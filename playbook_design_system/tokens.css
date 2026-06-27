@@ -1,0 +1,164 @@
+/* ============================================================
+   Playbook — Design OS · Design Tokens
+   Aesthetic: iOS 26 Liquid Glass
+   ============================================================ */
+
+:root {
+  /* ── Backgrounds ── */
+  --paper:     #F5F5F7;
+  --surface:   #FFFFFF;
+  --surface-2: #F0F0F2;
+  --surface-3: #E8E8EC;
+
+  /* ── True Liquid Glass ──
+     40px blur + 200% saturation so the background gradient bleeds through.
+     Specular is the top-edge rim light that sells the "glass" illusion. */
+  --glass-bg:       rgba(255,255,255,0.55);
+  --glass-bg-heavy: rgba(255,255,255,0.82);
+  --glass-border:   rgba(255,255,255,0.72);
+  --glass-specular: rgba(255,255,255,0.96);
+  /* Liquid Glass via CSS layers — frost + saturation lift + a touch of
+     brightness so light bends/blooms through the surface. Renders identically
+     in every engine (no SVG/WebGL dependency). */
+  --glass-blur:     blur(18px) saturate(1.8) brightness(1.04);
+
+  /* ── Time-of-day elevation ──
+     Direction/length/softness are driven at runtime by <TimeShadows>; these are
+     the noon defaults used before the script runs and during SSR. */
+  --elev-x: 0px;
+  --elev-y: 8px;
+  --elev-blur: 30px;
+  --elev-a: 0.12;
+  --elev:
+    var(--elev-x) var(--elev-y) var(--elev-blur)
+      rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost))),
+    0 1px 3px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.6));
+
+  /* ── Separators ── */
+  --line:        rgba(0,0,0,0.08);
+  --line-opaque: #D1D1D6;
+
+  /* ── Labels ── */
+  --ink:   #000000;
+  --ink-2: rgba(0,0,0,0.50);
+  --ink-3: rgba(0,0,0,0.28);
+  --ink-4: rgba(0,0,0,0.14);
+
+  /* ── Accent — only for interactive elements ── */
+  --accent:      #007AFF;
+  --accent-soft: rgba(0,122,255,0.10);
+
+  /* ── Semantic — task state ONLY ── */
+  --success:      #34C759;  --success-soft: rgba(52,199,89,0.12);
+  --warning:      #FF9500;  --warning-soft: rgba(255,149,0,0.12);
+  --danger:       #FF3B30;  --danger-soft:  rgba(255,59,48,0.12);
+  --brag:         #AF52DE;  --brag-soft:    rgba(175,82,222,0.12);
+
+  /* Indicator LED — bright amber (warning hue, lifted); green is reserved
+     for the sync status, so the appearance switch uses amber instead. */
+  --led-amber:      #FFA51F;
+  --led-amber-glow: rgba(255,165,31,0.85);
+
+  /* ── Radius ── */
+  --r-xs:   6px;
+  --r-sm:   10px;
+  --r-md:   14px;
+  --r-lg:   20px;
+  --r-xl:   28px;
+  --r-2xl:  36px;
+  --r-full: 999px;
+  /* Controls — Dieter Rams: near-rectangular, functional, barely softened.
+     Buttons and tabs use this instead of pills. */
+  --r-btn:  4px;
+
+  /* ── Spacing — base 4 ── */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-6: 24px;  --space-8: 32px;  --space-12: 48px; --space-16: 64px;
+
+  /* ── Typography ── */
+  --font-sans: 'Google Sans Flex', 'Google Sans', -apple-system, system-ui, sans-serif;
+  --font-mono: 'Google Sans Mono', 'SF Mono', ui-monospace, monospace;
+
+  /* ── Shadows — all derive from the time-of-day elevation vars ──
+     One light source; each step scales offset/blur/alpha off --elev so the
+     whole UI casts a consistent shadow that shifts with the clock.
+     --elev-boost lifts opacity in dark mode (see [data-theme="dark"]). */
+  --elev-boost: 1;
+  --shadow-xs:
+    0 1px 2px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.5)),
+    0 1px 3px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.4));
+  --shadow-sm:
+    var(--elev-x) calc(var(--elev-y) * 0.55) calc(var(--elev-blur) * 0.55)
+      rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.85)),
+    0 1px 3px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.5));
+  --shadow-md:
+    var(--elev-x) var(--elev-y) var(--elev-blur)
+      rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost))),
+    0 2px 8px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.6));
+  --shadow-lg:
+    calc(var(--elev-x) * 1.4) calc(var(--elev-y) * 1.6) calc(var(--elev-blur) * 1.6)
+      rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 1.25)),
+    0 4px 16px rgba(0,0,0,calc(var(--elev-a) * var(--elev-boost) * 0.8));
+  /* Glass shadow: a single faint top rim-light + the time-of-day drop shadow.
+     (The heavy inner bevel was removed — it read as a hard ring.) */
+  --shadow-glass:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    var(--elev);
+
+  /* ── Motion ── */
+  --ease:        cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-decel:  cubic-bezier(0.0, 0.0, 0.2, 1);
+  --dur-fast:    180ms;
+  --dur-base:    300ms;
+  --dur-theme:   400ms;
+}
+
+[data-theme="dark"] {
+  --paper:     #000000;
+  --surface:   #111111;
+  --surface-2: #1C1C1E;
+  --surface-3: #2C2C2E;
+
+  --glass-bg:       rgba(20,20,22,0.52);
+  --glass-bg-heavy: rgba(20,20,22,0.88);
+  --glass-border:   rgba(255,255,255,0.09);
+  --glass-specular: rgba(255,255,255,0.10);
+
+  --line:        rgba(255,255,255,0.09);
+  --line-opaque: #3A3A3C;
+
+  --ink:   #FFFFFF;
+  --ink-2: rgba(255,255,255,0.52);
+  --ink-3: rgba(255,255,255,0.28);
+  --ink-4: rgba(255,255,255,0.14);
+
+  --accent:      #0A84FF;
+  --accent-soft: rgba(10,132,255,0.14);
+
+  --success:      #30D158;  --success-soft: rgba(48,209,88,0.14);
+  --warning:      #FF9F0A;  --warning-soft: rgba(255,159,10,0.14);
+  --danger:       #FF453A;  --danger-soft:  rgba(255,69,58,0.14);
+  --brag:         #BF5AF2;  --brag-soft:    rgba(191,90,242,0.14);
+
+  --led-amber:      #FFB23D;
+  --led-amber-glow: rgba(255,178,61,0.9);
+
+  /* Shadows in dark mode need more opacity to read against near-black —
+     the xs/sm/md/lg scale is inherited from :root and lifted via the boost. */
+  --elev-boost: 3.2;
+  --shadow-glass:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    var(--elev);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background var(--dur-theme) var(--ease),
+    color var(--dur-theme) var(--ease);
+}

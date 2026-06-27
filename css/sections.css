@@ -1,0 +1,429 @@
+/* ==========================================================================
+   Sections — page-specific composition (hero, work, about, case study, contact)
+   ========================================================================== */
+
+/* --- Hero --- */
+.hero {
+  padding-block: var(--space-7) var(--space-8);
+}
+.hero__role {
+  margin-bottom: var(--space-3);
+}
+.hero__title {
+  max-width: 16ch;
+}
+.hero__signature {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--clay);
+}
+.hero__lede {
+  margin-top: var(--space-3);
+  font-size: var(--step-h3);
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--text-muted);
+  max-width: 24ch;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.hero__availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--step-small);
+  color: var(--text-muted);
+}
+.hero__availability::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--clay);
+}
+
+/* --- Hero (noir): bold statement left, portrait on the right third --- */
+.hero-noir {
+  position: relative;
+  min-height: 100svh;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  /* Golden split: statement 61.8% · portrait 38.2% */
+  grid-template-columns: var(--col-major) var(--col-minor);
+}
+.hero-noir__content {
+  display: grid;
+  /* Golden split vertically: empty 61.8% · statement zone 38.2% */
+  grid-template-rows: var(--col-major) var(--col-minor);
+  padding: var(--nav-h) var(--gutter) var(--space-6);
+}
+.hero-noir__lower {
+  grid-row: 2;
+  align-self: end; /* sits in the lower golden zone, anchored to the baseline */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.hero-noir__statement {
+  font-family: var(--font-statement);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  max-width: 18ch;
+}
+.hero-noir__statement em { color: var(--clay); font-style: normal; }
+.hero-noir__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+.hero-noir__cue:hover { color: var(--paper); }
+
+.hero-noir__media {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ink) 85%, var(--paper));
+}
+.hero-noir__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero-noir__media-label {
+  position: absolute;
+  inset: auto 0 var(--space-3) 0;
+  text-align: center;
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 30%, transparent);
+}
+
+@media (max-width: 760px) {
+  .hero-noir { grid-template-columns: 1fr; }
+  /* Golden split stacked: portrait 38.2svh · content 61.8svh */
+  .hero-noir__media { order: -1; min-height: 38svh; }
+  .hero-noir__content { min-height: 62svh; }
+}
+
+/* --- Section heading block --- */
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+/* --- Selected work: Saint-Louvent cards ---
+   Full-bleed 3-col grid of colour cards (multiply-blended). At rest each card
+   shows only its name; on hover it tilts and reveals the full project detail. */
+.sl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+}
+.sl-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  color: var(--paper);
+  transition: transform var(--dur-base) var(--ease-out);
+  will-change: transform;
+}
+/* The colour layer is what blends — text layers stay crisp on top. */
+.sl-card__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--tile, var(--linen));
+  mix-blend-mode: multiply;
+}
+.sl-card__name {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-3);
+  text-align: center;
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h2);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.sl-card__details {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.sl-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-top: 1px solid currentColor;
+  padding-top: var(--space-2);
+  font-size: var(--step-small);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+}
+.sl-card__cat { font-weight: var(--weight-regular); opacity: 0.7; }
+.sl-card__services {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: 0.35rem;
+  font-size: var(--step-small);
+  opacity: 0.85;
+}
+.sl-card:hover {
+  transform: rotate(-2.5deg) scale(1.05);
+  z-index: 5;
+}
+.sl-card:hover .sl-card__name { opacity: 0; }
+.sl-card:hover .sl-card__details { opacity: 1; }
+@media (max-width: 760px) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .sl-grid { grid-template-columns: 1fr; } }
+
+/* Placeholder retained for case-study figures */
+.work-card__placeholder {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  color: color-mix(in srgb, #fff 88%, transparent);
+  text-align: center;
+  padding: var(--space-3);
+  line-height: 1.1;
+}
+
+/* --- Capabilities — editorial hairline columns, no boxes --- */
+.capabilities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+.capability { border-top: 1px solid var(--ink); padding-top: var(--space-2); }
+.capability__num {
+  color: var(--text-muted);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-caps);
+}
+.capability h3 { margin-block: var(--space-2) var(--space-1); }
+.capability p { color: var(--text-muted); font-size: var(--step-small); max-width: 30ch; }
+
+/* --- Testimonials --- */
+.quote {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-4);
+}
+.quote__text {
+  font-family: var(--font-display);
+  font-size: var(--step-h3);
+  font-weight: 400;
+  line-height: 1.35;
+  max-width: 32ch;
+}
+.quote__author {
+  margin-top: var(--space-3);
+  font-size: var(--step-small);
+  color: var(--text-muted);
+}
+
+/* --- About --- */
+.about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .about-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+}
+.about-portrait {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--linen);
+  aspect-ratio: 4 / 5;
+}
+.about-mission {
+  font-family: var(--font-display);
+  font-size: var(--step-h2);
+  font-weight: 400;
+  line-height: 1.25;
+  max-width: 18ch;
+}
+.about-mission em { color: var(--clay); font-style: italic; }
+
+/* --- Case study (Mother Design / Cadillac structure, dark) --- */
+.case-page { background: var(--ink); color: var(--paper); }
+
+.case-hero { padding-block: calc(var(--nav-h) + var(--space-5)) var(--space-4); }
+.case-back { margin-bottom: var(--space-5); }
+.case-back a,
+.case-next__label {
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+.case-back a:hover { color: var(--paper); }
+.case-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2.75rem, 8vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+}
+.case-tagline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+  line-height: 1.15;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  margin-top: var(--space-3);
+  max-width: 22ch;
+}
+
+/* Full-bleed media bands */
+.case-media {
+  position: relative;
+  left: 50%; right: 50%;
+  width: 100vw;
+  margin-left: -50vw; margin-right: -50vw;
+  margin-block: var(--space-6);
+  overflow: hidden;
+  background: var(--tile, #1d1b16);
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+}
+.case-media--tall { aspect-ratio: 4 / 3; }
+.case-media img { width: 100%; height: 100%; object-fit: cover; }
+.case-media .work-card__placeholder { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+
+/* Two-column editorial grid: narrow left rail + offset centre body */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-3) var(--space-4);
+  margin-block: var(--space-6);
+}
+.case-rail { grid-column: 1 / 4; }
+.case-rail__label {
+  font-weight: var(--weight-regular);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.case-rail__text {
+  font-size: var(--step-small);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  margin: 0.35rem 0 var(--space-3);
+}
+.case-col {
+  grid-column: 6 / 12;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.case-col p { color: color-mix(in srgb, var(--paper) 80%, transparent); max-width: none; }
+.case-col strong { color: var(--paper); }
+.case-question {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--step-h3);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--paper) 65%, transparent);
+  margin-bottom: var(--space-3);
+}
+
+.case-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.case-metric strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--step-h2);
+  font-weight: 500;
+  color: var(--clay);
+}
+.case-metric span { font-size: var(--step-small); color: color-mix(in srgb, var(--paper) 55%, transparent); }
+
+.case-next {
+  border-top: 1px solid color-mix(in srgb, var(--paper) 15%, transparent);
+  padding-block: var(--space-5) var(--space-7);
+  margin-top: var(--space-6);
+}
+.case-next__link {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-top: var(--space-2);
+}
+.case-next__link:hover { color: var(--clay); }
+
+@media (max-width: 760px) {
+  .case-rail, .case-col { grid-column: 1 / -1; }
+}
+
+/* --- Contact --- */
+.contact-section {
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: var(--space-7);
+}
+.contact h2 {
+  color: var(--paper);
+  font-size: var(--step-h2);
+  max-width: 16ch;
+}
+.contact__lede { color: color-mix(in srgb, var(--paper) 70%, transparent); margin-top: var(--space-2); }
+.contact__form {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 32rem;
+  margin-top: var(--space-4);
+}
+.field { display: grid; gap: 0.4rem; }
+.field label { font-size: var(--step-small); color: color-mix(in srgb, var(--paper) 75%, transparent); }
+.field input,
+.field textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+  padding: 0.6rem 0;
+  color: var(--paper);
+}
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--clay);
+}
+.field input::placeholder,
+.field textarea::placeholder { color: color-mix(in srgb, var(--paper) 45%, transparent); }
+.form-status { font-size: var(--step-small); min-height: 1.2em; color: #9fe1b0; }
