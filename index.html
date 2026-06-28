@@ -49,7 +49,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
-<body data-page="home" data-nav-theme="dark">
+<body data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav"></header>
 
@@ -59,18 +59,17 @@
     <section class="hero-noir">
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
+          <div data-mount="now-playing"></div>
           <h1 class="hero-noir__statement">Building the standard for <em>African</em> brand design.</h1>
-          <a class="hero-noir__cue" href="#work">&darr;&ensp;Selected work</a>
+          <a class="scroll-cue" href="#work" aria-label="Scroll to selected work">
+            <span class="scroll-cue__track" aria-hidden="true"><span class="scroll-cue__dot"></span></span>
+            <span class="scroll-cue__label">Scroll Down</span>
+          </a>
         </div>
       </div>
       <div class="hero-noir__media" data-portrait-mount>
         <span class="hero-noir__media-label">Your portrait here</span>
       </div>
-    </section>
-
-    <!-- Client logo marquee: a break before the work -->
-    <section class="marquee" aria-label="Brands I've worked with">
-      <div class="marquee__viewport" data-mount="clients"></div>
     </section>
 
     <!-- Selected work -->
@@ -81,36 +80,49 @@
       <div data-mount="work-grid"></div>
     </section>
 
-    <!-- Capabilities -->
-    <section class="section--tight container" id="capabilities">
-      <div class="section-head reveal">
-        <h2>What I do</h2>
+    <!-- About Me: experience bar · what I do · quote · portrait -->
+    <section class="about-home" id="about">
+
+      <!-- Experience: client logo marquee -->
+      <div class="container about-home__label">
+        <p class="meta">Experience</p>
       </div>
-      <div data-mount="capabilities"></div>
-    </section>
+      <div class="marquee marquee--light" aria-label="Brands I've worked with">
+        <div class="marquee__viewport" data-mount="clients"></div>
+      </div>
 
-    <!-- Testimonial -->
-    <section class="section container">
-      <figure data-mount="testimonial" class="reveal"></figure>
-    </section>
+      <!-- What I do -->
+      <div class="container about-home__block" id="capabilities">
+        <div class="section-head reveal">
+          <h2>What I do</h2>
+        </div>
+        <div data-mount="capabilities"></div>
+      </div>
 
-    <!-- About preview -->
-    <section class="section container" id="about-preview">
-      <div class="about-grid">
-        <div class="about-portrait reveal" aria-hidden="true"></div>
-        <div class="stack reveal">
-          <p class="about-mission">Design should make a brand <em>feel</em> as good as it works.</p>
-          <p>My earliest memory of design is the first time I held a games console — ever since, I&rsquo;ve been fascinated by how design moves people to act. If one word describes me, it&rsquo;s <em>inquisitive</em>: I question every decision until the idea underneath is sound.</p>
-          <p><a class="link" href="about.html">More about me</a></p>
+      <!-- Quote from collaborator -->
+      <div class="container about-home__block">
+        <figure data-mount="testimonial" class="reveal"></figure>
+      </div>
+
+      <!-- More About Me -->
+      <div class="container about-home__block" id="about-preview">
+        <div class="about-grid">
+          <div class="about-portrait reveal" aria-hidden="true"></div>
+          <div class="stack reveal">
+            <p class="about-mission">Design should make a brand <em>feel</em> as good as it works.</p>
+            <p>My earliest memory of design is the first time I held a games console — ever since, I&rsquo;ve been fascinated by how design moves people to act. If one word describes me, it&rsquo;s <em>inquisitive</em>: I question every decision until the idea underneath is sound.</p>
+            <p><a class="link" href="about.html">More about me</a></p>
+          </div>
         </div>
       </div>
+
     </section>
 
     <!-- Contact -->
     <section class="contact-section" id="contact">
       <div class="container contact reveal">
+        <p class="meta contact__label">Contact</p>
         <h2 class="contact__heading">Let&rsquo;s work together.</h2>
-        <p class="contact__lede">Have a brand worth building well? Tell me about it.</p>
         <form class="contact__form" novalidate>
           <div class="field">
             <label for="name">Name</label>

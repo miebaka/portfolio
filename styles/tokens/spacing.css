@@ -7,9 +7,15 @@
   --space-1: 0.5rem;  /* 8 */
   --space-2: 1rem;    /* 16 */
   --space-3: 1.5rem;  /* 24 */
-  --space-4: 2rem;    /* 32 */
-  --space-5: 3rem;    /* 48 */
+  --space-4:  2rem;   /* 32 */
+  --space-4h: 2.5rem; /* 40 — 8pt grid fill between space-4 and space-5 */
+  --space-5:  3rem;   /* 48 */
+  --space-5h: 4rem;   /* 64 — 8pt grid fill between space-5 and space-6 */
   --space-6: 5rem;    /* 80 */
   --space-7: 8rem;    /* 128 */
   --space-8: 13rem;   /* 208 */
+
+  /* Section padding — semantic aliases consumed by .section / .section--tight */
+  --section-block:       15rem; /* 240px — standard section vertical rhythm */
+  --section-block-tight: 10rem; /* 160px — compact section vertical rhythm  */
 }

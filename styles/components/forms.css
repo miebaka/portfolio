@@ -43,6 +43,7 @@
 
 .form-status {
   font-size: var(--step-small);
-  min-height: 1.2em;
+  --_min-h: 1.2em; /* reserves one line of space to prevent layout shift on validation */
+  min-height: var(--_min-h);
   color: var(--success);
 }

@@ -7,16 +7,20 @@
   overflow: hidden;
   background: var(--ink);
   color: var(--paper);
-  /* min-height matches the mask's natural height at 104vw so the full signature
-     is never clipped vertically; flex pins content to the bottom (Rise-style). */
-  min-height: clamp(240px, 42vw, 600px);
+  /* Taller than the signature so the signature top clears the section top.
+     SVG aspect ratio ≈ 705.67 × 280; at 80% width: height ≈ 31.75vw. */
+  /* Taller than the script-name SVG — heights derived from its aspect ratio.
+     SVG ≈ 705.67 × 280; at 80% viewport width: height ≈ 31.75vw. */
+  --_min: 260px;
+  --_max: 640px;
+  min-height: clamp(var(--_min), 46vw, var(--_max));
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding-block: var(--space-5);
 }
-/* Oversized script-signature watermark, edge-to-edge and slightly clipped — a
-   low-contrast paper tint behind the content (mask keeps it recolourable). */
+
+/* Oversized script-signature watermark — CSS mask keeps it recolourable */
 .site-footer::before {
   content: "";
   position: absolute;
@@ -25,42 +29,54 @@
   pointer-events: none;
   background-color: var(--paper);
   opacity: 0.08;
-  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center / 104% auto;
-  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center / 104% auto;
+  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / 100% auto;
+  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / 100% auto;
 }
+
 .site-footer a { color: var(--paper); }
-/* Content layers above the watermark. */
+
+/* Content layers above the watermark */
 .site-footer__grid,
 .site-footer__bottom { position: relative; z-index: 1; }
+
+/* φ split: email = major (61.8%); socials = minor (38.2%) */
 .site-footer__grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: var(--col-major) var(--col-minor);
+  align-items: center;
   gap: var(--space-4);
 }
-.site-footer__cta {
-  font-family: var(--font-display);
-  font-size: var(--step-h2);
+@media (max-width: 600px) {
+  .site-footer__grid { grid-template-columns: 1fr; }
+}
+
+/* Quiet email — label treatment, not display */
+.site-footer__email {
+  font-family: var(--font-label);
+  font-size: var(--step-small);
   font-weight: var(--weight-regular);
-  letter-spacing: var(--tracking-heading);
-  max-width: 14ch;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  line-height: var(--leading-label);
+  text-decoration: none;
+  opacity: 0.55;
+  transition: opacity var(--duration-fast) var(--ease-standard);
 }
-.site-footer__cta a {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
+.site-footer__email:hover { opacity: 1; }
+
 .site-footer__meta {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   font-size: var(--step-caption);
 }
+
 .site-footer__socials {
   display: flex;
   gap: var(--space-3);
 }
 .site-footer__socials a:hover { color: var(--clay); }
+
 .site-footer__bottom {
   display: flex;
   flex-wrap: wrap;

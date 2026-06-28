@@ -10,6 +10,9 @@
   --duration-medium: 350ms;
   --duration-slow: 500ms;
   --duration-emphasis: 700ms;
+  --duration-loop:    1600ms; /* continuous repeating animations — scroll indicators, pulses */
+  --duration-marquee:   24s; /* full marquee scroll loop */
+  --duration-stagger:   70ms; /* per-item delay increment for sequenced reveal groups */
 
   /* Easing */
   --ease-linear: linear;

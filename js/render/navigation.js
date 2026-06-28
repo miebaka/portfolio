@@ -1,4 +1,4 @@
-/* Render — navigation: fixed nav (menu · logo) and the fullscreen overlay menu. */
+/* Render — navigation bar (logo · menu) and the fullscreen overlay menu. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 
@@ -15,11 +15,24 @@ export function renderNavigation() {
   const el = mount("nav");
   if (!el) return;
   el.className = "site-nav";
+  /* Logo sits on the left, menu trigger on the right. */
   el.innerHTML =
     '<div class="container site-nav__inner">' +
-    '<button class="site-nav__menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu">Menu</button>' +
     brandHTML() +
+    '<button class="site-nav__menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu">Menu</button>' +
     "</div>";
+}
+
+/* Floating pill — always links home on every page except home. */
+export function renderBackButton() {
+  const page = document.body.dataset.page || "";
+  if (page === "home") return;
+  const base = basePath();
+  const btn = document.createElement("a");
+  btn.className = "back-btn";
+  btn.href = base + "index.html";
+  btn.innerHTML = "&larr;&ensp;Home";
+  document.body.appendChild(btn);
 }
 
 export function renderMenu() {
@@ -30,17 +43,17 @@ export function renderMenu() {
   const items = (SITE.menu || [])
     .map((m) => {
       const current = m.key === page ? ' aria-current="page"' : "";
-      return (
-        '<a href="' + base + esc(m.href) + '"' + current + ">" +
-        '<span class="site-menu__marker" aria-hidden="true">&#9673;</span>' +
-        '<span class="site-menu__label">' + esc(m.label) + "</span></a>"
-      );
+      return '<a href="' + base + esc(m.href) + '"' + current + ">" + esc(m.label) + "</a>";
     })
     .join("");
 
   const socials = (SITE.socials || [])
     .map((s) => '<a href="' + esc(s.href) + '" rel="noopener">' + esc(s.label) + "</a>")
     .join(" ");
+
+  /* Single static signature — anchored bottom-right of the overlay. */
+  const sigSrc = base + "assets/images/miebaka-joshua-script-name.svg";
+  const sigImg = '<img src="' + sigSrc + '" alt="" decoding="async">';
 
   const menu = document.createElement("div");
   menu.className = "site-menu";
@@ -49,13 +62,16 @@ export function renderMenu() {
   menu.setAttribute("aria-modal", "true");
   menu.setAttribute("aria-label", "Site menu");
   menu.innerHTML =
+    '<div class="site-menu__sig" aria-hidden="true">' + sigImg + "</div>" +
     '<div class="container site-menu__bar">' +
       brandHTML() +
-      '<button class="site-menu__close" type="button" data-menu-close aria-label="Close menu"><span>Close</span><span class="site-menu__close-icon" aria-hidden="true">&#10005;</span></button>' +
+      '<button class="site-menu__close btn" type="button" data-menu-close aria-label="Close menu">' +
+        "<span>Close</span>" +
+        '<span class="site-menu__close-icon" aria-hidden="true">&#10005;</span>' +
+      "</button>" +
     "</div>" +
     '<nav class="container site-menu__nav" aria-label="Primary">' +
       '<div class="site-menu__list">' + items + "</div>" +
-      '<a class="site-menu__cta" href="' + base + 'index.html#contact">Let&rsquo;s work together</a>' +
     "</nav>" +
     '<div class="container site-menu__foot">' +
       "<span>&copy; <span data-year></span> " + esc(SITE.name) + "</span>" +
