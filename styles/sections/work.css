@@ -36,7 +36,7 @@
   text-align: center;
   font-weight: var(--weight-regular);
   font-size: var(--step-h2);
-  line-height: 1.05;
+  line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
   transition: opacity var(--duration-fast) var(--ease-standard);
@@ -63,9 +63,10 @@
 }
 .sl-card__cat { opacity: 0.7; }
 .sl-card__services {
+  --_gap: 0.35rem; /* tight inter-service spacing — proportional, not on 8pt grid */
   margin-top: var(--space-3);
   display: grid;
-  gap: 0.35rem;
+  gap: var(--_gap);
   font-size: var(--step-small);
   opacity: 0.85;
 }

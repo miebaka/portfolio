@@ -48,7 +48,8 @@
   line-height: var(--leading-heading);
   color: color-mix(in srgb, var(--paper) 55%, transparent);
   margin-top: var(--space-3);
-  max-width: 22ch;
+  --_w: 22ch; /* tagline — between hero (18ch) and lead (34ch) */
+  max-width: var(--_w);
 }
 
 /* Full-bleed media bands */
@@ -66,18 +67,18 @@
 }
 .case-media--tall { aspect-ratio: 4 / 3; }
 /* Band shade variants, derived from the page accent. */
-.case-media--light { background: color-mix(in srgb, var(--case-accent) 78%, #fff); }
-.case-media--dark  { background: color-mix(in srgb, var(--case-accent) 82%, #000); }
+.case-media--light { background: color-mix(in srgb, var(--case-accent) 78%, var(--paper)); }
+.case-media--dark  { background: color-mix(in srgb, var(--case-accent) 82%, var(--ink)); }
 .case-media img { width: 100%; height: 100%; object-fit: cover; }
 /* Placeholder label shown inside a media band until real imagery lands. */
 .case-media__placeholder {
   font-family: var(--font-display);
   font-weight: var(--weight-medium);
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: var(--step-h3);
   color: color-mix(in srgb, var(--paper) 88%, transparent);
   text-align: center;
   padding: var(--space-3);
-  line-height: 1.1;
+  line-height: var(--leading-heading);
 }
 
 /* Two-column editorial grid: narrow left rail + offset centre body */
@@ -96,9 +97,10 @@
   color: var(--paper);
 }
 .case-rail__text {
+  --_mt: 0.35rem; /* tight offset below the label — proportional, not on 8pt grid */
   font-size: var(--step-small);
   color: color-mix(in srgb, var(--paper) 55%, transparent);
-  margin: 0.35rem 0 var(--space-3);
+  margin: var(--_mt) 0 var(--space-3);
 }
 .case-col {
   grid-column: 6 / 12;
@@ -112,7 +114,7 @@
 }
 .case-col strong { color: var(--paper); }
 .case-question {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-style: italic;
   font-size: var(--step-h3);
   line-height: var(--leading-intro);
@@ -121,8 +123,9 @@
 }
 
 .case-metrics {
+  --_min: 140px; /* minimum metric cell width before wrapping */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--_min), 1fr));
   gap: var(--space-4);
   margin-top: var(--space-4);
 }

@@ -35,6 +35,7 @@
   --border-muted: var(--linen);
   --accent: var(--clay);
   --accent-hover: var(--clay-hover);
+  --ink-hover: color-mix(in srgb, var(--ink) 85%, #000);
 
   /* Status */
   --danger: #e5484d;

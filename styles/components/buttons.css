@@ -3,10 +3,12 @@
    ========================================================================== */
 
 .btn {
+  --_py: 0.85rem;
+  --_px: 1.4rem;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 0.85rem 1.4rem;
+  padding: var(--_py) var(--_px);
   border-radius: var(--radius-sm);
   font-size: var(--step-small);
   font-weight: var(--weight-medium);
@@ -18,7 +20,7 @@
 .btn:active { transform: translateY(1px); }
 
 .btn--primary { background: var(--ink); color: var(--paper); }
-.btn--primary:hover { background: color-mix(in srgb, var(--ink) 85%, #000); }
+.btn--primary:hover { background: var(--ink-hover); }
 
 .btn--accent { background: var(--clay); color: var(--paper); }
 .btn--accent:hover { background: var(--clay-hover); }
@@ -29,18 +31,22 @@
 /* Inline text link with the clay accent. Underline stays for affordance;
    on hover it thickens and drops 1px — a deliberate, ≤2px micro-interaction. */
 .link {
+  --_offset:       3px;
+  --_offset-hover: 4px;
+  --_thick:        1px;
+  --_thick-hover:  2px;
   color: var(--clay);
   text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
+  text-underline-offset: var(--_offset);
+  text-decoration-thickness: var(--_thick);
   transition: color var(--duration-fast) var(--ease-standard),
               text-decoration-thickness var(--duration-fast) var(--ease-standard),
               text-underline-offset var(--duration-fast) var(--ease-standard);
 }
 .link:hover {
   color: var(--clay-hover);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+  text-decoration-thickness: var(--_thick-hover);
+  text-underline-offset: var(--_offset-hover);
 }
 
 /* Chips (fun facts, tags) */
@@ -50,10 +56,13 @@
   gap: var(--space-1);
 }
 .chip {
+  --_gap: 0.4rem;
+  --_py:  0.4rem;
+  --_px:  0.85rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.85rem;
+  gap: var(--_gap);
+  padding: var(--_py) var(--_px);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
   font-size: var(--step-caption);

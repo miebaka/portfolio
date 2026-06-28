@@ -109,9 +109,10 @@
   --tracking-caps: 0.16em;   /* alias → label (legacy) */
 
   /* Reading measures */
-  --measure-hero: 18ch;
-  --measure-lead: 34ch;
-  --measure-reading: 68ch;
-  --measure-caption: 42ch;
-  --measure-wide: 84ch;
+  --measure-title:   16ch; /* primary page heading constraint */
+  --measure-hero:    18ch; /* hero statement */
+  --measure-lead:    34ch; /* about / mission statement */
+  --measure-reading: 68ch; /* body copy */
+  --measure-caption: 42ch; /* captions */
+  --measure-wide:    84ch; /* testimonials, pull quotes */
 }

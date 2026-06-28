@@ -6,6 +6,8 @@
 
 export const SITE = {
   name: "Miebaka Joshua",
+  lastfmUser: "sheikmoujabaa",
+  lastfmKey:  "127872bcf2ccc619e4fb52bb4b81805f",
   role: "Brand & visual designer",
   email: "hello@miebaka.design",
   location: "Lagos, Nigeria",
@@ -31,10 +33,11 @@ export const SITE = {
      (Hero, proof strip, testimonials and footer are intentionally omitted —
      they aren't navigation destinations.) */
   menu: [
-    { label: "Work", href: "work.html", key: "work" },
-    { label: "About", href: "about.html", key: "about" },
-    { label: "Services", href: "index.html#capabilities", key: "services" },
-    { label: "Contact", href: "index.html#contact", key: "contact" },
+    { label: "Work",       href: "work.html",               key: "work" },
+    { label: "About",      href: "about.html",              key: "about" },
+    { label: "Services",   href: "services.html",  key: "services" },
+    { label: "Playground", href: "playground.html", key: "playground" },
+    { label: "Contact",    href: "contact.html",   key: "contact" },
   ],
 
   socials: [
@@ -126,11 +129,12 @@ export const SITE = {
   /* Brands shown in the scrolling logo bar. Add `logo: "assets/images/clients/<file>.svg"`
      to swap a wordmark for a real logo image (kept ≤48px tall automatically). */
   clients: [
-    { name: "Anakle", logo: "assets/images/clients/anakle.svg" },
-    { name: "Grey Finance", logo: "assets/images/clients/grey-finance.svg" },
-    { name: "Rise", logo: "assets/images/clients/rise.svg" },
-    { name: "Riv-TechCreek", logo: "assets/images/clients/riv-techcreek.svg" },
-    { name: "WellaHealth Technologies", logo: "assets/images/clients/wellahealth-technologies.svg" },
+    { name: "Anakle",                  logo: "assets/images/clients/anakle.svg" },
+    { name: "Grey Finance",            logo: "assets/images/clients/grey-finance.svg" },
+    { name: "Rise",                    logo: "assets/images/clients/rise.svg" },
+    { name: "Riv-TechCreek",           logo: "assets/images/clients/riv-techcreek.svg" },
+    { name: "WellaHealth Technologies",logo: "assets/images/clients/wellahealth-technologies.svg" },
+    { name: "Celebration Church",      logo: "assets/images/clients/celebration-church.svg" },
   ],
 
   capabilities: [

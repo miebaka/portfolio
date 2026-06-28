@@ -2,7 +2,8 @@
    main.js — module entry. Renders the data-driven DOM, then wires behaviour.
    Order matters: nav + menu must be rendered before their handlers attach.
    ========================================================================== */
-import { renderNavigation, renderMenu } from "./render/navigation.js";
+import { renderNavigation, renderMenu, renderBackButton } from "./render/navigation.js";
+import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
 import { renderCapabilities, renderTestimonial, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
@@ -16,6 +17,7 @@ import { initForm } from "./core/form.js";
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();
 renderMenu();
+renderBackButton();
 renderWork();
 renderClients();
 renderCapabilities();
@@ -23,6 +25,7 @@ renderTestimonial();
 renderCaseStudy();
 renderFooter();
 fillSlots();
+initNowPlaying();
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 initScrollReveal();

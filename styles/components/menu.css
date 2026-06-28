@@ -12,7 +12,8 @@
   color: var(--paper);
   display: flex;
   flex-direction: column;
-  padding-block: 0 var(--space-4);
+  padding-block: 0 var(--space-5);
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--duration-medium) var(--ease-emphasized),
@@ -20,7 +21,25 @@
 }
 .site-menu.is-open { opacity: 1; visibility: visible; }
 
+/* Padding override — minimum left/right breathing room on small screens */
+.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
+
+/* Static signature — anchored at bottom-right, inset from edge */
+.site-menu__sig {
+  --_h:     28vw;  /* viewport-relative height matches the SVG's natural proportion */
+  --_h-max: 260px; /* cap so the sig doesn't overpower the overlay on large screens */
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  pointer-events: none;
+  opacity: 0.05;
+  filter: brightness(0) invert(1);
+}
+.site-menu__sig img { height: var(--_h); max-height: var(--_h-max); width: auto; display: block; }
+
 .site-menu__bar {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,39 +47,37 @@
   flex-shrink: 0;
 }
 .site-menu__bar .site-nav__brand { color: var(--paper); }
+
+/* Close button — inherits .btn base; dark-overlay overrides */
 .site-menu__close {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-min);
-  gap: var(--space-1);
-  font-size: var(--step-small);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--danger);
-  transition: color var(--duration-fast) var(--ease-standard);
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
 }
-.site-menu__close:hover { color: var(--danger-hover); }
-.site-menu__close-icon { font-size: 1.35em; line-height: 1; }
+.site-menu__close:hover {
+  background: color-mix(in srgb, var(--paper) 10%, transparent);
+  border-color: var(--paper);
+  color: var(--paper);
+}
+/* Slightly larger icon inside the close button — relative to its own font-size */
+.site-menu__close-icon { font-size: 1.1em; line-height: var(--leading-label); }
 
 .site-menu__nav {
+  position: relative;
+  z-index: 1;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--space-2);
-  padding-block: var(--space-4);
 }
-.site-menu__list { display: grid; gap: 0.4rem; }
+.site-menu__list { display: grid; gap: var(--space-3); }
 .site-menu__list a {
   display: inline-flex;
-  align-items: center; /* dot centred to the item */
-  gap: var(--space-3);
+  align-items: center;
   width: fit-content;
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-hero);
-  line-height: 1.05;
+  line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--paper) 22%, transparent);
@@ -69,29 +86,9 @@
 .site-menu__list a:hover,
 .site-menu__list a[aria-current="page"] { color: var(--paper); }
 
-/* Indicator dot: off (grey) → on (green) */
-.site-menu__marker {
-  font-family: var(--font-label);
-  font-size: var(--step-small);
-  color: color-mix(in srgb, var(--paper) 22%, transparent);
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-.site-menu__list a:hover .site-menu__marker,
-.site-menu__list a[aria-current="page"] .site-menu__marker { color: var(--success); }
-
-.site-menu__cta {
-  margin-top: var(--space-4);
-  align-self: flex-start;
-  font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--step-h3);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-heading);
-  color: var(--clay);
-}
-.site-menu__cta:hover { color: var(--paper); }
-
 .site-menu__foot {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
@@ -108,6 +105,5 @@
   gap: var(--space-5);
 }
 
-/* Lock background scroll + hide page nav while the overlay is open */
 body.menu-open { overflow: hidden; }
 body.menu-open .site-nav { opacity: 0; visibility: hidden; }

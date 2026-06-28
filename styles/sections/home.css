@@ -20,7 +20,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-h2);
-  line-height: 1;
+  line-height: var(--leading-hero);
   letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
 }
@@ -33,13 +33,50 @@
   .cap-row { flex-direction: column; gap: var(--space-2); padding-block: var(--space-4); }
 }
 
+/* Playground — empty state */
+.playground-empty {
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--step-body-lg);
+}
+
+/* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */
+.about-home {
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  padding-block-start: var(--space-6);
+}
+
+.about-home__label {
+  margin-bottom: var(--space-3);
+}
+
+/* Each content block inside about-home gets a top hairline + generous breathing room */
+.about-home__block {
+  padding-block: var(--space-7);
+  border-top: 1px solid var(--border);
+}
+
+/* Testimonial already has border-top + padding-top — suppress inside about-home__block */
+.about-home__block .testimonial {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Capabilities block: no top border (marquee provides the visual break above) */
+#capabilities.about-home__block { border-top: none; }
+
+/* Remove trailing hairline below last capability row */
+.cap-row:last-child { border-bottom: none; }
+
 /* Testimonial — serif quote */
 .testimonial {
   border-top: 1px solid var(--border);
   padding-top: var(--space-4);
 }
 .testimonial__text {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-style: italic;
   font-size: var(--step-h3);
   line-height: var(--leading-intro);

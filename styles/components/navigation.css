@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Component · Navigation — menu (left) · logo (centre).
+   Component · Navigation — logo (left) · menu trigger (right).
    ========================================================================== */
 
 .site-nav {
@@ -24,41 +24,77 @@
   border-bottom-color: var(--border);
   color: var(--ink);
 }
-/* Over a dark hero, nav ink flips to paper until the page is scrolled */
+/* Over a dark hero the nav flips to paper until scrolled */
 body[data-nav-theme="dark"] .site-nav:not(.is-scrolled) { color: var(--paper); }
 
 .site-nav__inner {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
 }
 
+/* Logo — left-anchored, colour mask so it flips with currentColor */
 .site-nav__brand {
-  justify-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: var(--tap-min);
   min-height: var(--tap-min);
+  flex-shrink: 0;
 }
-/* Logo as a currentColor mask → black on light nav, white on dark nav */
 .site-nav__logo {
+  --_size: 1.875rem; /* 30px — SVG logo proportion; not on 8pt grid by design */
   display: block;
-  width: 1.875rem;
-  height: 1.875rem;
+  width: var(--_size);
+  height: var(--_size);
   background-color: currentColor;
   -webkit-mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
   mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
 }
 
+/* Menu trigger — right-anchored */
 .site-nav__menu-btn {
-  justify-self: start;
+  --_px: 0.2rem; /* minimal side padding — visual balance only */
   display: inline-flex;
   align-items: center;
   min-height: var(--tap-min);
   font-size: var(--step-meta);
-  padding: var(--space-1) 0.2rem;
+  padding: var(--space-1) var(--_px);
+  flex-shrink: 0;
 }
 .site-nav__menu-btn:hover { color: var(--accent); }
+
+/* ── Floating back button ─────────────────────────────────────────────── */
+.back-btn {
+  --_gap: 0.4rem;
+  --_py:  0.7rem;
+  --_px:  1.2rem;
+  position: fixed;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  z-index: var(--z-sticky);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  gap: var(--_gap);
+  padding: var(--_py) var(--_px);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  box-shadow: var(--shadow-md);
+  transition: background var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-snappy);
+}
+.back-btn:hover {
+  background: var(--ink-hover);
+  transform: translateY(-2px);
+}
+/* Invert on dark case-study pages */
+.case-page .back-btn  { background: var(--paper); color: var(--ink); }
+.case-page .back-btn:hover { background: var(--linen); }

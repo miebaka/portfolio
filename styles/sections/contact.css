@@ -1,24 +1,83 @@
 /* ==========================================================================
-   Section · Contact — dark band with an underlined form.
+   Section · Contact — editorial, light-on-paper, sleak.tv-inspired.
    ========================================================================== */
 
 .contact-section {
-  background: var(--ink);
-  color: var(--paper);
-  padding-block: var(--space-7);
+  background: var(--paper);
+  color: var(--ink);
+  padding-block: var(--space-8);
+  border-top: 1px solid var(--border);
 }
-.contact h2 {
-  color: var(--paper);
-  font-size: var(--step-h2);
-  max-width: 16ch;
+
+/* Small label above the heading */
+.contact__label {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-2);
 }
-.contact__lede {
-  color: color-mix(in srgb, var(--paper) 70%, transparent);
-  margin-top: var(--space-2);
+
+.contact__heading {
+  font-family: var(--font-display);
+  font-size: var(--step-h1);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-heading);
+  margin-bottom: var(--space-6);
 }
+
+/* Desktop: label + heading span full width; form sits in the major (right) column only.
+   The empty minor column acts as an editorial offset — fashion proportions. */
+@media (min-width: 820px) {
+  .contact {
+    display: grid;
+    grid-template-columns: var(--col-minor) var(--col-major);
+    column-gap: var(--space-6);
+    row-gap: var(--space-0);
+    align-items: start;
+  }
+  .contact__heading {
+    grid-column: 1 / -1;
+    white-space: nowrap;
+    margin-bottom: var(--space-7);
+  }
+  .contact__form {
+    grid-column: 2 / 3;
+    margin-top: 0;
+  }
+}
+
 .contact__form {
   display: grid;
-  gap: var(--space-3);
-  max-width: 32rem;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.contact__submit {
+  margin-top: var(--space-2);
+}
+
+/* ── Dedicated contact page ───────────────────────────────────────────────── */
+
+/* Minor col = contact info; major col = form */
+.contact-page {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (min-width: 820px) {
+  .contact-page {
+    grid-template-columns: var(--col-minor) var(--col-major);
+    column-gap: var(--space-7);
+    row-gap: var(--space-0);
+  }
+}
+
+.contact-info dt {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
   margin-top: var(--space-4);
 }
+.contact-info dt:first-child { margin-top: 0; }
+.contact-info dd { margin-top: var(--space-1); font-size: var(--step-body); }
