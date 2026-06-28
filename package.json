@@ -1,0 +1,12 @@
+{
+  "name": "miebaka-joshua-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Optional image-optimization tooling for the portfolio. The site itself is zero-build (static HTML + CSS + ES modules) and needs none of this to run.",
+  "scripts": {
+    "optimize:images": "node scripts/optimize-images.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}

@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Section · Case study — dark editorial template (Cadillac structure):
+   left rail + offset prose + full-bleed media.
+   ========================================================================== */
+
+.case-page { background: var(--ink); color: var(--paper); color-scheme: dark; }
+/* Optional flourish: faint film grain across the dark case page (sits below the
+   nav/menu, above content; non-interactive). */
+.case-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* Per-project accent — drives the placeholder media bands until real imagery
+   lands. One token per page; band shades derive from it (no inline styles). */
+.case-page--rivo    { --case-accent: #1f4d3a; }
+.case-page--poster  { --case-accent: #1d4ed8; }
+.case-page--tedx    { --case-accent: #b91c1c; }
+.case-page--chopbox { --case-accent: #c2531c; }
+
+.case-hero { padding-block: calc(var(--nav-h) + var(--space-5)) var(--space-4); }
+.case-back { margin-bottom: var(--space-5); }
+.case-back a,
+.case-next__label {
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+.case-back a:hover { color: var(--paper); }
+.case-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-display-xl);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-display);
+}
+.case-tagline {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h3);
+  line-height: var(--leading-heading);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  margin-top: var(--space-3);
+  max-width: 22ch;
+}
+
+/* Full-bleed media bands */
+.case-media {
+  position: relative;
+  left: 50%; right: 50%;
+  width: 100vw;
+  margin-left: -50vw; margin-right: -50vw;
+  margin-block: var(--space-6);
+  overflow: hidden;
+  background: var(--case-accent, color-mix(in srgb, var(--ink) 85%, var(--paper)));
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+}
+.case-media--tall { aspect-ratio: 4 / 3; }
+/* Band shade variants, derived from the page accent. */
+.case-media--light { background: color-mix(in srgb, var(--case-accent) 78%, #fff); }
+.case-media--dark  { background: color-mix(in srgb, var(--case-accent) 82%, #000); }
+.case-media img { width: 100%; height: 100%; object-fit: cover; }
+/* Placeholder label shown inside a media band until real imagery lands. */
+.case-media__placeholder {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+  text-align: center;
+  padding: var(--space-3);
+  line-height: 1.1;
+}
+
+/* Two-column editorial grid: narrow left rail + offset centre body */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-3) var(--space-4);
+  margin-block: var(--space-6);
+}
+.case-rail { grid-column: 1 / 4; }
+.case-rail__label {
+  font-weight: var(--weight-medium);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.case-rail__text {
+  font-size: var(--step-small);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  margin: 0.35rem 0 var(--space-3);
+}
+.case-col {
+  grid-column: 6 / 12;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.case-col p {
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+  max-width: var(--measure-reading);
+}
+.case-col strong { color: var(--paper); }
+.case-question {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--step-h3);
+  line-height: var(--leading-intro);
+  color: color-mix(in srgb, var(--paper) 65%, transparent);
+  margin-bottom: var(--space-3);
+}
+
+.case-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.case-metric strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--step-h2);
+  font-weight: var(--weight-medium);
+  color: var(--clay);
+}
+.case-metric span {
+  font-size: var(--step-small);
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+/* Placeholder note beneath the metrics. */
+.case-note {
+  margin-top: var(--space-3);
+  color: color-mix(in srgb, var(--paper) 45%, transparent);
+}
+
+.case-next {
+  border-top: 1px solid color-mix(in srgb, var(--paper) 15%, transparent);
+  padding-block: var(--space-5) var(--space-7);
+  margin-top: var(--space-6);
+}
+.case-next__link {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h1);
+  letter-spacing: var(--tracking-heading);
+  margin-top: var(--space-2);
+}
+.case-next__link:hover { color: var(--clay); }
+
+@media (max-width: 760px) {
+  .case-rail,
+  .case-col { grid-column: 1 / -1; }
+}

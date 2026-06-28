@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Tokens · Motion — durations + easing curves. No component hardcodes timing.
+   ========================================================================== */
+
+:root {
+  /* Durations */
+  --duration-instant: 75ms;
+  --duration-fast: 150ms;
+  --duration-standard: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 500ms;
+  --duration-emphasis: 700ms;
+
+  /* Easing */
+  --ease-linear: linear;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.3, 0, 0, 1);
+  --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+}

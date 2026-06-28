@@ -1,0 +1,37 @@
+/* ==========================================================================
+   main.css — single entry. Layers cascade in order; nothing skips a layer.
+   Tokens → Base → Components → Sections.
+   ========================================================================== */
+
+/* Tokens */
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/radius.css";
+@import "tokens/shadow.css";
+@import "tokens/z-index.css";
+@import "tokens/motion.css";
+@import "tokens/layout.css";
+@import "tokens/grid.css";
+
+/* Base */
+@import "base/reset.css";
+@import "base/typography.css";
+@import "base/utilities.css";
+@import "base/view-transitions.css";
+
+/* Components */
+@import "components/navigation.css";
+@import "components/menu.css";
+@import "components/marquee.css";
+@import "components/buttons.css";
+@import "components/forms.css";
+@import "components/footer.css";
+
+/* Sections */
+@import "sections/hero.css";
+@import "sections/work.css";
+@import "sections/home.css";
+@import "sections/about.css";
+@import "sections/contact.css";
+@import "sections/case-study.css";

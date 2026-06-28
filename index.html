@@ -5,15 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Miebaka Joshua — Brand &amp; visual designer</title>
   <meta name="description" content="Miebaka Joshua is a brand and visual designer with 7+ years building world-class identities for African brands. Open to remote roles worldwide.">
+  <link rel="canonical" href="https://miebaka.design/">
   <meta property="og:title" content="Miebaka Joshua — Brand &amp; visual designer">
   <meta property="og:description" content="Building a standard for what brand and graphic design can be for African brands.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://miebaka.design/">
+  <meta property="og:site_name" content="Miebaka Joshua">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Miebaka Joshua — Brand &amp; visual designer">
+  <meta name="twitter:description" content="Building a standard for what brand and graphic design can be for African brands.">
+  <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta name="theme-color" content="#16140f">
+  <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
+  <link rel="preload" as="font" type="font/woff" href="assets/fonts/texgyreheros-regular.woff" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Miebaka Williams Atubokiki Joshua",
+      "alternateName": "Miebaka Joshua",
+      "jobTitle": "Brand & Visual Designer",
+      "url": "https://miebaka.design/",
+      "image": "https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg",
+      "email": "mailto:hello@miebaka.design",
+      "address": { "@type": "PostalAddress", "addressLocality": "Lagos", "addressCountry": "NG" },
+      "sameAs": ["https://behance.net/miebaka", "https://linkedin.com/in/miebakajoshua"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Miebaka Joshua",
+      "url": "https://miebaka.design/"
+    }
+  ]
+  </script>
   <script>document.documentElement.classList.replace("no-js", "has-js");</script>
 
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,18 +77,16 @@
     <section class="section" id="work">
       <div class="container section-head reveal">
         <h2>Selected work</h2>
-        <p class="meta">Brand identity, strategy &amp; graphic design</p>
       </div>
-      <div data-mount="work-grid" class="reveal"></div>
+      <div data-mount="work-grid"></div>
     </section>
 
     <!-- Capabilities -->
     <section class="section--tight container" id="capabilities">
       <div class="section-head reveal">
         <h2>What I do</h2>
-        <p class="meta">Five things, done well</p>
       </div>
-      <div data-mount="capabilities" class="reveal"></div>
+      <div data-mount="capabilities"></div>
     </section>
 
     <!-- Testimonial -->
@@ -82,18 +114,18 @@
         <form class="contact__form" novalidate>
           <div class="field">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required>
+            <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required aria-required="true" aria-describedby="form-status">
           </div>
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" placeholder="name@company.com" required>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="name@company.com" required aria-required="true" aria-describedby="form-status">
           </div>
           <div class="field">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="4" placeholder="What are you building?"></textarea>
           </div>
           <button class="btn btn--accent" type="submit">Send message</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -102,8 +134,6 @@
 
   <footer data-mount="footer"></footer>
 
-  <script src="data/site.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+/* ==========================================================================
+   Section · Contact — dark band with an underlined form.
+   ========================================================================== */
+
+.contact-section {
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: var(--space-7);
+}
+.contact h2 {
+  color: var(--paper);
+  font-size: var(--step-h2);
+  max-width: 16ch;
+}
+.contact__lede {
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  margin-top: var(--space-2);
+}
+.contact__form {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 32rem;
+  margin-top: var(--space-4);
+}

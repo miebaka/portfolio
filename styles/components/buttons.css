@@ -1,0 +1,61 @@
+/* ==========================================================================
+   Component · Buttons, links & chips.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.85rem 1.4rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--step-small);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-button);
+  transition: background var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-snappy);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--primary { background: var(--ink); color: var(--paper); }
+.btn--primary:hover { background: color-mix(in srgb, var(--ink) 85%, #000); }
+
+.btn--accent { background: var(--clay); color: var(--paper); }
+.btn--accent:hover { background: var(--clay-hover); }
+
+.btn--ghost { border: 1px solid var(--border); }
+.btn--ghost:hover { border-color: var(--ink); }
+
+/* Inline text link with the clay accent. Underline stays for affordance;
+   on hover it thickens and drops 1px — a deliberate, ≤2px micro-interaction. */
+.link {
+  color: var(--clay);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color var(--duration-fast) var(--ease-standard),
+              text-decoration-thickness var(--duration-fast) var(--ease-standard),
+              text-underline-offset var(--duration-fast) var(--ease-standard);
+}
+.link:hover {
+  color: var(--clay-hover);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* Chips (fun facts, tags) */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--step-caption);
+  color: var(--text-muted);
+}

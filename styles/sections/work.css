@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Section · Work — full-bleed Saint-Louvent colour cards (multiply, hover tilt).
+   ========================================================================== */
+
+/* The work section is a query container; the grid responds to its width, not
+   the viewport — future-proof and reusable wherever the grid is placed. */
+#work { container-type: inline-size; container-name: work; }
+
+.sl-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile-first base; graceful where @container is unsupported */
+  width: 100%;
+}
+.sl-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  color: var(--paper);
+  transition: transform var(--duration-standard) var(--ease-standard);
+  will-change: transform;
+}
+/* Colour layer blends; text layers stay crisp on top */
+.sl-card__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--tile, var(--linen));
+  mix-blend-mode: multiply;
+}
+.sl-card__name {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-3);
+  text-align: center;
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h2);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.sl-card__details {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3);
+  opacity: 0;
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+.sl-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-top: 1px solid currentColor;
+  padding-top: var(--space-2);
+  font-size: var(--step-small);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.sl-card__cat { opacity: 0.7; }
+.sl-card__services {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: 0.35rem;
+  font-size: var(--step-small);
+  opacity: 0.85;
+}
+.sl-card:hover {
+  transform: rotate(-2.5deg) scale(1.05);
+  z-index: var(--z-raised);
+}
+.sl-card:hover .sl-card__name { opacity: 0; }
+.sl-card:hover .sl-card__details { opacity: 1; }
+
+@container work (min-width: 30rem) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
+@container work (min-width: 47.5rem) { .sl-grid { grid-template-columns: repeat(3, 1fr); } }

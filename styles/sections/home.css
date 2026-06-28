@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Section · Home — "What I do" list + testimonial.
+   ========================================================================== */
+
+/* What I do — editorial list: big name left, meta right, hairline rows */
+.cap-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+.cap-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+.cap-row__name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h2);
+  line-height: 1;
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+}
+.cap-row__meta {
+  color: var(--text-muted);
+  font-size: var(--step-meta);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .cap-row { flex-direction: column; gap: var(--space-2); padding-block: var(--space-4); }
+}
+
+/* Testimonial — serif quote */
+.testimonial {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-4);
+}
+.testimonial__text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--step-h3);
+  line-height: var(--leading-intro);
+  max-width: var(--measure-wide);
+}
+.testimonial__author {
+  margin-top: var(--space-3);
+  font-size: var(--step-caption);
+  color: var(--text-muted);
+}
+.testimonial__author cite { font-style: normal; }

@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Tokens · Colour — owns every colour value and semantic colour role.
+   No component may define a raw colour; consume the role tokens below.
+   ========================================================================== */
+
+:root {
+  /* The base experience is a warm light theme; native UI (scrollbars, form
+     controls) follows suit. Dark contexts opt in via `color-scheme: dark`. */
+  color-scheme: light;
+
+  /* Core palette (semantic names only — never numeric) */
+  --paper: #f4f1ea;
+  --ink: #16140f;
+  --stone: #6b6256;
+  --linen: #e4ded2;
+  --linen-strong: #ded8cc;
+  --clay: #c2531c;
+  --clay-hover: #a8460f;
+
+  /* Surfaces */
+  --bg: var(--paper);
+  --bg-invert: var(--ink);
+  --surface: var(--paper);
+  --surface-invert: var(--ink);
+
+  /* Text hierarchy */
+  --text: var(--ink);
+  --text-primary: var(--ink);
+  --text-secondary: var(--stone);
+  --text-muted: var(--stone);
+  --text-invert: var(--paper);
+
+  /* Borders & interactive */
+  --border: var(--linen-strong);
+  --border-muted: var(--linen);
+  --accent: var(--clay);
+  --accent-hover: var(--clay-hover);
+
+  /* Status */
+  --danger: #e5484d;
+  --danger-hover: #ff5a5f;
+  --success: #4ec06f;
+}

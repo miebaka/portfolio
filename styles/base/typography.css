@@ -1,0 +1,126 @@
+/* ==========================================================================
+   Base · Typography — heading roles, reading copy, labels, utility classes.
+   Three roles: Display (headings) · Reading (serif body) · Interface (labels).
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular); /* display reads light — editorial */
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: balance;
+}
+h1 { font-size: var(--step-h1); }
+h2 { font-size: var(--step-h2); }
+h3 { font-size: var(--step-h3); }
+h4 { font-size: var(--step-h4); }
+h5 { font-size: var(--step-h5); }
+h6 { font-size: var(--step-h6); }
+
+em { font-style: italic; }
+
+/* Running body copy is the serif, capped to the reading measure */
+p { max-width: var(--measure-reading); }
+.case-col p,
+.stack p {
+  font-family: var(--font-serif);
+  letter-spacing: var(--tracking-body);
+}
+
+/* Labels — Interface (Josefin Sans), uppercase, widely tracked */
+.meta,
+.site-nav__menu-btn,
+.site-menu__close,
+.site-menu__foot,
+.case-back a,
+.case-rail__label,
+.case-rail__text,
+.case-next__label,
+.case-metric span,
+.cap-row__meta,
+.sl-card__head,
+.sl-card__services,
+.chip,
+.btn,
+.hero-noir__cue,
+.hero__availability,
+.site-footer__meta,
+.site-footer__bottom {
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+/* --- Typography utility classes — components consume these --- */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: var(--step-display-xl);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-display-xl);
+}
+.display {
+  font-family: var(--font-display);
+  font-size: var(--step-hero);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-display);
+}
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--step-h2);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+.subhead {
+  font-family: var(--font-display);
+  font-size: var(--step-h4);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+.lead {
+  font-family: var(--font-serif);
+  font-size: var(--step-body-lg);
+  line-height: var(--leading-intro);
+  max-width: var(--measure-lead);
+}
+.body {
+  font-family: var(--font-serif);
+  font-size: var(--step-body);
+  line-height: var(--leading-body);
+  max-width: var(--measure-reading);
+}
+.small {
+  font-family: var(--font-serif);
+  font-size: var(--step-small);
+  line-height: var(--leading-body);
+}
+.caption {
+  font-family: var(--font-label);
+  font-size: var(--step-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+}
+.quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--step-h4);
+  line-height: var(--leading-intro);
+  max-width: var(--measure-wide);
+}
+
+/* Overline & label — small uppercase interface markers */
+.label,
+.overline,
+.meta {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.overline,
+.meta { color: var(--text-muted); }

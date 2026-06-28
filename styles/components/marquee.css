@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Component · Marquee — seamless client-logo bar (200px bar, 32px logos,
+   64px rhythm, 24s loop — values fixed by design).
+   ========================================================================== */
+
+.marquee {
+  height: 200px;
+  background: var(--ink);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.marquee__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 24s linear infinite;
+}
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__group {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  padding-right: 64px; /* keeps the rhythm across the loop seam */
+  margin: 0;
+  list-style: none;
+}
+.marquee__item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+.marquee__item img {
+  height: 32px;
+  width: auto;
+  max-width: none;
+  display: block;
+  filter: brightness(0) invert(1); /* uniform paper-white logos on the dark bar */
+  opacity: 0.9;
+}
+.marquee__wordmark {
+  font-family: var(--font-label);
+  font-size: var(--step-body-lg);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track { animation: none; }
+}

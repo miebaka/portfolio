@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Tokens · Layout — container widths, gutter, nav height, default measure.
+   ========================================================================== */
+
+:root {
+  --page-max: 1400px;
+  --content-max: 1400px;           /* legacy alias */
+  --content-width: var(--page-max);
+  --text-width: var(--measure-reading);
+  --gallery-width: 100%;
+  --bleed-width: 100vw;
+
+  --gutter: clamp(1.5rem, 6vw, 7rem);
+  --nav-h: 5rem;
+  --measure: var(--measure-reading); /* default reading width */
+  --tap-min: 44px; /* WCAG 2.2 minimum touch-target size */
+}

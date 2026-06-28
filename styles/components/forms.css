@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Component · Forms — underlined fields on the dark contact band.
+   ========================================================================== */
+
+.field { display: grid; gap: 0.4rem; }
+.field label {
+  font-size: var(--step-small);
+  color: color-mix(in srgb, var(--paper) 75%, transparent);
+}
+.field input,
+.field textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+  padding: 0.6rem 0;
+  color: var(--paper);
+}
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--clay);
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--paper) 45%, transparent);
+}
+.form-status {
+  font-size: var(--step-small);
+  min-height: 1.2em;
+  color: var(--success);
+}

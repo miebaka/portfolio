@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Section · About.
+   ========================================================================== */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .about-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+}
+.about-portrait {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--linen);
+  aspect-ratio: 4 / 5;
+}
+.about-mission {
+  font-family: var(--font-display);
+  font-size: var(--step-h2);
+  font-weight: var(--weight-regular);
+  line-height: 1.25;
+  max-width: 18ch;
+}
+.about-mission em { color: var(--clay); font-style: italic; }

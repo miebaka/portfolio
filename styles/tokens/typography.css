@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Tokens · Typography — font faces, families, scale, tracking, leading, measures.
+   Three roles only: Display (TeX Gyre Heros), Reading (Libre Baskerville),
+   Interface (Josefin Sans). Never interchange.
+   ========================================================================== */
+
+/* --- Self-hosted faces (paths relative to this file) --- */
+
+/* Display — TeX Gyre Heros (Helvetica-metric grotesque) */
+@font-face {
+  font-family: "TeX Gyre Heros";
+  src: url("../../assets/fonts/texgyreheros-regular.woff") format("woff");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "TeX Gyre Heros";
+  src: url("../../assets/fonts/texgyreheros-italic.woff") format("woff");
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "TeX Gyre Heros";
+  src: url("../../assets/fonts/texgyreheros-bold.woff") format("woff");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "TeX Gyre Heros";
+  src: url("../../assets/fonts/texgyreheros-bolditalic.woff") format("woff");
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+
+/* Reading — Libre Baskerville */
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("../../assets/fonts/librebaskerville-regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("../../assets/fonts/librebaskerville-italic.woff2") format("woff2");
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("../../assets/fonts/librebaskerville-bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+/* Interface — Josefin Sans */
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("../../assets/fonts/josefinsans-regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("../../assets/fonts/josefinsans-semibold.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* Families */
+  --font-sans: "TeX Gyre Heros", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --font-label: "Josefin Sans", "Century Gothic", "Futura", system-ui, sans-serif;
+  --font-display: var(--font-sans);   /* role: headings */
+  --font-statement: var(--font-sans);
+  --font-body: var(--font-serif);     /* role: reading */
+
+  /* Weights (faces ship 400 + 700; 500/600 used where the face exists) */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  /* Type scale — fluid mobile → desktop */
+  --step-display-xl: clamp(3.5rem, 1.7rem + 7.6vw, 6rem);    /* 56 → 96 */
+  --step-hero: clamp(3rem, 1.9rem + 4.6vw, 4.5rem);          /* 48 → 72 · display-lg */
+  --step-h1: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);          /* 40 → 56 */
+  --step-h2: clamp(2.125rem, 1.7rem + 1.8vw, 2.75rem);       /* 34 → 44 */
+  --step-h3: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);         /* 28 → 34 */
+  --step-h4: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem);        /* 24 → 28 */
+  --step-h5: clamp(1.25rem, 1.15rem + 0.4vw, 1.375rem);      /* 20 → 22 */
+  --step-h6: 1.125rem;                                        /* 18 */
+  --step-body-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem); /* 18 → 20 */
+  --step-body: clamp(1.0625rem, 1.02rem + 0.18vw, 1.125rem); /* 17 → 18 */
+  --step-small: 1rem;                                         /* 16 · body-sm */
+  --step-caption: 0.875rem;                                   /* 14 */
+  --step-meta: 0.75rem;                                       /* 12 · label */
+
+  /* Line heights */
+  --leading-hero: 1;
+  --leading-heading: 1.08;
+  --leading-intro: 1.55;
+  --leading-body: 1.75;
+  --leading-caption: 1.55;
+  --leading-label: 1;
+  --leading-tight: 1.08;  /* alias → heading (legacy) */
+  --leading-snug: 1.16;   /* legacy */
+
+  /* Letter tracking */
+  --tracking-display-xl: -0.05em;
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.02em;
+  --tracking-body: 0;
+  --tracking-caption: 0.01em;
+  --tracking-label: 0.16em;
+  --tracking-button: 0.12em;
+  --tracking-tight: -0.02em; /* alias → heading (legacy) */
+  --tracking-meta: 0.16em;   /* alias → label (legacy) */
+  --tracking-caps: 0.16em;   /* alias → label (legacy) */
+
+  /* Reading measures */
+  --measure-hero: 18ch;
+  --measure-lead: 34ch;
+  --measure-reading: 68ch;
+  --measure-caption: 42ch;
+  --measure-wide: 84ch;
+}
