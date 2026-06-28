@@ -138,18 +138,18 @@ export const SITE = {
   ],
 
   capabilities: [
-    { title: "Brand identity", meta: "Logotypes · Systems · Guidelines" },
-    { title: "Brand strategy", meta: "Positioning · Naming · Voice" },
-    { title: "Visual & graphic design", meta: "Posters · Campaigns · Type" },
-    { title: "Art direction", meta: "Direction · Standards · Craft" },
-    { title: "Editorial design", meta: "Layout · Print · Considered type" },
+    { title: "Brand identity",        meta: "A system your team can grow into." },
+    { title: "Brand strategy",        meta: "The thinking that makes the design inevitable." },
+    { title: "Visual & graphic design", meta: "Creative that earns attention before it asks for anything." },
+    { title: "Art direction",         meta: "Standards that survive the brief." },
+    { title: "Editorial design",      meta: "Print that earns its weight." },
   ],
 
   testimonials: [
     {
       text: "He questions every decision until the idea underneath is sound — then makes it beautiful.",
-      author: "A collaborator",
-      detail: "Add a real client quote here",
+      author: "— Placeholder",
+      detail: "Replace with a real name and title",
     },
   ],
 
