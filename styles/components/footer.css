@@ -7,7 +7,13 @@
   overflow: hidden;
   background: var(--ink);
   color: var(--paper);
-  padding-block: var(--space-6) var(--space-4);
+  /* min-height matches the mask's natural height at 104vw so the full signature
+     is never clipped vertically; flex pins content to the bottom (Rise-style). */
+  min-height: clamp(240px, 42vw, 600px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-block: var(--space-5);
 }
 /* Oversized script-signature watermark, edge-to-edge and slightly clipped — a
    low-contrast paper tint behind the content (mask keeps it recolourable). */

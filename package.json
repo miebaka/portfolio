@@ -4,6 +4,7 @@
   "private": true,
   "description": "Optional image-optimization tooling for the portfolio. The site itself is zero-build (static HTML + CSS + ES modules) and needs none of this to run.",
   "scripts": {
+    "dev": "npx serve . --listen 4000 --no-clipboard",
     "optimize:images": "node scripts/optimize-images.mjs"
   },
   "devDependencies": {

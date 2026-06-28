@@ -1,24 +1,36 @@
 /* ==========================================================================
-   Section · Contact — dark band with an underlined form.
+   Section · Contact — editorial, light-on-paper, sleak.tv-inspired.
    ========================================================================== */
 
 .contact-section {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
   padding-block: var(--space-7);
+  border-top: 1px solid var(--border);
 }
-.contact h2 {
-  color: var(--paper);
-  font-size: var(--step-h2);
-  max-width: 16ch;
+
+.contact__heading {
+  font-family: var(--font-display);
+  font-size: var(--step-h1);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-heading);
 }
+
 .contact__lede {
-  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  color: var(--text-muted);
   margin-top: var(--space-2);
+  font-size: var(--step-body-lg);
+  max-width: 40ch;
 }
+
 .contact__form {
   display: grid;
-  gap: var(--space-3);
-  max-width: 32rem;
-  margin-top: var(--space-4);
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+  max-width: 48rem;
+}
+
+.contact__submit {
+  margin-top: var(--space-2);
 }
