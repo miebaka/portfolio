@@ -3,11 +3,29 @@
    ========================================================================== */
 
 .site-footer {
+  position: relative;
+  overflow: hidden;
   background: var(--ink);
   color: var(--paper);
   padding-block: var(--space-6) var(--space-4);
 }
+/* Oversized script-signature watermark, edge-to-edge and slightly clipped — a
+   low-contrast paper tint behind the content (mask keeps it recolourable). */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--paper);
+  opacity: 0.08;
+  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center / 104% auto;
+  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center / 104% auto;
+}
 .site-footer a { color: var(--paper); }
+/* Content layers above the watermark. */
+.site-footer__grid,
+.site-footer__bottom { position: relative; z-index: 1; }
 .site-footer__grid {
   display: flex;
   flex-wrap: wrap;
