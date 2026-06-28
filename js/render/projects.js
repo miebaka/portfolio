@@ -27,9 +27,9 @@ export function renderWork() {
 }
 
 function clientItem(client) {
-  // Height is fixed (32px) by CSS; width stays auto so each logo keeps its ratio.
+  const dims = client.logoW ? ' width="' + client.logoW + '" height="' + client.logoH + '"' : ' height="32"';
   const inner = client.logo
-    ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '" height="32" decoding="async">'
+    ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '"' + dims + ' decoding="async">'
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
   return '<li class="marquee__item">' + inner + "</li>";
 }

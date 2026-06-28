@@ -59,6 +59,7 @@ function buildPortrait() {
     img.height = 1350;
     img.loading = "eager";
     img.decoding = "async";
+    img.fetchPriority = "high";
     return img;
   }
   const srcset = (ext) =>
@@ -70,6 +71,6 @@ function buildPortrait() {
     '<source type="image/webp" srcset="' + srcset("webp") + '" sizes="' + esc(r.sizes) + '">' +
     '<img src="' + r.dir + r.base + "-" + largest + '.jpg" srcset="' + srcset("jpg") +
     '" sizes="' + esc(r.sizes) + '" alt="' + esc(alt) + '" width="' + r.width +
-    '" height="' + r.height + '" loading="eager" decoding="async">';
+    '" height="' + r.height + '" loading="eager" decoding="async" fetchpriority="high">';
   return pic;
 }

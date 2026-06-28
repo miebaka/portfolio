@@ -80,7 +80,7 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   line-height: var(--leading-label);
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  color: color-mix(in srgb, var(--ink) 75%, transparent);
   transition: color var(--duration-fast) var(--ease-standard);
 }
 .scroll-cue:hover .scroll-cue__label { color: var(--ink); }
@@ -132,7 +132,7 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 35%, transparent);
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
 }
 
 @media (max-width: 760px) {
