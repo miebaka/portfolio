@@ -74,6 +74,7 @@
   /* Type scale — fluid mobile → desktop */
   --step-display-xl: clamp(3.5rem, 1.7rem + 7.6vw, 6rem);    /* 56 → 96 */
   --step-hero: clamp(3rem, 1.9rem + 4.6vw, 4.5rem);          /* 48 → 72 · display-lg */
+  --step-display: var(--step-hero);                           /* alias — display heading */
   --step-h1: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);          /* 40 → 56 */
   --step-h2: clamp(2.125rem, 1.7rem + 1.8vw, 2.75rem);       /* 34 → 44 */
   --step-h3: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);         /* 28 → 34 */

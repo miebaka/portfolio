@@ -24,10 +24,12 @@ export function renderWriting() {
   el.innerHTML =
     '<ul class="writing-list">' +
     articles
-      .map(
-        (a) =>
+      .map((a) => {
+        const isExternal = a.href.startsWith("http");
+        const linkExtra  = isExternal ? ' target="_blank" rel="noopener"' : "";
+        return (
           '<li class="writing-item reveal">' +
-            '<a class="writing-item__link" href="' + esc(a.href) + '" target="_blank" rel="noopener">' +
+            '<a class="writing-item__link" href="' + esc(a.href) + '"' + linkExtra + ">" +
               '<div class="writing-item__meta">' +
                 (a.tag ? '<span class="writing-item__tag">' + esc(a.tag) + "</span>" : "") +
                 '<span class="writing-item__date">' + formatDate(a.date) + "</span>" +
@@ -38,7 +40,8 @@ export function renderWriting() {
               '<span class="writing-item__arrow" aria-hidden="true">&nearr;</span>' +
             "</a>" +
           "</li>"
-      )
+        );
+      })
       .join("") +
     "</ul>";
 }

@@ -36,14 +36,6 @@
   .cap-row { flex-direction: column; gap: var(--space-2); padding-block: var(--space-4); }
 }
 
-/* Playground — empty state */
-.playground-empty {
-  padding-block: var(--space-5);
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: var(--step-body-lg);
-}
-
 /* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */
 .about-home {
   background: var(--paper);

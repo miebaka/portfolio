@@ -51,7 +51,7 @@
   color-scheme: dark;
   --paper:        #1c1a16;   /* warm dark surface — slightly lighter than light-mode ink */
   --ink:          #ede9e1;   /* warm off-white text — not the same as light-mode paper */
-  --stone:        #7a7268;   /* mid-tone adjusted for dark bg legibility */
+  --stone:        #857e74;   /* mid-tone adjusted for dark bg legibility — WCAG AA ≥4.5:1 on --paper */
   --linen:        #272420;   /* warm dark elevated surface */
   --linen-strong: #1f1d19;   /* deeper warm dark */
   --border:       var(--linen-strong);

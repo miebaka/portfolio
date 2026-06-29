@@ -58,19 +58,19 @@ export const SITE = {
   writing: [
     {
       title: "When the Swoosh Lost Its Soul",
-      href:  "https://medium.com/@sheikmoujabaa/when-the-swoosh-lost-its-soul-51f821b61796",
+      href:  "writing/when-the-swoosh-lost-its-soul.html",
       date:  "2026-06-01",
       summary: "A close look at how Nike's identity drifted from its athletic roots — and what it reveals about the risk of letting a brand outgrow its own meaning.",
       tag:  "Brand Strategy",
-      readingTime: "",
+      readingTime: "4 min read",
     },
     {
       title: "Designing for Disability in Nigeria",
-      href:  "https://medium.com/@sheikmoujabaa/designing-for-disability-in-nigeria-4d5417195994",
+      href:  "writing/designing-for-disability-in-nigeria.html",
       date:  "2023-09-01",
       summary: "Why inclusive design in Nigeria isn't a feature — it's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
       tag:  "Inclusive Design",
-      readingTime: "",
+      readingTime: "5 min read",
     },
   ],
 

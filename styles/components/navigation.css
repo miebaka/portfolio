@@ -74,6 +74,7 @@
   --_inset:   1px;
   display: inline-flex;
   align-items: center;
+  gap: var(--space-3);
   justify-self: end;
   background: none;
   border: none;
@@ -117,6 +118,21 @@
   background: var(--ink);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.28);
 }
+
+/* ── Toggle sun/moon icons ────────────────────────────────────────────── */
+.theme-toggle__icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--ink);
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+/* Light mode: sun is active, moon is dim */
+.theme-toggle__icon--sun  { opacity: 0.80; }
+.theme-toggle__icon--moon { opacity: 0.25; }
+/* Dark mode: moon is active, sun is dim */
+[data-theme="dark"] .theme-toggle__icon--sun  { opacity: 0.25; }
+[data-theme="dark"] .theme-toggle__icon--moon { opacity: 0.80; }
 
 /* ── Floating back button ─────────────────────────────────────────────── */
 .back-btn {

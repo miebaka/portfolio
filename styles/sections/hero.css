@@ -114,6 +114,9 @@
   85%  { opacity: 1; }
   100% { transform: translateY(var(--cue-travel)); opacity: 0; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue__dot { animation: none; opacity: 1; }
+}
 .hero-noir__media {
   position: relative;
   overflow: hidden;
