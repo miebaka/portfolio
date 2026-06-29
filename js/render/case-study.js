@@ -41,7 +41,9 @@ function overviewSection(c) {
   );
 }
 
-function outcomeSection(o) {
+/* Solution and Outcome share one section — two labelled rails, one column. */
+function solutionOutcomeSection(c) {
+  const o = c.outcome;
   const metrics =
     '<div class="case-metrics">' +
     o.metrics
@@ -53,7 +55,18 @@ function outcomeSection(o) {
       .join("") +
     "</div>";
   const note = o.note ? '<p class="case-note"><em>' + esc(o.note) + "</em></p>" : "";
-  return section("Outcome", paras(o.body) + metrics + note);
+  return (
+    '<section class="container case-grid reveal">' +
+    '<div class="case-rail">' +
+      '<p class="case-rail__label">Solution</p>' +
+      '<p class="case-rail__label">Outcome</p>' +
+    '</div>' +
+    '<div class="case-col">' +
+      paras(c.solution) +
+      '<hr class="case-divider" aria-hidden="true">' +
+      paras(o.body) + metrics + note +
+    '</div></section>'
+  );
 }
 
 export function renderCaseStudy() {
@@ -74,9 +87,8 @@ export function renderCaseStudy() {
     section("Challenge", paras(c.challenge)) +
     section("Process", paras(c.process)) +
     band(c.media[1]) +
-    section("Solution", paras(c.solution)) +
     band(c.media[2]) +
-    outcomeSection(c.outcome) +
+    solutionOutcomeSection(c) +
     '<section class="case-next container reveal">' +
     '<p class="case-next__label">Next project</p>' +
     '<a class="case-next__link" href="' + base + "work/" + esc(c.next.slug) + '.html">' +

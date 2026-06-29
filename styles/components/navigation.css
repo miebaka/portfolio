@@ -88,13 +88,12 @@ body[data-nav-theme="dark"] .site-nav:not(.is-scrolled) { color: var(--paper); }
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   box-shadow: var(--shadow-md);
-  transition: background var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-snappy);
+  /* instant color swap keeps pace with scroll; transform stays fast for hover */
+  transition: background var(--duration-instant) var(--ease-standard),
+              color     var(--duration-instant) var(--ease-standard),
+              transform var(--duration-fast)    var(--ease-snappy);
 }
-.back-btn:hover {
-  background: var(--ink-hover);
-  transform: translateY(-2px);
-}
-/* Invert on dark case-study pages */
-.case-page .back-btn  { background: var(--paper); color: var(--ink); }
-.case-page .back-btn:hover { background: var(--linen); }
+.back-btn:hover { background: var(--ink-hover); transform: translateY(-2px); }
+/* JS toggles this class whenever the button scrolls over a dark background */
+.back-btn--dark            { background: var(--paper); color: var(--ink); }
+.back-btn--dark:hover      { background: var(--linen); transform: translateY(-2px); }

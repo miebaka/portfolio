@@ -98,9 +98,21 @@
 }
 .case-rail__text {
   --_mt: 0.35rem; /* tight offset below the label — proportional, not on 8pt grid */
-  font-size: var(--step-small);
+  font-size: var(--step-caption);
   color: color-mix(in srgb, var(--paper) 55%, transparent);
   margin: var(--_mt) 0 var(--space-3);
+}
+
+/* Hairline divider inside the combined Solution & Outcome section */
+.case-divider {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+  margin-block: var(--space-5);
+}
+/* Second section label that sits beneath the first in the same rail */
+.case-rail__label + .case-rail__label {
+  margin-top: var(--space-5);
+  display: block;
 }
 .case-col {
   grid-column: 6 / 12;

@@ -33,11 +33,11 @@ export const SITE = {
      (Hero, proof strip, testimonials and footer are intentionally omitted —
      they aren't navigation destinations.) */
   menu: [
-    { label: "Work",       href: "work.html",               key: "work" },
-    { label: "About",      href: "about.html",              key: "about" },
-    { label: "Services",   href: "services.html",  key: "services" },
-    { label: "Playground", href: "playground.html", key: "playground" },
-    { label: "Contact",    href: "contact.html",   key: "contact" },
+    { label: "Work",  href: "work.html",        key: "work" },
+    { label: "Story", href: "about.html",        key: "about" },
+    { label: "Offer", href: "services.html",     key: "services" },
+    { label: "Lab",   href: "playground.html",   key: "playground" },
+    { label: "Talk",  href: "contact.html",      key: "contact" },
   ],
 
   socials: [
