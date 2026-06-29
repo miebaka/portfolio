@@ -60,6 +60,13 @@
   .marquee__track { animation: none; }
 }
 
+/* Dark mode: paper is now the dark surface, so the band stays dark */
+[data-theme="dark"] .marquee { background: var(--paper); }
+/* Light variant in dark mode: dark background means we need inverted logos */
+[data-theme="dark"] .marquee--light { background: var(--paper); }
+[data-theme="dark"] .marquee--light .marquee__item img { filter: brightness(0) invert(1); }
+[data-theme="dark"] .marquee--light .marquee__wordmark { color: var(--ink); }
+
 /* Light variant — paper background inside the About Me section */
 .marquee--light {
   background: var(--paper);

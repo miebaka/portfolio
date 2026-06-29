@@ -33,11 +33,11 @@ export const SITE = {
      (Hero, proof strip, testimonials and footer are intentionally omitted —
      they aren't navigation destinations.) */
   menu: [
-    { label: "Work",  href: "work.html",        key: "work" },
-    { label: "Story", href: "about.html",        key: "about" },
-    { label: "Offer", href: "services.html",     key: "services" },
-    { label: "Lab",   href: "playground.html",   key: "playground" },
-    { label: "Talk",  href: "contact.html",      key: "contact" },
+    { label: "Work",       href: "work.html",       key: "work" },
+    { label: "About",      href: "about.html",      key: "about" },
+    { label: "Services",   href: "services.html",   key: "services" },
+    { label: "Playground", href: "playground.html", key: "playground" },
+    { label: "Contact",    href: "contact.html",    key: "contact" },
   ],
 
   socials: [
@@ -45,6 +45,33 @@ export const SITE = {
     { label: "LinkedIn", href: "https://linkedin.com/in/miebakajoshua" },
     { label: "Instagram", href: "https://instagram.com/" },
     { label: "Twitter", href: "https://twitter.com/" },
+  ],
+
+  /* Writing — articles shown on the Playground page.
+     Add each article here; the renderer picks it up automatically.
+     - title:       Article headline
+     - href:        Full URL (external blog) or path (e.g. "writing/slug.html")
+     - date:        ISO 8601 date string — "YYYY-MM-DD"
+     - summary:     One or two sentences shown on the card
+     - tag:         Category label (e.g. "Brand Strategy", "Process", "Design Thinking")
+     - readingTime: Optional — e.g. "5 min read" */
+  writing: [
+    {
+      title: "When the Swoosh Lost Its Soul",
+      href:  "https://medium.com/@sheikmoujabaa/when-the-swoosh-lost-its-soul-51f821b61796",
+      date:  "2026-06-01",
+      summary: "A close look at how Nike's identity drifted from its athletic roots — and what it reveals about the risk of letting a brand outgrow its own meaning.",
+      tag:  "Brand Strategy",
+      readingTime: "",
+    },
+    {
+      title: "Designing for Disability in Nigeria",
+      href:  "https://medium.com/@sheikmoujabaa/designing-for-disability-in-nigeria-4d5417195994",
+      date:  "2023-09-01",
+      summary: "Why inclusive design in Nigeria isn't a feature — it's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
+      tag:  "Inclusive Design",
+      readingTime: "",
+    },
   ],
 
   /* Projects power the work grid and link to case studies.

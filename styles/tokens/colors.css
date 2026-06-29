@@ -42,3 +42,19 @@
   --danger-hover: #ff5a5f;
   --success: #4ec06f;
 }
+
+/* ── Dark theme — toggled by data-theme="dark" on <html> ─────────────────
+   Considered warm-dark palette. --paper becomes the dark page surface and
+   --ink becomes the light text — but the values are not mechanical reverses
+   of the light palette; they are independently chosen for dark-bg comfort. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --paper:        #1c1a16;   /* warm dark surface — slightly lighter than light-mode ink */
+  --ink:          #ede9e1;   /* warm off-white text — not the same as light-mode paper */
+  --stone:        #7a7268;   /* mid-tone adjusted for dark bg legibility */
+  --linen:        #272420;   /* warm dark elevated surface */
+  --linen-strong: #1f1d19;   /* deeper warm dark */
+  --border:       var(--linen-strong);
+  --border-muted: var(--linen);
+  --ink-hover:    color-mix(in srgb, var(--ink) 85%, #fff);
+}

@@ -11,16 +11,38 @@ function brandHTML() {
   );
 }
 
+/* Reads current theme state and syncs the toggle's aria-pressed attribute. */
+function setupThemeToggle() {
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const html = document.documentElement;
+  function isDark() { return html.dataset.theme === "dark"; }
+  function sync() { btn.setAttribute("aria-pressed", String(isDark())); }
+  sync();
+  btn.addEventListener("click", function () {
+    const next = isDark() ? "light" : "dark";
+    html.dataset.theme = next;
+    localStorage.setItem("color-theme", next);
+    sync();
+  });
+}
+
 export function renderNavigation() {
   const el = mount("nav");
   if (!el) return;
   el.className = "site-nav";
-  /* Logo sits on the left, menu trigger on the right. */
+  /* Three-column grid: Logo (left) | Menu (centre, auto-width) | Toggle (right) */
   el.innerHTML =
     '<div class="container site-nav__inner">' +
     brandHTML() +
     '<button class="site-nav__menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu">Menu</button>' +
+    '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">' +
+      '<span class="theme-toggle__track">' +
+        '<span class="theme-toggle__knob"></span>' +
+      "</span>" +
+    "</button>" +
     "</div>";
+  setupThemeToggle();
 }
 
 /* Floating pill — always links home on every page except home. */
@@ -85,14 +107,6 @@ export function renderMenu() {
     })
     .join("");
 
-  const socials = (SITE.socials || [])
-    .map((s) => '<a href="' + esc(s.href) + '" rel="noopener">' + esc(s.label) + "</a>")
-    .join(" ");
-
-  /* Single static signature — anchored bottom-right of the overlay. */
-  const sigSrc = base + "assets/images/miebaka-joshua-script-name.svg";
-  const sigImg = '<img src="' + sigSrc + '" alt="" decoding="async">';
-
   const menu = document.createElement("div");
   menu.className = "site-menu";
   menu.id = "site-menu";
@@ -100,7 +114,6 @@ export function renderMenu() {
   menu.setAttribute("aria-modal", "true");
   menu.setAttribute("aria-label", "Site menu");
   menu.innerHTML =
-    '<div class="site-menu__sig" aria-hidden="true">' + sigImg + "</div>" +
     '<div class="container site-menu__bar">' +
       brandHTML() +
       '<button class="site-menu__close btn" type="button" data-menu-close aria-label="Close menu">' +
@@ -113,7 +126,6 @@ export function renderMenu() {
     "</nav>" +
     '<div class="container site-menu__foot">' +
       "<span>&copy; <span data-year></span> " + esc(SITE.name) + "</span>" +
-      '<span class="site-menu__socials">' + socials + "</span>" +
     "</div>";
   document.body.appendChild(menu);
 }

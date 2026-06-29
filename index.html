@@ -45,7 +45,7 @@
     }
   ]
   </script>
-  <script>document.documentElement.classList.replace("no-js", "has-js");</script>
+  <script>document.documentElement.classList.replace("no-js","has-js");if(localStorage.getItem("color-theme")==="dark")document.documentElement.dataset.theme="dark";</script>
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
@@ -61,12 +61,6 @@
         <div class="hero-noir__lower">
           <div data-mount="now-playing"></div>
           <h1 class="hero-noir__statement">The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
-          <a class="btn-rams" href="contact.html">
-            <span class="btn-rams__keycap">
-              <span class="btn-rams__led" aria-hidden="true"></span>
-              Let&rsquo;s talk
-            </span>
-          </a>
           <a class="scroll-cue" href="#work" aria-label="Scroll to selected work">
             <span class="scroll-cue__track" aria-hidden="true"><span class="scroll-cue__dot"></span></span>
             <span class="scroll-cue__label">Scroll Down</span>

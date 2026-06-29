@@ -5,12 +5,8 @@
 .site-footer {
   position: relative;
   overflow: hidden;
-  background: var(--ink);
-  color: var(--paper);
-  /* Taller than the signature so the signature top clears the section top.
-     SVG aspect ratio ≈ 705.67 × 280; at 80% width: height ≈ 31.75vw. */
-  /* Taller than the script-name SVG — heights derived from its aspect ratio.
-     SVG ≈ 705.67 × 280; at 80% viewport width: height ≈ 31.75vw. */
+  background: var(--paper);
+  color: var(--ink);
   --_min: 260px;
   --_max: 640px;
   min-height: clamp(var(--_min), 46vw, var(--_max));
@@ -20,24 +16,25 @@
   padding-block: var(--space-5);
 }
 
-/* Oversized script-signature watermark — CSS mask keeps it recolourable */
+/* Oversized script-signature watermark — CSS mask keeps it recolourable.
+   Uses --ink so it appears dark in light mode, light in dark mode. */
 .site-footer::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-color: var(--paper);
-  opacity: 0.08;
+  background-color: var(--ink);
+  opacity: 0.07;
   -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / 100% auto;
   mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / 100% auto;
 }
 
-.site-footer a { color: var(--paper); }
+.site-footer a { color: var(--ink); }
 
 /* Content layers above the watermark */
 .site-footer__grid,
-.site-footer__bottom { position: relative; z-index: 1; }
+.site-footer__bottom { position: relative; z-index: var(--z-base); }
 
 /* φ split: email = major (61.8%); socials = minor (38.2%) */
 .site-footer__grid {
@@ -84,7 +81,7 @@
   gap: var(--space-2);
   margin-top: var(--space-5);
   padding-top: var(--space-3);
-  border-top: 1px solid color-mix(in srgb, var(--paper) 20%, transparent);
+  border-top: 1px solid var(--border);
   font-size: var(--step-meta);
-  color: color-mix(in srgb, var(--paper) 65%, transparent);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
 }

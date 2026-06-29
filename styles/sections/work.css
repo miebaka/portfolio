@@ -79,3 +79,6 @@
 
 @container work (min-width: 30rem) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
 @container work (min-width: 47.5rem) { .sl-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* Card text must stay light regardless of theme — cards have coloured backgrounds */
+[data-theme="dark"] .sl-card { color: var(--ink); }

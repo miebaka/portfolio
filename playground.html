@@ -33,7 +33,7 @@
     ]
   }
   </script>
-  <script>document.documentElement.classList.replace("no-js", "has-js");</script>
+  <script>document.documentElement.classList.replace("no-js","has-js");if(localStorage.getItem("color-theme")==="dark")document.documentElement.dataset.theme="dark";</script>
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
@@ -57,9 +57,7 @@
       <div class="section-head reveal">
         <h2>Writing</h2>
       </div>
-      <div class="playground-empty reveal">
-        <p>Nothing here yet &mdash; first post coming soon.</p>
-      </div>
+      <div data-mount="writing"></div>
     </section>
 
     <section class="section container">

@@ -24,22 +24,10 @@
 /* Padding override — minimum left/right breathing room on small screens */
 .site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
 
-/* Static signature — anchored at bottom-right, inset from edge */
-.site-menu__sig {
-  --_h:     28vw;  /* viewport-relative height matches the SVG's natural proportion */
-  --_h-max: 260px; /* cap so the sig doesn't overpower the overlay on large screens */
-  position: absolute;
-  bottom: var(--space-3);
-  right: var(--space-3);
-  pointer-events: none;
-  opacity: 0.05;
-  filter: brightness(0) invert(1);
-}
-.site-menu__sig img { height: var(--_h); max-height: var(--_h-max); width: auto; display: block; }
 
 .site-menu__bar {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -63,13 +51,14 @@
 
 .site-menu__nav {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
-.site-menu__list { display: grid; gap: var(--space-3); }
+.site-menu__list { display: grid; gap: var(--space-3); justify-items: center; }
 .site-menu__list a {
   display: inline-flex;
   align-items: center;
@@ -88,22 +77,35 @@
 
 .site-menu__foot {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   font-size: var(--step-meta);
   color: color-mix(in srgb, var(--paper) 60%, transparent);
   flex-shrink: 0;
 }
-.site-menu__foot a:hover { color: var(--paper); }
-.site-menu__socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-5);
-}
 
 body.menu-open { overflow: hidden; }
 body.menu-open .site-nav { opacity: 0; visibility: hidden; }
+
+/* Dark mode — menu is intentionally dark in both themes; anchor colours explicitly */
+[data-theme="dark"] .site-menu {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  color: var(--ink);
+}
+[data-theme="dark"] .site-menu__bar .site-nav__brand { color: var(--ink); }
+[data-theme="dark"] .site-menu__close {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+[data-theme="dark"] .site-menu__list a {
+  color: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+[data-theme="dark"] .site-menu__list a:hover,
+[data-theme="dark"] .site-menu__list a[aria-current="page"] { color: var(--ink); }
+[data-theme="dark"] .site-menu__foot {
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+}
