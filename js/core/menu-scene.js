@@ -115,27 +115,34 @@ export function createMenuScene(host) {
       c.vx += (c.hx - c.x) * c.sp;
       c.vy += (c.hy - c.y) * c.sp;
 
-      /* ── 4. Damp + integrate ────────────────────────────────────────── */
+      /* ── 4. Soft boundary — repulse cells away from edges before they
+         reach the hard wall. Margin = 3 pitches (12 px). Force scales
+         linearly from 0 at the margin to WALL_F at the very edge, so cells
+         near the border are always nudged back without ever stopping. This
+         eliminates the wall-impact discontinuity that caused edge glitching. */
+      const MARGIN = PITCH * 3;
+      const WALL_F = 0.14;
+      if (c.x < MARGIN)     c.vx += (1 - c.x / MARGIN)     * WALL_F;
+      if (c.x > w - MARGIN) c.vx -= (1 - (w - c.x) / MARGIN) * WALL_F;
+      if (c.y < MARGIN)     c.vy += (1 - c.y / MARGIN)     * WALL_F;
+      if (c.y > h - MARGIN) c.vy -= (1 - (h - c.y) / MARGIN) * WALL_F;
+
+      /* ── 5. Damp + integrate ────────────────────────────────────────── */
       c.vx *= c.dm;
       c.vy *= c.dm;
       c.x  += c.vx;
       c.y  += c.vy;
 
-      /* ── 5. Hard-wall containment ───────────────────────────────────────
-         Full stop at walls (not a bounce). Bounce creates a standing
-         oscillation that fights the cursor repulsion and makes the glow
-         flicker at top/bottom; stopping lets the spring pull the cell back
-         smoothly with no velocity reversal. */
+      /* ── 5b. Hard clamp — safety net only; soft boundary above means
+         cells should never reach here under normal operation. */
       if (c.x < HALF)     { c.x = HALF;     c.vx = 0; }
       if (c.x > w - HALF) { c.x = w - HALF; c.vx = 0; }
       if (c.y < HALF)     { c.y = HALF;     c.vy = 0; }
       if (c.y > h - HALF) { c.y = h - HALF; c.vy = 0; }
 
       /* ── 6. Bioluminescent opacity ──────────────────────────────────────
-         Recompute distance from the cell's FINAL position (after integration
-         + wall clamp). Using the pre-integration dist caused a frame-to-frame
-         mismatch — cells pushed into the top/bottom wall had a pre-clamp dist
-         smaller than their actual post-clamp dist, making the glow flicker. */
+         Distance recomputed from the cell's FINAL position (post-integration
+         + post-clamp) so glow matches actual drawn position exactly. */
       const pdx   = c.x - mouse.x;
       const pdy   = c.y - mouse.y;
       const pdist = Math.hypot(pdx, pdy);
@@ -145,9 +152,7 @@ export function createMenuScene(host) {
       const alpha = REST_A + prox * GLOW_A + trail * TRAIL_A;
 
       /* ── 7. Write 2×2 pixel block to ImageData ──────────────────────────
-         Unrolled loop avoids inner-loop overhead for 2-pixel cells.
-         Wall clamping guarantees px ∈ [0, w-2] and py ∈ [0, h-2] so every
-         index is within buf bounds — no range check needed per cell. */
+         Soft boundary + hard clamp guarantee px ∈ [0, w-2], py ∈ [0, h-2]. */
       const px = Math.round(c.x) - HALF;
       const py = Math.round(c.y) - HALF;
       const a8 = (alpha * 255 + 0.5) | 0;   /* fast float→int, clamped by Uint8ClampedArray */
