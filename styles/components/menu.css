@@ -6,10 +6,11 @@
    ========================================================================== */
 
 dialog.site-menu {
-  /* Overlay-local roles: --menu-fg is always the LIGHT tone (overlay text),
-     --menu-bg the DARK tone — the menu is intentionally dark in both themes. */
-  --menu-fg: var(--paper);
-  --menu-bg: var(--ink);
+  /* Overlay-local colour roles.
+     Light mode: midnight-blue field with cream type.
+     Dark mode (inverted via override below): warm-cream field with dark type. */
+  --menu-fg: var(--paper);     /* cream text on dark bg */
+  --menu-bg: #0d1120;          /* midnight blue — intentional cool/warm contrast */
   /* Reset all dialog UA defaults */
   border: none;
   padding: 0;
@@ -43,15 +44,17 @@ dialog.site-menu {
 }
 dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
 dialog.site-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+/* Dark mode inverts the field: warm-cream bg, dark warm text.
+   --ink in dark mode = #ede9e1 (warm off-white); --paper = #1c1a16 (dark). */
 [data-theme="dark"] dialog.site-menu {
-  --menu-fg: var(--ink);
-  --menu-bg: var(--paper);
+  --menu-fg: var(--paper);   /* #1c1a16 — dark type on light bg */
+  --menu-bg: var(--ink);     /* #ede9e1 — warm cream field */
 }
 
 /* Padding override — minimum left/right breathing room on small screens */
 dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
 
-/* WebGL cursor backdrop — injected by js/core/menu-scene.js. Sits under all
+/* Particle canvas — injected by js/core/menu-scene.js. Sits under all
    content (bar/nav/foot carry z-base); purely decorative, never interactive. */
 .site-menu__canvas {
   position: absolute;
@@ -136,12 +139,13 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--menu-fg) 88%, transparent);
+  background-color: transparent;
   transition: font-size var(--duration-medium) var(--ease-emphasized),
-              color var(--duration-fast) var(--ease-standard);
+              color var(--duration-fast) var(--ease-standard),
+              background-color var(--duration-fast) var(--ease-standard);
 }
-.site-menu__list a:last-child {
-  border-bottom: 1px solid color-mix(in srgb, var(--menu-fg) 14%, transparent);
-}
+/* Remove the outer dividers — only the internal dividers between rows remain */
+.site-menu__list a:first-child { border-top: none; }
 .site-menu__list a[aria-current="page"] { color: var(--accent); }
 
 /* Scatter — alternating alignment, repeating every five rows (LEEROY rhythm:
@@ -162,7 +166,13 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
     font-size: calc(var(--_size) * 0.72);
     color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
   }
-  .site-menu__list a:hover { font-size: calc(var(--_size) * 1.16); color: var(--menu-fg); }
+  .site-menu__list a:hover {
+    font-size: calc(var(--_size) * 1.16);
+    color: var(--menu-fg);
+    /* Lighter tint on dark bg (light mode) / darker tint on light bg (dark mode):
+       8% of --menu-fg creates the right direction in both themes automatically. */
+    background-color: color-mix(in srgb, var(--menu-fg) 8%, transparent);
+  }
   .site-menu__list a:hover[aria-current="page"] { color: var(--accent); }
 }
 /* Keyboard parity — focus gets a visible underline indicator rather than the
