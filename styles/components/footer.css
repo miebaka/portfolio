@@ -32,6 +32,16 @@
 
 .site-footer a { color: var(--ink); }
 
+/* Pixel grid canvas — sits above the SVG watermark, below the text layers */
+.site-footer__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Content layers above the watermark */
 .site-footer__grid,
 .site-footer__bottom { position: relative; z-index: var(--z-base); }

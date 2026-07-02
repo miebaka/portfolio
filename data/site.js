@@ -41,8 +41,10 @@ export const SITE = {
   ],
 
   socials: [
-    { label: "Behance", href: "https://behance.net/miebaka" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/miebakajoshua" },
+    { label: "Behance",   href: "https://behance.net/miebaka" },
+    { label: "LinkedIn",  href: "https://linkedin.com/in/miebakajoshua" },
+    { label: "Instagram", href: "https://www.instagram.com/sheikmoujabaa" },
+    { label: "Twitter",   href: "https://www.x.com/sheikmoujabaa" },
   ],
 
   /* Writing — articles shown on the Playground page.
