@@ -23,7 +23,15 @@
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff" href="assets/fonts/texgyreheros-regular.woff" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-italic.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-semibold.woff2" crossorigin>
+  <link rel="preload" as="image"
+        imagesrcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
+                     assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
+                     assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
+        imagesizes="(max-width: 760px) 100vw, 38vw"
+        fetchpriority="high">
   <script type="application/ld+json">
   [
     {
@@ -69,7 +77,26 @@
         </div>
       </div>
       <div class="hero-noir__media" data-portrait-mount>
-        <span class="hero-noir__media-label" hidden>Your portrait here</span>
+        <picture>
+          <source type="image/avif"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
+                  sizes="(max-width: 760px) 100vw, 38vw">
+          <source type="image/webp"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.webp 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w"
+                  sizes="(max-width: 760px) 100vw, 38vw">
+          <img src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg"
+               srcset="assets/images/optimized/miebaka-joshua-portrait-540.jpg 540w,
+                       assets/images/optimized/miebaka-joshua-portrait-810.jpg 810w,
+                       assets/images/optimized/miebaka-joshua-portrait-1080.jpg 1080w"
+               sizes="(max-width: 760px) 100vw, 38vw"
+               alt="Portrait of Miebaka Joshua"
+               width="1080" height="1350"
+               loading="eager" decoding="sync" fetchpriority="high">
+        </picture>
       </div>
     </section>
 

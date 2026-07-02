@@ -14,7 +14,6 @@
   border-bottom: 1px solid transparent;
   transition: background var(--duration-standard) var(--ease-standard),
               color var(--duration-standard) var(--ease-standard),
-              border-color var(--duration-standard) var(--ease-standard),
               opacity var(--duration-fast) var(--ease-standard);
 }
 .site-nav.is-scrolled {

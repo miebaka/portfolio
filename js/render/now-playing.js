@@ -61,5 +61,5 @@ export function initNowPlaying() {
   const container = document.querySelector("[data-mount='now-playing']");
   if (!container) return;
   buildChip(container);
-  poll();
+  window.addEventListener("load", poll, { once: true });
 }

@@ -81,3 +81,8 @@
 }
 .contact-info dt:first-child { margin-top: 0; }
 .contact-info dd { margin-top: var(--space-1); font-size: var(--step-body); }
+
+@media (max-width: 480px) {
+  .contact-section { padding-block: var(--space-5); }
+  .contact__heading { margin-bottom: var(--space-4); }
+}

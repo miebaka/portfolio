@@ -107,3 +107,9 @@
     transition: none;
   }
 }
+
+@media (max-width: 480px) {
+  .section       { padding-block: 5rem; }
+  .section--tight { padding-block: 3rem; }
+  .section-head  { margin-bottom: var(--space-4); }
+}

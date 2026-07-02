@@ -41,7 +41,7 @@ export function fillSlots() {
   });
 
   const portraitMount = document.querySelector("[data-portrait-mount]");
-  if (portraitMount && SITE.portrait) {
+  if (portraitMount && SITE.portrait && !portraitMount.querySelector("img")) {
     portraitMount.appendChild(buildPortrait());
     const label = portraitMount.querySelector(".hero-noir__media-label");
     if (label) label.remove();

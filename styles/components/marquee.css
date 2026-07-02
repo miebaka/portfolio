@@ -60,6 +60,12 @@
   .marquee__track { animation: none; }
 }
 
+@media (max-width: 480px) {
+  .marquee        { height: var(--space-6); }
+  .marquee--light { height: calc(var(--space-6) * 1.2); }
+  .marquee__group { --_gap: var(--space-4); }
+}
+
 /* Dark mode: paper is now the dark surface, so the band stays dark */
 [data-theme="dark"] .marquee { background: var(--paper); }
 /* Light variant in dark mode: dark background means we need inverted logos */

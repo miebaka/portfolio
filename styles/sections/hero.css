@@ -147,3 +147,8 @@
   .hero-noir__media { order: -1; min-height: 38svh; }
   .hero-noir__content { min-height: 62svh; }
 }
+
+@media (max-width: 480px) {
+  .hero { padding-block: var(--space-4h) var(--space-6); }
+  .hero__lede { font-size: var(--step-body-lg); max-width: none; }
+}

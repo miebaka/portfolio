@@ -87,6 +87,7 @@
 
 .site-footer__socials {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
 }
 .site-footer__socials a:hover { color: var(--clay); }
@@ -101,4 +102,8 @@
   border-top: 1px solid var(--border);
   font-size: var(--step-meta);
   color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+@media (max-width: 480px) {
+  .site-footer { min-height: clamp(180px, 60vw, 320px); }
 }

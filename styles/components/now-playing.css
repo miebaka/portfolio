@@ -32,7 +32,7 @@
 }
 
 .now-playing__label {
-  color: var(--clay);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -40,4 +40,8 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .now-playing__label { display: none; }
 }
