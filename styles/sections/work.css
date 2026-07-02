@@ -70,6 +70,24 @@
   font-size: var(--step-small);
   opacity: 0.85;
 }
+/* Ink-bleed spotlight — a radial gradient tracks the cursor inside the card.
+   mix-blend-mode:screen keeps text and colour layers fully visible on top. */
+.sl-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 60% at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.28) 0%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity var(--duration-standard) var(--ease-standard);
+  pointer-events: none;
+}
+.sl-card:hover::after { opacity: 1; }
+
 .sl-card:hover {
   transform: rotate(-2.5deg) scale(1.05);
   z-index: var(--z-raised);

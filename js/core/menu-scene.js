@@ -1,15 +1,18 @@
-/* Menu scene — cursor-reactive particle constellation backdrop.
-   Pure canvas 2D — no external dependencies, no CDN.
-   ~55 particles drift and interconnect; the cursor repels them.
+/* Menu scene — cursor-reactive pixel grid backdrop.
+   Pure canvas 2D — no external dependencies.
+   A regular grid of small squares scatters on cursor proximity
+   and springs back home. Resting cells are near-invisible; displaced
+   cells flash brighter, making the scatter readable without clutter.
    Progressive enhancement: prefers-reduced-motion or canvas failure
    leaves the flat overlay untouched. */
 
-const COUNT        = 55;
-const RADIUS       = 2;          /* particle dot radius (px) */
-const CONNECT_DIST = 140;        /* max distance for a connecting line */
-const REPEL_DIST   = 110;        /* cursor repulsion radius */
-const FRICTION     = 0.91;       /* velocity damping per frame */
-const DRIFT_SPEED  = 0.006;      /* amplitude of idle sine drift */
+const CELL        = 6;     /* square side length (px) */
+const GAP         = 5;     /* gap between squares */
+const PITCH       = CELL + GAP;   /* 11 px grid pitch */
+const REPEL_DIST  = 100;   /* cursor repulsion radius (px) */
+const REPEL_FORCE = 3.5;   /* peak repulsion push per frame */
+const SPRING      = 0.08;  /* spring constant pulling cell home */
+const DAMPING     = 0.72;  /* velocity damping per frame */
 
 export function createMenuScene(host) {
   let canvas  = null;
@@ -18,43 +21,13 @@ export function createMenuScene(host) {
   let running = false;
   let failed  = false;
   let w = 0, h = 0;
-  let particles = [];
-  /* fg[0..2] = RGB 0-255, matched to current theme at open time */
-  let fg = [244, 241, 234];
+  let cells = [];
+  let fg = [22, 20, 15];   /* RGB — matched to --ink light mode */
 
-  const mouse = { x: -999, y: -999, hasPointer: false };
-
-  /* ── helpers ─────────────────────────────────────────────────── */
+  const mouse = { x: -9999, y: -9999 };
 
   function rgba(a) {
     return `rgba(${fg[0]},${fg[1]},${fg[2]},${a})`;
-  }
-
-  function mkParticle() {
-    return {
-      x:  Math.random() * w,
-      y:  Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      ph: Math.random() * Math.PI * 2,   /* phase offset for idle drift */
-    };
-  }
-
-  /* ── lifecycle ───────────────────────────────────────────────── */
-
-  function resize() {
-    if (!canvas) return;
-    w = host.clientWidth;
-    h = host.clientHeight;
-    canvas.width  = w;
-    canvas.height = h;
-  }
-
-  function onPointerMove(e) {
-    const r = host.getBoundingClientRect();
-    mouse.x = e.clientX - r.left;
-    mouse.y = e.clientY - r.top;
-    mouse.hasPointer = true;
   }
 
   function build() {
@@ -66,67 +39,67 @@ export function createMenuScene(host) {
     host.prepend(canvas);
   }
 
-  /* ── frame loop ──────────────────────────────────────────────── */
+  function buildGrid() {
+    cells = [];
+    const ox = PITCH / 2;
+    const oy = PITCH / 2;
+    for (let hy = oy; hy < h; hy += PITCH) {
+      for (let hx = ox; hx < w; hx += PITCH) {
+        cells.push({ hx, hy, x: hx, y: hy, vx: 0, vy: 0 });
+      }
+    }
+  }
 
-  function loop(t) {
+  function resize() {
+    if (!canvas) return;
+    w = host.clientWidth;
+    h = host.clientHeight;
+    canvas.width  = w;
+    canvas.height = h;
+    buildGrid();
+  }
+
+  function onPointerMove(e) {
+    const r = host.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  }
+
+  function onPointerLeave() {
+    mouse.x = -9999;
+    mouse.y = -9999;
+  }
+
+  function loop() {
     if (!running) return;
     ctx.clearRect(0, 0, w, h);
 
-    const t_s = t * 0.001;
-
-    /* ── update particles ── */
-    for (const p of particles) {
-      /* Idle drift: gentle sine/cosine wander when no pointer */
-      if (!mouse.hasPointer) {
-        p.vx += DRIFT_SPEED * Math.sin(t_s * 0.28 + p.ph);
-        p.vy += DRIFT_SPEED * Math.cos(t_s * 0.21 + p.ph * 1.4);
-      }
-
+    for (const c of cells) {
       /* Cursor repulsion */
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const d  = Math.hypot(dx, dy);
-      if (d < REPEL_DIST && d > 0) {
-        const f = (1 - d / REPEL_DIST) * 0.55;
-        p.vx += (dx / d) * f;
-        p.vy += (dy / d) * f;
+      const dx   = c.x - mouse.x;
+      const dy   = c.y - mouse.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < REPEL_DIST && dist > 0) {
+        const force = (1 - dist / REPEL_DIST) * REPEL_FORCE;
+        c.vx += (dx / dist) * force;
+        c.vy += (dy / dist) * force;
       }
 
-      p.vx *= FRICTION;
-      p.vy *= FRICTION;
-      p.x  += p.vx;
-      p.y  += p.vy;
+      /* Spring toward home */
+      c.vx += (c.hx - c.x) * SPRING;
+      c.vy += (c.hy - c.y) * SPRING;
 
-      /* Wrap edges — particles re-enter from the opposite side */
-      if (p.x <  0) p.x += w;
-      if (p.x > w) p.x -= w;
-      if (p.y <  0) p.y += h;
-      if (p.y > h) p.y -= h;
-    }
+      c.vx *= DAMPING;
+      c.vy *= DAMPING;
+      c.x  += c.vx;
+      c.y  += c.vy;
 
-    /* ── draw connections ── */
-    for (let i = 0; i < particles.length - 1; i++) {
-      const a = particles[i];
-      for (let j = i + 1; j < particles.length; j++) {
-        const b    = particles[j];
-        const dist = Math.hypot(a.x - b.x, a.y - b.y);
-        if (dist > CONNECT_DIST) continue;
-        const alpha = (1 - dist / CONNECT_DIST) * 0.22;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.strokeStyle = rgba(alpha);
-        ctx.lineWidth   = 0.7;
-        ctx.stroke();
-      }
-    }
+      /* Opacity scales with displacement: resting ≈ 7%, fully scattered ≈ 42% */
+      const disp  = Math.hypot(c.x - c.hx, c.y - c.hy);
+      const alpha = 0.07 + Math.min(disp / 40, 1) * 0.35;
 
-    /* ── draw dots ── */
-    for (const p of particles) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, RADIUS, 0, Math.PI * 2);
-      ctx.fillStyle = rgba(0.55);
-      ctx.fill();
+      ctx.fillStyle = rgba(alpha);
+      ctx.fillRect(Math.round(c.x - CELL / 2), Math.round(c.y - CELL / 2), CELL, CELL);
     }
 
     raf = requestAnimationFrame(loop);
@@ -143,16 +116,16 @@ export function createMenuScene(host) {
       failed = true;
       return;
     }
-    /* Theme-aware particle colour: cream on midnight (light mode), dark on cream (dark mode) */
+    /* Theme-aware cell colour: dark ink on light bg / light ink on dark bg */
     const dark = document.documentElement.dataset.theme === "dark";
-    fg = dark ? [28, 26, 22] : [244, 241, 234];
+    fg = dark ? [237, 233, 225] : [22, 20, 15];
 
-    mouse.x = -999; mouse.y = -999; mouse.hasPointer = false;
+    mouse.x = -9999; mouse.y = -9999;
     resize();
-    particles = Array.from({ length: COUNT }, mkParticle);
-    running   = true;
+    running = true;
     window.addEventListener("resize", resize);
     host.addEventListener("pointermove", onPointerMove);
+    host.addEventListener("pointerleave", onPointerLeave);
     raf = requestAnimationFrame(loop);
   }
 
@@ -161,6 +134,7 @@ export function createMenuScene(host) {
     cancelAnimationFrame(raf);
     window.removeEventListener("resize", resize);
     host.removeEventListener("pointermove", onPointerMove);
+    host.removeEventListener("pointerleave", onPointerLeave);
   }
 
   return { start, stop };

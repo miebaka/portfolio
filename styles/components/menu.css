@@ -6,11 +6,11 @@
    ========================================================================== */
 
 dialog.site-menu {
-  /* Overlay-local colour roles.
-     Light mode: midnight-blue field with cream type.
-     Dark mode (inverted via override below): warm-cream field with dark type. */
-  --menu-fg: var(--paper);     /* cream text on dark bg */
-  --menu-bg: #0d1120;          /* midnight blue — intentional cool/warm contrast */
+  /* Overlay-local colour roles — both values follow the active theme so the
+     menu surface always matches the page (cream on light, dark on dark).
+     --paper and --ink swap meaning automatically via the dark theme token file. */
+  --menu-fg: var(--ink);
+  --menu-bg: var(--paper);
   /* Reset all dialog UA defaults */
   border: none;
   padding: 0;
@@ -44,12 +44,6 @@ dialog.site-menu {
 }
 dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
 dialog.site-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
-/* Dark mode inverts the field: warm-cream bg, dark warm text.
-   --ink in dark mode = #ede9e1 (warm off-white); --paper = #1c1a16 (dark). */
-[data-theme="dark"] dialog.site-menu {
-  --menu-fg: var(--paper);   /* #1c1a16 — dark type on light bg */
-  --menu-bg: var(--ink);     /* #ede9e1 — warm cream field */
-}
 
 /* Padding override — minimum left/right breathing room on small screens */
 dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }

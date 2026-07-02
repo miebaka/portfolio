@@ -14,6 +14,7 @@ import { initNavigation } from "./core/navigation.js";
 import { initMenu } from "./core/menu.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
+import { initInteractions } from "./core/interactions.js";
 
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();
@@ -35,3 +36,4 @@ initNavigation();
 initMenu();
 initYear();
 initForm();
+initInteractions();
