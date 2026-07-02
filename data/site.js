@@ -6,6 +6,8 @@
 
 export const SITE = {
   name: "Miebaka Joshua",
+  lastfmUser: "sheikmoujabaa",
+  lastfmKey:  "127872bcf2ccc619e4fb52bb4b81805f",
   role: "Brand & visual designer",
   email: "hello@miebaka.design",
   location: "Lagos, Nigeria",
@@ -31,17 +33,43 @@ export const SITE = {
      (Hero, proof strip, testimonials and footer are intentionally omitted —
      they aren't navigation destinations.) */
   menu: [
-    { label: "Work", href: "work.html", key: "work" },
-    { label: "About", href: "about.html", key: "about" },
-    { label: "Services", href: "index.html#capabilities", key: "services" },
-    { label: "Contact", href: "index.html#contact", key: "contact" },
+    { label: "Work",       href: "work.html",       key: "work" },
+    { label: "About",      href: "about.html",      key: "about" },
+    { label: "Services",   href: "services.html",   key: "services" },
+    { label: "Playground", href: "playground.html", key: "playground" },
+    { label: "Contact",    href: "contact.html",    key: "contact" },
   ],
 
   socials: [
     { label: "Behance", href: "https://behance.net/miebaka" },
     { label: "LinkedIn", href: "https://linkedin.com/in/miebakajoshua" },
-    { label: "Instagram", href: "https://instagram.com/" },
-    { label: "Twitter", href: "https://twitter.com/" },
+  ],
+
+  /* Writing — articles shown on the Playground page.
+     Add each article here; the renderer picks it up automatically.
+     - title:       Article headline
+     - href:        Full URL (external blog) or path (e.g. "writing/slug.html")
+     - date:        ISO 8601 date string — "YYYY-MM-DD"
+     - summary:     One or two sentences shown on the card
+     - tag:         Category label (e.g. "Brand Strategy", "Process", "Design Thinking")
+     - readingTime: Optional — e.g. "5 min read" */
+  writing: [
+    {
+      title: "When the Swoosh Lost Its Soul",
+      href:  "writing/when-the-swoosh-lost-its-soul.html",
+      date:  "2026-06-01",
+      summary: "A close look at how Nike's identity drifted from its athletic roots — and what it reveals about the risk of letting a brand outgrow its own meaning.",
+      tag:  "Brand Strategy",
+      readingTime: "4 min read",
+    },
+    {
+      title: "Designing for Disability in Nigeria",
+      href:  "writing/designing-for-disability-in-nigeria.html",
+      date:  "2023-09-01",
+      summary: "Why inclusive design in Nigeria isn't a feature — it's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
+      tag:  "Inclusive Design",
+      readingTime: "5 min read",
+    },
   ],
 
   /* Projects power the work grid and link to case studies.
@@ -126,26 +154,27 @@ export const SITE = {
   /* Brands shown in the scrolling logo bar. Add `logo: "assets/images/clients/<file>.svg"`
      to swap a wordmark for a real logo image (kept ≤48px tall automatically). */
   clients: [
-    { name: "Anakle", logo: "assets/images/clients/anakle.svg" },
-    { name: "Grey Finance", logo: "assets/images/clients/grey-finance.svg" },
-    { name: "Rise", logo: "assets/images/clients/rise.svg" },
-    { name: "Riv-TechCreek", logo: "assets/images/clients/riv-techcreek.svg" },
-    { name: "WellaHealth Technologies", logo: "assets/images/clients/wellahealth-technologies.svg" },
+    { name: "Anakle",                  logo: "assets/images/clients/anakle.svg",                    logoW: 217, logoH: 40 },
+    { name: "Grey Finance",            logo: "assets/images/clients/grey-finance.svg",              logoW: 136, logoH: 40 },
+    { name: "Rise",                    logo: "assets/images/clients/rise.svg",                      logoW: 128, logoH: 40 },
+    { name: "Riv-TechCreek",           logo: "assets/images/clients/riv-techcreek.svg",            logoW:  40, logoH: 40 },
+    { name: "WellaHealth Technologies",logo: "assets/images/clients/wellahealth-technologies.svg", logoW: 360, logoH: 40 },
+    { name: "Celebration Church",      logo: "assets/images/clients/celebration-church.svg",       logoW: 163, logoH: 40 },
   ],
 
   capabilities: [
-    { title: "Brand identity", meta: "Logotypes · Systems · Guidelines" },
-    { title: "Brand strategy", meta: "Positioning · Naming · Voice" },
-    { title: "Visual & graphic design", meta: "Posters · Campaigns · Type" },
-    { title: "Art direction", meta: "Direction · Standards · Craft" },
-    { title: "Editorial design", meta: "Layout · Print · Considered type" },
+    { title: "Brand identity",        meta: "A system your team can grow into." },
+    { title: "Brand strategy",        meta: "The thinking that makes the design inevitable." },
+    { title: "Visual & graphic design", meta: "Creative that earns attention before it asks for anything." },
+    { title: "Art direction",         meta: "Standards that survive the brief." },
+    { title: "Editorial design",      meta: "Print that earns its weight." },
   ],
 
   testimonials: [
     {
       text: "He questions every decision until the idea underneath is sound — then makes it beautiful.",
-      author: "A collaborator",
-      detail: "Add a real client quote here",
+      author: "— Placeholder",
+      detail: "Replace with a real name and title",
     },
   ],
 

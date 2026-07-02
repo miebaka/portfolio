@@ -20,7 +20,7 @@ function band(m) {
 /* A standard section: a labelled left rail beside an offset column of prose. */
 function section(label, bodyHTML) {
   return (
-    '<section class="container case-grid reveal">' +
+    '<section class="container case-grid reveal" aria-label="' + esc(label) + '">' +
     '<p class="case-rail__label case-rail">' + esc(label) + "</p>" +
     '<div class="case-col">' + bodyHTML + "</div></section>"
   );
@@ -29,7 +29,7 @@ function section(label, bodyHTML) {
 function overviewSection(c) {
   const r = c.rail;
   return (
-    '<section class="container case-grid reveal">' +
+    '<section class="container case-grid reveal" aria-label="Overview">' +
     '<div class="case-rail">' +
     '<p class="case-rail__label">' + esc(r.servicesLabel) + "</p>" +
     '<p class="case-rail__text">' + esc(r.services) + "</p>" +
@@ -42,16 +42,17 @@ function overviewSection(c) {
 }
 
 function outcomeSection(o) {
-  const metrics =
-    '<div class="case-metrics">' +
-    o.metrics
-      .map(
-        (m) =>
-          '<div class="case-metric"><strong>' + esc(m.value) +
-          "</strong><span>" + esc(m.label) + "</span></div>"
-      )
-      .join("") +
-    "</div>";
+  const metrics = o.metrics
+    ? '<div class="case-metrics">' +
+      o.metrics
+        .map(
+          (m) =>
+            '<div class="case-metric"><strong>' + esc(m.value) +
+            "</strong><span>" + esc(m.label) + "</span></div>"
+        )
+        .join("") +
+      "</div>"
+    : "";
   const note = o.note ? '<p class="case-note"><em>' + esc(o.note) + "</em></p>" : "";
   return section("Outcome", paras(o.body) + metrics + note);
 }
@@ -65,7 +66,7 @@ export function renderCaseStudy() {
   const base = basePath();
 
   el.innerHTML =
-    '<section class="case-hero container">' +
+    '<section class="case-hero container" aria-label="' + esc(c.title) + '">' +
     '<p class="case-back reveal"><a href="' + base + 'work.html">&larr; Work</a></p>' +
     '<h1 class="case-title reveal">' + esc(c.title) + "</h1>" +
     '<p class="case-tagline reveal">' + esc(c.tagline) + "</p></section>" +
@@ -75,9 +76,9 @@ export function renderCaseStudy() {
     section("Process", paras(c.process)) +
     band(c.media[1]) +
     section("Solution", paras(c.solution)) +
-    band(c.media[2]) +
     outcomeSection(c.outcome) +
-    '<section class="case-next container reveal">' +
+    band(c.media[2]) +
+    '<section class="case-next container reveal" aria-label="Next project">' +
     '<p class="case-next__label">Next project</p>' +
     '<a class="case-next__link" href="' + base + "work/" + esc(c.next.slug) + '.html">' +
     esc(c.next.title) + " &rarr;</a></section>";

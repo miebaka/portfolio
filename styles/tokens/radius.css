@@ -3,6 +3,7 @@
    ========================================================================== */
 
 :root {
+  --radius-btn: 4px;  /* Dieter Rams: near-rectangular, functional, barely softened */
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;

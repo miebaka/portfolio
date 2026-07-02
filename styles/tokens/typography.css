@@ -74,6 +74,7 @@
   /* Type scale — fluid mobile → desktop */
   --step-display-xl: clamp(3.5rem, 1.7rem + 7.6vw, 6rem);    /* 56 → 96 */
   --step-hero: clamp(3rem, 1.9rem + 4.6vw, 4.5rem);          /* 48 → 72 · display-lg */
+  --step-display: var(--step-hero);                           /* alias — display heading */
   --step-h1: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);          /* 40 → 56 */
   --step-h2: clamp(2.125rem, 1.7rem + 1.8vw, 2.75rem);       /* 34 → 44 */
   --step-h3: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);         /* 28 → 34 */
@@ -109,9 +110,10 @@
   --tracking-caps: 0.16em;   /* alias → label (legacy) */
 
   /* Reading measures */
-  --measure-hero: 18ch;
-  --measure-lead: 34ch;
-  --measure-reading: 68ch;
-  --measure-caption: 42ch;
-  --measure-wide: 84ch;
+  --measure-title:   16ch; /* primary page heading constraint */
+  --measure-hero:    18ch; /* hero statement */
+  --measure-lead:    34ch; /* about / mission statement */
+  --measure-reading: 68ch; /* body copy */
+  --measure-caption: 42ch; /* captions */
+  --measure-wide:    84ch; /* testimonials, pull quotes */
 }

@@ -2,9 +2,10 @@
    Section · About.
    ========================================================================== */
 
+/* Portrait column = φ minor (38.2%); text column = φ major (61.8%) */
 .about-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: var(--col-minor) var(--col-major);
   gap: var(--space-6);
   align-items: start;
 }
@@ -17,11 +18,41 @@
   background: var(--linen);
   aspect-ratio: 4 / 5;
 }
+
+/* Home-page preview statement */
 .about-mission {
   font-family: var(--font-display);
   font-size: var(--step-h2);
   font-weight: var(--weight-regular);
-  line-height: 1.25;
-  max-width: 18ch;
+  line-height: var(--leading-heading);
+  max-width: var(--measure-hero);
 }
 .about-mission em { color: var(--clay); font-style: italic; }
+
+/* About-page mission statement — smaller, reading-friendly */
+.about-statement {
+  font-family: var(--font-display);
+  font-size: var(--step-h3);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-intro);
+  max-width: var(--measure-lead);
+}
+.about-statement em { color: var(--clay); font-style: italic; }
+
+/* Wide picture alongside the mission statement */
+.about-mission-grid {
+  display: grid;
+  grid-template-columns: var(--col-minor) var(--col-major);
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .about-mission-grid { grid-template-columns: 1fr; }
+}
+.about-wide-img {
+  aspect-ratio: 4 / 3;
+  background: var(--linen);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+

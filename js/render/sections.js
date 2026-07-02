@@ -7,13 +7,16 @@ export function renderCapabilities() {
   if (!el) return;
   el.classList.add("cap-list");
   el.innerHTML = SITE.capabilities
-    .map((c, i) =>
-      '<div class="cap-row reveal" style="--reveal-i:' + i + '">' +
+    .map((c) =>
+      '<div class="cap-row reveal">' +
       '<span class="cap-row__name">' + esc(c.title) + "</span>" +
       '<span class="cap-row__meta">' + esc(c.meta || "") + "</span>" +
       "</div>"
     )
     .join("");
+  el.querySelectorAll(".cap-row").forEach((row, i) => {
+    row.style.setProperty("--reveal-i", i);
+  });
 }
 
 export function renderTestimonial() {
@@ -59,6 +62,7 @@ function buildPortrait() {
     img.height = 1350;
     img.loading = "eager";
     img.decoding = "async";
+    img.fetchPriority = "high";
     return img;
   }
   const srcset = (ext) =>
@@ -70,6 +74,6 @@ function buildPortrait() {
     '<source type="image/webp" srcset="' + srcset("webp") + '" sizes="' + esc(r.sizes) + '">' +
     '<img src="' + r.dir + r.base + "-" + largest + '.jpg" srcset="' + srcset("jpg") +
     '" sizes="' + esc(r.sizes) + '" alt="' + esc(alt) + '" width="' + r.width +
-    '" height="' + r.height + '" loading="eager" decoding="async">';
+    '" height="' + r.height + '" loading="eager" decoding="async" fetchpriority="high">';
   return pic;
 }

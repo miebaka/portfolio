@@ -9,8 +9,20 @@
   padding-inline: var(--gutter);
 }
 
-.section { padding-block: var(--space-7); }
-.section--tight { padding-block: var(--space-6); }
+/* Golden-ratio two-column split. Major = 61.8%, minor = 38.2%.
+   Use --reverse to flip (minor left, major right). */
+.phi-grid {
+  display: grid;
+  grid-template-columns: var(--col-major) var(--col-minor);
+  gap: var(--space-4);
+}
+.phi-grid--reverse { grid-template-columns: var(--col-minor) var(--col-major); }
+@media (max-width: 760px) {
+  .phi-grid, .phi-grid--reverse { grid-template-columns: 1fr; }
+}
+
+.section { padding-block: var(--section-block); }
+.section--tight { padding-block: var(--section-block-tight); }
 
 .stack > * + * { margin-top: var(--space-3); }
 
@@ -28,10 +40,10 @@
   gap: var(--space-2);
   margin-bottom: var(--space-5);
 }
-.section-head h2 {
+.section-head__label {
   font-family: var(--font-label);
-  font-size: var(--step-meta);
-  font-weight: var(--weight-medium);
+  font-size: var(--step-h5);
+  font-weight: 600;
   line-height: var(--leading-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
@@ -61,14 +73,22 @@
 }
 .skip-link:focus { top: var(--space-2); }
 
+/* Closing CTA — small label-style line at the end of a section */
+.closing-cta {
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
 /* Scroll reveal (progressive enhancement).
    Items in a group set --reveal-i to stagger their entrance in sequence. */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(var(--space-3));
   transition: opacity var(--duration-slow) var(--ease-gentle),
               transform var(--duration-slow) var(--ease-gentle);
-  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+  transition-delay: calc(var(--reveal-i, 0) * var(--duration-stagger));
   will-change: opacity, transform;
 }
 .reveal.is-visible {

@@ -23,7 +23,7 @@ em { font-style: italic; }
 p { max-width: var(--measure-reading); }
 .case-col p,
 .stack p {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   letter-spacing: var(--tracking-body);
 }
 
@@ -81,19 +81,19 @@ p { max-width: var(--measure-reading); }
   letter-spacing: var(--tracking-heading);
 }
 .lead {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--step-body-lg);
   line-height: var(--leading-intro);
   max-width: var(--measure-lead);
 }
 .body {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--step-body);
   line-height: var(--leading-body);
   max-width: var(--measure-reading);
 }
 .small {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-size: var(--step-small);
   line-height: var(--leading-body);
 }
@@ -104,7 +104,7 @@ p { max-width: var(--measure-reading); }
   letter-spacing: var(--tracking-caption);
 }
 .quote {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-style: italic;
   font-size: var(--step-h4);
   line-height: var(--leading-intro);
@@ -117,7 +117,7 @@ p { max-width: var(--measure-reading); }
 .meta {
   font-family: var(--font-label);
   font-size: var(--step-meta);
-  font-weight: var(--weight-medium);
+  font-weight: 600; /* Josefin Sans ships 400 & 600; avoid faux-weight at 500 */
   line-height: var(--leading-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;

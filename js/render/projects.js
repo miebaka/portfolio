@@ -2,14 +2,14 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 
-function workCard(project, i) {
+function workCard(project) {
   const base = basePath();
   const services = project.tags.map((t) => "<li>" + esc(t) + "</li>").join("");
   const category = project.category
     ? ' <span class="sl-card__cat">(' + esc(project.category) + ")</span>"
     : "";
   return (
-    '<a class="sl-card reveal" style="--tile:' + esc(project.tone) + ";--reveal-i:" + i + '" href="' + base + "work/" + esc(project.slug) + '.html">' +
+    '<a class="sl-card reveal" href="' + base + "work/" + esc(project.slug) + '.html">' +
     '<span class="sl-card__bg"></span>' +
     '<span class="sl-card__name">' + esc(project.title) + "</span>" +
     '<span class="sl-card__details">' +
@@ -23,13 +23,17 @@ export function renderWork() {
   const el = mount("work-grid");
   if (!el) return;
   el.classList.add("sl-grid");
-  el.innerHTML = SITE.projects.map((p, i) => workCard(p, i)).join("");
+  el.innerHTML = SITE.projects.map(workCard).join("");
+  el.querySelectorAll(".sl-card").forEach((card, i) => {
+    card.style.setProperty("--tile", SITE.projects[i].tone);
+    card.style.setProperty("--reveal-i", i);
+  });
 }
 
 function clientItem(client) {
-  // Height is fixed (32px) by CSS; width stays auto so each logo keeps its ratio.
+  const dims = client.logoW ? ' width="' + client.logoW + '" height="' + client.logoH + '"' : ' height="32"';
   const inner = client.logo
-    ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '" height="32" decoding="async">'
+    ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '"' + dims + ' decoding="async">'
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
   return '<li class="marquee__item">' + inner + "</li>";
 }
