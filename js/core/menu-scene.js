@@ -122,22 +122,24 @@ export function createMenuScene(host) {
       c.y  += c.vy;
 
       /* ── 5. Hard-wall containment ───────────────────────────────────────
-         Clamp the cell CENTRE to [HALF, w/h − HALF] so the full CELL×CELL
-         square is always 100 % inside the canvas. This is the definitive fix
-         for the edge-clipping glitch: a cell clamped at HALF=1 draws its
-         2×2 block at columns [0, 1], which is fully in-bounds.
-         Previous fix clamped at [0, w] leaving the half-cell overhang that
-         produced the partial-pixel flicker at the viewport boundary. */
-      if (c.x < HALF)     { c.x = HALF;     c.vx *= -0.3; }
-      if (c.x > w - HALF) { c.x = w - HALF; c.vx *= -0.3; }
-      if (c.y < HALF)     { c.y = HALF;     c.vy *= -0.3; }
-      if (c.y > h - HALF) { c.y = h - HALF; c.vy *= -0.3; }
+         Full stop at walls (not a bounce). Bounce creates a standing
+         oscillation that fights the cursor repulsion and makes the glow
+         flicker at top/bottom; stopping lets the spring pull the cell back
+         smoothly with no velocity reversal. */
+      if (c.x < HALF)     { c.x = HALF;     c.vx = 0; }
+      if (c.x > w - HALF) { c.x = w - HALF; c.vx = 0; }
+      if (c.y < HALF)     { c.y = HALF;     c.vy = 0; }
+      if (c.y > h - HALF) { c.y = h - HALF; c.vy = 0; }
 
       /* ── 6. Bioluminescent opacity ──────────────────────────────────────
-         Primary glow: proximity to cursor, gamma-curved for a soft halo.
-         Secondary glow: kinetic trail — scattered cells stay lit as they
-         spring home, then fade back to the resting near-black state. */
-      const prox  = dist < REPEL_DIST ? (1 - dist / REPEL_DIST) ** 1.5 : 0;
+         Recompute distance from the cell's FINAL position (after integration
+         + wall clamp). Using the pre-integration dist caused a frame-to-frame
+         mismatch — cells pushed into the top/bottom wall had a pre-clamp dist
+         smaller than their actual post-clamp dist, making the glow flicker. */
+      const pdx   = c.x - mouse.x;
+      const pdy   = c.y - mouse.y;
+      const pdist = Math.hypot(pdx, pdy);
+      const prox  = pdist < REPEL_DIST ? (1 - pdist / REPEL_DIST) ** 1.5 : 0;
       const disp  = Math.hypot(c.x - c.hx, c.y - c.hy);
       const trail = Math.min(disp / 28, 1);
       const alpha = REST_A + prox * GLOW_A + trail * TRAIL_A;
