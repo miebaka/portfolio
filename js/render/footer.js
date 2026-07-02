@@ -6,7 +6,7 @@ export function renderFooter() {
   const el = mount("footer");
   if (!el) return;
   const socials = SITE.socials
-    .map((s) => '<a href="' + esc(s.href) + '" rel="noopener">' + esc(s.label) + "</a>")
+    .map((s) => '<a href="' + esc(s.href) + '" rel="noopener noreferrer">' + esc(s.label) + "</a>")
     .join("");
   el.className = "site-footer";
   el.innerHTML =

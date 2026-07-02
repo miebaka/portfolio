@@ -26,7 +26,7 @@ export function renderWriting() {
     articles
       .map((a) => {
         const isExternal = a.href.startsWith("http");
-        const linkExtra  = isExternal ? ' target="_blank" rel="noopener"' : "";
+        const linkExtra  = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
         return (
           '<li class="writing-item reveal">' +
             '<a class="writing-item__link" href="' + esc(a.href) + '"' + linkExtra + ">" +

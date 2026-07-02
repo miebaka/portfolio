@@ -57,7 +57,7 @@ export function initMenu() {
 
   openBtn.addEventListener("click", open);
   menu.querySelectorAll("[data-menu-close]").forEach((el) => el.addEventListener("click", close));
-  menu.querySelectorAll(".site-menu__list a, .site-menu__cta").forEach((a) =>
+  menu.querySelectorAll(".site-menu__list a").forEach((a) =>
     a.addEventListener("click", close)
   );
 }

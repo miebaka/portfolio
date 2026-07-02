@@ -8,15 +8,17 @@ function workCard(project) {
   const category = project.category
     ? ' <span class="sl-card__cat">(' + esc(project.category) + ")</span>"
     : "";
-  return (
-    '<a class="sl-card reveal" href="' + base + "work/" + esc(project.slug) + '.html">' +
+  const inner =
     '<span class="sl-card__bg"></span>' +
     '<span class="sl-card__name">' + esc(project.title) + "</span>" +
     '<span class="sl-card__details">' +
     '<span class="sl-card__head">' + esc(project.title) + category + "</span>" +
     '<ul class="sl-card__services">' + services + "</ul>" +
-    "</span></a>"
-  );
+    "</span>";
+  if (project.caseReady === false) {
+    return '<div class="sl-card reveal" style="cursor:default" aria-disabled="true">' + inner + "</div>";
+  }
+  return '<a class="sl-card reveal" href="' + base + "work/" + esc(project.slug) + '.html">' + inner + "</a>";
 }
 
 export function renderWork() {

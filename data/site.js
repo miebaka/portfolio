@@ -11,8 +11,8 @@ export const SITE = {
   role: "Brand & visual designer",
   email: "hello@miebaka.design",
   location: "Lagos, Nigeria",
-  city: "Lagos", // shown in the nav clock
-  timezone: "Africa/Lagos", // WAT (UTC+1)
+  city: "Lagos",      // reserved — planned nav clock feature
+  timezone: "WAT",    // reserved — planned nav clock feature
   availability: "Open to remote roles worldwide",
   portrait: "assets/images/miebaka-joshua-portrait.jpg", // fills the hero's right third
 
@@ -136,6 +136,7 @@ export const SITE = {
       cover: "",
       span: 6, ratio: "1 / 1",
       featured: false,
+      caseReady: false,
     },
     {
       slug: "kigoma-hotels",
@@ -148,6 +149,7 @@ export const SITE = {
       cover: "",
       span: 6, ratio: "4 / 3",
       featured: false,
+      caseReady: false,
     },
   ],
 
@@ -172,9 +174,9 @@ export const SITE = {
 
   testimonials: [
     {
-      text: "He questions every decision until the idea underneath is sound — then makes it beautiful.",
-      author: "— Placeholder",
-      detail: "Replace with a real name and title",
+      text: "",
+      author: "",
+      detail: "",
     },
   ],
 
@@ -205,7 +207,6 @@ export const SITE = {
           { value: "100%", label: "Founder sign-off, first round" },
           { value: "3 wk", label: "Strategy to delivery" },
         ],
-        note: "Replace with real results once available — reach, conversion, recall.",
       },
       media: [
         { label: "Rivo — hero", variants: [] },
