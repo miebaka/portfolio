@@ -18,10 +18,13 @@ export function initMenu() {
     menu.showModal();                          /* native: focus trap + AT announce */
     document.body.classList.add("menu-open");
     openBtn.setAttribute("aria-expanded", "true");
-    /* is-open + focus must both happen after the rAF tick; until that tick
-       the dialog is visibility:hidden (CSS), so closeBtn.focus() would fail. */
+    /* is-open + focus must both happen after the rAF tick. Reading offsetHeight
+       after classList.add forces a style recalc so visibility:visible is
+       computed before focus() — without it the browser hasn't yet processed
+       the CSS change and treats the element as still visibility:hidden. */
     requestAnimationFrame(() => {
       menu.classList.add("is-open");
+      menu.offsetHeight; // force style recalculation
       const closeBtn = menu.querySelector("[data-menu-close]");
       if (closeBtn) closeBtn.focus();
     });

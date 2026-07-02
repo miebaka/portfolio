@@ -30,13 +30,19 @@ dialog.site-menu {
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
-  /* No visibility toggle — showModal()/close() control display via the open
-     attribute. visibility:hidden on the dialog would block focus even after
-     is-open switches it. Opacity-only fade lets focus work from the first tick. */
-  transition: opacity var(--duration-medium) var(--ease-emphasized);
+  /* visibility:hidden keeps the fixed-position overlay out of pointer events
+     and the tab order when closed — critical because display:flex (needed for
+     the transition) overrides the UA dialog:not([open]){display:none} rule,
+     so without visibility the invisible panel blocks every click on the page.
+     When transitioning TO visible, visibility switches at t=0 (CSS spec),
+     so closeBtn.focus() called in the same rAF tick works correctly. */
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--duration-medium) var(--ease-emphasized),
+              visibility var(--duration-medium) var(--ease-emphasized);
 }
 dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
-dialog.site-menu.is-open { opacity: 1; }
+dialog.site-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
 [data-theme="dark"] dialog.site-menu {
   --menu-fg: var(--ink);
   --menu-bg: var(--paper);
