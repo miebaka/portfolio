@@ -1,18 +1,19 @@
 /* Menu scene — cursor-reactive pixel grid backdrop.
    Pure canvas 2D — no external dependencies.
    A regular grid of small squares scatters on cursor proximity
-   and springs back home. Resting cells are near-invisible; displaced
-   cells flash brighter, making the scatter readable without clutter.
+   and springs back home. Organic drift via a position+time flow field;
+   per-cell spring/damping variance gives each square its own rhythm.
    Progressive enhancement: prefers-reduced-motion or canvas failure
    leaves the flat overlay untouched. */
 
-const CELL        = 6;     /* square side length (px) */
-const GAP         = 5;     /* gap between squares */
-const PITCH       = CELL + GAP;   /* 11 px grid pitch */
-const REPEL_DIST  = 100;   /* cursor repulsion radius (px) */
-const REPEL_FORCE = 3.5;   /* peak repulsion push per frame */
-const SPRING      = 0.08;  /* spring constant pulling cell home */
-const DAMPING     = 0.72;  /* velocity damping per frame */
+const CELL        = 4;          /* square side (px) */
+const GAP         = 3;          /* gap between squares */
+const PITCH       = CELL + GAP; /* 7 px pitch — ~2.5× denser than 11 px */
+const REPEL_DIST  = 110;        /* cursor repulsion radius (px) */
+const REPEL_FORCE = 3.8;        /* peak push per frame */
+const SPRING      = 0.07;       /* mean spring constant toward home */
+const DAMPING     = 0.74;       /* mean velocity damping per frame */
+const DRIFT       = 0.013;      /* flow-field amplitude */
 
 export function createMenuScene(host) {
   let canvas  = null;
@@ -22,13 +23,11 @@ export function createMenuScene(host) {
   let failed  = false;
   let w = 0, h = 0;
   let cells = [];
-  let fg = [22, 20, 15];   /* RGB — matched to --ink light mode */
+  let fg = [22, 20, 15];
 
   const mouse = { x: -9999, y: -9999 };
 
-  function rgba(a) {
-    return `rgba(${fg[0]},${fg[1]},${fg[2]},${a})`;
-  }
+  function rgba(a) { return `rgba(${fg[0]},${fg[1]},${fg[2]},${a})`; }
 
   function build() {
     canvas = document.createElement("canvas");
@@ -45,7 +44,15 @@ export function createMenuScene(host) {
     const oy = PITCH / 2;
     for (let hy = oy; hy < h; hy += PITCH) {
       for (let hx = ox; hx < w; hx += PITCH) {
-        cells.push({ hx, hy, x: hx, y: hy, vx: 0, vy: 0 });
+        cells.push({
+          hx, hy,
+          x: hx, y: hy,
+          vx: 0, vy: 0,
+          ph: Math.random() * Math.PI * 2,
+          /* Per-cell variance — different natural frequencies, no lockstep */
+          sp: SPRING  + (Math.random() - 0.5) * 0.018,
+          dm: DAMPING + (Math.random() - 0.5) * 0.04,
+        });
       }
     }
   }
@@ -59,45 +66,61 @@ export function createMenuScene(host) {
     buildGrid();
   }
 
-  function onPointerMove(e) {
-    const r = host.getBoundingClientRect();
-    mouse.x = e.clientX - r.left;
-    mouse.y = e.clientY - r.top;
+  /* dialog is position:fixed; inset:0 — clientX/Y maps directly to canvas coords.
+     Listening on window (not host) prevents the pointerleave snap that glitches
+     cells at the viewport edge when the cursor briefly exits the dialog hitbox. */
+  function onMouseMove(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   }
 
-  function onPointerLeave() {
-    mouse.x = -9999;
-    mouse.y = -9999;
-  }
-
-  function loop() {
+  function loop(t) {
     if (!running) return;
     ctx.clearRect(0, 0, w, h);
 
     for (const c of cells) {
-      /* Cursor repulsion */
+      /* ── 1. Organic flow-field drift ──────────────────────────────────
+         Sine/cosine keyed to home position + time. Adjacent cells flow in
+         subtly different directions, creating a slow breathing wave. */
+      c.vx += Math.sin(c.hy * 0.018 + t * 0.00027 + c.ph) * DRIFT;
+      c.vy += Math.cos(c.hx * 0.018 + t * 0.00021 + c.ph * 1.4) * DRIFT;
+
+      /* ── 2. Cursor repulsion (swirling) ────────────────────────────────
+         A time-varying angular twist on the repulsion direction creates a
+         swirl — the scatter looks alive rather than perfectly radial. */
       const dx   = c.x - mouse.x;
       const dy   = c.y - mouse.y;
       const dist = Math.hypot(dx, dy);
       if (dist < REPEL_DIST && dist > 0) {
         const force = (1 - dist / REPEL_DIST) * REPEL_FORCE;
-        c.vx += (dx / dist) * force;
-        c.vy += (dy / dist) * force;
+        const twist = Math.sin(t * 0.00038 + c.ph) * 0.25;
+        const ct    = Math.cos(twist);
+        const st    = Math.sin(twist);
+        c.vx += ((dx / dist) * ct - (dy / dist) * st) * force;
+        c.vy += ((dx / dist) * st + (dy / dist) * ct) * force;
       }
 
-      /* Spring toward home */
-      c.vx += (c.hx - c.x) * SPRING;
-      c.vy += (c.hy - c.y) * SPRING;
+      /* ── 3. Spring toward home (per-cell constant) ──────────────────── */
+      c.vx += (c.hx - c.x) * c.sp;
+      c.vy += (c.hy - c.y) * c.sp;
 
-      c.vx *= DAMPING;
-      c.vy *= DAMPING;
+      /* ── 4. Damp + integrate ────────────────────────────────────────── */
+      c.vx *= c.dm;
+      c.vy *= c.dm;
       c.x  += c.vx;
       c.y  += c.vy;
 
-      /* Opacity scales with displacement: resting ≈ 7%, fully scattered ≈ 42% */
+      /* ── 5. Wall bounce — cells that escape the canvas edge flip their
+         velocity and clamp, preventing the half-pixel edge glitch where a
+         partially off-screen cell clips in/out of view each frame. ─────── */
+      if (c.x < 0)  { c.x = 0; c.vx *= -0.3; }
+      if (c.x > w)  { c.x = w; c.vx *= -0.3; }
+      if (c.y < 0)  { c.y = 0; c.vy *= -0.3; }
+      if (c.y > h)  { c.y = h; c.vy *= -0.3; }
+
+      /* ── 6. Draw ────────────────────────────────────────────────────── */
       const disp  = Math.hypot(c.x - c.hx, c.y - c.hy);
       const alpha = 0.07 + Math.min(disp / 40, 1) * 0.35;
-
       ctx.fillStyle = rgba(alpha);
       ctx.fillRect(Math.round(c.x - CELL / 2), Math.round(c.y - CELL / 2), CELL, CELL);
     }
@@ -105,7 +128,7 @@ export function createMenuScene(host) {
     raf = requestAnimationFrame(loop);
   }
 
-  /* ── public API ──────────────────────────────────────────────── */
+  /* ── public API ──────────────────────────────────────────────────── */
 
   function start() {
     if (running || failed) return;
@@ -116,16 +139,14 @@ export function createMenuScene(host) {
       failed = true;
       return;
     }
-    /* Theme-aware cell colour: dark ink on light bg / light ink on dark bg */
     const dark = document.documentElement.dataset.theme === "dark";
     fg = dark ? [237, 233, 225] : [22, 20, 15];
-
-    mouse.x = -9999; mouse.y = -9999;
+    mouse.x = -9999;
+    mouse.y = -9999;
     resize();
     running = true;
     window.addEventListener("resize", resize);
-    host.addEventListener("pointermove", onPointerMove);
-    host.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     raf = requestAnimationFrame(loop);
   }
 
@@ -133,8 +154,7 @@ export function createMenuScene(host) {
     running = false;
     cancelAnimationFrame(raf);
     window.removeEventListener("resize", resize);
-    host.removeEventListener("pointermove", onPointerMove);
-    host.removeEventListener("pointerleave", onPointerLeave);
+    window.removeEventListener("mousemove", onMouseMove);
   }
 
   return { start, stop };
