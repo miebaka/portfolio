@@ -1,79 +1,194 @@
 /* ==========================================================================
    Component · Menu — fullscreen overlay navigation.
+   Scattered editorial rows (LEEROY-style): full-bleed hairline dividers,
+   alternating alignment, hover grow/shrink, WebGL backdrop behind content.
+   Implemented as a native <dialog> for built-in focus trap + AT announcement.
    ========================================================================== */
 
-.site-menu {
+dialog.site-menu {
+  /* Overlay-local roles: --menu-fg is always the LIGHT tone (overlay text),
+     --menu-bg the DARK tone — the menu is intentionally dark in both themes. */
+  --menu-fg: var(--paper);
+  --menu-bg: var(--ink);
+  /* Reset all dialog UA defaults */
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  /* Overlay layout */
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay);
-  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  background: color-mix(in srgb, var(--menu-bg) 92%, transparent);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-  color: var(--paper);
+  color: var(--menu-fg);
   display: flex;
   flex-direction: column;
-  padding-block: 0 var(--space-5);
   overflow: hidden;
   opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--duration-medium) var(--ease-emphasized),
-              visibility var(--duration-medium) var(--ease-emphasized);
+  /* No visibility toggle — showModal()/close() control display via the open
+     attribute. visibility:hidden on the dialog would block focus even after
+     is-open switches it. Opacity-only fade lets focus work from the first tick. */
+  transition: opacity var(--duration-medium) var(--ease-emphasized);
 }
-.site-menu.is-open { opacity: 1; visibility: visible; }
+dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
+dialog.site-menu.is-open { opacity: 1; }
+[data-theme="dark"] dialog.site-menu {
+  --menu-fg: var(--ink);
+  --menu-bg: var(--paper);
+}
 
 /* Padding override — minimum left/right breathing room on small screens */
-.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
+dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
 
+/* WebGL cursor backdrop — injected by js/core/menu-scene.js. Sits under all
+   content (bar/nav/foot carry z-base); purely decorative, never interactive. */
+.site-menu__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 
+/* Bar mirrors the site-nav's 3-column grid so Close lands exactly where the
+   Menu trigger sits — the nav/overlay crossfade reads as one button morphing. */
 .site-menu__bar {
   position: relative;
   z-index: var(--z-base);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   height: var(--nav-h);
   flex-shrink: 0;
 }
-.site-menu__bar .site-nav__brand { color: var(--paper); }
+.site-menu__bar .site-nav__brand { color: var(--menu-fg); justify-self: start; }
+.site-menu__bar-spacer { justify-self: end; }
 
-/* Close button — inherits .btn base; dark-overlay overrides */
+/* Close — solid rectangle chip; hover/focus fills with the accent ("red"). */
 .site-menu__close {
-  color: var(--paper);
-  border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  line-height: var(--leading-label);
+  padding: var(--space-1) var(--space-3);
+  min-height: var(--tap-min);
+  background: var(--menu-fg);
+  color: var(--menu-bg);
+  border: none;
+  border-radius: 0; /* deliberate sharp rectangle — the one square chip on site */
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard);
 }
 .site-menu__close:hover {
-  background: color-mix(in srgb, var(--paper) 10%, transparent);
-  border-color: var(--paper);
-  color: var(--paper);
+  background: var(--accent);
+  color: var(--menu-fg);
 }
-/* Slightly larger icon inside the close button — relative to its own font-size */
-.site-menu__close-icon { font-size: 1.1em; line-height: var(--leading-label); }
+/* Focus keeps the resting chip (it's auto-focused on open) — outline marks it */
+.site-menu__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
+/* Nav — full-bleed so the row dividers span the whole viewport */
 .site-menu__nav {
   position: relative;
   z-index: var(--z-base);
   flex: 1;
   display: flex;
+  min-height: 0;
+}
+.site-menu__list {
+  flex: 1;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  width: 100%;
 }
-.site-menu__list { display: grid; gap: var(--space-3); justify-items: center; }
+
+/* Rows — each anchor is a full-width row; the type itself is the interface.
+   --_size is menu-local: vw-driven with a vh cap so five rows always fit. */
 .site-menu__list a {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
+  --_size: clamp(2.5rem, min(9vw, 12vh), 7rem);
+  display: block;
+  width: 100%;
+  padding-block: 0.14em;
+  padding-inline: max(var(--space-4), var(--gutter));
+  border-top: 1px solid color-mix(in srgb, var(--menu-fg) 14%, transparent);
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
-  font-size: var(--step-hero);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
+  font-size: var(--_size);
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-display);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--paper) 22%, transparent);
-  transition: color var(--duration-fast) var(--ease-standard);
+  color: color-mix(in srgb, var(--menu-fg) 88%, transparent);
+  transition: font-size var(--duration-medium) var(--ease-emphasized),
+              color var(--duration-fast) var(--ease-standard);
 }
-.site-menu__list a:hover,
-.site-menu__list a[aria-current="page"] { color: var(--paper); }
+.site-menu__list a:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--menu-fg) 14%, transparent);
+}
+.site-menu__list a[aria-current="page"] { color: var(--accent); }
+
+/* Scatter — alternating alignment, repeating every five rows (LEEROY rhythm:
+   left · right · shallow indent · deep indent · left). */
+.site-menu__list a:nth-child(5n + 2) { text-align: right; }
+.site-menu__list a:nth-child(5n + 3) { padding-inline-start: 17%; }
+/* Deep-indent row aligns right with an inset — a left indent would clip long
+   single-word labels (e.g. PLAYGROUND) off-viewport at narrow widths. */
+.site-menu__list a:nth-child(5n + 4) { text-align: right; padding-inline-end: 12%; }
+
+/* Hover grow/shrink — the hovered row swells, siblings compress to make room.
+   Pointer-device only: sticky :hover on touch would leave a row stuck large.
+   Dimmed siblings use 45% (not 32%) to clear WCAG large-text 3:1 contrast.
+   contain:layout limits reflow to this list, never the broader page. */
+.site-menu__list { contain: layout; }
+@media (hover: hover) {
+  .site-menu__list:has(a:hover) a:not(:hover) {
+    font-size: calc(var(--_size) * 0.72);
+    color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+  }
+  .site-menu__list a:hover { font-size: calc(var(--_size) * 1.16); color: var(--menu-fg); }
+  .site-menu__list a:hover[aria-current="page"] { color: var(--accent); }
+}
+/* Keyboard parity — focus gets a visible underline indicator rather than the
+   hover grow/shrink, which is disorienting when tabbing (stable peripheral
+   context matters more than spatial drama for sequential keyboard nav). */
+.site-menu__list a:focus-visible {
+  color: var(--menu-fg);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  text-decoration-thickness: 2px;
+  outline: none;
+}
+.site-menu__list a:focus-visible[aria-current="page"] { color: var(--accent); }
+
+/* Entry — rows rise in sequence when the overlay opens (animation, not
+   transition, so the stagger delay never taxes the hover transitions).
+   visibility:hidden in the from-keyframe + fill-mode:both means items are
+   removed from the tab order during their delay — no focusing invisible links. */
+dialog.site-menu.is-open .site-menu__list a {
+  animation: menu-row-in var(--duration-emphasis) var(--ease-emphasized) both;
+}
+dialog.site-menu.is-open .site-menu__list a:nth-child(1) { animation-delay: calc(1 * var(--duration-stagger)); }
+dialog.site-menu.is-open .site-menu__list a:nth-child(2) { animation-delay: calc(2 * var(--duration-stagger)); }
+dialog.site-menu.is-open .site-menu__list a:nth-child(3) { animation-delay: calc(3 * var(--duration-stagger)); }
+dialog.site-menu.is-open .site-menu__list a:nth-child(4) { animation-delay: calc(4 * var(--duration-stagger)); }
+dialog.site-menu.is-open .site-menu__list a:nth-child(5) { animation-delay: calc(5 * var(--duration-stagger)); }
+dialog.site-menu.is-open .site-menu__list a:nth-child(n + 6) { animation-delay: calc(6 * var(--duration-stagger)); }
+@keyframes menu-row-in {
+  0%   { opacity: 0; transform: translateY(0.5em); visibility: hidden; }
+  1%   { visibility: visible; }          /* un-hide at 1% so fill-mode keeps it */
+  100% { opacity: 1; transform: none; visibility: visible; } /* hidden during delay */
+}
 
 .site-menu__foot {
   position: relative;
@@ -81,31 +196,29 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-block: var(--space-3);
   font-size: var(--step-meta);
-  color: color-mix(in srgb, var(--paper) 60%, transparent);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--menu-fg) 60%, transparent);
   flex-shrink: 0;
 }
 
 body.menu-open { overflow: hidden; }
 body.menu-open .site-nav { opacity: 0; visibility: hidden; }
+/* dialog[open] display doesn't need our visibility trick — showModal handles it */
 
-/* Dark mode — menu is intentionally dark in both themes; anchor colours explicitly */
-[data-theme="dark"] .site-menu {
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  color: var(--ink);
+/* Shallower offsets on small screens — every label must fit its row */
+@media (max-width: 640px) {
+  .site-menu__list a:nth-child(5n + 3) { padding-inline-start: 10%; }
+  .site-menu__list a:nth-child(5n + 4) { padding-inline-end: 6%; }
 }
-[data-theme="dark"] .site-menu__bar .site-nav__brand { color: var(--ink); }
-[data-theme="dark"] .site-menu__close {
-  color: var(--ink);
-  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
-}
-[data-theme="dark"] .site-menu__list a {
-  color: color-mix(in srgb, var(--ink) 22%, transparent);
-}
-[data-theme="dark"] .site-menu__list a:hover,
-[data-theme="dark"] .site-menu__list a[aria-current="page"] { color: var(--ink); }
-[data-theme="dark"] .site-menu__foot {
-  color: color-mix(in srgb, var(--ink) 60%, transparent);
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.site-menu { transition: none; opacity: 1; }
+  .site-menu__list a,
+  .site-menu__close { transition: none; }
+  dialog.site-menu.is-open .site-menu__list a { animation: none; }
 }

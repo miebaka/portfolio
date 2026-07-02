@@ -121,21 +121,21 @@ export function renderMenu() {
     })
     .join("");
 
-  const menu = document.createElement("div");
+  const menu = document.createElement("dialog");
   menu.className = "site-menu";
   menu.id = "site-menu";
-  menu.setAttribute("role", "dialog");
-  menu.setAttribute("aria-modal", "true");
   menu.setAttribute("aria-label", "Site menu");
+  /* Native <dialog> provides built-in focus trap, AT announcement, and
+     Escape handling — no role/aria-modal needed (implicit on dialog element). */
+  /* Bar mirrors the site-nav's 3-column grid so Close sits exactly where the
+     Menu trigger is — the crossfade reads as one button morphing in place. */
   menu.innerHTML =
     '<div class="container site-menu__bar">' +
       brandHTML() +
-      '<button class="site-menu__close btn" type="button" data-menu-close aria-label="Close menu">' +
-        "<span>Close</span>" +
-        '<span class="site-menu__close-icon" aria-hidden="true">&#10005;</span>' +
-      "</button>" +
+      '<button class="site-menu__close" type="button" data-menu-close aria-label="Close menu">Close</button>' +
+      '<span class="site-menu__bar-spacer" aria-hidden="true"></span>' +
     "</div>" +
-    '<nav class="container site-menu__nav" aria-label="Primary">' +
+    '<nav class="site-menu__nav" aria-label="Primary">' +
       '<div class="site-menu__list">' + items + "</div>" +
     "</nav>" +
     '<div class="container site-menu__foot">' +

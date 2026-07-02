@@ -7,13 +7,16 @@ export function renderCapabilities() {
   if (!el) return;
   el.classList.add("cap-list");
   el.innerHTML = SITE.capabilities
-    .map((c, i) =>
-      '<div class="cap-row reveal" style="--reveal-i:' + i + '">' +
+    .map((c) =>
+      '<div class="cap-row reveal">' +
       '<span class="cap-row__name">' + esc(c.title) + "</span>" +
       '<span class="cap-row__meta">' + esc(c.meta || "") + "</span>" +
       "</div>"
     )
     .join("");
+  el.querySelectorAll(".cap-row").forEach((row, i) => {
+    row.style.setProperty("--reveal-i", i);
+  });
 }
 
 export function renderTestimonial() {

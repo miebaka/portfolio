@@ -12,7 +12,7 @@
   inset: 0;
   z-index: var(--z-base);
   pointer-events: none;
-  opacity: 0.05;
+  opacity: var(--opacity-grain);
   mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
@@ -75,7 +75,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-medium);
   font-size: var(--step-h3);
-  color: rgba(255, 255, 255, 0.80);
+  color: color-mix(in srgb, white 80%, transparent);
   text-align: center;
   padding: var(--space-3);
   line-height: var(--leading-heading);

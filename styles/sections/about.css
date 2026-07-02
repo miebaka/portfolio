@@ -56,8 +56,3 @@
   overflow: hidden;
 }
 
-/* Bigger hero title on the about page */
-.hero__title--display {
-  font-size: var(--step-hero);
-  line-height: var(--leading-heading);
-}

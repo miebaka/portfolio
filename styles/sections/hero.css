@@ -5,6 +5,10 @@
 .hero { padding-block: var(--space-7) var(--space-8); }
 .hero__role { margin-bottom: var(--space-3); }
 .hero__title { max-width: var(--measure-title); }
+.hero__title--display {
+  font-size: var(--step-hero);
+  line-height: var(--leading-heading);
+}
 .hero__lede {
   margin-top: var(--space-3);
   font-size: var(--step-h3);
@@ -85,10 +89,10 @@
 }
 .scroll-cue:hover .scroll-cue__label { color: var(--ink); }
 .scroll-cue__track {
-  --cue-w:      4px;
-  --cue-h:      44px;
-  --cue-radius: 2px;
-  --dot-h:      12px;
+  --cue-w:      0.25rem;
+  --cue-h:      2.75rem;
+  --cue-radius: 0.125rem;
+  --dot-h:      0.75rem;
   --cue-travel: calc(var(--cue-h) - var(--dot-h)); /* 32px */
   position: relative;
   width: var(--cue-w);

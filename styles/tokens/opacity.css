@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Tokens · Opacity — named opacity levels for overlays, watermarks, muted UI.
+   ========================================================================== */
+
+:root {
+  --opacity-grain:    0.05; /* barely-there: film grain, texture overlays */
+  --opacity-mark:     0.07; /* subtle: signature watermarks, background hints */
+  --opacity-muted:    0.55; /* secondary: muted text, quiet labels */
+  --opacity-dim:      0.80; /* dimmed: placeholder text on dark backgrounds */
+  --opacity-full:     1;    /* full: standard foreground elements */
+}
