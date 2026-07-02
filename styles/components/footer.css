@@ -32,7 +32,8 @@
 
 .site-footer a { color: var(--ink); }
 
-/* Pixel grid canvas — sits above the SVG watermark, below the text layers */
+/* Pixel grid canvas — sits above the SVG watermark, below the text layers.
+   Positioning is set inline by footer-scene.js so it works without a CSS refresh. */
 .site-footer__canvas {
   position: absolute;
   inset: 0;
@@ -40,6 +41,12 @@
   height: 100%;
   z-index: 0;
   pointer-events: none;
+}
+
+/* When the pixel scene is active it forms the signature — hide the static version */
+.site-footer.scene-active::before {
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-standard);
 }
 
 /* Content layers above the watermark */
