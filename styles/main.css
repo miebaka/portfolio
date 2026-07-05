@@ -23,15 +23,15 @@
 
 /* Components */
 @import "components/navigation.css";
-@import "components/menu.css?v=2";
+@import "components/menu.css";
 @import "components/marquee.css";
 @import "components/buttons.css";
-@import "components/forms.css?v=2";
+@import "components/forms.css";
 @import "components/footer.css";
 @import "components/now-playing.css";
 
 /* Sections */
-@import "sections/hero.css?v=2";
+@import "sections/hero.css";
 @import "sections/work.css";
 @import "sections/home.css";
 @import "sections/about.css";
