@@ -39,16 +39,17 @@
   background: var(--clay);
 }
 
-/* Statement hero: full-bleed Three.js canvas background */
+/* Statement hero — starts below the nav bar; canvas is flush with the nav bottom */
 .hero-noir {
   position: relative;
-  min-height: 100svh;
-  background: #1c1a16; /* warm-dark fallback before canvas loads */
-  color: #ede9e1;      /* always light — portrait bg is always warm-dark */
+  margin-top: var(--nav-h);                    /* push below fixed nav */
+  min-height: calc(100svh - var(--nav-h));     /* fill remaining viewport */
+  background: #1c1a16;
+  color: #ede9e1;
   overflow: hidden;
 }
 
-/* Three.js canvas — absolute, fills the section */
+/* Three.js canvas — fills the hero section only (not behind the nav) */
 .hero-noir__canvas {
   position: absolute;
   inset: 0;
@@ -61,10 +62,10 @@
 .hero-noir__content {
   position: relative;
   z-index: 1;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--nav-h));
   display: flex;
   align-items: flex-end;
-  padding: var(--nav-h) var(--gutter) var(--space-7);
+  padding: var(--space-6) var(--gutter) var(--space-7);
 }
 .hero-noir__lower {
   display: flex;
@@ -81,6 +82,8 @@
   text-transform: uppercase;
   max-width: var(--measure-hero);
   color: inherit;
+  /* text-shadow ensures legibility over the portrait without darkening it */
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.50), 0 0 48px rgba(0, 0, 0, 0.20);
 }
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
 
