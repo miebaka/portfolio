@@ -68,11 +68,10 @@
 
   <main id="main">
 
-    <!-- Hero (noir) — golden ratio grid: content (38.2%) | portrait (61.8%) -->
+    <!-- Hero — golden ratio grid: content (38.2%) | portrait (61.8%) -->
     <section class="hero-noir">
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
-          <div data-mount="now-playing"></div>
           <h1 class="hero-noir__statement">The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
           <a class="scroll-cue" href="#work" aria-label="Scroll to selected work">
             <span class="scroll-cue__track" aria-hidden="true"><span class="scroll-cue__dot"></span></span>
@@ -81,9 +80,14 @@
         </div>
       </div>
       <div class="hero-noir__picture">
-        <canvas class="hero-noir__canvas" data-mount="hero-canvas" aria-hidden="true"></canvas>
+        <!-- Browser renders the AVIF with full native colour management — no shader processing -->
+        <img class="hero-noir__portrait"
+             src="assets/images/optimized/miebaka-joshua-portrait-1080.avif"
+             alt="" aria-hidden="true" data-hero-portrait>
       </div>
-      <!-- Portrait kept hidden: texture is preloaded above; JS fillSlots() guard prevents injection -->
+      <!-- Chip floats over picture; sits outside the grid flow (position: absolute in CSS) -->
+      <div class="hero-noir__chip" data-mount="now-playing"></div>
+      <!-- Hidden portrait mount: fillSlots() guard -->
       <div class="hero-noir__media" data-portrait-mount aria-hidden="true"></div>
     </section>
 

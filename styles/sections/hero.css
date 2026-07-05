@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Section · Hero — light editorial hero (.hero) + dark statement hero (.hero-noir).
+   Section · Hero — light editorial hero (.hero) + golden-ratio hero (.hero-noir).
    ========================================================================== */
 
 .hero { padding-block: var(--space-7) var(--space-8); }
@@ -15,7 +15,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   color: var(--text-muted);
-  --_w: 24ch; /* lede text — between hero (18ch) and lead (34ch) */
+  --_w: 24ch;
   max-width: var(--_w);
 }
 .hero__actions {
@@ -48,54 +48,87 @@
   /* φ ≈ 1.618 — portrait takes the larger column */
   grid-template-columns: 38.197% 61.803%;
   grid-template-areas: "content picture";
-  background: #1c1a16;
-  color: #ede9e1;
+  /* matches the rest of the page in both light and dark mode */
+  background: var(--paper);
+  color: var(--ink);
   overflow: hidden;
 }
 
-/* Left column — text content aligned to the bottom of the section */
+/* Left column — text content aligned to the bottom */
 .hero-noir__content {
   grid-area: content;
   position: relative;
   z-index: 1;
   display: flex;
   align-items: flex-end;
-  padding: var(--space-6) var(--space-5) var(--space-7) var(--gutter);
+  padding: var(--space-6) var(--space-5) var(--space-6) var(--gutter);
 }
 
 .hero-noir__lower {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  /* no max-width here — the column is the constraint; heading has its own */
 }
 
 .hero-noir__statement {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
-  font-size: var(--step-hero);
+  /* Cap at 60px (3.75rem) so the text wraps to 6 lines in the 38% content column */
+  font-size: clamp(3rem, 1.9rem + 4.6vw, 3.75rem);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
-  max-width: var(--measure-hero); /* 18ch at display font size ≈ 450px */
+  max-width: var(--measure-hero);
   color: inherit;
 }
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
 
-/* Right column — Three.js canvas fills the portrait cell */
+/* Right column — portrait photo with parallax */
 .hero-noir__picture {
   grid-area: picture;
   position: relative;
   overflow: hidden;
 }
 
-.hero-noir__canvas {
+.hero-noir__portrait {
+  /* Oversized by RANGE (20px) on every side so transform has room to pan */
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  will-change: transform;
   display: block;
 }
+
+/* Now-playing chip — floats over the portrait, top aligned with scroll-cue */
+.hero-noir__chip {
+  position: absolute;
+  z-index: 3;
+  /* horizontally: inside the picture column with left breathing room */
+  left: calc(38.197% + var(--space-5));
+  /* vertically: padding-bottom is space-6 (80px); scroll-cue is 2.75rem (44px) tall.
+     chip.bottom = scroll-cue.top - chip.height ≈ (80+44) - 46 = 78px */
+  bottom: calc(var(--space-6) - 2px);
+  /* constrain width to picture column minus side margins */
+  max-width: calc(61.803% - 2 * var(--space-5));
+}
+
+/* Chip styling: always-dark frosted glass — readable over warm portrait */
+.hero-noir .now-playing {
+  font-size: var(--step-small);
+  background: rgba(28, 26, 22, 0.60);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-color: rgba(237, 233, 225, 0.20);
+  color: #ede9e1;
+}
+.hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.60); }
+
+/* Portrait media: hidden */
+.hero-noir__media { display: none; }
 
 /* Scroll-down indicator */
 .scroll-cue {
@@ -111,28 +144,27 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   line-height: var(--leading-label);
-  color: rgba(237, 233, 225, 0.60);
+  color: var(--text-muted);
   transition: color var(--duration-fast) var(--ease-standard);
 }
-.scroll-cue:hover .scroll-cue__label { color: #ede9e1; }
+.scroll-cue:hover .scroll-cue__label { color: var(--ink); }
 .scroll-cue__track {
   --cue-w:      0.25rem;
   --cue-h:      2.75rem;
   --cue-radius: 0.125rem;
   --dot-h:      0.75rem;
-  --cue-travel: calc(var(--cue-h) - var(--dot-h)); /* 32px */
+  --cue-travel: calc(var(--cue-h) - var(--dot-h));
   position: relative;
   width: var(--cue-w);
   height: var(--cue-h);
   border-radius: var(--cue-radius);
-  background: rgba(237, 233, 225, 0.18);
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
   overflow: hidden;
   flex-shrink: 0;
 }
 .scroll-cue__dot {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: var(--cue-w);
   height: var(--dot-h);
   border-radius: var(--cue-radius);
@@ -149,34 +181,24 @@
   .scroll-cue__dot { animation: none; opacity: 1; }
 }
 
-/* Portrait media element: hidden — canvas replaces it */
-.hero-noir__media { display: none; }
-
-/* Now-playing chip: light style + bumped size for the dark hero context */
-.hero-noir .now-playing {
-  font-size: var(--step-small); /* 16px — up from 14px caption in hero */
-  border-color: rgba(237, 233, 225, 0.20);
-  background: rgba(237, 233, 225, 0.07);
-  color: #ede9e1;
-}
-.hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.55); }
-
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 
-/* Tablet: stack — picture on top, content below */
 @media (max-width: 760px) {
   .hero-noir {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "picture"
-      "content";
+    grid-template-areas: "picture" "content";
     min-height: unset;
   }
   .hero-noir__picture { height: 65svh; }
   .hero-noir__content {
-    padding-top: var(--space-5);
-    padding-right: var(--gutter);
-    padding-bottom: var(--space-6);
+    padding-top:    var(--space-5);
+    padding-right:  var(--gutter);
+    padding-bottom: var(--space-5);
+  }
+  .hero-noir__chip {
+    /* on stacked layout: inside picture at bottom-left */
+    left: var(--gutter);
+    bottom: var(--space-3);
   }
 }
 
