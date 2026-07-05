@@ -24,10 +24,10 @@ const REST_A     = 0.055;  /* visible grain at rest                  */
 const PULSE_AMP  = 0.008;  /* per-cell breathe ±0.8 %                */
 const SHIMMER_A  = 0.012;  /* extra opacity from displacement         */
 
-/* 60-second undulating wave */
-const WAVE_PERIOD = 60_000;   /* ms — full left-to-right sweep         */
-const WAVE_LAMBDA = 240;      /* px wavelength — ~5 crests at 1280px   */
-const WAVE_BOOST  = 0.22;     /* peak extra opacity at wave crest      */
+/* 60-second sweep wave */
+const WAVE_PERIOD = 60_000;   /* ms — full left-to-right cycle         */
+const WAVE_HW_F   = 0.08;     /* half-width as fraction of viewport    */
+const WAVE_BOOST  = 0.20;     /* peak extra opacity at wave crest      */
 
 export function initPageScene() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -39,7 +39,7 @@ export function initPageScene() {
     inset:         "0",
     width:         "100%",
     height:        "100%",
-    zIndex:        "1",
+    zIndex:        "0",
     pointerEvents: "none",
   });
 
@@ -96,8 +96,10 @@ export function initPageScene() {
     buf.fill(0);
     const [r8, g8, b8] = fg;
 
-    /* 60-second undulating wave — phase offset sweeps left-to-right */
-    const phaseOff = ((t % WAVE_PERIOD) / WAVE_PERIOD) * (w + WAVE_LAMBDA);
+    /* 60-second traveling wave — bell sweeps from left edge to right */
+    const waveHW     = WAVE_HW_F * w;
+    const waveTravel = w + 2 * waveHW;
+    const waveFront  = ((t % WAVE_PERIOD) / WAVE_PERIOD) * waveTravel - waveHW;
 
     for (const c of cells) {
       /* Organic flow-field drift */
@@ -127,11 +129,11 @@ export function initPageScene() {
       const disp    = Math.hypot(c.x - c.hx, c.y - c.hy);
       const shimmer = Math.min(disp / 10, 1) * SHIMMER_A;
 
-      /* Multi-harmonic undulating wave — diagonal tilt + harmonic ripple */
-      const p         = ((c.hx + c.hy * 0.22) - phaseOff) / WAVE_LAMBDA;
-      const primary   = 0.5 + 0.5 * Math.cos(p * Math.PI * 2);
-      const secondary = 0.5 + 0.5 * Math.cos(p * Math.PI * 6);
-      const wave      = (primary * 0.7 + secondary * 0.3) * WAVE_BOOST;
+      /* Wave contribution — cosine bell centred on waveFront */
+      const dd = c.hx - waveFront;
+      const wave = Math.abs(dd) < waveHW
+        ? (0.5 + 0.5 * Math.cos((dd / waveHW) * Math.PI)) * WAVE_BOOST
+        : 0;
 
       const alpha = Math.max(0, REST_A + pulse + shimmer + wave);
 

@@ -31,7 +31,7 @@
 @import "components/now-playing.css";
 
 /* Sections */
-@import "sections/hero.css";
+@import "sections/hero.css?v=2";
 @import "sections/work.css";
 @import "sections/home.css";
 @import "sections/about.css";

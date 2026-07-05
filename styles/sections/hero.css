@@ -48,8 +48,6 @@
   /* φ ≈ 1.618 — portrait takes the larger column */
   grid-template-columns: 38.197% 61.803%;
   grid-template-areas: "content picture";
-  /* matches the rest of the page in both light and dark mode */
-  background: var(--paper);
   color: var(--ink);
   overflow: hidden;
 }

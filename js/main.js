@@ -11,13 +11,13 @@ import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
 import { initScrollReveal } from "./core/scroll.js";
 import { initNavigation } from "./core/navigation.js";
-import { initMenu } from "./core/menu.js?v=4";
+import { initMenu } from "./core/menu.js?v=5";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initInteractions } from "./core/interactions.js?v=3";
 import { initFooterScene } from "./core/footer-scene.js";
 import { initHeroScene }  from "./three/hero-scene.js";
-import { initPageScene }  from "./core/page-scene.js?v=3";
+import { initPageScene }  from "./core/page-scene.js?v=4";
 
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();
