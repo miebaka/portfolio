@@ -68,9 +68,8 @@
 
   <main id="main">
 
-    <!-- Hero (noir) — Three.js full-screen portrait scene -->
+    <!-- Hero (noir) — golden ratio grid: content (38.2%) | portrait (61.8%) -->
     <section class="hero-noir">
-      <canvas class="hero-noir__canvas" data-mount="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
           <div data-mount="now-playing"></div>
@@ -80,6 +79,9 @@
             <span class="scroll-cue__label">Scroll Down</span>
           </a>
         </div>
+      </div>
+      <div class="hero-noir__picture">
+        <canvas class="hero-noir__canvas" data-mount="hero-canvas" aria-hidden="true"></canvas>
       </div>
       <!-- Portrait kept hidden: texture is preloaded above; JS fillSlots() guard prevents injection -->
       <div class="hero-noir__media" data-portrait-mount aria-hidden="true"></div>

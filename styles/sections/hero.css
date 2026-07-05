@@ -39,40 +39,37 @@
   background: var(--clay);
 }
 
-/* Statement hero — starts below the nav bar; canvas is flush with the nav bottom */
+/* ── Statement hero — golden ratio grid (content | portrait) ─────────────── */
 .hero-noir {
   position: relative;
-  margin-top: var(--nav-h);                    /* push below fixed nav */
-  min-height: calc(100svh - var(--nav-h));     /* fill remaining viewport */
+  margin-top: var(--nav-h);
+  min-height: calc(100svh - var(--nav-h));
+  display: grid;
+  /* φ ≈ 1.618 — portrait takes the larger column */
+  grid-template-columns: 38.197% 61.803%;
+  grid-template-areas: "content picture";
   background: #1c1a16;
   color: #ede9e1;
   overflow: hidden;
 }
 
-/* Three.js canvas — fills the hero section only (not behind the nav) */
-.hero-noir__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 0;
-}
-
+/* Left column — text content aligned to the bottom of the section */
 .hero-noir__content {
+  grid-area: content;
   position: relative;
   z-index: 1;
-  min-height: calc(100svh - var(--nav-h));
   display: flex;
   align-items: flex-end;
-  padding: var(--space-6) var(--gutter) var(--space-7);
+  padding: var(--space-6) var(--space-5) var(--space-7) var(--gutter);
 }
+
 .hero-noir__lower {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  max-width: var(--measure-hero);
+  /* no max-width here — the column is the constraint; heading has its own */
 }
+
 .hero-noir__statement {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
@@ -80,14 +77,27 @@
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
-  max-width: var(--measure-hero);
+  max-width: var(--measure-hero); /* 18ch at display font size ≈ 450px */
   color: inherit;
-  /* text-shadow ensures legibility over the portrait without darkening it */
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.50), 0 0 48px rgba(0, 0, 0, 0.20);
 }
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
 
-/* Scroll-down indicator — track left, label right, 16px gap, tops aligned */
+/* Right column — Three.js canvas fills the portrait cell */
+.hero-noir__picture {
+  grid-area: picture;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-noir__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Scroll-down indicator */
 .scroll-cue {
   display: inline-flex;
   flex-direction: row;
@@ -138,25 +148,41 @@
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue__dot { animation: none; opacity: 1; }
 }
-/* Portrait media: hidden — Three.js canvas replaces it visually */
+
+/* Portrait media element: hidden — canvas replaces it */
 .hero-noir__media { display: none; }
 
-/* Now-playing chip: always light in hero (portrait bg is warm-dark) */
+/* Now-playing chip: light style + bumped size for the dark hero context */
 .hero-noir .now-playing {
+  font-size: var(--step-small); /* 16px — up from 14px caption in hero */
   border-color: rgba(237, 233, 225, 0.20);
   background: rgba(237, 233, 225, 0.07);
   color: #ede9e1;
 }
 .hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.55); }
 
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+/* Tablet: stack — picture on top, content below */
 @media (max-width: 760px) {
-  .hero-noir__content { padding-bottom: var(--space-6); }
-}
-@media (max-width: 480px) {
-  .hero-noir__content { padding-bottom: var(--space-5); }
+  .hero-noir {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "picture"
+      "content";
+    min-height: unset;
+  }
+  .hero-noir__picture { height: 65svh; }
+  .hero-noir__content {
+    padding-top: var(--space-5);
+    padding-right: var(--gutter);
+    padding-bottom: var(--space-6);
+  }
 }
 
 @media (max-width: 480px) {
   .hero { padding-block: var(--space-4h) var(--space-6); }
   .hero__lede { font-size: var(--step-body-lg); max-width: none; }
+  .hero-noir__picture { height: 55svh; }
+  .hero-noir .now-playing__label { display: none; }
 }
