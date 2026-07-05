@@ -39,26 +39,38 @@
   background: var(--clay);
 }
 
-/* Statement hero: golden split — statement 61.8% · portrait 38.2% */
+/* Statement hero: full-bleed Three.js canvas background */
 .hero-noir {
   position: relative;
   min-height: 100svh;
-  background: var(--paper);
-  color: var(--ink);
-  display: grid;
-  grid-template-columns: var(--col-major) var(--col-minor);
+  background: #1c1a16; /* warm-dark fallback before canvas loads */
+  color: #ede9e1;      /* always light — portrait bg is always warm-dark */
+  overflow: hidden;
 }
+
+/* Three.js canvas — absolute, fills the section */
+.hero-noir__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
 .hero-noir__content {
-  display: grid;
-  grid-template-rows: var(--col-major) var(--col-minor);
-  padding: var(--nav-h) var(--gutter) var(--space-6);
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--nav-h) var(--gutter) var(--space-7);
 }
 .hero-noir__lower {
-  grid-row: 2;
-  align-self: end;
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+  max-width: var(--measure-hero);
 }
 .hero-noir__statement {
   font-family: var(--font-display);
@@ -68,8 +80,10 @@
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
   max-width: var(--measure-hero);
+  color: inherit;
 }
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
+
 /* Scroll-down indicator — track left, label right, 16px gap, tops aligned */
 .scroll-cue {
   display: inline-flex;
@@ -84,10 +98,10 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   line-height: var(--leading-label);
-  color: color-mix(in srgb, var(--ink) 75%, transparent);
+  color: rgba(237, 233, 225, 0.60);
   transition: color var(--duration-fast) var(--ease-standard);
 }
-.scroll-cue:hover .scroll-cue__label { color: var(--ink); }
+.scroll-cue:hover .scroll-cue__label { color: #ede9e1; }
 .scroll-cue__track {
   --cue-w:      0.25rem;
   --cue-h:      2.75rem;
@@ -98,7 +112,7 @@
   width: var(--cue-w);
   height: var(--cue-h);
   border-radius: var(--cue-radius);
-  background: color-mix(in srgb, var(--ink) 15%, transparent);
+  background: rgba(237, 233, 225, 0.18);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -121,31 +135,22 @@
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue__dot { animation: none; opacity: 1; }
 }
-.hero-noir__media {
-  position: relative;
-  overflow: hidden;
-  background: var(--linen);
+/* Portrait media: hidden — Three.js canvas replaces it visually */
+.hero-noir__media { display: none; }
+
+/* Now-playing chip: always light in hero (portrait bg is warm-dark) */
+.hero-noir .now-playing {
+  border-color: rgba(237, 233, 225, 0.20);
+  background: rgba(237, 233, 225, 0.07);
+  color: #ede9e1;
 }
-.hero-noir__media img {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-.hero-noir__media-label {
-  position: absolute;
-  inset: auto 0 var(--space-3) 0;
-  text-align: center;
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 50%, transparent);
-}
+.hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.55); }
 
 @media (max-width: 760px) {
-  .hero-noir { grid-template-columns: 1fr; }
-  .hero-noir__media { order: -1; min-height: 38svh; }
-  .hero-noir__content { min-height: 62svh; }
+  .hero-noir__content { padding-bottom: var(--space-6); }
+}
+@media (max-width: 480px) {
+  .hero-noir__content { padding-bottom: var(--space-5); }
 }
 
 @media (max-width: 480px) {

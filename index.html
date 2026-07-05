@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Building brands that think before they look.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#16140f">
+  <meta name="theme-color" content="#1c1a16">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff" href="assets/fonts/texgyreheros-regular.woff" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
@@ -27,11 +27,15 @@
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-semibold.woff2" crossorigin>
   <link rel="preload" as="image"
-        imagesrcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
-                     assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
-                     assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
-        imagesizes="(max-width: 760px) 100vw, 38vw"
+        href="assets/images/optimized/miebaka-joshua-portrait-1080.avif"
         fetchpriority="high">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"
+    }
+  }
+  </script>
   <script type="application/ld+json">
   [
     {
@@ -64,8 +68,9 @@
 
   <main id="main">
 
-    <!-- Hero (noir) -->
+    <!-- Hero (noir) — Three.js full-screen portrait scene -->
     <section class="hero-noir">
+      <canvas class="hero-noir__canvas" data-mount="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
           <div data-mount="now-playing"></div>
@@ -76,28 +81,8 @@
           </a>
         </div>
       </div>
-      <div class="hero-noir__media" data-portrait-mount>
-        <picture>
-          <source type="image/avif"
-                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
-                          assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
-                          assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
-                  sizes="(max-width: 760px) 100vw, 38vw">
-          <source type="image/webp"
-                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w,
-                          assets/images/optimized/miebaka-joshua-portrait-810.webp 810w,
-                          assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w"
-                  sizes="(max-width: 760px) 100vw, 38vw">
-          <img src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg"
-               srcset="assets/images/optimized/miebaka-joshua-portrait-540.jpg 540w,
-                       assets/images/optimized/miebaka-joshua-portrait-810.jpg 810w,
-                       assets/images/optimized/miebaka-joshua-portrait-1080.jpg 1080w"
-               sizes="(max-width: 760px) 100vw, 38vw"
-               alt="Portrait of Miebaka Joshua"
-               width="1080" height="1350"
-               loading="eager" decoding="sync" fetchpriority="high">
-        </picture>
-      </div>
+      <!-- Portrait kept hidden: texture is preloaded above; JS fillSlots() guard prevents injection -->
+      <div class="hero-noir__media" data-portrait-mount aria-hidden="true"></div>
     </section>
 
     <!-- Selected work -->
@@ -176,6 +161,6 @@
 
   <footer data-mount="footer"></footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=2"></script>
 </body>
 </html>
