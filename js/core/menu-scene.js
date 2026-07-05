@@ -1,39 +1,38 @@
-/* Menu scene — bioluminescent pixel grid backdrop.
-   2 × 2 px cells on a 4 px pitch drawn via ImageData (one putImageData per
-   frame instead of per-cell fillRect calls — handles 100k+ cells at 60 fps).
-   Cells are near-invisible at rest; cursor proximity illuminates them with a
-   soft proximity glow + kinetic trail as they spring home. Organic breathing
-   via a position+time flow-field; per-cell spring/damping variance gives each
-   square its own subtle rhythm.
-   Progressive enhancement: prefers-reduced-motion or canvas failure leaves
-   the flat overlay untouched. */
+/* ==========================================================================
+   menu-scene.js — Ambient pixel backdrop for the fullscreen menu overlay.
 
-const CELL        = 2;
-const GAP         = 2;
-const PITCH       = CELL + GAP;   /* 4 px pitch */
-const HALF        = CELL >> 1;    /* 1 — half-cell; used for clamping + draw offset */
-const REPEL_DIST  = 100;
-const REPEL_FORCE = 1.4;          /* gentle — bioluminescence is soft */
-const SPRING      = 0.09;
-const DAMPING     = 0.76;
-const DRIFT       = 0.008;        /* flow-field amplitude */
-const REST_A      = 0.04;         /* near-invisible at rest */
-const GLOW_A      = 0.55;         /* peak proximity glow */
-const TRAIL_A     = 0.20;         /* fading kinetic trail */
+   Identical physics and wave to page-scene so the transition from page to
+   menu feels like the same living surface behind the content.
+   ========================================================================== */
+
+const CELL  = 2;
+const GAP   = 8;
+const PITCH = CELL + GAP;
+const HALF  = CELL >> 1;
+
+const SPRING  = 0.007;
+const DAMPING = 0.96;
+const DRIFT   = 0.003;
+
+const REST_A    = 0.055;
+const PULSE_AMP = 0.008;
+const SHIMMER_A = 0.012;
+
+const WAVE_PERIOD = 60_000;
+const WAVE_HW_F   = 0.08;
+const WAVE_BOOST  = 0.20;
 
 export function createMenuScene(host) {
   let canvas    = null;
   let ctx       = null;
   let imageData = null;
-  let buf       = null;   /* Uint8ClampedArray — reused across frames */
+  let buf       = null;
   let raf       = 0;
   let running   = false;
   let failed    = false;
   let w = 0, h = 0;
-  let cells     = [];
-  let fg        = [22, 20, 15];
-
-  const mouse = { x: -9999, y: -9999 };
+  let cells = [];
+  let fg    = [22, 20, 15];
 
   function build() {
     canvas = document.createElement("canvas");
@@ -52,11 +51,12 @@ export function createMenuScene(host) {
       for (let hx = ox; hx < w; hx += PITCH) {
         cells.push({
           hx, hy,
-          x: hx, y: hy,
+          x:  hx + (Math.random() - 0.5) * PITCH,
+          y:  hy + (Math.random() - 0.5) * PITCH,
           vx: 0, vy: 0,
           ph: Math.random() * Math.PI * 2,
-          sp: SPRING  + (Math.random() - 0.5) * 0.016,   /* per-cell spring variance */
-          dm: DAMPING + (Math.random() - 0.5) * 0.036,   /* per-cell damping variance */
+          sp: SPRING  + (Math.random() - 0.5) * 0.002,
+          dm: DAMPING + (Math.random() - 0.5) * 0.015,
         });
       }
     }
@@ -73,89 +73,47 @@ export function createMenuScene(host) {
     buildGrid();
   }
 
-  /* dialog is position:fixed; inset:0 — clientX/Y maps directly to canvas coords.
-     Listening on window (not host) avoids the pointerleave snap that fires when
-     the cursor reaches the exact viewport boundary of the fullscreen dialog. */
-  function onMouseMove(e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  }
-
   function loop(t) {
     if (!running) return;
 
-    /* Reset every pixel to fully transparent */
     buf.fill(0);
-
     const [r8, g8, b8] = fg;
 
+    const waveHW    = WAVE_HW_F * w;
+    const waveTravel = w + 2 * waveHW;
+    const waveFront  = ((t % WAVE_PERIOD) / WAVE_PERIOD) * waveTravel - waveHW;
+
     for (const c of cells) {
-      /* ── 1. Organic flow-field drift ──────────────────────────────────
-         Sine/cosine keyed to cell home-position + time creates a slow wave
-         where neighbours flow in subtly different directions. */
-      c.vx += Math.sin(c.hy * 0.018 + t * 0.00027 + c.ph) * DRIFT;
+      c.vx += Math.sin(c.hy * 0.018 + t * 0.00027 + c.ph)       * DRIFT;
       c.vy += Math.cos(c.hx * 0.018 + t * 0.00021 + c.ph * 1.4) * DRIFT;
 
-      /* ── 2. Cursor repulsion (swirling) ────────────────────────────────
-         A time-varying angular twist makes scatter non-radial — spiralling
-         rather than perfectly symmetric away from the cursor. */
-      const dx   = c.x - mouse.x;
-      const dy   = c.y - mouse.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < REPEL_DIST && dist > 0) {
-        const force = (1 - dist / REPEL_DIST) * REPEL_FORCE;
-        const twist = Math.sin(t * 0.00038 + c.ph) * 0.25;
-        const ct    = Math.cos(twist);
-        const st    = Math.sin(twist);
-        c.vx += ((dx / dist) * ct - (dy / dist) * st) * force;
-        c.vy += ((dx / dist) * st + (dy / dist) * ct) * force;
-      }
-
-      /* ── 3. Spring toward home (per-cell constant) ──────────────────── */
       c.vx += (c.hx - c.x) * c.sp;
       c.vy += (c.hy - c.y) * c.sp;
 
-      /* ── 4. Soft boundary — repulse cells away from edges before they
-         reach the hard wall. Margin = 3 pitches (12 px). Force scales
-         linearly from 0 at the margin to WALL_F at the very edge, so cells
-         near the border are always nudged back without ever stopping. This
-         eliminates the wall-impact discontinuity that caused edge glitching. */
-      const MARGIN = PITCH * 3;
-      const WALL_F = 0.14;
-      if (c.x < MARGIN)     c.vx += (1 - c.x / MARGIN)     * WALL_F;
-      if (c.x > w - MARGIN) c.vx -= (1 - (w - c.x) / MARGIN) * WALL_F;
-      if (c.y < MARGIN)     c.vy += (1 - c.y / MARGIN)     * WALL_F;
-      if (c.y > h - MARGIN) c.vy -= (1 - (h - c.y) / MARGIN) * WALL_F;
-
-      /* ── 5. Damp + integrate ────────────────────────────────────────── */
       c.vx *= c.dm;
       c.vy *= c.dm;
       c.x  += c.vx;
       c.y  += c.vy;
 
-      /* ── 5b. Hard clamp — safety net only; soft boundary above means
-         cells should never reach here under normal operation. */
       if (c.x < HALF)     { c.x = HALF;     c.vx = 0; }
       if (c.x > w - HALF) { c.x = w - HALF; c.vx = 0; }
       if (c.y < HALF)     { c.y = HALF;     c.vy = 0; }
       if (c.y > h - HALF) { c.y = h - HALF; c.vy = 0; }
 
-      /* ── 6. Bioluminescent opacity ──────────────────────────────────────
-         Distance recomputed from the cell's FINAL position (post-integration
-         + post-clamp) so glow matches actual drawn position exactly. */
-      const pdx   = c.x - mouse.x;
-      const pdy   = c.y - mouse.y;
-      const pdist = Math.hypot(pdx, pdy);
-      const prox  = pdist < REPEL_DIST ? (1 - pdist / REPEL_DIST) ** 1.5 : 0;
-      const disp  = Math.hypot(c.x - c.hx, c.y - c.hy);
-      const trail = Math.min(disp / 28, 1);
-      const alpha = REST_A + prox * GLOW_A + trail * TRAIL_A;
+      const pulse   = Math.sin(t * 0.00035 + c.ph) * PULSE_AMP;
+      const disp    = Math.hypot(c.x - c.hx, c.y - c.hy);
+      const shimmer = Math.min(disp / 10, 1) * SHIMMER_A;
 
-      /* ── 7. Write 2×2 pixel block to ImageData ──────────────────────────
-         Soft boundary + hard clamp guarantee px ∈ [0, w-2], py ∈ [0, h-2]. */
+      const dd   = c.hx - waveFront;
+      const wave = Math.abs(dd) < waveHW
+        ? (0.5 + 0.5 * Math.cos((dd / waveHW) * Math.PI)) * WAVE_BOOST
+        : 0;
+
+      const alpha = Math.max(0, REST_A + pulse + shimmer + wave);
+
       const px = Math.round(c.x) - HALF;
       const py = Math.round(c.y) - HALF;
-      const a8 = (alpha * 255 + 0.5) | 0;   /* fast float→int, clamped by Uint8ClampedArray */
+      const a8 = Math.min(255, (alpha * 255 + 0.5) | 0);
 
       let i = (py * w + px) << 2;
       buf[i] = r8; buf[i + 1] = g8; buf[i + 2] = b8; buf[i + 3] = a8;
@@ -171,8 +129,6 @@ export function createMenuScene(host) {
     raf = requestAnimationFrame(loop);
   }
 
-  /* ── public API ──────────────────────────────────────────────────────── */
-
   function start() {
     if (running || failed) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -182,14 +138,12 @@ export function createMenuScene(host) {
       failed = true;
       return;
     }
-    const dark = document.documentElement.dataset.theme === "dark";
-    fg = dark ? [237, 233, 225] : [22, 20, 15];
-    mouse.x = -9999;
-    mouse.y = -9999;
+    fg = document.documentElement.dataset.theme === "dark"
+      ? [237, 233, 225]
+      : [22, 20, 15];
     resize();
     running = true;
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("resize", resize, { passive: true });
     raf = requestAnimationFrame(loop);
   }
 
@@ -197,7 +151,6 @@ export function createMenuScene(host) {
     running = false;
     cancelAnimationFrame(raf);
     window.removeEventListener("resize", resize);
-    window.removeEventListener("mousemove", onMouseMove);
   }
 
   return { start, stop };

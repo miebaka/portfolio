@@ -1,22 +1,33 @@
 /* ==========================================================================
-   page-scene.js — Ambient pixel field visible across all pages.
+   page-scene.js — Ambient pixel field across all pages.
 
-   A sparse grid of 2 × 2 px cells drifts with a slow organic flow-field.
-   No cursor interaction — the motion is purely passive, like static on film.
-   Canvas sits at z-index 0 with pointer-events: none; nav (z=50) and the
+   Sparse 2 × 2 px cells on a 10 px pitch, driven by a slow organic
+   flow-field. A 60-second left→right traveling wave periodically sweeps
+   a brighter band across the field like a subtle progress timer.
+
+   Canvas sits at z-index 0 with pointer-events: none; the nav (z=50) and
    menu overlay (z=100) both paint above it.
-
-   Inspired by the Claude Cowork "living canvas" background.
    ========================================================================== */
 
-const CELL    = 2;
-const GAP     = 8;
-const PITCH   = CELL + GAP;   /* 10 px pitch — sparser than menu (4 px) */
-const HALF    = CELL >> 1;    /* 1 */
-const SPRING  = 0.007;        /* very lazy pull toward home */
-const DAMPING = 0.96;         /* slow decay — cells float like motes of dust */
-const DRIFT   = 0.003;        /* subtle flow-field amplitude */
-const REST_A  = 0.020;        /* ~5/255 at rest — barely perceptible grain */
+const CELL  = 2;
+const GAP   = 8;
+const PITCH = CELL + GAP;  /* 10 px pitch — sparser than the menu (4 px) */
+const HALF  = CELL >> 1;   /* 1 */
+
+/* Physics — very lazy, dust-mote feel */
+const SPRING  = 0.007;
+const DAMPING = 0.96;
+const DRIFT   = 0.003;
+
+/* Opacity */
+const REST_A     = 0.055;  /* visible grain at rest                  */
+const PULSE_AMP  = 0.008;  /* per-cell breathe ±0.8 %                */
+const SHIMMER_A  = 0.012;  /* extra opacity from displacement         */
+
+/* 60-second sweep wave */
+const WAVE_PERIOD = 60_000;   /* ms — full left-to-right cycle         */
+const WAVE_HW_F   = 0.08;     /* half-width as fraction of viewport    */
+const WAVE_BOOST  = 0.20;     /* peak extra opacity at wave crest      */
 
 export function initPageScene() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -39,9 +50,9 @@ export function initPageScene() {
 
   let w = 0, h = 0;
   let imageData, buf;
-  let cells  = [];
-  let fg     = [22, 20, 15];
-  let raf    = 0;
+  let cells   = [];
+  let fg      = [22, 20, 15];
+  let raf     = 0;
   let running = false;
 
   function themeColor() {
@@ -85,12 +96,17 @@ export function initPageScene() {
     buf.fill(0);
     const [r8, g8, b8] = fg;
 
+    /* 60-second traveling wave — bell sweeps from left edge to right */
+    const waveHW    = WAVE_HW_F * w;
+    const waveTravel = w + 2 * waveHW;
+    const waveFront  = ((t % WAVE_PERIOD) / WAVE_PERIOD) * waveTravel - waveHW;
+
     for (const c of cells) {
-      /* Organic flow-field — neighbours flow in subtly different directions */
+      /* Organic flow-field drift */
       c.vx += Math.sin(c.hy * 0.018 + t * 0.00027 + c.ph)       * DRIFT;
       c.vy += Math.cos(c.hx * 0.018 + t * 0.00021 + c.ph * 1.4) * DRIFT;
 
-      /* Very gentle spring toward home */
+      /* Spring toward home */
       c.vx += (c.hx - c.x) * c.sp;
       c.vy += (c.hy - c.y) * c.sp;
 
@@ -106,16 +122,25 @@ export function initPageScene() {
       if (c.y < HALF)     { c.y = HALF;     c.vy = 0; }
       if (c.y > h - HALF) { c.y = h - HALF; c.vy = 0; }
 
-      /* Opacity: rest + slow per-cell pulse + tiny displacement shimmer */
-      const pulse   = Math.sin(t * 0.00035 + c.ph) * 0.006;
+      /* Per-cell breathe pulse */
+      const pulse = Math.sin(t * 0.00035 + c.ph) * PULSE_AMP;
+
+      /* Displacement shimmer */
       const disp    = Math.hypot(c.x - c.hx, c.y - c.hy);
-      const shimmer = Math.min(disp / 10, 1) * 0.010;
-      const alpha   = Math.max(0, REST_A + pulse + shimmer);
+      const shimmer = Math.min(disp / 10, 1) * SHIMMER_A;
+
+      /* Wave contribution — cosine bell centred on waveFront */
+      const dd = c.hx - waveFront;
+      const wave = Math.abs(dd) < waveHW
+        ? (0.5 + 0.5 * Math.cos((dd / waveHW) * Math.PI)) * WAVE_BOOST
+        : 0;
+
+      const alpha = Math.max(0, REST_A + pulse + shimmer + wave);
 
       /* Write 2 × 2 pixel block */
       const px = Math.round(c.x) - HALF;
       const py = Math.round(c.y) - HALF;
-      const a8 = (alpha * 255 + 0.5) | 0;
+      const a8 = Math.min(255, (alpha * 255 + 0.5) | 0);
 
       let i = (py * w + px) << 2;
       buf[i] = r8; buf[i + 1] = g8; buf[i + 2] = b8; buf[i + 3] = a8;
@@ -143,21 +168,14 @@ export function initPageScene() {
     cancelAnimationFrame(raf);
   }
 
-  /* Pause when tab is in background to save battery */
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) pause();
     else start();
   });
 
-  /* Sync dot colour when user toggles the theme */
-  new MutationObserver(() => {
-    fg = themeColor();
-  }).observe(document.documentElement, {
-    attributes:      true,
-    attributeFilter: ["data-theme"],
-  });
+  new MutationObserver(() => { fg = themeColor(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-  /* Rebuild grid on resize */
   window.addEventListener("resize", () => {
     if (!running) return;
     pause();

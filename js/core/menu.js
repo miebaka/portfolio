@@ -4,7 +4,7 @@
    - animated open/close (class-toggled CSS transition + showModal/close)
    - scroll lock on <body>
    - focus return to the trigger on close */
-import { createMenuScene } from "./menu-scene.js";
+import { createMenuScene } from "./menu-scene.js?v=2";
 
 export function initMenu() {
   const openBtn = document.querySelector("[data-menu-open]");

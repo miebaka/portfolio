@@ -41,7 +41,6 @@ function initInkBleed() {
 
 function initMagneticButtons() {
   const btns = [
-    ...document.querySelectorAll(".site-nav__menu-btn"),
     ...document.querySelectorAll(".btn"),
     ...document.querySelectorAll(".back-btn"),
   ];
