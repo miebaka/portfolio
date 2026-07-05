@@ -162,7 +162,7 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   }
   .site-menu__list a:hover {
     font-size: calc(var(--_size) * 1.16);
-    color: var(--menu-fg);
+    color: var(--accent);
     /* Lighter tint on dark bg (light mode) / darker tint on light bg (dark mode):
        8% of --menu-fg creates the right direction in both themes automatically. */
     background-color: color-mix(in srgb, var(--menu-fg) 8%, transparent);
