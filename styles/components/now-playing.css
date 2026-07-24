@@ -13,9 +13,17 @@
   color: var(--ink);
   max-width: 100%;
   overflow: hidden;
+  /* Fade in when JS reveals the chip; fade out when hidden is set */
+  transition: opacity var(--duration-standard) var(--ease-emphasized),
+              display  var(--duration-standard) allow-discrete;
+  @starting-style { opacity: 0; }
 }
 
-.now-playing[hidden] { display: none; }
+/* Exit state — opacity 0 before display:none takes effect */
+.now-playing[hidden] {
+  display: none;
+  opacity: 0;
+}
 
 .now-playing__dot {
   width: var(--space-1);

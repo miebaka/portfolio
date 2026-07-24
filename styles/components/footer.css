@@ -46,7 +46,7 @@
 /* When the pixel scene is active it forms the signature — hide the static version */
 .site-footer.scene-active::before {
   opacity: 0;
-  transition: opacity 0.8s var(--ease-standard);
+  transition: opacity var(--duration-emphasis) var(--ease-standard);
 }
 
 /* Content layers above the watermark */
@@ -76,7 +76,9 @@
   opacity: var(--opacity-muted);
   transition: opacity var(--duration-fast) var(--ease-standard);
 }
-.site-footer__email:hover { opacity: 1; }
+@media (hover: hover) {
+  .site-footer__email:hover { opacity: 1; }
+}
 
 .site-footer__meta {
   display: flex;
@@ -90,7 +92,9 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
-.site-footer__socials a:hover { color: var(--clay); }
+@media (hover: hover) {
+  .site-footer__socials a:hover { color: var(--clay); }
+}
 
 .site-footer__bottom {
   display: flex;
