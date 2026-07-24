@@ -133,12 +133,11 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
 /* Rows — each anchor is a full-width row; the type itself is the interface.
    --_size is menu-local: vw-driven with a vh cap so five rows always fit. */
 .site-menu__list a {
-  --_size: clamp(2.5rem, min(9vw, 12vh), 7rem);
+  --_size: clamp(2rem, min(7.5vw, 10vh), 5.5rem);
   display: block;
   width: 100%;
   padding-block: 0.14em;
   padding-inline: max(var(--space-4), var(--gutter));
-  border-top: 1px solid color-mix(in srgb, var(--menu-fg) 14%, transparent);
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--_size);
@@ -146,11 +145,10 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--menu-fg) 88%, transparent);
-  transition: opacity var(--duration-fast) var(--ease-standard),
-              color   var(--duration-fast) var(--ease-standard);
+  transition: opacity   var(--duration-fast) var(--ease-standard),
+              color     var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
 }
-/* Remove the outer dividers — only the internal dividers between rows remain */
-.site-menu__list a:first-child { border-top: none; }
 .site-menu__list a[aria-current="page"] { color: var(--accent); }
 
 /* Scatter — alternating alignment, repeating every five rows (LEEROY rhythm:
@@ -174,40 +172,51 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   .site-menu__list a:hover[aria-current="page"] {
     opacity: 1;
     color: var(--accent);
+    transform: translateY(-0.05em);
   }
 }
 /* Touch press feedback — pointer-down on mobile; hover effects handle desktop */
 .site-menu__list a:active { opacity: 0.6; }
 
-/* Keyboard parity — focus gets a visible underline indicator rather than the
-   hover grow/shrink, which is disorienting when tabbing (stable peripheral
-   context matters more than spatial drama for sequential keyboard nav). */
-.site-menu__list a:focus-visible {
-  color: var(--menu-fg);
+/* Keyboard parity — same emphasis vocabulary as hover: accent colour + sibling
+   dimming. Underline is the keyboard-only indicator distinguishing tab from hover. */
+.site-menu__list:has(a:focus-visible) a:not(:focus-visible) {
+  opacity: 0.35;
+  color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+}
+.site-menu__list a:focus-visible,
+.site-menu__list a:focus-visible[aria-current="page"] {
+  opacity: 1;
+  color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 0.12em;
   text-decoration-thickness: 2px;
   outline: none;
 }
-.site-menu__list a:focus-visible[aria-current="page"] { color: var(--accent); }
 
-/* Entry — rows rise in sequence when the overlay opens (animation, not
-   transition, so the stagger delay never taxes the hover transitions).
-   visibility:hidden in the from-keyframe + fill-mode:both means items are
-   removed from the tab order during their delay — no focusing invisible links. */
+/* Entry — rows converge from their alignment direction: left items from the left,
+   right items from the right, reinforcing the alternating LEEROY layout with motion.
+   Stagger creates sequence; fill-mode:both keeps items out of tab order during delay. */
 dialog.site-menu.is-open .site-menu__list a {
   animation: menu-row-in var(--duration-emphasis) var(--ease-emphasized) both;
 }
+dialog.site-menu.is-open .site-menu__list a:nth-child(odd)  { animation-name: menu-row-in--left; }
+dialog.site-menu.is-open .site-menu__list a:nth-child(even) { animation-name: menu-row-in--right; }
 dialog.site-menu.is-open .site-menu__list a:nth-child(1) { animation-delay: calc(1 * var(--duration-stagger)); }
 dialog.site-menu.is-open .site-menu__list a:nth-child(2) { animation-delay: calc(2 * var(--duration-stagger)); }
 dialog.site-menu.is-open .site-menu__list a:nth-child(3) { animation-delay: calc(3 * var(--duration-stagger)); }
 dialog.site-menu.is-open .site-menu__list a:nth-child(4) { animation-delay: calc(4 * var(--duration-stagger)); }
 dialog.site-menu.is-open .site-menu__list a:nth-child(5) { animation-delay: calc(5 * var(--duration-stagger)); }
 dialog.site-menu.is-open .site-menu__list a:nth-child(n + 6) { animation-delay: calc(6 * var(--duration-stagger)); }
-@keyframes menu-row-in {
-  0%   { opacity: 0; transform: translateY(0.5em); visibility: hidden; }
-  1%   { visibility: visible; }          /* un-hide at 1% so fill-mode keeps it */
-  100% { opacity: 1; transform: none; visibility: visible; } /* hidden during delay */
+@keyframes menu-row-in--left {
+  0%   { opacity: 0; transform: translateX(-0.2em); visibility: hidden; }
+  1%   { visibility: visible; }
+  100% { opacity: 1; transform: none; visibility: visible; }
+}
+@keyframes menu-row-in--right {
+  0%   { opacity: 0; transform: translateX(0.2em); visibility: hidden; }
+  1%   { visibility: visible; }
+  100% { opacity: 1; transform: none; visibility: visible; }
 }
 
 .site-menu__foot {
@@ -248,9 +257,6 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
     background: var(--paper);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-  }
-  .site-menu__list a {
-    border-top-color: color-mix(in srgb, var(--menu-fg) 40%, transparent);
   }
 }
 @media (prefers-reduced-motion: reduce) {
