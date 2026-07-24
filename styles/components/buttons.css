@@ -48,6 +48,7 @@
   text-decoration-thickness: var(--_thick-hover);
   text-underline-offset: var(--_offset-hover);
 }
+.link:active { opacity: 0.65; }
 
 /* Dieter Rams mechanical keycap button — appears in hero section only.
    Two layers: recessed housing (outer) + raised keycap surface (inner).
@@ -94,6 +95,7 @@
 .btn-rams:active .btn-rams__keycap {
   transform: translateY(1.5px);
   box-shadow: var(--_keycap-press);
+  transition-duration: var(--duration-instant); /* press fast; release uses base 150ms */
 }
 
 .btn-rams__led {

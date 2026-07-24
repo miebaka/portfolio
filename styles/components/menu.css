@@ -24,8 +24,8 @@ dialog.site-menu {
   inset: 0;
   z-index: var(--z-overlay);
   background: color-mix(in srgb, var(--menu-bg) 92%, transparent);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
   color: var(--menu-fg);
   display: flex;
   flex-direction: column;
@@ -97,7 +97,12 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   border-radius: 0; /* deliberate sharp rectangle — the one square chip on site */
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-standard),
-              color var(--duration-fast) var(--ease-standard);
+              color     var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-snappy);
+}
+.site-menu__close:active {
+  transform: scale(0.97);
+  transition-duration: var(--duration-instant);
 }
 .site-menu__close:hover {
   background: var(--accent);
@@ -177,6 +182,9 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   }
   .site-menu__list a:hover[aria-current="page"] { color: var(--accent); }
 }
+/* Touch press feedback — pointer-down on mobile; hover effects handle desktop */
+.site-menu__list a:active { opacity: 0.6; }
+
 /* Keyboard parity — focus gets a visible underline indicator rather than the
    hover grow/shrink, which is disorienting when tabbing (stable peripheral
    context matters more than spatial drama for sequential keyboard nav). */
@@ -234,6 +242,23 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
   .site-menu__list a:nth-child(5n + 4) { padding-inline-end: 6%; }
 }
 
+@media (prefers-reduced-transparency: reduce) {
+  dialog.site-menu {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  dialog.site-menu {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .site-menu__list a {
+    border-top-color: color-mix(in srgb, var(--menu-fg) 40%, transparent);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   dialog.site-menu { transition: none; opacity: 1; }
   .site-menu__list a,

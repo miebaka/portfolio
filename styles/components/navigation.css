@@ -18,8 +18,8 @@
 }
 .site-nav.is-scrolled {
   background: color-mix(in srgb, var(--paper) 90%, transparent);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
   border-bottom-color: var(--border);
   color: var(--ink);
 }
@@ -82,6 +82,11 @@
   padding: var(--space-1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: transform var(--duration-fast) var(--ease-snappy);
+}
+.theme-toggle:active {
+  transform: scale(0.95);
+  transition-duration: var(--duration-instant);
 }
 .theme-toggle__track {
   position: relative;
@@ -173,3 +178,20 @@
 [data-theme="dark"] .back-btn--dark      { background: var(--ink); color: var(--paper); }
 [data-theme="dark"] .back-btn:hover,
 [data-theme="dark"] .back-btn--dark:hover { background: var(--ink-hover); transform: translateY(-2px); }
+
+/* Apple HIG § accessibility — solidify translucent surfaces when OS requests it */
+@media (prefers-reduced-transparency: reduce) {
+  .site-nav.is-scrolled {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  .site-nav.is-scrolled {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: var(--ink);
+  }
+}
