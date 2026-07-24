@@ -21,8 +21,12 @@ export function initForm() {
     const name = (data.get("name") || "").toString().trim();
     const email = (data.get("email") || "").toString().trim();
     const message = (data.get("message") || "").toString().trim();
-    if (!name || !email) {
-      setStatus("Add your name and email so I can reply.");
+    if (!name) {
+      setStatus("Add your name so I can reply.");
+      return;
+    }
+    if (!email) {
+      setStatus("Add your email so I can reply.");
       return;
     }
     const to = SITE.email || "hello@miebaka.design";

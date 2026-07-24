@@ -191,17 +191,17 @@ export const SITE = {
     rivo: {
       title: "Rivo",
       tagline: "A financial brand built on warmth, not cold blue.",
-      rail: { servicesLabel: "What we did", services: "Brand identity, Brand strategy, Guidelines", metaLabel: "Industry", meta: "Fintech" },
+      rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Guidelines", metaLabel: "Industry", meta: "Fintech" },
       overview: {
         question: "How do you make a fintech brand feel human?",
         body: ["Rivo was entering one of the most crowded markets in tech — where every challenger looks the same: cold blues, generic gradients, and not a single point of view."],
       },
       challenge: [
-        "We were asked to build an identity that signalled trust without disappearing into the category — warm enough to feel human, sharp enough to feel capable.",
+        "I was asked to build an identity that signalled trust without disappearing into the category — warm enough to feel human, sharp enough to feel capable.",
         "Fintech lives or dies on trust, yet the category has flattened into a sea of interchangeable blues. Rivo needed to feel different on sight while still reading as safe with people’s money — a hard balance between warmth and authority.",
       ],
-      process: ["We led with a warm, considered green over the category blue — ownable on sight and quietly confident. A humanist logotype softened the edges so a money brand could feel approachable, not corporate."],
-      solution: ["Rather than a fixed logo, we built a flexible system: components that scale from an app icon to a billboard without ever breaking."],
+      process: ["I led with a warm, considered green over the category blue — ownable on sight and quietly confident. A humanist logotype softened the edges so a money brand could feel approachable, not corporate."],
+      solution: ["Rather than a fixed logo, I built a flexible system: components that scale from an app icon to a billboard without ever breaking."],
       outcome: {
         body: ["Rivo launched with a system the team could run themselves, and a look that finally matched the product’s ambition."],
         metrics: [
@@ -221,7 +221,7 @@ export const SITE = {
     "christian-poster-a-week": {
       title: "A Christian Poster A Week",
       tagline: "One poster a week — scripture as bold graphic design.",
-      rail: { servicesLabel: "What we did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
+      rail: { servicesLabel: "What I did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
       overview: {
         question: "Can scripture be designed with real craft?",
         body: ["Faith content online is visually tired — soft gradients, stock doves, predictable type. I wanted to prove a verse could be designed with the same edge as a culture brand."],
@@ -248,7 +248,7 @@ export const SITE = {
     "tedx-rsu": {
       title: "TEDx RSU",
       tagline: "A global stage, made unmistakably local.",
-      rail: { servicesLabel: "What we did", services: "Brand identity, Creative direction, Print", metaLabel: "Industry", meta: "Event" },
+      rail: { servicesLabel: "What I did", services: "Brand identity, Creative direction, Print", metaLabel: "Industry", meta: "Event" },
       overview: {
         question: "How do you honour a global brand while making it your own?",
         body: ["TEDx carries a strict global identity, yet every event needs its own character. The brief was to build something that honoured the TEDx system while capturing the spirit of Rivers State University."],
@@ -275,7 +275,7 @@ export const SITE = {
     chopbox: {
       title: "ChopBox",
       tagline: "An identity as warm and crave-able as the food.",
-      rail: { servicesLabel: "What we did", services: "Brand identity, Brand strategy, Packaging", metaLabel: "Industry", meta: "Food brand" },
+      rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Packaging", metaLabel: "Industry", meta: "Food brand" },
       overview: {
         question: "How do you make a brand you’d order from twice?",
         body: ["Food brands live or die on appetite appeal. ChopBox needed to feel warm, generous and instantly crave-able — the kind of brand you trust with dinner."],
