@@ -146,10 +146,8 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--menu-fg) 88%, transparent);
-  background-color: transparent;
-  transition: font-size var(--duration-medium) var(--ease-emphasized),
-              color var(--duration-fast) var(--ease-standard),
-              background-color var(--duration-fast) var(--ease-standard);
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              color   var(--duration-fast) var(--ease-standard);
 }
 /* Remove the outer dividers — only the internal dividers between rows remain */
 .site-menu__list a:first-child { border-top: none; }
@@ -163,24 +161,20 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
    single-word labels (e.g. PLAYGROUND) off-viewport at narrow widths. */
 .site-menu__list a:nth-child(5n + 4) { text-align: right; padding-inline-end: 12%; }
 
-/* Hover grow/shrink — the hovered row swells, siblings compress to make room.
-   Pointer-device only: sticky :hover on touch would leave a row stuck large.
-   Dimmed siblings use 45% (not 32%) to clear WCAG large-text 3:1 contrast.
-   contain:layout limits reflow to this list, never the broader page. */
-.site-menu__list { contain: layout; }
-@media (hover: hover) {
+/* Hover — opacity dimming only: compositor-only, zero layout change.
+   Pointer-device only: sticky :hover on touch would leave a row stuck dimmed.
+   Siblings use 45% color-mix + opacity:0.35 to clear WCAG large-text 3:1.
+   No font-size change → items never shift position → no gap between bar/list/foot. */
+@media (hover: hover) and (pointer: fine) {
   .site-menu__list:has(a:hover) a:not(:hover) {
-    font-size: calc(var(--_size) * 0.72);
+    opacity: 0.35;
     color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
   }
-  .site-menu__list a:hover {
-    font-size: calc(var(--_size) * 1.16);
+  .site-menu__list a:hover,
+  .site-menu__list a:hover[aria-current="page"] {
+    opacity: 1;
     color: var(--accent);
-    /* Lighter tint on dark bg (light mode) / darker tint on light bg (dark mode):
-       8% of --menu-fg creates the right direction in both themes automatically. */
-    background-color: color-mix(in srgb, var(--menu-fg) 8%, transparent);
   }
-  .site-menu__list a:hover[aria-current="page"] { color: var(--accent); }
 }
 /* Touch press feedback — pointer-down on mobile; hover effects handle desktop */
 .site-menu__list a:active { opacity: 0.6; }
