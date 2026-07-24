@@ -86,14 +86,15 @@
   transition: opacity var(--duration-standard) var(--ease-standard);
   pointer-events: none;
 }
-.sl-card:hover::after { opacity: 1; }
-
-.sl-card:hover {
-  transform: rotate(-2.5deg) scale(1.05);
-  z-index: var(--z-raised);
+@media (hover: hover) and (pointer: fine) {
+  .sl-card:hover::after { opacity: 1; }
+  .sl-card:hover {
+    transform: rotate(-2.5deg) scale(1.05);
+    z-index: var(--z-raised);
+  }
+  .sl-card:hover .sl-card__name { opacity: 0; }
+  .sl-card:hover .sl-card__details { opacity: 1; }
 }
-.sl-card:hover .sl-card__name { opacity: 0; }
-.sl-card:hover .sl-card__details { opacity: 1; }
 
 @container work (min-width: 30rem) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
 @container work (min-width: 47.5rem) { .sl-grid { grid-template-columns: repeat(3, 1fr); } }

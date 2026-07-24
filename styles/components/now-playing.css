@@ -42,6 +42,10 @@
   text-overflow: ellipsis;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .now-playing__dot { animation: none; }
+}
+
 @media (max-width: 480px) {
   .now-playing__label { display: none; }
 }

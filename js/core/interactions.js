@@ -46,10 +46,18 @@ function initMagneticButtons() {
   ];
   if (!btns.length) return;
 
-  const state  = btns.map(() => ({ tx: 0, ty: 0, cx: 0, cy: 0 }));
-  let mouseX   = 0;
-  let mouseY   = 0;
-  let hasPtr   = false;
+  const state   = btns.map(() => ({ tx: 0, ty: 0, cx: 0, cy: 0 }));
+  const pressed = new Set();
+  let mouseX    = 0;
+  let mouseY    = 0;
+  let hasPtr    = false;
+
+  btns.forEach(btn => {
+    btn.addEventListener("pointerdown",   () => pressed.add(btn),    { passive: true });
+    btn.addEventListener("pointerup",     () => pressed.delete(btn), { passive: true });
+    btn.addEventListener("pointercancel", () => pressed.delete(btn), { passive: true });
+    btn.addEventListener("pointerleave",  () => pressed.delete(btn), { passive: true });
+  });
 
   window.addEventListener("mousemove", (e) => {
     mouseX = e.clientX;
@@ -80,11 +88,11 @@ function initMagneticButtons() {
       s.cx += (s.tx - s.cx) * MAG_LERP;
       s.cy += (s.ty - s.cy) * MAG_LERP;
 
-      if (Math.abs(s.cx) > 0.05 || Math.abs(s.cy) > 0.05) {
-        btn.style.transform = `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)`;
-      } else {
-        btn.style.transform = "";
-      }
+      const scale = pressed.has(btn) ? " scale(0.97)" : "";
+      const hasMag = Math.abs(s.cx) > 0.05 || Math.abs(s.cy) > 0.05;
+      btn.style.transform = hasMag
+        ? `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)${scale}`
+        : scale || "";
     });
   })();
 }

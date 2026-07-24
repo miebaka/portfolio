@@ -63,7 +63,9 @@
   padding: var(--space-1) var(--_px);
   flex-shrink: 0;
 }
-.site-nav__menu-btn:hover { color: var(--accent); }
+@media (hover: hover) {
+  .site-nav__menu-btn:hover { color: var(--accent); }
+}
 
 /* ── Drams-037 theme toggle — pill track + oversized knob ─────────────── */
 .theme-toggle {

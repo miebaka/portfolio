@@ -39,11 +39,19 @@ dialog.site-menu {
      so closeBtn.focus() called in the same rAF tick works correctly. */
   visibility: hidden;
   pointer-events: none;
+  /* Close: faster than open — exits should feel snappy */
+  transition: opacity var(--duration-standard) var(--ease-emphasized),
+              visibility var(--duration-standard) var(--ease-emphasized);
+}
+dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
+dialog.site-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  /* Open: slower, more deliberate than close */
   transition: opacity var(--duration-medium) var(--ease-emphasized),
               visibility var(--duration-medium) var(--ease-emphasized);
 }
-dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
-dialog.site-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
 
 /* Padding override — minimum left/right breathing room on small screens */
 dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
