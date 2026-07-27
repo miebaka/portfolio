@@ -5,7 +5,6 @@
 .site-footer {
   position: relative;
   overflow: hidden;
-  background: var(--paper);
   color: var(--ink);
   /* The signature fills the footer and bleeds off both sides. That overscale
      is the point: it is the one moment on the site that behaves like a poster

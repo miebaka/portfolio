@@ -67,8 +67,9 @@
 }
 
 /* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */
+/* No background: identical to the page surface, and an opaque repaint here
+   would block the cursor field beneath it. */
 .about-home {
-  background: var(--paper);
   padding-block-start: var(--section-block-tight);
 }
 

@@ -3,7 +3,9 @@
    left rail + offset prose + full-bleed media.
    ========================================================================== */
 
-.case-page { background: var(--paper); color: var(--ink); }
+/* No background: the page surface is already --paper, and repainting it
+   here would hide the cursor field, which sits just above it. */
+.case-page { color: var(--ink); }
 /* Optional flourish: faint film grain across the dark case page (sits below the
    nav/menu, above content; non-interactive). */
 .case-page::before {

@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Component · Cursor field — ink bleed + halftone, merged.
+
+   One element, two background layers, one static mask:
+
+     layer 1 (bloom)  travels with the element  → the light
+     layer 2 (dots)   counter-translated        → locked to the viewport grid
+
+   The bloom is the light and moves with the pointer; the dot grid has to stay
+   registered to the page, otherwise the texture reads as a patch being
+   carried around rather than something the light is revealing.
+
+   background-attachment: fixed would be the obvious way to lock the dots, but
+   it does not work here: an element with a transform becomes the containing
+   block for its own fixed backgrounds, so the transform silently turns
+   "fixed" back into "scroll". Instead the dot layer's background-position is
+   counter-translated by the element's own offset, modulo the pitch. Because
+   the offset is wrapped to one tile, the value stays tiny and the repaint is
+   a single 10px cell rather than the whole element.
+   ========================================================================== */
+
+.cursor-field {
+  --_size: 42rem;          /* diameter of the lit patch                    */
+  --_pitch: 10px;          /* dot spacing — matches the footer signature   */
+  --_dot: 0.75px;          /* dot radius                                   */
+  --_bloom: 16%;           /* clay strength at the centre of the bleed     */
+  --_grain: 26%;           /* ink strength of the dots                     */
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;             /* above the page background, beneath all content */
+  width: var(--_size);
+  height: var(--_size);
+  /* Centre the element on the pointer coordinate the JS writes */
+  margin: calc(var(--_size) / -2) 0 0 calc(var(--_size) / -2);
+  pointer-events: none;
+
+  background-image:
+    /* bloom — soft warm light, travels with the element */
+    radial-gradient(circle at 50% 50%,
+      color-mix(in srgb, var(--clay) var(--_bloom), transparent) 0%,
+      transparent 62%),
+    /* halftone — locked to the viewport grid */
+    radial-gradient(circle,
+      color-mix(in srgb, var(--ink) var(--_grain), transparent) var(--_dot),
+      transparent var(--_dot));
+  background-size: 100% 100%, var(--_pitch) var(--_pitch);
+  /* --gx/--gy are written by cursor-field.js as the element offset wrapped to
+     one tile, which holds the dot grid still while the element moves. */
+  background-position: 50% 50%, var(--gx, 0px) var(--gy, 0px);
+
+  /* Static soft edge. The dots stop well before the bloom does, so the light
+     spills wider than the texture it reveals. */
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 22%, transparent 68%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 22%, transparent 68%);
+
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-standard);
+  will-change: transform;
+}
+
+.cursor-field.is-lit { opacity: 1; }
+
+/* Dark mode: the paper is dark, so the same ink dots would vanish and the
+   clay would glare. Lift the grain and pull the bloom back. */
+[data-theme="dark"] .cursor-field {
+  --_bloom: 12%;
+  --_grain: 34%;
+}
+
+/* Belt and braces — the module never initialises in either of these cases,
+   but if the markup is ever present the element must not render. */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-field { display: none; }
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor-field { display: none; }
+}

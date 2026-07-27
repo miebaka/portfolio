@@ -73,9 +73,10 @@
 [data-theme="dark"] .marquee--light .marquee__item img { filter: brightness(0) invert(1); }
 [data-theme="dark"] .marquee--light .marquee__wordmark { color: var(--ink); }
 
-/* Light variant — paper background inside the About Me section */
+/* Light variant — sits inside the About Me section. No background: it matches
+   the page surface, and an opaque band here would cut a hole in the cursor
+   field as it passes behind. */
 .marquee--light {
-  background: var(--paper);
   height: calc(var(--space-6) * var(--phi) * 1.3);
 }
 .marquee--light .marquee__item {
