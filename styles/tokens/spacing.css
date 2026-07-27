@@ -15,7 +15,10 @@
   --space-7: 8rem;    /* 128 */
   --space-8: 13rem;   /* 208 */
 
-  /* Section padding — semantic aliases consumed by .section / .section--tight */
-  --section-block:       15rem; /* 240px — standard section vertical rhythm */
-  --section-block-tight: 10rem; /* 160px — compact section vertical rhythm  */
+  /* Section padding — semantic aliases consumed by .section / .section--tight.
+     Fluid rather than fixed: at VISUAL_DENSITY 2 whitespace is the primary
+     separator, so it has to scale with the viewport instead of collapsing to
+     a fixed rem value on large screens. */
+  --section-block:       clamp(7rem, 18vw, 19rem);  /* standard vertical rhythm */
+  --section-block-tight: clamp(5rem, 11vw, 12rem);  /* compact vertical rhythm  */
 }

@@ -5,7 +5,10 @@
 .contact-section {
   background: var(--paper);
   color: var(--ink);
-  padding-block: var(--space-8);
+  /* Uses the shared section rhythm rather than a raw spacing step, so the
+     gap before the footer scales with the rest of the page instead of
+     sitting at a fixed 208px on every screen. */
+  padding-block: var(--section-block-tight);
   border-top: 1px solid var(--border);
 }
 
@@ -36,7 +39,8 @@
   }
   .contact__heading {
     grid-column: 1 / -1;
-    white-space: nowrap;
+    /* No nowrap: the heading is free to break. Forcing one line meant any
+       longer heading, or a wider font fallback, would push past the gutter. */
     margin-bottom: var(--space-7);
   }
   .contact__form {

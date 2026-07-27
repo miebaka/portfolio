@@ -71,9 +71,12 @@
   --weight-medium: 500;
   --weight-bold: 700;
 
-  /* Type scale — fluid mobile → desktop */
-  --step-display-xl: clamp(3.5rem, 1.7rem + 7.6vw, 6rem);    /* 56 → 96 */
-  --step-hero: clamp(3rem, 1.9rem + 4.6vw, 4.5rem);          /* 48 → 72 · display-lg */
+  /* Type scale — fluid mobile → desktop.
+     The top of the scale is genuinely large: an editorial page needs one
+     piece of type that behaves like an image, not like a bigger heading. */
+  --step-poster: clamp(4rem, 12.5vw, 13rem);                 /* 64 → 208 · full-bleed display */
+  --step-display-xl: clamp(3.25rem, 8vw, 8rem);              /* 52 → 128 */
+  --step-hero: clamp(2.75rem, 5.4vw, 5rem);                  /* 44 → 80 · display-lg */
   --step-display: var(--step-hero);                           /* alias — display heading */
   --step-h1: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);          /* 40 → 56 */
   --step-h2: clamp(2.125rem, 1.7rem + 1.8vw, 2.75rem);       /* 34 → 44 */
@@ -87,27 +90,32 @@
   --step-caption: 0.875rem;                                   /* 14 */
   --step-meta: 0.75rem;                                       /* 12 · label */
 
-  /* Line heights */
-  --leading-hero: 1;
-  --leading-heading: 1.08;
-  --leading-intro: 1.55;
+  /* Line heights — leading tracks size inversely: tight on display, open on
+     body. A single line-height across the scale is wrong somewhere. */
+  --leading-poster: 0.86;
+  --leading-hero: 0.95;
+  --leading-heading: 1.06;
+  --leading-intro: 1.5;
   --leading-body: 1.75;
   --leading-caption: 1.55;
   --leading-label: 1;
-  --leading-tight: 1.08;  /* alias → heading (legacy) */
+  --leading-tight: 1.06;  /* alias → heading (legacy) */
   --leading-snug: 1.16;   /* legacy */
 
-  /* Letter tracking */
-  --tracking-display-xl: -0.05em;
-  --tracking-display: -0.03em;
-  --tracking-heading: -0.02em;
+  /* Letter tracking — optical, not uniform. Large type reads too loose at 0,
+     so it tightens as it grows; small caps-labels need positive tracking to
+     stay legible. */
+  --tracking-poster: -0.055em;
+  --tracking-display-xl: -0.045em;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.022em;
   --tracking-body: 0;
   --tracking-caption: 0.01em;
-  --tracking-label: 0.16em;
+  --tracking-label: 0.18em;
   --tracking-button: 0.12em;
-  --tracking-tight: -0.02em; /* alias → heading (legacy) */
-  --tracking-meta: 0.16em;   /* alias → label (legacy) */
-  --tracking-caps: 0.16em;   /* alias → label (legacy) */
+  --tracking-tight: -0.022em; /* alias → heading (legacy) */
+  --tracking-meta: 0.18em;   /* alias → label (legacy) */
+  --tracking-caps: 0.18em;   /* alias → label (legacy) */
 
   /* Reading measures */
   --measure-title:   16ch; /* primary page heading constraint */

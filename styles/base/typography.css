@@ -38,11 +38,11 @@ p { max-width: var(--measure-reading); }
 .case-next__label,
 .case-metric span,
 .cap-row__meta,
-.sl-card__head,
+.sl-card__cat,
 .sl-card__services,
 .chip,
 .btn,
-.hero-noir__cue,
+.hero-noir__meta,
 .hero__availability,
 .site-footer__meta,
 .site-footer__bottom {

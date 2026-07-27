@@ -71,16 +71,16 @@
     <!-- Hero — golden ratio grid: content (38.2%) | portrait (61.8%) -->
     <section class="hero-noir">
       <div class="hero-noir__content">
+        <p class="hero-noir__meta reveal">
+          <span>Brand &amp; visual designer</span>
+          <span>Lagos &middot; WAT</span>
+        </p>
         <div class="hero-noir__lower">
-          <h1 class="hero-noir__statement">The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
-          <a class="scroll-cue" href="#work" aria-label="Scroll to selected work">
-            <span class="scroll-cue__track" aria-hidden="true"><span class="scroll-cue__dot"></span></span>
-            <span class="scroll-cue__label">Scroll Down</span>
-          </a>
+          <h1 class="hero-noir__statement" data-split>The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
         </div>
       </div>
-      <div class="hero-noir__picture">
-        <!-- Browser renders the AVIF with full native colour management — no shader processing -->
+      <div class="hero-noir__picture" data-wipe="up">
+        <!-- Browser renders the AVIF with full native colour management -->
         <img class="hero-noir__portrait"
              src="assets/images/optimized/miebaka-joshua-portrait-1080.avif"
              alt="" aria-hidden="true" data-hero-portrait>
@@ -123,15 +123,17 @@
         <figure data-mount="testimonial" class="reveal"></figure>
       </div>
 
-      <!-- More About Me -->
+      <!-- More About Me — statement at full width, note indented to the φ line.
+           No portrait here: the hero already carries it, and repeating the
+           same photo one screen later reads as filler. -->
       <div class="container about-home__block" id="about-preview">
-        <div class="about-grid">
-          <div class="about-portrait reveal" aria-hidden="true"></div>
-          <div class="stack reveal">
-            <p class="about-mission">Great brands feel like they were always going to look that way.</p>
-            <p>My earliest memory of design is a games console: the moment I understood that form and function could conspire to make something irresistible. Seven years later, I&rsquo;m building creative for 800,000+ users at Rise, and building an AI tool that scores where eyes actually land in an ad. If one word describes how I work: <em>inquisitive</em>. I question every brief until the idea underneath is inevitable.</p>
-            <p><a class="link" href="about.html">More about me</a></p>
-          </div>
+        <div class="section-head reveal">
+          <h2 class="section-head__label">About</h2>
+        </div>
+        <p class="about-mission" data-split>Great brands feel like they were always going to look that way.</p>
+        <div class="about-note stack reveal">
+          <p>My earliest memory of design is a games console: the moment I understood that form and function could conspire to make something irresistible. Seven years later, I&rsquo;m building creative for 800,000+ users at Rise, and building an AI tool that scores where eyes actually land in an ad. If one word describes how I work: <em>inquisitive</em>. I question every brief until the idea underneath is inevitable.</p>
+          <p><a class="link" href="about.html">More about me</a></p>
         </div>
       </div>
 

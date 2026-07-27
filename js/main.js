@@ -9,6 +9,7 @@ import { renderCapabilities, renderTestimonial, fillSlots } from "./render/secti
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
+import { initSplitText } from "./core/split-text.js";
 import { initScrollReveal } from "./core/scroll.js";
 import { initNavigation } from "./core/navigation.js";
 import { initMenu } from "./core/menu.js";
@@ -16,8 +17,6 @@ import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initInteractions } from "./core/interactions.js";
 import { initFooterScene } from "./core/footer-scene.js";
-import { initHeroScene }  from "./three/hero-scene.js";
-import { initPageScene }  from "./core/page-scene.js";
 
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();
@@ -33,13 +32,14 @@ renderFooter();
 fillSlots();
 initNowPlaying();
 
-/* Behaviour: attach handlers to the freshly rendered DOM. */
+/* Behaviour: attach handlers to the freshly rendered DOM.
+   Split runs before the reveal observer so words are wrapped and measured
+   before anything can be marked visible. */
+initSplitText();
 initScrollReveal();
 initNavigation();
 initMenu();
 initYear();
 initForm();
 initInteractions();
-initPageScene();
 initFooterScene();
-initHeroScene();

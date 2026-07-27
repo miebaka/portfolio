@@ -2,23 +2,30 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 
+/* Colour field on top, caption underneath — the editorial treatment. The
+   title sits outside the tile rather than centred inside it, so the colour
+   field reads as the work and the type reads as the label for it. */
 function workCard(project) {
   const base = basePath();
   const services = project.tags.map((t) => "<li>" + esc(t) + "</li>").join("");
-  const category = project.category
-    ? ' <span class="sl-card__cat">(' + esc(project.category) + ")</span>"
-    : "";
   const inner =
-    '<span class="sl-card__bg"></span>' +
-    '<span class="sl-card__name">' + esc(project.title) + "</span>" +
-    '<span class="sl-card__details">' +
-    '<span class="sl-card__head">' + esc(project.title) + category + "</span>" +
-    '<ul class="sl-card__services">' + services + "</ul>" +
+    '<span class="sl-card__frame" data-wipe>' +
+      '<span class="sl-card__bg"></span>' +
+      '<span class="sl-card__services-wrap">' +
+        '<ul class="sl-card__services">' + services + "</ul>" +
+      "</span>" +
+    "</span>" +
+    '<span class="sl-card__meta">' +
+      '<span class="sl-card__name">' + esc(project.title) + "</span>" +
+      '<span class="sl-card__cat">' +
+        esc(project.category || "") +
+        (project.year ? ' <span class="sl-card__year">' + esc(project.year) + "</span>" : "") +
+      "</span>" +
     "</span>";
   if (project.caseReady === false) {
-    return '<div class="sl-card reveal" style="cursor:default" aria-disabled="true">' + inner + "</div>";
+    return '<div class="sl-card" style="cursor:default" aria-disabled="true">' + inner + "</div>";
   }
-  return '<a class="sl-card reveal" href="' + base + "work/" + esc(project.slug) + '.html">' + inner + "</a>";
+  return '<a class="sl-card" href="' + base + "work/" + esc(project.slug) + '.html">' + inner + "</a>";
 }
 
 export function renderWork() {
@@ -27,8 +34,12 @@ export function renderWork() {
   el.classList.add("sl-grid");
   el.innerHTML = SITE.projects.map(workCard).join("");
   el.querySelectorAll(".sl-card").forEach((card, i) => {
-    card.style.setProperty("--tile", SITE.projects[i].tone);
-    card.style.setProperty("--reveal-i", i);
+    const p = SITE.projects[i];
+    card.style.setProperty("--tile", p.tone);
+    /* span (of 12) and ratio drive the asymmetric grid — both already lived in
+       the data and were previously unused. */
+    if (p.span)  card.style.setProperty("--span", String(p.span));
+    if (p.ratio) card.style.setProperty("--ratio", p.ratio);
   });
 }
 

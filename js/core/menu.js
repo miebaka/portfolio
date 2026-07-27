@@ -4,14 +4,12 @@
    - animated open/close (class-toggled CSS transition + showModal/close)
    - scroll lock on <body>
    - focus return to the trigger on close */
-import { createMenuScene } from "./menu-scene.js";
 
 export function initMenu() {
   const openBtn = document.querySelector("[data-menu-open]");
   const menu = document.getElementById("site-menu");
   if (!openBtn || !menu) return;
   let lastFocus = null;
-  const scene = createMenuScene(menu);
 
   function open() {
     lastFocus = document.activeElement;
@@ -28,24 +26,31 @@ export function initMenu() {
       const closeBtn = menu.querySelector("[data-menu-close]");
       if (closeBtn) closeBtn.focus();
     });
-    scene.start();                             /* async, non-blocking */
   }
 
   function close() {
     menu.classList.remove("is-open");
     document.body.classList.remove("menu-open");
     openBtn.setAttribute("aria-expanded", "false");
-    scene.stop();
-    /* Wait for the CSS opacity/visibility transition before calling dialog.close()
-       so the overlay fades out rather than snapping away. */
-    menu.addEventListener(
-      "transitionend",
-      () => {
-        menu.close();
-        if (lastFocus && lastFocus.focus) lastFocus.focus();
-      },
-      { once: true }
-    );
+
+    /* Wait for the fade before dialog.close() so the overlay animates out
+       rather than snapping away. The dialog transitions several properties;
+       only opacity marks the end of the visible exit, and a timeout backstop
+       covers the case where the transition never fires (reduced motion, a
+       backgrounded tab) and would otherwise strand the dialog open. */
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      menu.removeEventListener("transitionend", onEnd);
+      menu.close();
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    };
+    const onEnd = (e) => {
+      if (e.target === menu && e.propertyName === "opacity") finish();
+    };
+    menu.addEventListener("transitionend", onEnd);
+    setTimeout(finish, 600);
   }
 
   /* The native dialog fires a "cancel" event on Escape before closing itself.

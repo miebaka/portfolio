@@ -12,47 +12,68 @@
 @media (max-width: 820px) {
   .about-grid { grid-template-columns: 1fr; gap: var(--space-4); }
 }
+/* Image frames are square-cornered site-wide. The radius scale is reserved
+   for interactive chips (buttons, the back pill) so shape carries meaning:
+   rounded means pressable, sharp means content.
+
+   The portrait is set as a background rather than an <img> because these
+   elements are aria-hidden decoration — the same face already carries an
+   accessible identity in the hero, and repeating it as content would only
+   add noise for screen readers. image-set lets the browser pick AVIF and
+   the right density without a <picture> element. */
 .about-portrait {
-  border-radius: var(--radius);
+  border-radius: 0;
   overflow: hidden;
-  background: var(--linen);
+  background-color: var(--linen);
+  background-image: image-set(
+    url("../../assets/images/optimized/miebaka-joshua-portrait-810.avif") type("image/avif"),
+    url("../../assets/images/optimized/miebaka-joshua-portrait-810.webp") type("image/webp"),
+    url("../../assets/images/optimized/miebaka-joshua-portrait-810.jpg")  type("image/jpeg")
+  );
+  background-size: cover;
+  background-position: center 22%;
   aspect-ratio: 4 / 5;
+}
+/* Stacked, a 4:5 portrait at full container width eats an entire screen.
+   Crop to a landscape band so it reads as an image in the flow rather than
+   as a section of its own. */
+@media (max-width: 820px) {
+  .about-portrait { aspect-ratio: 3 / 2; background-position: center 18%; }
 }
 
 /* Home-page preview statement */
 .about-mission {
   font-family: var(--font-display);
-  font-size: var(--step-h2);
+  font-size: var(--step-hero);
   font-weight: var(--weight-regular);
   line-height: var(--leading-heading);
-  max-width: var(--measure-hero);
+  letter-spacing: var(--tracking-display);
+  max-width: 20ch;
 }
 .about-mission em { color: var(--clay); font-style: italic; }
 
-/* About-page mission statement — smaller, reading-friendly */
-.about-statement {
-  font-family: var(--font-display);
-  font-size: var(--step-h3);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-intro);
-  max-width: var(--measure-lead);
-}
-.about-statement em { color: var(--clay); font-style: italic; }
-
-/* Wide picture alongside the mission statement */
-.about-mission-grid {
-  display: grid;
-  grid-template-columns: var(--col-minor) var(--col-major);
-  gap: var(--space-6);
-  align-items: start;
+/* The note sits on the φ line rather than under the statement — an indent
+   deep enough to read as a deliberate second column, without needing a grid
+   or a second visible edge. */
+.about-note {
+  margin-top: var(--space-6);
+  margin-inline-start: 38.197%;
+  max-width: var(--measure-reading);
 }
 @media (max-width: 820px) {
-  .about-mission-grid { grid-template-columns: 1fr; }
+  .about-note { margin-inline-start: 0; margin-top: var(--space-5); }
 }
-.about-wide-img {
-  aspect-ratio: 4 / 3;
-  background: var(--linen);
-  border-radius: var(--radius);
-  overflow: hidden;
+
+/* About-page mission statement — the page's one display moment. It stands
+   alone at a wide measure with nothing beside it; the surrounding whitespace
+   is what gives it weight, so it needs no image to lean on. */
+.about-statement {
+  font-family: var(--font-display);
+  font-size: var(--step-hero);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-display);
+  max-width: 22ch;
 }
+.about-statement em { color: var(--clay); font-style: italic; }
 

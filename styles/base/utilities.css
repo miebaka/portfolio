@@ -31,7 +31,10 @@
 .measure-lead { max-width: var(--measure-lead); }
 .measure-reading { max-width: var(--measure-reading); }
 
-/* Shared section heading block. The marker itself is a small label, not display. */
+/* Shared section heading block. The marker is a small label, never display
+   type — the work below it is what should carry the scale. A hairline runs
+   the full width above it, which is the one rule the page needs to signal
+   "new section" now that the block borders are gone. */
 .section-head {
   display: flex;
   flex-wrap: wrap;
@@ -39,10 +42,12 @@
   justify-content: space-between;
   gap: var(--space-2);
   margin-bottom: var(--space-5);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
 }
 .section-head__label {
   font-family: var(--font-label);
-  font-size: var(--step-h5);
+  font-size: var(--step-meta);
   font-weight: 600;
   line-height: var(--leading-label);
   letter-spacing: var(--tracking-label);
@@ -81,33 +86,8 @@
   text-transform: uppercase;
 }
 
-/* Scroll reveal (progressive enhancement).
-   Items in a group set --reveal-i to stagger their entrance in sequence.
-   Translation is 0.6em (scales with local font size) rather than a fixed pixel
-   distance — text reveals feel tighter; larger type reveals travel proportionally. */
-.reveal {
-  opacity: 0;
-  transform: translateY(0.6em);
-  transition: opacity var(--duration-slow) var(--ease-out-expo),
-              transform var(--duration-slow) var(--ease-out-expo);
-  transition-delay: calc(var(--reveal-i, 0) * var(--duration-stagger));
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-.no-js .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
+/* Scroll reveal lives in base/motion.css — the whole reveal vocabulary is
+   kept in one place so directions and timings stay coherent across the site. */
 
 @media (max-width: 480px) {
   .section       { padding-block: 5rem; }

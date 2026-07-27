@@ -114,11 +114,32 @@ export function renderMenu() {
   const base = basePath();
   const page = document.body.dataset.page || "";
 
+  /* Numbered editorial index. Each label is wrapped in a clipping span so the
+     word can rise from behind its own baseline on open — the same masked
+     reveal vocabulary the page headings use. The index number is decorative
+     and hidden from AT; the link text alone carries the accessible name. */
   const items = (SITE.menu || [])
-    .map((m) => {
+    .map((m, i) => {
       const current = m.key === page ? ' aria-current="page"' : "";
-      return '<a href="' + base + esc(m.href) + '"' + current + ">" + esc(m.label) + "</a>";
+      const n = String(i + 1).padStart(2, "0");
+      return (
+        '<li class="site-menu__item" style="--row-i:' + (i + 1) + '">' +
+          '<a class="site-menu__link" href="' + base + esc(m.href) + '"' + current + ">" +
+            '<span class="site-menu__index" aria-hidden="true">' + n + "</span>" +
+            '<span class="site-menu__label">' +
+              '<span class="site-menu__label-i">' + esc(m.label) + "</span>" +
+            "</span>" +
+          "</a>" +
+        "</li>"
+      );
     })
+    .join("");
+
+  const socials = (SITE.socials || [])
+    .map((s) =>
+      '<a class="site-menu__social" href="' + esc(s.href) +
+      '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + "</a>"
+    )
     .join("");
 
   const menu = document.createElement("dialog");
@@ -132,14 +153,19 @@ export function renderMenu() {
   menu.innerHTML =
     '<div class="container site-menu__bar">' +
       brandHTML() +
-      '<button class="site-menu__close" type="button" data-menu-close aria-label="Close menu">Close</button>' +
+      '<button class="site-menu__close" type="button" data-menu-close aria-label="Close menu">' +
+        '<span class="site-menu__close-label">Close</span>' +
+        '<span class="site-menu__close-mark" aria-hidden="true"></span>' +
+      "</button>" +
       '<span class="site-menu__bar-spacer" aria-hidden="true"></span>' +
     "</div>" +
     '<nav class="site-menu__nav" aria-label="Primary">' +
-      '<div class="site-menu__list">' + items + "</div>" +
+      '<ul class="site-menu__list">' + items + "</ul>" +
     "</nav>" +
     '<div class="container site-menu__foot">' +
-      "<span>&copy; <span data-year></span> " + esc(SITE.name) + "</span>" +
+      '<a class="site-menu__email" data-href="email" href="mailto:' + esc(SITE.email) + '">' +
+        esc(SITE.email) + "</a>" +
+      '<div class="site-menu__socials">' + socials + "</div>" +
     "</div>";
   document.body.appendChild(menu);
 }

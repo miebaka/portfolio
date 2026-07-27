@@ -1,7 +1,10 @@
 /* ==========================================================================
    Component · Menu — fullscreen overlay navigation.
-   Scattered editorial rows (LEEROY-style): full-bleed hairline dividers,
-   alternating alignment, hover grow/shrink, WebGL backdrop behind content.
+
+   A numbered editorial index: rule, number, label. One left edge, no scatter —
+   the hierarchy comes from scale and the counter, not from moving things
+   around. Rows unmask from behind their own baseline in sequence on open.
+
    Implemented as a native <dialog> for built-in focus trap + AT announcement.
    ========================================================================== */
 
@@ -23,14 +26,16 @@ dialog.site-menu {
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay);
-  background: color-mix(in srgb, var(--menu-bg) 92%, transparent);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
+  background: color-mix(in srgb, var(--menu-bg) 88%, transparent);
   color: var(--menu-fg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Materialize rather than fade: the blur and the surface arrive together,
+     so it reads as glass forming instead of a panel dissolving in. */
   opacity: 0;
+  -webkit-backdrop-filter: blur(0px) saturate(100%);
+  backdrop-filter: blur(0px) saturate(100%);
   /* visibility:hidden keeps the fixed-position overlay out of pointer events
      and the tab order when closed — critical because display:flex (needed for
      the transition) overrides the UA dialog:not([open]){display:none} rule,
@@ -40,32 +45,25 @@ dialog.site-menu {
   visibility: hidden;
   pointer-events: none;
   /* Close: faster than open — exits should feel snappy */
-  transition: opacity var(--duration-standard) var(--ease-emphasized),
-              visibility var(--duration-standard) var(--ease-emphasized);
+  transition: opacity          var(--duration-standard) var(--ease-emphasized),
+              backdrop-filter  var(--duration-standard) var(--ease-emphasized),
+              visibility       var(--duration-standard) var(--ease-emphasized);
 }
 dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
 dialog.site-menu.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
   /* Open: slower, more deliberate than close */
-  transition: opacity var(--duration-medium) var(--ease-emphasized),
-              visibility var(--duration-medium) var(--ease-emphasized);
+  transition: opacity         var(--duration-emphasis) var(--ease-emphasized),
+              backdrop-filter var(--duration-emphasis) var(--ease-emphasized),
+              visibility      var(--duration-emphasis) var(--ease-emphasized);
 }
 
 /* Padding override — minimum left/right breathing room on small screens */
 dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
-
-/* Particle canvas — injected by js/core/menu-scene.js. Sits under all
-   content (bar/nav/foot carry z-base); purely decorative, never interactive. */
-.site-menu__canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
 
 /* Bar mirrors the site-nav's 3-column grid so Close lands exactly where the
    Menu trigger sits — the nav/overlay crossfade reads as one button morphing. */
@@ -81,187 +79,286 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
 .site-menu__bar .site-nav__brand { color: var(--menu-fg); justify-self: start; }
 .site-menu__bar-spacer { justify-self: end; }
 
-/* Close — solid rectangle chip; hover/focus fills with the accent ("red"). */
+/* Close — a label and a hairline cross, not a filled chip. The chip read as a
+   dark rectangle dropped onto the composition; this sits in the type system. */
 .site-menu__close {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-label);
   font-size: var(--step-meta);
   font-weight: 600;
   letter-spacing: var(--tracking-button);
   text-transform: uppercase;
   line-height: var(--leading-label);
-  padding: var(--space-1) var(--space-3);
   min-height: var(--tap-min);
-  background: var(--menu-fg);
-  color: var(--menu-bg);
+  padding-inline: var(--space-1);
+  background: none;
   border: none;
-  border-radius: 0; /* deliberate sharp rectangle — the one square chip on site */
+  color: var(--menu-fg);
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard),
-              color     var(--duration-fast) var(--ease-standard),
+  transition: color var(--duration-fast) var(--ease-standard),
               transform var(--duration-fast) var(--ease-snappy);
 }
+.site-menu__close-mark {
+  position: relative;
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+.site-menu__close-mark::before,
+.site-menu__close-mark::after {
+  content: "";
+  position: absolute;
+  inset-block: 50%;
+  inset-inline: 0;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--duration-standard) var(--ease-emphasized);
+}
+.site-menu__close-mark::before { transform: rotate(45deg); }
+.site-menu__close-mark::after  { transform: rotate(-45deg); }
 .site-menu__close:active {
   transform: scale(0.97);
   transition-duration: var(--duration-instant);
 }
-.site-menu__close:hover {
-  background: var(--accent);
-  color: var(--menu-fg);
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__close:hover { color: var(--accent); }
+  /* The cross spins a quarter turn into a plus and back — the affordance
+     confirms the button is live without moving anything else. */
+  .site-menu__close:hover .site-menu__close-mark::before { transform: rotate(135deg); }
+  .site-menu__close:hover .site-menu__close-mark::after  { transform: rotate(45deg); }
 }
-/* Focus keeps the resting chip (it's auto-focused on open) — outline marks it */
 .site-menu__close:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
-/* Nav — full-bleed so the row dividers span the whole viewport */
+/* Nav — the index is vertically centred in whatever height is left */
 .site-menu__nav {
   position: relative;
   z-index: var(--z-base);
   flex: 1;
   display: flex;
+  align-items: center;
   min-height: 0;
 }
 .site-menu__list {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Rows — each anchor is a full-width row; the type itself is the interface.
-   --_size is menu-local: vw-driven with a vh cap so five rows always fit. */
-.site-menu__list a {
-  --_size: clamp(2rem, min(7.5vw, 10vh), 5.5rem);
-  display: block;
+/* Row — a hairline above each item is the only rule in the layout; it gives
+   the numbers something to hang from without boxing anything in. */
+.site-menu__item {
+  border-top: 1px solid color-mix(in srgb, var(--menu-fg) 12%, transparent);
+}
+.site-menu__item:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--menu-fg) 12%, transparent);
+}
+
+.site-menu__link {
+  --_size: clamp(2rem, min(7vw, 9.5vh), 5rem);
+  display: flex;
+  align-items: baseline;
+  gap: clamp(var(--space-3), 4vw, var(--space-6));
   width: 100%;
-  padding-block: 0.14em;
+  padding-block: clamp(0.35rem, 1.1vh, 0.9rem);
   padding-inline: max(var(--space-4), var(--gutter));
+  text-decoration: none;
+  color: var(--menu-fg);
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              color   var(--duration-fast) var(--ease-standard);
+}
+
+/* Counter — small, monospaced-in-feel, sits above the label's cap height */
+.site-menu__index {
+  flex-shrink: 0;
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  color: color-mix(in srgb, var(--menu-fg) 58%, transparent);
+  font-variant-numeric: tabular-nums;
+  transition: color     var(--duration-fast)     var(--ease-standard),
+              transform var(--duration-standard) var(--ease-out-expo);
+}
+
+/* Label — the clipping box the word rises out of on open */
+.site-menu__label {
+  display: block;
+  overflow: hidden;
+  /* Clear descenders from the mask without shifting the baseline */
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--_size);
   line-height: var(--leading-hero);
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--menu-fg) 88%, transparent);
-  transition: opacity   var(--duration-fast) var(--ease-standard),
-              color     var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-standard);
 }
-.site-menu__list a[aria-current="page"] { color: var(--accent); }
+.site-menu__label-i {
+  display: block;
+  transition: transform var(--duration-medium) var(--ease-out-expo);
+}
 
-/* Scatter — alternating alignment, repeating every five rows (LEEROY rhythm:
-   left · right · shallow indent · deep indent · left). */
-.site-menu__list a:nth-child(5n + 2) { text-align: right; }
-.site-menu__list a:nth-child(5n + 3) { padding-inline-start: 17%; }
-/* Deep-indent row aligns right with an inset — a left indent would clip long
-   single-word labels (e.g. PLAYGROUND) off-viewport at narrow widths. */
-.site-menu__list a:nth-child(5n + 4) { text-align: right; padding-inline-end: 12%; }
+.site-menu__link[aria-current="page"] { color: var(--accent); }
+.site-menu__link[aria-current="page"] .site-menu__index { color: var(--accent); }
 
-/* Hover — opacity dimming only: compositor-only, zero layout change.
-   Pointer-device only: sticky :hover on touch would leave a row stuck dimmed.
-   Siblings use 45% color-mix + opacity:0.35 to clear WCAG large-text 3:1.
-   No font-size change → items never shift position → no gap between bar/list/foot. */
+/* Hover — sibling dimming plus a short lateral push. Compositor-only: no
+   font-size or layout property changes, so rows never shift each other.
+   Pointer-device only; sticky :hover on touch would leave a row dimmed. */
 @media (hover: hover) and (pointer: fine) {
-  .site-menu__list:has(a:hover) a:not(:hover) {
-    opacity: 0.35;
-    color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+  .site-menu__list:has(.site-menu__link:hover) .site-menu__link:not(:hover) {
+    opacity: 0.28;
   }
-  .site-menu__list a:hover,
-  .site-menu__list a:hover[aria-current="page"] {
+  .site-menu__link:hover {
     opacity: 1;
     color: var(--accent);
-    transform: translateY(-0.05em);
+  }
+  .site-menu__link:hover .site-menu__index {
+    color: var(--accent);
+    transform: translateX(0.4em);
+  }
+  .site-menu__link:hover .site-menu__label-i {
+    transform: translateX(0.12em);
   }
 }
-/* Touch press feedback — pointer-down on mobile; hover effects handle desktop */
-.site-menu__list a:active { opacity: 0.6; }
+/* Touch press feedback — pointer-down on mobile; hover handles desktop */
+.site-menu__link:active { opacity: 0.6; }
 
-/* Keyboard parity — same emphasis vocabulary as hover: accent colour + sibling
-   dimming. Underline is the keyboard-only indicator distinguishing tab from hover. */
-.site-menu__list:has(a:focus-visible) a:not(:focus-visible) {
-  opacity: 0.35;
-  color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+/* Keyboard parity — same emphasis vocabulary as hover. Underline is the
+   keyboard-only indicator distinguishing tab focus from pointer hover. */
+.site-menu__list:has(.site-menu__link:focus-visible) .site-menu__link:not(:focus-visible) {
+  opacity: 0.28;
 }
-.site-menu__list a:focus-visible,
-.site-menu__list a:focus-visible[aria-current="page"] {
+.site-menu__link:focus-visible {
   opacity: 1;
   color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
-  text-decoration-thickness: 2px;
   outline: none;
 }
-
-/* Entry — rows converge from their alignment direction: left items from the left,
-   right items from the right, reinforcing the alternating LEEROY layout with motion.
-   Stagger creates sequence; fill-mode:both keeps items out of tab order during delay. */
-dialog.site-menu.is-open .site-menu__list a {
-  animation: menu-row-in var(--duration-emphasis) var(--ease-emphasized) both;
-}
-dialog.site-menu.is-open .site-menu__list a:nth-child(odd)  { animation-name: menu-row-in--left; }
-dialog.site-menu.is-open .site-menu__list a:nth-child(even) { animation-name: menu-row-in--right; }
-dialog.site-menu.is-open .site-menu__list a:nth-child(1) { animation-delay: calc(1 * var(--duration-stagger)); }
-dialog.site-menu.is-open .site-menu__list a:nth-child(2) { animation-delay: calc(2 * var(--duration-stagger)); }
-dialog.site-menu.is-open .site-menu__list a:nth-child(3) { animation-delay: calc(3 * var(--duration-stagger)); }
-dialog.site-menu.is-open .site-menu__list a:nth-child(4) { animation-delay: calc(4 * var(--duration-stagger)); }
-dialog.site-menu.is-open .site-menu__list a:nth-child(5) { animation-delay: calc(5 * var(--duration-stagger)); }
-dialog.site-menu.is-open .site-menu__list a:nth-child(n + 6) { animation-delay: calc(6 * var(--duration-stagger)); }
-@keyframes menu-row-in--left {
-  0%   { opacity: 0; transform: translateX(-0.2em); visibility: hidden; }
-  1%   { visibility: visible; }
-  100% { opacity: 1; transform: none; visibility: visible; }
-}
-@keyframes menu-row-in--right {
-  0%   { opacity: 0; transform: translateX(0.2em); visibility: hidden; }
-  1%   { visibility: visible; }
-  100% { opacity: 1; transform: none; visibility: visible; }
+.site-menu__link:focus-visible .site-menu__label-i {
+  text-decoration: underline;
+  text-underline-offset: 0.1em;
+  text-decoration-thickness: 2px;
 }
 
+/* Entry — labels rise from behind the rule in sequence, and the hairline
+   above each row draws itself in from the left just ahead of its label.
+   fill-mode:both holds the pre-state through the delay. */
+dialog.site-menu.is-open .site-menu__label-i {
+  animation: menu-label-rise var(--duration-emphasis) var(--ease-out-expo) both;
+  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
+}
+dialog.site-menu.is-open .site-menu__index {
+  animation: menu-index-in var(--duration-emphasis) var(--ease-out-expo) both;
+  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow) + 60ms);
+}
+dialog.site-menu.is-open .site-menu__item {
+  animation: menu-rule-in var(--duration-emphasis) var(--ease-wipe) both;
+  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
+}
+@keyframes menu-label-rise {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes menu-index-in {
+  from { opacity: 0; transform: translateX(-0.6em); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes menu-rule-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* Foot — contact on the left, socials on the right */
 .site-menu__foot {
   position: relative;
   z-index: var(--z-base);
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  padding-block: var(--space-3);
+  padding-block: var(--space-4);
+  font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--menu-fg) 60%, transparent);
   flex-shrink: 0;
+}
+.site-menu__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+.site-menu__email,
+.site-menu__social {
+  color: color-mix(in srgb, var(--menu-fg) 60%, transparent);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__email:hover,
+  .site-menu__social:hover { color: var(--accent); }
+}
+.site-menu__email:focus-visible,
+.site-menu__social:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  color: var(--menu-fg);
+}
+/* Foot fades up last, after the index has finished arriving */
+dialog.site-menu.is-open .site-menu__foot {
+  animation: menu-foot-in var(--duration-emphasis) var(--ease-out-expo) both;
+  animation-delay: calc(6 * var(--duration-stagger-slow));
+}
+@keyframes menu-foot-in {
+  from { opacity: 0; transform: translateY(0.8em); }
+  to   { opacity: 1; transform: none; }
 }
 
 body.menu-open { overflow: hidden; }
 body.menu-open .site-nav { opacity: 0; visibility: hidden; }
 /* dialog[open] display doesn't need our visibility trick — showModal handles it */
 
-/* Shallower offsets on small screens — every label must fit its row */
 @media (max-width: 640px) {
-  .site-menu__list a:nth-child(5n + 3) { padding-inline-start: 10%; }
-  .site-menu__list a:nth-child(5n + 4) { padding-inline-end: 6%; }
+  .site-menu__link { gap: var(--space-3); }
+  .site-menu__foot { justify-content: flex-start; }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  dialog.site-menu {
+  dialog.site-menu,
+  dialog.site-menu.is-open {
     background: var(--paper);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 }
 @media (prefers-contrast: more) {
-  dialog.site-menu {
+  dialog.site-menu,
+  dialog.site-menu.is-open {
     background: var(--paper);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+  .site-menu__item,
+  .site-menu__item:last-child { border-color: var(--menu-fg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  dialog.site-menu { transition: none; opacity: 1; }
-  .site-menu__list a,
-  .site-menu__close { transition: none; }
-  dialog.site-menu.is-open .site-menu__list a { animation: none; }
+  dialog.site-menu { transition: opacity var(--duration-fast) linear; }
+  .site-menu__link,
+  .site-menu__index,
+  .site-menu__label-i,
+  .site-menu__close,
+  .site-menu__close-mark::before,
+  .site-menu__close-mark::after { transition: none; }
+  dialog.site-menu.is-open .site-menu__label-i,
+  dialog.site-menu.is-open .site-menu__index,
+  dialog.site-menu.is-open .site-menu__item,
+  dialog.site-menu.is-open .site-menu__foot { animation: none; }
 }

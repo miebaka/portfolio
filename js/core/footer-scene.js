@@ -62,20 +62,22 @@ export function createFooterScene(host) {
     }
   }
 
-  /* Measure a CSS custom property in px. Handles rem, px, or unitless fallback. */
-  function measureCssVar(prop, fallback) {
-    const raw = getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
-    if (raw.endsWith("rem")) {
-      return parseFloat(raw) * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
-    }
-    if (raw.endsWith("px")) return parseFloat(raw);
-    return fallback;
+  /* Read the watermark's rect straight off the ::before pseudo-element.
+     getComputedStyle resolves the clamp() to a used pixel value, so the
+     particle signature and the CSS mask are guaranteed to occupy the same
+     box — no duplicated sizing maths to drift out of sync. */
+  function signatureRect() {
+    const cs = getComputedStyle(host, "::before");
+    const sigH = parseFloat(cs.height);
+    const bottom = parseFloat(cs.bottom);
+    if (!sigH || Number.isNaN(bottom)) return null;
+    const svgW = (SVG_VW / SVG_VH) * sigH;
+    return { w: svgW, h: sigH, x: (w - svgW) / 2, y: h - bottom - sigH };
   }
 
   /* Sample the SVG to find which grid positions fall inside the signature.
-     Mirrors the CSS mask sizing: height = calc(100% - --space-4), width = auto,
-     position = center bottom. Checks a 3×3 neighbourhood so thin strokes
-     (which may be narrower than PITCH) still get cells. */
+     Checks a 3×3 neighbourhood so thin strokes (which may be narrower than
+     PITCH) still get cells. */
   async function buildGrid() {
     const gen = ++buildGen;
 
@@ -92,19 +94,15 @@ export function createFooterScene(host) {
     }
     if (gen !== buildGen) return;
 
-    /* Compute rendered SVG size/position (mirrors CSS mask rule) */
-    const space4 = measureCssVar("--space-4", 32);
-    const svgH   = h - space4;
-    const svgW   = (SVG_VW / SVG_VH) * svgH;
-    const svgX   = (w - svgW) / 2;  /* center */
-    const svgY   = h - svgH;         /* bottom */
+    const rect = signatureRect();
+    if (!rect) return;
 
     /* Rasterize to offscreen canvas */
     const off    = document.createElement("canvas");
     off.width    = w;
     off.height   = h;
     const offCtx = off.getContext("2d");
-    offCtx.drawImage(img, svgX, svgY, svgW, svgH);
+    offCtx.drawImage(img, rect.x, rect.y, rect.w, rect.h);
 
     if (gen !== buildGen) return;
 
