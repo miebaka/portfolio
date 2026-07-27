@@ -17,7 +17,7 @@
   aspect-ratio: 4 / 5;
   overflow: hidden;
   color: var(--paper);
-  transition: transform var(--duration-standard) var(--ease-standard);
+  transition: transform var(--duration-medium) var(--ease-out-expo);
   will-change: transform;
 }
 /* Colour layer blends; text layers stay crisp on top */
@@ -89,9 +89,12 @@
 @media (hover: hover) and (pointer: fine) {
   .sl-card:hover::after { opacity: 1; }
   .sl-card:hover {
-    transform: rotate(-2.5deg) scale(1.05);
+    transform: rotate(-2.5deg) scale(1.06);
     z-index: var(--z-raised);
+    transition-duration: var(--duration-medium);
   }
+  /* Snap back faster than it opened — exits feel snappier */
+  .sl-card:not(:hover) { transition-duration: var(--duration-standard); }
   .sl-card:hover .sl-card__name { opacity: 0; }
   .sl-card:hover .sl-card__details { opacity: 1; }
 }

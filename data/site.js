@@ -60,7 +60,7 @@ export const SITE = {
       title: "When the Swoosh Lost Its Soul",
       href:  "writing/when-the-swoosh-lost-its-soul.html",
       date:  "2026-06-01",
-      summary: "A close look at how Nike's identity drifted from its athletic roots — and what it reveals about the risk of letting a brand outgrow its own meaning.",
+      summary: "A close look at how Nike's identity drifted from its athletic roots, and what it reveals about the risk of letting a brand outgrow its own meaning.",
       tag:  "Brand Strategy",
       readingTime: "4 min read",
     },
@@ -68,7 +68,7 @@ export const SITE = {
       title: "Designing for Disability in Nigeria",
       href:  "writing/designing-for-disability-in-nigeria.html",
       date:  "2023-09-01",
-      summary: "Why inclusive design in Nigeria isn't a feature — it's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
+      summary: "Why inclusive design in Nigeria isn't a feature. It's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
       tag:  "Inclusive Design",
       readingTime: "5 min read",
     },
@@ -194,13 +194,13 @@ export const SITE = {
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Guidelines", metaLabel: "Industry", meta: "Fintech" },
       overview: {
         question: "How do you make a fintech brand feel human?",
-        body: ["Rivo was entering one of the most crowded markets in tech — where every challenger looks the same: cold blues, generic gradients, and not a single point of view."],
+        body: ["Rivo was entering one of the most crowded markets in tech, where every challenger looks the same: cold blues, generic gradients, and not a single point of view."],
       },
       challenge: [
-        "I was asked to build an identity that signalled trust without disappearing into the category — warm enough to feel human, sharp enough to feel capable.",
-        "Fintech lives or dies on trust, yet the category has flattened into a sea of interchangeable blues. Rivo needed to feel different on sight while still reading as safe with people’s money — a hard balance between warmth and authority.",
+        "I was asked to build an identity that signalled trust without disappearing into the category: warm enough to feel human, sharp enough to feel capable.",
+        "Fintech lives or dies on trust, yet the category has flattened into a sea of interchangeable blues. Rivo needed to feel different on sight while still reading as safe with people’s money. A hard balance between warmth and authority.",
       ],
-      process: ["I led with a warm, considered green over the category blue — ownable on sight and quietly confident. A humanist logotype softened the edges so a money brand could feel approachable, not corporate."],
+      process: ["I led with a warm, considered green over the category blue: ownable on sight and quietly confident. A humanist logotype softened the edges so a money brand could feel approachable, not corporate."],
       solution: ["Rather than a fixed logo, I built a flexible system: components that scale from an app icon to a billboard without ever breaking."],
       outcome: {
         body: ["Rivo launched with a system the team could run themselves, and a look that finally matched the product’s ambition."],
@@ -211,7 +211,7 @@ export const SITE = {
         ],
       },
       media: [
-        { label: "Rivo — hero", variants: [] },
+        { label: "Rivo, hero", variants: [] },
         { label: "The system", variants: ["light"] },
         { label: "Identity in use", variants: ["tall", "dark"] },
       ],
@@ -220,17 +220,17 @@ export const SITE = {
 
     "christian-poster-a-week": {
       title: "A Christian Poster A Week",
-      tagline: "One poster a week — scripture as bold graphic design.",
+      tagline: "One poster a week. Scripture as bold graphic design.",
       rail: { servicesLabel: "What I did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
       overview: {
         question: "Can scripture be designed with real craft?",
-        body: ["Faith content online is visually tired — soft gradients, stock doves, predictable type. I wanted to prove a verse could be designed with the same edge as a culture brand."],
+        body: ["Faith content online is visually tired: soft gradients, stock doves, predictable type. I wanted to prove a verse could be designed with the same edge as a culture brand."],
       },
       challenge: ["So I set a rule: one poster, every week. A fixed format and a hard deadline that would force decisions and build a recognisable body of work."],
-      process: ["Every week I chose a verse, found its single emotional idea, and built a poster around it — concept, typography, image treatment and finish. The constraint was the point."],
-      solution: ["One idea per poster, said loudly. Expressive, varied typography — condensed, serif, display — held together by a consistent grid, with real craft on every finish."],
+      process: ["Every week I chose a verse, found its single emotional idea, and built a poster around it: concept, typography, image treatment and finish. The constraint was the point."],
+      solution: ["One idea per poster, said loudly. Expressive, varied typography (condensed, serif, display) held together by a consistent grid, with real craft on every finish."],
       outcome: {
-        body: ["A growing, recognisable body of work that doubles as my most reliable proof of range — and a habit that keeps my craft sharp."],
+        body: ["A growing, recognisable body of work that doubles as my most reliable proof of range, and a habit that keeps my craft sharp."],
         metrics: [
           { value: "52", label: "Posters a year, by design" },
           { value: "1/wk", label: "Self-imposed cadence" },
@@ -238,7 +238,7 @@ export const SITE = {
         ],
       },
       media: [
-        { label: "Poster series — hero", variants: [] },
+        { label: "Poster series, hero", variants: [] },
         { label: "Type & image treatments", variants: ["light"] },
         { label: "The series", variants: ["tall", "dark"] },
       ],
@@ -253,9 +253,9 @@ export const SITE = {
         question: "How do you honour a global brand while making it your own?",
         body: ["TEDx carries a strict global identity, yet every event needs its own character. The brief was to build something that honoured the TEDx system while capturing the spirit of Rivers State University."],
       },
-      challenge: ["And it had to hold up everywhere — on stage, in print, and on a phone screen — without falling apart."],
-      process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif — one system that scaled from a phone to a stage backdrop."],
-      solution: ["Print was treated as a first-class citizen — tactile, considered collateral that matched the on-stage experience across programme, signage and social."],
+      challenge: ["And it had to hold up everywhere: on stage, in print, and on a phone screen, without falling apart."],
+      process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif: one system that scaled from a phone to a stage backdrop."],
+      solution: ["Print was treated as a first-class citizen: tactile, considered collateral that matched the on-stage experience across programme, signage and social."],
       outcome: {
         body: ["A cohesive event brand that felt premium and on-system, applied consistently across every touchpoint on the day."],
         metrics: [
@@ -265,7 +265,7 @@ export const SITE = {
         ],
       },
       media: [
-        { label: "TEDx RSU — hero", variants: [] },
+        { label: "TEDx RSU, hero", variants: [] },
         { label: "Collateral system", variants: ["light"] },
         { label: "On the day", variants: ["tall", "dark"] },
       ],
@@ -278,10 +278,10 @@ export const SITE = {
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Packaging", metaLabel: "Industry", meta: "Food brand" },
       overview: {
         question: "How do you make a brand you’d order from twice?",
-        body: ["Food brands live or die on appetite appeal. ChopBox needed to feel warm, generous and instantly crave-able — the kind of brand you trust with dinner."],
+        body: ["Food brands live or die on appetite appeal. ChopBox needed to feel warm, generous and instantly crave-able: the kind of brand you trust with dinner."],
       },
       challenge: ["And it had to stay flexible enough to run across packaging, app and social without ever losing its flavour."],
-      process: ["I built the brand from strategy out, checking every decision against one question — does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."],
+      process: ["I built the brand from strategy out, checking every decision against one question: does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."],
       solution: ["Built for packaging from day one — a system designed to survive the box, not just the screen, with a toasted, appetising palette that owns its category."],
       outcome: {
         body: ["An appetising, ownable identity with a system the team could extend across products and packaging."],
@@ -292,7 +292,7 @@ export const SITE = {
         ],
       },
       media: [
-        { label: "ChopBox — hero", variants: [] },
+        { label: "ChopBox, hero", variants: [] },
         { label: "Identity & system", variants: ["light"] },
         { label: "Packaging", variants: ["tall", "dark"] },
       ],

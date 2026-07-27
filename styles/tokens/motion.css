@@ -20,4 +20,10 @@
   --ease-snappy: cubic-bezier(0.3, 0, 0, 1);
   --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Stronger out curves — for entrance animations and hover reveals */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);   /* very punchy expo deceleration */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);   /* medium punch, versatile */
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1); /* for on-screen repositioning */
+  /* Spring-feel — slight overshoot, for interactive elements only */
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
 }

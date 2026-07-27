@@ -28,23 +28,28 @@
 .btn--ghost { border: 1px solid var(--border); }
 .btn--ghost:hover { border-color: var(--ink); }
 
-/* Inline text link with the clay accent. Underline stays for affordance;
-   on hover it thickens and drops 1px — a deliberate, ≤2px micro-interaction. */
+/* Inline text link with the clay accent. On hover the underline
+   thickens and drops, and the text shifts to the deeper clay.
+   Both changes are instant enough to feel responsive but smooth enough
+   not to feel mechanical. */
 .link {
   --_offset:       3px;
-  --_offset-hover: 4px;
+  --_offset-hover: 5px;
   --_thick:        1px;
   --_thick-hover:  2px;
   color: var(--clay);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--clay) 55%, transparent);
   text-underline-offset: var(--_offset);
   text-decoration-thickness: var(--_thick);
   transition: color var(--duration-fast) var(--ease-standard),
-              text-decoration-thickness var(--duration-fast) var(--ease-standard),
-              text-underline-offset var(--duration-fast) var(--ease-standard);
+              text-decoration-color var(--duration-fast) var(--ease-standard),
+              text-decoration-thickness var(--duration-standard) var(--ease-out-expo),
+              text-underline-offset var(--duration-standard) var(--ease-out-expo);
 }
 .link:hover {
   color: var(--clay-hover);
+  text-decoration-color: var(--clay-hover);
   text-decoration-thickness: var(--_thick-hover);
   text-underline-offset: var(--_offset-hover);
 }

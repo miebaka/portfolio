@@ -82,14 +82,15 @@
 }
 
 /* Scroll reveal (progressive enhancement).
-   Items in a group set --reveal-i to stagger their entrance in sequence. */
+   Items in a group set --reveal-i to stagger their entrance in sequence.
+   Translation is 0.6em (scales with local font size) rather than a fixed pixel
+   distance — text reveals feel tighter; larger type reveals travel proportionally. */
 .reveal {
   opacity: 0;
-  transform: translateY(var(--space-3));
-  transition: opacity var(--duration-slow) var(--ease-gentle),
-              transform var(--duration-slow) var(--ease-gentle);
+  transform: translateY(0.6em);
+  transition: opacity var(--duration-slow) var(--ease-out-expo),
+              transform var(--duration-slow) var(--ease-out-expo);
   transition-delay: calc(var(--reveal-i, 0) * var(--duration-stagger));
-  will-change: opacity, transform;
 }
 .reveal.is-visible {
   opacity: 1;

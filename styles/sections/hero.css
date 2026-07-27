@@ -78,8 +78,25 @@
   text-transform: uppercase;
   max-width: var(--measure-hero);
   color: inherit;
+  /* Entrance — starts invisible and 1em below, rises on load */
+  animation: hero-statement-in 0.9s var(--ease-out-expo) 0.05s both;
 }
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
+
+@keyframes hero-statement-in {
+  0%   { opacity: 0; transform: translateY(0.8em); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* Scroll cue enters after the statement */
+.hero-noir .scroll-cue {
+  animation: hero-statement-in 0.7s var(--ease-out-expo) 0.35s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-noir__statement,
+  .hero-noir .scroll-cue { animation: none; }
+}
 
 /* Right column — portrait photo with parallax */
 .hero-noir__picture {
@@ -128,7 +145,8 @@
 /* Portrait media: hidden */
 .hero-noir__media { display: none; }
 
-/* Scroll-down indicator */
+/* Scroll-down indicator — visual track only, no text label (scroll affordance
+   is the animated dot; the label "Scroll Down" is redundant and removed). */
 .scroll-cue {
   display: inline-flex;
   flex-direction: row;
@@ -136,18 +154,7 @@
   gap: var(--space-2);
   text-decoration: none;
 }
-.scroll-cue__label {
-  font-family: var(--font-label);
-  font-size: var(--step-small);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  line-height: var(--leading-label);
-  color: var(--text-muted);
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-@media (hover: hover) and (pointer: fine) {
-  .scroll-cue:hover .scroll-cue__label { color: var(--ink); }
-}
+.scroll-cue__label { display: none; }
 .scroll-cue__track {
   --cue-w:      0.25rem;
   --cue-h:      2.75rem;

@@ -15,6 +15,14 @@
   gap: var(--space-4);
   padding-block: var(--space-5);
   border-bottom: 1px solid var(--border);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+/* When any row is hovered, dim siblings — same opacity-dimming mechanic as menu */
+@media (hover: hover) and (pointer: fine) {
+  .cap-list:has(.cap-row:hover) .cap-row:not(:hover) {
+    opacity: 0.45;
+  }
+  .cap-row:hover { opacity: 1; cursor: default; }
 }
 .cap-row__name {
   font-family: var(--font-display);
