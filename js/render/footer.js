@@ -1,12 +1,19 @@
 /* Render — site footer: email, socials and the legal line. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, mount } from "../utilities/dom.js";
+import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
 
 export function renderFooter() {
   const el = mount("footer");
   if (!el) return;
-  const socials = SITE.socials
-    .map((s) => '<a href="' + esc(s.href) + '" rel="noopener noreferrer">' + esc(s.label) + "</a>")
+  /* target="_blank" was missing, which made the rel attribute inert and sent
+     visitors off-site in the same tab from the footer while the same links in
+     the menu opened a new one. */
+  const socials = (SITE.socials || [])
+    .filter((s) => s && s.href && s.label)
+    .map((s) =>
+      '<a href="' + safeURL(s.href) + '" target="_blank" rel="noopener noreferrer">' +
+      esc(s.label) + "</a>"
+    )
     .join("");
   el.className = "site-footer";
   el.innerHTML =

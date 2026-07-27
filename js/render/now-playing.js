@@ -51,9 +51,30 @@ function updateChip(track) {
   }
 }
 
+/* Backoff. The original loop hit Last.fm every 60s forever, including while
+   the tab was in the background and including while the service was down.
+   Failures now back off up to eight minutes, and a success resets it. */
+const MAX_BACKOFF_MS = 8 * 60_000;
+
+let timer = 0;
+let backoff = POLL_MS;
+
+function schedule(ms) {
+  clearTimeout(timer);
+  timer = setTimeout(poll, ms);
+}
+
 async function poll() {
-  updateChip(await fetchNowPlaying());
-  setTimeout(poll, POLL_MS);
+  /* Nothing to show and nobody looking: skip the request entirely and wait
+     for visibilitychange to restart the loop. */
+  if (document.hidden) {
+    timer = 0;
+    return;
+  }
+  const track = await fetchNowPlaying();
+  updateChip(track);
+  backoff = track ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
+  schedule(track ? POLL_MS : backoff);
 }
 
 export function initNowPlaying() {
@@ -61,5 +82,18 @@ export function initNowPlaying() {
   const container = document.querySelector("[data-mount='now-playing']");
   if (!container) return;
   buildChip(container);
-  window.addEventListener("load", poll, { once: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      clearTimeout(timer);
+      timer = 0;
+    } else if (!timer) {
+      /* Returning to the tab is a good moment to be current again, so reset
+         the backoff rather than resuming a long one. */
+      backoff = POLL_MS;
+      schedule(0);
+    }
+  });
+
+  window.addEventListener("load", () => schedule(0), { once: true });
 }

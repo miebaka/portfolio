@@ -11,6 +11,11 @@ const SELECTOR = ".reveal, [data-wipe], [data-split]";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function initScrollReveal() {
+  /* Tells the head-script failsafe that the module graph loaded and this
+     observer is about to take responsibility for revealing content. Set
+     first, before anything that could throw. See styles/base/motion.css. */
+  document.documentElement.classList.add("reveal-ready");
+
   const items = document.querySelectorAll(SELECTOR);
   if (reduceMotion || !("IntersectionObserver" in window)) {
     items.forEach((el) => el.classList.add("is-visible"));

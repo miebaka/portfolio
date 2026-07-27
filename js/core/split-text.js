@@ -130,11 +130,32 @@ export function initSplitText() {
     els.forEach(split);
 
     /* Re-measure line grouping when the element rewraps. Only the delays
-       change; re-splitting from source keeps this idempotent. */
+       change; re-splitting from source keeps this idempotent.
+
+       Guarded by width because the callback mutates the very elements it
+       observes: re-splitting can nudge the element's box, which fires the
+       observer again, which re-splits. Line breaks only change when the
+       width changes, so anything else is noise and is dropped. Without this
+       the pair can trade frames indefinitely. */
+    const widths = new WeakMap();
+    els.forEach((el) => widths.set(el, el.getBoundingClientRect().width));
+
     let frame = 0;
-    const ro = new ResizeObserver(() => {
+    const ro = new ResizeObserver((entries) => {
+      const changed = entries.filter((e) => {
+        const w = e.contentRect.width;
+        if (Math.abs((widths.get(e.target) || 0) - w) < 1) return false;
+        widths.set(e.target, w);
+        return true;
+      });
+      if (!changed.length) return;
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => els.forEach(split));
+      frame = requestAnimationFrame(() => {
+        changed.forEach(({ target }) => {
+          split(target);
+          widths.set(target, target.getBoundingClientRect().width);
+        });
+      });
     });
     els.forEach((el) => ro.observe(el));
   });

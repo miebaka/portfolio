@@ -93,10 +93,31 @@ export function initForm() {
       return;
     }
 
+    /* mailto: is a URL, and long ones get truncated or silently dropped by
+       mail clients and by Windows' shell handler in particular. Trim the body
+       well short of any of those limits and tell the sender it happened,
+       rather than letting the end of their message disappear. */
+    const MAX_BODY = 1500;
+    let sent = message;
+    let trimmed = false;
+    if (sent.length > MAX_BODY) {
+      sent = sent.slice(0, MAX_BODY);
+      trimmed = true;
+    }
+
     const to = SITE.email || "hello@miebaka.design";
     const subject = encodeURIComponent("Project enquiry from " + name);
-    const body = encodeURIComponent(message + "\n\n" + name + " (" + email + ")");
+    const body = encodeURIComponent(sent + "\n\n" + name + " (" + email + ")");
     window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
-    setStatus("Opening your email app...", "success");
+
+    /* Whether a mail client actually opened is not observable from here, so
+       the message names the address instead of asserting success. If nothing
+       happened, the visitor still has what they need. */
+    setStatus(
+      trimmed
+        ? "Your message was long, so it opens trimmed. Send to " + to + " if it looks cut short."
+        : "Opening your email app. If nothing happens, write to " + to + ".",
+      trimmed ? "error" : "success"
+    );
   });
 }

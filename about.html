@@ -34,7 +34,20 @@
     ]
   }
   </script>
-  <script>document.documentElement.classList.replace("no-js","has-js");if(localStorage.getItem("color-theme")==="dark")document.documentElement.dataset.theme="dark";</script>
+  <script>(function(r){
+    r.classList.replace("no-js","has-js");
+    /* localStorage throws outright when storage is blocked (Safari private
+       browsing, some enterprise policies). Unguarded, that exception kills
+       the rest of this script. */
+    try { if (localStorage.getItem("color-theme") === "dark") r.dataset.theme = "dark"; } catch (e) {}
+    /* Failsafe. Most of the page is hidden by default and revealed by
+       js/core/scroll.js, so any failure in the module graph would leave the
+       site blank. scroll.js marks itself ready; if that never happens this
+       unhides everything. Inline so it runs even when modules do not. */
+    setTimeout(function () {
+      if (!r.classList.contains("reveal-ready")) r.classList.add("reveal-failsafe");
+    }, 2500);
+  })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
 </head>

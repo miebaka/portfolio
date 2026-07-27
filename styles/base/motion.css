@@ -141,6 +141,33 @@
 [data-wipe].is-visible > img,
 [data-wipe].is-visible > picture > img { transform: scale(1); }
 
+/* ── Failsafe ──────────────────────────────────────────────────────────────
+   Most of this file hides content and relies on js/core/scroll.js to reveal
+   it. That is a single point of failure for roughly forty elements: one bad
+   import, one network blip on any module in the graph, and the page renders
+   blank with no error the visitor can act on.
+
+   scroll.js sets .reveal-ready on <html> the moment it starts. An inline
+   script in every page head watches for that and, if it never appears, sets
+   .reveal-failsafe instead. These rules then hand the page back.
+
+   A plain CSS timeout cannot do this job: .reveal elements below the fold are
+   legitimately un-revealed for as long as the visitor takes to scroll, so a
+   timer would fire on a perfectly healthy page. Keying off the module having
+   started is what makes it specific to actual failure. */
+.reveal-failsafe .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.reveal-failsafe [data-wipe]::before { display: none; }
+/* :not(.is-split) is carried over from the rule this overrides. Without it
+   the selector has one fewer class-level component and loses to
+   `.has-js [data-split]:not(.is-split)`, leaving split headings invisible in
+   exactly the failure this block exists to cover. */
+.reveal-failsafe [data-split]:not(.is-split) { opacity: 1; }
+.reveal-failsafe [data-split] .word__i { transform: none; }
+
 /* ── No-JS + reduced motion ────────────────────────────────────────────────
    Both must land in a fully readable resting state, never mid-animation. */
 

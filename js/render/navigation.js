@@ -1,6 +1,6 @@
 /* Render — navigation bar (logo · menu) and the fullscreen overlay menu. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
 
 function brandHTML() {
   const base = basePath();
@@ -25,7 +25,12 @@ function setupThemeToggle() {
   btn.addEventListener("click", function () {
     const next = isDark() ? "light" : "dark";
     html.dataset.theme = next;
-    localStorage.setItem("color-theme", next);
+    /* Persisting is best-effort. setItem throws when storage is blocked
+       (Safari private browsing, quota, enterprise policy); unguarded, that
+       exception fired after the theme had already flipped but before sync(),
+       leaving the button's aria-pressed permanently out of step with the
+       theme the visitor can see. */
+    try { localStorage.setItem("color-theme", next); } catch (e) {}
     sync();
   });
 }
@@ -119,11 +124,12 @@ export function renderMenu() {
      it is decoration pretending to be structure. The hairline per row already
      gives the list its rhythm. */
   const items = (SITE.menu || [])
+    .filter((m) => m && m.href && m.label)
     .map((m, i) => {
       const current = m.key === page ? ' aria-current="page"' : "";
       return (
         '<li class="site-menu__item" style="--row-i:' + (i + 1) + '">' +
-          '<a class="site-menu__link" href="' + base + esc(m.href) + '"' +
+          '<a class="site-menu__link" href="' + base + safeURL(m.href) + '"' +
            ' aria-label="' + esc(m.label) + '"' + current + ">" +
             '<span class="site-menu__label" aria-hidden="true">' +
               '<span class="site-menu__label-i">' +
@@ -142,8 +148,9 @@ export function renderMenu() {
     .join("");
 
   const socials = (SITE.socials || [])
+    .filter((s) => s && s.href && s.label)
     .map((s) =>
-      '<a class="site-menu__social" href="' + esc(s.href) +
+      '<a class="site-menu__social" href="' + safeURL(s.href) +
       '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + "</a>"
     )
     .join("");
@@ -169,7 +176,7 @@ export function renderMenu() {
       '<ul class="site-menu__list">' + items + "</ul>" +
     "</nav>" +
     '<div class="container site-menu__foot">' +
-      '<a class="site-menu__email" data-href="email" href="mailto:' + esc(SITE.email) + '">' +
+      '<a class="site-menu__email" data-href="email" href="' + safeURL('mailto:' + SITE.email) + '">' +
         esc(SITE.email) + "</a>" +
       '<div class="site-menu__socials">' + socials + "</div>" +
     "</div>";
