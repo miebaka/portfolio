@@ -1,9 +1,8 @@
 /* interactions.js — ink-bleed spotlight on work cards + magnetic buttons.
    Both effects are pointer-only and degrade cleanly on touch devices. */
 
-const MAG_THRESH   = 64;   /* px from button centre — enter magnetic zone */
-const MAG_STRENGTH = 0.24; /* fraction of cursor offset applied to button */
-const MAG_LERP     = 0.14; /* lerp speed toward/away from magnetic target */
+const MAG_STRENGTH = 0.28; /* fraction of cursor offset applied to the button */
+const MAG_LERP     = 0.16; /* lerp speed toward/away from the magnetic target */
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -18,8 +17,8 @@ export function initInteractions() {
    position a soft spotlight that follows the cursor.
 
    Measured against the frame, not the card: the card also contains the
-   caption below the field, and using its box would put the spotlight's
-   origin off by the caption's height. */
+   caption below the field, so using its box would put the spotlight's origin
+   off by the caption's height. */
 
 function initInkBleed() {
   const cards = document.querySelectorAll(".sl-card");
@@ -43,14 +42,18 @@ function initInkBleed() {
 }
 
 /* ── Magnetic buttons ─────────────────────────────────────────────────
-   Scoped deliberately to primary CTAs and the floating back button — the
-   effect means "this is the thing to press", which it stops meaning if
-   everything on the page does it.
+   Scoped to primary CTAs and the floating back button. The effect means
+   "this is the thing to press", which it stops meaning if everything on the
+   page does it.
 
-   Geometry is cached and only re-read on scroll/resize. Reading
-   getBoundingClientRect() for every button on every frame forces a layout
-   flush 60 times a second, which is exactly the kind of jank a magnetic
-   button is supposed to be hiding. */
+   Everything is driven by the button's own pointer events. There is no global
+   mousemove handler, no scroll listener, and no per-frame getBoundingClientRect
+   across every button — the geometry is read once on pointerenter and is valid
+   for the whole hover, because leaving the button (including because the page
+   scrolled out from under the cursor) fires pointerleave and ends it.
+
+   The rAF loop only runs while a button is actually engaged, and stops itself
+   once every button has settled back to rest. */
 
 function initMagneticButtons() {
   const btns = [
@@ -59,75 +62,81 @@ function initMagneticButtons() {
   ];
   if (!btns.length) return;
 
-  const state   = btns.map(() => ({ tx: 0, ty: 0, cx: 0, cy: 0, mx: 0, my: 0 }));
-  const pressed = new Set();
-  let mouseX = 0;
-  let mouseY = 0;
-  let hasPtr = false;
+  const active = new Map(); /* button -> { cx, cy, tx, ty, pressed } */
+  let raf = 0;
 
-  /* Cache each button's centre with its transform temporarily cleared, so a
-     button already displaced by the effect doesn't report a moving centre and
-     chase itself across the screen. */
-  function measure() {
-    btns.forEach((btn, i) => {
-      const prev = btn.style.transform;
-      btn.style.transform = "none";
-      const r = btn.getBoundingClientRect();
-      btn.style.transform = prev;
-      state[i].mx = r.left + r.width  / 2;
-      state[i].my = r.top  + r.height / 2;
-    });
-  }
+  function frame() {
+    raf = 0;
+    let moving = false;
 
-  btns.forEach(btn => {
-    btn.addEventListener("pointerdown",   () => pressed.add(btn),    { passive: true });
-    btn.addEventListener("pointerup",     () => pressed.delete(btn), { passive: true });
-    btn.addEventListener("pointercancel", () => pressed.delete(btn), { passive: true });
-    btn.addEventListener("pointerleave",  () => pressed.delete(btn), { passive: true });
-  });
-
-  window.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    hasPtr = true;
-  }, { passive: true });
-
-  let queued = false;
-  const remeasure = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => { measure(); queued = false; });
-  };
-  window.addEventListener("scroll", remeasure, { passive: true });
-  window.addEventListener("resize", remeasure, { passive: true });
-
-  measure();
-
-  (function tick() {
-    requestAnimationFrame(tick);
-    if (!hasPtr) return;
-
-    btns.forEach((btn, i) => {
-      const s  = state[i];
-      const dx = mouseX - s.mx;
-      const dy = mouseY - s.my;
-
-      if (Math.hypot(dx, dy) < MAG_THRESH) {
-        s.tx = dx * MAG_STRENGTH;
-        s.ty = dy * MAG_STRENGTH;
-      } else {
-        s.tx = 0;
-        s.ty = 0;
-      }
-
+    active.forEach((s, btn) => {
       s.cx += (s.tx - s.cx) * MAG_LERP;
       s.cy += (s.ty - s.cy) * MAG_LERP;
 
-      const scale = pressed.has(btn) ? " scale(0.97)" : "";
-      const hasMag = Math.abs(s.cx) > 0.05 || Math.abs(s.cy) > 0.05;
-      btn.style.transform = hasMag
-        ? `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)${scale}`
-        : scale || "";
+      const settled = Math.abs(s.cx) < 0.05 && Math.abs(s.cy) < 0.05 &&
+                      s.tx === 0 && s.ty === 0;
+      if (settled) {
+        btn.style.transform = s.pressed ? "scale(0.97)" : "";
+        active.delete(btn);
+        return;
+      }
+
+      moving = true;
+      const scale = s.pressed ? " scale(0.97)" : "";
+      btn.style.transform =
+        `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)${scale}`;
     });
-  })();
+
+    if (moving) raf = requestAnimationFrame(frame);
+  }
+
+  function ensureFrame() {
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
+
+  function stateFor(btn) {
+    let s = active.get(btn);
+    if (!s) {
+      s = { cx: 0, cy: 0, tx: 0, ty: 0, pressed: false, rect: null };
+      active.set(btn, s);
+    }
+    return s;
+  }
+
+  btns.forEach((btn) => {
+    btn.addEventListener("pointerenter", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const s = stateFor(btn);
+      /* One layout read per hover, not one per frame */
+      s.rect = btn.getBoundingClientRect();
+    });
+
+    btn.addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const s = stateFor(btn);
+      if (!s.rect) s.rect = btn.getBoundingClientRect();
+      s.tx = (e.clientX - (s.rect.left + s.rect.width  / 2)) * MAG_STRENGTH;
+      s.ty = (e.clientY - (s.rect.top  + s.rect.height / 2)) * MAG_STRENGTH;
+      ensureFrame();
+    }, { passive: true });
+
+    btn.addEventListener("pointerleave", () => {
+      const s = active.get(btn);
+      if (!s) return;
+      s.tx = 0;
+      s.ty = 0;
+      s.pressed = false;
+      s.rect = null;
+      ensureFrame();
+    }, { passive: true });
+
+    const press = (on) => () => {
+      const s = stateFor(btn);
+      s.pressed = on;
+      ensureFrame();
+    };
+    btn.addEventListener("pointerdown", press(true), { passive: true });
+    btn.addEventListener("pointerup", press(false), { passive: true });
+    btn.addEventListener("pointercancel", press(false), { passive: true });
+  });
 }

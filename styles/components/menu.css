@@ -1,9 +1,9 @@
 /* ==========================================================================
    Component · Menu — fullscreen overlay navigation.
 
-   A numbered editorial index: rule, number, label. One left edge, no scatter —
-   the hierarchy comes from scale and the counter, not from moving things
-   around. Rows unmask from behind their own baseline in sequence on open.
+   An editorial index: hairline, label. One left edge, no scatter, no counter.
+   The hierarchy comes from scale alone. Rows unmask from behind their own
+   baseline in sequence on open.
 
    Implemented as a native <dialog> for built-in focus trap + AT announcement.
    ========================================================================== */
@@ -123,7 +123,7 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   transition-duration: var(--duration-instant);
 }
 @media (hover: hover) and (pointer: fine) {
-  .site-menu__close:hover { color: var(--accent); }
+  .site-menu__close:hover { color: var(--accent-text); }
   /* The cross spins a quarter turn into a plus and back — the affordance
      confirms the button is live without moving anything else. */
   .site-menu__close:hover .site-menu__close-mark::before { transform: rotate(135deg); }
@@ -134,7 +134,7 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   outline-offset: 4px;
 }
 
-/* Nav — the index is vertically centred in whatever height is left */
+/* Nav — the list is vertically centred in whatever height is left */
 .site-menu__nav {
   position: relative;
   z-index: var(--z-base);
@@ -152,7 +152,7 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
 }
 
 /* Row — a hairline above each item is the only rule in the layout; it gives
-   the numbers something to hang from without boxing anything in. */
+   the list its rhythm without boxing anything in. */
 .site-menu__item {
   border-top: 1px solid color-mix(in srgb, var(--menu-fg) 12%, transparent);
 }
@@ -162,9 +162,7 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
 
 .site-menu__link {
   --_size: clamp(2rem, min(7vw, 9.5vh), 5rem);
-  display: flex;
-  align-items: baseline;
-  gap: clamp(var(--space-3), 4vw, var(--space-6));
+  display: block;
   width: 100%;
   padding-block: clamp(0.35rem, 1.1vh, 0.9rem);
   padding-inline: max(var(--space-4), var(--gutter));
@@ -172,19 +170,6 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   color: var(--menu-fg);
   transition: opacity var(--duration-fast) var(--ease-standard),
               color   var(--duration-fast) var(--ease-standard);
-}
-
-/* Counter — small, monospaced-in-feel, sits above the label's cap height */
-.site-menu__index {
-  flex-shrink: 0;
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  font-weight: 600;
-  letter-spacing: var(--tracking-label);
-  color: color-mix(in srgb, var(--menu-fg) 58%, transparent);
-  font-variant-numeric: tabular-nums;
-  transition: color     var(--duration-fast)     var(--ease-standard),
-              transform var(--duration-standard) var(--ease-out-expo);
 }
 
 /* Label — the clipping box the word rises out of on open */
@@ -207,7 +192,6 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
 }
 
 .site-menu__link[aria-current="page"] { color: var(--accent); }
-.site-menu__link[aria-current="page"] .site-menu__index { color: var(--accent); }
 
 /* Hover — sibling dimming plus a short lateral push. Compositor-only: no
    font-size or layout property changes, so rows never shift each other.
@@ -220,12 +204,8 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
     opacity: 1;
     color: var(--accent);
   }
-  .site-menu__link:hover .site-menu__index {
-    color: var(--accent);
-    transform: translateX(0.4em);
-  }
   .site-menu__link:hover .site-menu__label-i {
-    transform: translateX(0.12em);
+    transform: translateX(0.18em);
   }
 }
 /* Touch press feedback — pointer-down on mobile; hover handles desktop */
@@ -254,10 +234,6 @@ dialog.site-menu.is-open .site-menu__label-i {
   animation: menu-label-rise var(--duration-emphasis) var(--ease-out-expo) both;
   animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
 }
-dialog.site-menu.is-open .site-menu__index {
-  animation: menu-index-in var(--duration-emphasis) var(--ease-out-expo) both;
-  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow) + 60ms);
-}
 dialog.site-menu.is-open .site-menu__item {
   animation: menu-rule-in var(--duration-emphasis) var(--ease-wipe) both;
   animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
@@ -265,10 +241,6 @@ dialog.site-menu.is-open .site-menu__item {
 @keyframes menu-label-rise {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
-}
-@keyframes menu-index-in {
-  from { opacity: 0; transform: translateX(-0.6em); }
-  to   { opacity: 1; transform: none; }
 }
 @keyframes menu-rule-in {
   from { clip-path: inset(0 100% 0 0); }
@@ -304,7 +276,7 @@ dialog.site-menu.is-open .site-menu__item {
 }
 @media (hover: hover) and (pointer: fine) {
   .site-menu__email:hover,
-  .site-menu__social:hover { color: var(--accent); }
+  .site-menu__social:hover { color: var(--accent-text); }
 }
 .site-menu__email:focus-visible,
 .site-menu__social:focus-visible {
@@ -327,7 +299,6 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
 /* dialog[open] display doesn't need our visibility trick — showModal handles it */
 
 @media (max-width: 640px) {
-  .site-menu__link { gap: var(--space-3); }
   .site-menu__foot { justify-content: flex-start; }
 }
 
@@ -352,13 +323,11 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   dialog.site-menu { transition: opacity var(--duration-fast) linear; }
   .site-menu__link,
-  .site-menu__index,
   .site-menu__label-i,
   .site-menu__close,
   .site-menu__close-mark::before,
   .site-menu__close-mark::after { transition: none; }
   dialog.site-menu.is-open .site-menu__label-i,
-  dialog.site-menu.is-open .site-menu__index,
   dialog.site-menu.is-open .site-menu__item,
   dialog.site-menu.is-open .site-menu__foot { animation: none; }
 }

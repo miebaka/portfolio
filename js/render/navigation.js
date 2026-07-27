@@ -5,8 +5,11 @@ import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 function brandHTML() {
   const base = basePath();
   return (
-    '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ' — home">' +
-    '<span class="site-nav__logo" role="img" aria-label="' + esc(SITE.name) + '"></span>' +
+    /* The anchor's aria-label is the accessible name; anything inside it is
+       overridden and never announced, so the logo span is marked decorative
+       rather than carrying a second label that no one hears. */
+    '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
+    '<span class="site-nav__logo" aria-hidden="true"></span>' +
     "</a>"
   );
 }
@@ -59,7 +62,14 @@ export function renderNavigation() {
   setupThemeToggle();
 }
 
-/* Floating pill — always links home on every page except home. */
+/* Floating pill — always links home on every page except home.
+
+   The pill is opaque ink-on-paper (16.3:1 internally) with a hairline ring, so
+   it stays legible over the page background AND over the coloured case-study
+   media bands without needing to know what is behind it. The previous version
+   sampled the underlying surface on every scroll frame with elementFromPoint
+   plus a getComputedStyle walk, toggling its own visibility mid-frame to do
+   so; an opaque pill removes the need for any of that. */
 export function renderBackButton() {
   const page = document.body.dataset.page || "";
   if (page === "home") return;
@@ -69,44 +79,6 @@ export function renderBackButton() {
   btn.href = base + "index.html";
   btn.innerHTML = "&larr;&ensp;Home";
   document.body.appendChild(btn);
-  setupThemeTracking(btn);
-}
-
-/* Toggles .back-btn--dark whenever the button's centre overlaps a dark surface.
-   Uses visibility:hidden for one rAF tick so elementFromPoint finds what's below,
-   then restores. Throttled to one rAF per scroll event to stay on the fast path. */
-function setupThemeTracking(btn) {
-  function lum(rgba) {
-    const m = rgba.match(/[\d.]+/g);
-    if (!m) return 1;
-    const r = +m[0], g = +m[1], b = +m[2];
-    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  }
-  function update() {
-    const rect = btn.getBoundingClientRect();
-    const x = Math.round(rect.left + rect.width  / 2);
-    const y = Math.round(rect.top  + rect.height / 2);
-    btn.style.visibility = "hidden";
-    let el = document.elementFromPoint(x, y);
-    btn.style.visibility = "";
-    el = el || document.body;
-    while (el && el !== document.documentElement) {
-      const bg = window.getComputedStyle(el).backgroundColor;
-      if (bg && bg !== "rgba(0, 0, 0, 0)") {
-        btn.classList.toggle("back-btn--dark", lum(bg) < 0.5);
-        return;
-      }
-      el = el.parentElement;
-    }
-    btn.classList.remove("back-btn--dark");
-  }
-  let tick = false;
-  window.addEventListener("scroll", function () {
-    if (tick) return;
-    tick = true;
-    requestAnimationFrame(function () { update(); tick = false; });
-  }, { passive: true });
-  update();
 }
 
 export function renderMenu() {
@@ -114,18 +86,19 @@ export function renderMenu() {
   const base = basePath();
   const page = document.body.dataset.page || "";
 
-  /* Numbered editorial index. Each label is wrapped in a clipping span so the
-     word can rise from behind its own baseline on open — the same masked
-     reveal vocabulary the page headings use. The index number is decorative
-     and hidden from AT; the link text alone carries the accessible name. */
+  /* Each label is wrapped in a clipping span so the word can rise from behind
+     its own baseline on open, reusing the masked reveal vocabulary the page
+     headings use.
+
+     No index numbers: a five-item menu is countable at a glance, so numbering
+     it is decoration pretending to be structure. The hairline per row already
+     gives the list its rhythm. */
   const items = (SITE.menu || [])
     .map((m, i) => {
       const current = m.key === page ? ' aria-current="page"' : "";
-      const n = String(i + 1).padStart(2, "0");
       return (
         '<li class="site-menu__item" style="--row-i:' + (i + 1) + '">' +
           '<a class="site-menu__link" href="' + base + esc(m.href) + '"' + current + ">" +
-            '<span class="site-menu__index" aria-hidden="true">' + n + "</span>" +
             '<span class="site-menu__label">' +
               '<span class="site-menu__label-i">' + esc(m.label) + "</span>" +
             "</span>" +

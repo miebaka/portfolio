@@ -104,7 +104,7 @@
   gap: var(--space-3);
 }
 @media (hover: hover) {
-  .site-footer__socials a:hover { color: var(--clay); }
+  .site-footer__socials a:hover { color: var(--accent-text); }
 }
 
 /* Pinned to the footer's baseline; the signature band sits in the gap that
@@ -121,7 +121,8 @@
   font-family: var(--font-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  /* 12px label: 55% measured 3.95:1, under the 4.5 minimum */
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 
 @media (max-width: 480px) {

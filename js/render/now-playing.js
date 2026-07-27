@@ -44,7 +44,7 @@ function updateChip(track) {
   if (!chip) return;
   if (track) {
     chip.querySelector(".now-playing__track").textContent =
-      track.name + " — " + track.artist;
+      track.name + ", " + track.artist;
     chip.hidden = false;
   } else {
     chip.hidden = true;

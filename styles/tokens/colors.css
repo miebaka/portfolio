@@ -16,6 +16,13 @@
   --linen-strong: #ded8cc;
   --clay: #c2531c;
   --clay-hover: #a8460f;
+  /* Text-safe accent. --clay is the brand colour and stays exactly as it is,
+     but at 4.09:1 on --paper it clears WCAG AA only for large text (3:1). Small
+     accent text — inline links, 12px labels, the menu counter — needs 4.5:1, so
+     it uses this slightly deeper value of the same hue (4.72:1). Large display
+     accents keep the true brand colour. */
+  --clay-text: #b24c1a;
+  --clay-text-hover: #9e4417;
 
   /* Surfaces */
   --bg: var(--paper);
@@ -35,12 +42,16 @@
   --border-muted: var(--linen);
   --accent: var(--clay);
   --accent-hover: var(--clay-hover);
+  /* Accent for text below 24px — see --clay-text above */
+  --accent-text: var(--clay-text);
+  --accent-text-hover: var(--clay-text-hover);
   --ink-hover: color-mix(in srgb, var(--ink) 85%, #000);
 
-  /* Status */
-  --danger: #e5484d;
-  --danger-hover: #ff5a5f;
-  --success: #4ec06f;
+  /* Status — both values carry small text, so both are tuned to clear AA
+     (4.5:1) on --paper rather than to look bright. */
+  --danger: #b3272c;        /* 5.74:1 on paper */
+  --danger-hover: #8f1f23;
+  --success: #1f7a43;       /* 5.61:1 on paper */
 }
 
 /* ── Dark theme — toggled by data-theme="dark" on <html> ─────────────────
@@ -57,4 +68,12 @@
   --border:       var(--linen-strong);
   --border-muted: var(--linen);
   --ink-hover:    color-mix(in srgb, var(--ink) 85%, #fff);
+  /* The brand clay is too dark against the dark surface (3.76:1), so small
+     accent text lightens along the same hue to 5.24:1. --clay itself is
+     unchanged, so large display accents stay on-brand in both themes. */
+  --clay-text:       #d9703d;
+  --clay-text-hover: #e68250;
+  --danger:          #ff8a8e;
+  --danger-hover:    #ffa8ab;
+  --success:         #5fd48a;
 }

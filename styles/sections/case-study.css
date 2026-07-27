@@ -31,9 +31,11 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  /* 12px label: 55% measured 3.95:1, under the 4.5 minimum */
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 .case-back a:hover { color: var(--ink); }
+.case-back a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .case-title {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
@@ -99,7 +101,8 @@
 .case-rail__text {
   --_mt: 0.35rem; /* tight offset below the label — proportional, not on 8pt grid */
   font-size: var(--step-caption);
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  /* 14px: 55% measured 3.95:1, under the 4.5 minimum */
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
   margin: var(--_mt) 0 var(--space-3);
 }
 
@@ -139,12 +142,14 @@
 }
 .case-metric span {
   font-size: var(--step-small);
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  /* 16px: 55% measured 3.95:1, under the 4.5 minimum */
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 /* Placeholder note beneath the metrics. */
 .case-note {
   margin-top: var(--space-3);
-  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  /* 45% measured 2.91:1 */
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
 }
 
 .case-next {

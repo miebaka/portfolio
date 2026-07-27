@@ -41,9 +41,12 @@
   .about-portrait { aspect-ratio: 3 / 2; background-position: center 18%; }
 }
 
-/* Home-page preview statement */
+/* Home-page preview statement. It is the section's heading, so it carries the
+   heading role rather than sitting under a small-caps label. */
 .about-mission {
   font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  text-transform: none;
   font-size: var(--step-hero);
   font-weight: var(--weight-regular);
   line-height: var(--leading-heading);

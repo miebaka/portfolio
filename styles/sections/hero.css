@@ -23,27 +23,6 @@
   --_w: 26ch;
   max-width: var(--_w);
 }
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
-}
-.hero__availability {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-size: var(--step-small);
-  color: var(--text-muted);
-}
-.hero__availability::before {
-  content: "";
-  width: var(--space-1); height: var(--space-1);
-  border-radius: var(--radius-pill);
-  background: var(--clay);
-}
-
 /* ── Statement hero — golden ratio grid (content | portrait) ─────────────── */
 .hero-noir {
   position: relative;
@@ -106,7 +85,51 @@
      left edge of the type stays optically flush with the column. */
   hanging-punctuation: first last;
 }
+/* --clay is 4.09:1 on paper, which clears AA for large text (3:1) but not for
+   body text. At this size it is comfortably in the large-text band, so the
+   true brand colour is used rather than the deeper --accent-text. */
 .hero-noir__statement em { color: var(--clay); font-style: normal; }
+
+/* Hero CTA — the one action on the page's first screen. Underline rather than
+   a filled button: a solid chip would compete with the statement, which is the
+   thing that should be doing the talking. */
+.hero-noir__cta {
+  align-self: flex-start;
+  margin-top: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--tap-min);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent-text);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-text) 45%, transparent);
+  padding-bottom: 2px;
+  transition: color        var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+}
+.hero-noir__cta-arrow {
+  display: inline-block;
+  transition: transform var(--duration-medium) var(--ease-out-expo);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-noir__cta:hover {
+    color: var(--accent-text-hover);
+    border-bottom-color: var(--accent-text-hover);
+  }
+  .hero-noir__cta:hover .hero-noir__cta-arrow { transform: translateX(0.35em); }
+}
+.hero-noir__cta:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-noir__cta-arrow { transition: none; }
+}
 
 /* Right column — portrait. Reveal is the clip-path wipe in base/motion.css. */
 .hero-noir__picture {
@@ -145,9 +168,6 @@
   color: #ede9e1;
 }
 .hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.60); }
-
-/* Portrait media: hidden */
-.hero-noir__media { display: none; }
 
 @media (prefers-reduced-transparency: reduce) {
   .hero-noir .now-playing {

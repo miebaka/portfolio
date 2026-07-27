@@ -1,6 +1,12 @@
 /* ==========================================================================
-   Component · Buttons, links & chips.
+   Component · Buttons and links.
    ========================================================================== */
+
+/* SHAPE SYSTEM (documented rule, applied site-wide):
+     · Interactive controls  → --radius-pill   (buttons, the back pill)
+     · Content surfaces      → 0               (image frames, colour fields)
+     · Inputs                → 0               (underline fields, no box)
+   Shape carries meaning here: if it is rounded, you can press it. */
 
 .btn {
   --_py: var(--space-2);
@@ -9,7 +15,9 @@
   align-items: center;
   gap: var(--space-1);
   padding: var(--_py) var(--_px);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
+  /* Primary CTAs must never wrap to a second line */
+  white-space: nowrap;
   font-size: var(--step-small);
   font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-button);
@@ -19,14 +27,13 @@
 }
 .btn:active { transform: scale(0.97); }
 
+/* --ink on --paper is 16.3:1 in light mode and inverts cleanly in dark */
 .btn--primary { background: var(--ink); color: var(--paper); }
 .btn--primary:hover { background: var(--ink-hover); }
-
-.btn--accent { background: var(--clay); color: var(--paper); }
-.btn--accent:hover { background: var(--clay-hover); }
-
-.btn--ghost { border: 1px solid var(--border); }
-.btn--ghost:hover { border-color: var(--ink); }
+.btn--primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 /* Inline text link with the clay accent. On hover the underline
    thickens and drops, and the text shifts to the deeper clay.
@@ -37,9 +44,11 @@
   --_offset-hover: 5px;
   --_thick:        1px;
   --_thick-hover:  2px;
-  color: var(--clay);
+  /* Body-size link: uses the text-safe accent, not the brand clay, so it
+     clears AA at 17-18px. See tokens/colors.css. */
+  color: var(--accent-text);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--clay) 55%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 60%, transparent);
   text-underline-offset: var(--_offset);
   text-decoration-thickness: var(--_thick);
   transition: color var(--duration-fast) var(--ease-standard),
@@ -48,96 +57,14 @@
               text-underline-offset var(--duration-standard) var(--ease-out-expo);
 }
 .link:hover {
-  color: var(--clay-hover);
-  text-decoration-color: var(--clay-hover);
+  color: var(--accent-text-hover);
+  text-decoration-color: var(--accent-text-hover);
   text-decoration-thickness: var(--_thick-hover);
   text-underline-offset: var(--_offset-hover);
 }
 .link:active { opacity: 0.65; }
-
-/* Dieter Rams mechanical keycap button — appears in hero section only.
-   Two layers: recessed housing (outer) + raised keycap surface (inner).
-   All shadow values are component-local because they model a physical surface,
-   not a UI elevation level — the three global --shadow-* tokens don't apply. */
-.btn-rams {
-  --_housing-pad: 5px;
-  --_housing-shadow-inner-top: inset 0 2px 5px color-mix(in srgb, black 32%, transparent);
-  --_housing-shadow-inner-btm: inset 0 -1px 0 color-mix(in srgb, white 6%, transparent);
-  --_housing-shadow-outer:     0 1px 0 color-mix(in srgb, white 6%, transparent);
-  display: inline-flex;
-  align-self: flex-start;   /* don't stretch to fill flex-column containers */
-  padding: var(--_housing-pad);
-  border-radius: calc(var(--radius-btn) + var(--_housing-pad));
-  background: color-mix(in srgb, var(--paper) 7%, var(--ink));
-  box-shadow: var(--_housing-shadow-inner-top),
-              var(--_housing-shadow-inner-btm),
-              var(--_housing-shadow-outer);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btn-rams__keycap {
-  --_keycap-shine: inset 0 1px 0 color-mix(in srgb, white 95%, transparent);
-  --_keycap-edge:  inset 0 -1.5px 1px color-mix(in srgb, black 7%, transparent);
-  --_keycap-drop:  0 2px 3px color-mix(in srgb, black 18%, transparent), 0 1px 1px color-mix(in srgb, black 10%, transparent);
-  --_keycap-press: inset 0 2px 4px color-mix(in srgb, black 22%, transparent), inset 0 1px 1px color-mix(in srgb, black 14%, transparent);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-btn);
-  background: linear-gradient(180deg, var(--paper) 0%, var(--linen) 100%);
-  box-shadow: var(--_keycap-shine), var(--_keycap-edge), var(--_keycap-drop);
-  font-family: var(--font-label);
-  font-size: var(--step-small);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-button);
-  color: var(--ink);
-  position: relative;
-  transition: transform var(--duration-fast) var(--ease-snappy),
-              box-shadow var(--duration-fast) var(--ease-standard);
-}
-.btn-rams:active .btn-rams__keycap {
-  transform: translateY(1.5px);
-  box-shadow: var(--_keycap-press);
-  transition-duration: var(--duration-instant); /* press fast; release uses base 150ms */
-}
-
-.btn-rams__led {
-  --_size: 6px;
-  width: var(--_size);
-  height: var(--_size);
-  border-radius: var(--radius-pill);
-  /* Off state (light mode): subtle dark dot — LED is not active */
-  background: color-mix(in srgb, var(--ink) 25%, transparent);
-  box-shadow: none;
-  flex-shrink: 0;
-  transition: background var(--duration-standard) var(--ease-standard),
-              box-shadow   var(--duration-standard) var(--ease-standard);
-}
-/* On state (dark mode active): amber glow signals the dark theme is engaged */
-[data-theme="dark"] .btn-rams__led {
-  background: var(--clay);
-  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--clay) 60%, transparent),
-              0 0 14px 4px color-mix(in srgb, var(--clay) 30%, transparent);
-}
-
-/* Chips (fun facts, tags) */
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-.chip {
-  --_gap: var(--space-1);
-  --_py:  var(--space-1);
-  --_px:  var(--space-2);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--_gap);
-  padding: var(--_py) var(--_px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  font-size: var(--step-caption);
-  color: var(--text-muted);
+.link:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+  border-radius: 1px;
 }

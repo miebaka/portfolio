@@ -4,7 +4,8 @@
 
 .playground-empty {
   padding-block: var(--space-5);
-  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  /* 45% measured 2.91:1; 65% reaches 5.47:1 and still reads as secondary */
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
   font-size: var(--step-body);
 }
 
@@ -15,10 +16,9 @@
   padding: 0;
 }
 
-.writing-item {
-  border-top: 1px solid var(--border);
-}
-.writing-item:last-child { border-bottom: 1px solid var(--border); }
+/* One hairline between items — the section head above already draws the
+   line that opens the list. */
+.writing-item + .writing-item { border-top: 1px solid var(--border); }
 
 .writing-item__link {
   position: relative;
@@ -33,6 +33,7 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 .writing-item__link:hover { color: var(--accent); }
+.writing-item__link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
 
 .writing-item__meta {
   grid-column: 1;
@@ -44,13 +45,16 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 50%, transparent);
+  /* 12px label: 50% was 3.40:1, below the 4.5 minimum */
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
   transition: color var(--duration-fast) var(--ease-standard);
 }
-.writing-item__link:hover .writing-item__meta { color: color-mix(in srgb, var(--accent) 70%, transparent); }
+.writing-item__link:hover .writing-item__meta { color: var(--accent-text); }
 
-.writing-item__date::before,
-.writing-item__time::before {
+/* One separator per metadata line. A dot before every part turns the strip
+   into "a · b · c · d", which is the default-separator habit the rest of the
+   page avoids; the reading time is set apart by space alone. */
+.writing-item__date::before {
   content: "·";
   margin-right: var(--space-3);
 }
@@ -82,7 +86,8 @@
   align-self: center;
   font-size: var(--step-h2);
   line-height: 1;
-  color: color-mix(in srgb, var(--ink) 30%, transparent);
+  /* Non-text UI element: needs 3:1, 30% gave 1.95:1 */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
   transition: color     var(--duration-fast) var(--ease-standard),
               transform var(--duration-fast) var(--ease-snappy);
 }
@@ -108,7 +113,7 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-text);
   margin-bottom: var(--space-3);
 }
 

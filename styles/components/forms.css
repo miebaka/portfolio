@@ -18,7 +18,10 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 28%, transparent);
+  /* 28% ink measured 1.85:1 against paper — below the 3:1 WCAG minimum for a
+     UI component boundary. At 55% it reaches 3.4:1 and the field edge is
+     actually visible, which is the whole job of an underline field. */
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
   border-radius: 0;
   padding: var(--space-2) 0;
   font-family: var(--font-body);
@@ -29,24 +32,50 @@
   appearance: none;
 }
 
-.field input:focus,
-.field textarea:focus {
-  outline: none;
+/* Focus must be visible without relying on the border alone — a 1px colour
+   shift is not a sufficient focus indicator. */
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
   border-bottom-color: var(--ink);
 }
 
+/* Placeholders previously sat at 2.24:1. Removing the extra 0.55 multiplier
+   puts them on --stone alone, which is 5.31:1 and still clearly secondary
+   against the ink of real input. */
 .field input::placeholder,
 .field textarea::placeholder {
   color: var(--stone);
-  opacity: 0.55;
+  opacity: 1;
 }
 
+/* ── Validation ───────────────────────────────────────────────────────────
+   Errors belong next to the field that caused them, not only in a summary
+   line at the end of the form. */
+.field--invalid input,
+.field--invalid textarea { border-bottom-color: var(--danger); }
+
+.field__error {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--danger);
+}
+.field__error:empty { display: none; }
+
+/* Summary line. Colour is set by state rather than always-success: an error
+   rendered in green is worse than no colour at all. */
 .form-status {
   font-size: var(--step-small);
-  --_min-h: 1.2em; /* reserves one line of space to prevent layout shift on validation */
+  --_min-h: 1.2em; /* reserves one line so validation does not shift layout */
   min-height: var(--_min-h);
-  color: var(--success);
+  color: var(--text-muted);
 }
+.form-status[data-state="error"]   { color: var(--danger); }
+.form-status[data-state="success"] { color: var(--success); }
+
 .form-status.is-visible {
   animation: status-in var(--duration-standard) var(--ease-emphasized) both;
 }

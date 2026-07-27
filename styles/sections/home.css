@@ -9,10 +9,13 @@
 /* What I do — editorial index: name in the major column, meta in the minor.
    A two-column grid rather than flex space-between, so the meta has its own
    measure and wraps inside it instead of running to the viewport edge. */
+/* One hairline BETWEEN rows, not a border above the list plus one under every
+   row. The doubled version draws a line above the first item and below the
+   last, which boxes the list in and is the "rule under every row" pattern that
+   makes a short list read like a spec table. */
 .cap-list {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--border);
 }
 .cap-row {
   display: grid;
@@ -20,9 +23,9 @@
   align-items: baseline;
   gap: var(--space-4);
   padding-block: var(--space-5);
-  border-bottom: 1px solid var(--border);
   transition: opacity var(--duration-standard) var(--ease-standard);
 }
+.cap-row + .cap-row { border-top: 1px solid var(--border); }
 /* When any row is hovered, dim siblings — the same "focus one, quiet the
    rest" mechanic as the menu and the work grid. */
 @media (hover: hover) and (pointer: fine) {
@@ -82,9 +85,6 @@
 }
 
 #capabilities.about-home__block { padding-top: var(--space-6); }
-
-/* Remove trailing hairline below last capability row */
-.cap-row:last-child { border-bottom: none; }
 
 /* Testimonial — serif pull quote */
 .testimonial { padding-top: var(--space-4); }

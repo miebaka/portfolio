@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Miebaka Joshua — Brand Designer &amp; Strategic Thinker</title>
+  <title>Miebaka Joshua | Brand Designer &amp; Strategic Thinker</title>
   <meta name="description" content="Brand designer and strategic thinker based in Lagos. 7+ years building identities and campaigns for fintech, FMCG, and health tech brands. Open to remote roles worldwide.">
   <link rel="canonical" href="https://miebaka.design/">
-  <meta property="og:title" content="Miebaka Joshua — Brand Designer &amp; Strategic Thinker">
+  <meta property="og:title" content="Miebaka Joshua | Brand Designer &amp; Strategic Thinker">
   <meta property="og:description" content="Building brands that think before they look.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miebaka.design/">
@@ -15,7 +15,7 @@
   <meta property="og:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
   <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Miebaka Joshua — Brand Designer &amp; Strategic Thinker">
+  <meta name="twitter:title" content="Miebaka Joshua | Brand Designer &amp; Strategic Thinker">
   <meta name="twitter:description" content="Building brands that think before they look.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
@@ -26,16 +26,15 @@
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-italic.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-semibold.woff2" crossorigin>
-  <link rel="preload" as="image"
-        href="assets/images/optimized/miebaka-joshua-portrait-1080.avif"
+  <!-- LCP image. imagesrcset/imagesizes must mirror the <picture> below, or the
+       preload fetches the 1080 variant and the render then fetches a different
+       one, downloading the portrait twice on phones. -->
+  <link rel="preload" as="image" type="image/avif"
+        imagesrcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
+                     assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
+                     assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
+        imagesizes="(max-width: 760px) 100vw, 62vw"
         fetchpriority="high">
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"
-    }
-  }
-  </script>
   <script type="application/ld+json">
   [
     {
@@ -77,18 +76,38 @@
         </p>
         <div class="hero-noir__lower">
           <h1 class="hero-noir__statement" data-split>The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
+          <a class="hero-noir__cta reveal" href="#work">
+            <span>See the work</span>
+            <span class="hero-noir__cta-arrow" aria-hidden="true">&rarr;</span>
+          </a>
         </div>
       </div>
       <div class="hero-noir__picture" data-wipe="up">
-        <!-- Browser renders the AVIF with full native colour management -->
-        <img class="hero-noir__portrait"
-             src="assets/images/optimized/miebaka-joshua-portrait-1080.avif"
-             alt="" aria-hidden="true" data-hero-portrait>
+        <!-- width/height are required even though CSS stretches the image to
+             fill: without them the browser cannot reserve the box before the
+             file arrives, and the hero reflows on load. -->
+        <picture>
+          <source type="image/avif" sizes="(max-width: 760px) 100vw, 62vw"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w">
+          <source type="image/webp" sizes="(max-width: 760px) 100vw, 62vw"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.webp 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w">
+          <img class="hero-noir__portrait"
+               src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg"
+               sizes="(max-width: 760px) 100vw, 62vw"
+               srcset="assets/images/optimized/miebaka-joshua-portrait-540.jpg 540w,
+                       assets/images/optimized/miebaka-joshua-portrait-810.jpg 810w,
+                       assets/images/optimized/miebaka-joshua-portrait-1080.jpg 1080w"
+               width="1080" height="1350"
+               alt="" aria-hidden="true"
+               fetchpriority="high" decoding="async">
+        </picture>
       </div>
       <!-- Chip floats over picture; sits outside the grid flow (position: absolute in CSS) -->
       <div class="hero-noir__chip" data-mount="now-playing"></div>
-      <!-- Hidden portrait mount: fillSlots() guard -->
-      <div class="hero-noir__media" data-portrait-mount aria-hidden="true"></div>
     </section>
 
     <!-- Selected work -->
@@ -127,10 +146,10 @@
            No portrait here: the hero already carries it, and repeating the
            same photo one screen later reads as filler. -->
       <div class="container about-home__block" id="about-preview">
-        <div class="section-head reveal">
-          <h2 class="section-head__label">About</h2>
-        </div>
-        <p class="about-mission" data-split>Great brands feel like they were always going to look that way.</p>
+        <!-- No "About" label above this: the statement is the heading, and a
+             small-caps label over every section is the templated rhythm the
+             page is trying not to have. -->
+        <h2 class="about-mission" data-split>Great brands feel like they were always going to look that way.</h2>
         <div class="about-note stack reveal">
           <p>My earliest memory of design is a games console: the moment I understood that form and function could conspire to make something irresistible. Seven years later, I&rsquo;m building creative for 800,000+ users at Rise, and building an AI tool that scores where eyes actually land in an ad. If one word describes how I work: <em>inquisitive</em>. I question every brief until the idea underneath is inevitable.</p>
           <p><a class="link" href="about.html">More about me</a></p>
@@ -142,7 +161,8 @@
     <!-- Contact -->
     <section class="contact-section" id="contact">
       <div class="container contact reveal">
-        <p class="meta contact__label">Contact</p>
+        <!-- The headline names the section; a "Contact" label above it is a
+             textbook eyebrow and adds nothing. -->
         <h2 class="contact__heading">Something worth building?</h2>
         <form class="contact__form" novalidate>
           <div class="field">

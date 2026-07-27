@@ -64,7 +64,8 @@
   flex-shrink: 0;
 }
 @media (hover: hover) {
-  .site-nav__menu-btn:hover { color: var(--accent); }
+  /* 12px label — text-safe accent, see tokens/colors.css */
+  .site-nav__menu-btn:hover { color: var(--accent-text); }
 }
 
 /* ── Drams-037 theme toggle — pill track + oversized knob ─────────────── */
@@ -161,23 +162,20 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  box-shadow: var(--shadow-md);
-  /* instant color swap keeps pace with scroll; transform stays fast for hover */
-  transition: background var(--duration-instant) var(--ease-standard),
-              color     var(--duration-instant) var(--ease-standard),
-              transform var(--duration-fast)    var(--ease-snappy);
+  /* Ring separates the pill from dark media bands, where a shadow alone
+     disappears. Opaque fill means the pill never needs to know what is under
+     it — see renderBackButton in js/render/navigation.js. */
+  box-shadow: var(--shadow-md),
+              0 0 0 1px color-mix(in srgb, var(--paper) 30%, transparent);
+  transition: background var(--duration-fast) var(--ease-standard),
+              transform  var(--duration-fast) var(--ease-snappy);
 }
 .back-btn:hover { background: var(--ink-hover); transform: translateY(-2px); }
-/* JS toggles this class whenever the button scrolls over a dark background */
-.back-btn--dark            { background: var(--paper); color: var(--ink); }
-.back-btn--dark:hover      { background: var(--linen); transform: translateY(-2px); }
-
-/* Dark mode: --ink is now light and --paper is dark, so the default button is
-   already light-on-dark. Lock --dark to the same so it doesn't flip invisible. */
-[data-theme="dark"] .back-btn,
-[data-theme="dark"] .back-btn--dark      { background: var(--ink); color: var(--paper); }
-[data-theme="dark"] .back-btn:hover,
-[data-theme="dark"] .back-btn--dark:hover { background: var(--ink-hover); transform: translateY(-2px); }
+.back-btn:active { transform: translateY(0) scale(0.97); }
+.back-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 /* Apple HIG § accessibility — solidify translucent surfaces when OS requests it */
 @media (prefers-reduced-transparency: reduce) {
