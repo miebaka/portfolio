@@ -186,26 +186,54 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
 }
-/* Carries the open-entrance rise. Kept separate from the hover roll below so
+/* Carries the open-entrance rise. Kept separate from the hover animation so
    the two never compete for the same transform. */
-.site-menu__label-i { display: block; }
-
-/* Kinetic roll. The label is rendered twice: the first face sits in flow, the
-   second is pulled out of flow and parked exactly one line below, so the roll
-   box stays one line tall and .site-menu__label keeps clipping it. On hover
-   the box travels up by its own height, which swaps face one for face two in
-   a single continuous move rather than a crossfade. */
-.site-menu__roll {
+.site-menu__label-i {
   display: block;
   position: relative;
-  transition: transform var(--duration-slow) var(--ease-emphasized);
 }
+
+/* ── Kinetic type ─────────────────────────────────────────────────────────
+   Two copies of the label sit exactly on top of each other. The base copy is
+   ordinary text and carries the accessible name. The accent copy is split
+   into characters, each anchored to its own baseline and collapsed flat; on
+   hover they stretch back to full height one after another, so the word
+   appears to grow into the accent colour letter by letter.
+
+   Scaling from the baseline rather than sliding a whole word is what makes
+   this read as type behaving like type rather than a panel changing state. */
 .site-menu__face { display: block; }
-.site-menu__face + .site-menu__face {
+
+.site-menu__face--accent {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  inset: 0;
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* Both copies are split so their glyph metrics match exactly. Only the accent
+   copy's characters are ever transformed; the base copy just sits there and
+   provides the resting word. */
+.site-menu__char {
+  display: inline-block;
+  /* Bottom-left: the glyph grows up off its baseline, not out of its middle */
+  transform-origin: 0 100%;
+}
+
+.site-menu__face--accent .site-menu__char {
+  transform: scaleY(0);
+  /* Exit: no stagger and quicker than the entrance, so pulling away feels
+     immediate while arriving feels deliberate. */
+  transition: transform var(--duration-standard) var(--ease-in-out-quart);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__link:hover .site-menu__face--accent .site-menu__char,
+  .site-menu__link:focus-visible .site-menu__face--accent .site-menu__char {
+    transform: scaleY(1);
+    transition-duration: var(--duration-emphasis);
+    transition-delay: var(--char-d, 0ms);
+  }
 }
 
 .site-menu__link[aria-current="page"] { color: var(--accent); }
@@ -221,11 +249,6 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
     opacity: 1;
     color: var(--accent);
   }
-  /* The roll is the hover gesture. No lateral push as well: two motions on
-     one element reads as fidget rather than intent. */
-  .site-menu__link:hover .site-menu__roll {
-    transform: translateY(-100%);
-  }
 }
 /* Touch press feedback — pointer-down on mobile; hover handles desktop */
 .site-menu__link:active { opacity: 0.6; }
@@ -240,9 +263,8 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   color: var(--accent);
   outline: none;
 }
-/* Keyboard gets the same roll as the pointer, plus the underline that marks
-   focus specifically. */
-.site-menu__link:focus-visible .site-menu__roll { transform: translateY(-100%); }
+/* Keyboard gets the same growth as the pointer (handled in the hover block
+   above), plus the underline that marks focus specifically. */
 .site-menu__link:focus-visible .site-menu__face {
   text-decoration: underline;
   text-underline-offset: 0.1em;
@@ -345,15 +367,13 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   dialog.site-menu { transition: opacity var(--duration-fast) linear; }
   .site-menu__link,
-  .site-menu__roll,
+  .site-menu__char,
   .site-menu__close,
   .site-menu__close-mark::before,
   .site-menu__close-mark::after { transition: none; }
-  /* With the transition removed the roll would jump straight to the second
-     face, which is a harder movement than the animation it replaces. Hold the
-     first face in place and let colour carry the hover instead. */
-  .site-menu__link:hover .site-menu__roll,
-  .site-menu__link:focus-visible .site-menu__roll { transform: none; }
+  /* Without the transition the characters would snap to full height. Hide the
+     accent copy entirely and let colour on the base copy carry the hover. */
+  .site-menu__face--accent { display: none; }
   dialog.site-menu.is-open .site-menu__label-i,
   dialog.site-menu.is-open .site-menu__item,
   dialog.site-menu.is-open .site-menu__foot { animation: none; }

@@ -86,6 +86,31 @@ export function renderMenu() {
   const base = basePath();
   const page = document.body.dataset.page || "";
 
+  /* Splits a label into per-character spans.
+
+     BOTH copies get split, not just the animated one. Each character becomes
+     an inline-block, which suppresses kerning across the boundaries; splitting
+     one copy and leaving the other as a continuous run gives the two different
+     advance widths, and the accent letters drift out of register with the base
+     letters underneath them. Identical treatment keeps them aligned.
+
+     Because the visible text is now a run of separated glyphs, the link
+     carries an explicit aria-label so the accessible name stays a clean word. */
+  function chars(label) {
+    const list = Array.from(label);
+    /* GSAP's stagger:{amount:.15} spreads the whole sequence over 150ms
+       regardless of length, so the per-character step depends on the count.
+       Longer words step faster; every label finishes together. */
+    const step = list.length > 1 ? 150 / (list.length - 1) : 0;
+    return list
+      .map((ch, i) => {
+        const c = ch === " " ? "&nbsp;" : esc(ch);
+        return '<span class="site-menu__char" style="--char-d:' +
+               (i * step).toFixed(1) + 'ms">' + c + "</span>";
+      })
+      .join("");
+  }
+
   /* Each label is wrapped in a clipping span so the word can rise from behind
      its own baseline on open, reusing the masked reveal vocabulary the page
      headings use.
@@ -98,14 +123,15 @@ export function renderMenu() {
       const current = m.key === page ? ' aria-current="page"' : "";
       return (
         '<li class="site-menu__item" style="--row-i:' + (i + 1) + '">' +
-          '<a class="site-menu__link" href="' + base + esc(m.href) + '"' + current + ">" +
-            '<span class="site-menu__label">' +
+          '<a class="site-menu__link" href="' + base + esc(m.href) + '"' +
+           ' aria-label="' + esc(m.label) + '"' + current + ">" +
+            '<span class="site-menu__label" aria-hidden="true">' +
               '<span class="site-menu__label-i">' +
-                '<span class="site-menu__roll">' +
-                  '<span class="site-menu__face">' + esc(m.label) + "</span>" +
-                  /* Second face is the one that rolls up into view on hover.
-                     aria-hidden so the label is not announced twice. */
-                  '<span class="site-menu__face" aria-hidden="true">' + esc(m.label) + "</span>" +
+                '<span class="site-menu__face">' + chars(m.label) + "</span>" +
+                /* Accent copy, stacked exactly over the base copy. Its
+                   characters are the ones that animate. */
+                '<span class="site-menu__face site-menu__face--accent">' +
+                  chars(m.label) +
                 "</span>" +
               "</span>" +
             "</span>" +
