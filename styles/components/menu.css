@@ -186,9 +186,26 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   letter-spacing: var(--tracking-display);
   text-transform: uppercase;
 }
-.site-menu__label-i {
+/* Carries the open-entrance rise. Kept separate from the hover roll below so
+   the two never compete for the same transform. */
+.site-menu__label-i { display: block; }
+
+/* Kinetic roll. The label is rendered twice: the first face sits in flow, the
+   second is pulled out of flow and parked exactly one line below, so the roll
+   box stays one line tall and .site-menu__label keeps clipping it. On hover
+   the box travels up by its own height, which swaps face one for face two in
+   a single continuous move rather than a crossfade. */
+.site-menu__roll {
   display: block;
-  transition: transform var(--duration-medium) var(--ease-out-expo);
+  position: relative;
+  transition: transform var(--duration-slow) var(--ease-emphasized);
+}
+.site-menu__face { display: block; }
+.site-menu__face + .site-menu__face {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
 }
 
 .site-menu__link[aria-current="page"] { color: var(--accent); }
@@ -204,8 +221,10 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
     opacity: 1;
     color: var(--accent);
   }
-  .site-menu__link:hover .site-menu__label-i {
-    transform: translateX(0.18em);
+  /* The roll is the hover gesture. No lateral push as well: two motions on
+     one element reads as fidget rather than intent. */
+  .site-menu__link:hover .site-menu__roll {
+    transform: translateY(-100%);
   }
 }
 /* Touch press feedback — pointer-down on mobile; hover handles desktop */
@@ -221,7 +240,10 @@ dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter))
   color: var(--accent);
   outline: none;
 }
-.site-menu__link:focus-visible .site-menu__label-i {
+/* Keyboard gets the same roll as the pointer, plus the underline that marks
+   focus specifically. */
+.site-menu__link:focus-visible .site-menu__roll { transform: translateY(-100%); }
+.site-menu__link:focus-visible .site-menu__face {
   text-decoration: underline;
   text-underline-offset: 0.1em;
   text-decoration-thickness: 2px;
@@ -323,10 +345,15 @@ body.menu-open .site-nav { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   dialog.site-menu { transition: opacity var(--duration-fast) linear; }
   .site-menu__link,
-  .site-menu__label-i,
+  .site-menu__roll,
   .site-menu__close,
   .site-menu__close-mark::before,
   .site-menu__close-mark::after { transition: none; }
+  /* With the transition removed the roll would jump straight to the second
+     face, which is a harder movement than the animation it replaces. Hold the
+     first face in place and let colour carry the hover instead. */
+  .site-menu__link:hover .site-menu__roll,
+  .site-menu__link:focus-visible .site-menu__roll { transform: none; }
   dialog.site-menu.is-open .site-menu__label-i,
   dialog.site-menu.is-open .site-menu__item,
   dialog.site-menu.is-open .site-menu__foot { animation: none; }

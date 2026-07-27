@@ -65,12 +65,12 @@ export const SITE = {
       readingTime: "10 min read",
     },
     {
-      title: "Designing for Disability in Nigeria",
+      title: "Making the World More Accessible",
       href:  "writing/designing-for-disability-in-nigeria.html",
-      date:  "2023-09-01",
-      summary: "Why inclusive design in Nigeria isn't a feature. It's a foundation. Exploring the gaps, the stakes, and what designers here can actually do about it.",
+      date:  "2023-09-29",
+      summary: "At least 20 million Nigerians live with a disability. What that means for designers, and why building inclusively makes better products for everyone.",
       tag:  "Inclusive Design",
-      readingTime: "5 min read",
+      readingTime: "8 min read",
     },
   ],
 

@@ -27,6 +27,8 @@ const SOURCES = [
   { src: "assets/images/writing/swoosh-dream-crazy.jpg",  base: "swoosh-dream-crazy" },
   { src: "assets/images/writing/swoosh-nike-2021.jpg",    base: "swoosh-nike-2021" },
   { src: "assets/images/writing/swoosh-outlet-racks.png", base: "swoosh-outlet-racks" },
+  { src: "assets/images/writing/disability-flying-stars.jpg", base: "disability-flying-stars" },
+  { src: "assets/images/writing/disability-types.png",       base: "disability-types" },
 ];
 
 async function exists(p) {

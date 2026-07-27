@@ -215,6 +215,37 @@
   max-width: 52ch;
 }
 
+/* Lists. Markers are hung outside the measure so the text edge stays flush
+   with the paragraphs above and below it. */
+.article-body ul {
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+.article-body li {
+  position: relative;
+  padding-left: var(--space-3);
+  margin-bottom: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--step-body-lg);
+  line-height: var(--leading-body);
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
+}
+.article-body li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  /* Sits on the first line's optical centre rather than its box top */
+  top: 0.72em;
+  width: 0.4em;
+  height: 1px;
+  background: var(--accent);
+}
+.article-body li strong {
+  font-weight: var(--weight-bold);
+  color: var(--ink);
+}
+
 .article-body blockquote {
   border-left: 3px solid var(--accent);
   margin-block: var(--space-5);
@@ -224,7 +255,18 @@
   font-family: var(--font-body);
   font-style: italic;
   font-size: var(--step-h3);
+  line-height: 1.45;
   color: color-mix(in srgb, var(--ink) 70%, transparent);
+  margin-bottom: var(--space-2);
+}
+.article-body blockquote cite {
+  display: block;
+  font-family: var(--font-label);
+  font-style: normal;
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 
 .article-footer {

@@ -100,7 +100,14 @@ export function renderMenu() {
         '<li class="site-menu__item" style="--row-i:' + (i + 1) + '">' +
           '<a class="site-menu__link" href="' + base + esc(m.href) + '"' + current + ">" +
             '<span class="site-menu__label">' +
-              '<span class="site-menu__label-i">' + esc(m.label) + "</span>" +
+              '<span class="site-menu__label-i">' +
+                '<span class="site-menu__roll">' +
+                  '<span class="site-menu__face">' + esc(m.label) + "</span>" +
+                  /* Second face is the one that rolls up into view on hover.
+                     aria-hidden so the label is not announced twice. */
+                  '<span class="site-menu__face" aria-hidden="true">' + esc(m.label) + "</span>" +
+                "</span>" +
+              "</span>" +
             "</span>" +
           "</a>" +
         "</li>"
