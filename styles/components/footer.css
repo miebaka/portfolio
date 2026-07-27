@@ -7,34 +7,32 @@
   overflow: hidden;
   background: var(--paper);
   color: var(--ink);
-  /* The signature occupies a reserved band near the bottom. Sizing it here
-     rather than "fill the footer" is what stops it from running off the
-     sides — the artwork is 2.5:1, so a height-driven fit makes it wider than
-     the viewport on every screen. */
-  --_sig-h:      clamp(110px, 21vw, 290px);
-  --_sig-bottom: var(--space-6);
-  min-height: clamp(340px, 40vw, 560px);
+  /* The signature fills the footer and bleeds off both sides. That overscale
+     is the point: it is the one moment on the site that behaves like a poster
+     rather than a layout. */
+  --_min: 260px;
+  --_max: 640px;
+  min-height: clamp(var(--_min), 46vw, var(--_max));
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-block: var(--space-5) var(--space-3);
+  justify-content: flex-end;
+  padding-block: var(--space-5);
 }
 
-/* Script-signature watermark — CSS mask keeps it recolourable. Uses --ink so
-   it appears dark in light mode, light in dark mode. js/core/footer-scene.js
-   reads this pseudo-element's used height and offset so the particle version
-   lands on exactly the same rect; CSS stays the single source of truth. */
+/* Oversized script-signature watermark — CSS mask keeps it recolourable.
+   Uses --ink so it appears dark in light mode, light in dark mode.
+   js/core/footer-scene.js mirrors this sizing so the particle version lands
+   on the same rect; keep the two in sync. */
 .site-footer::before {
   content: "";
   position: absolute;
-  inset: auto 0 var(--_sig-bottom) 0;
-  height: var(--_sig-h);
+  inset: 0;
   z-index: 0;
   pointer-events: none;
   background-color: var(--ink);
   opacity: var(--opacity-mark);
-  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto 100%;
-  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto 100%;
+  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto calc(100% - var(--space-4));
+  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto calc(100% - var(--space-4));
 }
 
 .site-footer a { color: var(--ink); }
@@ -60,16 +58,12 @@
 .site-footer__grid,
 .site-footer__bottom { position: relative; z-index: var(--z-base); }
 
-/* φ split: email = major (61.8%); socials = minor (38.2%).
-   The bottom margin reserves the signature band's height, so the watermark
-   never rides up into the contact row no matter how the footer resolves its
-   min-height. */
+/* φ split: email = major (61.8%); socials = minor (38.2%) */
 .site-footer__grid {
   display: grid;
   grid-template-columns: var(--col-major) var(--col-minor);
   align-items: center;
   gap: var(--space-4);
-  margin-bottom: calc(var(--_sig-h) + var(--space-4));
 }
 @media (max-width: 600px) {
   .site-footer__grid { grid-template-columns: 1fr; }
@@ -107,14 +101,12 @@
   .site-footer__socials a:hover { color: var(--accent-text); }
 }
 
-/* Pinned to the footer's baseline; the signature band sits in the gap that
-   this leaves between it and the email/socials row above. */
 .site-footer__bottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-top: auto;
+  margin-top: var(--space-5);
   padding-top: var(--space-3);
   border-top: 1px solid var(--border);
   font-size: var(--step-meta);
@@ -126,9 +118,5 @@
 }
 
 @media (max-width: 480px) {
-  .site-footer {
-    --_sig-h: clamp(80px, 26vw, 150px);
-    --_sig-bottom: var(--space-5);
-    min-height: clamp(300px, 78vw, 420px);
-  }
+  .site-footer { min-height: clamp(180px, 60vw, 320px); }
 }

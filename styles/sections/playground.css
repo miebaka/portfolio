@@ -143,8 +143,14 @@
   margin-right: var(--space-3);
 }
 
+/* The article keeps the page container (so it lines up with the hero at the
+   gutter) and constrains the measure on the children instead. Putting the
+   68ch cap on the container itself made the whole column centre inside the
+   1400px page, so the body sat indented from the title above it. */
 .article-body {
   padding-block: var(--space-6) var(--space-7);
+}
+.article-body > * {
   max-width: 68ch;
 }
 
@@ -156,9 +162,13 @@
   margin-bottom: var(--space-4);
 }
 
+/* Standfirst. Needs its own leading: 1.75 at display size opens the lines so
+   far apart the paragraph stops holding together. */
 .article-body p:first-child {
   font-size: var(--step-h3);
+  line-height: 1.4;
   color: var(--ink);
+  margin-bottom: var(--space-5);
 }
 
 .article-body h2 {
@@ -177,6 +187,32 @@
   letter-spacing: var(--tracking-heading);
   text-transform: uppercase;
   margin-block: var(--space-4) var(--space-2);
+}
+
+/* Figures. The image runs the full reading measure and the caption sits
+   under it in label type, so the credit never overlays the picture. */
+/* Wider than the reading measure so the image reads as a picture rather than
+   as an illustration slotted into the text column. */
+.article-figure {
+  margin: var(--space-6) 0;
+  max-width: 92ch;
+}
+.article-figure picture,
+.article-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.article-figure figcaption {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  line-height: 1.6;
+  letter-spacing: var(--tracking-caption);
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+  max-width: 52ch;
 }
 
 .article-body blockquote {

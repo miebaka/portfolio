@@ -57,12 +57,12 @@ export const SITE = {
      - readingTime: Optional — e.g. "5 min read" */
   writing: [
     {
-      title: "When the Swoosh Lost Its Soul",
+      title: "When The Swoosh Lost Its Soul",
       href:  "writing/when-the-swoosh-lost-its-soul.html",
-      date:  "2026-06-01",
-      summary: "A close look at how Nike's identity drifted from its athletic roots, and what it reveals about the risk of letting a brand outgrow its own meaning.",
+      date:  "2026-06-15",
+      summary: "Nike has spent four consecutive years destroying shareholder value. A close read of how creative decisions became a $180 billion financial problem.",
       tag:  "Brand Strategy",
-      readingTime: "4 min read",
+      readingTime: "10 min read",
     },
     {
       title: "Designing for Disability in Nigeria",

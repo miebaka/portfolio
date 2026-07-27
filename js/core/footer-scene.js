@@ -62,17 +62,27 @@ export function createFooterScene(host) {
     }
   }
 
-  /* Read the watermark's rect straight off the ::before pseudo-element.
-     getComputedStyle resolves the clamp() to a used pixel value, so the
-     particle signature and the CSS mask are guaranteed to occupy the same
-     box — no duplicated sizing maths to drift out of sync. */
+  /* Measure a CSS custom property in px. Handles rem, px, or unitless. */
+  function measureCssVar(prop, fallback) {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
+    if (raw.endsWith("rem")) {
+      return parseFloat(raw) * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
+    }
+    if (raw.endsWith("px")) return parseFloat(raw);
+    return fallback;
+  }
+
+  /* Mirrors the CSS mask rule in components/footer.css:
+       mask: ... no-repeat center bottom / auto calc(100% - var(--space-4))
+     The signature is sized to the footer's full height and is free to bleed
+     past the left and right edges; the footer clips it with overflow:hidden.
+     Keep this in step with that rule. */
   function signatureRect() {
-    const cs = getComputedStyle(host, "::before");
-    const sigH = parseFloat(cs.height);
-    const bottom = parseFloat(cs.bottom);
-    if (!sigH || Number.isNaN(bottom)) return null;
-    const svgW = (SVG_VW / SVG_VH) * sigH;
-    return { w: svgW, h: sigH, x: (w - svgW) / 2, y: h - bottom - sigH };
+    const space4 = measureCssVar("--space-4", 32);
+    const svgH = h - space4;
+    if (svgH <= 0) return null;
+    const svgW = (SVG_VW / SVG_VH) * svgH;
+    return { w: svgW, h: svgH, x: (w - svgW) / 2, y: h - svgH };
   }
 
   /* Sample the SVG to find which grid positions fall inside the signature.

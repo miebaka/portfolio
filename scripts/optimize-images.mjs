@@ -22,6 +22,11 @@ const WIDTHS = [540, 810, 1080];
 /* Raster sources to optimize. Add project covers here as you create them. */
 const SOURCES = [
   { src: "assets/images/miebaka-joshua-portrait.jpg", base: "miebaka-joshua-portrait" },
+  /* Article imagery. Originals live in assets/images/writing/ and are not
+     served directly; the pages reference the optimized variants only. */
+  { src: "assets/images/writing/swoosh-dream-crazy.jpg",  base: "swoosh-dream-crazy" },
+  { src: "assets/images/writing/swoosh-nike-2021.jpg",    base: "swoosh-nike-2021" },
+  { src: "assets/images/writing/swoosh-outlet-racks.png", base: "swoosh-outlet-racks" },
 ];
 
 async function exists(p) {
