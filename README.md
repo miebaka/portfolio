@@ -2,9 +2,9 @@
 
 A fast, scalable, **zero-build** portfolio site (static HTML + CSS + vanilla ES
 modules). Direction: a warm editorial frame that stays neutral so the work
-supplies the colour. Art direction lives in
-[`creative-direction.md`](creative-direction.md); the governing engineering
-contract is [`engineering-specification.md`](engineering-specification.md).
+supplies the colour. [`engineering-specification.md`](engineering-specification.md)
+is the single governing document, covering positioning, art direction and voice
+as well as the engineering contract.
 
 ## Run it
 
@@ -12,9 +12,15 @@ No build step, no dependencies. Serve the folder over HTTP (ES modules need a
 server — `file://` won't load them):
 
 ```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000
+python3 scripts/dev-server.py 4180
+# then visit http://localhost:4180
 ```
+
+Use `scripts/dev-server.py` rather than `python3 -m http.server`. The stock
+handler sends no cache headers, so the browser applies heuristic caching, and
+because the site is a graph of ES modules a cached `js/main.js` pins every
+module it imports at the old version. Edits then appear to do nothing until a
+manual hard reload. The dev server is the same thing with `no-store` added.
 
 ## Structure
 

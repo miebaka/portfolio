@@ -1,3 +1,27 @@
+# Engineering Specification — Miebaka Joshua Portfolio
+### "The Quiet Gallery"
+
+> The interface is the wall. The work is the art. Everything the frame does is in service of making the work — bold, colourful, African brand design — the loudest thing in the room.
+
+This is the single governing document for the project. It absorbs the former
+`creative-direction.md`: art direction, voice and positioning now live here
+alongside the engineering contract, so there is one place to look and no way for
+the two to drift apart. Where the two documents disagreed, the resolutions are
+recorded inline and marked **Resolved**.
+
+---
+
+# 0. Positioning & Thesis
+
+* **Who:** Joshua Miebaka Williams Atubokiki — brand and visual designer, 7+ years, Lagos / WAT, remote-global.
+* **Thesis line (the spine of the whole site):** *"Building a standard for what brand and graphic design can be for African brands."*
+* **Promise:** World-class craft, premium and considered, hireable from anywhere.
+* **Feeling:** Considered, confident, warm. Restraint as proof of taste, never loud for its own sake.
+
+Every page must reinforce the thesis and end with a single clear ask.
+
+---
+
 # 1. Design Principles
 
 The portfolio is **not** a SaaS dashboard.
@@ -51,6 +75,9 @@ Prefer:
 
 over decoration.
 
+Whitespace is a feature, not leftover space. Wide margins and big air are the
+deliberate output of the spacing scale, not what is left once content is placed.
+
 ---
 
 ## 1.4 Consistency
@@ -63,45 +90,42 @@ The same spacing token should always produce identical rhythm.
 
 ---
 
-# 2. Design Token Architecture
+## 1.5 The Frame Stays Neutral; the Work Supplies the Colour
 
-Current
-
-```
-tokens.css
-```
-
-Target
-
-```
-styles/
-
-tokens/
-
-colors.css
-
-typography.css
-
-spacing.css
-
-layout.css
-
-grid.css
-
-motion.css
-
-radius.css
-
-elevation.css
-
-z-index.css
-```
-
-No token file should exceed roughly 250 lines.
+No decorative colour in the UI. Every colour a visitor sees beyond the core
+palette must come from the work itself: a project tile, a case-study band, a
+photograph. The chrome never competes with the portfolio.
 
 ---
 
-# 3. Typography System
+## 1.6 Show, Never List
+
+Any reference to a project carries an image or a colour field. A project named
+in text with nothing to look at is a broken reference.
+
+---
+
+## 1.7 One Idea Per Screen
+
+Lead the eye to a single focal point. If a viewport contains two things
+competing to be read first, one of them is in the wrong place.
+
+---
+
+## 1.8 Restraint Over Options
+
+One accent, one weight of emphasis, one call to action per view.
+
+---
+
+## 1.9 Every Project Is a Story
+
+Challenge, role, decisions, outcome, with numbers. A case study that only shows
+the artefact has not explained the work.
+
+---
+
+# 2. Typography System
 
 Typography is the primary communication layer.
 
@@ -119,9 +143,21 @@ Images are secondary.
 
 Never interchange these roles.
 
+> **Resolved — type pairing.** The retired `creative-direction.md` specified
+> Fraunces (display) plus Inter (body), with an optional signature script. That
+> pairing is void. The three roles above are the only correct ones: they are
+> what is self-hosted in `assets/fonts/`, what `styles/tokens/typography.css`
+> declares, and what every page renders. Fraunces and Inter appear nowhere in
+> the build and must not be reintroduced.
+>
+> The signature script survives in one place only, and not as a typeface: the
+> footer wordmark is an SVG (`miebaka-joshua-script-name.svg`), used as a mask
+> and as the sampling source for the footer particle scene. It is artwork, never
+> a font, and never sets type.
+
 ---
 
-# Display Typography
+## Display Typography
 
 Used only for:
 
@@ -181,7 +217,7 @@ It should never appear in paragraphs.
 
 ---
 
-# Typography Scale
+## Typography Scale
 
 | Token      | Desktop | Mobile |
 | ---------- | ------: | -----: |
@@ -203,7 +239,7 @@ All sizes should use `clamp()` for fluid scaling.
 
 ---
 
-# Font Weights
+## Font Weights
 
 Display
 
@@ -231,7 +267,7 @@ No artificial bolding.
 
 ---
 
-# Letter Tracking
+## Letter Tracking
 
 | Role       | Tracking |
 | ---------- | -------- |
@@ -249,7 +285,7 @@ Never inside components.
 
 ---
 
-# Line Heights
+## Line Heights
 
 | Role    | Value |
 | ------- | ----- |
@@ -262,7 +298,7 @@ Never inside components.
 
 ---
 
-# Reading Measures
+## Reading Measures
 
 ```
 --measure-hero:18ch;
@@ -280,7 +316,7 @@ Every content role gets its own measure.
 
 ---
 
-# OpenType Features
+## OpenType Features
 
 Enable globally.
 
@@ -302,7 +338,7 @@ contextual;
 
 ---
 
-# Typography Utility Classes
+## Typography Utility Classes
 
 ```
 .display-xl
@@ -334,7 +370,7 @@ Components consume these classes.
 
 ---
 
-# 4. Color System
+# 3. Color System
 
 Current naming already communicates quality.
 
@@ -342,27 +378,36 @@ Retain semantic naming.
 
 ## Core Palette
 
-```
-paper
+| Token   | Hex       | Use                                          |
+| ------- | --------- | -------------------------------------------- |
+| `paper` | `#F4F1EA` | Primary background                            |
+| `ink`   | `#16140F` | Primary text, inverted sections               |
+| `stone` | `#6B6256` | Secondary text                                |
+| `linen` | `#E4DED2` | Card and section separation, hairlines        |
+| `clay`  | `#C2531C` | Accent: links, the one CTA — sparingly        |
 
-ink
+Derived roles (`linen-strong`, `clay-hover`, `clay-text`, `clay-text-hover`,
+`bg`, `surface`, `text-*`, `border*`, `accent*`) are defined in
+`styles/tokens/colors.css` and are the only things components may consume. Dark
+mode redefines these token values; it never redefines a component.
 
-linen
+> **Resolved — accent contrast.** `--clay` is the brand colour and is 4.09:1 on
+> `--paper`, which clears WCAG AA for large text (3:1) but not for body text
+> (4.5:1). Small accent text therefore uses `--clay-text` (4.72:1 light,
+> 5.24:1 dark). Large display accents keep the true brand `--clay`. Do not
+> collapse these back into one token.
 
-stone
+> **Resolved — phantom tokens.** Earlier drafts of this section also named
+> `mist`, `forest`, `ember` and `gold`. None of them exist in
+> `styles/tokens/colors.css` and none are used anywhere in the build. They were
+> aspirational, never implemented, and are removed here rather than left as a
+> list that does not describe the product. Adding any of them back is a new
+> decision requiring a token definition first.
 
-clay
-
-mist
-
-forest
-
-ember
-
-gold
-
-accent
-```
+**Accent budget:** `clay` appears on no more than roughly three elements per
+screen. All other colour on any page must come from the work itself. A single
+near-black `ink` section is permitted as a tonal break; invert text to `paper`
+inside it.
 
 Never expose numerical color names.
 
@@ -428,7 +473,7 @@ Body copy
 
 ---
 
-# Dark Mode
+## Dark Mode
 
 Maintain semantic token names.
 
@@ -438,7 +483,7 @@ Only redefine tokens.
 
 ---
 
-# 5. Spacing System
+# 4. Spacing System
 
 Use an 8-point grid.
 
@@ -508,7 +553,7 @@ All tokenized.
 
 ---
 
-# 6. Layout System
+# 5. Layout System
 
 Containers
 
@@ -560,7 +605,7 @@ Padding must never be manually declared inside pages.
 
 ---
 
-# 7. Grid System
+# 6. Grid System
 
 Use CSS Grid exclusively for page layout.
 
@@ -620,45 +665,40 @@ Use semantic layout utilities instead of inline grid declarations.
 
 ---
 
-# Acceptance Criteria
+## The Golden Ratio (φ ≈ 1.618)
 
-## Typography
+> **Resolved — grid systems.** The retired creative direction proportioned the
+> site on the golden ratio; this document specified a 12/8/4 column grid. These
+> were recorded as a conflict, but they are not one: they govern different
+> things and both are present in the build. The rule is which one applies where.
 
-* [ ] Every heading uses TeX Gyre Heros.
-* [ ] Every long-form paragraph uses Libre Baskerville.
-* [ ] Every label and UI element uses Josefin Sans.
-* [ ] No typography role leaks into another.
-* [ ] All font sizes use tokens.
-* [ ] All tracking values use tokens.
-* [ ] Reading measures are respected.
+**φ governs two-part splits.** Any layout that divides into a major and a minor
+column uses `--col-major` (`1.618fr`) and `--col-minor` (`1fr`), giving the
+61.8% / 38.2% division. In the build this covers the hero (statement : portrait),
+the about grid, the capability and experience rows, the contact page, and the
+footer.
 
-## Color
+**The 12-column grid governs multi-item layouts.** The work grid and the
+case-study body use `repeat(12, 1fr)`, with each item claiming a span from data.
+Tablet collapses to 8 columns, mobile to 4.
 
-* [ ] No hardcoded colors remain.
-* [ ] Components consume semantic color tokens only.
-* [ ] All text meets contrast requirements.
+Further φ rules:
 
-## Spacing
+* **Vertical placement:** anchor focal elements on the golden lines, not
+  arbitrary centres. The hero statement sits on the lower golden line.
+* **Spacing and type:** prefer steps that scale by φ, or √φ ≈ 1.272 for finer
+  increments.
+* **Tokens:** `--phi`, `--phi-inv`, `--col-major`, `--col-minor`, defined in
+  `styles/tokens/grid.css` alongside the 12-column tokens.
+* **Mobile:** the golden split collapses to a single column; work reverts to a
+  single-column stack before widening to 2 and then 12.
 
-* [ ] No literal margin or padding values remain.
-* [ ] All spacing derives from the spacing scale.
-* [ ] Vertical rhythm is consistent across pages.
-
-## Layout
-
-* [ ] Containers use layout tokens.
-* [ ] No inline widths remain.
-* [ ] All sections use spacing utilities.
-
-## Grid
-
-* [ ] Layouts follow the 12/8/4 column system.
-* [ ] Gutters are tokenized.
-* [ ] Components align to the grid consistently.
+Content max width is ~1400px with generous margins. Deliberate asymmetry is
+expected; work is shown full-bleed where it earns it.
 
 ---
 
-# 1. Motion System
+# 7. Motion System
 
 ## Motion Philosophy
 
@@ -675,9 +715,13 @@ Every animation must answer one of four questions:
 
 If an animation cannot answer one of those questions, it should be removed.
 
+Motion confirms quality; it never performs. Specifically banned: auto-advancing
+carousels, bouncing, and any attention-grabbing loop. A visitor should never
+have to wait for the interface to finish moving before they can read it.
+
 ---
 
-# Motion Characteristics
+## Motion Characteristics
 
 The site should feel:
 
@@ -697,7 +741,7 @@ It should never feel:
 
 ---
 
-# Motion Categories
+## Motion Categories
 
 ## Entrance
 
@@ -763,7 +807,7 @@ Error
 
 ---
 
-# Timing Tokens
+## Timing Tokens
 
 ```css
 --duration-instant:75ms;
@@ -783,7 +827,7 @@ No component may hardcode durations.
 
 ---
 
-# Easing Tokens
+## Easing Tokens
 
 ```css
 --ease-linear;
@@ -809,7 +853,7 @@ Reading transitions → Gentle
 
 ---
 
-# Hover Standards
+## Hover Standards
 
 Links
 
@@ -871,7 +915,7 @@ Never exceed
 
 ---
 
-# Reduced Motion
+## Reduced Motion
 
 Always support
 
@@ -891,7 +935,7 @@ Disable
 
 ---
 
-# Scroll Reveals
+## Scroll Reveals
 
 Allowed
 
@@ -911,7 +955,7 @@ Overshoot
 
 ---
 
-# 2. Design Token Architecture
+# 8. Design Token Architecture
 
 Tokens are the single source of truth.
 
@@ -981,7 +1025,7 @@ case-study.css
 
 ---
 
-# Token Rules
+## Token Rules
 
 Every token must be:
 
@@ -1018,7 +1062,7 @@ border-muted
 
 ---
 
-# Token Ownership
+## Token Ownership
 
 Only tokens may define
 
@@ -1044,7 +1088,7 @@ Z-index
 
 ---
 
-# Component Rules
+## Component Rules
 
 Components consume tokens.
 
@@ -1052,7 +1096,7 @@ Components never create design language.
 
 ---
 
-# 3. CSS Architecture
+# 9. CSS Architecture
 
 Architecture
 
@@ -1084,7 +1128,7 @@ Nothing skips layers.
 
 ---
 
-# Naming Convention
+## Naming Convention
 
 BEM
 
@@ -1108,7 +1152,7 @@ Maximum selector depth
 
 ---
 
-# CSS Conventions
+## CSS Conventions
 
 Never use
 
@@ -1136,7 +1180,7 @@ Modern CSS
 
 ---
 
-# Property Order
+## Property Order
 
 Position
 
@@ -1158,7 +1202,7 @@ Every rule follows identical order.
 
 ---
 
-# File Size Limits
+## File Size Limits
 
 tokens
 
@@ -1178,7 +1222,7 @@ Split file.
 
 ---
 
-# Responsive Strategy
+## Responsive Strategy
 
 Desktop first layout
 
@@ -1192,7 +1236,7 @@ No breakpoint-specific typography.
 
 ---
 
-# Utilities
+## Utilities
 
 Allowed
 
@@ -1222,7 +1266,7 @@ Visual hacks
 
 ---
 
-# 4. HTML Architecture
+# 10. HTML Architecture
 
 HTML communicates meaning.
 
@@ -1230,7 +1274,7 @@ CSS communicates appearance.
 
 ---
 
-# Semantic Structure
+## Semantic Structure
 
 ```text
 body
@@ -1252,7 +1296,7 @@ Never use div when a semantic element exists.
 
 ---
 
-# Heading Structure
+## Heading Structure
 
 One
 
@@ -1264,7 +1308,7 @@ Never skip heading levels.
 
 ---
 
-# Images
+## Images
 
 Every image
 
@@ -1280,7 +1324,7 @@ Decoding
 
 ---
 
-# Links
+## Links
 
 Descriptive text.
 
@@ -1292,7 +1336,7 @@ Learn more
 
 ---
 
-# Forms
+## Forms
 
 Every control
 
@@ -1306,7 +1350,7 @@ Autocomplete
 
 ---
 
-# Accessibility
+## Accessibility
 
 Landmarks
 
@@ -1320,7 +1364,7 @@ Required everywhere.
 
 ---
 
-# Inline Styles
+## Inline Styles
 
 Forbidden.
 
@@ -1328,7 +1372,7 @@ Move every inline declaration into CSS.
 
 ---
 
-# Data Attributes
+## Data Attributes
 
 Allowed only for
 
@@ -1342,7 +1386,7 @@ Never for styling.
 
 ---
 
-# 5. JavaScript Architecture
+# 11. JavaScript Architecture
 
 JavaScript enhances.
 
@@ -1350,7 +1394,7 @@ HTML should remain usable.
 
 ---
 
-# Directory
+## Directory
 
 ```text
 js/
@@ -1392,7 +1436,7 @@ projects.js
 
 ---
 
-# Principles
+## Principles
 
 Single responsibility.
 
@@ -1404,7 +1448,7 @@ Predictable naming.
 
 ---
 
-# Naming
+## Naming
 
 Good
 
@@ -1432,7 +1476,7 @@ execute()
 
 ---
 
-# DOM Access
+## DOM Access
 
 Cache selectors.
 
@@ -1450,7 +1494,7 @@ for multiple insertions.
 
 ---
 
-# Events
+## Events
 
 Delegate where possible.
 
@@ -1458,7 +1502,7 @@ Avoid attaching listeners repeatedly.
 
 ---
 
-# State
+## State
 
 Never store UI state in the DOM unless required.
 
@@ -1466,7 +1510,7 @@ Keep state centralized.
 
 ---
 
-# Rendering
+## Rendering
 
 Rendering functions should
 
@@ -1478,7 +1522,7 @@ Never mutate unrelated state.
 
 ---
 
-# Error Handling
+## Error Handling
 
 Gracefully handle
 
@@ -1492,7 +1536,61 @@ Unexpected values
 
 ---
 
-# Component-by-Component Implementation Guide
+# 12. Art Direction
+
+Engineering decides how an image is delivered. This section decides which image
+is worth delivering.
+
+## Portraits
+
+Warm, natural light, with presence: eye contact, or caught in the act of making.
+Never passive or incidental.
+
+## Work
+
+High resolution, true colour, full-bleed where the piece earns it. The posters
+and identities are the subject; the page is the wall they hang on.
+
+## Consistency
+
+One treatment throughout. Do not mix black-and-white and colour portraits
+arbitrarily. The chosen lane is warm colour, for approachability and for the
+trust a remote hire has to establish quickly.
+
+## Credit
+
+Third-party imagery used editorially (campaign stills, documentary photography)
+carries its credit in the caption, below the image, never set over it.
+
+---
+
+# 13. Voice
+
+Inquisitive, warm, unhedged. The register is the writer's smartest, most curious
+self.
+
+Personal detail — comic books, dinosaurs, snakes, the ability to taste the
+difference in water — is encouraged rather than tolerated: it earns the craft and
+makes the work memorable.
+
+Lead client-facing copy with the African-brands mission. Keep personality
+concentrated in the About page and the writing.
+
+**Mechanics:**
+
+* Sentence case everywhere except small uppercase interface labels.
+* No em-dashes or en-dashes in any user-visible string, including page titles,
+  meta descriptions, alt text and button labels. Use a comma, colon, period or
+  plain hyphen. This applies to prose in the articles as much as to UI copy.
+* One label per intent across the whole site. The contact call to action is
+  "Start a project" everywhere it appears.
+* No scroll cues, no section-number eyebrows, no decorative status dots.
+* At most one small-caps eyebrow per three sections; a headline that names its
+  own section does not also need a label above it.
+
+---
+
+# 14. Component-by-Component Implementation Guide
 
 ## Navigation
 
@@ -1632,7 +1730,59 @@ Acceptance Criteria
 
 ---
 
-# Engineering Definition of Done
+# 15. Acceptance Criteria
+
+## Typography
+
+* [ ] Every heading uses TeX Gyre Heros.
+* [ ] Every long-form paragraph uses Libre Baskerville.
+* [ ] Every label and UI element uses Josefin Sans.
+* [ ] No typography role leaks into another.
+* [ ] All font sizes use tokens.
+* [ ] All tracking values use tokens.
+* [ ] Reading measures are respected.
+
+## Color
+
+* [ ] No hardcoded colors remain.
+* [ ] Components consume semantic color tokens only.
+* [ ] All text meets contrast requirements.
+
+## Spacing
+
+* [ ] No literal margin or padding values remain.
+* [ ] All spacing derives from the spacing scale.
+* [ ] Vertical rhythm is consistent across pages.
+
+## Layout
+
+* [ ] Containers use layout tokens.
+* [ ] No inline widths remain.
+* [ ] All sections use spacing utilities.
+
+## Grid
+
+* [ ] Multi-item layouts follow the 12/8/4 column system.
+* [ ] Two-part splits use `--col-major` / `--col-minor`, not hand-written percentages.
+* [ ] Gutters are tokenized.
+* [ ] Components align to the grid consistently.
+
+## Art Direction
+
+* [ ] Every project reference carries an image or a colour field.
+* [ ] Portrait treatment is consistent across the site.
+* [ ] Third-party imagery is credited in a caption below the image.
+
+## Voice
+
+* [ ] No em-dash or en-dash appears in any user-visible string.
+* [ ] The contact call to action reads "Start a project" everywhere.
+* [ ] Eyebrow labels number at most one per three sections.
+* [ ] No scroll cues, section numbering, or decorative status dots.
+
+---
+
+# 16. Definition of Done — Implementation
 
 The implementation is complete only when:
 
@@ -1647,7 +1797,7 @@ The implementation is complete only when:
 * [ ] All pages share a unified visual language.
 * [ ] The codebase is maintainable, scalable, and production-ready.
 
-8. File-by-File Refactor Tasks
+# 17. File-by-File Refactor Tasks
 
 The project should be refactored from the foundation outward. Never begin with visual polish before completing the architectural work.
 
@@ -1899,7 +2049,7 @@ Improve state management.
 
 Improve naming consistency.
 
-9. Accessibility Requirements (WCAG 2.2 AA)
+# 18. Accessibility Requirements (WCAG 2.2 AA)
 
 Accessibility is not an enhancement. It is a release requirement.
 
@@ -1989,7 +2139,7 @@ Disable non-essential animation.
 
 Preserve usability without animation.
 
-10. Performance Optimization Plan
+# 19. Performance Optimization Plan
 Core Web Vitals Targets
 | Metric | Target |
 | ------ | ------ |
@@ -2051,7 +2201,7 @@ Minimize paint areas.
 
 Animate only transform and opacity.
 
-11. SEO Implementation Plan
+# 20. SEO Implementation Plan
 Metadata
 
 Every page requires:
@@ -2102,7 +2252,7 @@ Clean URLs.
 
 Proper redirects where required.
 
-12. Responsive Design Standards
+# 21. Responsive Design Standards
 
 Responsive behavior is part of the design system, not an afterthought.
 
@@ -2151,7 +2301,11 @@ Tablet landscape
 Laptop
 Desktop
 Ultrawide
-13. Animation Standards
+# 22. Animation Standards
+
+> Detailed timing tokens, easing tokens, hover standards and reduced-motion
+> rules live in **§7 Motion System**. This section holds the acceptance-level
+> standards only; §7 is authoritative where the two describe the same value.
 
 Animation should reinforce the editorial character of the portfolio.
 
@@ -2231,7 +2385,11 @@ Animation system consistent.
 
 Only after every critical item is complete should visual polish and future enhancements be considered.
 
-14. Naming Conventions
+# 23. Naming Conventions
+
+> CSS-specific naming (BEM, selector depth, file names) is defined in
+> **§9 CSS Architecture**. This section covers project-wide naming: branches,
+> commits, assets and tokens.
 
 Naming is architecture.
 
@@ -2437,7 +2595,7 @@ feature/case-study-layout
 fix/mobile-navigation
 
 refactor/css-architecture
-15. Quality Assurance Checklists
+# 24. Quality Assurance Checklists
 
 Every feature must pass the following gates.
 
@@ -2581,7 +2739,7 @@ Open Graph complete
 
 Twitter Cards complete
 
-16. Definition of Ready (DoR)
+# 25. Definition of Ready
 
 No implementation begins until:
 
@@ -2599,7 +2757,10 @@ Accessibility impact reviewed
 
 Responsive behaviour defined
 
-17. Definition of Done (DoD)
+# 26. Definition of Done — Per Task
+
+> §16 defines when the *implementation as a whole* is complete. This section
+> defines when an *individual task* is complete. Both apply.
 
 A task is complete only when every requirement below is satisfied.
 
@@ -2653,7 +2814,7 @@ Changelog updated
 
 Engineering documentation updated
 
-18. Refactor Priorities
+# 27. Refactor Priorities
 Critical
 
 These block release.
@@ -2710,7 +2871,7 @@ Future-proof container query enhancements
 
 Optional visual flourishes
 
-19. Progress Tracking
+# 28. Progress Tracking
 Phase 1 — Foundation
 
 Split token architecture
@@ -2783,7 +2944,7 @@ Production build
 
 Deployment
 
-20. Page-by-Page Acceptance Criteria
+# 29. Page-by-Page Acceptance Criteria
 Home
 Objectives
 
@@ -2890,3 +3051,14 @@ Lighthouse Performance, Accessibility, Best Practices, and SEO all score ≥ 95.
 No duplicated design decisions remain outside the design token system.
 
 The codebase is maintainable, documented, and capable of supporting future growth without architectural changes.
+# What This Locks
+
+* **Direction:** The Quiet Gallery — warm editorial, neutral frame, work-led colour.
+* **Type:** TeX Gyre Heros (display) · Libre Baskerville (reading) · Josefin Sans (interface). Fraunces and Inter are void.
+* **Palette:** Paper · Ink · Stone · Linen · Clay. No `mist`, `forest`, `ember` or `gold`.
+* **Proportion:** φ for two-part splits, 12/8/4 for multi-item grids.
+* **Principle:** show the work; the frame stays quiet.
+
+Everything built from here references this document, and only this document.
+
+---
