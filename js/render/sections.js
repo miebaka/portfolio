@@ -1,9 +1,10 @@
 /* Render — home sections: capabilities list, testimonial, and text/portrait slots. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 export function renderCapabilities() {
-  const el = mount("capabilities");
+  const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
   el.classList.add("cap-list");
   el.innerHTML = SITE.capabilities
@@ -24,7 +25,7 @@ export function renderCapabilities() {
    empty blockquote and an empty <cite> sitting in the middle of the home page
    as a visible gap. An unfilled section should not reserve space. */
 export function renderTestimonial() {
-  const el = mount("testimonial");
+  const el = mount(MOUNT.TESTIMONIAL);
   if (!el) return;
 
   const t = (SITE.testimonials || []).find(

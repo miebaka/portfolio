@@ -1,9 +1,10 @@
 /* Render — site footer: email, socials and the legal line. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 export function renderFooter() {
-  const el = mount("footer");
+  const el = mount(MOUNT.FOOTER);
   if (!el) return;
   /* target="_blank" was missing, which made the rel attribute inert and sent
      visitors off-site in the same tab from the footer while the same links in

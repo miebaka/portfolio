@@ -65,13 +65,48 @@
 </head>
 <body class="case-page case-page--rivo" data-page="work" data-base="../" data-case="rivo">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header data-mount="nav"></header>
+  <header data-mount="nav">
+    <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
+         only ever seen when the module graph fails or JS is off. Without it the
+         site has no navigation at all in those cases, for people and for
+         crawlers that do not execute scripts. -->
+    <nav class="nav-fallback" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../work.html">Work</a>
+        <a href="../about.html">About</a>
+        <a href="../services.html">Services</a>
+        <a href="../playground.html">Playground</a>
+        <a href="../contact.html">Contact</a>
+    </nav>
+  </header>
 
   <main id="main">
-    <article class="case" data-mount="case"></article>
+    <article class="case" data-mount="case">
+      <!-- Static fallback, replaced wholesale by renderCaseStudy(). The body of
+           this page is entirely data-driven, so without this the page is blank
+           when JS fails and carries no link a crawler can follow. -->
+      <section class="case-hero container">
+        <p class="case-back"><a href="../work.html">&larr; Work</a></p>
+        <h1 class="case-title">Rivo</h1>
+        <p class="case-tagline">A financial brand built on warmth, not cold blue.</p>
+      </section>
+      <section class="case-next container" aria-label="Next project">
+        <p class="case-next__label">Next project</p>
+        <a class="case-next__link" href="christian-poster-a-week.html">A Christian Poster A Week &rarr;</a>
+      </section>
+    </article>
   </main>
 
-  <footer data-mount="footer"></footer>
+  <footer data-mount="footer">
+    <!-- Static fallback, replaced by renderFooter(). -->
+    <div class="nav-fallback">
+        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
+        <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
+        <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.instagram.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.x.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Twitter</a>
+    </div>
+  </footer>
 
   <script type="module" src="../js/main.js"></script>
 </body>

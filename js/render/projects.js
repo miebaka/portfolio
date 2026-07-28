@@ -1,6 +1,7 @@
 /* Render — projects: the work grid (Saint-Louvent cards) and the client marquee. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 /* Colour field on top, caption underneath — the editorial treatment. The
    title sits outside the tile rather than centred inside it, so the colour
@@ -29,7 +30,7 @@ function workCard(project) {
 }
 
 export function renderWork() {
-  const el = mount("work-grid");
+  const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   el.classList.add("sl-grid");
   el.innerHTML = SITE.projects.map(workCard).join("");
@@ -52,7 +53,7 @@ function clientItem(client) {
 }
 
 export function renderClients() {
-  const el = mount("clients");
+  const el = mount(MOUNT.CLIENTS);
   if (!el || !SITE.clients || !SITE.clients.length) return;
   const setHTML = SITE.clients.map(clientItem).join("");
 

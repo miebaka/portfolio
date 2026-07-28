@@ -53,7 +53,20 @@
 </head>
 <body data-page="work">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header data-mount="nav"></header>
+  <header data-mount="nav">
+    <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
+         only ever seen when the module graph fails or JS is off. Without it the
+         site has no navigation at all in those cases, for people and for
+         crawlers that do not execute scripts. -->
+    <nav class="nav-fallback" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="work.html">Work</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="playground.html">Playground</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
   <main id="main">
 
@@ -65,7 +78,16 @@
 
     <!-- Full work index -->
     <section class="section--tight" id="work">
-      <div data-mount="work-grid"></div>
+      <div data-mount="work-grid">
+        <!-- Static fallback, replaced by renderWork(). Keeps the four case
+             studies reachable and crawlable when the grid never renders. -->
+        <ul class="link-fallback">
+          <li><a href="work/rivo.html">Rivo, fintech brand identity</a></li>
+          <li><a href="work/christian-poster-a-week.html">A Christian Poster A Week, self-directed series</a></li>
+          <li><a href="work/tedx-rsu.html">TEDx Rivers State University, event identity</a></li>
+          <li><a href="work/chopbox.html">ChopBox, food brand identity</a></li>
+        </ul>
+      </div>
     </section>
 
     <!-- Closing line -->
@@ -77,7 +99,16 @@
 
   </main>
 
-  <footer data-mount="footer"></footer>
+  <footer data-mount="footer">
+    <!-- Static fallback, replaced by renderFooter(). -->
+    <div class="nav-fallback">
+        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
+        <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
+        <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.instagram.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.x.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Twitter</a>
+    </div>
+  </footer>
 
   <script type="module" src="js/main.js"></script>
 </body>

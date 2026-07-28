@@ -3,6 +3,7 @@
    Polls every 60 s; renders only when a track is actively playing.
    ========================================================================== */
 import { SITE } from "../../data/site.js";
+import { MOUNT } from "../core/contract.js";
 
 const ENDPOINT =
   "https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks" +
@@ -79,7 +80,7 @@ async function poll() {
 
 export function initNowPlaying() {
   if (!SITE.lastfmUser || !SITE.lastfmKey) return;
-  const container = document.querySelector("[data-mount='now-playing']");
+  const container = document.querySelector(`[data-mount="${MOUNT.NOW_PLAYING}"]`);
   if (!container) return;
   buildChip(container);
 

@@ -2,6 +2,7 @@
    main.js — module entry. Renders the data-driven DOM, then wires behaviour.
    Order matters: nav + menu must be rendered before their handlers attach.
    ========================================================================== */
+import { initContract } from "./core/contract.js";
 import { renderNavigation, renderMenu, renderBackButton } from "./render/navigation.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
@@ -18,6 +19,11 @@ import { initForm } from "./core/form.js";
 import { initInteractions } from "./core/interactions.js";
 import { initCursorField } from "./core/cursor-field.js";
 import { initFooterScene } from "./core/footer-scene.js";
+
+/* Verify the HTML/JS contract before rendering anything. A mount name that
+   exists in one half but not the other is reported here instead of showing up
+   later as a section that silently never filled. See js/core/contract.js. */
+initContract();
 
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();

@@ -1,6 +1,7 @@
 /* Render — writing list for the Playground page. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 /* Returns "" for a missing or unparseable date rather than "Invalid Date",
    which is what toLocaleDateString emits and which would otherwise be
@@ -13,7 +14,7 @@ function formatDate(iso) {
 }
 
 export function renderWriting() {
-  const el = mount("writing");
+  const el = mount(MOUNT.WRITING);
   if (!el) return;
 
   /* An entry with no destination or no title cannot render as a usable link,

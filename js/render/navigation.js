@@ -1,6 +1,7 @@
 /* Render — navigation bar (logo · menu) and the fullscreen overlay menu. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 function brandHTML() {
   const base = basePath();
@@ -36,7 +37,7 @@ function setupThemeToggle() {
 }
 
 export function renderNavigation() {
-  const el = mount("nav");
+  const el = mount(MOUNT.NAV);
   if (!el) return;
   el.className = "site-nav";
   /* Three-column grid: Logo (left) | Menu (centre, auto-width) | Toggle (right) */

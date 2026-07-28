@@ -42,7 +42,20 @@
 </head>
 <body data-page="404">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header data-mount="nav"></header>
+  <header data-mount="nav">
+    <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
+         only ever seen when the module graph fails or JS is off. Without it the
+         site has no navigation at all in those cases, for people and for
+         crawlers that do not execute scripts. -->
+    <nav class="nav-fallback" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="work.html">Work</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="playground.html">Playground</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
   <main id="main">
     <section class="hero container">
@@ -56,7 +69,16 @@
     </section>
   </main>
 
-  <footer data-mount="footer"></footer>
+  <footer data-mount="footer">
+    <!-- Static fallback, replaced by renderFooter(). -->
+    <div class="nav-fallback">
+        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
+        <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
+        <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://www.instagram.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.x.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Twitter</a>
+    </div>
+  </footer>
 
   <script type="module" src="js/main.js"></script>
 </body>

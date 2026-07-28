@@ -94,3 +94,47 @@
   .section--tight { padding-block: 3rem; }
   .section-head  { margin-bottom: var(--space-4); }
 }
+
+/* Progressive-enhancement fallbacks.
+
+   Several regions of every page are empty elements filled in by JS
+   ([data-mount]). Each now ships static content inside it so the page is
+   navigable and crawlable before, and without, the module graph. The renderers
+   replace innerHTML wholesale, so these are never seen on a healthy load.
+
+   Styled plainly on purpose: this is the failure state, and it should read as
+   honest plain content rather than a half-built version of the real design. */
+.nav-fallback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--gutter);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.nav-fallback a { color: var(--accent-text); }
+
+.link-fallback {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--gutter);
+  display: grid;
+  gap: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+}
+.link-fallback a { color: var(--accent-text); }
+
+/* Hidden the moment JS is known to be present, so a healthy load never flashes
+   the fallback before the renderer replaces it. `.has-js` is set by the head
+   script, which a non-JS visitor or crawler never runs, so for them the class
+   is absent and the fallback simply shows. If JS is present but the module
+   graph fails, the head script's 2.5s failsafe brings it back. */
+.has-js .nav-fallback,
+.has-js .link-fallback { display: none; }
+
+.reveal-failsafe .nav-fallback { display: flex; }
+.reveal-failsafe .link-fallback { display: grid; }

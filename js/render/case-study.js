@@ -4,6 +4,7 @@
    Solution · Outcome, with three media bands interleaved. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
+import { MOUNT } from "../core/contract.js";
 
 function paras(list) {
   return (list || []).map((p) => "<p>" + esc(p) + "</p>").join("");
@@ -71,7 +72,7 @@ function outcomeSection(outcome) {
 export function renderCaseStudy() {
   const slug = document.body.dataset.case;
   if (!slug) return;
-  const el = mount("case");
+  const el = mount(MOUNT.CASE);
   if (!el) return;
 
   /* hasOwnProperty rather than a bare lookup: data-case comes from markup, and
