@@ -2,3 +2,6 @@
 Thumbs.db
 *.log
 node_modules/
+
+# graphify generated output (rebuild with /graphify .)
+graphify-out/
