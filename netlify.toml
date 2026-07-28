@@ -1,3 +1,34 @@
+# ── Security headers ──────────────────────────────────────────────────────
+# Applied to every response. The site is fully static and loads no third-party
+# scripts, so script-src can stay strict.
+#
+# The one executable inline script is the theme + reveal-failsafe bootstrap in
+# each page's <head>. It is byte-identical across all 13 pages, so a single
+# sha256 covers it and 'unsafe-inline' is not needed.
+#
+#   IMPORTANT: editing that inline bootstrap changes its hash. Recompute with
+#   the snippet in README ("Content Security Policy") and update the value
+#   below, or every page will silently lose its theme and failsafe bootstrap.
+#
+# JSON-LD blocks are type="application/ld+json" — data, not executed, and not
+# governed by script-src, so they need no hash.
+#
+# style-src keeps 'unsafe-inline': the menu sets per-character animation
+# timings (--char-d, --row-i) as inline style attributes at render time.
+# Style injection needs an existing HTML-injection vector to exploit, and all
+# 15 innerHTML sinks are escaped through utilities/dom.js, so this is a
+# deliberate, contained trade rather than an oversight.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-4HqSFpSasqkSju4l0KHTmJn4QeTmgEltLglsbxp/v/M='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://ws.audioscrobbler.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # No feature on this site needs camera, mic, geolocation or payments.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    X-Frame-Options = "DENY"
+
 # HTML, CSS, JS — always revalidate; no stale copies at the edge
 [[headers]]
   for = "/*.html"

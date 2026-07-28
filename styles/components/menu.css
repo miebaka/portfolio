@@ -318,6 +318,14 @@ dialog.site-menu.is-open .site-menu__item {
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
 }
+/* Same 44px rule as the footer: a standalone row of links, so each one needs
+   a real target on touch. Only the hit area grows. */
+.site-menu__social,
+.site-menu__email {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+}
 @media (hover: hover) and (pointer: fine) {
   .site-menu__email:hover,
   .site-menu__social:hover { color: var(--accent-text); }

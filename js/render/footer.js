@@ -1,6 +1,6 @@
 /* Render — site footer: email, socials and the legal line. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
+import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 export function renderFooter() {
@@ -26,6 +26,7 @@ export function renderFooter() {
     "</div>" +
     '<div class="container site-footer__bottom">' +
       "<span>" + esc(SITE.location) + "</span>" +
+      '<a class="site-footer__legal" href="' + basePath() + 'privacy.html">Privacy</a>' +
       "<span>&copy; <span data-year></span> " + esc(SITE.name) + "</span>" +
     "</div>";
 }

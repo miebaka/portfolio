@@ -30,6 +30,18 @@
   text-decoration: none;
 }
 
+/* Tile with no case study behind it yet. Replaces an inline style="cursor:default"
+   in the renderer, so the styling stays in the CSS layer with everything else. */
+.sl-card--pending { cursor: default; }
+.sl-card__pending {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  /* 12px label: matches the ratio used by the other muted labels on the page */
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
+}
+
 /* The colour field. [data-wipe] on this element makes it uncover on scroll
    rather than fade — see base/motion.css. */
 .sl-card__frame {
@@ -47,6 +59,18 @@
   /* Multiply lets the paper's warmth come through the colour so the tiles
      belong to the page rather than sitting on top of it. */
   mix-blend-mode: multiply;
+  transition: transform var(--duration-emphasis) var(--ease-out-quart);
+}
+
+/* Cover photograph. Sits over the tone field, which stays visible as the
+   backdrop while the image decodes and behind any transparency in it. The
+   image, not the colour, is what scales on hover once a cover exists. */
+.sl-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform var(--duration-emphasis) var(--ease-out-quart);
 }
 
@@ -126,14 +150,15 @@
   opacity: 0;
   transition: opacity var(--duration-standard) var(--ease-standard);
   pointer-events: none;
-  z-index: 1;
+  z-index: var(--z-base);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .sl-card:hover .sl-card__frame::after { opacity: 1; }
   /* The colour field pushes in slightly; the card itself never moves, so
      neighbouring cards are never nudged and the grid stays still. */
-  .sl-card:hover .sl-card__bg { transform: scale(1.04); }
+  .sl-card:hover .sl-card__bg,
+  .sl-card:hover .sl-card__img { transform: scale(1.04); }
   .sl-card:hover .sl-card__services-wrap { opacity: 1; }
   .sl-card:hover .sl-card__services li { transform: none; opacity: 1; }
   .sl-card:hover .sl-card__name { color: var(--accent); }
@@ -173,6 +198,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sl-card__bg,
+  .sl-card__img,
   .sl-card__services li,
   .sl-card__services-wrap { transition: none; }
 }

@@ -140,6 +140,31 @@
   margin-right: var(--space-3);
 }
 
+/* ── φ split — headline (major) : byline and reading time (minor) ─────────
+   The meta row is a short label set, so the minor column suits it, and moving
+   it off the stack lifts the article body up onto the golden line the two
+   share.
+
+   Must stay BELOW .article-hero__meta: a media query adds no specificity, so
+   above it the margin-top reset here would lose to the base rule. */
+@media (min-width: 820px) {
+  .article-hero {
+    display: grid;
+    grid-template-columns: var(--col-major) var(--col-minor);
+    column-gap: var(--space-5);
+    align-items: end;
+  }
+  .article-hero__tag   { grid-column: 1 / -1; }
+  .article-hero__title { grid-column: 1; }
+  .article-hero__meta  {
+    grid-column: 2;
+    margin-top: 0;
+    /* The meta is a wrapping flex row of labels; in the minor column it reads
+       better stacked at the bottom edge than squeezed onto one line. */
+    flex-wrap: wrap;
+  }
+}
+
 /* The article keeps the page container (so it lines up with the hero at the
    gutter) and constrains the measure on the children instead. Putting the
    68ch cap on the container itself made the whole column centre inside the

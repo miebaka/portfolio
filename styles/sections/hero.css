@@ -2,9 +2,20 @@
    Section · Hero — light editorial hero (.hero) + golden-ratio hero (.hero-noir).
    ========================================================================== */
 
-.hero { padding-block: var(--space-7) var(--space-8); }
+/* Vertical φ: 8rem over 13rem is 1.625, the Fibonacci step the spacing scale
+   already converges on, so the statement lands on the lower golden line
+   without a bespoke value.
+
+   The nav is fixed, so its height has to be cleared explicitly — .case-hero
+   and .article-hero already do this. At --space-7 (128px) the gap happened to
+   exceed --nav-h (80px) and hid the omission; the ≤480px override below drops
+   the padding to 40px, at which point the eyebrow rendered underneath the
+   fixed bar. Adding --nav-h keeps the φ relationship (the two padding steps
+   are still 8rem : 13rem) while guaranteeing the clearance at every width. */
+.hero { padding-block: calc(var(--nav-h) + var(--space-7)) var(--space-8); }
 .hero__role { margin-bottom: var(--space-3); }
 .hero__title { max-width: var(--measure-title); }
+
 .hero__title--display {
   font-size: var(--step-hero);
   line-height: var(--leading-heading);
@@ -23,14 +34,60 @@
   --_w: 26ch;
   max-width: var(--_w);
 }
+
+/* ── φ split — statement (major) : lede (minor) ───────────────────────────
+   Below 820px the hero stays stacked; a 38.2% column at phone width is a
+   gutter, not a column.
+
+   This block must stay BELOW the .hero__lede rule above. A media query adds
+   no specificity, so at equal specificity source order decides; placed higher
+   in the file, every font-size and measure here silently lost to the base
+   rule while the grid-column still applied. */
+@media (min-width: 820px) {
+  .hero {
+    display: grid;
+    grid-template-columns: var(--col-major) var(--col-minor);
+    column-gap: var(--space-5);
+    /* Bottom-aligned so the statement and its standfirst land on the same
+       lower golden line rather than floating at two arbitrary heights. */
+    align-items: end;
+  }
+  .hero__role  { grid-column: 1 / -1; }
+  .hero__title { grid-column: 1; }
+  .hero__lede {
+    grid-column: 2;
+    margin-top: 0;
+    /* Steps down to a standfirst beside the display title. At --step-h3 the
+       copy wrapped to nine lines in the minor column and read as a stripe,
+       and it cannot lose against the title at 34px. */
+    font-size: var(--step-h5);
+    /* Leading tracks size inversely, same as the base rule: 1.3 suits 28–34px,
+       but at 20–22px the standfirst wants a little more air. */
+    line-height: 1.45;
+    /* The column is the measure now. The 26ch cap was sized for the stacked
+       full-width hero and would re-narrow this well inside the minor column. */
+    --_w: var(--measure-lead);
+  }
+  /* work.html carries no .hero__title — its h1 IS the lede. There the lede is
+     the statement, so it takes the major column at full size instead of
+     shrinking to a standfirst beside an empty column. */
+  .hero:not(:has(.hero__title)) .hero__lede {
+    grid-column: 1;
+    font-size: var(--step-h3);
+    line-height: 1.3;
+    --_w: 26ch;
+  }
+}
+
 /* ── Statement hero — golden ratio grid (content | portrait) ─────────────── */
 .hero-noir {
   position: relative;
   margin-top: var(--nav-h);
   min-height: calc(100svh - var(--nav-h));
   display: grid;
-  /* φ ≈ 1.618 — portrait takes the larger column */
-  grid-template-columns: 38.197% 61.803%;
+  /* φ ≈ 1.618 — portrait takes the larger column. Uses the grid tokens rather
+     than literal percentages so every φ split on the site moves together. */
+  grid-template-columns: var(--col-minor) var(--col-major);
   grid-template-areas: "content picture";
   color: var(--ink);
   overflow: hidden;
@@ -42,7 +99,7 @@
 .hero-noir__content {
   grid-area: content;
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -152,7 +209,7 @@
 /* Now-playing chip — floats over the portrait, bottom-left of the picture */
 .hero-noir__chip {
   position: absolute;
-  z-index: 3;
+  z-index: var(--z-raised);
   left: calc(38.197% + var(--space-5));
   bottom: var(--space-5);
   max-width: calc(61.803% - 2 * var(--space-5));
@@ -203,7 +260,8 @@
 }
 
 @media (max-width: 480px) {
-  .hero { padding-block: var(--space-4h) var(--space-6); }
+  /* Keeps the --nav-h clearance from the base rule; only the φ steps tighten. */
+  .hero { padding-block: calc(var(--nav-h) + var(--space-4h)) var(--space-6); }
   .hero__lede { font-size: var(--step-body-lg); max-width: none; }
   .hero-noir__picture { height: 54svh; }
   .hero-noir .now-playing__label { display: none; }

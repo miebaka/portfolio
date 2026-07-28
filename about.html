@@ -21,7 +21,7 @@
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="theme-color" content="#16140f">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
-  <link rel="preload" as="font" type="font/woff" href="assets/fonts/texgyreheros-regular.woff" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
   <script type="application/ld+json">
@@ -81,7 +81,30 @@
     <!-- Portrait + bio -->
     <section class="section--tight container">
       <div class="about-grid">
-        <div class="about-portrait reveal" aria-hidden="true"></div>
+        <!-- A real <img>, not a CSS background: as a background this portrait
+             was invisible to assistive tech and to image search, and could not
+             carry alt text or be lazily prioritised. -->
+        <picture class="about-portrait reveal">
+          <source type="image/avif"
+                  sizes="(max-width: 760px) 100vw, 38vw"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w">
+          <source type="image/webp"
+                  sizes="(max-width: 760px) 100vw, 38vw"
+                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w,
+                          assets/images/optimized/miebaka-joshua-portrait-810.webp 810w,
+                          assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w">
+          <img class="about-portrait__img"
+               src="assets/images/optimized/miebaka-joshua-portrait-810.jpg"
+               sizes="(max-width: 760px) 100vw, 38vw"
+               srcset="assets/images/optimized/miebaka-joshua-portrait-540.jpg 540w,
+                       assets/images/optimized/miebaka-joshua-portrait-810.jpg 810w,
+                       assets/images/optimized/miebaka-joshua-portrait-1080.jpg 1080w"
+               width="1080" height="1350"
+               alt="Miebaka Joshua, brand and visual designer, photographed in Lagos."
+               loading="lazy" decoding="async">
+        </picture>
         <div class="stack reveal">
           <p>My earliest memory of design is a games console: the moment I first understood that form and function could conspire to make something irresistible. That question hasn&rsquo;t left me. Seven years later, I&rsquo;m in-house at Rise, shipping creative for 800,000+ users across six sub-teams. I&rsquo;m also building an AI-augmented tool that uses open-source eye-tracking data to score whether an ad is making people look where it actually counts.</p>
           <p>If I can describe myself with one word, it&rsquo;s <em>inquisitive</em>. Colleagues say so because I question the reason behind every decision, not to be difficult, but because the loopholes you miss in the brief are the problems you end up solving after the brand is live. I look for the idea underneath before I look for the form.</p>
@@ -133,7 +156,7 @@
     <!-- Closing -->
     <section class="section--tight container">
       <p class="closing-cta reveal">
-        If this is the kind of designer you&rsquo;re looking for: <a class="link" data-href="email" href="mailto:miebakakiki@gmail.com">start a project</a> or <a class="link" href="work.html">see the work</a>.
+        If this is the kind of designer you&rsquo;re looking for: <a class="link" data-href="email" href="mailto:hello@miebaka.design">start a project</a> or <a class="link" href="work.html">see the work</a>.
       </p>
     </section>
 
@@ -143,6 +166,7 @@
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
         <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
+        <a href="privacy.html">Privacy</a>
         <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="https://www.instagram.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Instagram</a>

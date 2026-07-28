@@ -26,7 +26,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: var(--z-under);
   pointer-events: none;
   background-color: var(--ink);
   opacity: var(--opacity-mark);
@@ -43,7 +43,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: var(--z-under);
   pointer-events: none;
 }
 
@@ -96,13 +96,34 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
+/* Standalone link rows, not links inside a sentence, so the WCAG 2.2 inline
+   exception does not apply: each needs a 44px target. The text keeps its
+   size; only the hit area grows, which is why these are inline-flex rather
+   than given padding that would visibly space the row out. */
+.site-footer__socials a,
+.site-footer__email {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+}
 @media (hover: hover) {
   .site-footer__socials a:hover { color: var(--accent-text); }
 }
 
+/* Legal link. Sits in the bottom row rather than with the socials so it reads
+   as site business, not as a place to follow the work. */
+.site-footer__legal {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: inherit;
+}
+.site-footer__legal:hover { color: var(--accent-text); }
+
 .site-footer__bottom {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
   margin-top: var(--space-5);

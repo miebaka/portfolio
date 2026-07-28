@@ -19,139 +19,232 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
-/* Per-project accent — drives the placeholder media bands until real imagery
-   lands. One token per page; band shades derive from it (no inline styles). */
-.case-page--rivo    { --case-accent: #1f4d3a; }
+/* Per-project accent — only reached by a project with no photography yet,
+   where it backs the placeholder. Sampled from each identity's own largest
+   flat field, so it matches the `tone` set in data/site.js. */
+.case-page--rivo    { --case-accent: #000041; } /* Rivo vision/mission card */
 .case-page--poster  { --case-accent: #1d4ed8; }
-.case-page--tedx    { --case-accent: #b91c1c; }
-.case-page--chopbox { --case-accent: #c2531c; }
+.case-page--tedx    { --case-accent: #6e2962; } /* Porphyra */
+.case-page--chopbox { --case-accent: #c2531c; } /* Fireside Red */
 
-.case-hero { padding-block: calc(var(--nav-h) + var(--space-5)) var(--space-4); }
-.case-back { margin-bottom: var(--space-5); }
+/* ── Case study, rebuilt ──────────────────────────────────────────────────
+   Presentation model taken from belonwus.com and portorocha.com: a full-bleed
+   opening image, one statement line, a compact facts block, then a long image
+   sequence in a single rhythm. Prose is deliberately short; the work argues.
+   ========================================================================== */
+
+.case-back {
+  padding-top: calc(var(--nav-h) + var(--space-3));
+  margin-bottom: var(--space-3);
+}
 .case-back a,
 .case-next__label {
+  font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  /* 12px label: 55% measured 3.95:1, under the 4.5 minimum */
+  /* 12px label: 68% clears 4.5:1 on paper. */
   color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 .case-back a:hover { color: var(--ink); }
 .case-back a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+
+/* ── Shots ────────────────────────────────────────────────────────────────
+   One element type for every image on the page. Ratio comes from the file's
+   own width/height, so nothing is cropped and nothing shifts on load. */
+.case-shot { margin: 0; }
+.case-shot picture { display: block; }
+.case-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Full-bleed opening image. */
+.case-shot--hero {
+  position: relative;
+  left: 50%; right: 50%;
+  width: 100vw;
+  margin-left: -50vw; margin-right: -50vw;
+}
+.case-shot--hero img { max-height: 82svh; object-fit: cover; }
+
+/* Landscape band: full width of the page container, not the viewport. Both
+   references keep a gutter here rather than bleeding every image. */
+.case-shot--band,
+.case-shot--upright {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* A lone upright with no partner: held to a column so it never stands two
+   viewport-heights tall. */
+.case-shot--upright img {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* Two uprights side by side, the pairing rhythm both references use for
+   posters and packaging. */
+.case-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.case-pair .case-shot--pair { padding-inline: 0; max-width: none; }
+
+@media (max-width: 50rem) {
+  .case-pair { grid-template-columns: 1fr; gap: var(--space-5); }
+}
+
+.case-shot__caption {
+  margin-top: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+}
+.case-shot--hero .case-shot__caption {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Placeholder for a project that is written up but not yet photographed. */
+.case-shot--empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  background: var(--case-accent, color-mix(in srgb, var(--ink) 85%, var(--paper)));
+}
+.case-shot__placeholder {
+  font-family: var(--font-display);
+  font-size: var(--step-h3);
+  color: color-mix(in srgb, white 80%, transparent);
+}
+
+/* The sequence itself: one rhythm, one gap. */
+.case-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-block: var(--space-6);
+}
+
+/* ── Lede ─────────────────────────────────────────────────────────────────
+   Services and year sit above the title as one small line, exactly as both
+   references do; the statement is the only large type on the page. */
+.case-lede { padding-block: var(--space-6) var(--space-5); }
+
+.case-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+}
+.case-eyebrow__year { font-variant-numeric: tabular-nums; }
+
 .case-title {
+  margin-top: var(--space-4);
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-display-xl);
   line-height: var(--leading-hero);
   letter-spacing: var(--tracking-display);
 }
-.case-tagline {
+.case-statement {
+  margin-top: var(--space-3);
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
-  font-size: var(--step-h3);
+  font-size: var(--step-h2);
   line-height: var(--leading-heading);
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
-  margin-top: var(--space-3);
-  --_w: 22ch; /* tagline — between hero (18ch) and lead (34ch) */
-  max-width: var(--_w);
+  letter-spacing: var(--tracking-heading);
+  max-width: 28ch;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
 }
 
-/* Full-bleed media bands */
-.case-media {
-  position: relative;
-  left: 50%; right: 50%;
-  width: 100vw;
-  margin-left: -50vw; margin-right: -50vw;
-  margin-block: var(--space-6);
-  overflow: hidden;
-  background: var(--case-accent, color-mix(in srgb, var(--ink) 85%, var(--paper)));
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-}
-.case-media--tall { aspect-ratio: 4 / 3; }
-/* Band shade variants, derived from the page accent. */
-.case-media--light { background: color-mix(in srgb, var(--case-accent) 75%, white); }
-.case-media--dark  { background: color-mix(in srgb, var(--case-accent) 82%, black); }
-.case-media img { width: 100%; height: 100%; object-fit: cover; }
-/* Placeholder label shown inside a media band until real imagery lands. */
-.case-media__placeholder {
-  font-family: var(--font-display);
-  font-weight: var(--weight-medium);
-  font-size: var(--step-h3);
-  color: color-mix(in srgb, white 80%, transparent);
-  text-align: center;
-  padding: var(--space-3);
-  line-height: var(--leading-heading);
+/* ── Facts + project information ──────────────────────────────────────────
+   φ split, same proportion as the rest of the site: facts in the minor
+   column, the short written block in the major one. */
+.case-info { padding-bottom: var(--space-6); }
+
+@media (min-width: 820px) {
+  .case-info {
+    display: grid;
+    grid-template-columns: var(--col-minor) var(--col-major);
+    column-gap: var(--space-5);
+    align-items: start;
+  }
 }
 
-/* Two-column editorial grid: narrow left rail + offset centre body */
-.case-grid {
+.case-facts { margin: 0; }
+.case-facts__row {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-3) var(--space-4);
-  margin-block: var(--space-6);
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  border-top: 1px solid var(--border);
 }
-.case-rail { grid-column: 1 / 4; }
-.case-rail__label {
-  font-weight: var(--weight-medium);
+.case-facts dt {
+  font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+}
+.case-facts dd {
+  margin: 0;
+  font-size: var(--step-small);
   color: var(--ink);
 }
-.case-rail__text {
-  --_mt: 0.35rem; /* tight offset below the label — proportional, not on 8pt grid */
-  font-size: var(--step-caption);
-  /* 14px: 55% measured 3.95:1, under the 4.5 minimum */
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
-  margin: var(--_mt) 0 var(--space-3);
-}
 
-.case-col {
-  grid-column: 6 / 12;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.case-info__label {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+  padding-bottom: var(--space-2);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-2);
+  margin-bottom: var(--space-3);
 }
-.case-col p {
-  color: color-mix(in srgb, var(--ink) 80%, transparent);
+.case-info__body p {
   max-width: var(--measure-reading);
-}
-.case-col strong { color: var(--ink); }
-.case-question {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: var(--step-h3);
-  line-height: var(--leading-intro);
-  color: color-mix(in srgb, var(--ink) 65%, transparent);
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
   margin-bottom: var(--space-3);
 }
 
+/* ── Outcome metrics ──────────────────────────────────────────────────── */
 .case-metrics {
-  --_min: 140px; /* minimum metric cell width before wrapping */
+  --_min: 140px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--_min), 1fr));
   gap: var(--space-4);
-  margin-top: var(--space-4);
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--border);
 }
 .case-metric strong {
   display: block;
   font-family: var(--font-display);
   font-size: var(--step-h2);
   font-weight: var(--weight-medium);
-  color: var(--clay);
+  color: var(--clay-text);
 }
 .case-metric span {
   font-size: var(--step-small);
-  /* 16px: 55% measured 3.95:1, under the 4.5 minimum */
   color: color-mix(in srgb, var(--ink) 68%, transparent);
-}
-/* Placeholder note beneath the metrics. */
-.case-note {
-  margin-top: var(--space-3);
-  /* 45% measured 2.91:1 */
-  color: color-mix(in srgb, var(--ink) 65%, transparent);
 }
 
 .case-next {
@@ -168,8 +261,3 @@
   margin-top: var(--space-2);
 }
 .case-next__link:hover { color: var(--clay); }
-
-@media (max-width: 760px) {
-  .case-rail,
-  .case-col { grid-column: 1 / -1; }
-}

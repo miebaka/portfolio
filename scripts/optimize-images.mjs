@@ -18,6 +18,19 @@ import { join } from "node:path";
 
 const OUT = "assets/images/optimized";
 const WIDTHS = [540, 810, 1080];
+/* Case-study media bands are full-bleed (100vw), so they need steps past the
+   1080 the in-column imagery tops out at, or they soften on wide displays. */
+const WIDTHS_BLEED = [540, 810, 1080, 1440, 1920];
+
+/* Work imagery. One master per module lives in assets/images/work/<slug>/ and
+   is never served directly — pages reference the optimized variants only.
+   Masters are the highest resolution the source gallery offered. */
+const work = (slug, names) =>
+  names.map((n) => ({
+    src: `assets/images/work/${slug}/${n}.jpg`,
+    base: `${slug}-${n}`,
+    widths: WIDTHS_BLEED,
+  }));
 
 /* Raster sources to optimize. Add project covers here as you create them. */
 const SOURCES = [
@@ -29,6 +42,13 @@ const SOURCES = [
   { src: "assets/images/writing/swoosh-outlet-racks.png", base: "swoosh-outlet-racks" },
   { src: "assets/images/writing/disability-flying-stars.jpg", base: "disability-flying-stars" },
   { src: "assets/images/writing/disability-types.png",       base: "disability-types" },
+
+  ...work("rivo", ["wordmark", "palette", "stationery", "guidelines",
+                   "in-use", "tote", "stage", "flag"]),
+  ...work("chopbox", ["platter", "logo-lockups", "palette", "typeface",
+                      "packaging", "apron", "campaign", "billboard"]),
+  ...work("tedx-rsu", ["logomark", "palette", "pattern", "typeface",
+                       "merch", "street-banner", "campus-banner", "event"]),
 ];
 
 async function exists(p) {
@@ -38,10 +58,10 @@ async function exists(p) {
 async function run() {
   await mkdir(OUT, { recursive: true });
   let count = 0;
-  for (const { src, base } of SOURCES) {
+  for (const { src, base, widths } of SOURCES) {
     if (!(await exists(src))) { console.warn("• skip (missing): " + src); continue; }
     const meta = await sharp(src).metadata();
-    for (const w of WIDTHS) {
+    for (const w of (widths || WIDTHS)) {
       if (meta.width && w > meta.width) continue; // never upscale
       const pipe = sharp(src).resize({ width: w });
       await pipe.clone().avif({ quality: 48, effort: 6 }).toFile(join(OUT, `${base}-${w}.avif`));

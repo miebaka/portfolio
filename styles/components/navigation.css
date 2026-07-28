@@ -81,6 +81,10 @@
   background: none;
   border: none;
   padding: var(--space-1);
+  /* The visible track is 20px tall; the control itself has to clear 44px to
+     meet WCAG 2.2 target size. Height comes from the box, not the artwork,
+     so nothing about the switch changes visually. */
+  min-height: var(--tap-min);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: transform var(--duration-fast) var(--ease-snappy);
