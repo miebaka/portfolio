@@ -2,10 +2,19 @@
    Component · Marquee — seamless client-logo bar.
    ========================================================================== */
 
-/* Height = --space-6 × φ ≈ 80px × 1.618 ≈ 130px — φ-derived band height */
+/* Height = --space-6 × φ × 1.48 ≈ 80 × 1.618 × 1.48 ≈ 192px. The φ band, 48% up. */
 .marquee {
-  height: calc(var(--space-6) * var(--phi));
-  background: var(--ink);
+  /* Full bleed. A logo strip that stops at the margin reads as a boxed widget;
+     running it to both edges is what makes it a band the page passes through.
+     It is the one element besides the work rail and the hero image that is
+     meant to cross the margin. */
+  height: calc(var(--space-6) * var(--phi) * 1.48);
+  /* Transparent. This bar previously painted a solid --ink slab across the
+     page, and the --light variant's "no background" comment was wrong: it
+     never reset the base rule, so the band was opaque in both themes and cut
+     a hole through the section behind it. The logos carry the contrast
+     instead, via a filter that flips with the theme. */
+  background: none;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -33,16 +42,18 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  height: var(--space-4); /* 32px */
-  color: color-mix(in srgb, var(--paper) 80%, transparent);
+  height: calc(var(--space-4) * 1.48); /* 32px x 1.48 */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 .marquee__item img {
-  height: var(--space-4); /* 32px */
+  height: calc(var(--space-4) * 1.48); /* 32px x 1.48 */
   width: auto;
   max-width: none;
   display: block;
-  filter: brightness(0) invert(1); /* uniform paper-white logos on the dark bar */
-  opacity: 0.9;
+  /* Flattened to a single ink silhouette so six logos of different weights
+     and colours read as one row rather than six brands competing. */
+  filter: brightness(0);
+  opacity: 0.55;
 }
 .marquee__wordmark {
   font-family: var(--font-label);
@@ -61,30 +72,32 @@
 }
 
 @media (max-width: 480px) {
-  .marquee        { height: var(--space-6); }
-  .marquee--light { height: calc(var(--space-6) * 1.2); }
+  .marquee        { height: calc(var(--space-6) * 1.48); }
+  .marquee--light { height: calc(var(--space-6) * 1.2 * 1.48); }
   .marquee__group { --_gap: var(--space-4); }
 }
 
-/* Dark mode: paper is now the dark surface, so the band stays dark */
-[data-theme="dark"] .marquee { background: var(--paper); }
-/* Light variant in dark mode: dark background means we need inverted logos */
-[data-theme="dark"] .marquee--light { background: var(--paper); }
-[data-theme="dark"] .marquee--light .marquee__item img { filter: brightness(0) invert(1); }
-[data-theme="dark"] .marquee--light .marquee__wordmark { color: var(--ink); }
+/* Dark mode: the surface behind is dark, so the logos invert to read against
+   it. Only the marks change; the band itself stays transparent in both. */
+[data-theme="dark"] .marquee__item img,
+[data-theme="dark"] .marquee--light .marquee__item img {
+  filter: brightness(0) invert(1);
+}
+[data-theme="dark"] .marquee__wordmark,
+[data-theme="dark"] .marquee--light .marquee__wordmark { color: var(--paper); }
 
 /* Light variant — sits inside the About Me section. No background: it matches
    the page surface, and an opaque band here would cut a hole in the cursor
    field as it passes behind. */
 .marquee--light {
-  height: calc(var(--space-6) * var(--phi) * 1.3);
+  height: calc(var(--space-6) * var(--phi) * 1.3 * 1.48);
 }
 .marquee--light .marquee__item {
-  height: var(--space-4h); /* 40px — larger on white background */
+  height: calc(var(--space-4h) * 1.48); /* 40px x 1.48 */
   color: var(--ink);
 }
 .marquee--light .marquee__item img {
-  height: var(--space-4h); /* 40px */
+  height: calc(var(--space-4h) * 1.48); /* 40px x 1.48 */
   filter: brightness(0);
   opacity: 0.35;
 }

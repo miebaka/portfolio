@@ -18,6 +18,7 @@ import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initInteractions } from "./core/interactions.js";
 import { initCursorField } from "./core/cursor-field.js";
+import { initWorkRail } from "./core/work-rail.js";
 import { initFooterScene } from "./core/footer-scene.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
@@ -49,5 +50,6 @@ initMenu();
 initYear();
 initForm();
 initInteractions();
+initWorkRail();
 initCursorField();
 initFooterScene();

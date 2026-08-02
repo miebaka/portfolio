@@ -34,16 +34,15 @@ function workCard(project) {
     '<span class="sl-card__frame" data-wipe>' +
       '<span class="sl-card__bg"></span>' +
       coverHTML(project) +
-      '<span class="sl-card__services-wrap">' +
-        '<ul class="sl-card__services">' + services + "</ul>" +
-      "</span>" +
+      '<span class="sl-card__scrim"></span>' +
     "</span>" +
+    /* One row, pinned to the foot of the card. The title holds the left edge
+       in both states; the scope arrives on the right of that same row on
+       hover, so the two are always on one baseline rather than the scope
+       appearing somewhere else in the frame. */
     '<span class="sl-card__meta">' +
       '<span class="sl-card__name">' + esc(project.title) + "</span>" +
-      '<span class="sl-card__cat">' +
-        esc(project.category || "") +
-        (project.year ? ' <span class="sl-card__year">' + esc(project.year) + "</span>" : "") +
-      "</span>" +
+      '<span class="sl-card__scope">' + esc(project.tags.join(", ")) + "</span>" +
     "</span>";
   /* No case study yet. This is a <div>, not an <a>, so there is nothing for
      aria-disabled to apply to — it was announcing nothing. A visible caption
@@ -59,17 +58,31 @@ function workCard(project) {
   return '<a class="sl-card" href="' + base + "work/" + esc(project.slug) + '.html">' + inner + "</a>";
 }
 
+/* A side-scrolling row of squares. The scrolling is the browser's; the sizing
+   is a CSS hover rule. js/core/work-rail.js adds only the caption and the
+   pointer pill, the two things CSS cannot express.
+
+   touch-action: pan-y tells the browser to keep vertical panning for itself,
+   so a downward drag scrolls the page rather than being absorbed by the
+   horizontal scroller under the finger. */
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
-  el.classList.add("sl-grid");
-  el.innerHTML = SITE.projects.map(workCard).join("");
+  const items = SITE.projects || [];
+  el.classList.add("sl-rail");
+
+  el.innerHTML =
+    '<div class="sl-rail__viewport" tabindex="0" role="group"' +
+      ' aria-roledescription="carousel" aria-label="Selected work"' +
+      ' style="touch-action: pan-y">' +
+      '<div class="sl-track">' + items.map(workCard).join("") + "</div>" +
+    "</div>" +
+    '<span class="sl-rail__pill" aria-hidden="true"></span>';
+
   el.querySelectorAll(".sl-card").forEach((card, i) => {
-    const p = SITE.projects[i];
+    const p = items[i];
     card.style.setProperty("--tile", p.tone);
-    /* span (of 12) and ratio drive the asymmetric grid — both already lived in
-       the data and were previously unused. */
-    if (p.span)  card.style.setProperty("--span", String(p.span));
+    /* Only the mobile stack uses this; the desktop row is square by rule. */
     if (p.ratio) card.style.setProperty("--ratio", p.ratio);
   });
 }

@@ -61,7 +61,6 @@ function shot(m, kind) {
         '<img src="' + base + "-" + fallback + '.jpg" alt="' + esc(m.alt || m.label) + '"' +
           ' width="' + m.w + '" height="' + m.h + '"' + load + ">" +
       "</picture>" +
-      '<figcaption class="case-shot__caption">' + esc(m.label) + "</figcaption>" +
     "</figure>"
   );
 }
@@ -84,20 +83,22 @@ function sequence(media) {
   return out;
 }
 
+/* Client / Year / Services laid across the grid, as in the reference. Industry
+   rides along with Client rather than claiming a fourth column, which keeps
+   the row to the three the reference uses. */
 function factsBlock(c, project) {
   const r = c.rail || {};
   const rows = [
     ["Client", c.title],
     ["Year", project && project.year],
     ["Services", r.services],
-    [r.metaLabel || "Industry", r.meta],
   ].filter(([, v]) => v);
   return (
     '<dl class="case-facts">' +
     rows
       .map(
         ([k, v]) =>
-          '<div class="case-facts__row">' +
+          '<div class="case-facts__cell">' +
           "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd></div>"
       )
       .join("") +
@@ -158,24 +159,30 @@ export function renderCaseStudy() {
       esc(c.next.title) + " &rarr;</a></section>"
     : "";
 
+  /* Order follows belonwus.com/work/owo:
+
+       back
+       full-bleed hero
+       Client | Year | Services      (hairline under, where the services and
+                                      year line used to sit)
+       statement                     (h1, the one piece of large type)
+       project information
+       image sequence
+       metrics
+       next project
+
+     The services-and-year eyebrow is gone: it repeated Services and Year
+     verbatim from the facts row two lines below it. The statement is the h1
+     now rather than a small repeat of the project name, because the name is
+     already the Client field and a page does not need to say it three times. */
   el.innerHTML =
     '<p class="case-back container reveal"><a href="' + base + 'work.html">&larr; Work</a></p>' +
     shot(hero, "hero") +
     '<header class="case-lede container">' +
-      '<p class="case-eyebrow reveal">' +
-        esc((c.rail && c.rail.services) || "") +
-        (project && project.year ? '<span class="case-eyebrow__year">' + esc(project.year) + "</span>" : "") +
-      "</p>" +
-      '<h1 class="case-title reveal">' + esc(c.title) + "</h1>" +
-      '<p class="case-statement reveal">' + esc(c.tagline) + "</p>" +
-    "</header>" +
-    '<section class="case-info container reveal" aria-label="Project information">' +
       factsBlock(c, project) +
-      '<div class="case-info__body">' +
-        '<p class="case-info__label">Project information</p>' +
-        paras(info) +
-      "</div>" +
-    "</section>" +
+      '<h1 class="case-statement reveal">' + esc(c.tagline) + "</h1>" +
+      '<div class="case-brief reveal">' + paras(info) + "</div>" +
+    "</header>" +
     '<div class="case-sequence">' + sequence(rest) + "</div>" +
     metricsBlock(c.outcome) +
     next;

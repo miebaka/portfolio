@@ -60,7 +60,12 @@
   will-change: transform;
 }
 
-.cursor-field.is-lit { opacity: 1; }
+/* Held well below full strength. The effect stays as a faint change in the
+   paper under the cursor rather than a visible spotlight follow, which is as
+   much presence as it can have on a page built around restraint. Set this to
+   1 to restore the original intensity, or drop initCursorField() from
+   js/main.js to remove it outright. */
+.cursor-field.is-lit { opacity: 0.32; }
 
 /* Dark mode: the paper is dark, so the same ink dots would vanish and the
    clay would glare. Lift the grain and pull the bloom back. */

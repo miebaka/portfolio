@@ -11,6 +11,10 @@
   align-items: center;
   color: var(--ink);
   background: transparent;
+  /* Transparent at every normal state: the scrolled nav separates itself with
+     a blurred translucent surface, not a line. The declaration stays so the
+     prefers-contrast override at the foot of this file has a border to colour
+     in, which is the one case where a hard edge is the accessible choice. */
   border-bottom: 1px solid transparent;
   transition: background var(--duration-standard) var(--ease-standard),
               color var(--duration-standard) var(--ease-standard),
@@ -20,7 +24,6 @@
   background: color-mix(in srgb, var(--paper) 90%, transparent);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   backdrop-filter: blur(12px) saturate(180%);
-  border-bottom-color: var(--border);
   color: var(--ink);
 }
 
@@ -36,7 +39,12 @@
 .site-nav__brand {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  /* Flush left inside its own box, not centred in it. The tap target is 44px
+     and the mark is 30px, so centring pushed the visible edge 7px inboard of
+     every other element on the page. The target keeps its full size; it simply
+     extends to the right of the mark instead of around it, which is the side
+     with room. The logo edge is now the page margin, exactly. */
+  justify-content: flex-start;
   min-width: var(--tap-min);
   min-height: var(--tap-min);
   flex-shrink: 0;
@@ -80,7 +88,10 @@
   justify-self: end;
   background: none;
   border: none;
-  padding: var(--space-1);
+  /* Mirror of the brand: no horizontal padding, so the moon's right edge lands
+     on the margin rather than a padding-width inside it. Vertical padding
+     stays, and min-height below still carries the 44px target. */
+  padding: var(--space-1) 0;
   /* The visible track is 20px tall; the control itself has to clear 44px to
      meet WCAG 2.2 target size. Height comes from the box, not the artwork,
      so nothing about the switch changes visually. */

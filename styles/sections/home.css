@@ -13,19 +13,64 @@
    row. The doubled version draws a line above the first item and below the
    last, which boxes the list in and is the "rule under every row" pattern that
    makes a short list read like a spec table. */
+/* ── What I do ────────────────────────────────────────────────────────────
+   Each capability is one group: the name, a fixed 320px of air, then the
+   explanation. The groups walk across the page, the first flush to the left
+   margin and the last flush to the right, evenly spaced in between and evenly
+   spaced down.
+
+   The walk uses a percentage against the element's own width and cqw against
+   the container. That difference is the whole trick: it expresses "the
+   container minus my own width", the one measurement CSS otherwise cannot
+   state, so nothing is measured in JS and the row stays correct through a
+   resize or a font swap.
+
+   It is written on the `translate` property, not inside `transform`. Every row
+   also carries .reveal, and .reveal.is-visible sets `transform: none` when the
+   row enters the viewport, which silently erased the whole stagger the moment
+   it animated in. `translate` is a separate property that composes with
+   `transform` rather than being replaced by it, so the reveal and the walk no
+   longer fight over one slot. */
+#capabilities,
+.cap-list { container-type: inline-size; }
+
 .cap-list {
   display: flex;
   flex-direction: column;
+  /* Even vertical spacing, replacing per-row padding: padding doubled up
+     between neighbours and left the first and last rows short. */
+  gap: var(--space-6);
 }
+
 .cap-row {
-  display: grid;
-  grid-template-columns: var(--col-major) var(--col-minor);
+  display: flex;
   align-items: baseline;
-  gap: var(--space-4);
-  padding-block: var(--space-5);
+  gap: 320px;
+  width: fit-content;
   transition: opacity var(--duration-standard) var(--ease-standard);
 }
-.cap-row + .cap-row { border-top: 1px solid var(--border); }
+
+@container (min-width: 62rem) {
+  .cap-row {
+    /* 0 for the first row, 1 for the last, linear in between. */
+    --t: calc(var(--row-i, 0) / max(1, calc(var(--row-n, 1) - 1)));
+    translate: calc(var(--t) * (100cqw - 100%)) 0;
+  }
+}
+
+/* Below the stagger breakpoint the 320px gap alone is wider than the column,
+   so the group stacks and the walk is dropped entirely. */
+@container (max-width: 62rem) {
+  .cap-row {
+    flex-direction: column;
+    gap: var(--space-2);
+    width: auto;
+    translate: none;
+  }
+}
+/* No rule between rows. At this row height the space alone separates them,
+   and without the lines the list reads as type on a page rather than as a
+   table of contents. */
 /* When any row is hovered, dim siblings — the same "focus one, quiet the
    rest" mechanic as the menu and the work grid. */
 @media (hover: hover) and (pointer: fine) {
@@ -48,7 +93,7 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  line-height: 1.7;
+  line-height: var(--leading-body);
   max-width: 34ch;
 }
 /* Experience list on About page — one step below the services scale */
@@ -75,15 +120,12 @@
 
 .about-home__label { margin-bottom: var(--space-3); }
 
-/* Blocks are separated by space, not rules. The one exception is the
-   capability list, which brings its own hairlines. */
+/* Blocks are separated by space, not rules. No exceptions now: the capability
+   list used to bring its own hairlines and no longer does. */
 .about-home__block { padding-block: var(--section-block-tight); }
 
-/* Testimonial already has border-top + padding-top — suppress inside a block */
-.about-home__block .testimonial {
-  border-top: none;
-  padding-top: 0;
-}
+/* The suppression this used to need is gone with the rule it suppressed. */
+.about-home__block .testimonial { padding-top: 0; }
 
 #capabilities.about-home__block { padding-top: var(--space-6); }
 

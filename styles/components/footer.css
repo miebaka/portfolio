@@ -126,9 +126,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  margin-top: var(--space-5);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-6);
   font-size: var(--step-meta);
   font-family: var(--font-label);
   letter-spacing: var(--tracking-label);

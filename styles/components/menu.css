@@ -1,388 +1,297 @@
 /* ==========================================================================
-   Component · Menu — fullscreen overlay navigation.
+   Component · Fullscreen menu — editorial curtain.
 
-   An editorial index: hairline, label. One left edge, no scatter, no counter.
-   The hierarchy comes from scale alone. Rows unmask from behind their own
-   baseline in sequence on open.
+   Rebuilt. The previous version stacked an accent copy of every label over the
+   base copy and animated each glyph's scaleY, a kinetic-type mechanic lifted
+   from an agency site. It was loud, it broke kerning, and it needed an
+   aria-label to repair the accessible name.
 
-   Implemented as a native <dialog> for built-in focus trap + AT announcement.
+   This version is built on two moves and nothing else:
+
+     1. The panel arrives as a curtain. clip-path inset() retracts from the top
+        edge over --menu-drop, so the surface is drawn down over the page
+        rather than faded in. One property, compositor-friendly, interruptible.
+
+     2. Each row rises from behind its own baseline. The word sits in an
+        overflow-hidden mask and translates from 105% to 0, staggered by
+        --menu-step per row, starting only after the curtain has mostly
+        landed (--menu-hold).
+
+   Easing is cubic-bezier(0.16, 1, 0.3, 1) throughout — a long expo-out tail
+   that decelerates for most of its duration. It is what makes the motion read
+   as weight rather than speed, and using one curve for both moves is why the
+   panel and the words feel like one gesture.
    ========================================================================== */
 
-dialog.site-menu {
-  /* Overlay-local colour roles — both values follow the active theme so the
-     menu surface always matches the page (cream on light, dark on dark).
-     --paper and --ink swap meaning automatically via the dark theme token file. */
+.site-menu {
   --menu-fg: var(--ink);
   --menu-bg: var(--paper);
-  /* Reset all dialog UA defaults */
-  border: none;
-  padding: 0;
-  margin: 0;
-  max-width: none;
-  max-height: none;
-  width: 100%;
-  height: 100%;
-  /* Overlay layout */
+  /* Curtain 760ms, rows begin at 240ms and step 70ms apart. The last of five
+     rows therefore starts at 520ms and lands well inside the first second. */
+  --menu-drop: 760ms;
+  --menu-hold: 240ms;
+  --menu-step: 70ms;
+  --menu-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay);
-  background: color-mix(in srgb, var(--menu-bg) 88%, transparent);
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+
+  /* A closed <dialog> is display:none by UA rule, and that is what keeps its
+     contents out of the tab order and out of the accessibility tree. Setting
+     display unconditionally overrode it: the panel was clipped away visually
+     by clip-path but still laid out, still focusable, and still announced, so
+     a keyboard user tabbing the page walked through five invisible menu links
+     before reaching the content. Gating on [open] restores the UA behaviour.
+
+     The curtain still animates: menu.js calls showModal() (which sets [open],
+     flipping display to grid), forces a reflow so the closed clip-path is
+     computed, and only then adds .is-open. */
+  display: none;
+  grid-template-rows: auto 1fr auto;
+
+  /* Opaque, not translucent. A frosted panel over live content is a product
+     UI idiom; a magazine turns the page. */
+  background: var(--menu-bg);
   color: var(--menu-fg);
-  display: flex;
-  flex-direction: column;
+
+  /* Closed state: fully retracted to the top edge. */
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path var(--menu-drop) var(--menu-ease);
   overflow: hidden;
-  /* Materialize rather than fade: the blur and the surface arrive together,
-     so it reads as glass forming instead of a panel dissolving in. */
-  opacity: 0;
-  -webkit-backdrop-filter: blur(0px) saturate(100%);
-  backdrop-filter: blur(0px) saturate(100%);
-  /* visibility:hidden keeps the fixed-position overlay out of pointer events
-     and the tab order when closed — critical because display:flex (needed for
-     the transition) overrides the UA dialog:not([open]){display:none} rule,
-     so without visibility the invisible panel blocks every click on the page.
-     When transitioning TO visible, visibility switches at t=0 (CSS spec),
-     so closeBtn.focus() called in the same rAF tick works correctly. */
-  visibility: hidden;
-  pointer-events: none;
-  /* Close: faster than open — exits should feel snappy */
-  transition: opacity          var(--duration-standard) var(--ease-emphasized),
-              backdrop-filter  var(--duration-standard) var(--ease-emphasized),
-              visibility       var(--duration-standard) var(--ease-emphasized);
 }
-dialog.site-menu::backdrop { display: none; } /* we provide our own blurred bg */
-dialog.site-menu.is-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  -webkit-backdrop-filter: blur(28px) saturate(160%);
-  backdrop-filter: blur(28px) saturate(160%);
-  /* Open: slower, more deliberate than close */
-  transition: opacity         var(--duration-emphasis) var(--ease-emphasized),
-              backdrop-filter var(--duration-emphasis) var(--ease-emphasized),
-              visibility      var(--duration-emphasis) var(--ease-emphasized);
-}
+.site-menu[open] { display: grid; }
+.site-menu::backdrop { background: none; }
 
-/* Padding override — minimum left/right breathing room on small screens */
-dialog.site-menu .container { padding-inline: max(var(--space-4), var(--gutter)); }
+.site-menu.is-open { clip-path: inset(0 0 0 0); }
 
-/* Bar mirrors the site-nav's 3-column grid so Close lands exactly where the
-   Menu trigger sits — the nav/overlay crossfade reads as one button morphing. */
+/* Scroll lock while open. */
+body.menu-open { overflow: hidden; }
+
+/* ── Bar: brand left, close right ───────────────────────────────────────── */
 .site-menu__bar {
-  position: relative;
-  z-index: var(--z-base);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   height: var(--nav-h);
-  flex-shrink: 0;
 }
 .site-menu__bar .site-nav__brand { color: var(--menu-fg); justify-self: start; }
 .site-menu__bar-spacer { justify-self: end; }
 
-/* Close — a label and a hairline cross, not a filled chip. The chip read as a
-   dark rectangle dropped onto the composition; this sits in the type system. */
+/* A word, not a glyph. "Close" says what it does and needs no aria-label. */
 .site-menu__close {
+  grid-column: 3;
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  font-weight: 600;
-  letter-spacing: var(--tracking-button);
-  text-transform: uppercase;
-  line-height: var(--leading-label);
   min-height: var(--tap-min);
-  padding-inline: var(--space-1);
   background: none;
   border: none;
-  color: var(--menu-fg);
+  padding: 0;
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-snappy);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--menu-fg) 62%, transparent);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__close:hover { color: var(--menu-fg); }
+}
+.site-menu__close:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 6px;
+}
+/* The mark is decorative next to the word; kept as a hairline cross rather
+   than a heavy X so it reads as a mark, not a button. */
 .site-menu__close-mark {
   position: relative;
-  width: 0.75rem;
-  height: 0.75rem;
-  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
 }
 .site-menu__close-mark::before,
 .site-menu__close-mark::after {
   content: "";
   position: absolute;
-  inset-block: 50%;
-  inset-inline: 0;
+  inset: 50% 0 auto 0;
   height: 1px;
   background: currentColor;
-  transition: transform var(--duration-standard) var(--ease-emphasized);
 }
 .site-menu__close-mark::before { transform: rotate(45deg); }
 .site-menu__close-mark::after  { transform: rotate(-45deg); }
-.site-menu__close:active {
-  transform: scale(0.97);
-  transition-duration: var(--duration-instant);
-}
-@media (hover: hover) and (pointer: fine) {
-  .site-menu__close:hover { color: var(--accent-text); }
-  /* The cross spins a quarter turn into a plus and back — the affordance
-     confirms the button is live without moving anything else. */
-  .site-menu__close:hover .site-menu__close-mark::before { transform: rotate(135deg); }
-  .site-menu__close:hover .site-menu__close-mark::after  { transform: rotate(45deg); }
-}
-.site-menu__close:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
 
-/* Nav — the list is vertically centred in whatever height is left */
+/* ── The list ───────────────────────────────────────────────────────────── */
 .site-menu__nav {
-  position: relative;
-  z-index: var(--z-base);
-  flex: 1;
-  display: flex;
-  align-items: center;
-  min-height: 0;
+  align-self: center;
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 .site-menu__list {
-  flex: 1;
-  width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* Row — a hairline above each item is the only rule in the layout; it gives
-   the list its rhythm without boxing anything in. */
-.site-menu__item {
-  border-top: 1px solid color-mix(in srgb, var(--menu-fg) 12%, transparent);
-}
-.site-menu__item:last-child {
-  border-bottom: 1px solid color-mix(in srgb, var(--menu-fg) 12%, transparent);
-}
+/* No rules between rows. The index numbers and the row height give the list
+   its structure; ruled rows made a full-screen menu look like a settings
+   table. */
 
 .site-menu__link {
-  --_size: clamp(2rem, min(7vw, 9.5vh), 5rem);
-  display: block;
-  width: 100%;
-  padding-block: clamp(0.35rem, 1.1vh, 0.9rem);
-  padding-inline: max(var(--space-4), var(--gutter));
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  /* Generous rows are all of the structure in this overlay now that the rules
+     between them are gone. */
+  padding-block: clamp(var(--space-4), 3vw, var(--space-5h));
   text-decoration: none;
   color: var(--menu-fg);
-  transition: opacity var(--duration-fast) var(--ease-standard),
-              color   var(--duration-fast) var(--ease-standard);
-}
-
-/* Label — the clipping box the word rises out of on open */
-.site-menu__label {
-  display: block;
-  overflow: hidden;
-  /* Clear descenders from the mask without shifting the baseline */
-  padding-bottom: 0.1em;
-  margin-bottom: -0.1em;
-  font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--_size);
-  line-height: var(--leading-hero);
-  letter-spacing: var(--tracking-display);
-  text-transform: uppercase;
-}
-/* Carries the open-entrance rise. Kept separate from the hover animation so
-   the two never compete for the same transform. */
-.site-menu__label-i {
-  display: block;
-  position: relative;
-}
-
-/* ── Kinetic type ─────────────────────────────────────────────────────────
-   Two copies of the label sit exactly on top of each other. The base copy is
-   ordinary text and carries the accessible name. The accent copy is split
-   into characters, each anchored to its own baseline and collapsed flat; on
-   hover they stretch back to full height one after another, so the word
-   appears to grow into the accent colour letter by letter.
-
-   Scaling from the baseline rather than sliding a whole word is what makes
-   this read as type behaving like type rather than a panel changing state. */
-.site-menu__face { display: block; }
-
-.site-menu__face--accent {
-  position: absolute;
-  inset: 0;
-  color: var(--accent);
-  pointer-events: none;
-}
-
-/* Both copies are split so their glyph metrics match exactly. Only the accent
-   copy's characters are ever transformed; the base copy just sits there and
-   provides the resting word. */
-.site-menu__char {
-  display: inline-block;
-  /* Bottom-left: the glyph grows up off its baseline, not out of its middle */
-  transform-origin: 0 100%;
-}
-
-.site-menu__face--accent .site-menu__char {
-  transform: scaleY(0);
-  /* Exit: no stagger and quicker than the entrance, so pulling away feels
-     immediate while arriving feels deliberate. */
-  transition: transform var(--duration-standard) var(--ease-in-out-quart);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .site-menu__link:hover .site-menu__face--accent .site-menu__char,
-  .site-menu__link:focus-visible .site-menu__face--accent .site-menu__char {
-    transform: scaleY(1);
-    transition-duration: var(--duration-emphasis);
-    transition-delay: var(--char-d, 0ms);
-  }
-}
-
-.site-menu__link[aria-current="page"] { color: var(--accent); }
-
-/* Hover — sibling dimming plus a short lateral push. Compositor-only: no
-   font-size or layout property changes, so rows never shift each other.
-   Pointer-device only; sticky :hover on touch would leave a row dimmed. */
-@media (hover: hover) and (pointer: fine) {
-  .site-menu__list:has(.site-menu__link:hover) .site-menu__link:not(:hover) {
-    opacity: 0.28;
-  }
-  .site-menu__link:hover {
-    opacity: 1;
-    color: var(--accent);
-  }
-}
-/* Touch press feedback — pointer-down on mobile; hover handles desktop */
-.site-menu__link:active { opacity: 0.6; }
-
-/* Keyboard parity — same emphasis vocabulary as hover. Underline is the
-   keyboard-only indicator distinguishing tab focus from pointer hover. */
-.site-menu__list:has(.site-menu__link:focus-visible) .site-menu__link:not(:focus-visible) {
-  opacity: 0.28;
+  transition: opacity var(--duration-standard) var(--ease-standard);
 }
 .site-menu__link:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
+
+/* The mask. overflow:hidden is what the word rises from behind. */
+.site-menu__mask {
+  display: block;
+  overflow: hidden;
+  /* phi^1/2 leaves 0.136em of half-leading under the baseline; this face
+     descends about 0.25em. The shortfall is what clipped "Playground" and
+     "Services". Padding the mask by it costs nothing visually, since the
+     descender simply occupies space that was already blank. */
+  padding-bottom: 0.18em;
+}
+.site-menu__word {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h1);
+  /* phi^1/2. The previous 1.05 was tighter than the face's own ascent plus
+     descent, so the mask cut the tails off "Playground" and "y" at rest, not
+     only mid-animation. A line box that contains the glyph box is the fix;
+     padding on the mask only moved the crop. */
+  line-height: var(--leading-intro);
+  letter-spacing: var(--tracking-heading);
+
+  /* Travels its own height plus the mask padding, or the descender
+     would sit visible below the fold at rest. */
+  transform: translateY(calc(100% + 0.18em));
+  transition: transform var(--menu-drop) var(--menu-ease);
+}
+.site-menu.is-open .site-menu__word {
+  transform: translateY(0);
+  /* Row index is set inline by the renderer, so the stagger is data-driven
+     rather than a hand-written nth-child ladder. */
+  transition-delay: calc(var(--menu-hold) + var(--row-i, 0) * var(--menu-step));
+}
+
+.site-menu__num {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+  opacity: 0;
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+.site-menu.is-open .site-menu__num {
   opacity: 1;
-  color: var(--accent);
-  outline: none;
-}
-/* Keyboard gets the same growth as the pointer (handled in the hover block
-   above), plus the underline that marks focus specifically. */
-.site-menu__link:focus-visible .site-menu__face {
-  text-decoration: underline;
-  text-underline-offset: 0.1em;
-  text-decoration-thickness: 2px;
+  transition-delay: calc(var(--menu-hold) + var(--row-i, 0) * var(--menu-step) + 120ms);
 }
 
-/* Entry — labels rise from behind the rule in sequence, and the hairline
-   above each row draws itself in from the left just ahead of its label.
-   fill-mode:both holds the pre-state through the delay. */
-dialog.site-menu.is-open .site-menu__label-i {
-  animation: menu-label-rise var(--duration-emphasis) var(--ease-out-expo) both;
-  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
-}
-dialog.site-menu.is-open .site-menu__item {
-  animation: menu-rule-in var(--duration-emphasis) var(--ease-wipe) both;
-  animation-delay: calc(var(--row-i, 1) * var(--duration-stagger-slow));
-}
-@keyframes menu-label-rise {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-@keyframes menu-rule-in {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
+/* Current page reads through the number, not a colour change. */
+.site-menu__link[aria-current="page"] .site-menu__num {
+  color: var(--accent-text);
 }
 
-/* Foot — contact on the left, socials on the right */
+/* Focus one, quiet the rest. Opacity only: no colour shift, no underline, no
+   movement. The restraint is the point. */
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__list:has(.site-menu__link:hover) .site-menu__link:not(:hover) {
+    opacity: 0.3;
+  }
+}
+.site-menu__list:has(.site-menu__link:focus-visible) .site-menu__link:not(:focus-visible) {
+  opacity: 0.3;
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
 .site-menu__foot {
-  position: relative;
-  z-index: var(--z-base);
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  justify-content: space-between;
   align-items: center;
-  padding-block: var(--space-4);
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
   font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  flex-shrink: 0;
 }
 .site-menu__socials {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-4);
 }
 .site-menu__email,
 .site-menu__social {
-  color: color-mix(in srgb, var(--menu-fg) 60%, transparent);
+  display: inline-flex;
+  align-items: center;
+  /* Standalone links, so the WCAG 2.2 inline exception does not apply. */
+  min-height: var(--tap-min);
+  color: color-mix(in srgb, var(--menu-fg) 62%, transparent);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
 }
-/* Same 44px rule as the footer: a standalone row of links, so each one needs
-   a real target on touch. Only the hit area grows. */
-.site-menu__social,
-.site-menu__email {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-min);
-}
 @media (hover: hover) and (pointer: fine) {
   .site-menu__email:hover,
-  .site-menu__social:hover { color: var(--accent-text); }
+  .site-menu__social:hover { color: var(--menu-fg); }
 }
 .site-menu__email:focus-visible,
 .site-menu__social:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  color: var(--menu-fg);
-}
-/* Foot fades up last, after the index has finished arriving */
-dialog.site-menu.is-open .site-menu__foot {
-  animation: menu-foot-in var(--duration-emphasis) var(--ease-out-expo) both;
-  animation-delay: calc(6 * var(--duration-stagger-slow));
-}
-@keyframes menu-foot-in {
-  from { opacity: 0; transform: translateY(0.8em); }
-  to   { opacity: 1; transform: none; }
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
 }
 
-body.menu-open { overflow: hidden; }
-body.menu-open .site-nav { opacity: 0; visibility: hidden; }
-/* dialog[open] display doesn't need our visibility trick — showModal handles it */
-
-@media (max-width: 640px) {
-  .site-menu__foot { justify-content: flex-start; }
+/* The foot is the last thing to arrive, after the final row. */
+.site-menu__foot,
+.site-menu__bar {
+  opacity: 0;
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+.site-menu.is-open .site-menu__foot,
+.site-menu.is-open .site-menu__bar {
+  opacity: 1;
+  transition-delay: var(--menu-hold);
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  dialog.site-menu,
-  dialog.site-menu.is-open {
-    background: var(--paper);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-}
-@media (prefers-contrast: more) {
-  dialog.site-menu,
-  dialog.site-menu.is-open {
-    background: var(--paper);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-  .site-menu__item,
-  .site-menu__item:last-child { border-color: var(--menu-fg); }
-}
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  dialog.site-menu { transition: opacity var(--duration-fast) linear; }
-  .site-menu__link,
-  .site-menu__char,
-  .site-menu__close,
-  .site-menu__close-mark::before,
-  .site-menu__close-mark::after { transition: none; }
-  /* Without the transition the characters would snap to full height. Hide the
-     accent copy entirely and let colour on the base copy carry the hover. */
-  .site-menu__face--accent { display: none; }
-  dialog.site-menu.is-open .site-menu__label-i,
-  dialog.site-menu.is-open .site-menu__item,
-  dialog.site-menu.is-open .site-menu__foot { animation: none; }
+  .site-menu {
+    /* No curtain: the panel is simply there. clip-path still has to resolve to
+       the open state or the menu would stay invisible. */
+    transition: opacity var(--duration-fast) linear;
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+    visibility: hidden;
+  }
+  .site-menu.is-open { opacity: 1; visibility: visible; }
+  .site-menu__word { transform: none; transition: none; }
+  .site-menu__num,
+  .site-menu__foot,
+  .site-menu__bar { opacity: 1; transition: none; }
 }

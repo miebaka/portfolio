@@ -28,7 +28,7 @@
   /* Leading has to be set here: inheriting the 1.75 body value at 28–34px
      opens the lines so far apart they stop reading as a paragraph. Leading
      tracks size inversely — the larger the type, the tighter it wants to be. */
-  line-height: 1.3;
+  line-height: var(--leading-intro);
   letter-spacing: var(--tracking-heading);
   color: var(--text-muted);
   --_w: 26ch;
@@ -63,7 +63,7 @@
     font-size: var(--step-h5);
     /* Leading tracks size inversely, same as the base rule: 1.3 suits 28–34px,
        but at 20–22px the standfirst wants a little more air. */
-    line-height: 1.45;
+    line-height: var(--leading-intro);
     /* The column is the measure now. The 26ch cap was sized for the stacked
        full-width hero and would re-narrow this well inside the minor column. */
     --_w: var(--measure-lead);
@@ -74,7 +74,7 @@
   .hero:not(:has(.hero__title)) .hero__lede {
     grid-column: 1;
     font-size: var(--step-h3);
-    line-height: 1.3;
+    line-height: var(--leading-intro);
     --_w: 26ch;
   }
 }
@@ -103,7 +103,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: var(--space-5) var(--space-5) var(--space-6) var(--gutter);
+  /* --margin-x, not --gutter. This column is laid out against the viewport
+     rather than inside a centred container, so the raw gutter put the meta
+     line and the statement 20px proud of every other block on the page. */
+  padding: var(--space-5) var(--space-5) var(--space-6) var(--margin-x);
 }
 
 /* Small caps rule at the top of the column — the editorial anchor that gives
@@ -117,8 +120,6 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--text-muted);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--border);
 }
 
 .hero-noir__lower {

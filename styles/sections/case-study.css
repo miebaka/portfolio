@@ -100,20 +100,6 @@
   .case-pair { grid-template-columns: 1fr; gap: var(--space-5); }
 }
 
-.case-shot__caption {
-  margin-top: var(--space-2);
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
-}
-.case-shot--hero .case-shot__caption {
-  max-width: var(--page-max);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
 /* Placeholder for a project that is written up but not yet photographed. */
 .case-shot--empty {
   display: grid;
@@ -136,95 +122,79 @@
 }
 
 /* ── Lede ─────────────────────────────────────────────────────────────────
-   Services and year sit above the title as one small line, exactly as both
-   references do; the statement is the only large type on the page. */
-.case-lede { padding-block: var(--space-6) var(--space-5); }
-
-.case-eyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  justify-content: space-between;
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
-}
-.case-eyebrow__year { font-variant-numeric: tabular-nums; }
-
-.case-title {
-  margin-top: var(--space-4);
-  font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--step-display-xl);
-  line-height: var(--leading-hero);
-  letter-spacing: var(--tracking-display);
-}
-.case-statement {
-  margin-top: var(--space-3);
-  font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--step-h2);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
-  max-width: 28ch;
-  color: color-mix(in srgb, var(--ink) 72%, transparent);
+   Six columns, measured off belonwus.com/work/owo at 1440px: 40px gutter,
+   30px gap. Client / Year / Services runs across the top under a hairline;
+   the statement and the brief take the right three columns and the left three
+   stay empty. That empty half is the whitespace. */
+.case-lede {
+  padding-block: var(--space-5) var(--space-7);
 }
 
-/* ── Facts + project information ──────────────────────────────────────────
-   φ split, same proportion as the rest of the site: facts in the minor
-   column, the short written block in the major one. */
-.case-info { padding-bottom: var(--space-6); }
-
-@media (min-width: 820px) {
-  .case-info {
+@media (min-width: 60rem) {
+  .case-lede {
     display: grid;
-    grid-template-columns: var(--col-minor) var(--col-major);
-    column-gap: var(--space-5);
-    align-items: start;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: var(--space-3);
   }
+  .case-facts     { grid-column: 1 / -1; }
+  .case-statement { grid-column: 4 / -1; }
+  .case-brief     { grid-column: 4 / -1; }
 }
 
-.case-facts { margin: 0; }
-.case-facts__row {
+/* ── Client / Year / Services ─────────────────────────────────────────────
+   Sits where the services-and-year eyebrow used to, and keeps that line's
+   hairline so the page still opens on a rule. */
+.case-facts {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: var(--space-2);
-  padding-block: var(--space-2);
-  border-top: 1px solid var(--border);
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-7);
+}
+@media (min-width: 60rem) {
+  .case-facts {
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: var(--space-3);
+    gap: 0;
+  }
+  /* Columns 2, 3 and 4-6, mirroring the reference's placement. Column 1 is
+     deliberately empty: it is the same left margin the statement keeps. */
+  .case-facts__cell:nth-child(1) { grid-column: 2; }
+  .case-facts__cell:nth-child(2) { grid-column: 3; }
+  .case-facts__cell:nth-child(3) { grid-column: 4 / -1; }
 }
 .case-facts dt {
   font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: var(--space-1);
 }
 .case-facts dd {
   margin: 0;
   font-size: var(--step-small);
+  line-height: var(--leading-intro);
   color: var(--ink);
 }
 
-.case-info__label {
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
-  padding-bottom: var(--space-2);
-  border-top: 1px solid var(--border);
-  padding-top: var(--space-2);
-  margin-bottom: var(--space-3);
+/* The one piece of large type on the page. */
+.case-statement {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--step-h1);
+  line-height: var(--leading-intro);
+  letter-spacing: -0.015em;
+  max-width: 26ch;
 }
-.case-info__body p {
+
+.case-brief { margin-top: var(--space-5); }
+.case-brief p {
   max-width: var(--measure-reading);
-  color: color-mix(in srgb, var(--ink) 85%, transparent);
+  line-height: var(--leading-body);
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
   margin-bottom: var(--space-3);
 }
+.case-brief p:last-child { margin-bottom: 0; }
 
 /* ── Outcome metrics ──────────────────────────────────────────────────── */
 .case-metrics {
@@ -232,8 +202,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--_min), 1fr));
   gap: var(--space-4);
-  padding-block: var(--space-5);
-  border-top: 1px solid var(--border);
+  padding-block: var(--space-7);
 }
 .case-metric strong {
   display: block;
@@ -248,9 +217,8 @@
 }
 
 .case-next {
-  border-top: 1px solid var(--border);
-  padding-block: var(--space-5) var(--space-7);
-  margin-top: var(--space-6);
+  padding-block: var(--space-6) var(--space-7);
+  margin-top: var(--space-7);
 }
 .case-next__link {
   display: inline-block;

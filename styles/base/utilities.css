@@ -32,18 +32,19 @@
 .measure-reading { max-width: var(--measure-reading); }
 
 /* Shared section heading block. The marker is a small label, never display
-   type — the work below it is what should carry the scale. A hairline runs
-   the full width above it, which is the one rule the page needs to signal
-   "new section" now that the block borders are gone. */
+   type: the work below it carries the scale. Nothing rules it off from what
+   came before, so the label plus the section rhythm is the only signal that a
+   new section has started, which is all a continuous page needs. */
 .section-head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-2);
+  /* The label alone opens the section. A rule above it drew a boundary the
+     page does not need, and repeated at every section it made the layout read
+     as a stack of boxes rather than one document. */
   margin-bottom: var(--space-5);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--border);
 }
 .section-head__label {
   font-family: var(--font-label);
@@ -138,3 +139,22 @@
 
 .reveal-failsafe .nav-fallback { display: flex; }
 .reveal-failsafe .link-fallback { display: grid; }
+
+/* Long-form prose blocks (privacy, and any future text page). Without a cap
+   these ran the full container: 825px at 17px is about 97 characters a line,
+   well past the 65-75 a reader can track without losing the return sweep. */
+.stack > p,
+.stack > ul,
+.stack > ol {
+  max-width: var(--measure-reading);
+  line-height: var(--leading-body);
+}
+.stack > h2,
+.stack > h3 {
+  max-width: var(--measure-title);
+  line-height: var(--leading-heading);
+}
+/* The base .stack rule above already sets the between-block step; a heading
+   opening a new topic gets more air than a paragraph following one. */
+.stack > h2 { margin-top: var(--space-6); }
+.stack > h2:first-child { margin-top: 0; }

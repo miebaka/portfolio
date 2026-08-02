@@ -19,6 +19,11 @@
      Fluid rather than fixed: at VISUAL_DENSITY 2 whitespace is the primary
      separator, so it has to scale with the viewport instead of collapsing to
      a fixed rem value on large screens. */
-  --section-block:       clamp(7rem, 18vw, 19rem);  /* standard vertical rhythm */
-  --section-block-tight: clamp(5rem, 11vw, 12rem);  /* compact vertical rhythm  */
+  /* Pulled back to a normal web rhythm. The previous values were 345px and
+     216px at 1440, which is gallery spacing: it reads as considered on a
+     poster and as dead air on a screen, because the visitor has to scroll
+     through a third of a viewport of nothing to reach the next idea.
+     130 / 86 keeps the sections distinct without making the page feel empty. */
+  --section-block:       clamp(4.5rem, 9vw, 8.5rem); /* standard vertical rhythm */
+  --section-block-tight: clamp(3rem, 6vw, 5.5rem);   /* compact vertical rhythm  */
 }

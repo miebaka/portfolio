@@ -72,35 +72,57 @@
   --weight-bold: 700;
 
   /* Type scale — fluid mobile → desktop.
-     The top of the scale is genuinely large: an editorial page needs one
-     piece of type that behaves like an image, not like a bigger heading. */
-  --step-poster: clamp(4rem, 12.5vw, 13rem);                 /* 64 → 208 · full-bleed display */
-  --step-display-xl: clamp(3.25rem, 8vw, 8rem);              /* 52 → 128 */
-  --step-hero: clamp(2.75rem, 5.4vw, 5rem);                  /* 44 → 80 · display-lg */
-  --step-display: var(--step-hero);                           /* alias — display heading */
-  --step-h1: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);          /* 40 → 56 */
-  --step-h2: clamp(2.125rem, 1.7rem + 1.8vw, 2.75rem);       /* 34 → 44 */
-  --step-h3: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);         /* 28 → 34 */
-  --step-h4: clamp(1.5rem, 1.35rem + 0.6vw, 1.75rem);        /* 24 → 28 */
-  --step-h5: clamp(1.25rem, 1.15rem + 0.4vw, 1.375rem);      /* 20 → 22 */
-  --step-h6: 1.125rem;                                        /* 18 */
-  --step-body-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem); /* 18 → 20 */
-  --step-body: clamp(1.0625rem, 1.02rem + 0.18vw, 1.125rem); /* 17 → 18 */
-  --step-small: 1rem;                                         /* 16 · body-sm */
-  --step-caption: 0.875rem;                                   /* 14 */
-  --step-meta: 0.75rem;                                       /* 12 · label */
 
-  /* Line heights — leading tracks size inversely: tight on display, open on
-     body. A single line-height across the scale is wrong somewhere. */
-  --leading-poster: 0.86;
-  --leading-hero: 0.95;
-  --leading-heading: 1.06;
-  --leading-intro: 1.5;
-  --leading-body: 1.75;
-  --leading-caption: 1.55;
+     Recalibrated to a fashion-editorial register. The old scale topped out at
+     208px and ran 40–56px for an h1, which is agency-loud: at that size type
+     fills the page and the whitespace has nowhere to go. Measured against the
+     reference (belonwus.com/work/owo), a page of that class runs 16px for
+     everything and 32px for its one statement line. This scale keeps a display
+     tier for the home hero, then drops sharply, so restraint is the default
+     and size has to be earned. Body stays at or above 16px throughout. */
+  --step-poster: clamp(3rem, 7.5vw, 7rem);                   /* 48 → 112 · full-bleed display */
+  --step-display-xl: clamp(2rem, 4vw, 3.5rem);               /* 32 → 56 */
+  --step-hero: clamp(1.875rem, 3.2vw, 3rem);                 /* 30 → 48 · display-lg */
+  --step-display: var(--step-hero);                           /* alias — display heading */
+  --step-h1: clamp(1.625rem, 1.4rem + 1.1vw, 2.25rem);       /* 26 → 36 */
+  --step-h2: clamp(1.375rem, 1.25rem + 0.7vw, 1.75rem);      /* 22 → 28 */
+  --step-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);        /* 20 → 24 */
+  --step-h4: clamp(1.125rem, 1.08rem + 0.25vw, 1.25rem);     /* 18 → 20 */
+  --step-h5: clamp(1.0625rem, 1.03rem + 0.16vw, 1.125rem);   /* 17 → 18 */
+  --step-h6: 1.0625rem;                                       /* 17 */
+  --step-body-lg: clamp(1.0625rem, 1.03rem + 0.16vw, 1.125rem); /* 17 → 18 */
+  --step-body: clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);      /* 16 → 17 */
+  --step-small: 0.9375rem;                                    /* 15 · body-sm */
+  --step-caption: 0.8125rem;                                  /* 13 */
+  --step-meta: 0.6875rem;                                     /* 11 · label */
+
+  /* ── Leading, derived from φ ──────────────────────────────────────────
+     Every value on this ladder is a root of the golden ratio, so the whole
+     system is one number expressed at different strengths:
+
+       φ      = 1.618   body — the reading measure
+       φ^1/2  = 1.272   intro and captions
+       φ^1/4  = 1.128   headings
+       φ^1/8  = 1.062   hero
+       φ^1/16 = 1.031   poster
+       1.000            labels, single-line by definition
+
+     A flat 1.618 on every size would be wrong, not golden: leading tracks
+     size inversely, so a 60px headline set at φ falls apart into separate
+     lines while 16px body set at a headline's leading reads as a wall. Taking
+     successive square roots keeps φ as the generator and lets the ratio relax
+     toward 1 exactly as the type grows, which is the relationship φ describes
+     in the first place. Body copy — the great majority of text on the site —
+     sits at φ itself. */
+  --leading-poster: 1.031;   /* φ^1/16 */
+  --leading-hero: 1.062;     /* φ^1/8  */
+  --leading-heading: 1.128;  /* φ^1/4  */
+  --leading-intro: 1.272;    /* φ^1/2  */
+  --leading-caption: 1.272;  /* φ^1/2  */
+  --leading-body: 1.618;     /* φ      */
   --leading-label: 1;
-  --leading-tight: 1.06;  /* alias → heading (legacy) */
-  --leading-snug: 1.16;   /* legacy */
+  --leading-tight: var(--leading-heading);  /* alias (legacy) */
+  --leading-snug: var(--leading-intro);     /* alias (legacy) */
 
   /* Letter tracking — optical, not uniform. Large type reads too loose at 0,
      so it tightens as it grows; small caps-labels need positive tracking to
@@ -117,11 +139,21 @@
   --tracking-meta: 0.18em;   /* alias → label (legacy) */
   --tracking-caps: 0.18em;   /* alias → label (legacy) */
 
-  /* Reading measures */
-  --measure-title:   16ch; /* primary page heading constraint */
-  --measure-hero:    18ch; /* hero statement */
-  --measure-lead:    34ch; /* about / mission statement */
-  --measure-reading: 68ch; /* body copy */
-  --measure-caption: 42ch; /* captions */
-  --measure-wide:    84ch; /* testimonials, pull quotes */
+  /* Reading measures.
+
+     Prose measures are in em, not ch. `ch` is the advance width of "0", and
+     in Libre Baskerville the figures are far wider than the lowercase: 68ch
+     resolved to 825px, which is about 97 characters a line, not 68. Every
+     prose block on the site was running roughly 40% over measure because of
+     it. `em` is proportional to the type size and gives a stable character
+     count for a given face, which is what a measure is actually for.
+
+     Display and label measures stay in ch: they are set in the grotesk, whose
+     figure width is close to its lowercase, so ch behaves there. */
+  --measure-title:   16ch;  /* primary page heading constraint */
+  --measure-hero:    18ch;  /* hero statement */
+  --measure-lead:    17em;  /* about / mission statement (~34 characters) */
+  --measure-reading: 34em;  /* body copy (~68 characters) */
+  --measure-caption: 21em;  /* captions (~42 characters) */
+  --measure-wide:    42em;  /* testimonials, pull quotes (~84 characters) */
 }

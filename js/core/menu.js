@@ -16,16 +16,20 @@ export function initMenu() {
     menu.showModal();                          /* native: focus trap + AT announce */
     document.body.classList.add("menu-open");
     openBtn.setAttribute("aria-expanded", "true");
-    /* is-open + focus must both happen after the rAF tick. Reading offsetHeight
-       after classList.add forces a style recalc so visibility:visible is
-       computed before focus() — without it the browser hasn't yet processed
-       the CSS change and treats the element as still visibility:hidden. */
-    requestAnimationFrame(() => {
-      menu.classList.add("is-open");
-      menu.offsetHeight; // force style recalculation
-      const closeBtn = menu.querySelector("[data-menu-close]");
-      if (closeBtn) closeBtn.focus();
-    });
+
+    /* The open class is applied synchronously, not inside requestAnimationFrame.
+       rAF does not fire while the tab is backgrounded or the window occluded,
+       and the previous version added `is-open` inside one: open the menu, switch
+       away before the frame lands, and the dialog is showing with its curtain
+       still fully retracted — an invisible overlay that still traps focus.
+
+       Reading offsetHeight first flushes style and layout, so the closed
+       clip-path is computed before the open one is set. That is all a CSS
+       transition needs in order to run; the frame callback never was. */
+    menu.offsetHeight;
+    menu.classList.add("is-open");
+    const closeBtn = menu.querySelector("[data-menu-close]");
+    if (closeBtn) closeBtn.focus();
   }
 
   function close() {

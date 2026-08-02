@@ -3,15 +3,33 @@
    ========================================================================== */
 
 :root {
-  --page-max: 1400px;
-  --content-max: 1400px;           /* legacy alias */
+  /* No max-width. A centred 1400px column put the margin at 84px on a 1440
+     screen (20px of centring plus the gutter), which is why nothing lined up
+     with the logo. Full width plus a fixed gutter makes the margin exactly the
+     gutter, at every viewport, with no arithmetic. Line length is still
+     controlled where it matters, by the --measure-* tokens on the text itself
+     rather than by a box around everything. */
+  --page-max: 100%;
+  --content-max: 100%;             /* legacy alias */
   --content-width: var(--page-max);
   --text-width: var(--measure-reading);
   --gallery-width: 100%;
   --bleed-width: 100vw;
 
-  --gutter: clamp(1.5rem, 6vw, 7rem);
+  /* The page margin. 64px flat, so the logo edge, the moon edge and every
+     content block share one number. Phones drop to 24px: 64px each side of a
+     375px screen leaves a 247px column, which is unreadable. */
+  --gutter: 4rem;
+
+  /* Kept as a name for the page margin now that it is simply the gutter.
+     Anything laid out against the viewport rather than inside a container
+     still reads this rather than hard-coding a number. */
+  --margin-x: var(--gutter);
   --nav-h: 5rem;
   --measure: var(--measure-reading); /* default reading width */
   --tap-min: 44px; /* WCAG 2.2 minimum touch-target size */
+}
+
+@media (max-width: 40rem) {
+  :root { --gutter: 1.5rem; }
 }

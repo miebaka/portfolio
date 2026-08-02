@@ -15,8 +15,13 @@ export function renderCapabilities() {
       "</div>"
     )
     .join("");
-  el.querySelectorAll(".cap-row").forEach((row, i) => {
+  const rows = el.querySelectorAll(".cap-row");
+  rows.forEach((row, i) => {
     row.style.setProperty("--reveal-i", i);
+    /* The stagger is interpolated in CSS from these two numbers, so the
+       distribution stays correct if a capability is added or removed. */
+    row.style.setProperty("--row-i", i);
+    row.style.setProperty("--row-n", rows.length);
   });
 }
 

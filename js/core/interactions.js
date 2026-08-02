@@ -7,8 +7,14 @@ const MAG_LERP     = 0.16; /* lerp speed toward/away from the magnetic target */
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function initInteractions() {
-  initInkBleed();
-  if (!reduceMotion) initMagneticButtons();
+  /* initInkBleed() no longer runs. The work cards now use a scrim that lifts
+     from 80% to 16% on hover, and a cursor-tracked highlight on top of that
+     was a second answer to the same question. The function is kept below so
+     the behaviour can be restored in one line. */
+  /* Magnetic buttons are retired. A control that slides away from the cursor
+     is an agency flourish, not an editorial one, and it fights the restraint
+     the rest of the page is now built on. initMagneticButtons() is kept below
+     rather than deleted so the behaviour can be restored in one line. */
 }
 
 /* ── Ink bleed ────────────────────────────────────────────────────────
