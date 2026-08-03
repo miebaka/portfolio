@@ -38,8 +38,6 @@ p { max-width: var(--measure-reading); }
 .case-next__label,
 .case-metric span,
 .cap-row__meta,
-.sl-card__cat,
-.sl-card__services,
 .chip,
 .btn,
 .hero-noir__meta,

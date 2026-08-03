@@ -167,7 +167,9 @@
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  /* 11px label: 55% measured 3.94:1, under the 4.5 minimum for small text.
+     68% is the site's muted-label value and clears it at 6:1. */
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
   margin-bottom: var(--space-1);
 }
 .case-facts dd {

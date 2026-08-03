@@ -1,10 +1,10 @@
 /* ==========================================================================
    Section · Work — side-scrolling gallery of squares.
 
-   The section owns a height. Every card is a square measured against it: 64%
-   at rest, 70% on hover. Because the height is a percentage of the section
+   The section owns a height. Every card is a square measured against it: 80%
+   at rest, 96% on hover. Because the height is a percentage of the section
    rather than a viewport width, the row keeps its proportions when the window
-   changes shape, and the growth on hover is the same 6% of the section at
+   changes shape, and the growth on hover is the same 16% of the section at
    every screen size.
 
    Scrolling is a real horizontal scroll container. An earlier version of this
@@ -87,7 +87,7 @@
 }
 
 /* ── Mobile ───────────────────────────────────────────────────────────────
-   A 64%-of-section square on a phone is a stamp, and a horizontal gesture
+   An 80%-of-section square on a phone is a stamp, and a horizontal gesture
    fights the page scroll. The row becomes a column at full width. */
 @media (max-width: 52rem) {
   .sl-rail__viewport { height: auto; overflow: visible; }
@@ -335,75 +335,16 @@
   outline-offset: -4px;
 }
 
-/* ── Rail controls ────────────────────────────────────────────────────────
-   Horizontal scroll is invisible on a plain mouse. The count says how far in
-   you are; the arrows give a mouse user the same access a trackpad already
-   has. Both sit inside the page gutter, not over the work. */
-.sl-rail__controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  max-width: var(--page-max);
-  margin-inline: auto;
-  padding: var(--space-3) var(--gutter) 0;
-}
-
-.sl-rail__count {
-  margin: 0;
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--ink) 68%, transparent);
-}
-.sl-rail__sep { margin-inline: 0.4em; }
-
-.sl-rail__nav { display: flex; gap: var(--space-2); }
-
-.sl-rail__btn {
-  /* 44px target, per WCAG 2.2. The glyph is small; the box is not. */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--tap-min);
-  min-height: var(--tap-min);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: var(--step-h4);
-  line-height: 1;
-  color: var(--ink);
-  transition: opacity var(--duration-fast) var(--ease-standard),
-              transform var(--duration-fast) var(--ease-snappy);
-}
-/* Press feedback: the control has to feel like it heard you. */
-.sl-rail__btn:active { transform: scale(0.92); }
-.sl-rail__btn:focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: 4px;
-}
-/* At either end the button is genuinely unavailable, and says so rather than
-   silently doing nothing. */
-.sl-rail__btn[disabled] {
-  opacity: 0.25;
-  cursor: default;
-  pointer-events: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  .sl-rail__btn:not([disabled]):hover { opacity: 0.55; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sl-rail__viewport { scroll-behavior: auto; }
-  .sl-rail__btn { transition: none; }
-}
-
 /* Card text must stay light regardless of theme — frames are coloured */
 [data-theme="dark"] .sl-card__frame { color: var(--ink); }
 
+/* One reduced-motion block, completed. It was committed as a dangling selector
+   list with a trailing comma and no body, which drops the whole @media rule.
+   The scrim/size transitions are handled by the per-rule reduced-motion
+   overrides above; this kills the two decorative ones left on the frame
+   layers. */
 @media (prefers-reduced-motion: reduce) {
+  .sl-rail__viewport { scroll-behavior: auto; }
   .sl-card__bg,
-  .sl-card__img,
+  .sl-card__img { transition: none; }
 }

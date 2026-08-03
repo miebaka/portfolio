@@ -1,5 +1,11 @@
-/* interactions.js — ink-bleed spotlight on work cards + magnetic buttons.
-   Both effects are pointer-only and degrade cleanly on touch devices. */
+/* interactions.js — currently a no-op.
+
+   It used to run an ink-bleed spotlight on the work cards and a magnetic pull
+   on primary buttons. Both were retired: the work cards now use a scrim that
+   lifts on hover, and the magnetic pull fought the editorial restraint. The
+   two functions are kept below, unreferenced, so either can be restored in one
+   line. Note initInkBleed targets .sl-card__frame::after, a spotlight layer
+   that no longer exists, so it would need its target rebuilt to work again. */
 
 const MAG_STRENGTH = 0.28; /* fraction of cursor offset applied to the button */
 const MAG_LERP     = 0.16; /* lerp speed toward/away from the magnetic target */

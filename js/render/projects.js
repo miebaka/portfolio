@@ -59,8 +59,9 @@ function workCard(project) {
 }
 
 /* A side-scrolling row of squares. The scrolling is the browser's; the sizing
-   is a CSS hover rule. js/core/work-rail.js adds only the caption and the
-   pointer pill, the two things CSS cannot express.
+   is a CSS hover rule. The title and tags are static markup emitted here, so
+   js/core/work-rail.js adds only the cursor-following pill, the one thing CSS
+   cannot express.
 
    touch-action: pan-y tells the browser to keep vertical panning for itself,
    so a downward drag scrolls the page rather than being absorbed by the
