@@ -7,18 +7,24 @@ export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
   el.classList.add("caps");
+  /* Each service is a native <details> so the disclosure is keyboard-accessible
+     and announced for free. The shared name makes the set exclusive: opening one
+     closes whichever was open, with no JS to keep in sync. */
   el.innerHTML = SITE.capabilities
-    .map((c, i) =>
-      '<div class="caps__row reveal">' +
-      '<span class="caps__num">' + String(i + 1).padStart(2, "0") + "</span>" +
-      '<span class="caps__name">' + esc(c.title) + "</span>" +
-      '<span class="caps__meta">' + esc(c.meta || "") + "</span>" +
-      "</div>"
-    )
+    .map((c, i) => {
+      const desc = esc(c.description || c.meta || "");
+      return (
+        '<details class="caps__item" name="capabilities">' +
+          '<summary class="caps__row">' +
+            '<span class="caps__num">' + String(i + 1).padStart(2, "0") + "</span>" +
+            '<span class="caps__name">' + esc(c.title) + "</span>" +
+            '<span class="caps__toggle" aria-hidden="true"></span>' +
+          "</summary>" +
+          '<div class="caps__panel"><p class="caps__desc">' + desc + "</p></div>" +
+        "</details>"
+      );
+    })
     .join("");
-  /* Stagger the scroll reveal down the list — the same --reveal-i the work
-     index and menu use, so the rhythm matches across the site. */
-  el.querySelectorAll(".caps__row").forEach((row, i) => row.style.setProperty("--reveal-i", i));
 }
 
 /* Renders nothing at all unless there is a real quote with a real attributor.

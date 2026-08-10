@@ -111,20 +111,34 @@
   }
 }
 
-/* ── What I do — editorial index ──────────────────────────────────────────
-   Numbered rows matching the work index: label number, name at heading scale,
-   description in the reading voice. Consistency with the work rows is the point
-   (Vignelli) — the two sections read as one system. The About page's Experience
-   list keeps the separate .cap-list treatment above. */
-.caps { border-top: 1px solid var(--text); }
+/* ── What I do — accordion index ──────────────────────────────────────────
+   Each service is a <details>: the title is the summary, a three-line
+   description is revealed on click, and the shared name keeps one open at a
+   time. No rules; the items distribute down the section on whitespace alone,
+   matching the work index (Vignelli — one system). */
+.caps {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: min(72svh, 780px);
+}
+
+/* Summary is the clickable row. Its default disclosure marker is removed; the
+   caps__toggle plus/minus carries the affordance instead (Norman — a visible,
+   honest signifier of open/closed). */
 .caps__row {
   display: grid;
-  grid-template-columns: var(--space-5) minmax(0, 1fr) minmax(0, 1.3fr);
+  grid-template-columns: var(--space-5) 1fr auto;
   gap: var(--space-4);
-  align-items: baseline;
+  align-items: center;
   padding-block: var(--space-4);
-  border-bottom: 1px solid var(--linen);
-  transition: opacity var(--duration-standard) var(--ease-standard);
+  cursor: pointer;
+  list-style: none;
+}
+.caps__row::-webkit-details-marker { display: none; }
+.caps__row:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
 }
 .caps__num {
   font-family: var(--font-label);
@@ -140,22 +154,52 @@
   letter-spacing: var(--tracking-heading);
   transition: color var(--duration-fast) var(--ease-standard);
 }
-.caps__meta {
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: var(--step-body);
-  line-height: var(--leading-intro);
-}
 @media (hover: hover) and (pointer: fine) {
-  .caps:has(.caps__row:hover) .caps__row:not(:hover) { opacity: 0.5; }
   .caps__row:hover .caps__name { color: var(--accent); }
 }
+.caps__item[open] .caps__name { color: var(--accent-text); }
+
+/* Plus that loses its vertical stroke to become a minus when open. */
+.caps__toggle {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  color: var(--text-muted);
+}
+.caps__toggle::before,
+.caps__toggle::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: currentColor;
+}
+.caps__toggle::after {
+  transform: rotate(90deg);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.caps__item[open] .caps__toggle { color: var(--accent-text); }
+.caps__item[open] .caps__toggle::after { opacity: 0; }
+
+/* Revealed description — kept to the reading measure and three lines of copy. */
+.caps__panel {
+  padding-inline-start: calc(var(--space-5) + var(--space-4));
+  padding-block-end: var(--space-4);
+  max-width: var(--measure-reading);
+}
+.caps__desc {
+  font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: var(--leading-body);
+  color: var(--text-muted);
+}
+
 @media (max-width: 40rem) {
-  .caps__row { grid-template-columns: var(--space-4) 1fr; row-gap: var(--space-1); }
-  .caps__meta { grid-column: 2; }
+  .caps__row { grid-template-columns: var(--space-4) 1fr auto; }
+  .caps__panel { padding-inline-start: calc(var(--space-4) + var(--space-4)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .caps__row, .caps__name { transition: none; }
+  .caps__name, .caps__toggle::after { transition: none; }
 }
 
 /* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */

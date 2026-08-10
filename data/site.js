@@ -162,12 +162,35 @@ export const SITE = {
     { name: "Celebration Church",      logo: "assets/images/clients/celebration-church.svg",       logoW: 163, logoH: 40, scale: 0.88 },
   ],
 
+  /* Each service is an accordion row: the title is the summary, the description
+     (kept to three lines) is revealed on click. `meta` stays as the one-line
+     summary used anywhere a collapsed form is needed. */
   capabilities: [
-    { title: "Brand identity",        meta: "A system your team can grow into." },
-    { title: "Brand strategy",        meta: "The thinking that makes the design inevitable." },
-    { title: "Visual & graphic design", meta: "Creative that earns attention before it asks for anything." },
-    { title: "Art direction",         meta: "Standards that survive the brief." },
-    { title: "Editorial design",      meta: "Print that earns its weight." },
+    {
+      title: "Brand identity",
+      meta: "A system your team can grow into.",
+      description: "The whole system, logo, type, colour, and the rules that keep it consistent, so the brand looks like itself everywhere it shows up.",
+    },
+    {
+      title: "Brand strategy",
+      meta: "The thinking that makes the design inevitable.",
+      description: "The thinking before the design: what you stand for, who it is for, and why you win. It is what makes every visual choice afterward feel inevitable.",
+    },
+    {
+      title: "Visual & graphic design",
+      meta: "Creative that earns attention before it asks for anything.",
+      description: "Campaigns, social, and decks that earn attention before they ask for it, with real craft on every detail rather than decoration.",
+    },
+    {
+      title: "Art direction",
+      meta: "Standards that survive the brief.",
+      description: "One standard held across photographers, illustrators, and channels, so everything ships on brand without anyone policing it.",
+    },
+    {
+      title: "Editorial design",
+      meta: "Print that earns its weight.",
+      description: "Print and long-form that respect the reader, where typography and pace carry the work and the object feels worth keeping.",
+    },
   ],
 
   testimonials: [
