@@ -3,7 +3,7 @@
    Order matters: nav + menu must be rendered before their handlers attach.
    ========================================================================== */
 import { initContract } from "./core/contract.js";
-import { renderNavigation, renderMenu, renderBackButton } from "./render/navigation.js";
+import { renderNavigation, renderBackButton } from "./render/navigation.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
 import { renderCapabilities, renderTestimonial, fillSlots } from "./render/sections.js";
@@ -13,7 +13,6 @@ import { renderFooter } from "./render/footer.js";
 import { initSplitText } from "./core/split-text.js";
 import { initScrollReveal } from "./core/scroll.js";
 import { initNavigation } from "./core/navigation.js";
-import { initMenu } from "./core/menu.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initCursorField } from "./core/cursor-field.js";
@@ -26,7 +25,6 @@ initContract();
 
 /* Render: build markup from site data into the [data-mount] points. */
 renderNavigation();
-renderMenu();
 renderBackButton();
 renderWork();
 renderClients();
@@ -44,7 +42,6 @@ initNowPlaying();
 initSplitText();
 initScrollReveal();
 initNavigation();
-initMenu();
 initYear();
 initForm();
 initCursorField();

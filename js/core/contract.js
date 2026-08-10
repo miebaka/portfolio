@@ -43,9 +43,6 @@ export const HOOK = {
   /* motion */
   SPLIT:       "data-split",
   WIPE:        "data-wipe",
-  /* menu */
-  MENU_OPEN:   "data-menu-open",
-  MENU_CLOSE:  "data-menu-close",
   /* misc */
   YEAR:        "data-year",
   PORTRAIT:    "data-hero-portrait",

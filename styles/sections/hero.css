@@ -101,6 +101,10 @@
   grid-template-columns: var(--col-major) var(--col-minor);
   grid-template-areas: "content picture";
   align-items: end;
+  /* Inset the whole hero from the right and bottom so the portrait reads as a
+     contained plate with the page margin around it, not a full-bleed crop. */
+  padding-inline-end: var(--margin-x);
+  padding-block-end: var(--space-6);
   color: var(--ink);
   overflow: hidden;
 }
@@ -118,15 +122,17 @@
   /* --margin-x, not --gutter. This column is laid out against the viewport
      rather than inside a centred container, so the raw gutter put the meta
      line and the statement 20px proud of every other block on the page. */
-  padding: var(--space-5) var(--space-5) var(--space-6) var(--margin-x);
+  padding: var(--space-5) var(--space-5) 0 var(--margin-x);
 }
 
 /* Small caps rule at the top of the column — the editorial anchor that gives
    the oversized statement something to measure itself against. */
 .hero-noir__meta {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--space-3);
+  white-space: nowrap;
   font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
@@ -180,7 +186,7 @@
   margin-top: var(--space-4);
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   min-height: var(--tap-min);
   font-family: var(--font-label);
   font-size: var(--step-meta);
@@ -189,28 +195,27 @@
   text-transform: uppercase;
   color: var(--accent-text);
   text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent-text) 45%, transparent);
-  padding-bottom: 2px;
-  transition: color        var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
-.hero-noir__cta-arrow {
+/* Leading rule that extends on hover — the affordance sits to the left of the
+   label, growing rather than sliding, so nothing shifts the text. */
+.hero-noir__cta-bar {
   display: inline-block;
-  transition: transform var(--duration-medium) var(--ease-out-expo);
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+  transition: width var(--duration-medium) var(--ease-out-expo);
 }
 @media (hover: hover) and (pointer: fine) {
-  .hero-noir__cta:hover {
-    color: var(--accent-text-hover);
-    border-bottom-color: var(--accent-text-hover);
-  }
-  .hero-noir__cta:hover .hero-noir__cta-arrow { transform: translateX(0.35em); }
+  .hero-noir__cta:hover { color: var(--accent-text-hover); }
+  .hero-noir__cta:hover .hero-noir__cta-bar { width: 4rem; }
 }
 .hero-noir__cta:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 4px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-noir__cta-arrow { transition: none; }
+  .hero-noir__cta-bar { transition: none; }
 }
 
 /* Right column — portrait (minor column). A natural-ratio image bottom-aligned
@@ -274,7 +279,7 @@
     padding-right:  var(--gutter);
     padding-bottom: var(--space-6);
   }
-  .hero-noir__meta { flex-direction: row; justify-content: space-between; }
+  .hero-noir__meta { flex-direction: column; gap: var(--space-1); }
   /* Full width available once stacked — the column cap no longer applies */
   .hero-noir__statement { font-size: clamp(2.25rem, 9vw, 4rem); }
   .hero-noir__chip {

@@ -30,86 +30,73 @@
 .site-nav__inner {
   width: 100%;
   display: grid;
-  /* Two anchored clusters, not three lonely items. Brand and the Menu trigger
-     sit together on the left (menu takes the flexible middle column but hugs
-     the brand via justify-self:start), and the theme toggle holds the right.
-     The centred Menu label read as orphaned between two unrelated anchors. */
+  /* Wordmark holds the left margin; the primary links sit at the right of the
+     flexible middle column, with the theme toggle anchored to the right edge. */
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
-/* Logo — left-anchored in the 3-column grid */
+/* Wordmark — the name set in the display grotesk, flush to the left margin. */
 .site-nav__brand {
-  display: inline-flex;
-  align-items: center;
-  /* Flush left inside its own box, not centred in it. The tap target is 44px
-     and the mark is 30px, so centring pushed the visible edge 7px inboard of
-     every other element on the page. The target keeps its full size; it simply
-     extends to the right of the mark instead of around it, which is the side
-     with room. The logo edge is now the page margin, exactly. */
-  justify-content: flex-start;
-  min-width: var(--tap-min);
-  min-height: var(--tap-min);
-  flex-shrink: 0;
   justify-self: start;
-}
-
-.site-nav__logo {
-  --_size: 1.875rem; /* 30px — SVG logo proportion; not on 8pt grid by design */
-  display: block;
-  width: var(--_size);
-  height: var(--_size);
-  background-color: currentColor;
-  -webkit-mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
-  mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
-}
-
-/* Menu trigger — right-anchored. Carries a plus that rotates to a cross when
-   the overlay opens, the affordance leandra-isler.ch puts on its "Services +".
-   The rotation happens during the curtain's fall, so it is seen before the
-   panel covers the nav. */
-.site-nav__menu-btn {
-  --_px: 0.2rem; /* minimal side padding — visual balance only */
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
   min-height: var(--tap-min);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--step-h5);
+  letter-spacing: var(--tracking-heading);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Inline primary links — right-anchored beside the toggle. The label font,
+   uppercase and tracking come from base/typography.css. */
+.site-nav__links {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--tap-min);
+}
+.site-nav__link {
   font-size: var(--step-meta);
-  padding: var(--space-1) var(--_px);
-  flex-shrink: 0;
-  /* Hug the brand at the left of the flexible middle column, rather than
-     centring in it. */
-  justify-self: start;
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
-.site-nav__menu-plus {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
-  /* Rotates a touch past 90° on the same curve as the menu rows, so the plus
-     turning into a cross reads as one gesture with the panel dropping. */
-  transition: transform var(--duration-standard) var(--ease-items);
-}
-.site-nav__menu-plus::before,
-.site-nav__menu-plus::after {
-  content: "";
-  position: absolute;
-  inset: 50% 0 auto 0;
-  height: 1px;
-  background: currentColor;
-}
-.site-nav__menu-plus::after { transform: rotate(90deg); }
-/* aria-expanded is toggled by menu.js on open/close. */
-.site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-plus {
-  transform: rotate(135deg);
-}
+.site-nav__link[aria-current="page"] { color: var(--text); }
 @media (hover: hover) {
-  /* 12px label — text-safe accent, see tokens/colors.css */
-  .site-nav__menu-btn:hover { color: var(--accent-text); }
+  .site-nav__link:hover { color: var(--accent-text); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .site-nav__menu-plus { transition: none; }
+
+/* Narrow screens: the wordmark and toggle share the top row, the links drop to
+   a full-width row beneath and scroll if they run long. min-width:0 lets that
+   row actually clip and scroll instead of expanding to its content and shoving
+   the wordmark. The bar gives up its fixed height here to hold both rows. */
+@media (max-width: 40rem) {
+  .site-nav { height: auto; }
+  .site-nav__inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand toggle"
+      "links links";
+    row-gap: var(--space-1);
+    column-gap: var(--space-2);
+    padding-block: var(--space-2);
+  }
+  .site-nav__brand { grid-area: brand; }
+  .theme-toggle    { grid-area: toggle; }
+  .site-nav__links {
+    grid-area: links;
+    justify-self: start;
+    min-width: 0;
+    max-width: 100%;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .site-nav__links::-webkit-scrollbar { display: none; }
 }
 
 /* ── Drams-037 theme toggle — pill track + oversized knob ─────────────── */

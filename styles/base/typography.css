@@ -29,9 +29,7 @@ p { max-width: var(--measure-reading); }
 
 /* Labels — Interface (Josefin Sans), uppercase, widely tracked */
 .meta,
-.site-nav__menu-btn,
-.site-menu__close,
-.site-menu__foot,
+.site-nav__link,
 .case-back a,
 .case-rail__label,
 .case-rail__text,
