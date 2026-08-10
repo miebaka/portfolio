@@ -26,7 +26,9 @@
   padding-block: var(--space-4);
   color: var(--text);
   text-decoration: none;
-  transition: padding-inline-start var(--duration-medium) var(--ease-out-expo);
+  /* Nudge on the GPU: transform, not padding (which would trigger layout on
+     every hover frame). */
+  transition: transform var(--duration-medium) var(--ease-out-expo);
 }
 
 .work-index__idx {
@@ -58,7 +60,7 @@
 .work-index__row--pending { cursor: default; }
 
 @media (hover: hover) and (pointer: fine) {
-  a.work-index__row:hover { padding-inline-start: var(--space-3); }
+  a.work-index__row:hover { transform: translateX(var(--space-3)); }
   a.work-index__row:hover .work-index__name { color: var(--accent-text); }
 }
 

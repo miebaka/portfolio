@@ -156,12 +156,13 @@
   border-radius: 50%;
   background: var(--paper);
   box-shadow: 0 2px 6px color-mix(in srgb, black 18%, transparent), 0 1px 2px color-mix(in srgb, black 10%, transparent);
-  transition: left       var(--duration-standard) var(--ease-standard),
+  /* Slide on the GPU: translateX, not `left` (a layout property). */
+  transition: transform  var(--duration-standard) var(--ease-standard),
               background var(--duration-standard) var(--ease-standard),
               box-shadow var(--duration-standard) var(--ease-standard);
 }
 .theme-toggle[aria-pressed="true"] .theme-toggle__knob {
-  left: calc(var(--_track-w) - var(--_knob-sz) - var(--_inset));
+  transform: translateX(calc(var(--_track-w) - var(--_knob-sz) - 2 * var(--_inset))) translateY(-50%);
 }
 [data-theme="dark"] .theme-toggle__track {
   background: color-mix(in srgb, var(--ink) 14%, transparent);
