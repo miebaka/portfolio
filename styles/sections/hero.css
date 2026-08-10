@@ -207,14 +207,19 @@
    label, growing rather than sliding, so nothing shifts the text. */
 .hero-noir__cta-bar {
   display: inline-block;
-  width: 2.5rem;
+  /* Full width is reserved in layout; the bar sits scaled down at rest and
+     grows to full on hover via transform, so the label never reflows and the
+     growth stays on the GPU. */
+  width: 4rem;
   height: 1px;
   background: currentColor;
-  transition: width var(--duration-medium) var(--ease-out-expo);
+  transform: scaleX(0.625); /* 2.5rem of the 4rem box */
+  transform-origin: left center;
+  transition: transform var(--duration-medium) var(--ease-out-expo);
 }
 @media (hover: hover) and (pointer: fine) {
   .hero-noir__cta:hover { color: var(--accent-text-hover); }
-  .hero-noir__cta:hover .hero-noir__cta-bar { width: 4rem; }
+  .hero-noir__cta:hover .hero-noir__cta-bar { transform: scaleX(1); }
 }
 .hero-noir__cta:focus-visible {
   outline: 2px solid var(--accent-text);

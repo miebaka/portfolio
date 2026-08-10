@@ -97,6 +97,29 @@
   .caps__name, .caps__toggle::after { transition: none; }
 }
 
+/* Panel reveal — where the browser can interpolate to height:auto the
+   description slides open on click; browsers without interpolate-size simply
+   snap, exactly as before (progressive enhancement). Short duration both ways
+   so a superseded item still collapses promptly. */
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+  .caps__item::details-content {
+    height: 0;
+    overflow: clip;
+    opacity: 0;
+    transition: height var(--duration-standard) var(--ease-out-quart),
+                opacity var(--duration-fast) var(--ease-standard),
+                content-visibility var(--duration-standard) allow-discrete;
+  }
+  .caps__item[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .caps__item::details-content { transition: none; opacity: 1; }
+  }
+}
+
 /* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */
 /* No background: identical to the page surface, and an opaque repaint here
    would block the cursor field beneath it. */

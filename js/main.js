@@ -1,8 +1,20 @@
 /* ==========================================================================
    main.js — module entry. Renders the data-driven DOM, then wires behaviour.
-   Order matters: nav + menu must be rendered before their handlers attach.
+   Order matters: the nav must be rendered before its handlers attach.
    ========================================================================== */
 import { initContract } from "./core/contract.js";
+
+/* Native cross-document view transitions (@view-transition in
+   styles/base/view-transitions.css) reject their promise with an AbortError
+   when one navigation supersedes an in-flight transition (rapid clicks,
+   back/forward). It is harmless but surfaces as an unhandled rejection. Swallow
+   exactly that case; let every other rejection through untouched. */
+window.addEventListener("unhandledrejection", (event) => {
+  const reason = event.reason;
+  if (reason && reason.name === "AbortError" && /transition was skipped/i.test(reason.message || "")) {
+    event.preventDefault();
+  }
+});
 import { renderNavigation, renderBackButton } from "./render/navigation.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";

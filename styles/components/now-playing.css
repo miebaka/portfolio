@@ -22,10 +22,13 @@
      is clipped with an ellipsis rather than widening past the portrait. */
   max-width: 100%;
   min-width: 0;
-  /* Fade in when JS reveals the chip; fade out when hidden is set */
-  transition: opacity var(--duration-standard) var(--ease-emphasized),
-              display  var(--duration-standard) allow-discrete;
-  @starting-style { opacity: 0; }
+  /* Grow in from just under full size, never from nothing, when JS reveals the
+     chip; fade out when hidden is set. */
+  transform: scale(1);
+  transition: opacity   var(--duration-standard) var(--ease-emphasized),
+              transform var(--duration-standard) var(--ease-emphasized),
+              display   var(--duration-standard) allow-discrete;
+  @starting-style { opacity: 0; transform: scale(0.98); }
 }
 
 /* Exit state — opacity 0 before display:none takes effect */

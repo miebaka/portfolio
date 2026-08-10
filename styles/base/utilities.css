@@ -79,15 +79,17 @@
 .skip-link {
   position: absolute;
   left: var(--space-2);
-  top: -3rem;
+  top: var(--space-2);
   z-index: var(--z-overlay);
   background: var(--ink);
   color: var(--paper);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
-  transition: top var(--duration-fast) var(--ease-snappy);
+  /* Hidden above the viewport by transform (GPU), slid in on focus. */
+  transform: translateY(-300%);
+  transition: transform var(--duration-fast) var(--ease-snappy);
 }
-.skip-link:focus { top: var(--space-2); }
+.skip-link:focus { transform: translateY(0); }
 
 /* Closing CTA — small label-style line at the end of a section */
 .closing-cta {
