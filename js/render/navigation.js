@@ -68,7 +68,9 @@ export function renderNavigation() {
   el.className = "site-nav";
   el.innerHTML =
     '<div class="container site-nav__inner">' +
-      '<a class="site-nav__brand" href="' + base + 'index.html">' + esc(SITE.name) + "</a>" +
+      '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
+        '<span class="site-nav__logo" aria-hidden="true"></span>' +
+      "</a>" +
       '<nav class="site-nav__links" aria-label="Primary">' + links + "</nav>" +
       themeToggleHTML() +
     "</div>";

@@ -9,9 +9,13 @@
    ========================================================================== */
 
 .work-index {
-  /* The strong opening rule; row hairlines are lighter below. Uses --text so it
-     re-derives itself in dark mode rather than vanishing on a dark ground. */
-  border-top: 1px solid var(--text);
+  /* A full-height editorial index: no rules, the rows distribute down the
+     section and whitespace does the separating (Rams / Vignelli). min-height
+     sets how much of the section the set fills; space-between spreads them. */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: min(72svh, 780px);
 }
 
 .work-index__row {
@@ -20,7 +24,6 @@
   gap: var(--space-4);
   align-items: baseline;
   padding-block: var(--space-4);
-  border-bottom: 1px solid var(--linen);
   color: var(--text);
   text-decoration: none;
   transition: padding-inline-start var(--duration-medium) var(--ease-out-expo);

@@ -118,7 +118,11 @@
   z-index: var(--z-base);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  /* The grid bottom-aligns its items (for the portrait); the statement column
+     opts out and sits at the top, so the tall headline always clears the fixed
+     nav instead of being pushed up behind it. */
+  align-self: start;
   /* --margin-x, not --gutter. This column is laid out against the viewport
      rather than inside a centred container, so the raw gutter put the meta
      line and the statement 20px proud of every other block on the page. */

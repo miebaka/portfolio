@@ -120,7 +120,8 @@
   --leading-heading: 1.128;  /* φ^1/4  */
   --leading-intro: 1.272;    /* φ^1/2  */
   --leading-caption: 1.272;  /* φ^1/2  */
-  --leading-body: 1.618;     /* φ      */
+  --leading-body: 1.75;      /* reading — opened past φ so Libre Baskerville's
+                                tall x-height has room to breathe line to line */
   --leading-label: 1;
   --leading-tight: var(--leading-heading);  /* alias (legacy) */
   --leading-snug: var(--leading-intro);     /* alias (legacy) */

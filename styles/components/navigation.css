@@ -37,18 +37,26 @@
   gap: var(--space-4);
 }
 
-/* Wordmark — the name set in the display grotesk, flush to the left margin. */
+/* Logo mark — flush to the left margin, a currentColor silhouette so it flips
+   with the theme. */
 .site-nav__brand {
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
+  min-width: var(--tap-min);
   min-height: var(--tap-min);
-  font-family: var(--font-display);
-  font-weight: var(--weight-bold);
-  font-size: var(--step-h5);
-  letter-spacing: var(--tracking-heading);
+  flex-shrink: 0;
   color: var(--text);
-  white-space: nowrap;
+}
+.site-nav__logo {
+  --_size: 1.875rem; /* 30px — SVG logo proportion; not on 8pt grid by design */
+  display: block;
+  width: var(--_size);
+  height: var(--_size);
+  background-color: currentColor;
+  -webkit-mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
+  mask: url("../../assets/images/miebaka-joshua-logo.svg") no-repeat center / contain;
 }
 
 /* Inline primary links — right-anchored beside the toggle. The label font,
