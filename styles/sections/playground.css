@@ -95,14 +95,34 @@
   transform: translate(2px, -2px);
 }
 
-/* ── Article page ─────────────────────────────────────────────────────── */
+/* ── Article page — centred long-read ─────────────────────────────────────
+   One centred reading column: the most timeless long-form layout. One measure,
+   generous leading, a clear hierarchy. Figures break wider than the text for
+   rhythm; nothing hangs in a margin. */
 .article-page { color: var(--ink); }
 
-.article-hero {
-  /* The extra bottom padding is the old rule's job, done with space. */
-  padding-block: calc(var(--nav-h) + var(--space-6)) var(--space-7);
+/* Scroll-progress rule at the top of the viewport (Nielsen: visibility of
+   system status). Pure CSS via a scroll-driven animation; where the browser
+   does not support it the bar stays at zero width, which is harmless. */
+.article-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: var(--z-nav);
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: article-progress linear both;
+  animation-timeline: scroll(root block);
 }
+@keyframes article-progress { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .article-progress { display: none; } }
 
+/* Hero — a centred feature masthead. */
+.article-hero {
+  padding-block: calc(var(--nav-h) + var(--space-6)) var(--space-5);
+  text-align: center;
+}
 .article-hero__tag {
   display: inline-block;
   font-family: var(--font-label);
@@ -112,18 +132,18 @@
   color: var(--accent-text);
   margin-bottom: var(--space-3);
 }
-
 .article-hero__title {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-display-xl);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-display);
-  max-width: 20ch;
+  max-width: 22ch;
+  margin-inline: auto;
 }
-
 .article-hero__meta {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: var(--space-3);
   margin-top: var(--space-4);
@@ -133,58 +153,43 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
-.article-hero__meta span + span::before {
-  content: "·";
+.article-hero__meta span + span::before,
+.article-hero__meta time + span::before {
+  content: "\00b7";
   margin-right: var(--space-3);
 }
 
-/* ── φ split — headline (major) : byline and reading time (minor) ─────────
-   The meta row is a short label set, so the minor column suits it, and moving
-   it off the stack lifts the article body up onto the golden line the two
-   share.
-
-   Must stay BELOW .article-hero__meta: a media query adds no specificity, so
-   above it the margin-top reset here would lose to the base rule. */
-@media (min-width: 820px) {
-  .article-hero {
-    display: grid;
-    grid-template-columns: var(--col-major) var(--col-minor);
-    column-gap: var(--space-5);
-    align-items: end;
-  }
-  .article-hero__tag   { grid-column: 1 / -1; }
-  .article-hero__title { grid-column: 1; }
-  .article-hero__meta  {
-    grid-column: 2;
-    margin-top: 0;
-    /* The meta is a wrapping flex row of labels; in the minor column it reads
-       better stacked at the bottom edge than squeezed onto one line. */
-    flex-wrap: wrap;
-  }
-}
-
-/* The article keeps the page container (so it lines up with the hero at the
-   gutter) and constrains the measure on the children instead. Putting the
-   68ch cap on the container itself made the whole column centre inside the
-   1400px page, so the body sat indented from the title above it. */
+/* A hairline closes the masthead and opens the read. */
 .article-body {
+  border-top: 1px solid var(--linen);
   padding-block: var(--space-6) var(--space-7);
 }
-.article-body > * {
-  max-width: var(--measure-reading);
+
+/* Every text element sits in one centred measure, whether it is a lead
+   paragraph or nested inside a section block. */
+.article-body p,
+.article-body h2,
+.article-body h3,
+.article-body ul,
+.article-body blockquote {
+  /* A fixed reading column, not the em-based measure: the standfirst is set
+     larger, and an em measure would render it wider than the body, so the
+     centred column would step in and out. One rem width keeps every element on
+     the same two edges. */
+  max-width: 40rem;
+  margin-inline: auto;
 }
 
 .article-body p {
   font-family: var(--font-body);
   font-size: var(--step-body-lg);
   line-height: var(--leading-body);
-  color: color-mix(in srgb, var(--ink) 85%, transparent);
+  color: color-mix(in srgb, var(--ink) 88%, transparent);
   margin-bottom: var(--space-4);
 }
 
-/* Standfirst. Needs its own leading: 1.75 at display size opens the lines so
-   far apart the paragraph stops holding together. */
-.article-body p:first-child {
+/* Standfirst — the opening paragraph, set larger to lead the reader in. */
+.article-body > p:first-child {
   font-size: var(--step-h3);
   line-height: var(--leading-intro);
   color: var(--ink);
@@ -195,25 +200,24 @@
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-h2);
+  line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
-  margin-block: var(--space-5) var(--space-3);
+  margin-block: var(--space-6) var(--space-3);
 }
-
 .article-body h3 {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
-  font-size: var(--step-h3);
+  font-size: var(--step-h4);
+  line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
   margin-block: var(--space-4) var(--space-2);
 }
 
-/* Figures. The image runs the full reading measure and the caption sits
-   under it in label type, so the credit never overlays the picture. */
-/* Wider than the reading measure so the image reads as a picture rather than
-   as an illustration slotted into the text column. */
+/* Figures break wider than the reading measure and centre, so an image reads
+   as a plate in the flow rather than a column-width inset. */
 .article-figure {
-  margin: var(--space-6) 0;
-  max-width: 46em;
+  max-width: 48em;
+  margin: var(--space-6) auto;
 }
 .article-figure picture,
 .article-figure img {
@@ -227,52 +231,51 @@
   font-size: var(--step-meta);
   line-height: var(--leading-body);
   letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
   color: color-mix(in srgb, var(--ink) 68%, transparent);
-  max-width: var(--measure-caption);
+  text-align: center;
 }
 
-/* Lists. Markers are hung outside the measure so the text edge stays flush
-   with the paragraphs above and below it. */
+/* Lists — hung markers, aligned to the reading column. */
 .article-body ul {
   list-style: none;
-  margin: 0 0 var(--space-4);
+  margin-block: 0 var(--space-4);
   padding: 0;
 }
 .article-body li {
   position: relative;
-  padding-left: var(--space-3);
+  padding-inline-start: var(--space-3);
   margin-bottom: var(--space-2);
   font-family: var(--font-body);
   font-size: var(--step-body-lg);
   line-height: var(--leading-body);
-  color: color-mix(in srgb, var(--ink) 85%, transparent);
+  color: color-mix(in srgb, var(--ink) 88%, transparent);
 }
 .article-body li::before {
   content: "";
   position: absolute;
-  left: 0;
-  /* Sits on the first line's optical centre rather than its box top */
+  inset-inline-start: 0;
   top: 0.72em;
   width: 0.4em;
   height: 1px;
   background: var(--accent);
 }
-.article-body li strong {
-  font-weight: var(--weight-bold);
-  color: var(--ink);
-}
+.article-body li strong { font-weight: var(--weight-bold); color: var(--ink); }
 
+/* Pull quote — indented from the accent rule, still on the reading column. */
 .article-body blockquote {
-  border-left: 3px solid var(--accent);
+  border-inline-start: 3px solid var(--accent);
   margin-block: var(--space-5);
-  padding-left: var(--space-4);
+  padding-inline-start: var(--space-4);
 }
 .article-body blockquote p {
+  max-width: none;
+  margin-inline: 0;
   font-family: var(--font-body);
   font-style: italic;
   font-size: var(--step-h3);
   line-height: var(--leading-intro);
-  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
   margin-bottom: var(--space-2);
 }
 .article-body blockquote cite {
@@ -285,10 +288,12 @@
   color: color-mix(in srgb, var(--ink) 68%, transparent);
 }
 
+/* Footer — a centred way back. */
 .article-footer {
-  padding-block: var(--space-7) var(--space-5);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--linen);
+  text-align: center;
 }
-
 .article-footer__back {
   font-family: var(--font-label);
   font-size: var(--step-meta);
@@ -299,96 +304,3 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 .article-footer__back:hover { color: var(--ink); }
-
-/* ── Editorial spread ─────────────────────────────────────────────────────
-   Each h2 and the run of copy under it is one block. The heading hangs in a
-   narrow left column, level with the first line of its own section; the copy
-   runs in a measured column beside it.
-
-   This is the oldest layout in book typography and it does two things a
-   stacked article cannot. The left column gives the reader a standing index
-   of where they are, visible without scrolling back. And it moves the body
-   off the page edge, so the text has a margin to sit against instead of
-   starting at the same place as everything else on the site.
-
-   The grouping is why headings can align with their copy at all. Flat
-   siblings in one grid place a heading on its own row, with the paragraphs
-   below it; wrapping each run in a <section> lets the heading take row 1 of
-   its own block while the first paragraph takes the cell beside it.
-
-   This block sits at the end of the file deliberately. `.article-block > h2`
-   and `.article-body h2` have identical specificity, so source order is the
-   only tie-break; higher up, the margin reset here lost and every heading kept
-   its 48px top margin, dropping it out of line with its own first paragraph. */
-@media (min-width: 62rem) {
-  /* One rail width, one gap, named once. They were written as 18ch, which is
-     font-relative: the standfirst sets type two steps larger, so its indent
-     computed 452px while the body paragraphs computed 375px and the ones
-     inside a block sat at 314px. Three different left edges in one article.
-     rem is font-size-independent, so every column starts in the same place. */
-  /* The left column now carries both the section headings and the figures, so
-     it is sized for a picture, not just a label: wide enough to read as a
-     plate, narrow enough to leave the reading measure intact beside it. */
-  .article-body { --article-rail: 16rem; --article-gap: var(--space-6); }
-
-  /* The block is one continuous reading column with a left rail. The copy flows
-     unbroken in the column; the section heading and the figures hang in the
-     rail as out-of-flow left floats. This is deliberately NOT a grid: a grid
-     ties each figure to a text row, so a tall plate — or two stacked — stretches
-     that row and tears a hole in the prose beside it (a 300px gap where the
-     Dream Crazy plates sat). Floated marginal figures let the text run past at
-     its own rhythm while the plate hangs beside where it was placed.
-
-     display:flow-root makes the block contain its own floats, so a plate taller
-     than its copy can never spill into the next section. max-width:none stops
-     the block inheriting the reading-measure cap .article-body > * applies to
-     paragraphs, which would otherwise crush the whole rail+column into one
-     column's width. */
-  .article-block {
-    display: flow-root;
-    max-width: none;
-    padding-left: calc(var(--article-rail) + var(--article-gap));
-  }
-  /* Copy keeps the reading measure inside the padded column. */
-  .article-block > * { max-width: var(--measure-reading); }
-
-  /* Heading hangs in the rail, level with the top of its section. Pulled into
-     the rail by a negative margin equal to the padding, so it sits at the page
-     edge with the figures. Capped tighter than the picture width — a label,
-     not a plate. */
-  .article-block > h2 {
-    float: left;
-    clear: left;
-    width: var(--article-rail);
-    max-width: 11rem;
-    margin: 0 0 0 calc(-1 * (var(--article-rail) + var(--article-gap)));
-  }
-  /* Figures hang in that same rail, filling it. clear:left stacks consecutive
-     plates down the margin instead of colliding; the copy runs on unbroken. */
-  .article-block > figure {
-    float: left;
-    clear: left;
-    width: var(--article-rail);
-    max-width: none;
-    margin: var(--space-3) 0 var(--space-4) calc(-1 * (var(--article-rail) + var(--article-gap)));
-  }
-  .article-block > figure figcaption { max-width: 100%; }
-
-  /* Content figures that sit in the lead flow (before the first section, so not
-     inside a block) hang in the same rail, so every picture in the article is a
-     left plate rather than a full-width break through the reading column. A
-     following section, being a flow-root, clears below the float on its own. */
-  .article-body > figure {
-    float: left;
-    clear: left;
-    width: var(--article-rail);
-    max-width: none;
-    margin: var(--space-3) 0 var(--space-4) 0;
-  }
-  .article-body > figure figcaption { max-width: 100%; }
-
-  /* The lead paragraphs before the first heading keep the same left edge as
-     the reading column, so the article starts where it continues. */
-  .article-body > p {
-    margin-left: calc(var(--article-rail) + var(--article-gap));
-  }
