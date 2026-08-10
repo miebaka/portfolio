@@ -49,6 +49,24 @@
 
 .site-footer a { color: var(--ink); }
 
+/* Pixel-grid canvas — the particle scene forms the signature from a grid of
+   cells sampled off the SVG. Positioning is also set inline by
+   js/core/footer-scene.js so it works even against a stale-cached stylesheet. */
+.site-footer__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-under);
+  pointer-events: none;
+}
+/* When the scene is active the particles carry the signature — fade the static
+   watermark out beneath them. */
+.site-footer.scene-active::before {
+  opacity: 0;
+  transition: opacity var(--duration-emphasis) var(--ease-standard);
+}
+
 /* Content layers above the watermark */
 .site-footer__grid,
 .site-footer__bottom { position: relative; z-index: var(--z-base); }
