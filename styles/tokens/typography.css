@@ -81,6 +81,7 @@
      tier for the home hero, then drops sharply, so restraint is the default
      and size has to be earned. Body stays at or above 16px throughout. */
   --step-poster: clamp(3rem, 7.5vw, 7rem);                   /* 48 → 112 · full-bleed display */
+  --step-statement: clamp(2.5rem, 6vw, 5.5rem);              /* 40 → 88 · home hero statement (major column) */
   --step-display-xl: clamp(2rem, 4vw, 3.5rem);               /* 32 → 56 */
   --step-hero: clamp(1.875rem, 3.2vw, 3rem);                 /* 30 → 48 · display-lg */
   --step-display: var(--step-hero);                           /* alias — display heading */

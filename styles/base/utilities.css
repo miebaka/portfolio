@@ -55,6 +55,16 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
+/* Optional framing line — sits opposite the label on the same baseline (the
+   section-head is space-between), in the reading voice. One short line that
+   reframes the section, never a second heading. */
+.section-head__frame {
+  max-width: var(--measure-caption);
+  font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: var(--leading-intro);
+  color: var(--text-muted);
+}
 
 /* Accessibility helpers */
 .sr-only {

@@ -77,6 +77,17 @@
     line-height: var(--leading-intro);
     --_w: 26ch;
   }
+
+  /* Mirror case: about.html's hero carries a title but no standfirst, so the
+     minor column had nothing in it and stranded an empty 38% void to the right
+     of the statement. When there is no lede, the title takes the full width
+     and a wider measure, opening the page as a full-bleed statement rather than
+     an 18ch block with a hole beside it. Overrides the .measure-hero utility
+     it also carries (higher specificity). */
+  .hero:not(:has(.hero__lede)) .hero__title {
+    grid-column: 1 / -1;
+    max-width: 30ch;
+  }
 }
 
 /* ── Statement hero — golden ratio grid (content | portrait) ─────────────── */
@@ -87,8 +98,9 @@
   display: grid;
   /* φ ≈ 1.618 — portrait takes the larger column. Uses the grid tokens rather
      than literal percentages so every φ split on the site moves together. */
-  grid-template-columns: var(--col-minor) var(--col-major);
+  grid-template-columns: var(--col-major) var(--col-minor);
   grid-template-areas: "content picture";
+  align-items: end;
   color: var(--ink);
   overflow: hidden;
 }
@@ -129,24 +141,36 @@
 
 .hero-noir__statement {
   font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  /* Sized against the viewport, not the type scale: this heading lives in a
-     38% column, so it has to be tuned to that column's width rather than to
-     the page-wide display step. The cap keeps it from outgrowing the column
-     on very wide screens. */
-  font-size: clamp(1.75rem, 4.2vw, 4rem);
+  font-weight: var(--weight-bold);
+  /* Now the major column (61.8%), so the statement commands the page at the
+     editorial statement step rather than being tuned to a narrow 38% column.
+     Sentence case: the Refined Editorial register reads as a magazine headline,
+     not an all-caps agency slab. */
+  font-size: var(--step-statement);
   line-height: var(--leading-hero);
   letter-spacing: var(--tracking-display-xl);
-  text-transform: uppercase;
   color: inherit;
+  max-width: 16ch;
+  text-wrap: balance;
   /* Hanging punctuation pulls the opening quote out of the measure so the
      left edge of the type stays optically flush with the column. */
   hanging-punctuation: first last;
 }
-/* --clay is 4.09:1 on paper, which clears AA for large text (3:1) but not for
-   body text. At this size it is comfortably in the large-text band, so the
-   true brand colour is used rather than the deeper --accent-text. */
-.hero-noir__statement em { color: var(--clay); font-style: normal; }
+/* Emphasis without the serif-italic accent (removed by owner): the payoff word
+   stays in the grotesk, carried by the surrounding restraint alone. */
+.hero-noir__statement em { font-style: normal; }
+
+/* Serif standfirst beneath the statement — the reading voice does the hiring
+   pitch the headline shouldn't. */
+.hero-noir__lede {
+  margin-top: var(--space-4);
+  max-width: var(--measure-reading);
+  font-family: var(--font-body);
+  font-size: var(--step-body-lg);
+  line-height: var(--leading-intro);
+  color: var(--text-muted);
+}
+.hero-noir__lede strong { color: var(--text); font-weight: var(--weight-regular); }
 
 /* Hero CTA — the one action on the page's first screen. Underline rather than
    a filled button: a solid chip would compete with the statement, which is the
@@ -189,31 +213,31 @@
   .hero-noir__cta-arrow { transition: none; }
 }
 
-/* Right column — portrait. Reveal is the clip-path wipe in base/motion.css. */
+/* Right column — portrait (minor column). A natural-ratio image bottom-aligned
+   to the golden line, not a full-height cover crop: at 38% width a cover crop
+   shows only a sliver of the face. Reveal is the clip-path wipe in
+   base/motion.css. */
 .hero-noir__picture {
   grid-area: picture;
+  align-self: end;
   position: relative;
   overflow: hidden;
 }
 
 .hero-noir__portrait {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  pointer-events: none;
   display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
 }
 
 /* Now-playing chip — floats over the portrait, bottom-left of the picture */
 .hero-noir__chip {
   position: absolute;
   z-index: var(--z-raised);
-  left: calc(38.197% + var(--space-5));
+  right: var(--margin-x);
   bottom: var(--space-5);
-  max-width: calc(61.803% - 2 * var(--space-5));
+  max-width: min(28ch, calc(38.197% - var(--space-5)));
 }
 
 /* Chip styling: always-dark frosted glass — readable over warm portrait */
@@ -243,7 +267,7 @@
     grid-template-areas: "picture" "content";
     min-height: unset;
   }
-  .hero-noir__picture { height: 62svh; }
+  .hero-noir__picture { height: auto; }
   .hero-noir__content {
     gap: var(--space-5);
     padding-top:    var(--space-5);
@@ -264,6 +288,6 @@
   /* Keeps the --nav-h clearance from the base rule; only the φ steps tighten. */
   .hero { padding-block: calc(var(--nav-h) + var(--space-4h)) var(--space-6); }
   .hero__lede { font-size: var(--step-body-lg); max-width: none; }
-  .hero-noir__picture { height: 54svh; }
+  .hero-noir__picture { height: auto; }
   .hero-noir .now-playing__label { display: none; }
 }

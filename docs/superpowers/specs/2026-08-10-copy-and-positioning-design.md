@@ -223,8 +223,9 @@ Not implemented in this phase. Listed so phase 2/3 can execute precisely.
 
 ---
 
-## 12. Open items (must resolve before launch)
+## 12. Open items — resolved with owner 2026-08-10
 
-- `[confirm]` One real, attributed testimonial quote (name + role).
-- `[confirm]` About: "ready to bring that to a team full-time" — keep, soften, or cut.
-- `[confirm]` Any metric stated as "more than 800,000 users" is accurate and current.
+- ~~Testimonial quote~~ **Parked.** No quote for now; the testimonial block is omitted from
+  the build rather than shipped empty. Can be added later without structural change.
+- ~~About hook~~ **Confirmed.** Keep "and I'm ready to bring that to a team full-time."
+- ~~800,000+ users figure~~ **Confirmed** accurate and current; cleared for the hero.

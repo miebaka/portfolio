@@ -37,11 +37,12 @@ export function initMenu() {
     document.body.classList.remove("menu-open");
     openBtn.setAttribute("aria-expanded", "false");
 
-    /* Wait for the fade before dialog.close() so the overlay animates out
-       rather than snapping away. The dialog transitions several properties;
-       only opacity marks the end of the visible exit, and a timeout backstop
-       covers the case where the transition never fires (reduced motion, a
-       backgrounded tab) and would otherwise strand the dialog open. */
+    /* Wait for the exit animation before dialog.close() so the overlay animates
+       out rather than snapping away. The curtain retracts on clip-path (normal
+       motion) and the panel fades on opacity (reduced motion); either marks the
+       end of the visible exit. A timeout backstop covers the case where no
+       transition fires (a backgrounded tab) and would otherwise strand the
+       dialog open. */
     let done = false;
     const finish = () => {
       if (done) return;
@@ -51,7 +52,7 @@ export function initMenu() {
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     };
     const onEnd = (e) => {
-      if (e.target === menu && e.propertyName === "opacity") finish();
+      if (e.target === menu && (e.propertyName === "clip-path" || e.propertyName === "opacity")) finish();
     };
     menu.addEventListener("transitionend", onEnd);
     setTimeout(finish, 600);

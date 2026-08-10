@@ -1,91 +1,50 @@
-/* Render — projects: the work grid (Saint-Louvent cards) and the client marquee. */
+/* Render — projects: the work index (editorial rows) and the client marquee. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-/* Colour field on top, caption underneath — the editorial treatment. The
-   title sits outside the tile rather than centred inside it, so the colour
-   field reads as the work and the type reads as the label for it. */
-/* Grid tiles never exceed roughly half the page width, so the cover ladder
-   stops at 1080 even where wider variants exist for the full-bleed bands. */
-const COVER_WIDTHS = [540, 810, 1080];
-
-function coverHTML(project) {
-  if (!project.cover) return "";
-  const src = basePath() + "assets/images/optimized/" + safeToken(project.cover);
-  const set = (ext) =>
-    COVER_WIDTHS.map((w) => src + "-" + w + "." + ext + " " + w + "w").join(", ");
-  /* Decorative: the card's own name and category sit right below it in the
-     caption, so alt text here would just repeat them to a screen reader. */
-  return (
-    "<picture>" +
-      '<source type="image/avif" srcset="' + set("avif") + '" sizes="(max-width: 56rem) 100vw, 50vw">' +
-      '<source type="image/webp" srcset="' + set("webp") + '" sizes="(max-width: 56rem) 100vw, 50vw">' +
-      '<img class="sl-card__img" src="' + src + '-810.jpg" alt="" aria-hidden="true"' +
-        ' loading="lazy" decoding="async">' +
-    "</picture>"
-  );
-}
-
-function workCard(project) {
-  const base = basePath();
-  const services = project.tags.map((t) => "<li>" + esc(t) + "</li>").join("");
+/* The work is an editorial index, not a gallery of cards: numbered rows, the
+   project name at display scale, category and year. Full-bleed imagery lives in
+   the case studies, so a reference here is a name and a decision, not six
+   competing photographs. Rows indent and the name shifts to the accent on
+   hover and focus — it looks interactive because it is. */
+function workRow(project, i, base) {
+  const num = String(i + 1).padStart(2, "0");
   const inner =
-    '<span class="sl-card__frame" data-wipe>' +
-      '<span class="sl-card__bg"></span>' +
-      coverHTML(project) +
-      '<span class="sl-card__scrim"></span>' +
-    "</span>" +
-    /* One row, pinned to the foot of the card. The title holds the left edge
-       in both states; the scope arrives on the right of that same row on
-       hover, so the two are always on one baseline rather than the scope
-       appearing somewhere else in the frame. */
-    '<span class="sl-card__meta">' +
-      '<span class="sl-card__name">' + esc(project.title) + "</span>" +
-      '<span class="sl-card__scope">' + esc(project.tags.join(", ")) + "</span>" +
-    "</span>";
-  /* No case study yet. This is a <div>, not an <a>, so there is nothing for
-     aria-disabled to apply to — it was announcing nothing. A visible caption
-     states the status instead, which reaches everyone rather than only AT. */
+    '<span class="work-index__idx">' + num + "</span>" +
+    '<span class="work-index__name">' + esc(project.title) + "</span>";
+
+  /* A project with no case study behind it is a real row, but not a link:
+     there is nothing to open yet, so it states its status in the meta slot
+     rather than promising a page that is not there. */
   if (project.caseReady === false) {
     return (
-      '<div class="sl-card sl-card--pending">' +
-      inner +
-      '<span class="sl-card__pending">Case study in progress</span>' +
+      '<div class="work-index__row work-index__row--pending reveal">' +
+        inner +
+        '<span class="work-index__meta">In progress</span>' +
       "</div>"
     );
   }
-  return '<a class="sl-card" href="' + base + "work/" + esc(project.slug) + '.html">' + inner + "</a>";
+
+  const meta = esc(project.category) + " &middot; " + esc(project.year);
+  return (
+    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html">' +
+      inner +
+      '<span class="work-index__meta">' + meta + "</span>" +
+    "</a>"
+  );
 }
 
-/* A side-scrolling row of squares. The scrolling is the browser's; the sizing
-   is a CSS hover rule. The title and tags are static markup emitted here, so
-   js/core/work-rail.js adds only the cursor-following pill, the one thing CSS
-   cannot express.
-
-   touch-action: pan-y tells the browser to keep vertical panning for itself,
-   so a downward drag scrolls the page rather than being absorbed by the
-   horizontal scroller under the finger. */
+/* Home shows the featured set; the Work page shows everything. Same data, same
+   renderer, differentiated only by which page is asking. */
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
-  const items = SITE.projects || [];
-  el.classList.add("sl-rail");
-
-  el.innerHTML =
-    '<div class="sl-rail__viewport" tabindex="0" role="group"' +
-      ' aria-roledescription="carousel" aria-label="Selected work"' +
-      ' style="touch-action: pan-y">' +
-      '<div class="sl-track">' + items.map(workCard).join("") + "</div>" +
-    "</div>" +
-    '<span class="sl-rail__pill" aria-hidden="true"></span>';
-
-  el.querySelectorAll(".sl-card").forEach((card, i) => {
-    const p = items[i];
-    card.style.setProperty("--tile", p.tone);
-    /* Only the mobile stack uses this; the desktop row is square by rule. */
-    if (p.ratio) card.style.setProperty("--ratio", p.ratio);
-  });
+  const base = basePath();
+  const all = SITE.projects || [];
+  const items = document.body.dataset.page === "work" ? all : all.filter((p) => p.featured);
+  el.classList.add("work-index");
+  el.innerHTML = items.map((project, i) => workRow(project, i, base)).join("");
 }
 
 function clientItem(client) {
@@ -93,7 +52,11 @@ function clientItem(client) {
   const inner = client.logo
     ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '"' + dims + ' decoding="async">'
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
-  return '<li class="marquee__item">' + inner + "</li>";
+  /* Optical-balance multiplier, applied to the mark's height in CSS. Numbers
+     only; guarded so a bad value can never inject a style. */
+  const scale = typeof client.scale === "number" && client.scale > 0 ? client.scale : 1;
+  const style = scale !== 1 ? ' style="--logo-scale:' + scale + '"' : "";
+  return '<li class="marquee__item"' + style + ">" + inner + "</li>";
 }
 
 export function renderClients() {

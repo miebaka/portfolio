@@ -42,6 +42,13 @@
   --ease-out-expo:  cubic-bezier(0.19, 1, 0.22, 1);   /* very punchy       */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);    /* medium, versatile */
 
+  /* Read off leandra-isler.ch's Services overlay. The panel curve is a long,
+     heavy quart-out for surfaces that should feel like mass settling; the
+     items curve is quicker and crisper for type placed on top. Kept as shared
+     tokens so the menu and the nav plus-toggle move on the same pair. */
+  --ease-panel: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-items: cubic-bezier(0.25, 0.74, 0.22, 0.99);
+
   /* On-screen repositioning — symmetric acceleration both ends */
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 

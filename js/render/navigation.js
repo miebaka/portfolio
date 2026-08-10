@@ -44,7 +44,10 @@ export function renderNavigation() {
   el.innerHTML =
     '<div class="container site-nav__inner">' +
     brandHTML() +
-    '<button class="site-nav__menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu">Menu</button>' +
+    '<button class="site-nav__menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-expanded="false" aria-controls="site-menu">' +
+      '<span class="site-nav__menu-label">Menu</span>' +
+      '<span class="site-nav__menu-plus" aria-hidden="true"></span>' +
+    "</button>" +
     '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">' +
       '<svg class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
         '<circle cx="12" cy="12" r="4" fill="currentColor"/>' +
@@ -124,8 +127,8 @@ export function renderMenu() {
   const socials = (SITE.socials || [])
     .filter((s) => s && s.href && s.label)
     .map((s) =>
-      '<a class="site-menu__social" href="' + safeURL(s.href) +
-      '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + "</a>"
+      '<li><a class="site-menu__social" href="' + safeURL(s.href) +
+      '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + "</a></li>"
     )
     .join("");
 
@@ -134,9 +137,13 @@ export function renderMenu() {
   menu.id = "site-menu";
   menu.setAttribute("aria-label", "Site menu");
   /* Native <dialog> provides built-in focus trap, AT announcement, and
-     Escape handling — no role/aria-modal needed (implicit on dialog element). */
-  /* Bar mirrors the site-nav's 3-column grid so Close sits exactly where the
-     Menu trigger is — the crossfade reads as one button morphing in place. */
+     Escape handling — no role/aria-modal needed (implicit on dialog element).
+
+     Layout is an editorial spread, not a centred link stack: the navigation
+     list holds the major column and an identity aside (status, email, socials,
+     locus) holds the minor one, so the open menu reads as a designed page —
+     a contact card and an index at once — rather than a modal list. The bar
+     keeps the brand at the left margin and Close at the right. */
   menu.innerHTML =
     '<div class="container site-menu__bar">' +
       brandHTML() +
@@ -144,15 +151,24 @@ export function renderMenu() {
         '<span class="site-menu__close-label">Close</span>' +
         '<span class="site-menu__close-mark" aria-hidden="true"></span>' +
       "</button>" +
-      '<span class="site-menu__bar-spacer" aria-hidden="true"></span>' +
     "</div>" +
-    '<nav class="site-menu__nav" aria-label="Primary">' +
-      '<ul class="site-menu__list">' + items + "</ul>" +
-    "</nav>" +
-    '<div class="container site-menu__foot">' +
-      '<a class="site-menu__email" data-href="email" href="' + safeURL('mailto:' + SITE.email) + '">' +
-        esc(SITE.email) + "</a>" +
-      '<div class="site-menu__socials">' + socials + "</div>" +
+    '<div class="container site-menu__spread">' +
+      '<nav class="site-menu__nav" aria-label="Primary">' +
+        '<ul class="site-menu__list">' + items + "</ul>" +
+      "</nav>" +
+      '<aside class="site-menu__aside" aria-label="Studio details">' +
+        '<p class="site-menu__note">' + esc(SITE.availability) + "</p>" +
+        '<div class="site-menu__card">' +
+          '<span class="site-menu__card-label">Get in touch</span>' +
+          '<a class="site-menu__email" data-href="email" href="' + safeURL('mailto:' + SITE.email) + '">' +
+            esc(SITE.email) + "</a>" +
+          '<ul class="site-menu__socials">' + socials + "</ul>" +
+          '<p class="site-menu__locus">' + esc(SITE.location) +
+            '<span class="site-menu__locus-sep" aria-hidden="true"></span>' +
+            '<span class="site-menu__locus-tz">' + esc(SITE.timezone) + "</span>" +
+          "</p>" +
+        "</div>" +
+      "</aside>" +
     "</div>";
   document.body.appendChild(menu);
 }

@@ -46,7 +46,10 @@
   color: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 .marquee__item img {
-  height: calc(var(--space-4) * 1.48); /* 32px x 1.48 */
+  /* Height is the base rhythm times the per-logo optical scale (set inline by
+     the renderer from data/site.js; 1 when absent). This is what balances the
+     row by weight instead of by bounding box. */
+  height: calc(var(--space-4) * 1.48 * var(--logo-scale, 1)); /* 32px x 1.48 */
   width: auto;
   max-width: none;
   display: block;
@@ -97,7 +100,7 @@
   color: var(--ink);
 }
 .marquee--light .marquee__item img {
-  height: calc(var(--space-4h) * 1.48); /* 40px x 1.48 */
+  height: calc(var(--space-4h) * 1.48 * var(--logo-scale, 1)); /* 40px x 1.48 */
   filter: brightness(0);
   opacity: 0.35;
 }

@@ -111,6 +111,53 @@
   }
 }
 
+/* ── What I do — editorial index ──────────────────────────────────────────
+   Numbered rows matching the work index: label number, name at heading scale,
+   description in the reading voice. Consistency with the work rows is the point
+   (Vignelli) — the two sections read as one system. The About page's Experience
+   list keeps the separate .cap-list treatment above. */
+.caps { border-top: 1px solid var(--text); }
+.caps__row {
+  display: grid;
+  grid-template-columns: var(--space-5) minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--linen);
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+.caps__num {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+}
+.caps__name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--step-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.caps__meta {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: var(--leading-intro);
+}
+@media (hover: hover) and (pointer: fine) {
+  .caps:has(.caps__row:hover) .caps__row:not(:hover) { opacity: 0.5; }
+  .caps__row:hover .caps__name { color: var(--accent); }
+}
+@media (max-width: 40rem) {
+  .caps__row { grid-template-columns: var(--space-4) 1fr; row-gap: var(--space-1); }
+  .caps__meta { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .caps__row, .caps__name { transition: none; }
+}
+
 /* About Me home-page wrapper — Experience, What I Do, Quote, More About Me */
 /* No background: identical to the page surface, and an opaque repaint here
    would block the cursor field beneath it. */

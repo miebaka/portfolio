@@ -74,14 +74,29 @@
 
 /* About-page mission statement — the page's one display moment. It stands
    alone at a wide measure with nothing beside it; the surrounding whitespace
-   is what gives it weight, so it needs no image to lean on. */
+   is what gives it weight, so it needs no image to lean on.
+
+   Set justified, edge to edge, the way leandra-isler.ch sets its display
+   lines: both margins are hard, so the block reads as a typeset column rather
+   than a ragged paragraph, and the word-rise reveal (base/motion.css) unmasks
+   it line by line. The measure is the full page width now, not a 22ch cap —
+   the spread is the point, and at --step-hero that runs ~9 words a line, wide
+   enough that justification never opens rivers.
+
+   text-align-last is left deliberately at its default: the last line here is a
+   short orphan, and stretching it edge to edge is the broken version of this
+   look, not the intended one. Interior lines carry the spread; the last line
+   sits naturally. */
 .about-statement {
   font-family: var(--font-display);
   font-size: var(--step-hero);
   font-weight: var(--weight-regular);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-display);
-  max-width: 22ch;
+  text-align: justify;
+  /* No hyphenation: broken words in display type read as a defect, and the
+     measure is wide enough not to need them. */
+  hyphens: none;
 }
 .about-statement em { color: var(--clay); font-style: italic; }
 

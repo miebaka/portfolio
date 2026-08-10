@@ -1,37 +1,45 @@
 /* ==========================================================================
-   Component · Fullscreen menu — editorial curtain.
+   Component · Fullscreen menu — an editorial spread on a curtain.
 
-   Rebuilt. The previous version stacked an accent copy of every label over the
-   base copy and animated each glyph's scaleY, a kinetic-type mechanic lifted
-   from an agency site. It was loud, it broke kerning, and it needed an
-   aria-label to repair the accessible name.
+   Rebuilt as a designed page, not a modal link list. Three references are
+   merged, each earning its place:
 
-   This version is built on two moves and nothing else:
+     1. The curtain (editorial). The panel arrives as a clip-path inset()
+        retracting from the top edge over --menu-drop — one compositor-only
+        property, interruptible, no layout. The surface is drawn down over the
+        page rather than faded in: a magazine turning the page.
 
-     1. The panel arrives as a curtain. clip-path inset() retracts from the top
-        edge over --menu-drop, so the surface is drawn down over the page
-        rather than faded in. One property, compositor-friendly, interruptible.
+     2. The spread (agency / studio sites like leandra-isler.ch). Open, it is
+        two columns: the navigation list holds the major φ column, and an
+        identity aside — status, email, socials, locus — holds the minor one.
+        The menu reads as a contact card and an index at once, which is what
+        lifts it past "a list on a scrim".
 
-     2. Each row rises from behind its own baseline. The word sits in an
-        overflow-hidden mask and translates from 105% to 0, staggered by
-        --menu-step per row, starting only after the curtain has mostly
-        landed (--menu-hold).
+     3. The masked stagger and hover reveal (Apple-style motion). Each label
+        rises from behind its own baseline, rows staggered by --menu-step. On
+        hover the word nudges toward the reader, its index turns to the accent,
+        and a hairline rule wipes in under it — the row acknowledges the
+        pointer without shouting.
 
-   Easing is cubic-bezier(0.16, 1, 0.3, 1) throughout — a long expo-out tail
-   that decelerates for most of its duration. It is what makes the motion read
-   as weight rather than speed, and using one curve for both moves is why the
-   panel and the words feel like one gesture.
+   Accessibility is not a fourth thing bolted on; it is the substrate. The
+   panel is a native <dialog> opened with showModal(), so the browser provides
+   the focus trap, the background inert-ing (top layer), the AT announcement,
+   and Escape. This file only dresses it. Motion collapses to a plain fade
+   under prefers-reduced-motion, and every interactive target clears 44px.
+
+   Easing: --ease-panel (a long quart-out) carries the curtain; --ease-items
+   (quicker, crisper) carries the rows and the hover. Both are read off
+   leandra-isler.ch and defined once in tokens/motion.css.
    ========================================================================== */
 
 .site-menu {
   --menu-fg: var(--ink);
   --menu-bg: var(--paper);
-  /* Curtain 760ms, rows begin at 240ms and step 70ms apart. The last of five
-     rows therefore starts at 520ms and lands well inside the first second. */
-  --menu-drop: 760ms;
-  --menu-hold: 240ms;
-  --menu-step: 70ms;
-  --menu-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --menu-drop: 600ms;
+  --menu-hold: 200ms;
+  --menu-step: 60ms;
+  --menu-ease: var(--ease-panel);
+  --menu-item-ease: var(--ease-items);
 
   position: fixed;
   inset: 0;
@@ -46,31 +54,34 @@
   outline: none;
 
   /* A closed <dialog> is display:none by UA rule, and that is what keeps its
-     contents out of the tab order and out of the accessibility tree. Setting
-     display unconditionally overrode it: the panel was clipped away visually
-     by clip-path but still laid out, still focusable, and still announced, so
-     a keyboard user tabbing the page walked through five invisible menu links
-     before reaching the content. Gating on [open] restores the UA behaviour.
-
-     The curtain still animates: menu.js calls showModal() (which sets [open],
-     flipping display to grid), forces a reflow so the closed clip-path is
-     computed, and only then adds .is-open. */
+     contents out of the tab order and the accessibility tree. menu.js calls
+     showModal() (which sets [open], flipping display to grid), forces a reflow
+     so the closed clip-path is computed, then adds .is-open to run the curtain. */
   display: none;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
 
   /* Opaque, not translucent. A frosted panel over live content is a product
      UI idiom; a magazine turns the page. */
   background: var(--menu-bg);
   color: var(--menu-fg);
 
-  /* Closed state: fully retracted to the top edge. */
+  /* Closed state: fully retracted to the top edge. Opacity is in the
+     transition as well as clip-path so the close in menu.js has a property
+     whose transitionend reliably marks the end of the exit, and so the panel
+     still eases out if the curtain is ever disabled. */
   clip-path: inset(0 0 100% 0);
-  transition: clip-path var(--menu-drop) var(--menu-ease);
-  overflow: hidden;
+  opacity: 1;
+  transition: clip-path var(--menu-drop) var(--menu-ease),
+              opacity   var(--menu-drop) var(--menu-ease);
+  /* x hidden (nothing should ever scroll sideways under the curtain); y auto so
+     a viewport too short for the spread — a phone, a small laptop — scrolls to
+     reach the contact block instead of clipping it. The clip-path curtain still
+     hides everything above its edge regardless. */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
 }
 .site-menu[open] { display: grid; }
 .site-menu::backdrop { background: none; }
-
 .site-menu.is-open { clip-path: inset(0 0 0 0); }
 
 /* Scroll lock while open. */
@@ -78,18 +89,15 @@ body.menu-open { overflow: hidden; }
 
 /* ── Bar: brand left, close right ───────────────────────────────────────── */
 .site-menu__bar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   height: var(--nav-h);
 }
-.site-menu__bar .site-nav__brand { color: var(--menu-fg); justify-self: start; }
-.site-menu__bar-spacer { justify-self: end; }
+.site-menu__bar .site-nav__brand { color: var(--menu-fg); }
 
 /* A word, not a glyph. "Close" says what it does and needs no aria-label. */
 .site-menu__close {
-  grid-column: 3;
-  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -112,8 +120,7 @@ body.menu-open { overflow: hidden; }
   outline: 2px solid var(--accent-text);
   outline-offset: 6px;
 }
-/* The mark is decorative next to the word; kept as a hairline cross rather
-   than a heavy X so it reads as a mark, not a button. */
+/* A hairline cross rather than a heavy X, so it reads as a mark, not a button. */
 .site-menu__close-mark {
   position: relative;
   width: 12px;
@@ -130,13 +137,38 @@ body.menu-open { overflow: hidden; }
 .site-menu__close-mark::before { transform: rotate(45deg); }
 .site-menu__close-mark::after  { transform: rotate(-45deg); }
 
-/* ── The list ───────────────────────────────────────────────────────────── */
-.site-menu__nav {
-  align-self: center;
+/* ── Spread: list (major) · identity (minor) ─────────────────────────────── */
+.site-menu__spread {
+  /* Centred in the 1fr row when it fits; `safe` falls back to top-aligned when
+     the spread is taller than the row (short viewport), so the first rows are
+     never pushed above the scroll origin and clipped. */
+  align-self: safe center;
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--gutter);
+  padding-block: var(--space-5);
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+@media (min-width: 820px) {
+  .site-menu__spread {
+    grid-template-columns: var(--col-major) var(--col-minor);
+    column-gap: var(--space-6);
+    /* Both columns stretch to the taller one (the list), so the aside can pin
+       its status to the top and its card to the bottom of the same height. */
+    align-items: stretch;
+  }
+}
+
+/* ── The list ───────────────────────────────────────────────────────────── */
+.site-menu__nav {
+  /* Centre the rows within the column so a short list still reads as composed. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .site-menu__list {
   list-style: none;
@@ -144,18 +176,13 @@ body.menu-open { overflow: hidden; }
   padding: 0;
 }
 
-/* No rules between rows. The index numbers and the row height give the list
-   its structure; ruled rows made a full-screen menu look like a settings
-   table. */
-
 .site-menu__link {
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-4);
-  /* Generous rows are all of the structure in this overlay now that the rules
-     between them are gone. */
-  padding-block: clamp(var(--space-4), 3vw, var(--space-5h));
+  padding-block: clamp(var(--space-3), 2.4vw, var(--space-5));
   text-decoration: none;
   color: var(--menu-fg);
   transition: opacity var(--duration-standard) var(--ease-standard);
@@ -164,38 +191,44 @@ body.menu-open { overflow: hidden; }
   outline: 2px solid var(--accent-text);
   outline-offset: 4px;
 }
+/* Hairline rule that wipes in from the left under the hovered/focused row —
+   the one restrained "you are here" signal, on the row curve. */
+.site-menu__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(var(--space-2), 1.6vw, var(--space-3));
+  height: 1px;
+  background: var(--accent-text);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-medium) var(--ease-items);
+}
 
 /* The mask. overflow:hidden is what the word rises from behind. */
 .site-menu__mask {
   display: block;
   overflow: hidden;
-  /* phi^1/2 leaves 0.136em of half-leading under the baseline; this face
-     descends about 0.25em. The shortfall is what clipped "Playground" and
-     "Services". Padding the mask by it costs nothing visually, since the
-     descender simply occupies space that was already blank. */
+  /* Padded by the descender so the mask never clips "Playground"'s tail. */
   padding-bottom: 0.18em;
+  /* Nudged toward the reader on hover; independent of the word's own rise
+     transform, which lives on the inner element. */
+  transition: transform var(--duration-medium) var(--ease-items);
 }
 .site-menu__word {
   display: block;
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--step-h1);
-  /* phi^1/2. The previous 1.05 was tighter than the face's own ascent plus
-     descent, so the mask cut the tails off "Playground" and "y" at rest, not
-     only mid-animation. A line box that contains the glyph box is the fix;
-     padding on the mask only moved the crop. */
   line-height: var(--leading-intro);
   letter-spacing: var(--tracking-heading);
-
-  /* Travels its own height plus the mask padding, or the descender
-     would sit visible below the fold at rest. */
+  /* Travels its own height plus the mask padding. On the row curve. */
   transform: translateY(calc(100% + 0.18em));
-  transition: transform var(--menu-drop) var(--menu-ease);
+  transition: transform var(--menu-drop) var(--menu-item-ease);
 }
 .site-menu.is-open .site-menu__word {
   transform: translateY(0);
-  /* Row index is set inline by the renderer, so the stagger is data-driven
-     rather than a hand-written nth-child ladder. */
   transition-delay: calc(var(--menu-hold) + var(--row-i, 0) * var(--menu-step));
 }
 
@@ -206,84 +239,167 @@ body.menu-open { overflow: hidden; }
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
   opacity: 0;
-  transition: opacity var(--duration-standard) var(--ease-standard);
+  transition: opacity var(--duration-standard) var(--ease-standard),
+              color   var(--duration-fast) var(--ease-standard);
 }
 .site-menu.is-open .site-menu__num {
   opacity: 1;
   transition-delay: calc(var(--menu-hold) + var(--row-i, 0) * var(--menu-step) + 120ms);
 }
 
-/* Current page reads through the number, not a colour change. */
-.site-menu__link[aria-current="page"] .site-menu__num {
-  color: var(--accent-text);
-}
+/* Current page reads through the number. */
+.site-menu__link[aria-current="page"] .site-menu__num { color: var(--accent-text); }
 
-/* Focus one, quiet the rest. Opacity only: no colour shift, no underline, no
-   movement. The restraint is the point. */
 @media (hover: hover) and (pointer: fine) {
-  .site-menu__list:has(.site-menu__link:hover) .site-menu__link:not(:hover) {
-    opacity: 0.3;
-  }
+  /* Focus one, quiet the rest. */
+  .site-menu__list:has(.site-menu__link:hover) .site-menu__link:not(:hover) { opacity: 0.3; }
+  .site-menu__link:hover .site-menu__mask { transform: translateX(var(--space-3)); }
+  .site-menu__link:hover .site-menu__num  { color: var(--accent-text); opacity: 1; }
+  .site-menu__link:hover::after { transform: scaleX(1); }
 }
-.site-menu__list:has(.site-menu__link:focus-visible) .site-menu__link:not(:focus-visible) {
-  opacity: 0.3;
+.site-menu__list:has(.site-menu__link:focus-visible) .site-menu__link:not(:focus-visible) { opacity: 0.3; }
+.site-menu__link:focus-visible .site-menu__mask { transform: translateX(var(--space-3)); }
+.site-menu__link:focus-visible .site-menu__num  { color: var(--accent-text); opacity: 1; }
+.site-menu__link:focus-visible::after { transform: scaleX(1); }
+
+/* ── Identity aside ─────────────────────────────────────────────────────── */
+.site-menu__aside {
+  display: flex;
+  flex-direction: column;
+  /* Grouped and centred against the list's own vertical centre, rather than
+     pinned top-and-bottom — the top/bottom anchoring left a large dead void in
+     the middle of the column and read as half-empty. Status and card stay
+     distinct via the gap, but sit as one block beside the index. */
+  justify-content: center;
+  gap: var(--space-6);
+  /* Fades up as one block after the last row has landed. */
+  opacity: 0;
+  transform: translateY(0.6em);
+  transition: opacity var(--duration-slow) var(--ease-standard),
+              transform var(--duration-slow) var(--ease-items);
+}
+.site-menu.is-open .site-menu__aside {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--menu-hold) + 5 * var(--menu-step));
 }
 
-/* ── Foot ───────────────────────────────────────────────────────────────── */
-.site-menu__foot {
+/* Status line — a standfirst, set in display italic so it reads as voice
+   rather than label. */
+.site-menu__note {
+  font-family: var(--font-display);
+  font-size: var(--step-h4);
+  font-style: italic;
+  line-height: var(--leading-intro);
+  letter-spacing: var(--tracking-heading);
+  color: color-mix(in srgb, var(--menu-fg) 80%, transparent);
+  max-width: 22ch;
+}
+
+/* Contact card — email large, socials and locus in label type beneath. */
+.site-menu__card {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding-bottom: var(--space-5);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.site-menu__card-label {
   font-family: var(--font-label);
   font-size: var(--step-meta);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
+  color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
 }
+.site-menu__email {
+  font-family: var(--font-display);
+  font-size: var(--step-h4);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  color: var(--menu-fg);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--menu-fg) 25%, transparent);
+  padding-bottom: 2px;
+  transition: color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-menu__email:hover {
+    color: var(--accent-text);
+    border-bottom-color: var(--accent-text);
+  }
+}
+.site-menu__email:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
+
 .site-menu__socials {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
 }
-.site-menu__email,
 .site-menu__social {
   display: inline-flex;
   align-items: center;
-  /* Standalone links, so the WCAG 2.2 inline exception does not apply. */
   min-height: var(--tap-min);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: color-mix(in srgb, var(--menu-fg) 62%, transparent);
   text-decoration: none;
   transition: color var(--duration-fast) var(--ease-standard);
 }
 @media (hover: hover) and (pointer: fine) {
-  .site-menu__email:hover,
   .site-menu__social:hover { color: var(--menu-fg); }
 }
-.site-menu__email:focus-visible,
 .site-menu__social:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 4px;
 }
 
-/* The foot is the last thing to arrive, after the final row. */
-.site-menu__foot,
+/* Locus — where and when. A dot rule separates place from timezone. */
+.site-menu__locus {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--menu-fg) 45%, transparent);
+}
+.site-menu__locus-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ── Bar reveal — arrives with the aside ────────────────────────────────── */
 .site-menu__bar {
   opacity: 0;
   transition: opacity var(--duration-standard) var(--ease-standard);
 }
-.site-menu.is-open .site-menu__foot,
 .site-menu.is-open .site-menu__bar {
   opacity: 1;
   transition-delay: var(--menu-hold);
 }
 
+/* ── Small screens — stack, and give the list room ──────────────────────── */
+@media (max-width: 820px) {
+  .site-menu__aside { margin-top: var(--space-4); }
+}
+
 /* ── Reduced motion ─────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .site-menu {
-    /* No curtain: the panel is simply there. clip-path still has to resolve to
-       the open state or the menu would stay invisible. */
+    /* No curtain: the panel is simply there. clip-path still resolves to the
+       open state or the menu would stay invisible. */
     transition: opacity var(--duration-fast) linear;
     clip-path: inset(0 0 0 0);
     opacity: 0;
@@ -291,7 +407,13 @@ body.menu-open { overflow: hidden; }
   }
   .site-menu.is-open { opacity: 1; visibility: visible; }
   .site-menu__word { transform: none; transition: none; }
+  .site-menu__mask { transition: none; }
+  .site-menu__link::after { transition: none; }
   .site-menu__num,
-  .site-menu__foot,
-  .site-menu__bar { opacity: 1; transition: none; }
+  .site-menu__aside,
+  .site-menu__bar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

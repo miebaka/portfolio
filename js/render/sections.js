@@ -6,23 +6,19 @@ import { MOUNT } from "../core/contract.js";
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  el.classList.add("cap-list");
+  el.classList.add("caps");
   el.innerHTML = SITE.capabilities
-    .map((c) =>
-      '<div class="cap-row reveal">' +
-      '<span class="cap-row__name">' + esc(c.title) + "</span>" +
-      '<span class="cap-row__meta">' + esc(c.meta || "") + "</span>" +
+    .map((c, i) =>
+      '<div class="caps__row reveal">' +
+      '<span class="caps__num">' + String(i + 1).padStart(2, "0") + "</span>" +
+      '<span class="caps__name">' + esc(c.title) + "</span>" +
+      '<span class="caps__meta">' + esc(c.meta || "") + "</span>" +
       "</div>"
     )
     .join("");
-  const rows = el.querySelectorAll(".cap-row");
-  rows.forEach((row, i) => {
-    row.style.setProperty("--reveal-i", i);
-    /* The stagger is interpolated in CSS from these two numbers, so the
-       distribution stays correct if a capability is added or removed. */
-    row.style.setProperty("--row-i", i);
-    row.style.setProperty("--row-n", rows.length);
-  });
+  /* Stagger the scroll reveal down the list — the same --reveal-i the work
+     index and menu use, so the rhythm matches across the site. */
+  el.querySelectorAll(".caps__row").forEach((row, i) => row.style.setProperty("--reveal-i", i));
 }
 
 /* Renders nothing at all unless there is a real quote with a real attributor.

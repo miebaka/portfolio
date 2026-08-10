@@ -172,8 +172,6 @@
 .article-body {
   padding-block: var(--space-6) var(--space-7);
 }
-
-}
 .article-body > * {
   max-width: var(--measure-reading);
 }
@@ -332,27 +330,66 @@
      computed 452px while the body paragraphs computed 375px and the ones
      inside a block sat at 314px. Three different left edges in one article.
      rem is font-size-independent, so every column starts in the same place. */
-  .article-body { --article-rail: 11rem; --article-gap: var(--space-6); }
+  /* The left column now carries both the section headings and the figures, so
+     it is sized for a picture, not just a label: wide enough to read as a
+     plate, narrow enough to leave the reading measure intact beside it. */
+  .article-body { --article-rail: 16rem; --article-gap: var(--space-6); }
 
+  /* The block is one continuous reading column with a left rail. The copy flows
+     unbroken in the column; the section heading and the figures hang in the
+     rail as out-of-flow left floats. This is deliberately NOT a grid: a grid
+     ties each figure to a text row, so a tall plate — or two stacked — stretches
+     that row and tears a hole in the prose beside it (a 300px gap where the
+     Dream Crazy plates sat). Floated marginal figures let the text run past at
+     its own rhythm while the plate hangs beside where it was placed.
+
+     display:flow-root makes the block contain its own floats, so a plate taller
+     than its copy can never spill into the next section. max-width:none stops
+     the block inheriting the reading-measure cap .article-body > * applies to
+     paragraphs, which would otherwise crush the whole rail+column into one
+     column's width. */
   .article-block {
-    display: grid;
-    grid-template-columns: var(--article-rail) minmax(0, var(--measure-reading));
-    column-gap: var(--article-gap);
-    align-items: start;
+    display: flow-root;
+    max-width: none;
+    padding-left: calc(var(--article-rail) + var(--article-gap));
   }
-  /* Everything defaults to the reading column. */
-  .article-block > * { grid-column: 2; }
+  /* Copy keeps the reading measure inside the padded column. */
+  .article-block > * { max-width: var(--measure-reading); }
+
+  /* Heading hangs in the rail, level with the top of its section. Pulled into
+     the rail by a negative margin equal to the padding, so it sits at the page
+     edge with the figures. Capped tighter than the picture width — a label,
+     not a plate. */
   .article-block > h2 {
-    grid-column: 1;
-    /* Level with the first line of the paragraph beside it, not with the top
-       of its box: the two faces have different cap heights. */
-    margin-block: 0;
-    position: sticky;
-    top: calc(var(--nav-h) + var(--space-3));
+    float: left;
+    clear: left;
+    width: var(--article-rail);
+    max-width: 11rem;
+    margin: 0 0 0 calc(-1 * (var(--article-rail) + var(--article-gap)));
   }
-  /* Figures earn the full width; they are the one thing worth breaking the
-     column for. */
-  .article-block > figure { grid-column: 1 / -1; }
+  /* Figures hang in that same rail, filling it. clear:left stacks consecutive
+     plates down the margin instead of colliding; the copy runs on unbroken. */
+  .article-block > figure {
+    float: left;
+    clear: left;
+    width: var(--article-rail);
+    max-width: none;
+    margin: var(--space-3) 0 var(--space-4) calc(-1 * (var(--article-rail) + var(--article-gap)));
+  }
+  .article-block > figure figcaption { max-width: 100%; }
+
+  /* Content figures that sit in the lead flow (before the first section, so not
+     inside a block) hang in the same rail, so every picture in the article is a
+     left plate rather than a full-width break through the reading column. A
+     following section, being a flow-root, clears below the float on its own. */
+  .article-body > figure {
+    float: left;
+    clear: left;
+    width: var(--article-rail);
+    max-width: none;
+    margin: var(--space-3) 0 var(--space-4) 0;
+  }
+  .article-body > figure figcaption { max-width: 100%; }
 
   /* The lead paragraphs before the first heading keep the same left edge as
      the reading column, so the article starts where it continues. */

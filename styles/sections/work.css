@@ -1,350 +1,76 @@
 /* ==========================================================================
-   Section · Work — side-scrolling gallery of squares.
+   Section · Work — editorial index.
 
-   The section owns a height. Every card is a square measured against it: 80%
-   at rest, 96% on hover. Because the height is a percentage of the section
-   rather than a viewport width, the row keeps its proportions when the window
-   changes shape, and the growth on hover is the same 16% of the section at
-   every screen size.
-
-   Scrolling is a real horizontal scroll container. An earlier version of this
-   drove a translated track from a JS index; that was more machinery than the
-   job needs and it threw away everything a scroller gives for nothing:
-   trackpad, touch drag, arrow keys, Home/End, focus scrolling, and a scrollbar
-   the visitor can actually grab.
+   Numbered rows, the project name at display scale, category and year. Not a
+   gallery of cards: the reference is a name and a decision, and the full-bleed
+   imagery lives in the case study. Rows indent and the name shifts to the
+   accent on hover and focus, so the affordance is honest (Norman) while the
+   frame stays quiet (Rams / Vignelli).
    ========================================================================== */
 
-#work { container-type: inline-size; container-name: work; }
-
-.sl-rail {
-  /* The section height every card is measured against. */
-  --section-h: min(86svh, 900px);
-  --card-rest: 80%;
-  --card-hover: 96%;
-  --ease-card: cubic-bezier(0, 0.4, 0.6, 1);
-
-  position: relative;
-  left: 50%; right: 50%;
-  width: 100vw;
-  margin-left: -50vw; margin-right: -50vw;
+.work-index {
+  /* The strong opening rule; row hairlines are lighter below. Uses --text so it
+     re-derives itself in dark mode rather than vanishing on a dark ground. */
+  border-top: 1px solid var(--text);
 }
 
-.sl-rail__viewport {
-  height: var(--section-h);
-  overflow-x: auto;
-  overflow-y: hidden;
-  /* The scrollbar stays visible and keeps the themed treatment from
-     base/reset.css: transparent track, thumb mixed from --ink so it re-derives
-     itself per theme. A side scroll the visitor cannot see is a side scroll
-     they will not find. */
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-}
-.sl-rail__viewport:focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: -4px;
-}
-
-.sl-track {
-  display: flex;
-  /* Touching, no gap, as with the mosaic. */
-  gap: 0;
-  height: 100%;
-  align-items: center;
-  width: max-content;
-  padding-inline: var(--gutter);
-}
-
-.sl-card {
-  position: relative;
-  display: block;
-  flex: 0 0 auto;
-
-  /* Square, measured off the section. height is a percentage of the track,
-     which is 100% of the section; aspect-ratio then resolves the width. */
-  height: var(--card-rest);
-  aspect-ratio: 1 / 1;
-  width: auto;
-
+.work-index__row {
+  display: grid;
+  grid-template-columns: var(--space-5) 1fr auto;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--linen);
   color: var(--text);
   text-decoration: none;
-  transition: height 0.55s var(--ease-card);
+  transition: padding-inline-start var(--duration-medium) var(--ease-out-expo);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .sl-card:hover { height: var(--card-hover); }
+.work-index__idx {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
 }
-/* Keyboard gets the same growth as the pointer, or tabbing through the row
-   would move focus to a card that never acknowledges it. */
-.sl-card:focus-visible {
-  height: var(--card-hover);
+
+.work-index__name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--step-display);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-display);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.work-index__meta {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: end;
+}
+
+/* A pending row is not a link: default cursor, no indent affordance. */
+.work-index__row--pending { cursor: default; }
+
+@media (hover: hover) and (pointer: fine) {
+  a.work-index__row:hover { padding-inline-start: var(--space-3); }
+  a.work-index__row:hover .work-index__name { color: var(--accent-text); }
+}
+
+.work-index__row:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 4px;
 }
+.work-index__row:focus-visible .work-index__name { color: var(--accent-text); }
 
-@media (prefers-reduced-motion: reduce) {
-  .sl-card { transition: none; }
-}
-
-/* ── Mobile ───────────────────────────────────────────────────────────────
-   An 80%-of-section square on a phone is a stamp, and a horizontal gesture
-   fights the page scroll. The row becomes a column at full width. */
-@media (max-width: 52rem) {
-  .sl-rail__viewport { height: auto; overflow: visible; }
-  .sl-track {
-    flex-direction: column;
-    height: auto;
-    width: auto;
-    gap: var(--space-5);
-  }
-  .sl-card { height: auto; width: 100%; }
-  .sl-card:focus-visible { height: auto; }
-}
-
-/* Tile with no case study behind it yet. Replaces an inline style="cursor:default"
-   in the renderer, so the styling stays in the CSS layer with everything else. */
-.sl-card--pending { cursor: default; }
-/* Pinned to the top of the tile, opposite the caption at the foot, so the two
-   never collide and the status reads before the name does. */
-.sl-card__pending {
-  position: absolute;
-  top: var(--space-3);
-  left: var(--space-4);
-  z-index: var(--z-base);
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-}
-
-/* The colour field. [data-wipe] on this element makes it uncover on scroll
-   rather than fade — see base/motion.css. */
-/* Fills the card exactly. No ratio of its own: the card owns the proportion,
-   the frame just occupies whatever the row resolved to. */
-.sl-card__frame {
-  position: absolute;
-  inset: 0;
-  display: block;
-  overflow: hidden;
-  color: var(--paper);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  /* Focus one, quiet the rest. Driven by hover now that there is no active
-     index: whichever card the pointer is over is the subject, and its
-     neighbours step back. Opacity on the image only, so the tone field
-     underneath still holds each card's colour and the row never reads as a
-     gap where a project used to be. */
-  .sl-card__img { transition: opacity 0.55s var(--ease-card); }
-  .sl-track:has(.sl-card:hover) .sl-card:not(:hover) .sl-card__img { opacity: 0.45; }
-}
-
-.sl-card__bg {
-  position: absolute;
-  inset: 0;
-  background: var(--tile, var(--linen));
-  /* Multiply lets the paper's warmth come through the colour so the tiles
-     belong to the page rather than sitting on top of it. */
-  mix-blend-mode: multiply;
-  transition: transform var(--duration-emphasis) var(--ease-out-quart);
-}
-
-/* Cover photograph. Sits over the tone field, which stays visible as the
-   backdrop while the image decodes and behind any transparency in it. The
-   image, not the colour, is what scales on hover once a cover exists. */
-.sl-card__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--duration-emphasis) var(--ease-out-quart);
-}
-
-/* ── Overlay ──────────────────────────────────────────────────────────────
-   The work sits under a heavy scrim at rest and clears on hover. That is the
-   whole hierarchy of the row: at 80% the cards read as a set of dark panels
-   with titles, so the eye goes to the type and the composition rather than to
-   six competing photographs; at 16% the one you are pointing at becomes the
-   only image on screen.
-
-   A real element, not a pseudo-element: ::before on the frame belongs to the
-   [data-wipe] reveal and ::after belonged to the ink-bleed spotlight, so an
-   overlay written as ::after silently lost to the spotlight's opacity:0 and
-   never painted. Its own element cannot be outbid.
-
-   An element also means it covers the tone field on projects with no
-   photograph yet, and sits under the caption so the title never dims with it. */
-.sl-card__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: var(--z-base);
-  background: #000;
-  opacity: 0.8;
-  pointer-events: none;
-  transition: opacity 0.55s var(--ease-card);
-}
-@media (hover: hover) and (pointer: fine) {
-  .sl-card:hover .sl-card__scrim { opacity: 0.16; }
-}
-.sl-card:focus-visible .sl-card__scrim { opacity: 0.16; }
-/* ── Card caption ─────────────────────────────────────────────────────────
-   Title left, scope right, one row at the foot of the card. Both sit above the
-   overlay, so the title stays legible at 80% and does not brighten with the
-   image on hover. */
-.sl-card__meta {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  z-index: var(--z-raised);
-  /* Stacked, not a row: the tags belong to the title, so they sit under it.
-     Splitting them to opposite edges read as two unrelated labels sharing a
-     bar rather than as one caption. */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-1);
-  padding: var(--space-3) var(--space-4);
-  color: var(--paper);
-  pointer-events: none;
-
-  /* Its own gradient, independent of the scrim. At rest the 80% scrim would
-     carry the type on its own, but on hover the scrim drops to 16% and the
-     caption is then white text sitting directly on whatever the photograph
-     happens to be. Over a pale image that fails contrast outright. This band
-     is local to the caption, so it holds the type legible at 16% without
-     re-darkening the picture. */
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, #000 62%, transparent) 0%,
-    color-mix(in srgb, #000 28%, transparent) 55%,
-    transparent 100%
-  );
-}
-.sl-card__name {
-  font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--step-h4);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
-  /* No transform. The names are already written the way they should read
-     ("Rivo Studio", "ChopBox", "TEDx RSU"), and uppercasing them destroyed
-     that: it flattened ChopBox to CHOPBOX and TEDx to TEDX. Title case is
-     data, not styling, so the data is the source of truth. */
-  text-transform: none;
-}
-/* The tags sit under the title and rise into place on hover. Uppercase here
-   is real styling: they are a classification, not a name. */
-.sl-card__scope {
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-  opacity: 0;
-  transform: translateY(0.35em);
-  transition: opacity 0.45s var(--ease-card), transform 0.45s var(--ease-card);
-}
-@media (hover: hover) and (pointer: fine) {
-  .sl-card:hover .sl-card__scope { opacity: 1; transform: none; }
-}
-.sl-card:focus-visible .sl-card__scope { opacity: 1; transform: none; }
-
-/* On the mobile stack there is no hover, so the scope is simply always there. */
-@media (max-width: 52rem) {
-  .sl-card__scope { opacity: 1; transform: none; }
+@media (max-width: 40rem) {
+  .work-index__row { grid-template-columns: var(--space-4) 1fr; gap: var(--space-3); }
+  .work-index__meta { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sl-card__scope,
-  .sl-card__scrim { transition: none; }
-}
-
-/* ── Hover pill ───────────────────────────────────────────────────────────
-   "View Rollr Project", following the cursor, as in the reference. One shared
-   element rather than one per card: six absolutely-positioned pills that are
-   invisible most of the time is six elements the compositor has to carry for
-   no reason.
-
-   aria-hidden because it says nothing the link does not already say, and a
-   pointer-only affordance has no meaning to a screen reader. */
-.sl-rail__pill {
-  position: fixed;
-  top: 0; left: 0;
-  z-index: var(--z-sticky);
-  pointer-events: none;
-  padding: 0.45em 0.9em;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-label);
-  font-size: var(--step-meta);
-  letter-spacing: var(--tracking-label);
-  white-space: nowrap;
-  opacity: 0;
-  /* Starts fractionally small so it reads as arriving rather than blinking on.
-     Never scale(0): nothing in the world appears out of nothing. */
-  transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(0.96);
-  transition: opacity 0.18s var(--ease-standard),
-              transform 0.18s var(--ease-standard);
-}
-.sl-rail__pill[data-show="true"] {
-  opacity: 1;
-  transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(1);
-}
-/* Touch has no cursor to follow, and a pill pinned to a tap point is noise. */
-@media (hover: none), (pointer: coarse) {
-  .sl-rail__pill { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sl-rail__pill { transition: opacity 0.18s linear; }
-}
-
-/* The per-card row carries the title now, so the separate rail caption is
-   gone: it printed the same project name a second time, a few hundred pixels
-   below the first. */
-
-
-/* The ink-bleed spotlight that used to live here is gone. With the scrim
-   lifting from 80% to 16% on hover, a second screen-blended highlight tracking
-   the cursor was two answers to the same question, and the quieter one is the
-   one that lets the photograph speak. js/core/interactions.js no longer runs
-   its tracker either. */
-
-@media (hover: hover) and (pointer: fine) {
-  /* The 1.04 push-in on hover is gone. A photograph that swells under the
-     cursor is a stock e-commerce tell; at this size the sibling dimming below
-     already does the job of saying which tile is live. */
-  .sl-card:hover .sl-card__name { color: var(--accent); }
-
-  /* Sibling dimming used to live here as `.sl-grid:has(.sl-card:hover)`, plus a
-     blanket `transition: opacity` on .sl-card. Both are gone:
-
-       - .sl-grid no longer exists, so the selector matched nothing.
-       - the blanket transition overrode the width transition further up, which
-         is why the focused card snapped to its new width instead of easing to
-         it. A shorthand `transition` on a shared class is a trap; it silently
-         replaces whatever an earlier rule set.
-
-     Focus-one-quiet-the-rest now lives with the hover rules above. */
-}
-
-/* Inset, not offset. With the tiles touching, a positive offset drew the ring
-   over the neighbouring tile instead of around this one. */
-.sl-card:focus-visible {
-  outline: 2px solid var(--paper);
-  outline-offset: -4px;
-}
-
-/* Card text must stay light regardless of theme — frames are coloured */
-[data-theme="dark"] .sl-card__frame { color: var(--ink); }
-
-/* One reduced-motion block, completed. It was committed as a dangling selector
-   list with a trailing comma and no body, which drops the whole @media rule.
-   The scrim/size transitions are handled by the per-rule reduced-motion
-   overrides above; this kills the two decorative ones left on the frame
-   layers. */
-@media (prefers-reduced-motion: reduce) {
-  .sl-rail__viewport { scroll-behavior: auto; }
-  .sl-card__bg,
-  .sl-card__img { transition: none; }
+  .work-index__row,
+  .work-index__name { transition: none; }
 }
