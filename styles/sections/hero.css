@@ -245,7 +245,9 @@
   position: absolute;
   z-index: var(--z-raised);
   right: var(--margin-x);
-  bottom: var(--space-5);
+  /* Flush with the portrait's lower edge (the hero's padding-block-end), not
+     hanging below it. */
+  bottom: var(--space-6);
   /* Wide enough to carry the full "Title - Artist" on a line or two. It floats
      over the portrait and the paper to its left, so it can exceed the portrait
      column. */
