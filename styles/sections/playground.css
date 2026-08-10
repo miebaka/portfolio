@@ -63,11 +63,10 @@
   grid-column: 1;
   grid-row: 2;
   font-family: var(--font-display);
-  font-weight: var(--weight-regular);
-  font-size: var(--step-h3);
+  font-weight: var(--weight-bold);
+  font-size: var(--step-display);
   line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
-  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
 }
 
 .writing-item__summary {
@@ -117,11 +116,10 @@
 .article-hero__title {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
-  font-size: var(--step-display);
+  font-size: var(--step-display-xl);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-display);
-  text-transform: uppercase;
-  max-width: 18ch;
+  max-width: 20ch;
 }
 
 .article-hero__meta {
@@ -198,7 +196,6 @@
   font-weight: var(--weight-regular);
   font-size: var(--step-h2);
   letter-spacing: var(--tracking-heading);
-  text-transform: uppercase;
   margin-block: var(--space-5) var(--space-3);
 }
 
@@ -207,7 +204,6 @@
   font-weight: var(--weight-regular);
   font-size: var(--step-h3);
   letter-spacing: var(--tracking-heading);
-  text-transform: uppercase;
   margin-block: var(--space-4) var(--space-2);
 }
 
