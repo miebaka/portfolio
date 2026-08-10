@@ -246,12 +246,15 @@
   z-index: var(--z-raised);
   right: var(--margin-x);
   bottom: var(--space-5);
-  max-width: min(28ch, calc(38.197% - var(--space-5)));
+  /* Wide enough to carry the full "Title - Artist" on a line or two. It floats
+     over the portrait and the paper to its left, so it can exceed the portrait
+     column. */
+  max-width: min(42ch, calc(100% - 2 * var(--margin-x)));
 }
 
 /* Chip styling: always-dark frosted glass — readable over warm portrait */
 .hero-noir .now-playing {
-  font-size: var(--step-small);
+  font-size: var(--step-body);
   background: rgba(28, 26, 22, 0.60);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);

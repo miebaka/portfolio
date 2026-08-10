@@ -18,6 +18,11 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+  /* Edge fade. A scrolling row hard-clips whichever marks straddle the left and
+     right edges, so a logo reads as chopped in half. Fading a band at each edge
+     lets marks dissolve in and out instead of being sliced. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent 100%);
 }
 .marquee__viewport {
   width: 100%;
