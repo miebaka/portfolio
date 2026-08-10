@@ -34,9 +34,11 @@ function buildChip(container) {
   chip.setAttribute("aria-live", "polite");
   chip.setAttribute("aria-label", "Currently listening");
   chip.innerHTML =
-    '<span class="now-playing__dot" aria-hidden="true"></span>' +
-    '<span class="now-playing__label" aria-hidden="true">Now playing</span>' +
-    '<span class="now-playing__track"></span>';
+    '<span class="now-playing__label" aria-hidden="true">Miebaka is listening to</span>' +
+    '<span class="now-playing__row">' +
+      '<span class="now-playing__dot" aria-hidden="true"></span>' +
+      '<span class="now-playing__track"></span>' +
+    "</span>";
   chip.hidden = true;
   container.appendChild(chip);
 }

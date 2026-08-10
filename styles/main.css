@@ -29,7 +29,6 @@
 @import "components/forms.css";
 @import "components/footer.css";
 @import "components/now-playing.css";
-@import "components/cursor-field.css";
 
 /* Sections */
 @import "sections/hero.css";

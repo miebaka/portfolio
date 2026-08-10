@@ -1,17 +1,21 @@
+/* ==========================================================================
+   Component · Now Playing — the Last.fm chip.
+   Pill-shaped like the site's buttons, all-caps. "Miebaka is listening to" sits
+   on top; the blinking light and the track sit side by side beneath it.
+   ========================================================================== */
+
 .now-playing {
   display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-2);
-  padding: var(--space-2) var(--space-3);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
   border: 1px solid var(--border);
-  /* A rounded rectangle, not a stadium: it now sizes to its content and can
-     wrap a long title to a second line, where a full pill radius looks broken. */
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--ink) 5%, transparent);
   font-family: var(--font-label);
-  font-size: var(--step-small);
   letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--ink);
   max-width: 100%;
   /* Fade in when JS reveals the chip; fade out when hidden is set */
@@ -26,6 +30,20 @@
   opacity: 0;
 }
 
+.now-playing__label {
+  font-size: var(--step-meta);
+  color: var(--text-muted);
+}
+
+/* Blinking light + track, on one line beneath the label. */
+.now-playing__row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  font-size: var(--step-small);
+}
+
 .now-playing__dot {
   width: var(--space-1);
   height: var(--space-1);
@@ -37,27 +55,11 @@
 
 @keyframes now-playing-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.35; transform: scale(0.65); }
+  50%      { opacity: 0.35; transform: scale(0.65); }
 }
 
-.now-playing__label {
-  color: var(--text-muted);
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-/* The full track: title and artist in their real case (a song is not a label),
-   allowed to wrap so the whole thing shows rather than truncating. */
-.now-playing__track {
-  min-width: 0;
-  letter-spacing: 0;
-  text-transform: none;
-}
+.now-playing__track { min-width: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .now-playing__dot { animation: none; }
-}
-
-@media (max-width: 480px) {
-  .now-playing__label { display: none; }
 }

@@ -19,9 +19,10 @@
 }
 
 /* Oversized script-signature watermark — CSS mask keeps it recolourable.
-   Uses --ink so it appears dark in light mode, light in dark mode.
-   js/core/footer-scene.js mirrors this sizing so the particle version lands
-   on the same rect; keep the two in sync. */
+   Uses --ink so it appears dark in light mode, light in dark mode. It runs end
+   to end (full width, bleeding to both edges) and a second mask layer, a
+   horizontal gradient composited with the glyph shape, fades the flourishes
+   into the margin instead of cutting them. */
 .site-footer::before {
   content: "";
   position: absolute;
@@ -30,28 +31,23 @@
   pointer-events: none;
   background-color: var(--ink);
   opacity: var(--opacity-mark);
-  -webkit-mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto calc(100% - var(--space-4));
-  mask: url("../../assets/images/miebaka-joshua-script-name.svg") no-repeat center bottom / auto calc(100% - var(--space-4));
+  -webkit-mask-image:
+    url("../../assets/images/miebaka-joshua-script-name.svg"),
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-position: center, center;
+  -webkit-mask-size: 100% auto, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-image:
+    url("../../assets/images/miebaka-joshua-script-name.svg"),
+    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-repeat: no-repeat, no-repeat;
+  mask-position: center, center;
+  mask-size: 100% auto, 100% 100%;
+  mask-composite: intersect;
 }
 
 .site-footer a { color: var(--ink); }
-
-/* Pixel grid canvas — sits above the SVG watermark, below the text layers.
-   Positioning is set inline by footer-scene.js so it works without a CSS refresh. */
-.site-footer__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-under);
-  pointer-events: none;
-}
-
-/* When the pixel scene is active it forms the signature — hide the static version */
-.site-footer.scene-active::before {
-  opacity: 0;
-  transition: opacity var(--duration-emphasis) var(--ease-standard);
-}
 
 /* Content layers above the watermark */
 .site-footer__grid,
