@@ -1,6 +1,6 @@
 /* Render — projects: the work index (editorial rows) and the client marquee. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 /* The work is an editorial index, not a gallery of cards: numbered rows, the
@@ -27,8 +27,13 @@ function workRow(project, i, base) {
   }
 
   const meta = esc(project.category) + " &middot; " + esc(project.year);
+  /* The cursor-following hover preview reads this: the small cover variant, so
+     the plate is light to fetch. Rows without a cover simply get no preview. */
+  const coverAttr = project.cover
+    ? ' data-cover="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp"'
+    : "";
   return (
-    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html">' +
+    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html"' + coverAttr + ">" +
       inner +
       '<span class="work-index__meta">' + meta + "</span>" +
     "</a>"

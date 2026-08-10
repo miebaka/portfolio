@@ -16,6 +16,7 @@ import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initCursorField } from "./core/cursor-field.js";
+import { initWorkPreview } from "./core/work-preview.js";
 import { initFooterScene } from "./core/footer-scene.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
@@ -45,4 +46,5 @@ initNavigation();
 initYear();
 initForm();
 initCursorField();
+initWorkPreview();
 initFooterScene();
