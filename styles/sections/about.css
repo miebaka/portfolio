@@ -58,7 +58,7 @@
   letter-spacing: var(--tracking-display);
   max-width: 20ch;
 }
-.about-mission em { color: var(--clay); font-style: italic; }
+.about-mission em { color: var(--clay); font-style: normal; }
 
 /* The note sits on the φ line rather than under the statement — an indent
    deep enough to read as a deliberate second column, without needing a grid
@@ -98,7 +98,7 @@
      measure is wide enough not to need them. */
   hyphens: none;
 }
-.about-statement em { color: var(--clay); font-style: italic; }
+.about-statement em { color: var(--clay); font-style: normal; }
 
 /* ── Experience — accordion ───────────────────────────────────────────────
    The same disclosure pattern as What I Do: each role is a native <details>,
