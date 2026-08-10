@@ -173,11 +173,13 @@
 /* Serif standfirst beneath the statement — the reading voice does the hiring
    pitch the headline shouldn't. */
 .hero-noir__lede {
-  margin-top: var(--space-4);
+  /* More air between the statement and the standfirst, and the reading leading
+     (1.75) rather than the tight intro value. */
+  margin-top: var(--space-5);
   max-width: var(--measure-reading);
   font-family: var(--font-body);
   font-size: var(--step-body-lg);
-  line-height: var(--leading-intro);
+  line-height: var(--leading-body);
   color: var(--text-muted);
 }
 .hero-noir__lede strong { color: var(--text); font-weight: var(--weight-regular); }
@@ -222,13 +224,31 @@
   .hero-noir__cta-bar { transition: none; }
 }
 
-/* Right column — portrait (minor column). A natural-ratio image bottom-aligned
-   to the golden line, not a full-height cover crop: at 38% width a cover crop
-   shows only a sliver of the face. Reveal is the clip-path wipe in
-   base/motion.css. */
-.hero-noir__picture {
+/* Right column — a media column holding the Now Playing pill above the
+   portrait. The portrait sits at the golden line (bottom); the pill sits in the
+   space above it, right-aligned, capped to the portrait's own width. */
+.hero-noir__media {
   grid-area: picture;
   align-self: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* The pill row spans the full column width, so the pill's max-width resolves to
+   the portrait's width; the pill right-aligns within it and truncates when the
+   track is longer than the portrait. */
+.hero-noir__chip {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* Natural-ratio portrait, bottom of the column. Reveal is the clip-path wipe in
+   base/motion.css. */
+.hero-noir__picture {
   position: relative;
   overflow: hidden;
 }
@@ -238,39 +258,6 @@
   width: 100%;
   height: auto;
   pointer-events: none;
-}
-
-/* Now-playing chip — floats over the portrait, bottom-left of the picture */
-.hero-noir__chip {
-  position: absolute;
-  z-index: var(--z-raised);
-  right: var(--margin-x);
-  /* Flush with the portrait's lower edge (the hero's padding-block-end), not
-     hanging below it. */
-  bottom: var(--space-6);
-  /* Wide enough to carry the full "Title - Artist" on a line or two. It floats
-     over the portrait and the paper to its left, so it can exceed the portrait
-     column. */
-  max-width: min(42ch, calc(100% - 2 * var(--margin-x)));
-}
-
-/* Chip styling: always-dark frosted glass — readable over warm portrait */
-.hero-noir .now-playing {
-  font-size: var(--step-body);
-  background: rgba(28, 26, 22, 0.60);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-color: rgba(237, 233, 225, 0.20);
-  color: #ede9e1;
-}
-.hero-noir .now-playing__label { color: rgba(237, 233, 225, 0.60); }
-
-@media (prefers-reduced-transparency: reduce) {
-  .hero-noir .now-playing {
-    background: rgb(28, 26, 22);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────────── */
@@ -291,11 +278,6 @@
   .hero-noir__meta { flex-direction: column; gap: var(--space-1); }
   /* Full width available once stacked — the column cap no longer applies */
   .hero-noir__statement { font-size: clamp(2.25rem, 9vw, 4rem); }
-  .hero-noir__chip {
-    /* on stacked layout: inside picture at bottom-left */
-    left: var(--gutter);
-    bottom: var(--space-3);
-  }
 }
 
 @media (max-width: 480px) {

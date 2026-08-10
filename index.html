@@ -105,7 +105,10 @@
           </a>
         </div>
       </div>
-      <div class="hero-noir__picture" data-wipe="up">
+      <div class="hero-noir__media">
+        <!-- Now Playing pill sits in the space above the portrait -->
+        <div class="hero-noir__chip" data-mount="now-playing"></div>
+        <div class="hero-noir__picture" data-wipe="up">
         <!-- width/height are required even though CSS stretches the image to
              fill: without them the browser cannot reserve the box before the
              file arrives, and the hero reflows on load. -->
@@ -128,9 +131,8 @@
                alt="Miebaka Joshua, brand and visual designer, photographed in Lagos."
                fetchpriority="high" decoding="async">
         </picture>
+        </div>
       </div>
-      <!-- Chip floats over picture; sits outside the grid flow (position: absolute in CSS) -->
-      <div class="hero-noir__chip" data-mount="now-playing"></div>
     </section>
 
     <!-- Selected work -->
