@@ -100,3 +100,108 @@
 }
 .about-statement em { color: var(--clay); font-style: italic; }
 
+/* ── Experience — accordion ───────────────────────────────────────────────
+   The same disclosure pattern as What I Do: each role is a native <details>,
+   click to reveal the work done as bullets, and the shared name keeps one open
+   at a time. No rules; whitespace separates the roles. */
+.exp {
+  display: flex;
+  flex-direction: column;
+}
+.exp__row {
+  display: grid;
+  grid-template-columns: 1fr auto var(--space-4);
+  gap: var(--space-2) var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+}
+.exp__row::-webkit-details-marker { display: none; }
+.exp__row:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
+.exp__role {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  font-size: var(--step-h4);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.exp__meta {
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.exp__item[open] .exp__role { color: var(--accent-text); }
+@media (hover: hover) and (pointer: fine) {
+  .exp__row:hover .exp__role { color: var(--accent); }
+}
+
+/* Plus that becomes a minus when open — same signifier as the services list. */
+.exp__toggle {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  align-self: center;
+  color: var(--text-muted);
+}
+.exp__toggle::before,
+.exp__toggle::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: currentColor;
+}
+.exp__toggle::after {
+  transform: rotate(90deg);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.exp__item[open] .exp__toggle { color: var(--accent-text); }
+.exp__item[open] .exp__toggle::after { opacity: 0; }
+
+/* Bullet panel — hung markers, reading voice, kept to the measure. */
+.exp__panel {
+  padding-block-end: var(--space-4);
+  max-width: var(--measure-reading);
+}
+.exp__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.exp__list li {
+  position: relative;
+  padding-inline-start: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: var(--leading-body);
+  color: var(--text-muted);
+}
+.exp__list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.72em;
+  width: 0.4em;
+  height: 1px;
+  background: var(--accent);
+}
+@media (max-width: 600px) {
+  .exp__row { grid-template-columns: 1fr var(--space-4); }
+  .exp__meta { grid-column: 1; grid-row: 2; white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .exp__role,
+  .exp__toggle::after { transition: none; }
+}
+

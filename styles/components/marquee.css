@@ -26,7 +26,12 @@
 }
 .marquee__viewport {
   width: 100%;
-  overflow: hidden;
+  /* Visible, not hidden: the row's optical-scale sizing makes some marks taller
+     than the base item height, and a hidden viewport clipped their tops and
+     bottoms. The band above still clips horizontally, and it is tall enough to
+     hold the tallest mark, so nothing is lost by letting the marks overflow the
+     viewport vertically. */
+  overflow: visible;
 }
 .marquee__track {
   display: flex;
