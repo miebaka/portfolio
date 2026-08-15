@@ -60,8 +60,8 @@ function loop() {
      the bright core reads warm and on-brand rather than neutral ink. */
   for (let p = 3; p < buf.length; p += 4) {
     const a = buf[p];
-    if (a <= 78) continue;
-    const m = Math.min((a - 78) / 120, 1) * 0.72;
+    if (a <= 52) continue;
+    const m = Math.min((a - 52) / 110, 1) * 0.72;
     const o = p - 3;
     buf[o]     += (clay[0] - buf[o])     * m;
     buf[o + 1] += (clay[1] - buf[o + 1]) * m;

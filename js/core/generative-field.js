@@ -11,7 +11,7 @@
    the field simply never appears. It is decoration; the page is complete without it. */
 
 const RES = 0.6;                 /* buffer resolution vs the viewport; scaled up by CSS */
-const CLAY = [194, 83, 28];      /* --clay, for the dense-core tint */
+const CLAY = [212, 90, 20];      /* a touch warmer than --clay (#C2531C), for the core tint */
 
 function dims() {
   return [
