@@ -1,86 +1,86 @@
-/* generative-field.js — a slow generative point-field behind the home page.
+/* generative-field.js — sets up the home-page point-field and hands the drawing
+   to a worker.
 
-   A dependency-free port of a p5 "dwitter" sketch: each frame plots ~10k
-   translucent points whose positions come from nested trig over time `t`,
-   forming an organic drifting bloom. Rendered ink-on-paper at very low opacity
-   as a fixed full-viewport layer behind the content, so it reads as a living
-   texture rather than a picture, and it flips ink/paper with the theme.
+   The heavy loop lives in generative-field.worker.js on its own thread via an
+   OffscreenCanvas, so it never costs the main thread a frame. This module owns
+   only the DOM-side concerns a worker can't see: the accessibility gates, the
+   theme, the viewport size, tab visibility, and — crucially — deferring the
+   whole thing until after load so it never competes with the hero LCP.
 
-   Points are written straight into one ImageData buffer (a single putImageData
-   per frame) rather than 10k canvas calls, and the buffer renders at a fraction
-   of device resolution and is CSS-scaled up — cheap, and the softening suits a
-   background. Guards: reduced motion never runs it, and it pauses when the tab
-   is hidden. Home page only. */
+   Progressive enhancement: where OffscreenCanvas or module workers are missing,
+   the field simply never appears. It is decoration; the page is complete without it. */
 
-const COUNT = 1e4;         /* points per frame */
-const POINT_ALPHA = 14;    /* 0-255 added per point; overlaps accumulate into density */
-const FILL = 1.716;        /* how much of the viewport the bloom spans (1.3 x 1.32) */
-const RES = 0.6;           /* internal buffer scale vs the viewport */
+const RES = 0.6;                 /* buffer resolution vs the viewport; scaled up by CSS */
+const CLAY = [194, 83, 28];      /* --clay, for the dense-core tint */
+
+function dims() {
+  return [
+    Math.max(1, Math.floor(window.innerWidth * RES)),
+    Math.max(1, Math.floor(window.innerHeight * RES)),
+  ];
+}
+
+function inkColour() {
+  return document.documentElement.dataset.theme === "dark"
+    ? [237, 233, 225]   /* paper — light points on the dark ground */
+    : [22, 20, 15];     /* ink  — dark points on paper */
+}
 
 export function initGenerativeField() {
   if (document.body.dataset.page !== "home") return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  /* Capability gate: needs an OffscreenCanvas that can be transferred to a worker. */
+  if (!("OffscreenCanvas" in window) ||
+      typeof HTMLCanvasElement.prototype.transferControlToOffscreen !== "function") return;
+
+  /* Accessibility gate: honour reduced motion, reduced transparency, and a
+     request for more contrast — any of them means "calm the page down". */
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(prefers-reduced-transparency: reduce)").matches ||
+      window.matchMedia("(prefers-contrast: more)").matches) return;
 
   const canvas = document.createElement("canvas");
   canvas.className = "generative-field";
   canvas.setAttribute("aria-hidden", "true");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
   document.body.prepend(canvas);
 
-  let W = 0, H = 0, cx = 0, cy = 0, S = 1, img = null, buf = null;
-  let ink = [22, 20, 15];
-  let t = 0, raf = 0, running = false;
+  let worker = null;
 
-  function syncTheme() {
-    ink = document.documentElement.dataset.theme === "dark"
-      ? [237, 233, 225]   /* paper — light points on the dark ground */
-      : [22, 20, 15];     /* ink  — dark points on paper */
-  }
+  function boot() {
+    try {
+      const off = canvas.transferControlToOffscreen();
+      const [w, h] = dims();
+      worker = new Worker(new URL("./generative-field.worker.js", import.meta.url), { type: "module" });
+      worker.postMessage(
+        { type: "init", canvas: off, width: w, height: h, ink: inkColour(), clay: CLAY },
+        [off]
+      );
 
-  function resize() {
-    W = canvas.width = Math.max(1, Math.floor(window.innerWidth * RES));
-    H = canvas.height = Math.max(1, Math.floor(window.innerHeight * RES));
-    cx = W / 2;
-    cy = H / 2;
-    S = Math.min(W, H) / 400 * FILL;
-    img = ctx.createImageData(W, H);
-    buf = img.data;
-  }
+      window.addEventListener("resize", () => {
+        const [rw, rh] = dims();
+        worker.postMessage({ type: "resize", width: rw, height: rh });
+      }, { passive: true });
 
-  function frame() {
-    if (!running) return;
-    t += Math.PI / 80;
-    buf.fill(0);
-    const r = ink[0], g = ink[1], b = ink[2];
-    for (let i = COUNT; i--; ) {
-      const y = i / 253;
-      const k = 5 * Math.cos(i / 44);
-      const e = y / 2 - 15;
-      const d = Math.hypot(k, e) / 3;
-      const c = d / 2 - t / 3 + (i % 2) * 3;
-      const rx = (79 + d * d + k * k) * Math.sin(c) + (d ** 3) / 4 * Math.cos(t * 3 - d * d / 4);
-      const ry = 99 * Math.cos(c / 2) + 4 * Math.sin(k * 2) + y / (77 * Math.sin(e / 2) + 1e-4) * k * e;
-      const x = (cx + rx * S) | 0;
-      const yy = (cy + ry * S) | 0;
-      if (x < 0 || x >= W || yy < 0 || yy >= H) continue;
-      const idx = (yy * W + x) * 4;
-      buf[idx] = r; buf[idx + 1] = g; buf[idx + 2] = b;
-      buf[idx + 3] = Math.min(255, buf[idx + 3] + POINT_ALPHA);
+      document.addEventListener("visibilitychange", () => {
+        worker.postMessage({ type: "run", on: !document.hidden });
+      });
+
+      new MutationObserver(() => {
+        worker.postMessage({ type: "theme", ink: inkColour() });
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    } catch (e) {
+      /* Anything from the transfer or worker load failing: drop the layer and
+         leave the page exactly as it would be without the field. */
+      canvas.remove();
     }
-    ctx.putImageData(img, 0, 0);
-    raf = requestAnimationFrame(frame);
   }
 
-  function start() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
-  function stop()  { running = false; cancelAnimationFrame(raf); }
+  /* Defer until the page has loaded and the main thread is idle, so building the
+     worker never steals time from the hero image (the LCP) or first input. */
+  const defer = (cb) => ("requestIdleCallback" in window)
+    ? requestIdleCallback(cb, { timeout: 2000 })
+    : setTimeout(cb, 400);
 
-  resize();
-  syncTheme();
-  window.addEventListener("resize", resize, { passive: true });
-  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
-  new MutationObserver(syncTheme).observe(document.documentElement, {
-    attributes: true, attributeFilter: ["data-theme"],
-  });
-  start();
+  if (document.readyState === "complete") defer(boot);
+  else window.addEventListener("load", () => defer(boot), { once: true });
 }
