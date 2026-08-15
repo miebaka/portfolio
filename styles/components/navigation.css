@@ -33,9 +33,6 @@
   align-items: center;
   gap: var(--space-4);
 }
-/* Logo holds the left margin; everything else is pushed to the right edge. */
-.site-nav__brand { margin-inline-end: auto; }
-
 /* Mobile menu button — hidden until the breakpoint below reveals it. */
 .site-nav__menu-btn {
   display: none;
@@ -51,9 +48,10 @@
 .site-nav__menu-btn[aria-expanded="true"] { color: var(--text); }
 
 /* Logo mark — flush to the left margin, a currentColor silhouette so it flips
-   with the theme. */
+   with the theme. margin-inline-end:auto pushes everything after it (links,
+   menu button, toggle) to the right edge of the flex bar. */
 .site-nav__brand {
-  justify-self: start;
+  margin-inline-end: auto;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
@@ -75,7 +73,6 @@
 /* Inline primary links — right-anchored beside the toggle. The label font,
    uppercase and tracking come from base/typography.css. */
 .site-nav__links {
-  justify-self: end;
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -142,7 +139,6 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
-  justify-self: end;
   background: none;
   border: none;
   /* Mirror of the brand: no horizontal padding, so the moon's right edge lands

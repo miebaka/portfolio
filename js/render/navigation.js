@@ -89,15 +89,23 @@ function setupMobileMenu(nav) {
   const links = nav.querySelector(".site-nav__links");
   if (!btn || !links) return;
 
+  /* Bound only while the menu is open, and torn down on close, so nothing
+     global stays registered on desktop or after the menu is dismissed. Clicks
+     on the button (or anywhere in the nav) are ignored here — the button's own
+     handler owns the toggle. */
+  function onDocClick(e) { if (!nav.contains(e.target)) setOpen(false); }
+  function onKeydown(e) { if (e.key === "Escape") setOpen(false); }
+
   function setOpen(open) {
     nav.classList.toggle("is-menu-open", open);
     btn.setAttribute("aria-expanded", String(open));
+    const bind = open ? "addEventListener" : "removeEventListener";
+    document[bind]("click", onDocClick);
+    document[bind]("keydown", onKeydown);
   }
 
   btn.addEventListener("click", () => setOpen(!nav.classList.contains("is-menu-open")));
   links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
-  document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setOpen(false); });
 }
 
 /* Floating pill — always links home on every page except home.
