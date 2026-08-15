@@ -29,13 +29,26 @@
 
 .site-nav__inner {
   width: 100%;
-  display: grid;
-  /* Wordmark holds the left margin; the primary links sit at the right of the
-     flexible middle column, with the theme toggle anchored to the right edge. */
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
   gap: var(--space-4);
 }
+/* Logo holds the left margin; everything else is pushed to the right edge. */
+.site-nav__brand { margin-inline-end: auto; }
+
+/* Mobile menu button — hidden until the breakpoint below reveals it. */
+.site-nav__menu-btn {
+  display: none;
+  min-height: var(--tap-min);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.site-nav__menu-btn[aria-expanded="true"] { color: var(--text); }
 
 /* Logo mark — flush to the left margin, a currentColor silhouette so it flips
    with the theme. */
@@ -78,33 +91,46 @@
   .site-nav__link:hover { color: var(--accent-text); }
 }
 
-/* Narrow screens: the wordmark and toggle share the top row, the links drop to
-   a full-width row beneath and scroll if they run long. min-width:0 lets that
-   row actually clip and scroll instead of expanding to its content and shoving
-   the wordmark. The bar gives up its fixed height here to hold both rows. */
+/* Narrow screens: the five links don't fit a single bar, so they collapse into
+   a compact dropdown behind the Menu button (state on .is-menu-open). The panel
+   scales in from its top-right origin — Emil's origin-aware disclosure — not the
+   old fullscreen overlay. Closes on link tap, Escape, or an outside click. */
 @media (max-width: 40rem) {
-  .site-nav { height: auto; }
-  .site-nav__inner {
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "brand toggle"
-      "links links";
-    row-gap: var(--space-1);
-    column-gap: var(--space-2);
-    padding-block: var(--space-2);
-  }
-  .site-nav__brand { grid-area: brand; }
-  .theme-toggle    { grid-area: toggle; }
+  .site-nav__inner { gap: var(--space-2); }
+  .site-nav__menu-btn { display: inline-flex; align-items: center; }
+
   .site-nav__links {
-    grid-area: links;
-    justify-self: start;
-    min-width: 0;
-    max-width: 100%;
+    position: absolute;
+    top: calc(100% - var(--space-2));
+    right: var(--margin-x);
+    flex-direction: column;
+    align-items: flex-end;
     gap: var(--space-3);
-    overflow-x: auto;
-    scrollbar-width: none;
+    padding: var(--space-3) var(--space-4);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    transform-origin: top right;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px) scale(0.98);
+    transition: opacity   var(--duration-standard) var(--ease-out-expo),
+                transform var(--duration-standard) var(--ease-out-expo),
+                visibility var(--duration-standard) var(--ease-out-expo);
   }
-  .site-nav__links::-webkit-scrollbar { display: none; }
+  .site-nav.is-menu-open .site-nav__links {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .site-nav__link { font-size: var(--step-small); }
+}
+@media (max-width: 40rem) and (prefers-reduced-motion: reduce) {
+  .site-nav__links,
+  .site-nav.is-menu-open .site-nav__links { transform: none; transition: opacity var(--duration-fast) linear, visibility var(--duration-fast) linear; }
 }
 
 /* ── Drams-037 theme toggle — pill track + oversized knob ─────────────── */

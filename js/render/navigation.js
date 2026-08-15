@@ -71,10 +71,33 @@ export function renderNavigation() {
       '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
         '<span class="site-nav__logo" aria-hidden="true"></span>' +
       "</a>" +
-      '<nav class="site-nav__links" aria-label="Primary">' + links + "</nav>" +
+      /* Shown only below the mobile breakpoint; toggles the links panel. */
+      '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links">Menu</button>' +
+      '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + "</nav>" +
       themeToggleHTML() +
     "</div>";
   setupThemeToggle();
+  setupMobileMenu(el);
+}
+
+/* Compact mobile menu. Desktop shows the links inline and the button is
+   hidden; below the breakpoint the button toggles a small dropdown panel (all
+   CSS state, driven by one class). Closes on link click, Escape, or an outside
+   click. Not the old fullscreen overlay. */
+function setupMobileMenu(nav) {
+  const btn = nav.querySelector(".site-nav__menu-btn");
+  const links = nav.querySelector(".site-nav__links");
+  if (!btn || !links) return;
+
+  function setOpen(open) {
+    nav.classList.toggle("is-menu-open", open);
+    btn.setAttribute("aria-expanded", String(open));
+  }
+
+  btn.addEventListener("click", () => setOpen(!nav.classList.contains("is-menu-open")));
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
+  document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setOpen(false); });
 }
 
 /* Floating pill — always links home on every page except home.
