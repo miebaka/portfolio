@@ -10,6 +10,9 @@ import { MOUNT } from "../core/contract.js";
    hover and focus — it looks interactive because it is. */
 function workRow(project, i, base) {
   const num = String(i + 1).padStart(2, "0");
+  /* Stagger the scroll-reveal down the list: .reveal reads --reveal-i as a
+     transition-delay multiplier, so the rows cascade in rather than all at once. */
+  const stagger = ' style="--reveal-i:' + i + '"';
   const inner =
     '<span class="work-index__idx">' + num + "</span>" +
     '<span class="work-index__name">' + esc(project.title) + "</span>";
@@ -19,7 +22,7 @@ function workRow(project, i, base) {
      rather than promising a page that is not there. */
   if (project.caseReady === false) {
     return (
-      '<div class="work-index__row work-index__row--pending reveal">' +
+      '<div class="work-index__row work-index__row--pending reveal"' + stagger + ">" +
         inner +
         '<span class="work-index__meta">In progress</span>' +
       "</div>"
@@ -33,7 +36,7 @@ function workRow(project, i, base) {
     ? ' data-cover="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp"'
     : "";
   return (
-    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html"' + coverAttr + ">" +
+    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html"' + coverAttr + stagger + ">" +
       inner +
       '<span class="work-index__meta">' + meta + "</span>" +
     "</a>"

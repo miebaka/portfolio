@@ -16,6 +16,9 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: min(72svh, 780px);
+  /* Scoped to the accordion: lets the disclosure height animate to and from
+     auto (see ::details-content below) without enabling it site-wide. */
+  interpolate-size: allow-keywords;
 }
 
 /* Summary is the clickable row. Its default disclosure marker is removed; the
@@ -87,6 +90,30 @@
   font-size: var(--step-body);
   line-height: var(--leading-body);
   color: var(--text-muted);
+}
+
+/* Smooth the disclosure instead of the native snap. ::details-content is the
+   revealed region; block-size animates between 0 and auto (enabled by
+   interpolate-size on .caps), and content-visibility is transitioned discretely
+   so the close animates too. Degrades to the instant native open where
+   ::details-content is unsupported. */
+.caps__item::details-content {
+  block-size: 0;
+  overflow: clip;
+  opacity: 0;
+  transition: block-size  var(--duration-standard) var(--ease-out-expo),
+              opacity     var(--duration-standard) var(--ease-standard),
+              content-visibility var(--duration-standard) allow-discrete;
+}
+.caps__item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .caps__item::details-content {
+    block-size: auto;
+    transition: opacity var(--duration-fast) linear;
+  }
 }
 
 @media (max-width: 40rem) {

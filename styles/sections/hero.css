@@ -256,6 +256,9 @@
 .hero-noir__picture {
   position: relative;
   overflow: hidden;
+  /* Parallax drift written by js/core/hero-parallax.js. Composes with the wipe
+     reveal, which lives on the ::before cover and the img, not here. */
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
 }
 
 .hero-noir__portrait {
