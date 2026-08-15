@@ -13,8 +13,8 @@
    is hidden. Home page only. */
 
 const COUNT = 1e4;         /* points per frame */
-const POINT_ALPHA = 12;    /* 0-255 added per point; overlaps accumulate into density */
-const FILL = 1.3;          /* how much of the viewport the bloom spans */
+const POINT_ALPHA = 14;    /* 0-255 added per point; overlaps accumulate into density */
+const FILL = 1.716;        /* how much of the viewport the bloom spans (1.3 x 1.32) */
 const RES = 0.6;           /* internal buffer scale vs the viewport */
 
 export function initGenerativeField() {
