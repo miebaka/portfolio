@@ -30,6 +30,7 @@ import { initForm } from "./core/form.js";
 import { initWorkPreview } from "./core/work-preview.js";
 import { initHeroParallax } from "./core/hero-parallax.js";
 import { initCountUp } from "./core/count-up.js";
+import { initGenerativeField } from "./core/generative-field.js";
 import { initFooterScene } from "./core/footer-scene.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
@@ -62,4 +63,5 @@ initWorkPreview();
 initHeroParallax();
 /* After renderCaseStudy() has built the metric markup. */
 initCountUp();
+initGenerativeField();
 initFooterScene();
