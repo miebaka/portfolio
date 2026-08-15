@@ -38,14 +38,18 @@ export function initWorkPreview() {
   rows.forEach((row) => {
     const src = row.dataset.cover;
     if (!src) return;
-    row.addEventListener("pointerenter", (e) => {
+    /* Trigger on the project name only, not the whole row: the plate should
+       appear when the cursor is on the title (left), not when it drifts over the
+       empty right side or the meta. */
+    const target = row.querySelector(".work-index__name") || row;
+    target.addEventListener("pointerenter", (e) => {
       if (img.getAttribute("src") !== src) img.src = src;
       x = e.clientX;
       y = e.clientY;
       place();
       preview.dataset.show = "true";
     });
-    row.addEventListener("pointermove", onMove);
-    row.addEventListener("pointerleave", () => { preview.dataset.show = "false"; });
+    target.addEventListener("pointermove", onMove);
+    target.addEventListener("pointerleave", () => { preview.dataset.show = "false"; });
   });
 }

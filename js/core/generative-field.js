@@ -56,14 +56,32 @@ export function initGenerativeField() {
         [off]
       );
 
+      /* The field belongs to the main content; it pauses when the tab is hidden
+         and when the footer is in view (the footer has its own signature scene). */
+      let tabHidden = false;
+      let footerIn = false;
+      function sync() {
+        canvas.classList.toggle("is-hidden", footerIn);
+        worker.postMessage({ type: "run", on: !tabHidden && !footerIn });
+      }
+
       window.addEventListener("resize", () => {
         const [rw, rh] = dims();
         worker.postMessage({ type: "resize", width: rw, height: rh });
       }, { passive: true });
 
       document.addEventListener("visibilitychange", () => {
-        worker.postMessage({ type: "run", on: !document.hidden });
+        tabHidden = document.hidden;
+        sync();
       });
+
+      const footer = document.querySelector("footer.site-footer");
+      if (footer) {
+        new IntersectionObserver(([e]) => {
+          footerIn = e.isIntersecting;
+          sync();
+        }, { threshold: 0.12 }).observe(footer);
+      }
 
       new MutationObserver(() => {
         worker.postMessage({ type: "theme", ink: inkColour() });

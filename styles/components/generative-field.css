@@ -19,7 +19,12 @@
      right, the reading copy never competes with it. */
   -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 24%, #000 66%);
   mask-image: linear-gradient(to right, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 24%, #000 66%);
+  opacity: 1;
+  transition: opacity var(--duration-slow) var(--ease-standard);
 }
+/* Faded out (and the worker paused) while the footer is in view — the field is
+   for the main content, and the footer carries its own signature scene. */
+.generative-field.is-hidden { opacity: 0; }
 
 /* The module never starts under reduced motion; this is belt-and-braces in case
    the element is ever present without it. */
