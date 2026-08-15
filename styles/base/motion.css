@@ -41,11 +41,13 @@
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
-  /* overflow:hidden clips descenders (g, y, p) at the word box. Pad the box
-     out and pull the same distance back so the mask clears the descender
-     without changing where the word sits. */
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
+  /* overflow:hidden clips glyph tops (cap height, ascenders) as well as
+     descenders (g, y, p) at the word box, and the tight display line-height
+     leaves no room for either. Pad the box out on both block edges and pull the
+     same distance back, so the mask clears the glyphs without moving where the
+     word sits. */
+  padding-block: 0.35em;
+  margin-block: -0.35em;
 }
 
 [data-split].is-split .word__i {
