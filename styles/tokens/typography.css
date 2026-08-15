@@ -63,7 +63,6 @@
   --font-serif: "Libre Baskerville", Georgia, "Times New Roman", serif;
   --font-label: "Josefin Sans", "Century Gothic", "Futura", system-ui, sans-serif;
   --font-display: var(--font-sans);   /* role: headings */
-  --font-statement: var(--font-sans);
   --font-body: var(--font-serif);     /* role: reading */
 
   /* Weights (faces ship 400 + 700; 500/600 used where the face exists) */
@@ -123,8 +122,6 @@
   --leading-body: 1.75;      /* reading — opened past φ so Libre Baskerville's
                                 tall x-height has room to breathe line to line */
   --leading-label: 1;
-  --leading-tight: var(--leading-heading);  /* alias (legacy) */
-  --leading-snug: var(--leading-intro);     /* alias (legacy) */
 
   /* Letter tracking — optical, not uniform. Large type reads too loose at 0,
      so it tightens as it grows; small caps-labels need positive tracking to
@@ -137,9 +134,6 @@
   --tracking-caption: 0.01em;
   --tracking-label: 0.18em;
   --tracking-button: 0.12em;
-  --tracking-tight: -0.022em; /* alias → heading (legacy) */
-  --tracking-meta: 0.18em;   /* alias → label (legacy) */
-  --tracking-caps: 0.18em;   /* alias → label (legacy) */
 
   /* Reading measures.
 
