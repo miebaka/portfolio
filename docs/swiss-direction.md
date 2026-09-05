@@ -42,7 +42,7 @@ Poster A Week has no cover image in the project data. Kiki-Joshua and Kigoma Hot
 - Three.js canvas rendered; pause control changed to Play motion.
 - Mobile menu expanded, exposed destinations, and closed with Escape.
 - Dark theme rendered successfully on mobile and persisted across navigation.
-- Brand filter returned exactly Rivo, TEDx RSU, and ChopBox.
+- Brand filter returned exactly Rivo, TEDx RSU, and ChopBox. Art direction returned three matching projects; Digital returned Kigoma Hotels; All work restored all six. The catalogue also passed a 390px overflow check.
 - No broken loaded images in the catalogue check; no browser console errors in home/case checks.
 - All 14 site HTML pages checked for missing local src/href destinations: none.
 - All project case destinations and all advertised catalogue image sizes checked: none missing.
