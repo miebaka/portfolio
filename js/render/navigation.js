@@ -69,7 +69,7 @@ export function renderNavigation() {
   el.innerHTML =
     '<div class="container site-nav__inner">' +
       '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
-        '<span class="site-nav__logo" aria-hidden="true"></span>' +
+        '<span class="swiss-brand">Miebaka Joshua<span aria-hidden="true">®</span></span>' +
       "</a>" +
       /* Shown only below the mobile breakpoint; toggles the links panel. */
       '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links">Menu</button>' +

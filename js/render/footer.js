@@ -18,6 +18,7 @@ export function renderFooter() {
     .join("");
   el.className = "site-footer";
   el.innerHTML =
+    '<div class="container swiss-footer-top"><span class="swiss-label">Have something in mind?</span><a class="swiss-footer-cta" href="' + basePath() + 'contact.html">Let’s make it matter.<span aria-hidden="true">↗</span></a></div>' +
     '<div class="container site-footer__grid">' +
       '<a class="site-footer__email" href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + "</a>" +
       '<div class="site-footer__meta">' +

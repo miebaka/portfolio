@@ -1,58 +1,54 @@
-/* Render — projects: the work index (editorial rows) and the client marquee. */
+/* Two listings, one source of project data. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-/* The work is an editorial index, not a gallery of cards: numbered rows, the
-   project name at display scale, category and year. Full-bleed imagery lives in
-   the case studies, so a reference here is a name and a decision, not six
-   competing photographs. Rows indent and the name shifts to the accent on
-   hover and focus — it looks interactive because it is. */
-function workRow(project, i, base) {
-  const num = String(i + 1).padStart(2, "0");
-  /* Stagger the scroll-reveal down the list: .reveal reads --reveal-i as a
-     transition-delay multiplier, so the rows cascade in rather than all at once. */
-  const stagger = ' style="--reveal-i:' + i + '"';
-  const inner =
-    '<span class="work-index__idx">' + num + "</span>" +
-    '<span class="work-index__name">' + esc(project.title) + "</span>";
-
-  /* A project with no case study behind it is a real row, but not a link:
-     there is nothing to open yet, so it states its status in the meta slot
-     rather than promising a page that is not there. */
-  if (project.caseReady === false) {
-    return (
-      '<div class="work-index__row work-index__row--pending reveal"' + stagger + ">" +
-        inner +
-        '<span class="work-index__meta">In progress</span>' +
-      "</div>"
-    );
-  }
-
-  const meta = esc(project.category) + " &middot; " + esc(project.year);
-  /* The cursor-following hover preview reads this: the small cover variant, so
-     the plate is light to fetch. Rows without a cover simply get no preview. */
-  const coverAttr = project.cover
-    ? ' data-cover="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp"'
-    : "";
-  return (
-    '<a class="work-index__row reveal" href="' + base + "work/" + esc(project.slug) + '.html"' + coverAttr + stagger + ">" +
-      inner +
-      '<span class="work-index__meta">' + meta + "</span>" +
-    "</a>"
-  );
+function titleMarkup(title) {
+  const first = [...title][0] || "";
+  return '<span class="swiss-initial">' + esc(first) + '</span>' + esc(title.slice(first.length));
 }
-
-/* Home shows the featured set; the Work page shows everything. Same data, same
-   renderer, differentiated only by which page is asking. */
+function cover(project, base) {
+  if (!project.cover) return '<div class="project-no-image"><span>' + esc(project.caseReady === false ? 'In progress' : 'Image archive forthcoming') + '</span><span aria-hidden="true">' + esc(project.title) + '</span></div>';
+  const src = base + 'assets/images/optimized/' + safeToken(project.cover);
+  return '<img src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 25vw" alt="' + esc(project.tagline) + '" width="810" height="1080" loading="lazy" decoding="async">';
+}
+function projectMarkup(project, i, base, archive) {
+  const number = String(i + 1).padStart(2, '0');
+  const pending = project.caseReady === false;
+  const element = pending ? 'article' : 'a';
+  const href = pending ? '' : ' href="' + base + 'work/' + safeToken(project.slug) + '.html"';
+  if (!archive) {
+    const preview = project.cover ? ' data-cover="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp"' : '';
+    return '<' + element + href + preview + ' class="swiss-work-row work-index__row"><span class="swiss-work-number">' + number + '</span><span class="swiss-work-name">' + titleMarkup(project.title) + '</span><span class="swiss-work-info">' + esc(project.tags[0]) + '<br>' + esc(project.year) + '</span><span class="swiss-work-arrow" aria-hidden="true">↗</span></' + element + '>';
+  }
+  return '<' + element + href + ' class="project-column" data-project="' + safeToken(project.slug) + '"><div class="project-column__head"><span>' + number + '</span><h2>' + esc(project.title) + '</h2><span aria-hidden="true">' + (pending ? '—' : '↗') + '</span></div><p class="project-column__category">(' + esc(project.category) + ')</p><ul class="project-column__tags">' + project.tags.map(tag => '<li>' + esc(tag) + '</li>').join('') + '</ul><div class="project-column__image">' + cover(project, base) + '</div><div class="project-column__foot"><span>' + esc(project.year) + '</span><span>' + (pending ? 'In progress' : 'View project') + '</span></div></' + element + '>';
+}
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
-  const base = basePath();
-  const all = SITE.projects || [];
-  const items = document.body.dataset.page === "work" ? all : all.filter((p) => p.featured);
-  el.classList.add("work-index");
-  el.innerHTML = items.map((project, i) => workRow(project, i, base)).join("");
+  const archive = document.body.dataset.page === 'work';
+  const projects = archive ? SITE.projects : SITE.projects.filter(p => p.featured);
+  el.classList.add(archive ? 'project-catalogue' : 'swiss-work-list');
+  el.innerHTML = projects.map((p,i) => projectMarkup(p,i,basePath(),archive)).join('');
+  if (!archive) return;
+  const filters = document.querySelector('.swiss-filters');
+  filters.hidden = false;
+  const count = filters.querySelector('.swiss-filter-count');
+  count.textContent = projects.length + ' projects';
+  filters.addEventListener('click', event => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    const filter = button.dataset.filter;
+    let shown = 0;
+    projects.forEach(p => {
+      const tags = p.tags.join(' ').toLowerCase();
+      const matches = filter === 'all' || (filter === 'brand' && tags.includes('brand')) || (filter === 'direction' && /direction|graphic|typography/.test(tags)) || (filter === 'digital' && /ui |product|web/.test(tags));
+      el.querySelector('[data-project="' + safeToken(p.slug) + '"]').hidden = !matches;
+      if (matches) shown++;
+    });
+    filters.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    count.textContent = shown + (shown === 1 ? ' project' : ' projects');
+  });
 }
 
 function clientItem(client) {
