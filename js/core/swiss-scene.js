@@ -1,87 +1,166 @@
-/* Progressive Three.js enhancement. Content never waits for WebGL. */
+/* The homepage logo is the only 3D object. A shared renderer also paints
+   a flat, glyph-masked colour fill over the selected-work names on interaction. */
 export async function initSwissScene() {
-  const host = document.querySelector('[data-swiss-scene]');
-  if (!host) return;
+  const hosts = [...document.querySelectorAll('[data-swiss-scene]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  // Keep the authored SVG for reduced motion and data-saving connections.
-  if (motion.matches || navigator.connection?.saveData) return;
-  let renderer;
+  if (!hosts.length || motion.matches || navigator.connection?.saveData) return;
+  // Pages whose only scene is in the footer do not download Three until needed.
+  await new Promise(resolve => {
+    const preload = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { preload.disconnect(); resolve(); }
+    }, { rootMargin: '180px' });
+    hosts.forEach(host => preload.observe(host));
+  });
+  if (motion.matches || !hosts[0].isConnected) return;
+  let renderer, cleanup = () => {};
   try {
-    const THREE = await import('../vendor/three/three.module.min.js');
-    if (!host.isConnected || motion.matches) return;
-    renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true, powerPreference:'low-power' });
-    renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-    renderer.setClearColor(0x000000,0);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
-    renderer.domElement.setAttribute('aria-hidden','true');
-    host.append(renderer.domElement);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(32,1,.1,30);
-    camera.position.set(0,0,7.4);
-    const sculpture = new THREE.Group();
-    scene.add(sculpture);
-    // A stack of rounded rectangular loops: a grid released into three dimensions.
-    const shape = new THREE.Shape();
-    const w=1.34,h=.88,r=.26;
-    shape.moveTo(-w+r,-h);shape.lineTo(w-r,-h);shape.quadraticCurveTo(w,-h,w,-h+r);
-    shape.lineTo(w,h-r);shape.quadraticCurveTo(w,h,w-r,h);shape.lineTo(-w+r,h);
-    shape.quadraticCurveTo(-w,h,-w,h-r);shape.lineTo(-w,-h+r);shape.quadraticCurveTo(-w,-h,-w+r,-h);
-    const hole = new THREE.Path();
-    const a=1.04,b=.58,q=.18;
-    hole.moveTo(-a+q,-b);hole.quadraticCurveTo(-a,-b,-a,-b+q);hole.lineTo(-a,b-q);hole.quadraticCurveTo(-a,b,-a+q,b);hole.lineTo(a-q,b);hole.quadraticCurveTo(a,b,a,b-q);hole.lineTo(a,-b+q);hole.quadraticCurveTo(a,-b,a-q,-b);hole.lineTo(-a+q,-b);
-    shape.holes.push(hole);
-    const geometry = new THREE.ExtrudeGeometry(shape,{depth:.045,bevelEnabled:true,bevelSegments:3,steps:1,bevelSize:.025,bevelThickness:.025,curveSegments:16});
-    geometry.center();
-    const material = new THREE.MeshPhysicalMaterial({color:0x1649ed,metalness:.32,roughness:.24,clearcoat:1,clearcoatRoughness:.2});
-    const plates=[];
-    for (let i=0;i<13;i++) {
-      const mesh = new THREE.Mesh(geometry,material);
-      mesh.position.z=(i-6)*.12;
-      mesh.rotation.z=(i-6)*.085;
-      sculpture.add(mesh);plates.push(mesh);
+    const T = await import('../vendor/three/three.module.min.js');
+    if (motion.matches) return;
+    renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    renderer.setClearColor(0, 0);
+    renderer.outputColorSpace = T.SRGBColorSpace;
+    renderer.toneMapping = T.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    const canvas = renderer.domElement;
+    canvas.className = 'enquiry-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.append(canvas);
+
+    // Authored light cards produce a lacquered surface without an HDR download.
+    const studio = new T.Scene();
+    studio.background = new T.Color(0x596078);
+    const cards = [];
+    [[-4, 3, 4, 4, 7], [3, 4, 1, 5, 3], [2, -3, -4, 2, 7]].forEach(([x,y,z,w,h]) => {
+      const card = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({color:new T.Color(4,4,4), side:T.DoubleSide}));
+      card.position.set(x,y,z); card.lookAt(0,0,0); studio.add(card); cards.push(card);
+    });
+    const pmrem = new T.PMREMGenerator(renderer);
+    const environment = pmrem.fromScene(studio, .02);
+    cards.forEach(card => {card.geometry.dispose();card.material.dispose();});
+    pmrem.dispose();
+    const material = new T.MeshPhysicalMaterial({color:0x1249ef, metalness:.62, roughness:.23, clearcoat:1, clearcoatRoughness:.16, envMap:environment.texture, envMapIntensity:1.25});
+    const { SVGLoader } = await import('../vendor/three/SVGLoader.js');
+    const response = await fetch(new URL('../../assets/images/miebaka-joshua-logo.svg', import.meta.url));
+    if (!response.ok) throw new Error('Logo unavailable');
+    const logo = new SVGLoader().parse(await response.text());
+    const geometries = logo.paths.flatMap(path => SVGLoader.createShapes(path)).map(shape => {
+      const geometry = new T.ExtrudeGeometry(shape, {depth:34,bevelEnabled:true,bevelThickness:1.5,bevelSize:1.1,bevelSegments:3,curveSegments:14,steps:1});
+      geometry.translate(-200,-200,-17);
+      geometry.scale(.011,.011,.011);
+      geometry.rotateX(Math.PI);
+      return geometry;
+    });
+    let paused = false;
+    try { paused = sessionStorage.getItem('enquiry-paused') === 'true'; } catch {}
+    let frame = 0, previous = 0, phase = 0, disposed = false, inPage = true;
+    const removers = [];
+    function on(target,event,fn,options) {target.addEventListener(event,fn,options);removers.push(() => target.removeEventListener(event,fn,options));}
+    const views = hosts.map(host => {
+      const scene = new T.Scene();
+      const camera = new T.PerspectiveCamera(34,1,.1,40);
+      const group = new T.Group();
+      geometries.forEach(geometry => group.add(new T.Mesh(geometry,material)));
+      group.rotation.set(.12,-.3,0);
+      scene.add(group,new T.HemisphereLight(0xffffff,0x435585,1.5));
+      const key=new T.DirectionalLight(0xffffff,2);key.position.set(-2,4,5);scene.add(key);
+      const view = {host,scene,camera,group,pointer:{x:0,y:0}};
+      on(host,'pointermove',event => {const r=host.getBoundingClientRect();view.pointer.x=((event.clientX-r.left)/r.width-.5)*2;view.pointer.y=((event.clientY-r.top)/r.height-.5)*2;request();},{passive:true});
+      on(host,'pointerleave',() => {view.pointer.x=0;view.pointer.y=0;request();});
+      return view;
+    });
+    const buttons=[...document.querySelectorAll('.scene-toggle')];
+    function syncButtons() {buttons.forEach(button => {button.hidden=motion.matches;button.textContent=paused?'Play motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));});}
+    buttons.forEach(button => on(button,'click',() => {paused=!paused;try{sessionStorage.setItem('enquiry-paused',String(paused));}catch{}syncButtons();request();}));
+    const textViews = [];
+    await document.fonts.ready;
+    for (const host of document.querySelectorAll('.swiss-work-name')) {
+      const row=host.closest('a'); if(!row) continue;
+      const textureCanvas=document.createElement('canvas');
+      const maskContext=textureCanvas.getContext('2d');
+      if(!maskContext || !('letterSpacing' in maskContext)) continue;
+      const texture=new T.CanvasTexture(textureCanvas);
+      const uniforms={mask:{value:texture},progress:{value:0},time:{value:0},ink:{value:new T.Color(host.dataset.fillColor)}};
+      const shader=new T.ShaderMaterial({transparent:true,depthTest:false,uniforms,
+        vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',
+        fragmentShader:`uniform sampler2D mask; uniform float progress; uniform float time; uniform vec3 ink; varying vec2 vUv;
+          void main(){float glyph=texture2D(mask,vUv).a;
+          float edge=progress*1.35-.16 + sin(vUv.y*11.+time*2.)*.065*sin(progress*3.14159);
+          float fill=1.-smoothstep(edge-.035,edge+.035,vUv.x);
+          gl_FragColor=vec4(ink,glyph*fill);
+          #include <colorspace_fragment>
+        }`});
+      const scene=new T.Scene();const geometry=new T.PlaneGeometry(2,2);scene.add(new T.Mesh(geometry,shader));
+      const view={host,scene,camera:new T.Camera(),uniforms,texture,textureCanvas,shader,geometry,active:row.matches(':hover') || document.activeElement===row,progress:0,width:0,height:0};
+      const enter=()=>{view.active=true;request();};const leave=()=>{view.active=false;request();};
+      on(row,'pointerenter',enter);on(row,'pointerleave',leave);on(row,'focus',enter);on(row,'blur',leave);
+      host.classList.add('webgl-fill');textViews.push(view);
     }
-    scene.add(new THREE.HemisphereLight(0xffffff,0x6979ab,1.6));
-    const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(-3,4,5);scene.add(key);
-    const rim=new THREE.DirectionalLight(0x9fbaff,4);rim.position.set(4,-2,-3);scene.add(rim);
-    const fill=new THREE.DirectionalLight(0xffffff,1.5);fill.position.set(3,1,4);scene.add(fill);
-    let pointer={x:0,y:0}, raf=0, visible=true, paused=false, destroyed=false, phase=0, previous=0;
-    const button=host.parentElement.querySelector('.scene-toggle');
-    button.hidden=false;
-    function render(time=0) {
-      raf=0;
-      if(destroyed) return;
-      const dt=previous ? Math.min((time-previous)/1000,.05) : 0;previous=time;
-      if (!paused) phase+=dt;
-      const targetY=-.45+pointer.x*.3+Math.sin(phase*.25)*.13;
-      const targetX=-.35+pointer.y*.18;
-      sculpture.rotation.y+=(targetY-sculpture.rotation.y)*.06;
-      sculpture.rotation.x+=(targetX-sculpture.rotation.x)*.06;
-      sculpture.rotation.z=-.32;
-      plates.forEach((plate,i)=>{plate.rotation.z=(i-6)*(.09+Math.sin(phase*.4)*.035)});
-      renderer.render(scene,camera);
-      host.classList.add('scene-ready');
-      if(visible && !document.hidden && !paused && !motion.matches) raf=requestAnimationFrame(render);
+    function updateMask(view,r) {
+      if(view.width===r.width&&view.height===r.height)return;
+      view.width=r.width;view.height=r.height;
+      const ctx=view.textureCanvas.getContext('2d');const scale=2;
+      view.textureCanvas.width=Math.ceil(r.width*scale);view.textureCanvas.height=Math.ceil(r.height*scale);
+      ctx.scale(scale,scale);
+      const style=getComputedStyle(view.host),size=parseFloat(style.fontSize);
+      ctx.font=style.fontWeight+' '+style.fontSize+' '+style.fontFamily;
+      ctx.letterSpacing=style.letterSpacing;ctx.fillStyle='#fff';ctx.textBaseline='alphabetic';
+      const m=ctx.measureText(view.host.textContent);
+      const ascent=m.fontBoundingBoxAscent??size*.8,descent=m.fontBoundingBoxDescent??size*.2;
+      ctx.fillText(view.host.textContent,0,(r.height-ascent-descent)/2+ascent);
+      view.texture.needsUpdate=true;
     }
-    function start(){previous=0;if(!raf&&!destroyed&&visible&&!document.hidden&&!paused&&!motion.matches) raf=requestAnimationFrame(render)}
-    function stop(){cancelAnimationFrame(raf);raf=0;previous=0}
-    function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height,false);camera.aspect=width/height;camera.position.z=width<400?8.5:7.4;camera.updateProjectionMatrix();renderer.render(scene,camera)}
-    const observer=new ResizeObserver(resize);observer.observe(host);
-    const intersection=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)start();else stop()});intersection.observe(host);
-    const move=e=>{const box=host.getBoundingClientRect();pointer={x:(e.clientX-box.left)/box.width*2-1,y:(e.clientY-box.top)/box.height*2-1}};
-    const leave=()=>{pointer={x:0,y:0}};
-    const visibility=()=>{if(document.hidden)stop();else start()};
-    const changeMotion=()=>{if(motion.matches){stop();host.classList.remove('scene-ready');renderer.domElement.hidden=true;button.hidden=true}else{renderer.domElement.hidden=false;button.hidden=false;start()}};
-    const toggle=()=>{paused=!paused;button.textContent=paused?'Play motion':'Pause motion';button.setAttribute('aria-pressed',String(paused));if(paused)stop();else start()};
-    function destroy(){destroyed=true;stop();observer.disconnect();intersection.disconnect();document.removeEventListener('visibilitychange',visibility);motion.removeEventListener('change',changeMotion);host.removeEventListener('pointermove',move);host.removeEventListener('pointerleave',leave);button.removeEventListener('click',toggle);geometry.dispose();material.dispose();renderer.dispose();renderer.domElement.remove();host.classList.remove('scene-ready');button.hidden=true}
-    host.addEventListener('pointermove',move,{passive:true});host.addEventListener('pointerleave',leave);
-    button.addEventListener('click',toggle);document.addEventListener('visibilitychange',visibility);motion.addEventListener('change',changeMotion);
-    renderer.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();destroy()},{once:true});
-    window.addEventListener('pagehide',event=>{if(event.persisted)stop();else destroy()});
-    window.addEventListener('pageshow',event=>{if(event.persisted)start()});
-    sculpture.rotation.set(-.35,-.45,-.32);resize();start();
+    function request() {if(!frame && !disposed && !document.hidden && inPage) frame=requestAnimationFrame(draw);}
+    function draw(time) {
+      frame=0;
+      if(disposed) return;
+      const dt=previous?Math.min((time-previous)/1000,.05):0;previous=time;
+      if(!paused&&!motion.matches) phase+=dt;
+      renderer.setScissorTest(false);renderer.clear();renderer.setScissorTest(true);
+      let anyVisible=false;
+      const width=window.innerWidth,height=window.innerHeight;
+      for(const view of [...views,...textViews]) {
+        if(view.uniforms) {
+          const target=view.active?1:0;
+          view.progress+=(target-view.progress)*.12;
+          if(Math.abs(target-view.progress)<.001)view.progress=target;
+          view.uniforms.progress.value=view.progress;view.uniforms.time.value=time/1000;
+        }
+        const r=view.host.getBoundingClientRect();
+        if(r.bottom<=0||r.top>=height||r.right<=0||r.left>=width||!r.width||!r.height) continue;
+        if(!view.uniforms)anyVisible=true;
+        if(view.uniforms) {
+          updateMask(view,r);
+
+        } else if(!paused&&!motion.matches) {
+          view.group.rotation.y += (-.24+view.pointer.x*.45+Math.sin(phase*.22)*.15-view.group.rotation.y)*.07;
+          view.group.rotation.x += (view.pointer.y*.25-view.group.rotation.x)*.07;
+          view.group.rotation.z = Math.sin(phase*.18)*.045;
+        }
+        if(!view.uniforms) { view.camera.aspect=r.width/r.height;
+        view.camera.position.z= Math.max(8.8, 5.1/(2*Math.tan(17*Math.PI/180)*view.camera.aspect));
+        view.camera.updateProjectionMatrix(); }
+        renderer.setViewport(r.left,height-r.bottom,r.width,r.height);
+        renderer.setScissor(Math.max(0,r.left),Math.max(0,height-r.bottom),Math.min(width,r.right)-Math.max(0,r.left),Math.min(height,r.bottom)-Math.max(0,r.top));
+        renderer.render(view.scene,view.camera);
+        if(!view.uniforms)view.host.classList.toggle('scene-ready',!motion.matches);
+      }
+      if(!motion.matches && ((anyVisible&&!paused) || textViews.some(view=>view.progress!==(view.active?1:0)))) request();
+    }
+    function resize() {renderer.setSize(window.innerWidth,window.innerHeight,false);request();}
+    const observer=new ResizeObserver(request);hosts.forEach(host => observer.observe(host));
+    on(window,'resize',resize,{passive:true});on(window,'scroll',request,{passive:true});
+    on(document,'visibilitychange',() => {previous=0;if(document.hidden){cancelAnimationFrame(frame);frame=0;}else request();});
+    on(motion,'change',() => {canvas.hidden=motion.matches;hosts.forEach(host=>host.classList.remove('scene-ready'));textViews.forEach(view=>view.host.classList.toggle('webgl-fill',!motion.matches));syncButtons();request();});
+    cleanup = () => {
+      if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();removers.forEach(remove=>remove());
+      geometries.forEach(geometry=>geometry.dispose());textViews.forEach(view=>{view.texture.dispose();view.shader.dispose();view.geometry.dispose();view.host.classList.remove('webgl-fill');});material.dispose();environment.dispose();renderer.dispose();canvas.remove();hosts.forEach(host=>host.classList.remove('scene-ready'));buttons.forEach(button=>button.hidden=true);
+    };
+    on(canvas,'webglcontextlost',event => {event.preventDefault();cleanup();});
+    on(window,'pagehide',event => {inPage=false;if(event.persisted){cancelAnimationFrame(frame);frame=0;}else cleanup();});
+    on(window,'pageshow',event => {if(event.persisted){inPage=true;previous=0;request();}});
+    syncButtons();resize();
   } catch {
-    renderer?.dispose();renderer?.domElement.remove();host.classList.remove('scene-ready');
+    cleanup();renderer?.dispose();renderer?.domElement.remove();hosts.forEach(host=>host.classList.remove('scene-ready'));
   }
 }
