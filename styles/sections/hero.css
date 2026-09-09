@@ -285,7 +285,7 @@
   }
   .hero-noir__meta { flex-direction: column; gap: var(--space-1); }
   /* Full width available once stacked — the column cap no longer applies */
-  .hero-noir__statement { font-size: clamp(2.25rem, 9vw, 4rem); }
+  .hero-noir__statement { font-size: var(--step-statement); }
 }
 
 @media (max-width: 480px) {
