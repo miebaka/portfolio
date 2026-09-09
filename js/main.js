@@ -18,6 +18,7 @@ import { initForm } from "./core/form.js";
 import { initHeroParallax } from "./core/hero-parallax.js";
 import { initCountUp } from "./core/count-up.js";
 import { initSwissScene } from "./core/swiss-scene.js";
+import { initPageTransition } from "./core/page-transition.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -47,6 +48,7 @@ initHeroParallax();
 /* After renderCaseStudy() has built the metric markup. */
 initCountUp();
 initSwissScene();
+initPageTransition();
 
 /* Normalise directional link icons after all data-driven markup exists. */
 for (const link of document.querySelectorAll("a, button[type=submit]")) {

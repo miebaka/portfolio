@@ -14,7 +14,7 @@ function projectMarkup(project, i, base, archive) {
   const element = pending ? 'article' : 'a';
   const href = pending ? '' : ' href="' + base + 'work/' + safeToken(project.slug) + '.html"';
   if (!archive) {
-    return '<' + element + href + ' class="swiss-work-row"><span class="swiss-work-name" data-fill-color="' + ['#1649ed','#9b37d9','#e53924','#008870'][i % 4] + '">' + esc(project.title) + '</span><span class="swiss-work-arrow" aria-hidden="true">↗</span></' + element + '>';
+    return '<' + element + href + ' class="swiss-work-row"><span class="swiss-work-name" data-fill-color="#c2531c">' + esc(project.title) + '</span><span class="swiss-work-arrow" aria-hidden="true">↗</span></' + element + '>';
   }
   return '<' + element + href + ' class="project-column" data-project="' + safeToken(project.slug) + '"><div class="project-column__head"><span>' + number + '</span><h2>' + esc(project.title) + '</h2><span aria-hidden="true">' + (pending ? '—' : '↗') + '</span></div><p class="project-column__category">(' + esc(project.category) + ')</p><ul class="project-column__tags">' + project.tags.map(tag => '<li>' + esc(tag) + '</li>').join('') + '</ul><div class="project-column__image">' + cover(project, base) + '</div><div class="project-column__foot"><span>' + esc(project.year) + '</span><span>' + (pending ? 'In progress' : 'View project') + '</span></div></' + element + '>';
 }

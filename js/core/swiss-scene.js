@@ -29,7 +29,7 @@ export async function initSwissScene() {
 
     // Authored light cards produce a lacquered surface without an HDR download.
     const studio = new T.Scene();
-    studio.background = new T.Color(0x596078);
+    studio.background = new T.Color(0x70665a);
     const cards = [];
     [[-4, 3, 4, 4, 7], [3, 4, 1, 5, 3], [2, -3, -4, 2, 7]].forEach(([x,y,z,w,h]) => {
       const card = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({color:new T.Color(4,4,4), side:T.DoubleSide}));
@@ -39,7 +39,7 @@ export async function initSwissScene() {
     const environment = pmrem.fromScene(studio, .02);
     cards.forEach(card => {card.geometry.dispose();card.material.dispose();});
     pmrem.dispose();
-    const material = new T.MeshPhysicalMaterial({color:0x1249ef, metalness:.62, roughness:.23, clearcoat:1, clearcoatRoughness:.16, envMap:environment.texture, envMapIntensity:1.25});
+    const material = new T.MeshPhysicalMaterial({color:0xc2531c, metalness:.62, roughness:.23, clearcoat:1, clearcoatRoughness:.16, envMap:environment.texture, envMapIntensity:1.25});
     const { SVGLoader } = await import('../vendor/three/SVGLoader.js');
     const response = await fetch(new URL('../../assets/images/miebaka-joshua-logo.svg', import.meta.url));
     if (!response.ok) throw new Error('Logo unavailable');
@@ -62,7 +62,7 @@ export async function initSwissScene() {
       const group = new T.Group();
       geometries.forEach(geometry => group.add(new T.Mesh(geometry,material)));
       group.rotation.set(.12,-.3,0);
-      scene.add(group,new T.HemisphereLight(0xffffff,0x435585,1.5));
+      scene.add(group,new T.HemisphereLight(0xffffff,0x665344,1.5));
       const key=new T.DirectionalLight(0xffffff,2);key.position.set(-2,4,5);scene.add(key);
       const view = {host,scene,camera,group,pointer:{x:0,y:0}};
       on(host,'pointermove',event => {const r=host.getBoundingClientRect();view.pointer.x=((event.clientX-r.left)/r.width-.5)*2;view.pointer.y=((event.clientY-r.top)/r.height-.5)*2;request();},{passive:true});

@@ -10,6 +10,16 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: var(--tracking-heading);
   text-wrap: balance;
 }
+
+body,
+p,
+li,
+dd,
+blockquote,
+input,
+textarea {
+  font-family: var(--font-body);
+}
 h1 { font-size: var(--step-h1); }
 h2 { font-size: var(--step-h2); }
 h3 { font-size: var(--step-h3); }

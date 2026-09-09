@@ -28,6 +28,7 @@
 @import "components/footer.css";
 @import "components/now-playing.css";
 @import "components/generative-field.css";
+@import "components/page-transition.css";
 
 /* Sections */
 @import "sections/hero.css";
