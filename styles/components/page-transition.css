@@ -4,27 +4,18 @@
   z-index: calc(var(--z-nav) + 20);
   overflow: hidden;
   pointer-events: none;
+  background: transparent;
 }
-.page-transition__veil,
-.page-transition__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.page-transition__veil { background: var(--paper); will-change: clip-path; }
-.page-transition__canvas { z-index: 1; }
-.page-transition--out .page-transition__veil { clip-path: inset(0 100% 0 0); }
-.page-transition--out.is-running .page-transition__veil {
-  clip-path: inset(0 0 0 0);
-  transition: clip-path var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
-}
-.page-transition--in .page-transition__veil { clip-path: inset(0 0 0 0); }
-.page-transition--in.is-running .page-transition__veil {
-  clip-path: inset(0 0 0 100%);
-  transition: clip-path var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
-}
+.page-transition__next,.page-transition__canvas {position:absolute;inset:0;width:100%;height:100%;border:0}
+.page-transition__next {z-index:0;background:var(--paper);transform:translateX(100%);will-change:transform}
+.page-transition__canvas {z-index:1}
+.page-transition.is-running .page-transition__next {transform:none;transition:transform var(--motion-page,2600ms) var(--ease-signature,cubic-bezier(.65,0,.35,1))}
 .page-is-leaving body > :not(.page-transition),
 .page-is-entering body > :not(.page-transition) {
   transition: transform var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
   will-change: transform;
 }
-.page-is-leaving body > :not(.page-transition) { transform: translateX(-9vw); }
+.page-is-leaving body > :not(.page-transition) { transform: translateX(-100vw); }
 .page-is-entering body > :not(.page-transition) { animation: page-drag-in 420ms cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes page-drag-in { from { transform: translateX(9vw); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .page-transition { display: none; } }
