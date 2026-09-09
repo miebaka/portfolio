@@ -53,7 +53,7 @@ initFooterScene();
 initPageTransition();
 
 /* Normalise directional link icons after all data-driven markup exists. */
-for (const link of document.querySelectorAll("a, button[type=submit]")) {
+for (const link of document.querySelectorAll("a:not(.project-column):not(.swiss-work-row), button[type=submit]")) {
   const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
   const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
   for (const node of nodes) {
@@ -64,4 +64,5 @@ for (const link of document.querySelectorAll("a, button[type=submit]")) {
       else fragment.append(document.createTextNode(part));
     }); node.replaceWith(fragment);
   }
+  for (const arrow of link.querySelectorAll(".link-arrow")) link.append(arrow);
 }

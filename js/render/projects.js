@@ -9,14 +9,13 @@ function cover(project, base) {
   return '<img src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 25vw" alt="' + esc(project.tagline) + '" width="810" height="1080" loading="lazy" decoding="async">';
 }
 function projectMarkup(project, i, base, archive) {
-  const number = String(i + 1).padStart(2, '0');
   const pending = project.caseReady === false;
   const element = pending ? 'article' : 'a';
   const href = pending ? '' : ' href="' + base + 'work/' + safeToken(project.slug) + '.html"';
   if (!archive) {
     return '<' + element + href + ' class="swiss-work-row"><span class="swiss-work-name" data-fill-color="#c2531c">' + esc(project.title) + '</span><span class="swiss-work-arrow" aria-hidden="true">↗</span></' + element + '>';
   }
-  return '<' + element + href + ' class="project-column" data-project="' + safeToken(project.slug) + '"><div class="project-column__head"><span>' + number + '</span><h2>' + esc(project.title) + '</h2><span aria-hidden="true">' + (pending ? '—' : '↗') + '</span></div><p class="project-column__category">(' + esc(project.category) + ')</p><ul class="project-column__tags">' + project.tags.map(tag => '<li>' + esc(tag) + '</li>').join('') + '</ul><div class="project-column__image">' + cover(project, base) + '</div><div class="project-column__foot"><span>' + esc(project.year) + '</span><span>' + (pending ? 'In progress' : 'View project') + '</span></div></' + element + '>';
+  return '<' + element + href + ' class="project-column" data-project="' + safeToken(project.slug) + '"><div class="project-column__head"><h2>' + esc(project.title) + '</h2></div><p class="project-column__category">(' + esc(project.category) + ')</p><ul class="project-column__tags">' + project.tags.map(tag => '<li>' + esc(tag) + '</li>').join('') + '</ul><div class="project-column__image">' + cover(project, base) + (pending ? '' : '<span class="project-card-cta">View project <span aria-hidden="true">↗</span></span>') + '</div></' + element + '>';
 }
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);

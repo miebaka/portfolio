@@ -120,6 +120,6 @@ export function renderBackButton() {
   const btn = document.createElement("a");
   btn.className = "back-btn";
   btn.href = base + "index.html";
-  btn.innerHTML = "&larr;&ensp;Home";
+  btn.innerHTML = "Home <span aria-hidden=\"true\">↗</span>";
   document.body.appendChild(btn);
 }

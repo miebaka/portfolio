@@ -9,8 +9,7 @@
 }
 [hidden] {display:none!important}
 :focus-visible {outline:2px solid var(--accent-text);outline-offset:5px}
-main > section + section {margin-block-start:clamp(3rem,6vw,6rem)}
-.site-nav {position:relative;background:var(--paper)}
+.site-nav {position:fixed;inset:0 0 auto;background:color-mix(in srgb,var(--paper) 92%,transparent);padding-block:var(--space-2);height:auto;min-height:calc(var(--nav-h) + var(--space-2))}
 .site-nav__inner {justify-content:space-between}
 .nav-logo {display:block;width:44px;height:44px}
 [data-theme="dark"] .nav-logo,[data-theme="dark"] .logo-fallback {filter:invert(1)}
@@ -46,10 +45,11 @@ main > section + section {margin-block-start:clamp(3rem,6vw,6rem)}
 
 /* The name is the opening display moment; the reading voice remains distinct. */
 .masthead-wrap {position:relative}
-.swiss-hero .personal-masthead {position:relative;font-family:var(--font-display);font-size:clamp(7.5rem,15vw,13rem);line-height:.82;letter-spacing:var(--tracking-poster);font-weight:400;margin:var(--space-7) 0 var(--space-8);display:flex;flex-direction:column;max-width:none}
+.swiss-hero .personal-masthead {position:relative;font-family:var(--font-display);font-size:clamp(9rem,17vw,15rem);line-height:.78;letter-spacing:var(--tracking-poster);font-weight:400;margin:var(--space-7) 0 var(--space-8);display:flex;flex-direction:column;max-width:none}
+.personal-masthead>span:first-child,.personal-masthead>span:last-child {position:relative;z-index:4;pointer-events:none}
 .personal-masthead>span:first-child {align-self:flex-start}
 .personal-masthead>span:last-child {align-self:flex-end}
-.masthead-logo {position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);display:block;width:clamp(180px,22vw,320px);aspect-ratio:1;min-width:0}
+.masthead-logo {position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);display:block;width:clamp(240px,29vw,430px);aspect-ratio:1;min-width:0;pointer-events:auto}
 .masthead-logo .swiss-object__stage {display:block;width:100%;height:100%}
 .masthead-dot {color:var(--accent)}
 .masthead-playing {position:absolute;top:calc(100% + var(--space-2));left:0;width:38%}
@@ -99,10 +99,12 @@ a:hover .link-arrow,a:focus-visible .link-arrow,button:hover .link-arrow {transf
 .project-column__head {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
 .project-column h2 {font-size:var(--step-h6);line-height:1.3}
 .project-column__head>span:first-child,.project-column__category,.project-column__tags {display:none}
-.project-column__image {aspect-ratio:3/4;overflow:hidden;background:var(--linen)}
+.project-column__image {position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--linen)}
 .project-column__image img {width:100%;height:100%;object-fit:cover;transition:transform .5s}
 a.project-column:hover img {transform:scale(1.025)}
-.project-column__foot {display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:20px;font-family:var(--font-label);font-size:var(--step-meta);color:var(--text-muted);text-transform:uppercase;letter-spacing:var(--tracking-label)}
+.project-column__foot {display:none}
+.project-card-cta {position:absolute;right:var(--space-3);bottom:var(--space-3);z-index:2;display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--radius-pill);background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:var(--step-meta);font-weight:700;letter-spacing:var(--tracking-button);text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity var(--duration-standard) var(--ease-standard),transform var(--duration-standard) var(--ease-out-expo),background var(--duration-fast) var(--ease-standard)}
+.project-column:hover .project-card-cta,.project-column:focus-visible .project-card-cta {opacity:1;transform:none;background:var(--accent-text)}
 .project-no-image {height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:20px;border:1px solid var(--border)}
 .project-no-image>span:first-child {font-family:var(--font-label);font-size:var(--step-meta)}
 .project-no-image>span:last-child {font-size:var(--step-h3);line-height:1.15;letter-spacing:var(--tracking-heading)}
@@ -130,15 +132,15 @@ body[data-page="work"] .back-btn {display:none}
  .swiss-object__stage {height:300px}
  .hero {padding-block:var(--section-block-tight)}
  .hero .hero__lede {margin-top:24px}
- .swiss-hero .personal-masthead {font-size:clamp(88px,17vw,128px)}
- .masthead-logo {width:clamp(130px,25vw,190px)}
+ .swiss-hero .personal-masthead {font-size:clamp(96px,19vw,144px)}
+ .masthead-logo {width:clamp(170px,30vw,230px)}
 }
 @media(max-width:640px) {
  .site-nav__inner {gap:16px}
  .site-nav__menu-btn {margin-left:auto}
  .site-nav__links {background:var(--paper);gap:8px}
- .swiss-hero .personal-masthead {font-size:clamp(64px,20vw,100px);margin-top:var(--space-5)}
- .masthead-logo {width:clamp(96px,30vw,150px)}
+ .swiss-hero .personal-masthead {font-size:clamp(72px,22vw,110px);margin-top:var(--space-5)}
+ .masthead-logo {width:clamp(120px,38vw,180px)}
  .masthead-playing {width:34%}
  .now-playing {padding:8px 10px}
  .now-playing__dot {display:none}
@@ -153,6 +155,21 @@ body[data-page="work"] .back-btn {display:none}
  .swiss-about img {width:180px;height:225px}
  .swiss-selected,.swiss-about {padding-block:var(--section-block-tight)}
 }
+
+/* One controlled interval between page sections. Components own their inner
+   spacing; adjacent sections do not stack padding and margin on top of it. */
+main > section {padding-block:0!important}
+main > section:first-child {padding-top:clamp(9rem,14vw,14rem)!important}
+main > section + section {margin-top:clamp(8rem,13vw,13rem)}
+main > section:last-child {margin-bottom:clamp(8rem,13vw,13rem)}
+
+@media (hover:hover) {
+  :is(a,button):hover {color:var(--accent-text)}
+  :is(.btn,.back-btn):hover {background:var(--accent-text);color:var(--paper)}
+}
+
+:is(.btn,.back-btn,.project-card-cta) {font-family:var(--font-label);font-size:var(--step-meta);font-weight:700;letter-spacing:var(--tracking-button);text-transform:uppercase}
+:is(.btn,.back-btn,.project-card-cta) .link-arrow {order:2;margin-inline-start:var(--space-1)}
 @media(prefers-reduced-motion:reduce) {
  *,*::before,*::after {scroll-behavior:auto!important;animation:none!important;transition:none!important}
  a.project-column:hover img {transform:none}

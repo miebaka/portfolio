@@ -1,7 +1,7 @@
 /* Species-specific boomslang transition: a slender taper, narrow neck,
    egg-shaped head, very large eyes, dark-edged green scales and a posteriorly
    travelling lateral wave in which the body follows the head's path. */
-const KEY="miebaka-page-transition", DURATION=1180;
+const KEY="miebaka-page-transition", DURATION=1750;
 const getSaved=()=>{try{return JSON.parse(sessionStorage.getItem(KEY)||"null")}catch{return null}};
 const setSaved=v=>{try{sessionStorage.setItem(KEY,JSON.stringify(v))}catch{}};
 const clearSaved=()=>{try{sessionStorage.removeItem(KEY)}catch{}};
@@ -20,18 +20,18 @@ async function buildBoomslang(canvas){
   const scene=new T.Scene(), camera=new T.OrthographicCamera(-8,8,4.5,-4.5,.1,30); camera.position.z=12;
 
   const count=120, segmentGeometry=new T.SphereGeometry(1,14,10);
-  const skin=new T.MeshPhysicalMaterial({color:0x3f7f29,roughness:.62,clearcoat:.2,clearcoatRoughness:.58});
+  const skin=new T.MeshPhysicalMaterial({color:0x416f32,roughness:.78,clearcoat:.05,clearcoatRoughness:.8});
   const body=new T.InstancedMesh(segmentGeometry,skin,count); body.instanceMatrix.setUsage(T.DynamicDrawUsage); body.frustumCulled=false;
   scene.add(body);
 
   const headGroup=new T.Group();
-  const headMaterial=new T.MeshPhysicalMaterial({color:0x4b8e2c,roughness:.48,clearcoat:.25});
-  const head=new T.Mesh(new T.SphereGeometry(1,24,16),headMaterial); head.scale.set(.68,.38,.31); headGroup.add(head);
-  const irisMaterial=new T.MeshPhysicalMaterial({color:0xd7a629,roughness:.28,clearcoat:.7});
+  const headMaterial=new T.MeshPhysicalMaterial({color:0x4a7937,roughness:.7,clearcoat:.08});
+  const head=new T.Mesh(new T.SphereGeometry(1,32,20),headMaterial); head.scale.set(.56,.28,.235); headGroup.add(head);
+  const irisMaterial=new T.MeshPhysicalMaterial({color:0xb79848,roughness:.42,clearcoat:.35});
   const pupilMaterial=new T.MeshBasicMaterial({color:0x080a07});
   for(const side of [-1,1]){
-    const iris=new T.Mesh(new T.SphereGeometry(.13,16,12),irisMaterial); iris.position.set(.27,side*.29,.19); iris.scale.set(1,.82,.62); headGroup.add(iris);
-    const pupil=new T.Mesh(new T.SphereGeometry(.062,12,8),pupilMaterial); pupil.position.set(.31,side*.305,.285); pupil.scale.set(.72,1,.45); headGroup.add(pupil);
+    const iris=new T.Mesh(new T.SphereGeometry(.09,18,12),irisMaterial); iris.position.set(.21,side*.215,.16); iris.scale.set(1,.9,.55); headGroup.add(iris);
+    const pupil=new T.Mesh(new T.SphereGeometry(.043,12,8),pupilMaterial); pupil.position.set(.235,side*.222,.215); pupil.scale.set(.85,1,.4); headGroup.add(pupil);
   }
   scene.add(headGroup);
 
@@ -41,12 +41,12 @@ async function buildBoomslang(canvas){
 
   const matrix=new T.Matrix4(), quaternion=new T.Quaternion(), scale=new T.Vector3(), position=new T.Vector3(), zAxis=new T.Vector3(0,0,1); let extent=8;
   function resize(){const aspect=innerWidth/innerHeight,vertical=4.5;extent=vertical*aspect;camera.left=-extent;camera.right=extent;camera.top=vertical;camera.bottom=-vertical;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight,false)}
-  const pathY=(x,phase)=>Math.sin(x*1.48-phase)*.76+Math.sin(x*.57-phase*.62)*.16;
+  const pathY=(x,phase)=>Math.sin(x*1.34-phase)*.56+Math.sin(x*.52-phase*.62)*.1;
   function update(progress){
     const spacing=.11, bodyLength=(count-1)*spacing;
     const headX=-extent-1+progress*(extent*2+bodyLength+2.5),phase=progress*7.5;
     for(let i=0;i<count;i++){
-      const x=headX-.48-i*spacing,y=pathY(x,phase),angle=Math.atan2(pathY(x+.04,phase)-y,.04),t=i/(count-1),neck=Math.min(1,i/10),radius=.215*(.5+.5*neck)*Math.pow(1-t,.62)+.045;
+      const x=headX-.42-i*spacing,y=pathY(x,phase),angle=Math.atan2(pathY(x+.04,phase)-y,.04),t=i/(count-1),neck=Math.min(1,i/12),radius=.155*(.42+.58*neck)*Math.pow(1-t,.7)+.028;
       position.set(x,y,Math.sin(i*.34-phase)*.028); quaternion.setFromAxisAngle(zAxis,angle); scale.set(Math.max(spacing*.9,radius*1.6),radius,radius*.92); matrix.compose(position,quaternion,scale); body.setMatrixAt(i,matrix);
     }
     body.instanceMatrix.needsUpdate=true;

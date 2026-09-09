@@ -6,7 +6,7 @@ The site uses an editorial reading voice inside a Swiss structural system: stric
 
 | Role | Face | Range | Leading | Use |
 | --- | --- | ---: | ---: | --- |
-| Poster | TeX Gyre Heros | 56–96px | 1.031 | Name and rare signature statements |
+| Poster | TeX Gyre Heros | 144–240px | 0.78 | Landing-page name only |
 | Hero | TeX Gyre Heros | 36–56px | 1.062 | Page openings |
 | H1 | TeX Gyre Heros | 32–48px | 1.08 | Primary headings |
 | H2 | TeX Gyre Heros | 26–36px | 1.08 | Section statements |
@@ -18,7 +18,7 @@ Display tracking tightens as size increases. Reading measures stop at 34em; capt
 
 ## Space and layout
 
-The base rhythm is 8px. Page gutters scale from 28px to 120px. Editorial column gaps scale from 48px to 128px; list rows from 36px to 64px; major sections from 96px to 192px. Six-column work catalogues step down to three columns at 1100px and two at 640px.
+The base rhythm is 8px. Page gutters scale from 28px to 120px. Editorial column gaps scale from 48px to 128px and list rows from 36px to 64px. Direct page sections use one 128–208px interval, avoiding doubled margins and padding. The Work catalogue uses three columns and two rows, stepping down to two columns on phones.
 
 ## Colour
 
@@ -31,4 +31,4 @@ The boomslang's green exists only during page transitions, so it reads as an aut
 
 ## Motion
 
-Motion is limited to authored signatures: the dimensional logo, selected-work fill, journey ticker, particle signature and boomslang page transition. Every continuous scene pauses outside its useful lifecycle; reduced-motion users receive static fallbacks and direct navigation.
+Motion is limited to authored signatures: the dimensional logo, CSS selected-work fill, journey ticker, particle signature and a single boomslang page transition. Every continuous scene pauses outside its useful lifecycle; reduced-motion users receive static fallbacks and direct navigation.
