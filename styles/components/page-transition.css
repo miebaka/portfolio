@@ -12,19 +12,19 @@
 .page-transition--out .page-transition__veil { clip-path: inset(0 100% 0 0); }
 .page-transition--out.is-running .page-transition__veil {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 760ms cubic-bezier(.76, 0, .24, 1);
+  transition: clip-path var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
 }
 .page-transition--in .page-transition__veil { clip-path: inset(0 0 0 0); }
 .page-transition--in.is-running .page-transition__veil {
   clip-path: inset(0 0 0 100%);
-  transition: clip-path 760ms cubic-bezier(.76, 0, .24, 1);
+  transition: clip-path var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
 }
 .page-is-leaving body > :not(.page-transition),
 .page-is-entering body > :not(.page-transition) {
-  transition: transform 760ms cubic-bezier(.76, 0, .24, 1);
+  transition: transform var(--motion-page, 1500ms) var(--ease-signature, cubic-bezier(.65, 0, .35, 1));
   will-change: transform;
 }
 .page-is-leaving body > :not(.page-transition) { transform: translateX(-9vw); }
-.page-is-entering body > :not(.page-transition) { animation: page-drag-in 760ms cubic-bezier(.76, 0, .24, 1) both; }
+.page-is-entering body > :not(.page-transition) { animation: page-drag-in 420ms cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes page-drag-in { from { transform: translateX(9vw); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .page-transition { display: none; } }

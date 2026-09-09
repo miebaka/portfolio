@@ -46,7 +46,7 @@ export const SITE = {
       title: "When The Swoosh Lost Its Soul",
       href:  "writing/when-the-swoosh-lost-its-soul.html",
       date:  "2026-06-15",
-      summary: "Nike has spent four consecutive years destroying shareholder value. A close read of how creative decisions became a $180 billion financial problem.",
+      summary: "A brand designer examines how Nike’s creative and commercial decisions compounded into a loss of cultural and financial value.",
       tag:  "Brand Strategy",
       readingTime: "10 min read",
     },
@@ -54,7 +54,7 @@ export const SITE = {
       title: "Making the World More Accessible",
       href:  "writing/designing-for-disability-in-nigeria.html",
       date:  "2023-09-29",
-      summary: "At least 20 million Nigerians live with a disability. What that means for designers, and why building inclusively makes better products for everyone.",
+      summary: "What designing for at least 20 million Nigerians with disabilities asks of designers, developers, architects and planners.",
       tag:  "Inclusive Design",
       readingTime: "8 min read",
     },
@@ -69,7 +69,7 @@ export const SITE = {
       slug: "rivo",
       title: "Rivo Studio",
       category: "Software studio",
-      tagline: "Software that simply works for all.",
+      tagline: "An accessible software studio, built to feel useful before it feels technical.",
       tags: ["Brand identity", "Brand strategy", "Guidelines"],
       year: "2025",
       /* Sampled from the vision and mission cards in the brand deck, which is
@@ -83,7 +83,7 @@ export const SITE = {
       slug: "christian-poster-a-week",
       title: "Poster A Week",
       category: "Personal series",
-      tagline: "Scripture, reimagined as bold weekly graphic design.",
+      tagline: "One verse each week, reduced to one visual idea and said with conviction.",
       tags: ["Graphic design", "Art direction", "Typography"],
       year: "2024",
       tone: "#1d4ed8",
@@ -95,7 +95,7 @@ export const SITE = {
       slug: "tedx-rsu",
       title: "TEDx RSU",
       category: "Event",
-      tagline: "A global stage, made unmistakably local.",
+      tagline: "A global event system given a distinct Rivers State rhythm.",
       tags: ["Brand identity", "Creative direction", "Print"],
       year: "2023",
       /* Porphyra, the dominant of the three theme colours. */
@@ -108,7 +108,7 @@ export const SITE = {
       slug: "chopbox",
       title: "ChopBox",
       category: "Food brand",
-      tagline: "An identity as warm and crave-able as the food.",
+      tagline: "A food identity designed to feel warm, generous and ready to order.",
       tags: ["Brand identity", "Brand strategy", "Packaging"],
       year: "2022",
       tone: "#c2531c",
@@ -209,14 +209,14 @@ export const SITE = {
   caseStudies: {
     rivo: {
       title: "Rivo Studio",
-      tagline: "Software that simply works for all.",
+      tagline: "An accessible software studio, built to feel useful before it feels technical.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Guidelines", metaLabel: "Industry", meta: "Software studio" },
       overview: {
         question: "How do you brand a software studio around access?",
-        body: ["Rivo Studio builds software for people the category tends to design past. The brand had to carry that position without turning accessibility into a compliance badge."],
+        body: ["Rivo Studio builds software for people the category often designs past. The identity had to make access feel native to the brand, rather than a compliance claim added afterwards."],
       },
       challenge: [
-        "The software market is oversaturated with clunky, uninspired products that feel more like obstacles than tools. Most of them prioritise feature density over usability, which leaves people frustrated and drained.",
+        "Software brands often confuse capability with complexity. Rivo needed to signal technical confidence without looking clinical, crowded or difficult to use.",
         "Underneath that is a design problem, not a feature problem. Products get built without inclusivity in mind, which shuts out whole segments of the people they were meant to serve.",
       ],
       process: ["I built the identity around the pronunciation, /\u02c8ra\u026avo\u028a/, and a wordmark with the corners taken off: soft, low-contrast letterforms that read cleanly at small sizes and never feel clinical. Almarai carries the interface voice for the same reason."],
@@ -226,7 +226,6 @@ export const SITE = {
         metrics: [
           { value: "1", label: "System, deck to signage" },
           { value: "#0000FF", label: "Clar, the single accent" },
-          { value: "1 in 10", label: "Nigerians the work speaks to" },
         ],
       },
       media: [
@@ -252,22 +251,18 @@ export const SITE = {
 
     "christian-poster-a-week": {
       title: "A Christian Poster A Week",
-      tagline: "One poster a week. Scripture as bold graphic design.",
+      tagline: "One verse. One week. One visual argument.",
       rail: { servicesLabel: "What I did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
       overview: {
         question: "Can scripture be designed with real craft?",
-        body: ["Faith content online is visually tired: soft gradients, stock doves, predictable type. I wanted to prove a verse could be designed with the same edge as a culture brand."],
+        body: ["Faith content online often falls back on soft gradients, stock symbolism and predictable type. I wanted to see what happened when scripture received the same conceptual and typographic rigour as a culture brand."],
       },
-      challenge: ["So I set a rule: one poster, every week. A fixed format and a hard deadline that would force decisions and build a recognisable body of work."],
+      challenge: ["The rule was simple: choose one verse, find its emotional centre and finish one poster every week. The deadline forced decisions; the repetition built a recognisable practice."],
       process: ["Every week I chose a verse, found its single emotional idea, and built a poster around it: concept, typography, image treatment and finish. The constraint was the point."],
       solution: ["One idea per poster, said loudly. Expressive, varied typography (condensed, serif, display) held together by a consistent grid, with real craft on every finish."],
       outcome: {
         body: ["A growing, recognisable body of work that doubles as my most reliable proof of range, and a habit that keeps my craft sharp."],
-        metrics: [
-          { value: "52", label: "Posters a year, by design" },
-          { value: "1/wk", label: "Self-imposed cadence" },
-          { value: "∞", label: "Range, on display" },
-        ],
+        metrics: [],
       },
       media: [
         { label: "Poster series, hero", variants: [] },
@@ -279,22 +274,18 @@ export const SITE = {
 
     "tedx-rsu": {
       title: "TEDx RSU",
-      tagline: "A global stage, made unmistakably local.",
+      tagline: "A global event system given a distinct Rivers State rhythm.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Creative direction, Print", metaLabel: "Industry", meta: "Event" },
       overview: {
         question: "How do you honour a global brand while making it your own?",
-        body: ["TEDx carries a strict global identity, yet every event needs its own character. The brief was to build something that honoured the TEDx system while capturing the spirit of Rivers State University."],
+        body: ["TEDx gives every event a strict global identity and asks each chapter to find its own character within it. The work had to feel unmistakably local without weakening the parent system."],
       },
-      challenge: ["And it had to hold up everywhere: on stage, in print, and on a phone screen, without falling apart."],
+      challenge: ["The identity needed one idea strong enough to hold across a phone, printed collateral and the event stage."],
       process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif: one system that scaled from a phone to a stage backdrop."],
       solution: ["Print was treated as a first-class citizen: tactile, considered collateral that matched the on-stage experience across programme, signage and social."],
       outcome: {
         body: ["A cohesive event brand that felt premium and on-system, applied consistently across every touchpoint on the day."],
-        metrics: [
-          { value: "1", label: "System, every surface" },
-          { value: "On-brand", label: "TEDx guidelines met" },
-          { value: "Stage to print", label: "Full collateral suite" },
-        ],
+        metrics: [],
       },
       media: [
         { label: "Logomark", src: "tedx-rsu-logomark", w: 1240, h: 496,
@@ -319,22 +310,18 @@ export const SITE = {
 
     chopbox: {
       title: "ChopBox",
-      tagline: "An identity as warm and crave-able as the food.",
+      tagline: "A food identity designed to feel warm, generous and ready to order.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Packaging", metaLabel: "Industry", meta: "Food brand" },
       overview: {
         question: "How do you make a brand you’d order from twice?",
-        body: ["Food brands live or die on appetite appeal. ChopBox needed to feel warm, generous and instantly crave-able: the kind of brand you trust with dinner."],
+        body: ["ChopBox needed to feel warm, generous and immediately appetising: a food brand people could trust with dinner before the first order arrived."],
       },
-      challenge: ["And it had to stay flexible enough to run across packaging, app and social without ever losing its flavour."],
+      challenge: ["The system also had to stretch from packaging to product and social without losing its flavour."],
       process: ["I built the brand from strategy out, checking every decision against one question: does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."],
       solution: ["Built for packaging from day one: a system designed to survive the box, not just the screen, with a toasted, appetising palette that owns its category."],
       outcome: {
         body: ["An appetising, ownable identity with a system the team could extend across products and packaging."],
-        metrics: [
-          { value: "1", label: "System, app to packaging" },
-          { value: "Ownable", label: "Distinct in a loud category" },
-          { value: "Ready", label: "Built to scale" },
-        ],
+        metrics: [],
       },
       media: [
         { label: "The Chop Platter", src: "chopbox-platter", w: 1080, h: 1080,

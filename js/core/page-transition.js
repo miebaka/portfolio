@@ -1,72 +1,18 @@
-/* Species-specific boomslang transition: a slender taper, narrow neck,
-   egg-shaped head, very large eyes, dark-edged green scales and a posteriorly
-   travelling lateral wave in which the body follows the head's path. */
-const KEY="miebaka-page-transition", DURATION=1750;
-const getSaved=()=>{try{return JSON.parse(sessionStorage.getItem(KEY)||"null")}catch{return null}};
-const setSaved=v=>{try{sessionStorage.setItem(KEY,JSON.stringify(v))}catch{}};
-const clearSaved=()=>{try{sessionStorage.removeItem(KEY)}catch{}};
-
-function isPageLink(a,e){
-  if(!a||e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target||a.hasAttribute("download"))return false;
-  const u=new URL(a.href,location.href);
-  return u.origin===location.origin&&/\.html$/.test(u.pathname)&&u.href!==location.href&&!u.hash;
-}
-
-async function buildBoomslang(canvas){
-  const T=await import("../vendor/three/three.module.min.js");
-  const renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:"low-power"});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.outputColorSpace=T.SRGBColorSpace;
-  renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
-  const scene=new T.Scene(), camera=new T.OrthographicCamera(-8,8,4.5,-4.5,.1,30); camera.position.z=12;
-
-  const count=120, segmentGeometry=new T.SphereGeometry(1,14,10);
-  const skin=new T.MeshPhysicalMaterial({color:0x416f32,roughness:.78,clearcoat:.05,clearcoatRoughness:.8});
-  const body=new T.InstancedMesh(segmentGeometry,skin,count); body.instanceMatrix.setUsage(T.DynamicDrawUsage); body.frustumCulled=false;
-  scene.add(body);
-
-  const headGroup=new T.Group();
-  const headMaterial=new T.MeshPhysicalMaterial({color:0x4a7937,roughness:.7,clearcoat:.08});
-  const head=new T.Mesh(new T.SphereGeometry(1,32,20),headMaterial); head.scale.set(.56,.28,.235); headGroup.add(head);
-  const irisMaterial=new T.MeshPhysicalMaterial({color:0xb79848,roughness:.42,clearcoat:.35});
-  const pupilMaterial=new T.MeshBasicMaterial({color:0x080a07});
-  for(const side of [-1,1]){
-    const iris=new T.Mesh(new T.SphereGeometry(.09,18,12),irisMaterial); iris.position.set(.21,side*.215,.16); iris.scale.set(1,.9,.55); headGroup.add(iris);
-    const pupil=new T.Mesh(new T.SphereGeometry(.043,12,8),pupilMaterial); pupil.position.set(.235,side*.222,.215); pupil.scale.set(.85,1,.4); headGroup.add(pupil);
-  }
-  scene.add(headGroup);
-
-  const tongueMaterial=new T.LineBasicMaterial({color:0x4b1014}), tongueGeometry=new T.BufferGeometry(), tonguePositions=new Float32Array(18);
-  tongueGeometry.setAttribute("position",new T.BufferAttribute(tonguePositions,3)); const tongue=new T.LineSegments(tongueGeometry,tongueMaterial); scene.add(tongue);
-  scene.add(new T.HemisphereLight(0xf7f3e9,0x718057,2.4)); const key=new T.DirectionalLight(0xffffff,2.7); key.position.set(-2,5,9); scene.add(key);
-
-  const matrix=new T.Matrix4(), quaternion=new T.Quaternion(), scale=new T.Vector3(), position=new T.Vector3(), zAxis=new T.Vector3(0,0,1); let extent=8;
-  function resize(){const aspect=innerWidth/innerHeight,vertical=4.5;extent=vertical*aspect;camera.left=-extent;camera.right=extent;camera.top=vertical;camera.bottom=-vertical;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight,false)}
-  const pathY=(x,phase)=>Math.sin(x*1.34-phase)*.56+Math.sin(x*.52-phase*.62)*.1;
-  function update(progress){
-    const spacing=.11, bodyLength=(count-1)*spacing;
-    const headX=-extent-1+progress*(extent*2+bodyLength+2.5),phase=progress*7.5;
-    for(let i=0;i<count;i++){
-      const x=headX-.42-i*spacing,y=pathY(x,phase),angle=Math.atan2(pathY(x+.04,phase)-y,.04),t=i/(count-1),neck=Math.min(1,i/12),radius=.155*(.42+.58*neck)*Math.pow(1-t,.7)+.028;
-      position.set(x,y,Math.sin(i*.34-phase)*.028); quaternion.setFromAxisAngle(zAxis,angle); scale.set(Math.max(spacing*.9,radius*1.6),radius,radius*.92); matrix.compose(position,quaternion,scale); body.setMatrixAt(i,matrix);
-    }
-    body.instanceMatrix.needsUpdate=true;
-    const headY=pathY(headX,phase),angle=Math.atan2(pathY(headX+.05,phase)-headY,.05); headGroup.position.set(headX,headY,.04); headGroup.rotation.z=angle;
-    const flick=Math.sin(progress*Math.PI*10)>.66?.34:.08;
-    tonguePositions.set([headX+.58,headY,0,headX+.58+flick,headY,0,headX+.58+flick,headY,0,headX+.74+flick,headY+.08,0,headX+.58+flick,headY,0,headX+.74+flick,headY-.08,0]); tongueGeometry.attributes.position.needsUpdate=true;
-  }
-  resize();
-  return {resize,render:p=>{update(p);renderer.render(scene,camera)},dispose:()=>{segmentGeometry.dispose();skin.dispose();head.geometry.dispose();headMaterial.dispose();irisMaterial.dispose();pupilMaterial.dispose();tongueGeometry.dispose();tongueMaterial.dispose();renderer.dispose()}};
-}
-
-async function playTransition(direction){
-  const overlay=document.createElement("div"); overlay.className=`page-transition page-transition--${direction}`; overlay.setAttribute("aria-hidden","true"); overlay.innerHTML='<div class="page-transition__veil"></div><canvas class="page-transition__canvas"></canvas>'; document.body.append(overlay);
-  let snake; try{snake=await buildBoomslang(overlay.querySelector("canvas"))}catch{overlay.classList.add("page-transition--fallback")}
-  const onResize=()=>snake?.resize(); addEventListener("resize",onResize); const start=performance.now(); overlay.getBoundingClientRect(); overlay.classList.add("is-running");
-  return new Promise(resolve=>{function frame(now){const p=Math.min(1,(now-start)/DURATION),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;snake?.render(direction==="out"?e:Math.min(1,.18+e));if(p<1)requestAnimationFrame(frame);else{removeEventListener("resize",onResize);snake?.dispose();if(direction==="in")overlay.remove();resolve()}}requestAnimationFrame(frame)});
-}
-
-export function initPageTransition(){
-  const reduce=matchMedia("(prefers-reduced-motion: reduce)"),saved=getSaved();
-  if(saved&&saved.path===location.pathname&&Date.now()-saved.time<5000){clearSaved();if(!reduce.matches){document.documentElement.classList.add("page-is-entering");document.body.setAttribute("aria-busy","true");setTimeout(()=>{document.documentElement.classList.remove("page-is-entering");document.body.removeAttribute("aria-busy")},780)}}else clearSaved();
-  document.addEventListener("click",async e=>{const a=e.target.closest("a[href]");if(!isPageLink(a,e)||reduce.matches)return;e.preventDefault();if(document.documentElement.classList.contains("page-is-leaving"))return;const destination=new URL(a.href,location.href);document.documentElement.classList.add("page-is-leaving");document.body.setAttribute("aria-busy","true");setSaved({path:destination.pathname,time:Date.now()});await playTransition("out");location.assign(destination.href)});
-}
+const KEY="miebaka-page-transition",DURATION=1500;
+const saved=()=>{try{return JSON.parse(sessionStorage.getItem(KEY)||"null")}catch{return null}},set=v=>{try{sessionStorage.setItem(KEY,JSON.stringify(v))}catch{}},clear=()=>{try{sessionStorage.removeItem(KEY)}catch{}};
+function valid(a,e){if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||a.target||a.hasAttribute("download"))return false;const u=new URL(a.href,location.href);return u.origin===location.origin&&/\.html$/.test(u.pathname)&&u.href!==location.href&&!u.hash}
+async function build(canvas){
+ const T=await import("../vendor/three/three.module.min.js"),renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:"high-performance"});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;
+ const scene=new T.Scene(),camera=new T.PerspectiveCamera(31,innerWidth/innerHeight,.1,50);camera.position.z=14;
+ const rings=innerWidth<640?96:128,sides=16,pos=new Float32Array(rings*sides*3),uv=new Float32Array(rings*sides*2),idx=[];
+ for(let i=0;i<rings;i++)for(let j=0;j<sides;j++){let n=i*sides+j;uv[n*2]=i/(rings-1)*22;uv[n*2+1]=j/sides*4;if(i<rings-1){let q=i*sides+(j+1)%sides;idx.push(n,n+sides,q,q,n+sides,(i+1)*sides+(j+1)%sides)}}
+ const geo=new T.BufferGeometry();geo.setAttribute("position",new T.BufferAttribute(pos,3).setUsage(T.DynamicDrawUsage));geo.setAttribute("uv",new T.BufferAttribute(uv,2));geo.setIndex(idx);
+ const texCanvas=document.createElement("canvas");texCanvas.width=256;texCanvas.height=128;const c=texCanvas.getContext("2d");c.fillStyle="#527f38";c.fillRect(0,0,256,128);for(let y=-16;y<144;y+=24)for(let x=-16;x<272;x+=22){let o=((y/24)&1)*11;c.beginPath();c.moveTo(x+o,y+12);c.lineTo(x+11+o,y);c.lineTo(x+22+o,y+12);c.lineTo(x+11+o,y+24);c.closePath();c.fillStyle=y<48?"#41672e":y>88?"#78984c":"#527f38";c.fill();c.strokeStyle="rgba(15,28,10,.58)";c.lineWidth=2;c.stroke();c.beginPath();c.moveTo(x+11+o,y+3);c.lineTo(x+11+o,y+21);c.strokeStyle="rgba(220,230,170,.2)";c.lineWidth=1;c.stroke()}
+ const tex=new T.CanvasTexture(texCanvas);tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.colorSpace=T.SRGBColorSpace;const skin=new T.MeshPhysicalMaterial({map:tex,roughness:.76,metalness:0,clearcoat:.025,side:T.DoubleSide}),body=new T.Mesh(geo,skin);body.frustumCulled=false;scene.add(body);
+ const hg=new T.Group(),hm=new T.MeshPhysicalMaterial({color:0x527f38,roughness:.72,map:tex}),head=new T.Mesh(new T.SphereGeometry(1,32,20),hm);head.scale.set(.48,.285,.225);head.position.x=.12;hg.add(head);const im=new T.MeshPhysicalMaterial({color:0x9b8b48,roughness:.3,clearcoat:.55}),pm=new T.MeshBasicMaterial({color:0x050705});for(const side of[-1,1]){let eye=new T.Mesh(new T.SphereGeometry(.105,20,14),im);eye.position.set(.26,side*.215,.1);eye.scale.set(1,.92,.72);hg.add(eye);let pupil=new T.Mesh(new T.SphereGeometry(.052,16,10),pm);pupil.position.set(.292,side*.234,.15);pupil.scale.set(.9,1,.5);hg.add(pupil)}scene.add(hg);
+ const tm=new T.LineBasicMaterial({color:0x54131a}),tg=new T.BufferGeometry(),tp=new Float32Array(18);tg.setAttribute("position",new T.BufferAttribute(tp,3));const tongue=new T.LineSegments(tg,tm);scene.add(tongue);scene.add(new T.HemisphereLight(0xf8f1df,0x5b6a45,2.2));const light=new T.DirectionalLight(0xffffff,3);light.position.set(-3,5,8);scene.add(light);
+ let extent=8;const centres=Array.from({length:rings},()=>new T.Vector3());function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight,false);extent=7.25*camera.aspect}
+ function update(p){const length=Math.min(13,extent*1.35),hx=-extent-1+p*(extent*2+length+2.5),travel=p*7.2;for(let i=0;i<rings;i++){let s=i/(rings-1),x=hx-s*length,a=.46*(.25+.75*Math.sin(Math.PI*Math.min(1,s*1.4))),phase=x*.9-travel;centres[i].set(x,Math.sin(phase)*a+Math.sin(phase*.43)*.09,Math.sin(phase*1.9+1.57)*a*.16)}for(let i=0;i<rings;i++){let s=i/(rings-1),a=centres[Math.max(0,i-1)],b=centres[Math.min(rings-1,i+1)],tx=b.x-a.x,ty=b.y-a.y,l=Math.hypot(tx,ty)||1,nx=-ty/l,ny=tx/l,r=s<.045?.105+s/.045*.045:s<.11?.15-(s-.045)/.065*.048:.102*Math.pow(1-(s-.11)/.89,.62)+.004;for(let j=0;j<sides;j++){let q=j/sides*Math.PI*2,rr=r*(1+.04*Math.cos(q*19)),n=(i*sides+j)*3;pos[n]=centres[i].x+nx*Math.cos(q)*rr;pos[n+1]=centres[i].y+ny*Math.cos(q)*rr;pos[n+2]=centres[i].z+Math.sin(q)*rr*.82}}geo.attributes.position.needsUpdate=true;geo.computeVertexNormals();let d=centres[0].clone().sub(centres[1]);hg.position.copy(centres[0]);hg.rotation.z=Math.atan2(d.y,d.x)+Math.sin(p*Math.PI*2)*.025;let flick=p>.62&&p<.71?Math.sin((p-.62)/.09*Math.PI)*.32:0,tip=hg.localToWorld(new T.Vector3(.52+flick,0,0));tp.set([centres[0].x+.48,centres[0].y,centres[0].z,tip.x,tip.y,tip.z,tip.x,tip.y,tip.z,tip.x+.13,tip.y+.055,tip.z,tip.x,tip.y,tip.z,tip.x+.13,tip.y-.055,tip.z]);tg.attributes.position.needsUpdate=true}
+ resize();return{resize,render:p=>{update(p);renderer.render(scene,camera)},dispose:()=>{geo.dispose();tex.dispose();skin.dispose();head.geometry.dispose();hm.dispose();im.dispose();pm.dispose();tg.dispose();tm.dispose();renderer.dispose()}}}
+async function play(){const o=document.createElement("div");o.className="page-transition page-transition--out";o.ariaHidden="true";o.innerHTML='<div class="page-transition__veil"></div><canvas class="page-transition__canvas"></canvas>';document.body.append(o);let snake;try{snake=await build(o.querySelector("canvas"))}catch{o.classList.add("page-transition--fallback")}const resize=()=>snake?.resize();addEventListener("resize",resize);const start=performance.now();o.getBoundingClientRect();o.classList.add("is-running");return new Promise(done=>{function frame(now){let p=Math.min(1,(now-start)/DURATION),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;snake?.render(e);if(p<1)requestAnimationFrame(frame);else{removeEventListener("resize",resize);snake?.dispose();done()}}requestAnimationFrame(frame)})}
+export function initPageTransition(){const reduce=matchMedia("(prefers-reduced-motion: reduce)"),old=saved();if(old&&old.path===location.pathname&&Date.now()-old.time<5000){clear();if(!reduce.matches){document.documentElement.classList.add("page-is-entering");setTimeout(()=>document.documentElement.classList.remove("page-is-entering"),420)}}else clear();document.addEventListener("click",async e=>{const a=e.target.closest("a[href]");if(!valid(a,e)||reduce.matches)return;e.preventDefault();if(document.documentElement.classList.contains("page-is-leaving"))return;const to=new URL(a.href,location.href);document.documentElement.classList.add("page-is-leaving");document.body.setAttribute("aria-busy","true");set({path:to.pathname,time:Date.now()});await play();location.assign(to.href)})}

@@ -60,7 +60,7 @@ for (const link of document.querySelectorAll("a:not(.project-column):not(.swiss-
     if (!/[↗↘→←↓]/.test(node.textContent)) continue;
     const fragment = document.createDocumentFragment();
     node.textContent.split(/([↗↘→←↓])/).forEach(part => {
-      if (/^[↗↘→←↓]$/.test(part)) { const arrow = document.createElement("span"); arrow.className="link-arrow"; arrow.setAttribute("aria-hidden","true"); arrow.textContent="↗"; fragment.append(arrow); }
+      if (/^[↗↘→←↓]$/.test(part)) { const arrow = document.createElement("span"); arrow.className="link-arrow"; arrow.setAttribute("aria-hidden","true"); arrow.textContent="→"; fragment.append(arrow); }
       else fragment.append(document.createTextNode(part));
     }); node.replaceWith(fragment);
   }
