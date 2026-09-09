@@ -79,7 +79,7 @@
      everything and 32px for its one statement line. This scale keeps a display
      tier for the home hero, then drops sharply, so restraint is the default
      and size has to be earned. Body stays at or above 16px throughout. */
-  --step-poster: clamp(3.5rem, 6.5vw, 6rem);                  /* 56 → 96 */
+  --step-poster: clamp(5rem, 10vw, 9rem);                     /* 80 → 144 */
   --step-statement: clamp(2.75rem, 5vw, 4.75rem);             /* 44 → 76 */
   --step-display-xl: clamp(3rem, 5vw, 4.5rem);                /* 48 → 72 */
   --step-hero: clamp(2.25rem, 3.5vw, 3.5rem);                 /* 36 → 56 */
