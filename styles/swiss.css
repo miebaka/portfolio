@@ -56,7 +56,7 @@
 .masthead-logo {position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);display:block;width:clamp(450px,54vw,840px);aspect-ratio:1;min-width:0;pointer-events:auto}
 .masthead-logo .swiss-object__stage {display:block;width:100%;height:100%}
 .masthead-dot {color:var(--accent)}
-.masthead-playing {position:absolute;z-index:5;top:64%;left:var(--gutter);width:min(34vw,440px);transform:translateY(-50%)}
+.masthead-playing {position:absolute;z-index:5;inset:auto auto 0 var(--gutter);width:min(34vw,440px);transform:none}
 .now-playing {max-width:100%}
 .now-playing__label,.now-playing__row {font-size:var(--step-meta)}
 .swiss-hero__bottom {display:grid;grid-template-columns:var(--col-major) var(--col-minor);gap:var(--editorial-gap);align-items:end;padding-block:var(--space-7) var(--space-8)}
@@ -147,7 +147,7 @@ body[data-page="work"] .back-btn {display:none}
  .site-nav__links {background:var(--paper);gap:8px}
  .swiss-hero .personal-masthead {font-size:clamp(72px,22vw,110px);margin-top:var(--space-5)}
  .masthead-logo {width:clamp(180px,57vw,270px)}
- .masthead-playing {top:62%;left:var(--gutter);width:min(42vw,220px)}
+ .masthead-playing {inset:auto auto 0 var(--gutter);width:min(42vw,220px)}
  .now-playing {padding:8px 10px}
  .now-playing__dot {display:none}
  .swiss-hero__bottom {padding-block:24px 48px}
