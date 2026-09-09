@@ -19,7 +19,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
+class PortfolioServer(ThreadingHTTPServer):
+    # CSS imports and ES modules arrive in a burst on a cold browser load.
+    request_queue_size = 128
+
+
 class NoCacheHandler(SimpleHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store, must-revalidate")
         self.send_header("Pragma", "no-cache")
@@ -35,7 +42,7 @@ class NoCacheHandler(SimpleHTTPRequestHandler):
 def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 4173
     handler = partial(NoCacheHandler, directory=str(ROOT))
-    with ThreadingHTTPServer(("", port), handler) as httpd:
+    with PortfolioServer(("127.0.0.1", port), handler) as httpd:
         print(f"serving {ROOT} at http://localhost:{port} (no-store)")
         httpd.serve_forever()
 

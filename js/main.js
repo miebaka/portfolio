@@ -4,17 +4,6 @@
    ========================================================================== */
 import { initContract } from "./core/contract.js";
 
-/* Native cross-document view transitions (@view-transition in
-   styles/base/view-transitions.css) reject their promise with an AbortError
-   when one navigation supersedes an in-flight transition (rapid clicks,
-   back/forward). It is harmless but surfaces as an unhandled rejection. Swallow
-   exactly that case; let every other rejection through untouched. */
-window.addEventListener("unhandledrejection", (event) => {
-  const reason = event.reason;
-  if (reason && reason.name === "AbortError" && /transition was skipped/i.test(reason.message || "")) {
-    event.preventDefault();
-  }
-});
 import { renderNavigation, renderBackButton } from "./render/navigation.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
@@ -22,15 +11,14 @@ import { renderCapabilities, renderTestimonial, fillSlots } from "./render/secti
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
-import { initSplitText } from "./core/split-text.js";
 import { initScrollReveal } from "./core/scroll.js";
 import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
-import { initWorkPreview } from "./core/work-preview.js";
 import { initHeroParallax } from "./core/hero-parallax.js";
 import { initCountUp } from "./core/count-up.js";
-import { initGenerativeField } from "./core/generative-field.js";
+import { initSwissScene } from "./core/swiss-scene.js";
+import { initPageTransition } from "./core/page-transition.js";
 import { initFooterScene } from "./core/footer-scene.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
@@ -51,17 +39,29 @@ renderFooter();
 fillSlots();
 initNowPlaying();
 
-/* Behaviour: attach handlers to the freshly rendered DOM.
-   Split runs before the reveal observer so words are wrapped and measured
-   before anything can be marked visible. */
-initSplitText();
+/* Behaviour: attach handlers to the freshly rendered DOM. Content stays visible;
+   the observer retains the existing readiness contract without delaying copy. */
 initScrollReveal();
 initNavigation();
 initYear();
 initForm();
-initWorkPreview();
 initHeroParallax();
 /* After renderCaseStudy() has built the metric markup. */
 initCountUp();
-initGenerativeField();
+initSwissScene();
 initFooterScene();
+initPageTransition();
+
+/* Normalise directional link icons after all data-driven markup exists. */
+for (const link of document.querySelectorAll("a, button[type=submit]")) {
+  const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+  const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  for (const node of nodes) {
+    if (!/[↗↘→←↓]/.test(node.textContent)) continue;
+    const fragment = document.createDocumentFragment();
+    node.textContent.split(/([↗↘→←↓])/).forEach(part => {
+      if (/^[↗↘→←↓]$/.test(part)) { const arrow = document.createElement("span"); arrow.className="link-arrow"; arrow.setAttribute("aria-hidden","true"); arrow.textContent="↗"; fragment.append(arrow); }
+      else fragment.append(document.createTextNode(part));
+    }); node.replaceWith(fragment);
+  }
+}

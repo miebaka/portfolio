@@ -19,8 +19,6 @@
 @import "base/reset.css";
 @import "base/typography.css";
 @import "base/utilities.css";
-@import "base/motion.css";
-@import "base/view-transitions.css";
 
 /* Components */
 @import "components/navigation.css";
@@ -30,6 +28,7 @@
 @import "components/footer.css";
 @import "components/now-playing.css";
 @import "components/generative-field.css";
+@import "components/page-transition.css";
 
 /* Sections */
 @import "sections/hero.css";
@@ -39,3 +38,5 @@
 @import "sections/contact.css";
 @import "sections/case-study.css";
 @import "sections/playground.css";
+
+@import "swiss.css";

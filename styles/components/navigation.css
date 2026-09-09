@@ -92,7 +92,7 @@
    a compact dropdown behind the Menu button (state on .is-menu-open). The panel
    scales in from its top-right origin — Emil's origin-aware disclosure — not the
    old fullscreen overlay. Closes on link tap, Escape, or an outside click. */
-@media (max-width: 40rem) {
+@media (max-width: 56rem) {
   .site-nav__inner { gap: var(--space-2); }
   .site-nav__menu-btn { display: inline-flex; align-items: center; }
 
@@ -125,7 +125,7 @@
   }
   .site-nav__link { font-size: var(--step-small); }
 }
-@media (max-width: 40rem) and (prefers-reduced-motion: reduce) {
+@media (max-width: 56rem) and (prefers-reduced-motion: reduce) {
   .site-nav__links,
   .site-nav.is-menu-open .site-nav__links { transform: none; transition: opacity var(--duration-fast) linear, visibility var(--duration-fast) linear; }
 }

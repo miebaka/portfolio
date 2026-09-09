@@ -22,8 +22,6 @@
   <meta name="theme-color" content="#16140f">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -69,34 +67,8 @@
   </header>
 
   <main id="main">
-
-    <!-- Hero: label + single lede line -->
-    <section class="hero container">
-      <p class="meta hero__role reveal">Work</p>
-      <h1 class="hero__lede reveal">Each project starts with a question the brand couldn&rsquo;t answer on its own.</h1>
-    </section>
-
-    <!-- Full work index -->
-    <section class="section--tight" id="work">
-      <div class="container" data-mount="work-grid">
-        <!-- Static fallback, replaced by renderWork(). Keeps the four case
-             studies reachable and crawlable when the grid never renders. -->
-        <ul class="link-fallback">
-          <li><a href="work/rivo.html">Rivo, fintech brand identity</a></li>
-          <li><a href="work/christian-poster-a-week.html">A Christian Poster A Week, self-directed series</a></li>
-          <li><a href="work/tedx-rsu.html">TEDx Rivers State University, event identity</a></li>
-          <li><a href="work/chopbox.html">ChopBox, food brand identity</a></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Closing line -->
-    <section class="section--tight container">
-      <p class="closing-cta reveal">
-        Have a brand that needs to decide what it is? <a class="link" href="contact.html">Work with me</a>.
-      </p>
-    </section>
-
+    <section class="swiss-work-hero container" aria-labelledby="work-title"><div class="work-title-row"><h1 id="work-title">Work<span class="swiss-period">.</span></h1></div></section>
+    <section class="swiss-collection container" aria-label="Project collection"><div class="swiss-filters" hidden aria-label="Filter projects"><button type="button" data-filter="all" aria-pressed="true">All work</button><button type="button" data-filter="brand" aria-pressed="false">Brand identity</button><button type="button" data-filter="direction" aria-pressed="false">Art direction</button><button type="button" data-filter="digital" aria-pressed="false">Digital</button><span class="swiss-filter-count" aria-live="polite"></span></div><div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/christian-poster-a-week.html">Poster A Week</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div></section>
   </main>
 
   <footer data-mount="footer">

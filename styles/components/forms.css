@@ -89,5 +89,5 @@
 /* Prevent iOS Safari auto-zoom on focus — inputs must be ≥ 16px */
 @media (max-width: 480px) {
   .field input,
-  .field textarea { font-size: 1rem; }
+  .field textarea { font-size: var(--step-body); }
 }

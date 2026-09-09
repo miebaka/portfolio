@@ -1,6 +1,6 @@
 /* ==========================================================================
    now-playing.js — Last.fm "currently listening" chip for the home hero.
-   Polls every 60 s; renders only when a track is actively playing.
+   Shows the active track or clearly labels the most recently played track.
    ========================================================================== */
 import { SITE } from "../../data/site.js";
 import { MOUNT } from "../core/contract.js";
@@ -21,8 +21,8 @@ async function fetchNowPlaying() {
     if (!res.ok) return null;
     const data = await res.json();
     const track = data?.recenttracks?.track?.[0];
-    if (!track || track["@attr"]?.nowplaying !== "true") return null;
-    return { name: track.name, artist: track.artist["#text"] };
+    if (!track) return null;
+    return { name: track.name, artist: track.artist["#text"], live: track["@attr"]?.nowplaying === "true" };
   } catch {
     return null;
   }
@@ -34,12 +34,13 @@ function buildChip(container) {
   chip.setAttribute("aria-live", "polite");
   chip.setAttribute("aria-label", "Currently listening");
   chip.innerHTML =
-    '<span class="now-playing__label" aria-hidden="true">Miebaka is listening to</span>' +
+    '<span class="now-playing__label" aria-hidden="true">Now Playing</span>' +
     '<span class="now-playing__row">' +
       '<span class="now-playing__dot" aria-hidden="true"></span>' +
       '<span class="now-playing__track"></span>' +
     "</span>";
-  chip.hidden = true;
+  chip.hidden = false;
+  chip.querySelector(".now-playing__track").textContent = "Checking listening status…";
   container.appendChild(chip);
 }
 
@@ -48,9 +49,16 @@ function updateChip(track) {
   if (track) {
     chip.querySelector(".now-playing__track").textContent =
       track.name + " - " + track.artist;
+    chip.querySelector(".now-playing__label").textContent = track.live ? "Now Playing" : "Last played";
+    chip.setAttribute("aria-label", track.live ? "Currently listening" : "Most recently played");
+    chip.dataset.live = String(track.live);
     chip.hidden = false;
   } else {
-    chip.hidden = true;
+    chip.querySelector(".now-playing__label").textContent = "Now Playing";
+    chip.setAttribute("aria-label", "Listening status unavailable");
+    chip.querySelector(".now-playing__track").textContent = "Listening status unavailable";
+    chip.dataset.live = "false";
+    chip.hidden = false;
   }
 }
 
@@ -98,5 +106,6 @@ export function initNowPlaying() {
     }
   });
 
-  window.addEventListener("load", () => schedule(0), { once: true });
+  if (document.readyState === "complete") schedule(0);
+  else window.addEventListener("load", () => schedule(0), { once: true });
 }
