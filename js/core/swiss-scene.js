@@ -1,5 +1,5 @@
-/* The homepage logo is the only 3D object. A shared renderer also paints
-   a flat, glyph-masked colour fill over the selected-work names on interaction. */
+/* The homepage logo is the only 3D object. Selected-work fills stay in CSS so
+   they remain complete when WebGL is unavailable or the shared canvas clips. */
 export async function initSwissScene() {
   const hosts = [...document.querySelectorAll('[data-swiss-scene]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -74,7 +74,7 @@ export async function initSwissScene() {
     buttons.forEach(button => on(button,'click',() => {paused=!paused;try{sessionStorage.setItem('enquiry-paused',String(paused));}catch{}syncButtons();request();}));
     const textViews = [];
     await document.fonts.ready;
-    for (const host of document.querySelectorAll('.swiss-work-name')) {
+    for (const host of document.querySelectorAll('[data-webgl-text-fill]')) {
       const row=host.closest('a'); if(!row) continue;
       const textureCanvas=document.createElement('canvas');
       const maskContext=textureCanvas.getContext('2d');

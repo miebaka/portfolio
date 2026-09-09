@@ -54,7 +54,7 @@
 @font-face {
   font-family: "Josefin Sans";
   src: url("../../assets/fonts/josefinsans-semibold.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
+  font-weight: 700; font-style: normal; font-display: swap;
 }
 
 :root {
@@ -94,7 +94,7 @@
   --step-body: clamp(1rem, .9vw, 1.125rem);                   /* 16 → 18 */
   --step-small: 0.875rem;                                     /* 14 */
   --step-caption: 0.8125rem;                                  /* 13 */
-  --step-meta: 0.75rem;                                       /* 12 */
+  --step-meta: 0.625rem;                                      /* 10 */
 
   /* ── Leading, derived from φ ──────────────────────────────────────────
      Every value on this ladder is a root of the golden ratio, so the whole

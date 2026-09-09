@@ -12,7 +12,7 @@ The site uses an editorial reading voice inside a Swiss structural system: stric
 | H2 | TeX Gyre Heros | 26–36px | 1.08 | Section statements |
 | H3 | TeX Gyre Heros | 22–28px | 1.08 | Subheads and work titles |
 | Body | Libre Baskerville | 16–18px | 1.72 | Reading copy |
-| Label | Josefin Sans Semibold | 12px | 1.35 | Navigation, metadata and controls; always uppercase |
+| Label | Josefin Sans Bold | 10px | 1.35 | Navigation, metadata and controls; always uppercase |
 
 Display tracking tightens as size increases. Reading measures stop at 34em; captions stop at 21em. Labels use 0.18em tracking.
 

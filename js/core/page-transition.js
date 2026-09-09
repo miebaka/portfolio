@@ -19,11 +19,9 @@ async function buildBoomslang(canvas){
   renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
   const scene=new T.Scene(), camera=new T.OrthographicCamera(-8,8,4.5,-4.5,.1,30); camera.position.z=12;
 
-  const count=72, segmentGeometry=new T.SphereGeometry(1,12,8);
-  const skin=new T.MeshPhysicalMaterial({color:0xffffff,vertexColors:true,roughness:.46,clearcoat:.34,clearcoatRoughness:.42});
-  const body=new T.InstancedMesh(segmentGeometry,skin,count); body.instanceMatrix.setUsage(T.DynamicDrawUsage);
-  const green=new T.Color(0x4b8e2c), dark=new T.Color(0x172b16);
-  for(let i=0;i<count;i++) body.setColorAt(i,i%4===0?dark:green);
+  const count=120, segmentGeometry=new T.SphereGeometry(1,14,10);
+  const skin=new T.MeshPhysicalMaterial({color:0x3f7f29,roughness:.62,clearcoat:.2,clearcoatRoughness:.58});
+  const body=new T.InstancedMesh(segmentGeometry,skin,count); body.instanceMatrix.setUsage(T.DynamicDrawUsage); body.frustumCulled=false;
   scene.add(body);
 
   const headGroup=new T.Group();
@@ -45,10 +43,11 @@ async function buildBoomslang(canvas){
   function resize(){const aspect=innerWidth/innerHeight,vertical=4.5;extent=vertical*aspect;camera.left=-extent;camera.right=extent;camera.top=vertical;camera.bottom=-vertical;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight,false)}
   const pathY=(x,phase)=>Math.sin(x*1.48-phase)*.76+Math.sin(x*.57-phase*.62)*.16;
   function update(progress){
-    const headX=-extent-5+progress*(extent*2+13),phase=progress*7.5,spacing=.155;
+    const spacing=.11, bodyLength=(count-1)*spacing;
+    const headX=-extent-1+progress*(extent*2+bodyLength+2.5),phase=progress*7.5;
     for(let i=0;i<count;i++){
-      const x=headX-.5-i*spacing,y=pathY(x,phase),angle=Math.atan2(pathY(x+.04,phase)-y,.04),t=i/(count-1),neck=Math.min(1,i/8),radius=.22*(.48+.52*neck)*Math.pow(1-t,.58)+.025;
-      position.set(x,y,Math.sin(i*.42-phase)*.035); quaternion.setFromAxisAngle(zAxis,angle); scale.set(radius*1.34,radius*.92,radius); matrix.compose(position,quaternion,scale); body.setMatrixAt(i,matrix);
+      const x=headX-.48-i*spacing,y=pathY(x,phase),angle=Math.atan2(pathY(x+.04,phase)-y,.04),t=i/(count-1),neck=Math.min(1,i/10),radius=.215*(.5+.5*neck)*Math.pow(1-t,.62)+.045;
+      position.set(x,y,Math.sin(i*.34-phase)*.028); quaternion.setFromAxisAngle(zAxis,angle); scale.set(Math.max(spacing*.9,radius*1.6),radius,radius*.92); matrix.compose(position,quaternion,scale); body.setMatrixAt(i,matrix);
     }
     body.instanceMatrix.needsUpdate=true;
     const headY=pathY(headX,phase),angle=Math.atan2(pathY(headX+.05,phase)-headY,.05); headGroup.position.set(headX,headY,.04); headGroup.rotation.z=angle;
@@ -68,6 +67,6 @@ async function playTransition(direction){
 
 export function initPageTransition(){
   const reduce=matchMedia("(prefers-reduced-motion: reduce)"),saved=getSaved();
-  if(saved&&saved.path===location.pathname&&Date.now()-saved.time<5000){clearSaved();if(!reduce.matches){document.documentElement.classList.add("page-is-entering");document.body.setAttribute("aria-busy","true");playTransition("in").finally(()=>{document.documentElement.classList.remove("page-is-entering");document.body.removeAttribute("aria-busy")})}}else clearSaved();
+  if(saved&&saved.path===location.pathname&&Date.now()-saved.time<5000){clearSaved();if(!reduce.matches){document.documentElement.classList.add("page-is-entering");document.body.setAttribute("aria-busy","true");setTimeout(()=>{document.documentElement.classList.remove("page-is-entering");document.body.removeAttribute("aria-busy")},780)}}else clearSaved();
   document.addEventListener("click",async e=>{const a=e.target.closest("a[href]");if(!isPageLink(a,e)||reduce.matches)return;e.preventDefault();if(document.documentElement.classList.contains("page-is-leaving"))return;const destination=new URL(a.href,location.href);document.documentElement.classList.add("page-is-leaving");document.body.setAttribute("aria-busy","true");setSaved({path:destination.pathname,time:Date.now()});await playTransition("out");location.assign(destination.href)});
 }

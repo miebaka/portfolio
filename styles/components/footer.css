@@ -11,11 +11,12 @@
      rather than a layout. */
   --_min: 260px;
   --_max: 640px;
-  min-height: clamp(var(--_min), 46vw, var(--_max));
+  min-height: clamp(480px, 58vw, 760px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-block: var(--space-5);
+  margin-block-start: var(--section-block);
+  padding-block: var(--section-block-tight) var(--space-5);
 }
 
 /* Oversized script-signature watermark — CSS mask keeps it recolourable.
@@ -74,7 +75,7 @@
 /* φ split: email = major (61.8%); socials = minor (38.2%) */
 .site-footer__grid {
   display: grid;
-  grid-template-columns: var(--col-major) var(--col-minor);
+  grid-template-columns: 1fr;
   align-items: center;
   gap: var(--space-4);
 }
@@ -106,9 +107,11 @@
 }
 
 .site-footer__socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-4);
 }
 /* Standalone link rows, not links inside a sentence, so the WCAG 2.2 inline
    exception does not apply: each needs a 44px target. The text keeps its
@@ -150,5 +153,7 @@
 }
 
 @media (max-width: 480px) {
-  .site-footer { min-height: clamp(180px, 60vw, 320px); }
+  .site-footer { min-height: 520px; }
+  .site-footer__socials { grid-template-columns: repeat(2, 1fr); }
+  .site-footer__socials a:nth-child(even) { justify-self: end; }
 }

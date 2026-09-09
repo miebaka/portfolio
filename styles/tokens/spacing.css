@@ -24,6 +24,6 @@
      poster and as dead air on a screen, because the visitor has to scroll
      through a third of a viewport of nothing to reach the next idea.
      130 / 86 keeps the sections distinct without making the page feel empty. */
-  --section-block:       clamp(6rem, 12vw, 12rem);
-  --section-block-tight: clamp(4rem, 8vw, 8rem);
+  --section-block:       clamp(8rem, 16vw, 16rem);
+  --section-block-tight: clamp(6rem, 11vw, 11rem);
 }

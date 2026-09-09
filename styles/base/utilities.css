@@ -103,8 +103,8 @@
    kept in one place so directions and timings stay coherent across the site. */
 
 @media (max-width: 480px) {
-  .section       { padding-block: 5rem; }
-  .section--tight { padding-block: 3rem; }
+  .section       { padding-block: var(--section-block); }
+  .section--tight { padding-block: var(--section-block-tight); }
   .section-head  { margin-bottom: var(--space-4); }
 }
 

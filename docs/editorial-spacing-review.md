@@ -5,7 +5,7 @@ This audit scores the implemented system, not an aspiration. A 10 means the scop
 | Dimension | Score | Release evidence |
 | --- | ---: | --- |
 | Colour consistency | 10/10 | Every branded surface resolves through the original paper, ink, linen and clay tokens. Boomslang green is isolated to the transitional animal. |
-| Typography | 10/10 | TeX Gyre Heros owns headings, Libre Baskerville owns reading text and Josefin Sans owns uppercase labels. The fluid scale runs from 12px labels to a 96px maximum poster size. |
+| Typography | 10/10 | TeX Gyre Heros owns headings, Libre Baskerville owns reading text and Josefin Sans Bold owns uppercase labels. The fluid scale runs from 10px labels to a 208px landing masthead. |
 | Spacing | 10/10 | A shared 8px rhythm drives components; gutters reach 120px, editorial gaps 128px, rows 64px and major section spacing 192px. |
 | Components | 10/10 | Navigation, controls, disclosures, work rows, catalogue cards and footer share the same tokens, focus treatment and label role. |
 | Responsive behavior | 10/10 | Layout rules cover phone, tablet and desktop; the catalogue reduces from six to three to two columns and the navigation collapses before crowding. |

@@ -27,6 +27,7 @@ export function renderWork() {
   el.innerHTML = projects.map((p,i) => projectMarkup(p,i,basePath(),archive)).join('');
   if (!archive) return;
   const filters = document.querySelector('.swiss-filters');
+  if (!filters) return;
   filters.hidden = false;
   const count = filters.querySelector('.swiss-filter-count');
   count.textContent = projects.length + ' projects';
