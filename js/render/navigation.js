@@ -3,26 +3,16 @@ import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-/* The theme toggle markup — a pill track with sun/moon icons either side.
-   Kept as its own function so the nav render below reads as structure. */
+/* The two theme glyphs share one compact circular control. */
 function themeToggleHTML() {
   return (
     '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">' +
-      '<svg class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<circle cx="12" cy="12" r="4" fill="currentColor"/>' +
-        '<line x1="12" y1="2" x2="12" y2="5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="12" y1="18.5" x2="12" y2="22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="4.22" y1="4.22" x2="6.64" y2="6.64" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="17.36" y1="17.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="2" y1="12" x2="5.5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="18.5" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="4.22" y1="19.78" x2="6.64" y2="17.36" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-        '<line x1="17.36" y1="6.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<span class="theme-toggle__icon-wrap">' +
+      '<svg class="theme-toggle__disc" aria-hidden="true" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">' +
+        '<g class="theme-toggle__disc-core"><path d="M120 67.5C149.25 67.5 172.5 90.75 172.5 120C172.5 149.25 149.25 172.5 120 172.5" fill="var(--paper)"/><path d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 172.5 120 172.5" fill="var(--ink)"/></g>' +
+        '<path d="M120 3.75C55.5 3.75 3.75 55.5 3.75 120C3.75 184.5 55.5 236.25 120 236.25C184.5 236.25 236.25 184.5 236.25 120C236.25 55.5 184.5 3.75 120 3.75ZM120 214.5V172.5C90.75 172.5 67.5 149.25 67.5 120C67.5 90.75 90.75 67.5 120 67.5V25.5C172.5 25.5 214.5 67.5 214.5 120C214.5 172.5 172.5 214.5 120 214.5Z" fill="var(--paper)"/>' +
       "</svg>" +
-      '<span class="theme-toggle__track"><span class="theme-toggle__knob"></span></span>' +
-      '<svg class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>' +
-      "</svg>" +
+      "</span>" +
     "</button>"
   );
 }
@@ -33,18 +23,27 @@ function setupThemeToggle() {
   if (!btn) return;
   const html = document.documentElement;
   function isDark() { return html.dataset.theme === "dark"; }
-  function sync() { btn.setAttribute("aria-pressed", String(isDark())); }
+  function sync() {
+    btn.setAttribute("aria-pressed", String(isDark()));
+    btn.setAttribute("aria-label", isDark() ? "Switch to light mode" : "Switch to dark mode");
+  }
   sync();
   btn.addEventListener("click", function () {
     const next = isDark() ? "light" : "dark";
-    html.dataset.theme = next;
+    const apply = () => { html.dataset.theme = next; sync(); };
+    html.dataset.themeTransition = "circle-blur";
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(apply).finished.finally(() => { delete html.dataset.themeTransition; });
+    } else {
+      apply();
+      delete html.dataset.themeTransition;
+    }
     /* Persisting is best-effort. setItem throws when storage is blocked
        (Safari private browsing, quota, enterprise policy); unguarded, that
        exception fired after the theme had already flipped but before sync(),
        leaving the button's aria-pressed permanently out of step with the
        theme the visitor can see. */
     try { localStorage.setItem("color-theme", next); } catch (e) {}
-    sync();
   });
 }
 
@@ -69,7 +68,7 @@ export function renderNavigation() {
   el.innerHTML =
     '<div class="container site-nav__inner">' +
       '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
-        '<span class="site-nav__logo" aria-hidden="true"></span>' +
+        '<img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="Miebaka Joshua" width="52" height="52">' +
       "</a>" +
       /* Shown only below the mobile breakpoint; toggles the links panel. */
       '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links">Menu</button>' +
@@ -106,20 +105,4 @@ function setupMobileMenu(nav) {
 
   btn.addEventListener("click", () => setOpen(!nav.classList.contains("is-menu-open")));
   links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
-}
-
-/* Floating pill — always links home on every page except home.
-
-   The pill is opaque ink-on-paper (16.3:1 internally) with a hairline ring, so
-   it stays legible over the page background AND over the coloured case-study
-   media bands without needing to know what is behind it. */
-export function renderBackButton() {
-  const page = document.body.dataset.page || "";
-  if (page === "home") return;
-  const base = basePath();
-  const btn = document.createElement("a");
-  btn.className = "back-btn";
-  btn.href = base + "index.html";
-  btn.innerHTML = "&larr;&ensp;Home";
-  document.body.appendChild(btn);
 }

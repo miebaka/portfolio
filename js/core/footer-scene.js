@@ -13,7 +13,7 @@ const REPEL_FORCE = 5.5;          /* explosive — cells fling well away from ho
 const SPRING      = 0.035;        /* very soft — cells hang scattered, reform slowly */
 const DAMPING     = 0.82;         /* higher damping — long drifting coast before return */
 const DRIFT       = 0.004;        /* minimal — cells are tied to letter positions */
-const REST_A      = 0.35;         /* clearly visible at rest — cells form the name */
+const REST_A      = 0.55;         /* legible at rest while retaining the dot texture */
 const GLOW_A      = 0.70;         /* brighter mid-scatter glow */
 const TRAIL_A     = 0.40;         /* strong kinetic trail while flying */
 
@@ -45,7 +45,7 @@ export function createFooterScene(host) {
       inset: "0",
       width: "100%",
       height: "100%",
-      zIndex: "0",
+      zIndex: "2",
       pointerEvents: "none",
     });
     ctx = canvas.getContext("2d");
@@ -53,25 +53,28 @@ export function createFooterScene(host) {
     host.prepend(canvas);
     /* Fade out the static ::before watermark — inject inline so this works
        even when the stylesheet is stale-cached. */
-    host.classList.add("scene-active");
-    if (!document.getElementById("footer-scene-style")) {
-      const s = document.createElement("style");
-      s.id = "footer-scene-style";
-      s.textContent = ".site-footer.scene-active::before{opacity:0;transition:opacity .8s}";
-      document.head.appendChild(s);
-    }
   }
 
-  /* Mirrors the CSS mask rule in components/footer.css:
-       mask-size: 100% auto; mask-position: center
-     The signature now runs end to end — full footer width, height by ratio,
-     centred vertically — and the footer clips any vertical overflow. Keep this
-     in step with that rule. */
+  /* Read the rendered signature geometry instead of duplicating its responsive
+     CSS. This keeps the particle home positions precisely on the oversized,
+     cropped mark at every breakpoint. */
   function signatureRect() {
-    const svgW = w;
+    const mark = host.querySelector("img");
+    if (mark) {
+      const hostRect = host.getBoundingClientRect();
+      const markRect = mark.getBoundingClientRect();
+      if (markRect.width > 0 && markRect.height > 0) {
+        return {
+          w: markRect.width,
+          h: markRect.height,
+          x: markRect.left - hostRect.left,
+          y: markRect.top - hostRect.top,
+        };
+      }
+    }
+    const svgW = w * 0.96;
     const svgH = (SVG_VH / SVG_VW) * svgW;
-    if (svgH <= 0) return null;
-    return { w: svgW, h: svgH, x: 0, y: (h - svgH) / 2 };
+    return svgH > 0 ? { w: svgW, h: svgH, x: w * 0.02, y: h - svgH } : null;
   }
 
   /* Horizontal edge fade matching the CSS gradient mask
@@ -158,6 +161,7 @@ export function createFooterScene(host) {
 
     if (gen !== buildGen) return;
     cells = newCells;
+    if (cells.length) host.classList.add("scene-active");
   }
 
   function resize() {
@@ -268,8 +272,10 @@ export function createFooterScene(host) {
       failed = true;
       return;
     }
-    const dark = document.documentElement.dataset.theme === "dark";
-    fg = dark ? [237, 233, 225] : [22, 20, 15];
+    /* The Seasats-derived footer is always deep navy, independent of the page
+       theme, so the signature matrix remains white in both theme modes. */
+    fg = host.closest(".site-footer--seasats") ? [255, 255, 255] :
+      (document.documentElement.dataset.theme === "dark" ? [237, 233, 225] : [22, 20, 15]);
     mouse.x = -9999;
     mouse.y = -9999;
 
@@ -302,9 +308,10 @@ export function createFooterScene(host) {
 
 export function initFooterScene() {
   const footer = document.querySelector("footer.site-footer");
-  if (!footer) return;
+  const signature = footer && footer.querySelector(".site-footer__signature");
+  if (!footer || !signature) return;
 
-  const scene = createFooterScene(footer);
+  const scene = createFooterScene(signature);
 
   const observer = new IntersectionObserver(
     (entries) => {

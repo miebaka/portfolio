@@ -5,15 +5,28 @@
    ========================================================================== */
 
 .now-playing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--space-1);
   /* Same padding as the site's buttons (.btn), between text and pill edge. */
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, white 62%, transparent);
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.18) 48%,rgba(255,255,255,.32)),
+    color-mix(in srgb,var(--paper) 28%,transparent);
+  -webkit-backdrop-filter: blur(22px) saturate(185%) contrast(104%);
+  backdrop-filter: blur(22px) saturate(185%) contrast(104%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -1px 0 rgba(255,255,255,.28),
+    inset 12px 10px 24px rgba(255,255,255,.18),
+    0 14px 36px rgba(32,32,32,.09),
+    0 2px 7px rgba(32,32,32,.07);
   font-family: var(--font-label);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
@@ -30,6 +43,28 @@
               display   var(--duration-standard) allow-discrete;
   @starting-style { opacity: 0; transform: scale(0.98); }
 }
+
+.now-playing::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:1px;
+  border-radius:inherit;
+  background:radial-gradient(110% 85% at 18% 0%,rgba(255,255,255,.72),transparent 52%);
+  pointer-events:none;
+}
+
+.now-playing::after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:auto 7% 2px 18%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.82),transparent);
+  pointer-events:none;
+}
+
+[data-theme="dark"] .now-playing {border-color:rgba(255,255,255,.2);background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 14px 36px rgba(0,0,0,.22)}
 
 /* Exit state — opacity 0 before display:none takes effect */
 .now-playing[hidden] {

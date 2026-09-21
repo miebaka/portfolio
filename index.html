@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Miebaka Joshua | Brand Designer &amp; Strategic Thinker</title>
-  <meta name="description" content="Brand designer and strategic thinker based in Lagos. 7+ years building identities and campaigns for fintech, FMCG, and health tech brands. Open to remote roles worldwide.">
+  <meta name="description" content="Miebaka Joshua is a Lagos-based brand and visual designer turning unclear positioning into identities, campaigns and systems that hold together.">
   <link rel="canonical" href="https://miebaka.design/">
   <meta property="og:title" content="Miebaka Joshua | Brand Designer &amp; Strategic Thinker">
   <meta property="og:description" content="Building brands that think before they look.">
@@ -22,18 +22,11 @@
   <meta name="theme-color" content="#1c1a16">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-regular.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/librebaskerville-italic.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-regular.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/josefinsans-semibold.woff2" crossorigin>
-  <!-- LCP image. imagesrcset/imagesizes must mirror the <picture> below, or the
-       preload fetches the 1080 variant and the render then fetches a different
-       one, downloading the portrait twice on phones. -->
   <link rel="preload" as="image" type="image/avif"
         imagesrcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
                      assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
                      assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
-        imagesizes="(max-width: 760px) 100vw, 62vw"
+        imagesizes="(max-width: 760px) 100vw, 38vw"
         fetchpriority="high">
   <script type="application/ld+json">
   [
@@ -74,7 +67,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
-<body data-page="home">
+<body data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav">
     <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
@@ -92,132 +85,39 @@
   </header>
 
   <main id="main">
-
-    <!-- Hero — golden ratio grid: content (38.2%) | portrait (61.8%) -->
-    <section class="hero-noir">
+    <section class="hero-noir" aria-labelledby="hero-title">
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
-          <h1 class="hero-noir__statement" data-split>The best brands don&rsquo;t look designed. They look <em>decided</em>.</h1>
-          <p class="hero-noir__lede reveal">I&rsquo;m Miebaka Joshua. For seven years I&rsquo;ve turned fuzzy briefs into identities that <strong>hold their shape</strong>, most recently in-house at Rise, shipping to more than 800,000 users. I&rsquo;m looking for the right team to do that for next.</p>
-          <a class="hero-noir__cta reveal" href="#work">
-            <span class="hero-noir__cta-bar" aria-hidden="true"></span>
-            <span>See the work</span>
-          </a>
+          <h1 id="hero-title" class="hero-noir__statement" data-split>The best brands don&rsquo;t look designed. They look <em>decided.</em></h1>
+          <a class="hero-noir__cta reveal" href="#work"><span class="hero-noir__cta-bar" aria-hidden="true"></span><span>See the work</span></a>
         </div>
       </div>
       <div class="hero-noir__media">
-        <!-- Now Playing pill sits in the space above the portrait -->
         <div class="hero-noir__chip" data-mount="now-playing"></div>
-        <div class="hero-noir__picture" data-wipe="up">
-        <!-- width/height are required even though CSS stretches the image to
-             fill: without them the browser cannot reserve the box before the
-             file arrives, and the hero reflows on load. -->
-        <picture>
-          <source type="image/avif" sizes="(max-width: 760px) 100vw, 62vw"
-                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
-                          assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
-                          assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w">
-          <source type="image/webp" sizes="(max-width: 760px) 100vw, 62vw"
-                  srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w,
-                          assets/images/optimized/miebaka-joshua-portrait-810.webp 810w,
-                          assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w">
-          <img class="hero-noir__portrait"
-               src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg"
-               sizes="(max-width: 760px) 100vw, 62vw"
-               srcset="assets/images/optimized/miebaka-joshua-portrait-540.jpg 540w,
-                       assets/images/optimized/miebaka-joshua-portrait-810.jpg 810w,
-                       assets/images/optimized/miebaka-joshua-portrait-1080.jpg 1080w"
-               width="1080" height="1350"
-               alt="Miebaka Joshua, brand and visual designer, photographed in Lagos."
-               fetchpriority="high" decoding="async">
-        </picture>
-        </div>
+        <figure class="hero-noir__picture" data-wipe="up">
+          <picture>
+            <source type="image/avif" sizes="(max-width: 760px) 100vw, 38vw" srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w, assets/images/optimized/miebaka-joshua-portrait-810.avif 810w, assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w">
+            <source type="image/webp" sizes="(max-width: 760px) 100vw, 38vw" srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w, assets/images/optimized/miebaka-joshua-portrait-810.webp 810w, assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w">
+            <img class="hero-noir__portrait" src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg" width="1080" height="1350" alt="Miebaka Joshua, brand and visual designer." fetchpriority="high" decoding="async">
+          </picture>
+        </figure>
       </div>
     </section>
-
-    <!-- Selected work -->
-    <section class="section" id="work">
-      <div class="container section-head reveal">
-        <h2 class="section-head__label">Selected work</h2>
-      </div>
-      <div class="container" data-mount="work-grid">
-        <!-- Static fallback, replaced by renderWork(). -->
-        <ul class="link-fallback">
-          <li><a href="work/rivo.html">Rivo</a></li>
-          <li><a href="work/christian-poster-a-week.html">A Christian Poster A Week</a></li>
-          <li><a href="work/tedx-rsu.html">TEDx Rivers State University</a></li>
-          <li><a href="work/chopbox.html">ChopBox</a></li>
-        </ul>
-      </div>
+    <section class="swiss-selected container" id="work" aria-labelledby="selected-title">
+      <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
+      <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/christian-poster-a-week.html">Poster A Week</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
+      <a class="swiss-link swiss-selected__all" href="work.html">View all work <span aria-hidden="true">↗</span></a>
     </section>
-
-    <!-- About Me: experience bar · what I do · quote · portrait -->
-    <section class="about-home" id="about">
-
-      <!-- Experience: client logo marquee -->
-      <div class="container about-home__label">
-        <p class="meta">Experience</p>
-      </div>
-      <div class="marquee marquee--light" aria-label="Brands I've worked with">
-        <div class="marquee__viewport" data-mount="clients"></div>
-      </div>
-
-      <!-- What I do -->
-      <div class="container about-home__block" id="capabilities">
-        <div class="section-head reveal">
-          <h2 class="section-head__label">What I do</h2>
-        </div>
-        <div data-mount="capabilities"></div>
-      </div>
-
-      <!-- Quote from collaborator -->
-      <div class="container about-home__block">
-        <figure data-mount="testimonial" class="reveal"></figure>
-      </div>
-
-      <!-- More About Me — statement at full width, note indented to the φ line.
-           No portrait here: the hero already carries it, and repeating the
-           same photo one screen later reads as filler. -->
-      <div class="container about-home__block" id="about-preview">
-        <!-- No "About" label above this: the statement is the heading, and a
-             small-caps label over every section is the templated rhythm the
-             page is trying not to have. -->
-        <h2 class="about-mission" data-split>Some of the most exciting brands in the world are being built in Africa. Most still don&rsquo;t look the part. I&rsquo;m building the standard that closes that gap, from Lagos.</h2>
-        <div class="about-note stack reveal">
-          <p>My earliest memory of design is a games console: the moment I understood that form and function could conspire to make something irresistible. Seven years later, I&rsquo;m building creative for more than 800,000 users at Rise, and building an AI tool that scores where eyes actually land in an ad. If one word describes how I work: <em>inquisitive</em>. I question every brief until the idea underneath is inevitable.</p>
-          <p><a class="link" href="about.html">More about me</a></p>
-        </div>
-      </div>
-
+    <section class="home-capabilities container" id="capabilities" aria-labelledby="capabilities-title">
+      <div class="disciplines-heading"><h2 id="capabilities-title">Disciplines</h2></div>
+      <div data-mount="capabilities"></div>
     </section>
-
-    <!-- Contact -->
-    <section class="contact-section" id="contact">
-      <div class="container contact reveal">
-        <!-- The headline names the section; a "Contact" label above it is a
-             textbook eyebrow and adds nothing. -->
-        <h2 class="contact__heading">Building something that needs to decide what it is?</h2>
-        <form class="contact__form" novalidate>
-          <div class="field">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="form-status">
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="form-status">
-          </div>
-          <div class="field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" autocomplete="off" placeholder="What are you trying to decide?"></textarea>
-          </div>
-          <div class="contact__submit">
-            <button class="btn btn--primary" type="submit">Work with me &rarr;</button>
-          </div>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-        </form>
-      </div>
+    <section class="swiss-about container" aria-labelledby="about-title">
+      <div><img src="assets/images/optimized/miebaka-joshua-portrait-540.webp" alt="Miebaka Joshua" width="540" height="720" loading="lazy" decoding="async"></div>
+      <div><h2 id="about-title">Inquisitive by nature.<br>Deliberate by design.</h2><p>I’m Miebaka. For seven years, I’ve helped brands find their voice and hold their shape, from fintech to food and culture. Most recently, I’ve been designing in-house at Rise.</p><p>I look for the idea underneath before I start shaping the form. Outside the work: snakes, games, and a surprisingly strong opinion about how water tastes.</p><a class="swiss-link" href="about.html">More about Miebaka <span aria-hidden="true">↗</span></a></div>
     </section>
-
+    <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Trusted with the work</h2><div class="marquee marquee--light"><div class="marquee__viewport" data-mount="clients"></div></div></section>
+    <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Building something that needs to decide what it is?</h2><a class="home-close__link" href="contact.html">Work with me <span aria-hidden="true">↗</span></a></section>
   </main>
 
   <footer data-mount="footer">

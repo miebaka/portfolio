@@ -48,6 +48,12 @@
   gap: var(--space-5);
   margin-top: var(--space-6);
 }
+.contact__handoff {
+  max-width: 58ch;
+  color: var(--text-muted);
+  font-size: var(--step-small);
+  line-height: var(--leading-body);
+}
 
 .contact__submit {
   margin-top: var(--space-2);

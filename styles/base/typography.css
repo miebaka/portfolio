@@ -1,6 +1,7 @@
 /* ==========================================================================
    Base · Typography — heading roles, reading copy, labels, utility classes.
-   Three roles: Display (headings) · Reading (serif body) · Interface (labels).
+   Two roles: TeX Gyre Heros for editorial display and reading; Josefin Sans
+   exclusively for labels and controls.
    ========================================================================== */
 
 h1, h2, h3, h4, h5, h6 {
@@ -9,6 +10,16 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
   text-wrap: balance;
+}
+
+body,
+p,
+li,
+dd,
+blockquote,
+input,
+textarea {
+  font-family: var(--font-body);
 }
 h1 { font-size: var(--step-h1); }
 h2 { font-size: var(--step-h2); }
@@ -19,7 +30,8 @@ h6 { font-size: var(--step-h6); }
 
 em { font-style: italic; }
 
-/* Running body copy is the serif, capped to the reading measure */
+/* Running body copy shares the grotesk with headlines, with calmer measure
+   and leading doing the hierarchy work. */
 p { max-width: var(--measure-reading); }
 .case-col p,
 .stack p {
@@ -30,7 +42,6 @@ p { max-width: var(--measure-reading); }
 /* Labels — Interface (Josefin Sans), uppercase, widely tracked */
 .meta,
 .site-nav__link,
-.case-back a,
 .case-rail__label,
 .case-rail__text,
 .case-next__label,

@@ -6,25 +6,11 @@ import { MOUNT } from "../core/contract.js";
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  el.classList.add("caps");
-  /* Each service is a native <details> so the disclosure is keyboard-accessible
-     and announced for free. The shared name makes the set exclusive: opening one
-     closes whichever was open, with no JS to keep in sync. */
-  el.innerHTML = SITE.capabilities
-    .map((c, i) => {
-      const desc = esc(c.description || c.meta || "");
-      return (
-        '<details class="caps__item" name="capabilities">' +
-          '<summary class="caps__row">' +
-            '<span class="caps__num">' + String(i + 1).padStart(2, "0") + "</span>" +
-            '<span class="caps__name">' + esc(c.title) + "</span>" +
-            '<span class="caps__toggle" aria-hidden="true"></span>' +
-          "</summary>" +
-          '<div class="caps__panel"><p class="caps__desc">' + desc + "</p></div>" +
-        "</details>"
-      );
-    })
-    .join("");
+  el.className = "disciplines-index";
+  const heading = document.body.dataset.page === "services" ? "h2" : "h3";
+  el.innerHTML = SITE.capabilities.map(c =>
+    '<article class="discipline"><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></article>'
+  ).join("");
 }
 
 /* Renders nothing at all unless there is a real quote with a real attributor.

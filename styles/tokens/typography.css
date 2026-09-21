@@ -1,12 +1,4 @@
-/* ==========================================================================
-   Tokens · Typography — font faces, families, scale, tracking, leading, measures.
-   Three roles only: Display (TeX Gyre Heros), Reading (Libre Baskerville),
-   Interface (Josefin Sans). Never interchange.
-   ========================================================================== */
-
-/* --- Self-hosted faces (paths relative to this file) --- */
-
-/* Display — TeX Gyre Heros (Helvetica-metric grotesque) */
+/* Typography: Heros display and reading, Josefin labels only. */
 @font-face {
   font-family: "TeX Gyre Heros";
   src: url("../../assets/fonts/texgyreheros-regular.woff2") format("woff2");
@@ -28,23 +20,6 @@
   font-weight: 700; font-style: italic; font-display: swap;
 }
 
-/* Reading — Libre Baskerville */
-@font-face {
-  font-family: "Libre Baskerville";
-  src: url("../../assets/fonts/librebaskerville-regular.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Libre Baskerville";
-  src: url("../../assets/fonts/librebaskerville-italic.woff2") format("woff2");
-  font-weight: 400; font-style: italic; font-display: swap;
-}
-@font-face {
-  font-family: "Libre Baskerville";
-  src: url("../../assets/fonts/librebaskerville-bold.woff2") format("woff2");
-  font-weight: 700; font-style: normal; font-display: swap;
-}
-
 /* Interface — Josefin Sans */
 @font-face {
   font-family: "Josefin Sans";
@@ -54,102 +29,53 @@
 @font-face {
   font-family: "Josefin Sans";
   src: url("../../assets/fonts/josefinsans-semibold.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
+  font-weight: 700; font-style: normal; font-display: swap;
 }
 
 :root {
-  /* Families */
   --font-sans: "TeX Gyre Heros", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-serif: "Libre Baskerville", Georgia, "Times New Roman", serif;
-  --font-label: "Josefin Sans", "Century Gothic", "Futura", system-ui, sans-serif;
-  --font-display: var(--font-sans);   /* role: headings */
-  --font-body: var(--font-serif);     /* role: reading */
-
-  /* Weights (faces ship 400 + 700; 500/600 used where the face exists) */
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-serif: var(--font-sans);
+  --font-label: "Josefin Sans", sans-serif;
   --weight-regular: 400;
-  --weight-medium: 500;
+  --weight-medium: 400;
   --weight-bold: 700;
-
-  /* Type scale — fluid mobile → desktop.
-
-     Recalibrated to a fashion-editorial register. The old scale topped out at
-     208px and ran 40–56px for an h1, which is agency-loud: at that size type
-     fills the page and the whitespace has nowhere to go. Measured against the
-     reference (belonwus.com/work/owo), a page of that class runs 16px for
-     everything and 32px for its one statement line. This scale keeps a display
-     tier for the home hero, then drops sharply, so restraint is the default
-     and size has to be earned. Body stays at or above 16px throughout. */
-  --step-poster: clamp(3rem, 7.5vw, 7rem);                   /* 48 → 112 · full-bleed display */
-  --step-statement: clamp(2.75rem, 8vw, 7.5rem);            /* 44 → 120 · home hero statement (major column) */
-  --step-display-xl: clamp(2rem, 4vw, 3.5rem);               /* 32 → 56 */
-  --step-hero: clamp(1.875rem, 3.2vw, 3rem);                 /* 30 → 48 · display-lg */
-  --step-display: var(--step-hero);                           /* alias — display heading */
-  --step-h1: clamp(1.625rem, 1.4rem + 1.1vw, 2.25rem);       /* 26 → 36 */
-  --step-h2: clamp(1.375rem, 1.25rem + 0.7vw, 1.75rem);      /* 22 → 28 */
-  --step-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);        /* 20 → 24 */
-  --step-h4: clamp(1.125rem, 1.08rem + 0.25vw, 1.25rem);     /* 18 → 20 */
-  --step-h5: clamp(1.0625rem, 1.03rem + 0.16vw, 1.125rem);   /* 17 → 18 */
-  --step-h6: 1.0625rem;                                       /* 17 */
-  --step-body-lg: clamp(1.0625rem, 1.03rem + 0.16vw, 1.125rem); /* 17 → 18 */
-  --step-body: clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);      /* 16 → 17 */
-  --step-small: 0.9375rem;                                    /* 15 · body-sm */
-  --step-caption: 0.8125rem;                                  /* 13 */
-  --step-meta: 0.6875rem;                                     /* 11 · label */
-
-  /* ── Leading, derived from φ ──────────────────────────────────────────
-     Every value on this ladder is a root of the golden ratio, so the whole
-     system is one number expressed at different strengths:
-
-       φ      = 1.618   body — the reading measure
-       φ^1/2  = 1.272   intro and captions
-       φ^1/4  = 1.128   headings
-       φ^1/8  = 1.062   hero
-       φ^1/16 = 1.031   poster
-       1.000            labels, single-line by definition
-
-     A flat 1.618 on every size would be wrong, not golden: leading tracks
-     size inversely, so a 60px headline set at φ falls apart into separate
-     lines while 16px body set at a headline's leading reads as a wall. Taking
-     successive square roots keeps φ as the generator and lets the ratio relax
-     toward 1 exactly as the type grows, which is the relationship φ describes
-     in the first place. Body copy — the great majority of text on the site —
-     sits at φ itself. */
-  --leading-poster: 1.031;   /* φ^1/16 */
-  --leading-hero: 1.062;     /* φ^1/8  */
-  --leading-heading: 1.128;  /* φ^1/4  */
-  --leading-intro: 1.272;    /* φ^1/2  */
-  --leading-caption: 1.272;  /* φ^1/2  */
-  --leading-body: 1.75;      /* reading — opened past φ so Libre Baskerville's
-                                tall x-height has room to breathe line to line */
-  --leading-label: 1;
-
-  /* Letter tracking — optical, not uniform. Large type reads too loose at 0,
-     so it tightens as it grows; small caps-labels need positive tracking to
-     stay legible. */
-  --tracking-poster: -0.055em;
-  --tracking-display-xl: -0.045em;
-  --tracking-display: -0.035em;
-  --tracking-heading: -0.022em;
-  --tracking-body: 0;
-  --tracking-caption: 0.01em;
-  --tracking-label: 0.18em;
-  --tracking-button: 0.12em;
-
-  /* Reading measures.
-
-     Prose measures are in em, not ch. `ch` is the advance width of "0", and
-     in Libre Baskerville the figures are far wider than the lowercase: 68ch
-     resolved to 825px, which is about 97 characters a line, not 68. Every
-     prose block on the site was running roughly 40% over measure because of
-     it. `em` is proportional to the type size and gives a stable character
-     count for a given face, which is what a measure is actually for.
-
-     Display and label measures stay in ch: they are set in the grotesk, whose
-     figure width is close to its lowercase, so ch behaves there. */
-  --measure-title:   16ch;  /* primary page heading constraint */
-  --measure-hero:    18ch;  /* hero statement */
-  --measure-lead:    17em;  /* about / mission statement (~34 characters) */
-  --measure-reading: 34em;  /* body copy (~68 characters) */
-  --measure-caption: 21em;  /* captions (~42 characters) */
-  --measure-wide:    42em;  /* testimonials, pull quotes (~84 characters) */
+  --step-poster: clamp(2.5rem, 4.5vw, 4rem);
+  --step-statement: var(--step-poster);
+  --step-display-xl: clamp(2.25rem, 4vw, 3.5rem);
+  --step-hero: clamp(2.25rem, 4.5vw, 4rem);
+  --step-display: var(--step-hero);
+  --step-h1: clamp(2rem, 3.5vw, 3rem);
+  --step-h2: clamp(1.75rem, 2.5vw, 2.25rem);
+  --step-h3: clamp(1.375rem, 2vw, 1.75rem);
+  --step-h4: 1.25rem;
+  --step-h5: 1.125rem;
+  --step-h6: 1rem;
+  --step-body-lg: 1.125rem;
+  --step-body: 1rem;
+  --step-small: .875rem;
+  --step-caption: .8125rem;
+  --step-meta: .75rem;
+  --leading-poster: 1.08;
+  --leading-hero: 1.08;
+  --leading-heading: 1.15;
+  --leading-intro: 1.4;
+  --leading-caption: 1.5;
+  --leading-body: 1.6;
+  --leading-label: 1.3;
+  --tracking-poster: -.035em;
+  --tracking-display-xl: -.035em;
+  --tracking-display: -.03em;
+  --tracking-heading: -.025em;
+  --tracking-body: -.005em;
+  --tracking-caption: 0;
+  --tracking-label: .16em;
+  --tracking-button: .14em;
+  --measure-title: 24ch;
+  --measure-hero: 28ch;
+  --measure-lead: 32em;
+  --measure-reading: 38em;
+  --measure-caption: 28em;
+  --measure-wide: 44em;
 }

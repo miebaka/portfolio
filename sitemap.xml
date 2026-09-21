@@ -12,8 +12,23 @@
   </url>
   <url>
     <loc>https://miebaka.design/about.html</loc>
-    <lastmod>2026-06-28</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://miebaka.design/services.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://miebaka.design/contact.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://miebaka.design/playground.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://miebaka.design/work/rivo.html</loc>
@@ -35,7 +50,16 @@
     <lastmod>2026-06-28</lastmod>
     <priority>0.8</priority>
   </url>
-
+  <url>
+    <loc>https://miebaka.design/writing/designing-for-disability-in-nigeria.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://miebaka.design/writing/when-the-swoosh-lost-its-soul.html</loc>
+    <lastmod>2026-09-16</lastmod>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://miebaka.design/privacy.html</loc>
     <priority>0.2</priority>

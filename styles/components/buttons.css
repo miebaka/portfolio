@@ -18,8 +18,10 @@
   border-radius: var(--radius-pill);
   /* Primary CTAs must never wrap to a second line */
   white-space: nowrap;
-  font-size: var(--step-small);
-  font-weight: var(--weight-medium);
+  font-family: var(--font-label);
+  font-size: var(--step-meta);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
   letter-spacing: var(--tracking-button);
   transition: background var(--duration-fast) var(--ease-standard),
               color var(--duration-fast) var(--ease-standard),

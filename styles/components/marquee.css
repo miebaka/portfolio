@@ -38,7 +38,6 @@
   width: max-content;
   animation: marquee-scroll var(--duration-marquee) linear infinite;
 }
-.marquee:hover .marquee__track { animation-play-state: paused; }
 .marquee__group {
   --_gap: var(--space-5h); /* 64px — inter-item rhythm */
   display: flex;

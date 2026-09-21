@@ -89,9 +89,10 @@ function sequence(media) {
 function factsBlock(c, project) {
   const r = c.rail || {};
   const rows = [
-    ["Client", c.title],
-    ["Year", project && project.year],
-    ["Services", r.services],
+    ["Role", r.services],
+    ["Scope", r.meta],
+    ["Constraint", c.overview && c.overview.question],
+    ["Outcome", c.outcome && c.outcome.body && c.outcome.body[0]],
   ].filter(([, v]) => v);
   return (
     '<dl class="case-facts">' +
@@ -122,6 +123,33 @@ function metricsBlock(outcome) {
   );
 }
 
+function chapter(id, title, heading, body, media, featured) {
+  const visual = media && media.length
+    ? '<div class="case-chapter__media' + (featured ? ' case-chapter__media--feature' : '') + '">' + sequence(media) + '</div>'
+    : "";
+  return (
+    '<section class="case-chapter" id="' + id + '" aria-labelledby="' + id + '-title">' +
+      '<div class="case-chapter__copy container reveal">' +
+        '<p class="case-chapter__label">' + esc(title) + '</p>' +
+        '<h2 id="' + id + '-title">' + esc(heading) + '</h2>' +
+        '<div class="case-chapter__body">' + paras(body) + '</div>' +
+      '</div>' + visual +
+    '</section>'
+  );
+}
+
+function chapterRail() {
+  return (
+    '<nav class="case-rail" aria-label="Case study chapters" hidden>' +
+      '<a href="#problem">Problem</a>' +
+      '<a href="#decision">Decision</a>' +
+      '<a href="#system">System</a>' +
+      '<a href="#applications">Applications</a>' +
+      '<a href="#result">Result</a>' +
+    '</nav>'
+  );
+}
+
 export function renderCaseStudy() {
   const slug = document.body.dataset.case;
   if (!slug) return;
@@ -142,12 +170,10 @@ export function renderCaseStudy() {
 
   const hero = media[0];
   const rest = media.slice(1);
-
-  /* Short form of the written sections. The references carry one block of
-     copy, not five, so overview and challenge are folded together and the
-     rest stays in the data unrendered. */
-  const info = [].concat(c.overview && c.overview.body ? c.overview.body : [],
-                         c.challenge || []).slice(0, 2);
+  const groups = [[], [], [], [], []];
+  rest.forEach((item, index) => groups[Math.min(4, Math.floor(index * 5 / Math.max(1, rest.length)))].push(item));
+  const overview = c.overview || {};
+  const outcome = c.outcome || {};
 
   /* The next-project link is optional. Without this guard a study missing
      `next` threw at the very end, after the whole article had been built,
@@ -159,31 +185,20 @@ export function renderCaseStudy() {
       esc(c.next.title) + " &rarr;</a></section>"
     : "";
 
-  /* Order follows belonwus.com/work/owo:
-
-       back
-       full-bleed hero
-       Client | Year | Services      (hairline under, where the services and
-                                      year line used to sit)
-       statement                     (h1, the one piece of large type)
-       project information
-       image sequence
-       metrics
-       next project
-
-     The services-and-year eyebrow is gone: it repeated Services and Year
-     verbatim from the facts row two lines below it. The statement is the h1
-     now rather than a small repeat of the project name, because the name is
-     already the Client field and a page does not need to say it three times. */
+  /* Opening image, facts, proposition, chapters, outcome and next project. */
   el.innerHTML =
-    '<p class="case-back container reveal"><a href="' + base + 'work.html">&larr; Work</a></p>' +
+    chapterRail() +
     shot(hero, "hero") +
     '<header class="case-lede container">' +
       factsBlock(c, project) +
       '<h1 class="case-statement reveal">' + esc(c.tagline) + "</h1>" +
-      '<div class="case-brief reveal">' + paras(info) + "</div>" +
+      '<div class="case-brief reveal">' + paras(overview.body || []) + "</div>" +
     "</header>" +
-    '<div class="case-sequence">' + sequence(rest) + "</div>" +
-    metricsBlock(c.outcome) +
+    chapter("problem", "Problem", overview.question || "The problem", c.challenge || [], groups[0], false) +
+    chapter("decision", "Decision", "The idea underneath the form", c.process || [], groups[1], true) +
+    chapter("system", "System", "One decision, carried through", c.solution || [], groups[2], false) +
+    chapter("applications", "Applications", "The system in the world", ["The identity was tested where it had to work: across the practical surfaces, scales and contexts the audience would actually encounter."], groups[3], false) +
+    chapter("result", "Result", "What the system made possible", outcome.body || [], groups[4], false) +
+    metricsBlock(outcome) +
     next;
 }

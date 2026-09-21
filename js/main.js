@@ -4,64 +4,55 @@
    ========================================================================== */
 import { initContract } from "./core/contract.js";
 
-/* Native cross-document view transitions (@view-transition in
-   styles/base/view-transitions.css) reject their promise with an AbortError
-   when one navigation supersedes an in-flight transition (rapid clicks,
-   back/forward). It is harmless but surfaces as an unhandled rejection. Swallow
-   exactly that case; let every other rejection through untouched. */
-window.addEventListener("unhandledrejection", (event) => {
-  const reason = event.reason;
-  if (reason && reason.name === "AbortError" && /transition was skipped/i.test(reason.message || "")) {
-    event.preventDefault();
-  }
-});
-import { renderNavigation, renderBackButton } from "./render/navigation.js";
+import { renderNavigation } from "./render/navigation.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
 import { renderCapabilities, renderTestimonial, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
-import { initSplitText } from "./core/split-text.js";
 import { initScrollReveal } from "./core/scroll.js";
 import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
-import { initWorkPreview } from "./core/work-preview.js";
-import { initHeroParallax } from "./core/hero-parallax.js";
 import { initCountUp } from "./core/count-up.js";
-import { initGenerativeField } from "./core/generative-field.js";
+import { initSwissScene } from "./core/swiss-scene.js";
 import { initFooterScene } from "./core/footer-scene.js";
+import { initCaseRail } from "./core/case-rail.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
    later as a section that silently never filled. See js/core/contract.js. */
-initContract();
+const page = document.body.dataset.page || "";
+const has = (selector) => Boolean(document.querySelector(selector));
+const isCaseStudy = Boolean(document.body.dataset.case);
+const run = (label, task) => {
+  try { task(); }
+  catch (error) { console.error("[portfolio] " + label + " failed", error); }
+};
+
+run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */
-renderNavigation();
-renderBackButton();
-renderWork();
-renderClients();
-renderCapabilities();
-renderTestimonial();
-renderCaseStudy();
-renderWriting();
-renderFooter();
-fillSlots();
-initNowPlaying();
+run("navigation render", renderNavigation);
+if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
+if (has('[data-mount="clients"]')) run("clients render", renderClients);
+if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
+if (has('[data-mount="testimonial"]')) run("testimonial render", renderTestimonial);
+if (isCaseStudy) run("case study render", renderCaseStudy);
+if (has('[data-mount="writing"]')) run("writing render", renderWriting);
+run("footer render", renderFooter);
+run("content slots", fillSlots);
+if (page === "home") run("listening status", initNowPlaying);
 
-/* Behaviour: attach handlers to the freshly rendered DOM.
-   Split runs before the reveal observer so words are wrapped and measured
-   before anything can be marked visible. */
-initSplitText();
-initScrollReveal();
-initNavigation();
-initYear();
-initForm();
-initWorkPreview();
-initHeroParallax();
+/* Behaviour: attach handlers to the freshly rendered DOM. Content stays visible;
+   the observer retains the existing readiness contract without delaying copy. */
+run("scroll reveal", initScrollReveal);
+run("navigation behaviour", initNavigation);
+run("year", initYear);
+if (page === "contact") run("contact form", initForm);
 /* After renderCaseStudy() has built the metric markup. */
-initCountUp();
-initGenerativeField();
-initFooterScene();
+if (isCaseStudy) run("case metrics", initCountUp);
+if (isCaseStudy) run("case chapter rail", initCaseRail);
+if (page === "home" && has("[data-swiss-scene]")) run("hero scene", initSwissScene);
+run("footer signature scene", initFooterScene);

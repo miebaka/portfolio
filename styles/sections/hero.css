@@ -45,28 +45,13 @@
    rule while the grid-column still applied. */
 @media (min-width: 820px) {
   .hero {
-    display: grid;
-    grid-template-columns: var(--col-major) var(--col-minor);
-    column-gap: var(--space-5);
-    /* Bottom-aligned so the statement and its standfirst land on the same
-       lower golden line rather than floating at two arbitrary heights. */
-    align-items: end;
+    display: block;
   }
-  .hero__role  { grid-column: 1 / -1; }
-  .hero__title { grid-column: 1; }
   .hero__lede {
-    grid-column: 2;
-    margin-top: 0;
-    /* Steps down to a standfirst beside the display title. At --step-h3 the
-       copy wrapped to nine lines in the minor column and read as a stripe,
-       and it cannot lose against the title at 34px. */
-    font-size: var(--step-h5);
-    /* Leading tracks size inversely, same as the base rule: 1.3 suits 28–34px,
-       but at 20–22px the standfirst wants a little more air. */
+    margin-top: var(--space-5);
+    font-size: var(--step-body-lg);
     line-height: var(--leading-intro);
-    /* The column is the measure now. The 26ch cap was sized for the stacked
-       full-width hero and would re-narrow this well inside the minor column. */
-    --_w: var(--measure-lead);
+    --_w: var(--measure-reading);
   }
   /* work.html carries no .hero__title — its h1 IS the lede. There the lede is
      the statement, so it takes the major column at full size instead of
@@ -285,7 +270,7 @@
   }
   .hero-noir__meta { flex-direction: column; gap: var(--space-1); }
   /* Full width available once stacked — the column cap no longer applies */
-  .hero-noir__statement { font-size: clamp(2.25rem, 9vw, 4rem); }
+  .hero-noir__statement { font-size: var(--step-statement); }
 }
 
 @media (max-width: 480px) {
