@@ -29,7 +29,7 @@ Light: #fff surface, #111 text, #595959 secondary, #d9d9d9 rules.
 Dark: #111 surface, #fff text, #b8b8b8 secondary, #404040 rules.
 Status messages retain explicit text; colour alone never conveys status.
 
-Gutters: 24–96px. Section intervals: 96–192px; compact intervals: 64–128px.
+Gutters: 24–96px, shared with the navigation and footer. Section intervals: 105.6–211.2px; compact intervals: 70.4–140.8px (10% increase).
 Components use an 8px internal rhythm where practical.
 Decorative dividers are removed. Major page openings contain a headline without supporting copy.
 
@@ -38,7 +38,8 @@ Decorative dividers are removed. Major page openings contain a headline without 
 - Buttons adapt [HyperUI solid and bordered patterns](https://www.hyperui.dev/components/marketing/buttons/) to the existing zero-build CSS. Minimum height 44px, 12px vertical/20px horizontal padding, 4px corners. Visible focus outlines and native disabled semantics.
 - Homepage and Work retain the original expanding panels: 64% active panel, blurred neighbouring image slivers and subtle image zoom. [HyperUI card 3](https://www.hyperui.dev/components/marketing/cards/#component-3) supplies only the hover layer: image darkening and a short description rising into view. Keyboard focus reveals content immediately; mobile retains stacked panels with visible descriptions.
 - Work filters are removed. Selected Work and Disciplines are uppercase 12px labels. Disciplines contains one title and one concise description per service.
-- Case-study navigation remains direct, without a transition overlay.
+- Case-study navigation remains direct, without a greeting loader or transition overlay. The chapter index appears at Problem and hides on reverse scrolling above it; its panel contrasts with the current theme.
+- About uses an original first-person biography grounded in public writing and the speaker profile; source notes are in docs/about-research.md. The former Now/Next, interests and writing index is removed.
 - Footer body and links use Heros. Exact signature occupies 80% of a matching-aspect-ratio frame with 10% inset on every side. Dot matrix samples the same geometry. Static fallback stays visible until sampling succeeds.
 
 ## Motion

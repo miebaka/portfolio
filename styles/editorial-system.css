@@ -184,7 +184,7 @@ body[data-page="work"] .swiss-collection { margin-top: var(--section-block-tight
 /* One horizontal content boundary, shared with the navigation. */
 .container { max-width: 100%; }
 main :is(p, h1, h2, h3, h4, li, dd, a) { overflow-wrap: anywhere; }
-.site-footer { padding-inline: var(--gutter); }
+.site-footer.site-footer--seasats { padding-inline: var(--gutter); }
 .contact { grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr); }
 .contact > *, .about-grid > *, .case-chapter__copy > *, .site-footer__panel > * { min-width: 0; }
 .case-page > .case-shot--hero { margin-top: var(--nav-h); }
