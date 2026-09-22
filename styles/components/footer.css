@@ -6,9 +6,6 @@
   position: relative;
   overflow: hidden;
   color: var(--ink);
-  /* The signature fills the footer and bleeds off both sides. That overscale
-     is the point: it is the one moment on the site that behaves like a poster
-     rather than a layout. */
   --_min: 260px;
   --_max: 640px;
   min-height: clamp(480px, 58vw, 760px);
@@ -19,54 +16,7 @@
   padding-block: var(--section-block-tight) var(--space-5);
 }
 
-/* Oversized script-signature watermark — CSS mask keeps it recolourable.
-   Uses --ink so it appears dark in light mode, light in dark mode. It runs end
-   to end (full width, bleeding to both edges) and a second mask layer, a
-   horizontal gradient composited with the glyph shape, fades the flourishes
-   into the margin instead of cutting them. */
-.site-footer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: var(--z-under);
-  pointer-events: none;
-  background-color: var(--ink);
-  opacity: var(--opacity-mark);
-  -webkit-mask-image:
-    url("../../assets/images/miebaka-joshua-script-name.svg"),
-    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
-  -webkit-mask-repeat: no-repeat, no-repeat;
-  -webkit-mask-position: center, center;
-  -webkit-mask-size: 100% auto, 100% 100%;
-  -webkit-mask-composite: source-in;
-  mask-image:
-    url("../../assets/images/miebaka-joshua-script-name.svg"),
-    linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
-  mask-repeat: no-repeat, no-repeat;
-  mask-position: center, center;
-  mask-size: 100% auto, 100% 100%;
-  mask-composite: intersect;
-}
-
 .site-footer a { color: var(--ink); }
-
-/* Pixel-grid canvas — the particle scene forms the signature from a grid of
-   cells sampled off the SVG. Positioning is also set inline by
-   js/core/footer-scene.js so it works even against a stale-cached stylesheet. */
-.site-footer__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: var(--z-under);
-  pointer-events: none;
-}
-/* When the scene is active the particles carry the signature — fade the static
-   watermark out beneath them. */
-.site-footer.scene-active::before {
-  opacity: 0;
-  transition: opacity var(--duration-emphasis) var(--ease-standard);
-}
 
 /* Content layers above the watermark */
 .site-footer__grid,

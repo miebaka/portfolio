@@ -78,7 +78,7 @@
 
    Set justified, edge to edge, the way leandra-isler.ch sets its display
    lines: both margins are hard, so the block reads as a typeset column rather
-   than a ragged paragraph, and the word-rise reveal (base/motion.css) unmasks
+   than a ragged paragraph, with the oversized word adding emphasis
    it line by line. The measure is the full page width now, not a 22ch cap —
    the spread is the point, and at --step-hero that runs ~9 words a line, wide
    enough that justification never opens rivers.

@@ -22,7 +22,6 @@
   --duration-emphasis: 700ms;  /* hero + menu entrances                   */
   --duration-editorial: 1100ms; /* mask wipes, display-type unveiling     */
   --duration-loop:    1600ms;  /* continuous repeating animations         */
-  --duration-marquee:   48s;   /* full marquee scroll loop — slow drift   */
 
   /* Stagger increments — sequence without ever feeling like a queue */
   --duration-stagger:      70ms; /* generic grouped reveals               */

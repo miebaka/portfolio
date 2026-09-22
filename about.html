@@ -12,23 +12,20 @@
   <meta property="og:url" content="https://miebaka.design/about.html">
   <meta property="og:site_name" content="Miebaka Joshua">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta property="og:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About | Miebaka Joshua, Brand Designer">
   <meta name="twitter:description" content="I ask better questions. Then I make the answer visible.">
-  <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="theme-color" content="#16140f">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://miebaka.design/" },
-      { "@type": "ListItem", "position": 2, "name": "About", "item": "https://miebaka.design/about.html" }
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement": [
+      {"@type":"ListItem","position": 1,"name":"Home","item":"https://miebaka.design/" },
+      {"@type":"ListItem","position": 2,"name":"About","item":"https://miebaka.design/about.html" }
     ]
   }
   </script>
@@ -37,14 +34,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") === "dark") r.dataset.theme = "dark"; } catch (e) {}
-    /* Failsafe. Most of the page is hidden by default and revealed by
-       js/core/scroll.js, so any failure in the module graph would leave the
-       site blank. scroll.js marks itself ready; if that never happens this
-       unhides everything. Inline so it runs even when modules do not. */
-    setTimeout(function () {
-      if (!r.classList.contains("reveal-ready")) r.classList.add("reveal-failsafe");
-    }, 2500);
+    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -70,7 +60,7 @@
 
     <!-- Hero — bigger title scale -->
     <section class="hero container">
-      <h1 class="hero__title hero__title--display measure-hero reveal">
+      <h1 class="hero__title hero__title--display measure-hero">
         I ask better questions. Then I make the answer visible.
       </h1>
     </section>
@@ -81,7 +71,7 @@
         <!-- A real <img>, not a CSS background: as a background this portrait
              was invisible to assistive tech and to image search, and could not
              carry alt text or be lazily prioritised. -->
-        <picture class="about-portrait reveal">
+        <picture class="about-portrait">
           <source type="image/avif"
                   sizes="(max-width: 760px) 100vw, 38vw"
                   srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
@@ -114,18 +104,18 @@
 
     <!-- Mission statement — stands alone at full measure -->
     <section class="section container" aria-label="Mission">
-      <p class="about-statement" data-split>
-        Africa has some of the most compelling brands in the world. Most of them don&rsquo;t look like it yet. I&rsquo;m building <em>a standard</em>, not by borrowing from what works in New York or London, but by proving what&rsquo;s possible from Lagos.
+      <p class="about-statement">
+        I want my work to raise the standard for brands built in Africa: not by borrowing someone else&rsquo;s visual language, but by making thoughtful, useful and unmistakable work from Lagos.
       </p>
     </section>
 
 
     <!-- Experience -->
     <section class="section container" id="experience">
-      <div class="section-head reveal">
+      <div class="section-head">
         <h2 class="section-head__label">Where I&rsquo;ve worked</h2>
       </div>
-      <div class="exp reveal">
+      <div class="exp">
         <details class="exp__item" name="experience">
           <summary class="exp__row">
             <span class="exp__role">Marketing Designer, Rise</span>
@@ -162,9 +152,9 @@
           </summary>
           <div class="exp__panel">
             <ul class="exp__list">
-              <li>Led design and final production of print materials, from brochures to product booklets.</li>
-              <li>Designed the brand&rsquo;s visual system and guarded its consistency.</li>
-              <li>Partnered with Product and Marketing to keep every touchpoint on brand.</li>
+              <li>Built the identity from wordmark and type through guidelines and production applications.</li>
+              <li>Designed and finished the print work, from brochures to product booklets.</li>
+              <li>Worked with Product and Marketing to carry the same logic across print, campaigns and the day-to-day brand work.</li>
             </ul>
           </div>
         </details>
@@ -176,9 +166,9 @@
           </summary>
           <div class="exp__panel">
             <ul class="exp__list">
-              <li>Designed assets and marketing materials that drove brand awareness across campaigns.</li>
+              <li>Made campaign and launch creative for a cross-border fintech speaking to Africans earning and spending globally.</li>
               <li>Built a brand pattern system still in use today.</li>
-              <li>Produced a branded e-book to amplify product reach.</li>
+              <li>Designed a branded e-book that gave the product story more room than a campaign post could.</li>
             </ul>
           </div>
         </details>
@@ -190,9 +180,9 @@
           </summary>
           <div class="exp__panel">
             <ul class="exp__list">
-              <li>Created social and campaign assets for brand awareness.</li>
-              <li>Kept a cohesive look and messaging across every user touchpoint.</li>
-              <li>Shaped creative strategy with stakeholders, aligned to brand and business goals.</li>
+              <li>Designed the everyday work of the brand: social, campaigns and product education for people navigating healthcare.</li>
+              <li>Built a visual rhythm that could move between trust, urgency and plain-language explanation without changing character.</li>
+              <li>Worked directly with stakeholders to turn business priorities into clear briefs and finished assets.</li>
             </ul>
           </div>
         </details>
@@ -205,7 +195,7 @@
           <div class="exp__panel">
             <ul class="exp__list">
               <li>Early-career generalist across brand, print and digital briefs for a range of clients.</li>
-              <li>Built the craft foundations, typography, layout and production, the later work stands on.</li>
+              <li>That was where typography, layout and production stopped being software skills and became a way of thinking.</li>
             </ul>
           </div>
         </details>
@@ -214,8 +204,8 @@
 
     <!-- Closing -->
     <section class="section--tight container">
-      <p class="closing-cta reveal">
-        If that&rsquo;s the kind of thinking your team is missing: <a class="link" data-href="email" href="mailto:hello@miebaka.design">start a conversation</a> or <a class="link" href="work.html">view the work</a>.
+      <p class="closing-cta">
+        If that&rsquo;s the kind of thinking your team is missing: <a class="link" data-href="email" href="mailto:hello@miebaka.design">talk about the role</a> or <a class="link" href="work.html">view the work</a>.
       </p>
     </section>
 

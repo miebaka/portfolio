@@ -1,6 +1,6 @@
 /* ==========================================================================
    Site data — single source of truth.
-   Add a project, skill, testimonial or social here and the UI updates.
+   Add a project, capability or social link here and the UI updates.
    Plain global (no build step) so the site runs from file:// or any server.
    ========================================================================== */
 
@@ -13,15 +13,15 @@ export const SITE = {
   location: "Lagos, Nigeria",
   city: "Lagos",      // reserved — planned nav clock feature
   timezone: "WAT",    // reserved — planned nav clock feature
-  availability: "Open to remote roles worldwide",
+  availability: "Open to remote roles and selected projects",
 
-  /* Standard world-class sections, shown in the fullscreen menu.
-     (Hero, proof strip, testimonials and footer are intentionally omitted —
+  /* Standard world-class sections, shown in the primary navigation.
+     (Hero, proof strip and footer are intentionally omitted —
      they aren't navigation destinations.) */
   menu: [
     { label: "Work",       href: "work.html",       key: "work" },
     { label: "About",      href: "about.html",      key: "about" },
-    { label: "Disciplines", href: "services.html",   key: "services" },
+    { label: "Services",    href: "services.html",   key: "services" },
     { label: "Playground", href: "playground.html", key: "playground" },
     { label: "Contact",    href: "contact.html",    key: "contact" },
   ],
@@ -69,7 +69,7 @@ export const SITE = {
       slug: "rivo",
       title: "Rivo Studio",
       category: "Software studio",
-      tagline: "An accessible software studio, built to feel useful before it feels technical.",
+      tagline: "A software studio positioned around access, built to feel useful before it feels technical.",
       tags: ["Brand identity", "Brand strategy", "Guidelines"],
       year: "2025",
       /* Sampled from the vision and mission cards in the brand deck, which is
@@ -80,22 +80,10 @@ export const SITE = {
       featured: true,
     },
     {
-      slug: "christian-poster-a-week",
-      title: "Poster A Week",
-      category: "Personal series",
-      tagline: "One verse each week, reduced to one visual idea and said with conviction.",
-      tags: ["Graphic design", "Art direction", "Typography"],
-      year: "2024",
-      tone: "#1d4ed8",
-      cover: "",
-      span: 5, ratio: "3 / 4",
-      featured: true,
-    },
-    {
       slug: "tedx-rsu",
       title: "TEDx RSU",
       category: "Event",
-      tagline: "A global event system given a distinct Rivers State rhythm.",
+      tagline: "A global event system given a distinct pause-and-reflect rhythm.",
       tags: ["Brand identity", "Creative direction", "Print"],
       year: "2023",
       /* Porphyra, the dominant of the three theme colours. */
@@ -144,60 +132,41 @@ export const SITE = {
     },
   ],
 
-  /* Brands shown in the scrolling logo bar. Add `logo: "assets/images/clients/<file>.svg"`
+  /* Brands shown in the client proof row. Add `logo: "assets/images/clients/<file>.svg"`
      to swap a wordmark for a real logo image (kept ≤48px tall automatically).
 
-     `scale` optically balances the row. The bar sizes every mark to the same
-     HEIGHT, which is the wrong yardstick for a logo wall: a 9:1 wordmark and a
-     1:1 monogram set to equal height do not carry equal visual weight — the
-     wide one dominates and the compact one vanishes. `scale` corrects toward
-     equal weight, not equal box: wide marks come down, the square monogram
-     comes up. Roughly indexed to aspect ratio (wider → smaller). Default 1. */
+     `optical` is a small correction for differences in the marks' ink density.
+     The renderer calculates the main scale from aspect ratio and equal area. */
   clients: [
-    { name: "Anakle",                  logo: "assets/images/clients/anakle.svg",                    logoW: 217, logoH: 40, scale: 0.76 },
-    { name: "Grey Finance",            logo: "assets/images/clients/grey-finance.svg",              logoW: 136, logoH: 40, scale: 0.95 },
-    { name: "Rise",                    logo: "assets/images/clients/rise.svg",                      logoW: 128, logoH: 40, scale: 1.05 },
-    { name: "Riv-TechCreek",           logo: "assets/images/clients/riv-techcreek.svg",            logoW:  40, logoH: 40, scale: 1.15 },
-    { name: "WellaHealth Technologies",logo: "assets/images/clients/wellahealth-technologies.svg", logoW: 360, logoH: 40, scale: 0.72 },
-    { name: "Celebration Church",      logo: "assets/images/clients/celebration-church.svg",       logoW: 163, logoH: 40, scale: 0.88 },
+    { name: "Anakle",                  logo: "assets/images/clients/anakle.svg",                    logoW: 217, logoH: 40 },
+    { name: "Grey Finance",            logo: "assets/images/clients/grey-finance.svg",              logoW: 136, logoH: 40 },
+    { name: "Rise",                    logo: "assets/images/clients/rise.svg",                      logoW: 128, logoH: 40, optical: 1.02 },
+    { name: "Riv-TechCreek",           logo: "assets/images/clients/riv-techcreek.svg",            logoW:  40, logoH: 40, optical: 0.96 },
+    { name: "WellaHealth Technologies",logo: "assets/images/clients/wellahealth-technologies.svg", logoW: 360, logoH: 40, optical: 1.03 },
+    { name: "Celebration Church",      logo: "assets/images/clients/celebration-church.svg",       logoW: 163, logoH: 40 },
   ],
 
-  /* Each service is an accordion row: the title is the summary, the description
-     (kept to three lines) is revealed on click. `meta` stays as the one-line
-     summary used anywhere a collapsed form is needed. */
+  /* Concise capabilities used on the homepage. */
   capabilities: [
     {
       title: "Brand identity",
-      meta: "A system your team can grow into.",
       description: "Logos, typography, colour and guidelines for a consistent brand.",
     },
     {
       title: "Brand strategy",
-      meta: "The thinking that makes the design inevitable.",
       description: "Positioning, audience and messaging that guide design decisions.",
     },
     {
       title: "Visual & graphic design",
-      meta: "Creative that earns attention before it asks for anything.",
       description: "Campaigns, social content and presentation decks.",
     },
     {
       title: "Art direction",
-      meta: "Standards that survive the brief.",
       description: "A shared visual direction for photography, illustration and campaigns.",
     },
     {
-      title: "Editorial design",
-      meta: "Print that earns its weight.",
-      description: "Books, reports and publications shaped around the reader.",
-    },
-  ],
-
-  testimonials: [
-    {
-      text: "",
-      author: "",
-      detail: "",
+      title: "Print & production design",
+      description: "Books, reports, packaging and production files shaped for screen, press and handoff.",
     },
   ],
 
@@ -209,8 +178,9 @@ export const SITE = {
   caseStudies: {
     rivo: {
       title: "Rivo Studio",
-      tagline: "An accessible software studio, built to feel useful before it feels technical.",
+      tagline: "A software studio positioned around access, built to feel useful before it feels technical.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Guidelines", metaLabel: "Industry", meta: "Software studio" },
+      facts: { context: "In-house identity work at Rivo Studios", role: "Brand strategy, identity design and guidelines", delivered: "Identity system and rollout" },
       overview: {
         question: "How do you brand a software studio around access?",
         body: ["Rivo Studio builds software for people the category often designs past. The identity had to make access feel native to the brand, rather than a compliance claim added afterwards."],
@@ -221,12 +191,9 @@ export const SITE = {
       ],
       process: ["I built the identity around the pronunciation, /\u02c8ra\u026avo\u028a/, and a wordmark with the corners taken off: soft, low-contrast letterforms that read cleanly at small sizes and never feel clinical. Almarai carries the interface voice for the same reason."],
       solution: ["Clar, a full-strength #0000FF, anchors the system against a deep navy, with signal yellow reserved for the moment that matters on any given surface. One accent doing one job keeps a studio brand legible across a pitch deck, a hoodie and a flag."],
+      applications: ["I carried the identity from the core guidelines into stationery, merchandise, flags and campaign applications, checking that the wordmark stayed legible at small sizes and against the strongest colour pairings."],
       outcome: {
-        body: ["The system runs from stationery to out-of-home without a redraw, and the accessibility argument stayed in the work rather than in a footnote."],
-        metrics: [
-          { value: "1", label: "System, deck to signage" },
-          { value: "#0000FF", label: "Clar, the single accent" },
-        ],
+        body: ["The identity was delivered across guidelines, stationery, merchandise, environmental graphics and campaign applications, giving the team a clear set of parts to keep using."],
       },
       media: [
         { label: "The wordmark", src: "rivo-wordmark", w: 3840, h: 3080,
@@ -246,46 +213,24 @@ export const SITE = {
         { label: "Environmental", src: "rivo-flag", w: 1240, h: 995,
           alt: "A blue Rivo flag against open sky, reading Software that simply works for all." },
       ],
-      next: { slug: "christian-poster-a-week", title: "A Christian Poster A Week" },
-    },
-
-    "christian-poster-a-week": {
-      title: "A Christian Poster A Week",
-      tagline: "One verse. One week. One visual argument.",
-      rail: { servicesLabel: "What I did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
-      overview: {
-        question: "Can scripture be designed with real craft?",
-        body: ["Faith content online often falls back on soft gradients, stock symbolism and predictable type. I wanted to see what happened when scripture received the same conceptual and typographic rigour as a culture brand."],
-      },
-      challenge: ["The rule was simple: choose one verse, find its emotional centre and finish one poster every week. The deadline forced decisions; the repetition built a recognisable practice."],
-      process: ["Every week I chose a verse, found its single emotional idea, and built a poster around it: concept, typography, image treatment and finish. The constraint was the point."],
-      solution: ["One idea per poster, said loudly. Expressive, varied typography (condensed, serif, display) held together by a consistent grid, with real craft on every finish."],
-      outcome: {
-        body: ["A growing, recognisable body of work that doubles as my most reliable proof of range, and a habit that keeps my craft sharp."],
-        metrics: [],
-      },
-      media: [
-        { label: "Poster series, hero", variants: [] },
-        { label: "Type & image treatments", variants: ["light"] },
-        { label: "The series", variants: ["tall", "dark"] },
-      ],
       next: { slug: "tedx-rsu", title: "TEDx Rivers State University" },
     },
 
     "tedx-rsu": {
       title: "TEDx RSU",
-      tagline: "A global event system given a distinct Rivers State rhythm.",
+      tagline: "A global event system given a distinct pause-and-reflect rhythm.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Creative direction, Print", metaLabel: "Industry", meta: "Event" },
+      facts: { context: "Identity commission for TEDx Rivers State University", role: "Identity design, creative direction and print", delivered: "Event identity and rollout" },
       overview: {
         question: "How do you honour a global brand while making it your own?",
         body: ["TEDx gives every event a strict global identity and asks each chapter to find its own character within it. The work had to feel unmistakably local without weakening the parent system."],
       },
       challenge: ["The identity needed one idea strong enough to hold across a phone, printed collateral and the event stage."],
-      process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif: one system that scaled from a phone to a stage backdrop."],
+      process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif that could move from a phone to a stage backdrop."],
       solution: ["Print was treated as a first-class citizen: tactile, considered collateral that matched the on-stage experience across programme, signage and social."],
+      applications: ["The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage, with each format staying inside the TEDx parent rules."],
       outcome: {
-        body: ["A cohesive event brand that felt premium and on-system, applied consistently across every touchpoint on the day."],
-        metrics: [],
+        body: ["The event identity was delivered across social promotion, printed collateral, merchandise, campus signage and the stage environment while remaining recognisably TEDx."],
       },
       media: [
         { label: "Logomark", src: "tedx-rsu-logomark", w: 1240, h: 496,
@@ -312,16 +257,17 @@ export const SITE = {
       title: "ChopBox",
       tagline: "A food identity designed to feel warm, generous and ready to order.",
       rail: { servicesLabel: "What I did", services: "Brand identity, Brand strategy, Packaging", metaLabel: "Industry", meta: "Food brand" },
+      facts: { context: "Independent brand identity commission", role: "Brand strategy, identity design and packaging", delivered: "Identity, packaging and rollout" },
       overview: {
         question: "How do you make a brand you’d order from twice?",
         body: ["ChopBox needed to feel warm, generous and immediately appetising: a food brand people could trust with dinner before the first order arrived."],
       },
       challenge: ["The system also had to stretch from packaging to product and social without losing its flavour."],
       process: ["I built the brand from strategy out, checking every decision against one question: does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."],
-      solution: ["Built for packaging from day one: a system designed to survive the box, not just the screen, with a toasted, appetising palette that owns its category."],
+      solution: ["Built for packaging from day one: a system designed to survive the box, not just the screen, with a toasted, appetising palette that steps away from the category’s loud reds."],
+      applications: ["Packaging was the first stress test, followed by uniforms, campaign graphics and out-of-home. The same warm palette and rounded voice had to make food look appetising at every scale."],
       outcome: {
-        body: ["An appetising, ownable identity with a system the team could extend across products and packaging."],
-        metrics: [],
+        body: ["The identity was delivered across packaging, uniforms, campaign graphics and out-of-home applications, giving the team a practical visual language for future products."],
       },
       media: [
         { label: "The Chop Platter", src: "chopbox-platter", w: 1080, h: 1080,

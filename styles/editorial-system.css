@@ -1,4 +1,4 @@
-/* Monochrome editorial system. HyperUI solid/bordered button patterns adapted
+/* Monochrome editorial system. Solid and bordered controls adapted
    to this zero-build site: https://www.hyperui.dev/components/marketing/buttons/ */
 :root {
   --paper: #fff; --ink: #111; --stone: #595959;
@@ -69,11 +69,77 @@ body[data-page="home"] main > .hero-noir { padding: 0 !important; min-height: 10
 .work-flick__item:active { transform: none; }
 .work-flick__item:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
 .work-flick__item:focus-visible, .work-flick__item:focus-visible * { transition: none !important; }
+
+/* Home pairs a concise index with one shared proof image; Work owns the rail. */
+.home-work-showcase {
+  display: grid;
+  grid-template-columns: minmax(18rem, .78fr) minmax(0, 1.22fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: start;
+}
+.home-work-preview {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--linen);
+}
+.home-work-preview img { width: 100%; height: 100%; object-fit: cover; transition: opacity 180ms ease; }
+.home-work-index { border-top: 1px solid var(--border); }
+.home-work-index__row {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto 1rem;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  align-items: baseline;
+  padding-block: clamp(1.5rem, 3vw, 2.75rem);
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+}
+.home-work-index__number, .home-work-index__meta {
+  font: 700 var(--step-meta)/1 var(--font-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--stone);
+}
+.home-work-index__title { font: 400 clamp(2rem, 5vw, 5rem)/.95 var(--font-display); letter-spacing: -.045em; }
+.home-work-index__arrow { transition: transform 180ms ease; }
+.home-work-index__row:is(:hover, :focus-visible) .home-work-index__title { color: var(--accent-text); }
+.home-work-index__row:is(:hover, :focus-visible) .home-work-index__arrow { transform: translate(.2rem, -.2rem); }
+.home-work-index__row.is-active .home-work-index__title { color: var(--accent-text); }
+.swiss-about--proof { grid-template-columns: minmax(0, 1fr); }
+.swiss-about--proof > div { max-width: 56rem; margin-left: auto; }
+
+body[data-page="services"] .hero + .services-detail { margin-top: clamp(2rem, 5vw, 4rem); }
+.services-detail { border-top: 1px solid var(--border); padding-top: 0; }
+.service-detail { display: grid; grid-template-columns: 3rem minmax(15rem, .8fr) minmax(20rem, 1.2fr); gap: clamp(1.5rem, 4vw, 5rem); padding-block: clamp(2rem, 5vw, 4.5rem); border-bottom: 1px solid var(--border); }
+.service-detail__number, .service-detail dt { font: 700 var(--step-meta)/1.4 var(--font-label); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--stone); }
+.service-detail h2 { font: 400 var(--step-h2)/1 var(--font-display); letter-spacing: -.04em; }
+.service-detail > div > p, .service-detail dd { margin-top: 1rem; color: var(--stone); }
+.service-detail dl { display: grid; gap: 1.5rem; }
+.service-detail dd a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: .25em; }
 body[data-page="work"] .swiss-collection { margin-top: 2rem; }
 body[data-page="work"] .work-flick__outcome,
 body[data-page="work"] .work-flick__index,
 body[data-page="work"] .swiss-filter-count { display: none; }
 body[data-page="work"] .work-flick__action { margin-top: auto; }
+.work-flick__tab {
+  position: absolute;
+  z-index: 3;
+  inset: 2rem 50% auto auto;
+  display: flex;
+  gap: .85rem;
+  align-items: center;
+  color: #fff;
+  font: 700 var(--step-meta)/1 var(--font-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: translateX(50%);
+  transition: opacity 180ms ease;
+}
+.work-flick__tab strong { font: inherit; }
+.work-flick__item.is-active .work-flick__tab { opacity: 0; }
 .case-page { --case-accent: var(--ink); }
 .site-footer.site-footer--seasats { background: #111; color: #fff; min-height: 0; padding-top: var(--section-block-tight); margin-top: var(--section-block); }
 .site-footer__panel { gap: 2rem; }
@@ -99,9 +165,24 @@ body[data-page="work"] .work-flick__action { margin-top: auto; }
 .work-flick:has(:focus-visible) .work-flick__item { transition: none; }
 .now-playing, [data-theme="dark"] .now-playing { background: var(--paper); color: var(--ink); box-shadow: none; border: 1px solid var(--border); border-radius: 4px; backdrop-filter: none; }
 .now-playing::before, .now-playing::after { display: none; }
-.now-playing__row, .now-playing__track { font: 400 .875rem/1.4 var(--font-body); text-transform: none; letter-spacing: 0; }
+.now-playing { gap: .25rem; padding: .375rem .75rem; max-width: 16.5rem; }
+.now-playing__label { font-size: .625rem; }
+.now-playing__row, .now-playing__track { font: 400 .75rem/1.35 var(--font-body); text-transform: none; letter-spacing: 0; }
+.now-playing__dot { width: .3rem; height: .3rem; }
 .now-playing__dot { background: currentColor; }
 .field__error, .form-status, .article-figure figcaption, .caption { font-family: var(--font-body); text-transform: none; letter-spacing: 0; font-size: var(--step-small); }
+
+@media (max-width: 767px) {
+  :root { --tap-min: 48px; }
+  :is(.btn, .hero-noir__cta, .home-close__link, .swiss-link, .article-footer__back, .swiss-filters button) { min-height: 48px; }
+  :is(.site-footer a, .contact-info a, .service-detail dd a, .closing-cta a, .case-next__link, .article-footer__back) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding-block: .5rem;
+  }
+  .site-footer__explore, .site-footer__socials { row-gap: .25rem; }
+}
 /* One solid/outlined control family; ordinary body links stay ordinary links. */
 :is(.btn, .hero-noir__cta, .home-close__link, .swiss-link, .article-footer__back) {
   display: inline-flex; align-items: center; justify-content: center; gap: .75rem;
@@ -205,7 +286,7 @@ main :is(p, h1, h2, h3, h4, li, dd, a) { overflow-wrap: anywhere; }
 }
 @media (max-width: 819px) { .contact { grid-template-columns: 1fr; } }
 
-/* Original expanding rail; HyperUI is a hover layer, not a new layout. */
+/* Expanding rail with persistent labels on inactive projects. */
 .work-flick__media > img { opacity: .75; }
 .work-flick__detail { margin-top: auto; opacity: 1; transform: none; transition: opacity 180ms ease, transform 180ms ease; }
 .work-flick__detail p { max-width: 32em; font: 400 var(--step-small)/1.6 var(--font-body); }
@@ -219,7 +300,15 @@ main :is(p, h1, h2, h3, h4, li, dd, a) { overflow-wrap: anywhere; }
   .work-flick__item:hover .work-flick__media > img { opacity: .5; }
 }
 @media (max-width: 767px) {
+  .hero-noir__chip { display: none; }
+  .home-work-showcase { grid-template-columns: 1fr; gap: 2rem; }
+  .home-work-preview { position: relative; top: auto; aspect-ratio: 4 / 3; }
+  .home-work-index__row { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
+  .home-work-index__meta { display: none; }
+  .service-detail { grid-template-columns: 2rem minmax(0, 1fr); }
+  .service-detail dl { grid-column: 2; }
   .work-flick__detail { opacity: 1; transform: none; }
+  .work-flick__tab { display: none; }
   .discipline { grid-template-columns: 1fr; gap: 1rem; }
   .site-footer__panel { gap: 2.5rem; }
 }

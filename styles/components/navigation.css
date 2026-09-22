@@ -227,7 +227,7 @@
   }
 }
 
-/* Skiper-style centre-origin circle-blur theme transition. These rules come
+/* Centre-origin circle-blur theme transition. These rules come
    after the legacy switch styling so the compact icon control wins cleanly. */
 .theme-toggle {
   display: inline-flex;

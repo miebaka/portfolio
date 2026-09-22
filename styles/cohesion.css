@@ -1,4 +1,4 @@
-/* Cohesion pass: HyperUI component discipline, Refined Editorial expression. */
+/* Shared component discipline and editorial expression. */
 :root {
   --ui-feedback: 150ms;
   --surface-paper: #f6f6f6;
@@ -36,7 +36,7 @@ body[data-page="home"] main > .hero-noir { padding: 0 !important; }
 .hero-noir__picture figcaption { position: absolute; z-index: 2; right: var(--margin-x); bottom: clamp(3rem, 7vw, 6rem); font-family: var(--font-label); font-size: var(--step-meta); letter-spacing: var(--tracking-label); text-transform: uppercase; }
 .hero-noir__chip { position: absolute; z-index: 4; top: calc(var(--nav-h) + 1rem); right: var(--margin-x); }
 
-/* HyperUI-like grouped filter: one bounded control, no loose pills. */
+/* Grouped filter: one bounded control, no loose pills. */
 .swiss-filters { width: max-content; max-width: 100%; gap: 0; border: 1px solid var(--border); margin-bottom: clamp(2rem, 4vw, 4rem); }
 .swiss-filters button { min-height: 42px; padding: .75rem 1.1rem; border-right: 1px solid var(--border); transition: background-color var(--ui-feedback), color var(--ui-feedback); }
 .swiss-filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); text-decoration: none; }
@@ -233,10 +233,7 @@ body[data-page="home"] main > .hero-noir { padding: 0 !important; }
 .work-flick__outcome { max-width: 34em; margin-top: auto; font: 400 var(--step-body)/1.55 var(--font-body); }
 .work-flick__action { display: inline-flex; gap: .7rem; align-items: center; width: max-content; margin-top: 1.5rem; }
 
-/* -------------------------------------------------------------------------
-   Seasats-derived footer: three information columns above one enormous mark.
-   The existing exact signature SVG replaces the SEASATS wordmark.
-   ------------------------------------------------------------------------- */
+/* Three information columns above one signature mark. */
 .site-footer.site-footer--seasats {
   min-height: clamp(42rem, 78svh, 58rem);
   margin-top: var(--section-block);
@@ -245,7 +242,6 @@ body[data-page="home"] main > .hero-noir { padding: 0 !important; }
   background: linear-gradient(180deg, #353535 0%, #2a2a2a 52%, #191919 100%);
   color: #ffffff;
 }
-.site-footer.site-footer--seasats::before { display: none; }
 .site-footer--seasats a { color: inherit; }
 .footer-in-view .site-nav { background: color-mix(in srgb, #2a2a2a 94%, transparent); color: #ffffff; }
 .footer-in-view .site-nav__link,
@@ -297,10 +293,7 @@ body[data-page="home"] main > .hero-noir { padding: 0 !important; }
   height: auto;
   filter: invert(1);
   opacity: 1;
-  transition: opacity 500ms var(--ease-standard);
 }
-.site-footer__signature.scene-active img { opacity: 0; }
-.site-footer__signature .site-footer__canvas { z-index: 2; }
 
 @media (max-width: 64rem) {
   .site-footer__panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }

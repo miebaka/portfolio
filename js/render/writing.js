@@ -24,7 +24,7 @@ export function renderWriting() {
 
   if (!articles.length) {
     el.innerHTML =
-      '<div class="playground-empty reveal">' +
+      '<div class="playground-empty">' +
         "<p>Nothing here yet. First post coming soon.</p>" +
       "</div>";
     return;
@@ -38,7 +38,7 @@ export function renderWriting() {
         const linkExtra  = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
         const date = formatDate(a.date);
         return (
-          '<li class="writing-item reveal">' +
+          '<li class="writing-item">' +
             '<a class="writing-item__link" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
               '<div class="writing-item__meta">' +
                 (a.tag ? '<span class="writing-item__tag">' + esc(a.tag) + "</span>" : "") +

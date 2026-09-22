@@ -39,8 +39,7 @@ function buildChip(container) {
       '<span class="now-playing__dot" aria-hidden="true"></span>' +
       '<span class="now-playing__track"></span>' +
     "</span>";
-  chip.hidden = false;
-  chip.querySelector(".now-playing__track").textContent = "Checking listening status…";
+  chip.hidden = true;
   container.appendChild(chip);
 }
 
@@ -54,11 +53,7 @@ function updateChip(track) {
     chip.dataset.live = String(track.live);
     chip.hidden = false;
   } else {
-    chip.querySelector(".now-playing__label").textContent = "Now Playing";
-    chip.setAttribute("aria-label", "Listening status unavailable");
-    chip.querySelector(".now-playing__track").textContent = "Listening status unavailable";
-    chip.dataset.live = "false";
-    chip.hidden = false;
+    chip.hidden = true;
   }
 }
 

@@ -23,7 +23,6 @@ export const MOUNT = {
   WORK_GRID:   "work-grid",
   CLIENTS:     "clients",
   CAPABILITIES:"capabilities",
-  TESTIMONIAL: "testimonial",
   WRITING:     "writing",
   CASE:        "case",
   NOW_PLAYING: "now-playing",
@@ -40,9 +39,6 @@ export const HOOK = {
   BASE:        "data-base",
   CASE_SLUG:   "data-case",
   NAV_THEME:   "data-nav-theme",
-  /* motion */
-  SPLIT:       "data-split",
-  WIPE:        "data-wipe",
   /* misc */
   YEAR:        "data-year",
   PORTRAIT:    "data-hero-portrait",
@@ -51,7 +47,7 @@ export const HOOK = {
 /* Mounts that are page-specific rather than sitewide. A page missing one of
    these is normal; a page missing NAV or FOOTER is not. */
 const OPTIONAL = new Set([
-  MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES, MOUNT.TESTIMONIAL,
+  MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
   MOUNT.WRITING, MOUNT.CASE, MOUNT.NOW_PLAYING,
 ]);
 

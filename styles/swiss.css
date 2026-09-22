@@ -22,7 +22,6 @@
 .site-nav__link {font-size:var(--step-meta)}
 .hero {padding-block:var(--space-6) var(--space-7)}
 .hero__role,.swiss-label {display:none}
-.hero .reveal {opacity:1;transform:none}
 .hero__title {font-size:var(--step-hero);font-weight:400;max-width:22ch}
 .hero .hero__lede {font-family:var(--font-body);font-size:var(--step-body-lg);line-height:var(--leading-body)}
 .hero:not(:has(.hero__lede)) .hero__title {max-width:28ch}
@@ -123,7 +122,6 @@ a.project-column:hover img {transform:scale(1.025)}
 /* Original reading layouts; only obsolete fixed-navigation offsets are removed. */
 .article-hero {padding-top:var(--space-6)}
 .case-page::before {display:none}
-.case-shot--hero.reveal {opacity:1;transform:none}
 .about-grid>*,.contact-page>*,.hero>* {min-width:0}
 .exp__meta {white-space:normal}
 .contact-info dd {overflow-wrap:anywhere}

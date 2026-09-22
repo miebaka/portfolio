@@ -236,14 +236,17 @@
   min-width: 0;
 }
 
-/* Natural-ratio portrait, bottom of the column. Reveal is the clip-path wipe in
-   base/motion.css. */
+/* Natural-ratio portrait, bottom of the column. */
 .hero-noir__picture {
   position: relative;
   overflow: hidden;
-  /* Parallax drift written by js/core/hero-parallax.js. Composes with the wipe
-     reveal, which lives on the ::before cover and the img, not here. */
-  transform: translate3d(0, var(--parallax-y, 0px), 0);
+}
+
+.hero-noir__identity {
+  max-width: 38rem;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  font-size: var(--step-small);
+  line-height: 1.5;
 }
 
 .hero-noir__portrait {

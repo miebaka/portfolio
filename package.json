@@ -1,18 +1,16 @@
 {
   "name": "miebaka-joshua-portfolio",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
-  "description": "Optional image-optimization tooling for the portfolio. The site itself is zero-build (static HTML + CSS + ES modules) and needs none of this to run.",
+  "description": "Build and image-optimization tooling for Miebaka Joshua's static portfolio.",
   "scripts": {
+    "build": "node scripts/build-site.mjs",
     "dev": "npx serve . --listen 4000 --no-clipboard",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "test": "node --test scripts/scene-lifecycle.test.mjs"
+    "test": "npm run build && node --test scripts/site-integrity.test.mjs"
   },
   "devDependencies": {
     "sharp": "^0.35.4"
-  },
-  "dependencies": {
-    "three": "0.180.0"
   },
   "type": "module"
 }

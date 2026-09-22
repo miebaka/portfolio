@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base · Utilities — layout containers, sections, rhythm, a11y, motion reveal.
+   Base · Utilities — layout containers, sections, rhythm and accessibility.
    ========================================================================== */
 
 .container {
@@ -99,9 +99,6 @@
   text-transform: uppercase;
 }
 
-/* Scroll reveal lives in base/motion.css — the whole reveal vocabulary is
-   kept in one place so directions and timings stay coherent across the site. */
-
 @media (max-width: 480px) {
   .section       { padding-block: var(--section-block); }
   .section--tight { padding-block: var(--section-block-tight); }
@@ -140,17 +137,6 @@
   font-size: var(--step-small);
 }
 .link-fallback a { color: var(--accent-text); }
-
-/* Hidden the moment JS is known to be present, so a healthy load never flashes
-   the fallback before the renderer replaces it. `.has-js` is set by the head
-   script, which a non-JS visitor or crawler never runs, so for them the class
-   is absent and the fallback simply shows. If JS is present but the module
-   graph fails, the head script's 2.5s failsafe brings it back. */
-.has-js .nav-fallback,
-.has-js .link-fallback { display: none; }
-
-.reveal-failsafe .nav-fallback { display: flex; }
-.reveal-failsafe .link-fallback { display: grid; }
 
 /* Long-form prose blocks (privacy, and any future text page). Without a cap
    these ran the full container: 825px at 17px is about 97 characters a line,

@@ -1,119 +1,35 @@
-/* ==========================================================================
-   Component · Marquee — seamless client-logo bar.
-   ========================================================================== */
-
-/* Height = --space-6 × φ × 1.48 ≈ 80 × 1.618 × 1.48 ≈ 192px. The φ band, 48% up. */
-.marquee {
-  /* Full bleed. A logo strip that stops at the margin reads as a boxed widget;
-     running it to both edges is what makes it a band the page passes through.
-     It is the one element besides the work rail and the hero image that is
-     meant to cross the margin. */
-  height: calc(var(--space-6) * var(--phi) * 1.48);
-  /* Transparent. This bar previously painted a solid --ink slab across the
-     page, and the --light variant's "no background" comment was wrong: it
-     never reset the base rule, so the band was opaque in both themes and cut
-     a hole through the section behind it. The logos carry the contrast
-     instead, via a filter that flips with the theme. */
-  background: none;
-  overflow: hidden;
-  display: flex;
+/* Static client proof row. The marks support the work instead of competing
+   with it through perpetual motion. */
+.client-strip { padding-inline: var(--gutter); }
+.client-strip__viewport { width: min(100%, var(--content-max)); margin-inline: auto; }
+.client-proof {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 4rem);
   align-items: center;
-  /* Edge fade. A scrolling row hard-clips whichever marks straddle the left and
-     right edges, so a logo reads as chopped in half. Fading a band at each edge
-     lets marks dissolve in and out instead of being sliced. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent 100%);
-}
-.marquee__viewport {
-  width: 100%;
-  /* Visible, not hidden: the row's optical-scale sizing makes some marks taller
-     than the base item height, and a hidden viewport clipped their tops and
-     bottoms. The band above still clips horizontally, and it is tall enough to
-     hold the tallest mark, so nothing is lost by letting the marks overflow the
-     viewport vertically. */
-  overflow: visible;
-}
-.marquee__track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll var(--duration-marquee) linear infinite;
-}
-.marquee__group {
-  --_gap: var(--space-5h); /* 64px — inter-item rhythm */
-  display: flex;
-  align-items: center;
-  gap: var(--_gap);
-  padding-right: var(--_gap); /* keeps the rhythm across the loop seam */
   margin: 0;
+  padding: clamp(2.5rem, 5vw, 5rem) 0;
   list-style: none;
 }
-.marquee__item {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  height: calc(var(--space-4) * 1.48); /* 32px x 1.48 */
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
-}
+.marquee__item { display: grid; place-items: center; min-width: 0; }
 .marquee__item img {
-  /* Height is the base rhythm times the per-logo optical scale (set inline by
-     the renderer from data/site.js; 1 when absent). This is what balances the
-     row by weight instead of by bounding box. */
-  height: calc(var(--space-4) * 1.48 * var(--logo-scale, 1)); /* 32px x 1.48 */
-  width: auto;
-  max-width: none;
   display: block;
-  /* Flattened to a single ink silhouette so six logos of different weights
-     and colours read as one row rather than six brands competing. */
+  width: auto;
+  max-width: 100%;
+  height: calc(2rem * var(--logo-scale, 1));
   filter: brightness(0);
-  opacity: 0.55;
+  opacity: .48;
 }
 .marquee__wordmark {
-  font-family: var(--font-label);
-  font-size: var(--step-body-lg);
+  color: var(--ink);
+  font: 700 var(--step-small)/1.2 var(--font-label);
   letter-spacing: var(--tracking-label);
+  text-align: center;
   text-transform: uppercase;
-  white-space: nowrap;
 }
-
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee__track { animation: none; }
-}
-
-@media (max-width: 480px) {
-  .marquee        { height: calc(var(--space-6) * 1.48); }
-  .marquee--light { height: calc(var(--space-6) * 1.2 * 1.48); }
-  .marquee__group { --_gap: var(--space-4); }
-}
-
-/* Dark mode: the surface behind is dark, so the logos invert to read against
-   it. Only the marks change; the band itself stays transparent in both. */
-[data-theme="dark"] .marquee__item img,
-[data-theme="dark"] .marquee--light .marquee__item img {
-  filter: brightness(0) invert(1);
-}
-[data-theme="dark"] .marquee__wordmark,
-[data-theme="dark"] .marquee--light .marquee__wordmark { color: var(--paper); }
-
-/* Light variant — sits inside the About Me section. No background: it matches
-   the page surface, and an opaque band here would cut a hole in the cursor
-   field as it passes behind. */
-.marquee--light {
-  height: calc(var(--space-6) * var(--phi) * 1.3 * 1.48);
-}
-.marquee--light .marquee__item {
-  height: calc(var(--space-4h) * 1.48); /* 40px x 1.48 */
-  color: var(--ink);
-}
-.marquee--light .marquee__item img {
-  height: calc(var(--space-4h) * 1.48 * var(--logo-scale, 1)); /* 40px x 1.48 */
-  filter: brightness(0);
-  opacity: 0.35;
-}
-.marquee--light .marquee__wordmark {
-  color: var(--ink);
-  opacity: 0.35;
+[data-theme="dark"] .marquee__item img { filter: brightness(0) invert(1); }
+[data-theme="dark"] .marquee__wordmark { color: var(--paper); }
+@media (max-width: 767px) {
+  .client-proof { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 2rem; }
+  .marquee__item img { height: calc(1.75rem * var(--logo-scale, 1)); }
 }

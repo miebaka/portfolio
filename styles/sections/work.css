@@ -4,13 +4,12 @@
    Numbered rows, the project name at display scale, category and year. Not a
    gallery of cards: the reference is a name and a decision, and the full-bleed
    imagery lives in the case study. Rows indent and the name shifts to the
-   accent on hover and focus, so the affordance is honest (Norman) while the
-   frame stays quiet (Rams / Vignelli).
+   accent on hover and focus while the frame stays quiet.
    ========================================================================== */
 
 .work-index {
   /* A full-height editorial index: no rules, the rows distribute down the
-     section and whitespace does the separating (Rams / Vignelli). min-height
+     section and whitespace does the separating. min-height
      sets how much of the section the set fills; space-between spreads them. */
   display: flex;
   flex-direction: column;
@@ -78,40 +77,4 @@
 @media (prefers-reduced-motion: reduce) {
   .work-index__row,
   .work-index__name { transition: none; }
-}
-
-/* ── Cursor-following cover preview ────────────────────────────────────────
-   Built and moved by js/core/work-preview.js. The JS writes the cursor
-   position to `transform`; the static offset (a little right of the cursor,
-   vertically centred on it) lives here on `translate`, which composes with
-   that transform rather than fighting it. */
-.work-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: var(--z-sticky);
-  width: clamp(11rem, 18vw, 15rem);
-  aspect-ratio: 4 / 3;
-  translate: 1.5rem -50%;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-lg);
-  pointer-events: none;
-  opacity: 0;
-  scale: 0.96;
-  transition: opacity var(--duration-fast) var(--ease-standard),
-              scale   var(--duration-fast) var(--ease-standard);
-}
-.work-preview[data-show="true"] { opacity: 1; scale: 1; }
-.work-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-@media (prefers-reduced-motion: reduce) {
-  .work-preview {
-    scale: 1;
-    transition: opacity var(--duration-fast) linear;
-  }
 }

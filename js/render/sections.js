@@ -1,4 +1,4 @@
-/* Render — home sections: capabilities list, testimonial, and text/portrait slots. */
+/* Render — home sections: capabilities list and text slots. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, mount } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
@@ -11,32 +11,6 @@ export function renderCapabilities() {
   el.innerHTML = SITE.capabilities.map(c =>
     '<article class="discipline"><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></article>'
   ).join("");
-}
-
-/* Renders nothing at all unless there is a real quote with a real attributor.
-   The seed entry in site.js has empty strings, which previously produced an
-   empty blockquote and an empty <cite> sitting in the middle of the home page
-   as a visible gap. An unfilled section should not reserve space. */
-export function renderTestimonial() {
-  const el = mount(MOUNT.TESTIMONIAL);
-  if (!el) return;
-
-  const t = (SITE.testimonials || []).find(
-    (q) => q && q.text && q.text.trim() && q.author && q.author.trim()
-  );
-
-  if (!t) {
-    /* Remove the wrapper block too, so its section padding collapses with it */
-    const block = el.closest(".about-home__block");
-    (block || el).remove();
-    return;
-  }
-
-  el.className = "testimonial";
-  el.innerHTML =
-    '<blockquote class="testimonial__text">' + esc(t.text.trim()) + "</blockquote>" +
-    '<figcaption class="testimonial__author"><cite>' + esc(t.author.trim()) + "</cite>" +
-    (t.detail && t.detail.trim() ? ", " + esc(t.detail.trim()) : "") + "</figcaption>";
 }
 
 /* Fill simple text slots ([data-fill]) and email links.

@@ -45,7 +45,6 @@ p { max-width: var(--measure-reading); }
 .case-rail__label,
 .case-rail__text,
 .case-next__label,
-.case-metric span,
 .chip,
 .btn,
 .hero-noir__meta,

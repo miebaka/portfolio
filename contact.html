@@ -7,28 +7,25 @@
   <meta name="description" content="Start a conversation with Miebaka Joshua about a brand identity, campaign, design role or an early brief that needs clarity.">
   <link rel="canonical" href="https://miebaka.design/contact.html">
   <meta property="og:title" content="Contact | Miebaka Joshua, Brand Designer">
-  <meta property="og:description" content="Bring me the brief. Or the question before it. Let&rsquo;s figure it out.">
+  <meta property="og:description" content="Tell me about the role. Or the brief.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miebaka.design/contact.html">
   <meta property="og:site_name" content="Miebaka Joshua">
   <meta property="og:locale" content="en_US">
-  <meta property="og:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta property="og:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Contact | Miebaka Joshua, Brand Designer">
-  <meta name="twitter:description" content="Bring me the brief. Or the question before it. Let&rsquo;s figure it out.">
-  <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta name="twitter:description" content="Tell me about the role. Or the brief.">
+  <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="theme-color" content="#16140f">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://miebaka.design/" },
-      { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://miebaka.design/contact.html" }
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement": [
+      {"@type":"ListItem","position": 1,"name":"Home","item":"https://miebaka.design/" },
+      {"@type":"ListItem","position": 2,"name":"Contact","item":"https://miebaka.design/contact.html" }
     ]
   }
   </script>
@@ -37,14 +34,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") === "dark") r.dataset.theme = "dark"; } catch (e) {}
-    /* Failsafe. Most of the page is hidden by default and revealed by
-       js/core/scroll.js, so any failure in the module graph would leave the
-       site blank. scroll.js marks itself ready; if that never happens this
-       unhides everything. Inline so it runs even when modules do not. */
-    setTimeout(function () {
-      if (!r.classList.contains("reveal-ready")) r.classList.add("reveal-failsafe");
-    }, 2500);
+    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -70,12 +60,12 @@
 
     <!-- Hero -->
     <section class="hero container">
-      <h1 class="hero__title measure-hero reveal">Bring me the brief. Or the question before it.</h1>
+      <h1 class="hero__title measure-hero">Tell me about the role. Or the brief.</h1>
     </section>
 
     <!-- Contact info + form -->
     <section class="section--tight" id="contact">
-      <div class="container contact-page reveal">
+      <div class="container contact-page">
 
         <div class="contact-info">
           <dl>
@@ -86,7 +76,7 @@
             <dt>Availability</dt>
             <!-- Driven from data/site.js so availability is stated in one
                  place. Falls back to this text if the module never runs. -->
-            <dd data-fill="availability">Open to remote roles worldwide</dd>
+            <dd data-fill="availability">Open to remote roles and selected projects</dd>
           </dl>
         </div>
 

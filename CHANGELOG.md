@@ -1,3 +1,21 @@
+## [1.1.2] - 2026-09-22
+
+### Added
+- Added a clear role-first availability line, print and production design services, and authorship details for every published case study.
+- Added a production build that emits complete case-study HTML and validates public links, assets, metadata, CSP hashes, and sitemap integrity.
+
+### Changed
+- Made remote roles the primary conversion path while retaining selected independent projects as a secondary offer.
+- Differentiated the homepage project index from the cinematic Work page and improved project identification, service-page rhythm, mobile touch targets, logo balance, and Now Playing restraint.
+- Rewrote generic experience and case-study copy with clearer responsibilities, constraints, decisions, and delivered scope.
+- Bundled production CSS and restricted deployment output to referenced imagery, fonts, published writing, and active JavaScript modules.
+
+### Fixed
+- Preserved useful navigation and project links when JavaScript fails, removed inaccurate sitemap dates, and kept the production CSP synchronized with the shared theme bootstrap.
+
+### Removed
+- Removed unpublished Poster A Week content from production, placeholder testimonials, decorative pseudo-metrics, obsolete reveal and scene systems, unused Three.js code, and other dead runtime assets.
+
 ## [1.1.1] - 2026-09-16
 
 ### Fixed

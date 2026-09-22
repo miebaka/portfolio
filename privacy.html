@@ -11,12 +11,12 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miebaka.design/privacy.html">
   <meta property="og:site_name" content="Miebaka Joshua">
-  <meta property="og:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta property="og:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy | Miebaka Joshua">
   <meta name="twitter:description" content="What this site collects, what it does not, and who it talks to.">
-  <meta name="twitter:image" content="https://miebaka.design/assets/images/miebaka-joshua-portrait.jpg">
+  <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="theme-color" content="#16140f">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
@@ -26,14 +26,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") === "dark") r.dataset.theme = "dark"; } catch (e) {}
-    /* Failsafe. Most of the page is hidden by default and revealed by
-       js/core/scroll.js, so any failure in the module graph would leave the
-       site blank. scroll.js marks itself ready; if that never happens this
-       unhides everything. Inline so it runs even when modules do not. */
-    setTimeout(function () {
-      if (!r.classList.contains("reveal-ready")) r.classList.add("reveal-failsafe");
-    }, 2500);
+    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -55,13 +48,13 @@
 
   <main id="main">
     <section class="hero container">
-      <p class="meta hero__role reveal">Privacy</p>
-      <h1 class="hero__title measure-hero reveal">What this site knows about you.</h1>
-      <p class="hero__lede reveal">Almost nothing. Here is exactly what leaves your browser, what stays on your device, and what I can see.</p>
+      <p class="meta hero__role">Privacy</p>
+      <h1 class="hero__title measure-hero">What this site knows about you.</h1>
+      <p class="hero__lede">Almost nothing. Here is exactly what leaves your browser, what stays on your device, and what I can see.</p>
     </section>
 
     <section class="section--tight container">
-      <div class="stack reveal">
+      <div class="stack">
         <h2 class="h3">No analytics, no cookies, no accounts</h2>
         <p>This site runs no analytics and sets no cookies. There is no tracking pixel, no advertising tag, and no third-party script of any kind. Nothing you do here is measured, profiled, or sold, and there is no account to create.</p>
         <p>The one thing stored on your device is your light or dark theme preference, kept in your browser&rsquo;s local storage so the site remembers it on your next visit. It never leaves your device, and clearing your browser data removes it.</p>
