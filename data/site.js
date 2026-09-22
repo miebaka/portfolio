@@ -150,19 +150,19 @@ export const SITE = {
   capabilities: [
     {
       title: "Brand identity",
-      description: "Logos, typography, colour and guidelines for a consistent brand.",
+      description: "A visual system your team can understand, use and keep consistent.",
     },
     {
       title: "Brand strategy",
-      description: "Positioning, audience and messaging that guide design decisions.",
+      description: "The positioning, audience and message that make later design decisions clearer.",
     },
     {
       title: "Visual & graphic design",
-      description: "Campaigns, social content and presentation decks.",
+      description: "Campaigns, social content and decks built around one clear idea.",
     },
     {
       title: "Art direction",
-      description: "A shared visual direction for photography, illustration and campaigns.",
+      description: "A shared visual direction that keeps photography, illustration and campaigns in the same world.",
     },
     {
       title: "Print & production design",
@@ -226,8 +226,8 @@ export const SITE = {
         body: ["TEDx gives every event a strict global identity and asks each chapter to find its own character within it. The work had to feel unmistakably local without weakening the parent system."],
       },
       challenge: ["The identity needed one idea strong enough to hold across a phone, printed collateral and the event stage."],
-      process: ["Work within the TEDx rules, not around them. The red and wordmark stay sacred; character comes from type, motion and a local visual motif that could move from a phone to a stage backdrop."],
-      solution: ["Print was treated as a first-class citizen: tactile, considered collateral that matched the on-stage experience across programme, signage and social."],
+      process: ["I worked within the TEDx rules, not around them. The red and wordmark stayed fixed; character came from type, motion and a local visual motif that could move from a phone to a stage backdrop."],
+      solution: ["Print was part of the system from the start. The programme, signage and social creative needed to carry the same pause-and-reflect rhythm as the stage."],
       applications: ["The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage, with each format staying inside the TEDx parent rules."],
       outcome: {
         body: ["The event identity was delivered across social promotion, printed collateral, merchandise, campus signage and the stage environment while remaining recognisably TEDx."],
@@ -262,9 +262,9 @@ export const SITE = {
         question: "How do you make a brand you’d order from twice?",
         body: ["ChopBox needed to feel warm, generous and immediately appetising: a food brand people could trust with dinner before the first order arrived."],
       },
-      challenge: ["The system also had to stretch from packaging to product and social without losing its flavour."],
+      challenge: ["The identity had to make the food feel worth ordering, then hold together across packaging, uniforms, campaigns and social."],
       process: ["I built the brand from strategy out, checking every decision against one question: does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."],
-      solution: ["Built for packaging from day one: a system designed to survive the box, not just the screen, with a toasted, appetising palette that steps away from the category’s loud reds."],
+      solution: ["I built the system for packaging from day one. A toasted, appetising palette steps away from the category’s loud reds, while the simple shapes and lockups survive the box as well as the screen."],
       applications: ["Packaging was the first stress test, followed by uniforms, campaign graphics and out-of-home. The same warm palette and rounded voice had to make food look appetising at every scale."],
       outcome: {
         body: ["The identity was delivered across packaging, uniforms, campaign graphics and out-of-home applications, giving the team a practical visual language for future products."],
