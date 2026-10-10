@@ -12,5 +12,8 @@
   "devDependencies": {
     "sharp": "^0.35.4"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "three": "^0.186.1"
+  }
 }

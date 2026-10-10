@@ -41,11 +41,11 @@ test("every production page has essential metadata and one heading", async () =>
 });
 
 test("case studies ship complete HTML before JavaScript runs", async () => {
-  for (const slug of Object.keys(SITE.caseStudies)) {
+  for (const [slug, study] of Object.entries(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.match(html, /data-prerendered="true"/);
     assert.match(html, /<dt>My role<\/dt>/);
-    assert.ok((html.match(/<img\b/g) || []).length >= 8, slug);
+    if (study.media?.length) assert.ok((html.match(/<img\b/g) || []).length >= 8, slug);
     assert.doesNotMatch(html, /filled by js|placeholder/i);
   }
 });
@@ -55,7 +55,11 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.deepEqual(cssFiles, [join(dist, "styles", "main.css")]);
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
-  assert.match(css, /filter='url\(%23g\)'/);
+  assert.match(css, /--accent:/);
+  assert.match(css, /font-family:\s*"BIZ UDPMincho"/);
+  assert.match(css, /font-family:\s*"Schibsted Grotesk"/);
+  assert.match(css, /font-family:\s*"Josefin Sans"/);
+  assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
     const value = match[1];
     if (/^(?:data:|https?:|#|%23)/.test(value)) continue;
@@ -64,6 +68,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   for (const file of ["scroll.js", "split-text.js", "hero-parallax.js", "work-preview.js"]) {
     await assert.rejects(access(join(dist, "js", "core", file)));
   }
+  await access(join(dist, "node_modules", "three", "build", "three.module.js"));
+  await access(join(dist, "node_modules", "three", "build", "three.core.js"));
 });
 
 test("all local HTML assets and links resolve", async () => {
@@ -109,9 +115,9 @@ test("production build excludes source and review directories", async () => {
   for (const path of ["reports", "Samples from Figma", "klat_magazine", "docs", "graphify-out"]) {
     await assert.rejects(access(new URL("../dist/" + path, import.meta.url)));
   }
-  await assert.rejects(access(new URL("../dist/work/christian-poster-a-week.html", import.meta.url)));
+  await access(new URL("../dist/work/christian-poster-a-week.html", import.meta.url));
   await assert.rejects(access(new URL("../dist/data/drafts.js", import.meta.url)));
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
   const publicData = await readFile(new URL("../dist/data/site.js", import.meta.url), "utf8");
-  assert.doesNotMatch(publicData, /Poster A Week|christian-poster-a-week/);
+  assert.match(publicData, /Poster A Week|christian-poster-a-week/);
 });

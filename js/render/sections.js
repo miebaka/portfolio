@@ -8,8 +8,17 @@ export function renderCapabilities() {
   if (!el) return;
   el.className = "disciplines-index";
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
-  el.innerHTML = SITE.capabilities.map(c =>
-    '<article class="discipline"><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></article>'
+  const visuals = [
+    { src: "rivo-guidelines", alt: "Rivo identity guidelines" },
+    null,
+    { src: "chopbox-campaign", alt: "ChopBox campaign design" },
+    { src: "tedx-rsu-pattern", alt: "TEDx RSU visual system" },
+    null,
+  ];
+  el.innerHTML = SITE.capabilities.map((c, index) =>
+    '<article class="discipline">' +
+      (visuals[index] ? '<figure class="discipline__media"><img src="assets/images/optimized/' + visuals[index].src + '-540.webp" alt="' + esc(visuals[index].alt) + '" width="540" height="675" loading="lazy" decoding="async"></figure>' : '') +
+      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></div></article>'
   ).join("");
 }
 

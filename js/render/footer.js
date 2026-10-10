@@ -22,7 +22,7 @@ export function renderFooter() {
   el.className = "site-footer site-footer--seasats";
   el.innerHTML =
     '<div class="site-footer__panel">' +
-      '<div class="site-footer__context"><p class="site-footer__label">Based in</p><p>' + esc(SITE.location) + '</p><p class="site-footer__availability">' + esc(SITE.availability) + '</p></div>' +
+      '<div class="site-footer__context"><p class="site-footer__label">Based in</p><p>' + esc(SITE.location) + '</p></div>' +
       '<nav class="site-footer__explore" aria-label="Footer"><p class="site-footer__label">Explore</p>' + explore + '</nav>' +
       '<div class="site-footer__contact"><p class="site-footer__label">Email</p><a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a><p class="site-footer__label">Social</p><div class="site-footer__socials">' + socials + '</div><a class="site-footer__legal" href="' + basePath() + 'privacy.html">Privacy</a><span>&copy; <span data-year></span> ' + esc(SITE.name) + '</span></div>' +
     '</div>' +

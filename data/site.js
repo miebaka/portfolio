@@ -22,7 +22,7 @@ export const SITE = {
     { label: "Work",       href: "work.html",       key: "work" },
     { label: "About",      href: "about.html",      key: "about" },
     { label: "Services",    href: "services.html",   key: "services" },
-    { label: "Playground", href: "playground.html", key: "playground" },
+    { label: "Writing",    href: "playground.html", key: "playground" },
     { label: "Contact",    href: "contact.html",    key: "contact" },
   ],
 
@@ -33,7 +33,7 @@ export const SITE = {
     { label: "Twitter",   href: "https://www.x.com/sheikmoujabaa" },
   ],
 
-  /* Writing — articles shown on the Playground page.
+  /* Writing — articles shown on the Writing page.
      Add each article here; the renderer picks it up automatically.
      - title:       Article headline
      - href:        Full URL (external blog) or path (e.g. "writing/slug.html")
@@ -43,10 +43,10 @@ export const SITE = {
      - readingTime: Optional — e.g. "5 min read" */
   writing: [
     {
-      title: "When The Swoosh Lost Its Soul",
+      title: "When the Swoosh Lost Its Soul",
       href:  "writing/when-the-swoosh-lost-its-soul.html",
       date:  "2026-06-15",
-      summary: "A brand designer examines how Nike’s creative and commercial decisions compounded into a loss of cultural and financial value.",
+      summary: "How Nike’s creative and commercial decisions weakened its cultural value.",
       tag:  "Brand Strategy",
       readingTime: "10 min read",
     },
@@ -54,7 +54,7 @@ export const SITE = {
       title: "Making the World More Accessible",
       href:  "writing/designing-for-disability-in-nigeria.html",
       date:  "2023-09-29",
-      summary: "What designing for at least 20 million Nigerians with disabilities asks of designers, developers, architects and planners.",
+      summary: "What designing for millions of Nigerians with disabilities asks of the people shaping products and places.",
       tag:  "Inclusive Design",
       readingTime: "8 min read",
     },
@@ -105,6 +105,44 @@ export const SITE = {
       featured: true,
     },
     {
+      slug: "christian-poster-a-week",
+      title: "Poster A Week",
+      category: "Personal series",
+      tagline: "One verse each week, reduced to one visual idea and said with conviction.",
+      tags: ["Graphic design", "Art direction", "Typography"],
+      year: "2024",
+      tone: "#123524",
+      cover: "",
+      featured: false,
+      caseReady: true,
+    },
+    {
+      slug: "designing-for-disability-in-nigeria",
+      title: "Designing for Disability",
+      category: "Editorial",
+      tagline: "An argument for designing Nigerian products and places around more of the people who use them.",
+      tags: ["Writing", "Research", "Editorial design"],
+      year: "2023",
+      tone: "#294f3a",
+      cover: "disability-flying-stars",
+      href: "writing/designing-for-disability-in-nigeria.html",
+      featured: false,
+      caseReady: true,
+    },
+    {
+      slug: "when-the-swoosh-lost-its-soul",
+      title: "When the Swoosh Lost Its Soul",
+      category: "Brand critique",
+      tagline: "A designer’s reading of the creative decisions that weakened Nike’s cultural value.",
+      tags: ["Brand strategy", "Writing", "Creative critique"],
+      year: "2026",
+      tone: "#0b2116",
+      cover: "swoosh-dream-crazy",
+      href: "writing/when-the-swoosh-lost-its-soul.html",
+      featured: false,
+      caseReady: true,
+    },
+    {
       slug: "kiki-joshua-notepad",
       title: "Kiki-Joshua",
       category: "Print",
@@ -150,23 +188,23 @@ export const SITE = {
   capabilities: [
     {
       title: "Brand identity",
-      description: "A visual system your team can understand, use and keep consistent.",
+      description: "Identity systems teams can understand, use and keep consistent.",
     },
     {
       title: "Brand strategy",
-      description: "The positioning, audience and message that make later design decisions clearer.",
+      description: "Positioning and messaging that make later decisions clearer.",
     },
     {
       title: "Visual & graphic design",
-      description: "Campaigns, social content and decks built around one clear idea.",
+      description: "Campaigns and presentations built around one clear idea.",
     },
     {
       title: "Art direction",
-      description: "A shared visual direction that keeps photography, illustration and campaigns in the same world.",
+      description: "A visual direction that keeps every asset in the same world.",
     },
     {
       title: "Print & production design",
-      description: "Books, reports, packaging and production files shaped for screen, press and handoff.",
+      description: "Books, reports and packaging prepared for production and handoff.",
     },
   ],
 
@@ -176,6 +214,23 @@ export const SITE = {
      the entry whose key matches the page's body[data-case]. `media` bands carry only
      placeholder labels until real imagery lands; `variants` map to .case-media--*. */
   caseStudies: {
+    "christian-poster-a-week": {
+      title: "A Christian Poster A Week",
+      tagline: "One verse. One week. One visual argument.",
+      rail: { servicesLabel: "What I did", services: "Graphic design, Art direction, Typography", metaLabel: "Type", meta: "Self-directed series" },
+      facts: { context: "Self-directed weekly practice", role: "Concept, typography and graphic design", delivered: "A continuing poster series" },
+      overview: {
+        question: "Can scripture be designed with real craft?",
+        body: ["Faith content online often falls back on stock symbolism and predictable type. I wanted to see what happened when scripture received the same conceptual and typographic rigour as a culture brand."],
+      },
+      challenge: ["Choose one verse, find its emotional centre and finish one poster every week. The deadline forces decisions; repetition builds the practice."],
+      process: ["I reduce each verse to one visual argument, then build the typography, image treatment and composition around that single idea."],
+      solution: ["One idea per poster. The visual language can change; the weekly constraint supplies the continuity."],
+      applications: ["The work lives as a digital series designed to reward both a quick read and a closer look."],
+      outcome: { body: ["The series remains an active laboratory for typography, conviction and conceptual speed."] },
+      media: [],
+      next: { slug: "rivo", title: "Rivo Studio" },
+    },
     rivo: {
       title: "Rivo Studio",
       tagline: "A software studio positioned around access, built to feel useful before it feels technical.",

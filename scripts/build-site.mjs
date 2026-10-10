@@ -7,7 +7,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
 const rootFiles = ["404.html", "about.html", "contact.html", "index.html", "playground.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
-const caseFiles = ["rivo.html", "tedx-rsu.html", "chopbox.html"];
+const caseFiles = ["rivo.html", "tedx-rsu.html", "chopbox.html", "christian-poster-a-week.html"];
 const articleFiles = ["designing-for-disability-in-nigeria.html", "when-the-swoosh-lost-its-soul.html"];
 
 const ensureCopy = async (source, target) => {
@@ -85,6 +85,30 @@ for (const file of caseFiles) {
 await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
 await copyJsGraph("js/main.js");
+/* decision-field.js loads Three only after capability checks. Dynamic imports
+   are intentionally outside copyJsGraph's static-import matcher, so vendor the
+   one browser module explicitly and keep the production CSP self-hosted. */
+await ensureCopy(
+  join(root, "node_modules/three/build/three.module.js"),
+  join(output, "node_modules/three/build/three.module.js")
+);
+await ensureCopy(
+  join(root, "node_modules/three/build/three.core.js"),
+  join(output, "node_modules/three/build/three.core.js")
+);
+await ensureCopy(
+  join(root, "node_modules/three/examples/jsm/loaders/SVGLoader.js"),
+  join(output, "node_modules/three/examples/jsm/loaders/SVGLoader.js")
+);
+
+/* Capability cards are rendered from JS, so their image URLs are not present
+   in the source HTML scanned below. Keep this small visual set explicit. */
+for (const asset of ["rivo-guidelines-540.webp", "chopbox-campaign-540.webp", "tedx-rsu-pattern-540.webp"]) {
+  await ensureCopy(
+    join(root, "assets/images/optimized", asset),
+    join(output, "assets/images/optimized", asset)
+  );
+}
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();
@@ -101,7 +125,7 @@ for (const asset of assets) {
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
-for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.woff2)/gi)) {
+for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
 

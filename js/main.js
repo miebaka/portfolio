@@ -5,7 +5,6 @@
 import { initContract } from "./core/contract.js";
 
 import { renderNavigation } from "./render/navigation.js";
-import { initNowPlaying } from "./render/now-playing.js";
 import { renderWork, renderClients } from "./render/projects.js";
 import { renderCapabilities, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
@@ -14,7 +13,8 @@ import { renderFooter } from "./render/footer.js";
 import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
-import { initCaseRail } from "./core/case-rail.js";
+import { initKineticSystem } from "./core/kinetic.js";
+import { initDecisionField } from "./core/decision-field.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -38,10 +38,10 @@ if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
 run("content slots", fillSlots);
-if (page === "home") run("listening status", initNowPlaying);
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
 run("year", initYear);
 if (page === "contact") run("contact form", initForm);
-if (isCaseStudy) run("case chapter rail", initCaseRail);
+run("kinetic editorial system", initKineticSystem);
+if (page === "home") run("spatial decision field", initDecisionField);

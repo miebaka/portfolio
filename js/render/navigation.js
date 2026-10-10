@@ -3,16 +3,12 @@ import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-/* The two theme glyphs share one compact circular control. */
+/* Material Symbols keep every interface glyph inside one coherent icon set. */
 function themeToggleHTML() {
   return (
     '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">' +
-      '<span class="theme-toggle__icon-wrap">' +
-      '<svg class="theme-toggle__disc" aria-hidden="true" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">' +
-        '<g class="theme-toggle__disc-core"><path d="M120 67.5C149.25 67.5 172.5 90.75 172.5 120C172.5 149.25 149.25 172.5 120 172.5" fill="var(--paper)"/><path d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 172.5 120 172.5" fill="var(--ink)"/></g>' +
-        '<path d="M120 3.75C55.5 3.75 3.75 55.5 3.75 120C3.75 184.5 55.5 236.25 120 236.25C184.5 236.25 236.25 184.5 236.25 120C236.25 55.5 184.5 3.75 120 3.75ZM120 214.5V172.5C90.75 172.5 67.5 149.25 67.5 120C67.5 90.75 90.75 67.5 120 67.5V25.5C172.5 25.5 214.5 67.5 214.5 120C214.5 172.5 172.5 214.5 120 214.5Z" fill="var(--paper)"/>' +
-      "</svg>" +
-      "</span>" +
+      '<span class="material-symbols-outlined theme-toggle__dark" aria-hidden="true">dark_mode</span>' +
+      '<span class="material-symbols-outlined theme-toggle__light" aria-hidden="true">light_mode</span>' +
     "</button>"
   );
 }
@@ -31,7 +27,7 @@ function setupThemeToggle() {
   btn.addEventListener("click", function () {
     const next = isDark() ? "light" : "dark";
     const apply = () => { html.dataset.theme = next; sync(); };
-    html.dataset.themeTransition = "circle-blur";
+    html.dataset.themeTransition = "fade";
     if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       document.startViewTransition(apply).finished.finally(() => { delete html.dataset.themeTransition; });
     } else {
@@ -71,7 +67,7 @@ export function renderNavigation() {
         '<img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="Miebaka Joshua" width="52" height="52">' +
       "</a>" +
       /* Shown only below the mobile breakpoint; toggles the links panel. */
-      '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links">Menu</button>' +
+      '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links"><span class="material-symbols-outlined" aria-hidden="true">menu</span><span>Menu</span></button>' +
       '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + "</nav>" +
       themeToggleHTML() +
     "</div>";
@@ -103,6 +99,9 @@ function setupMobileMenu(nav) {
     document[bind]("keydown", onKeydown);
   }
 
-  btn.addEventListener("click", () => setOpen(!nav.classList.contains("is-menu-open")));
+  btn.addEventListener("click", (event) => {
+    nav.classList.toggle("is-keyboard-open", event.detail === 0);
+    setOpen(!nav.classList.contains("is-menu-open"));
+  });
   links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
 }

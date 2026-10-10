@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Miebaka Joshua | Brand Designer &amp; Strategic Thinker</title>
+  <title>Miebaka Joshua | Brand &amp; Visual Designer</title>
   <meta name="description" content="Miebaka Joshua is a brand and visual designer in Lagos who turns unclear briefs into identities, campaigns and practical systems teams can keep using.">
   <link rel="canonical" href="https://miebaka.design/">
-  <meta property="og:title" content="Miebaka Joshua | Brand Designer &amp; Strategic Thinker">
+  <meta property="og:title" content="Miebaka Joshua | Brand &amp; Visual Designer">
   <meta property="og:description" content="I find the decision underneath the brief, then build the identity around it.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miebaka.design/">
@@ -15,19 +15,13 @@
   <meta property="og:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta property="og:image:alt" content="Portrait of Miebaka Joshua">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Miebaka Joshua | Brand Designer &amp; Strategic Thinker">
+  <meta name="twitter:title" content="Miebaka Joshua | Brand &amp; Visual Designer">
   <meta name="twitter:description" content="I find the decision underneath the brief, then build the identity around it.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#1c1a16">
+  <meta name="theme-color" content="#123524">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/texgyreheros-regular.woff2" crossorigin>
-  <link rel="preload" as="image" type="image/avif"
-        imagesrcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w,
-                     assets/images/optimized/miebaka-joshua-portrait-810.avif 810w,
-                     assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w"
-        imagesizes="(max-width: 760px) 100vw, 38vw"
-        fetchpriority="high">
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/SchibstedGrotesk-Regular.ttf" crossorigin>
   <script type="application/ld+json">
   [
     {"@context":"https://schema.org","@type":"Person","name":"Miebaka Williams Atubokiki Joshua","alternateName":"Miebaka Joshua","jobTitle":"Brand Designer & Strategic Thinker","url":"https://miebaka.design/","image":"https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg","email":"mailto:hello@miebaka.design","address": {"@type":"PostalAddress","addressLocality":"Lagos","addressCountry":"NG" },"sameAs": ["https://behance.net/miebaka","https://linkedin.com/in/miebakajoshua"]
@@ -45,6 +39,7 @@
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
+  <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
 </head>
 <body data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -58,45 +53,39 @@
         <a href="work.html">Work</a>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
-        <a href="playground.html">Playground</a>
+        <a href="playground.html">Writing</a>
         <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <main id="main">
     <section class="hero-noir" aria-labelledby="hero-title">
+      <div class="decision-field" data-decision-field aria-hidden="true">
+        <canvas class="decision-field__canvas"></canvas>
+        <div class="decision-field__fallback"></div>
+      </div>
       <div class="hero-noir__content">
         <div class="hero-noir__lower">
-          <h1 id="hero-title" class="hero-noir__statement">The best brands don&rsquo;t look designed. They look <em>decided.</em></h1>
-          <p class="hero-noir__identity">Miebaka Joshua. Brand and visual designer, open to remote roles and selected projects.</p>
-          <a class="hero-noir__cta" href="#work"><span class="hero-noir__cta-bar" aria-hidden="true"></span><span>See the work</span></a>
+          <h1 id="hero-title" class="hero-noir__statement">I find the <em>decision</em> underneath the brief.</h1>
+          <p class="hero-noir__identity">Then I build the identity and tools a team can keep using.</p>
+          <a class="hero-noir__cta" href="#work"><span>See the work</span></a>
         </div>
-      </div>
-      <div class="hero-noir__media">
-        <div class="hero-noir__chip" data-mount="now-playing"></div>
-        <figure class="hero-noir__picture">
-          <picture>
-            <source type="image/avif" sizes="(max-width: 760px) 100vw, 38vw" srcset="assets/images/optimized/miebaka-joshua-portrait-540.avif 540w, assets/images/optimized/miebaka-joshua-portrait-810.avif 810w, assets/images/optimized/miebaka-joshua-portrait-1080.avif 1080w">
-            <source type="image/webp" sizes="(max-width: 760px) 100vw, 38vw" srcset="assets/images/optimized/miebaka-joshua-portrait-540.webp 540w, assets/images/optimized/miebaka-joshua-portrait-810.webp 810w, assets/images/optimized/miebaka-joshua-portrait-1080.webp 1080w">
-            <img class="hero-noir__portrait" src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg" width="1080" height="1350" alt="Miebaka Joshua, brand and visual designer." fetchpriority="high" decoding="async">
-          </picture>
-        </figure>
       </div>
     </section>
     <section class="swiss-selected container" id="work" aria-labelledby="selected-title">
       <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
-      <a class="swiss-link swiss-selected__all" href="work.html">View all work <span aria-hidden="true">↗</span></a>
+      <a class="swiss-link swiss-selected__all" href="work.html">View all work</a>
     </section>
     <section class="home-capabilities container" id="capabilities" aria-labelledby="capabilities-title">
       <div class="disciplines-heading"><h2 id="capabilities-title">Services</h2></div>
       <div data-mount="capabilities"></div>
     </section>
     <section class="swiss-about swiss-about--proof container" aria-labelledby="about-title">
-      <div><h2 id="about-title">Inquisitive by nature.<br>Deliberate by design.</h2><p>I’m Miebaka. I’ve worked across fintech, food and culture since 2017, helping brands find their voice and hold their shape. At Rise, I support six marketing teams producing more than 40 creative assets a month for a platform serving over 800,000 users.</p><p>I want to understand the idea underneath the brief before I shape the form. That usually means asking more questions at the start, so the team has fewer decisions to repeat later.</p><a class="swiss-link" href="about.html">More about Miebaka <span aria-hidden="true">↗</span></a></div>
+      <div><h2 id="about-title">Ask first.<br>Design second.</h2><p>I’m Miebaka, a brand and visual designer in Lagos. I work across strategy, identity, campaigns and production.</p><p>I ask the difficult questions early, so the team has fewer decisions to repeat later.</p><a class="swiss-link" href="about.html">Read my approach</a></div>
     </section>
-    <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Brands worked on across in-house, agency and independent roles</h2><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"></div></div></section>
-    <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Need a designer who can find the decision before making the decoration?</h2><a class="home-close__link" href="contact.html">Work with me <span aria-hidden="true">↗</span></a></section>
+    <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Selected brands I&rsquo;ve worked with</h2><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"></div></div></section>
+    <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Need a designer who can find the decision?</h2><a class="home-close__link" href="contact.html">Work with me</a></section>
   </main>
 
   <footer data-mount="footer">

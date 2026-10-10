@@ -1,4 +1,4 @@
-/* Render — writing list for the Playground page. */
+/* Render — writing list for the Writing page. */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
@@ -47,7 +47,6 @@ export function renderWriting() {
               "</div>" +
               '<h3 class="writing-item__title">' + esc(a.title) + "</h3>" +
               (a.summary ? '<p class="writing-item__summary">' + esc(a.summary) + "</p>" : "") +
-              '<span class="writing-item__arrow" aria-hidden="true">&nearr;</span>' +
             "</a>" +
           "</li>"
         );
