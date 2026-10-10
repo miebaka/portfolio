@@ -22,6 +22,7 @@ function setupThemeToggle() {
   function sync() {
     btn.setAttribute("aria-pressed", String(isDark()));
     btn.setAttribute("aria-label", isDark() ? "Switch to light mode" : "Switch to dark mode");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", isDark() ? "#07112B" : "#F8F9FC");
   }
   sync();
   btn.addEventListener("click", function () {
@@ -40,6 +41,12 @@ function setupThemeToggle() {
        leaving the button's aria-pressed permanently out of step with the
        theme the visitor can see. */
     try { localStorage.setItem("color-theme", next); } catch (e) {}
+  });
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  systemTheme.addEventListener?.("change", event => {
+    try { if (localStorage.getItem("color-theme")) return; } catch (e) {}
+    html.dataset.theme = event.matches ? "dark" : "light";
+    sync();
   });
 }
 
@@ -64,7 +71,7 @@ export function renderNavigation() {
   el.innerHTML =
     '<div class="container site-nav__inner">' +
       '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
-        '<img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="Miebaka Joshua" width="52" height="52">' +
+        '<img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="52" height="52">' +
       "</a>" +
       /* Shown only below the mobile breakpoint; toggles the links panel. */
       '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links"><span class="material-symbols-outlined" aria-hidden="true">menu</span><span>Menu</span></button>' +
@@ -93,6 +100,7 @@ function setupMobileMenu(nav) {
 
   function setOpen(open) {
     nav.classList.toggle("is-menu-open", open);
+    if (!open) nav.classList.remove("is-keyboard-open");
     btn.setAttribute("aria-expanded", String(open));
     const bind = open ? "addEventListener" : "removeEventListener";
     document[bind]("click", onDocClick);

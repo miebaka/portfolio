@@ -11,174 +11,119 @@ export async function initDecisionField() {
   if (!root || !canvas || constrainedDevice()) return;
 
   let THREE;
-  let SVGLoader;
-  try {
-    [THREE, { SVGLoader }] = await Promise.all([
-      import("../../node_modules/three/build/three.module.js"),
-      import("../../node_modules/three/examples/jsm/loaders/SVGLoader.js"),
-    ]);
-  } catch (error) {
-    console.warn("3D logo unavailable", error);
-    return;
-  }
+  try { THREE = await import("../../assets/vendor/three.module.js"); }
+  catch (error) { console.warn("3D identity unavailable", error); return; }
 
   let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
-  } catch (error) {
-    console.warn("3D logo unavailable", error);
-    return;
-  }
+  try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "low-power" }); }
+  catch (error) { console.warn("3D identity unavailable", error); return; }
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
-  root.classList.add("is-webgl");
-
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  camera.position.set(0, 0, 10);
-  const logo = new THREE.Group();
-  logo.position.set(1.75, 0, 0);
-  scene.add(logo);
-
-  const material = new THREE.MeshPhysicalMaterial({
-    color: 0xb9d5c2,
-    emissive: 0x123524,
-    emissiveIntensity: 0.12,
-    metalness: 0.16,
-    roughness: 0.32,
-    clearcoat: 0.72,
-    clearcoatRoughness: 0.2,
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 40);
+  camera.position.set(0, 0, 9);
+  const mark = new THREE.Group();
+  const geometry = new THREE.BoxGeometry(1.25, .28, .28);
+  /* Rare-page delight only: a small custom shader turns the identity bars into
+     a responsive ultramarine material. It is decorative, skipped entirely for
+     reduced motion, small screens, and save-data devices. */
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uBase: { value: new THREE.Color(0x1c3da4) },
+      uEdge: { value: new THREE.Color(0xb1c5ff) },
+    },
+    vertexShader: `
+      uniform float uTime;
+      varying vec3 vNormal;
+      varying vec3 vViewPosition;
+      varying float vWave;
+      void main() {
+        vec3 transformed = position;
+        float wave = sin((position.x + position.y) * 3.5 + uTime * 1.2) * 0.018;
+        transformed += normal * wave;
+        vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vViewPosition = mvPosition.xyz;
+        vWave = wave;
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uBase;
+      uniform vec3 uEdge;
+      varying vec3 vNormal;
+      varying vec3 vViewPosition;
+      varying float vWave;
+      void main() {
+        vec3 viewDir = normalize(-vViewPosition);
+        float rim = pow(1.0 - max(0.0, dot(viewDir, normalize(vNormal))), 2.4);
+        float lightBand = smoothstep(-0.018, 0.018, vWave);
+        vec3 color = mix(uBase, uEdge, clamp(rim * 0.82 + lightBand * 0.12, 0.0, 1.0));
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `,
   });
-  const edgeMaterial = new THREE.MeshBasicMaterial({ color: 0x7faf8f, transparent: true, opacity: 0.2, side: THREE.BackSide });
-  const geometries = [];
-  const meshes = [];
-
-  try {
-    const data = await new SVGLoader().loadAsync("assets/images/miebaka-joshua-logo.svg");
-    data.paths.forEach(path => {
-      SVGLoader.createShapes(path).forEach(shape => {
-        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 12, bevelEnabled: true, bevelThickness: 2.2, bevelSize: 1.8, bevelSegments: 3, curveSegments: 12 });
-        geometries.push(geometry);
-        const face = new THREE.Mesh(geometry, material);
-        const edge = new THREE.Mesh(geometry, edgeMaterial);
-        edge.scale.set(1.015, 1.015, 1.025);
-        logo.add(face, edge);
-        meshes.push(face, edge);
-      });
-    });
-  } catch (error) {
-    console.warn("3D logo asset unavailable", error);
-    renderer.dispose();
-    return;
-  }
-
-  const bounds = new THREE.Box3().setFromObject(logo);
-  const center = bounds.getCenter(new THREE.Vector3());
-  logo.children.forEach(child => {
-    child.position.x -= center.x;
-    child.position.y -= center.y;
-    child.position.z -= center.z;
+  const positions = [
+    [-1.35, .9, 0], [-.45, .9, Math.PI / 2], [.45, .9, 0],
+    [-1.35, 0, Math.PI / 2], [-.45, 0, 0], [.45, 0, Math.PI / 2],
+    [-1.35, -.9, 0], [-.45, -.9, Math.PI / 2], [.45, -.9, 0],
+  ];
+  positions.forEach(([x, y, rotation]) => {
+    const bar = new THREE.Mesh(geometry, material);
+    bar.position.set(x, y, 0);
+    bar.rotation.z = rotation;
+    mark.add(bar);
   });
-  logo.scale.set(0.011, -0.011, 0.011);
-  logo.rotation.set(-0.18, 0.42, -0.06);
-
-  scene.add(new THREE.HemisphereLight(0xeaf7ee, 0x06140c, 1.75));
-  const key = new THREE.DirectionalLight(0xd9efe0, 5.2);
-  key.position.set(-4, 5, 7);
-  scene.add(key);
-  const rim = new THREE.PointLight(0x4f9a68, 18, 20);
-  rim.position.set(5, -2, 4);
-  scene.add(rim);
-
-  const pointer = new THREE.Vector2();
+  mark.rotation.set(-.14, .38, -.05);
+  scene.add(mark);
   const target = new THREE.Vector2();
-  let dragging = false;
-  let dragX = 0;
-  let dragY = 0;
-  let spin = 0;
+  const current = new THREE.Vector2();
   let frame = 0;
   let active = true;
   let inView = true;
-  const startedAt = performance.now();
-  let lastInteraction = startedAt;
-
-  const wake = () => {
-    lastInteraction = performance.now();
-    if (active && inView && !frame) render();
-  };
-  const onPointerMove = event => {
-    target.set((event.clientX / innerWidth - 0.5) * 2, (event.clientY / innerHeight - 0.5) * 2);
-    if (dragging) {
-      target.x += (event.clientX - dragX) * 0.008;
-      target.y += (event.clientY - dragY) * 0.008;
-      dragX = event.clientX;
-      dragY = event.clientY;
-    }
-    wake();
-  };
-  const onPointerDown = event => {
-    dragging = true;
-    dragX = event.clientX;
-    dragY = event.clientY;
-    spin += 0.16;
-    root.setPointerCapture?.(event.pointerId);
-    wake();
-  };
-  const onPointerUp = event => {
-    dragging = false;
-    root.releasePointerCapture?.(event.pointerId);
-    wake();
-  };
-  root.addEventListener("pointermove", onPointerMove, { passive: true });
-  root.addEventListener("pointerdown", onPointerDown);
-  root.addEventListener("pointerup", onPointerUp);
-  root.addEventListener("pointercancel", onPointerUp);
-
+  let lastInteraction = performance.now();
   const resize = () => {
     const { width, height } = root.getBoundingClientRect();
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     renderer.setSize(width, height, false);
     camera.aspect = width / Math.max(height, 1);
     camera.updateProjectionMatrix();
   };
+  const render = () => {
+    if (!active || !inView) return;
+    material.uniforms.uTime.value = performance.now() * .001;
+    current.lerp(target, .08);
+    mark.rotation.y += (.38 + current.x * .28 - mark.rotation.y) * .08;
+    mark.rotation.x += (-.14 - current.y * .18 - mark.rotation.x) * .08;
+    renderer.render(scene, camera);
+    frame = performance.now() - lastInteraction < 900 ? requestAnimationFrame(render) : 0;
+  };
+  const wake = () => { lastInteraction = performance.now(); if (!frame && active && inView) render(); };
+  const onPointerMove = event => {
+    const bounds = root.getBoundingClientRect();
+    target.set(((event.clientX - bounds.left) / bounds.width - .5) * 2, ((event.clientY - bounds.top) / bounds.height - .5) * 2);
+    wake();
+  };
+  root.addEventListener("pointermove", onPointerMove, { passive: true });
+
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(root);
-  resize();
-
-  function render() {
-    if (!active || !inView) return;
-    const elapsed = (performance.now() - startedAt) / 1000;
-    const entrance = 1 - Math.pow(1 - Math.min(1, elapsed / 0.48), 4);
-    pointer.lerp(target, dragging ? 0.15 : 0.055);
-    spin *= 0.965;
-    logo.rotation.y += (0.42 + pointer.x * 0.34 - logo.rotation.y) * 0.055 + spin;
-    logo.rotation.x += (-0.18 - pointer.y * 0.22 - logo.rotation.x) * 0.055;
-    logo.rotation.z += (-0.06 + pointer.x * 0.04 - logo.rotation.z) * 0.04;
-    logo.scale.setScalar(0.011 * (0.94 + entrance * 0.06));
-    logo.scale.y *= -1;
-    logo.position.y = Math.sin(elapsed * 0.75) * 0.045;
-    renderer.render(scene, camera);
-    const entering = elapsed < 0.6;
-    const responding = performance.now() - lastInteraction < 900 || Math.abs(spin) > 0.001;
-    frame = entering || responding ? requestAnimationFrame(render) : 0;
-  }
-
   const intersectionObserver = new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;
-    root.classList.toggle("is-visible", inView);
-    if (inView && active && !frame) render();
-    if (!inView && frame) { cancelAnimationFrame(frame); frame = 0; }
-  }, { rootMargin: "10% 0px" });
+    if (inView) wake();
+    else if (frame) { cancelAnimationFrame(frame); frame = 0; }
+  });
   intersectionObserver.observe(root);
   const onVisibility = () => {
     active = !document.hidden;
-    if (active && inView && !frame) render();
-    if (!active && frame) { cancelAnimationFrame(frame); frame = 0; }
+    if (active) wake();
+    else if (frame) { cancelAnimationFrame(frame); frame = 0; }
   };
   document.addEventListener("visibilitychange", onVisibility);
+  resize();
   render();
+  root.classList.add("is-webgl");
 
   window.addEventListener("pagehide", () => {
     active = false;
@@ -187,12 +132,8 @@ export async function initDecisionField() {
     intersectionObserver.disconnect();
     document.removeEventListener("visibilitychange", onVisibility);
     root.removeEventListener("pointermove", onPointerMove);
-    root.removeEventListener("pointerdown", onPointerDown);
-    root.removeEventListener("pointerup", onPointerUp);
-    root.removeEventListener("pointercancel", onPointerUp);
-    geometries.forEach(geometry => geometry.dispose());
+    geometry.dispose();
     material.dispose();
-    edgeMaterial.dispose();
     renderer.dispose();
   }, { once: true });
 }

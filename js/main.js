@@ -5,7 +5,7 @@
 import { initContract } from "./core/contract.js";
 
 import { renderNavigation } from "./render/navigation.js";
-import { renderWork, renderClients } from "./render/projects.js";
+import { renderWork, renderClients, renderProjectArchive } from "./render/projects.js";
 import { renderCapabilities, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
@@ -32,6 +32,7 @@ run("DOM contract", initContract);
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
 if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
+if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);
 if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
 if (isCaseStudy) run("case study render", renderCaseStudy);
@@ -44,4 +45,4 @@ run("navigation behaviour", initNavigation);
 run("year", initYear);
 if (page === "contact") run("contact form", initForm);
 run("kinetic editorial system", initKineticSystem);
-if (page === "home") run("spatial decision field", initDecisionField);
+if (has("[data-decision-field]")) run("404 identity field", () => { void initDecisionField(); });

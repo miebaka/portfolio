@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Tell me what you are building and what still needs deciding.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#123524">
+  <meta name="theme-color" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/SchibstedGrotesk-Regular.ttf" crossorigin>
   <script type="application/ld+json">
@@ -34,7 +34,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
+    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -60,6 +60,7 @@
 
     <!-- Hero -->
     <section class="hero container">
+      <p class="page-kicker">Contact / Start here</p>
       <h1 class="hero__title measure-hero">Tell me what still needs deciding.</h1>
     </section>
 
@@ -73,10 +74,6 @@
             <dd><a class="link" data-href="email" href="mailto:hello@miebaka.design">hello@miebaka.design</a></dd>
             <dt>Location</dt>
             <dd>Lagos, Nigeria (WAT, UTC+1)</dd>
-            <dt>Availability</dt>
-            <!-- Driven from data/site.js so availability is stated in one
-                 place. Falls back to this text if the module never runs. -->
-            <dd data-fill="availability">Open to remote roles and selected projects</dd>
           </dl>
         </div>
 
@@ -108,7 +105,6 @@
   <footer data-mount="footer">
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
-        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
         <a href="privacy.html">Privacy</a>
         <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>

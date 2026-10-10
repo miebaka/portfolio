@@ -13,7 +13,6 @@ export const SITE = {
   location: "Lagos, Nigeria",
   city: "Lagos",      // reserved — planned nav clock feature
   timezone: "WAT",    // reserved — planned nav clock feature
-  availability: "Open to remote roles and selected projects",
 
   /* Standard world-class sections, shown in the primary navigation.
      (Hero, proof strip and footer are intentionally omitted —
@@ -111,7 +110,7 @@ export const SITE = {
       tagline: "One verse each week, reduced to one visual idea and said with conviction.",
       tags: ["Graphic design", "Art direction", "Typography"],
       year: "2024",
-      tone: "#123524",
+      tone: "#002080",
       cover: "",
       featured: false,
       caseReady: true,
@@ -123,7 +122,7 @@ export const SITE = {
       tagline: "An argument for designing Nigerian products and places around more of the people who use them.",
       tags: ["Writing", "Research", "Editorial design"],
       year: "2023",
-      tone: "#294f3a",
+      tone: "#4b68c8",
       cover: "disability-flying-stars",
       href: "writing/designing-for-disability-in-nigeria.html",
       featured: false,
@@ -136,7 +135,7 @@ export const SITE = {
       tagline: "A designer’s reading of the creative decisions that weakened Nike’s cultural value.",
       tags: ["Brand strategy", "Writing", "Creative critique"],
       year: "2026",
-      tone: "#0b2116",
+      tone: "#07112b",
       cover: "swoosh-dream-crazy",
       href: "writing/when-the-swoosh-lost-its-soul.html",
       featured: false,
@@ -162,7 +161,7 @@ export const SITE = {
       tagline: "A hospitality interface with quiet confidence.",
       tags: ["UI design", "Product design"],
       year: "2021",
-      tone: "#0f766e",
+      tone: "#46516c",
       cover: "",
       span: 6, ratio: "4 / 3",
       featured: false,
@@ -189,22 +188,32 @@ export const SITE = {
     {
       title: "Brand identity",
       description: "Identity systems teams can understand, use and keep consistent.",
+      proof: "Rivo identity guidelines and implementation system",
+      href: "work/rivo.html",
     },
     {
       title: "Brand strategy",
       description: "Positioning and messaging that make later decisions clearer.",
+      proof: "Rivo positioning built around access rather than complexity",
+      href: "work/rivo.html#decision",
     },
     {
       title: "Visual & graphic design",
       description: "Campaigns and presentations built around one clear idea.",
+      proof: "ChopBox campaign and packaging applications",
+      href: "work/chopbox.html#applications",
     },
     {
       title: "Art direction",
       description: "A visual direction that keeps every asset in the same world.",
+      proof: "TEDx RSU’s pause-and-reflect visual system",
+      href: "work/tedx-rsu.html#system",
     },
     {
       title: "Print & production design",
       description: "Books, reports and packaging prepared for production and handoff.",
+      proof: "Production-ready event, packaging and editorial assets",
+      href: "work.html#archive-title",
     },
   ],
 

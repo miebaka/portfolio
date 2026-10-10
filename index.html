@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="I find the decision underneath the brief, then build the identity around it.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#123524">
+  <meta name="theme-color" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/SchibstedGrotesk-Regular.ttf" crossorigin>
   <script type="application/ld+json">
@@ -35,11 +35,10 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
+    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
-  <script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
 </head>
 <body data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -59,39 +58,30 @@
   </header>
 
   <main id="main">
-    <section class="hero-noir" aria-labelledby="hero-title">
-      <div class="decision-field" data-decision-field aria-hidden="true">
-        <canvas class="decision-field__canvas"></canvas>
-        <div class="decision-field__fallback"></div>
+    <section class="home-profile container" aria-labelledby="hero-title">
+      <div class="home-profile__introduction">
+        <h1 id="hero-title">Hi, I&rsquo;m Miebaka. I design brand identities, campaigns and graphic systems. I care as much about how they survive production as how they look in the presentation.</h1>
+        <p>Over the last seven years, I&rsquo;ve helped teams turn unclear ideas into useful, memorable systems. I like sharp thinking, expressive typography, generous collaborators and work that still makes sense after the handoff.</p>
+        <p>My practice moves between strategy, art direction and production for technology, finance, culture and self-initiated projects. This site is a record of the decisions, experiments and finished things along the way.</p>
+        <a class="swiss-link" href="about.html">More about me</a>
       </div>
-      <div class="hero-noir__content">
-        <div class="hero-noir__lower">
-          <h1 id="hero-title" class="hero-noir__statement">I find the <em>decision</em> underneath the brief.</h1>
-          <p class="hero-noir__identity">Then I build the identity and tools a team can keep using.</p>
-          <a class="hero-noir__cta" href="#work"><span>See the work</span></a>
-        </div>
-      </div>
+      <figure class="home-profile__portrait"><picture><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.avif" type="image/avif"><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.webp" type="image/webp"><img src="assets/images/optimized/miebaka-joshua-portrait-810.jpg" alt="Miebaka Joshua" width="810" height="1080" fetchpriority="high" decoding="async"></picture></figure>
     </section>
     <section class="swiss-selected container" id="work" aria-labelledby="selected-title">
       <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
-      <a class="swiss-link swiss-selected__all" href="work.html">View all work</a>
     </section>
     <section class="home-capabilities container" id="capabilities" aria-labelledby="capabilities-title">
-      <div class="disciplines-heading"><h2 id="capabilities-title">Services</h2></div>
+      <div class="disciplines-heading"><h2 id="capabilities-title">What I do</h2></div>
       <div data-mount="capabilities"></div>
     </section>
-    <section class="swiss-about swiss-about--proof container" aria-labelledby="about-title">
-      <div><h2 id="about-title">Ask first.<br>Design second.</h2><p>I’m Miebaka, a brand and visual designer in Lagos. I work across strategy, identity, campaigns and production.</p><p>I ask the difficult questions early, so the team has fewer decisions to repeat later.</p><a class="swiss-link" href="about.html">Read my approach</a></div>
-    </section>
     <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Selected brands I&rsquo;ve worked with</h2><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"></div></div></section>
-    <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Need a designer who can find the decision?</h2><a class="home-close__link" href="contact.html">Work with me</a></section>
+    <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Have something worth making unmistakable?</h2><a class="home-close__link" href="contact.html">Work with me</a></section>
   </main>
 
   <footer data-mount="footer">
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
-        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
         <a href="privacy.html">Privacy</a>
         <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>

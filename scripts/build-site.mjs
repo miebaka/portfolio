@@ -85,30 +85,8 @@ for (const file of caseFiles) {
 await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
 await copyJsGraph("js/main.js");
-/* decision-field.js loads Three only after capability checks. Dynamic imports
-   are intentionally outside copyJsGraph's static-import matcher, so vendor the
-   one browser module explicitly and keep the production CSP self-hosted. */
-await ensureCopy(
-  join(root, "node_modules/three/build/three.module.js"),
-  join(output, "node_modules/three/build/three.module.js")
-);
-await ensureCopy(
-  join(root, "node_modules/three/build/three.core.js"),
-  join(output, "node_modules/three/build/three.core.js")
-);
-await ensureCopy(
-  join(root, "node_modules/three/examples/jsm/loaders/SVGLoader.js"),
-  join(output, "node_modules/three/examples/jsm/loaders/SVGLoader.js")
-);
-
-/* Capability cards are rendered from JS, so their image URLs are not present
-   in the source HTML scanned below. Keep this small visual set explicit. */
-for (const asset of ["rivo-guidelines-540.webp", "chopbox-campaign-540.webp", "tedx-rsu-pattern-540.webp"]) {
-  await ensureCopy(
-    join(root, "assets/images/optimized", asset),
-    join(output, "assets/images/optimized", asset)
-  );
-}
+await ensureCopy(join(root, "node_modules/three/build/three.module.js"), join(output, "assets/vendor/three.module.js"));
+await ensureCopy(join(root, "node_modules/three/build/three.core.js"), join(output, "assets/vendor/three.core.js"));
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();

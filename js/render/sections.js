@@ -1,6 +1,6 @@
 /* Render — home sections: capabilities list and text slots. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, mount } from "../utilities/dom.js";
+import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 export function renderCapabilities() {
@@ -8,17 +8,9 @@ export function renderCapabilities() {
   if (!el) return;
   el.className = "disciplines-index";
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
-  const visuals = [
-    { src: "rivo-guidelines", alt: "Rivo identity guidelines" },
-    null,
-    { src: "chopbox-campaign", alt: "ChopBox campaign design" },
-    { src: "tedx-rsu-pattern", alt: "TEDx RSU visual system" },
-    null,
-  ];
   el.innerHTML = SITE.capabilities.map((c, index) =>
     '<article class="discipline">' +
-      (visuals[index] ? '<figure class="discipline__media"><img src="assets/images/optimized/' + visuals[index].src + '-540.webp" alt="' + esc(visuals[index].alt) + '" width="540" height="675" loading="lazy" decoding="async"></figure>' : '') +
-      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></div></article>'
+      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><div class="discipline__evidence"><p>' + esc(c.description) + '</p><a href="' + safeURL(c.href || 'work.html') + '"><span>Evidence:</span>' + esc(c.proof || 'View related work') + ' <span aria-hidden="true">↗</span></a></div></div></article>'
   ).join("");
 }
 

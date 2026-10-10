@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="First we find the decision. Then we build the system around it.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#123524">
+  <meta name="theme-color" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/SchibstedGrotesk-Regular.ttf" crossorigin>
   <script type="application/ld+json">
@@ -34,7 +34,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
+    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -59,14 +59,15 @@
   <main id="main">
 
     <section class="hero container">
+      <p class="page-kicker">Services / What I do</p>
       <h1 class="hero__title measure-hero">Clear decisions make stronger brands.</h1>
       <p class="hero__intro">I help teams clarify what the brand needs to say, then build the identity and tools to say it consistently.</p>
     </section>
 
     <section class="section--tight container services-detail" aria-label="Services and deliverables">
-      <article class="service-detail"><p class="service-detail__number">01</p><div><h2>Brand strategy &amp; identity</h2><p>For new brands and teams whose identity no longer matches the business they are building.</p></div><dl><div><dt>Deliverables</dt><dd>Positioning, messaging direction, identity, typography, colour and guidelines.</dd></div><div><dt>In practice</dt><dd><a href="work/rivo.html">Rivo Studio</a></dd></div></dl></article>
-      <article class="service-detail"><p class="service-detail__number">02</p><div><h2>Campaigns &amp; art direction</h2><p>One clear visual idea, carried across formats without losing its force.</p></div><dl><div><dt>Deliverables</dt><dd>Campaign concepts, key visuals, photography direction, social systems and presentation decks.</dd></div><div><dt>In practice</dt><dd><a href="work/tedx-rsu.html">TEDx RSU</a></dd></div></dl></article>
-      <article class="service-detail"><p class="service-detail__number">03</p><div><h2>Print &amp; production design</h2><p>For reports, packaging and physical applications that must survive production, not just look right on screen.</p></div><dl><div><dt>Deliverables</dt><dd>Reports, books, packaging, production artwork and vendor-ready files.</dd></div><div><dt>In practice</dt><dd><a href="work/chopbox.html">ChopBox</a></dd></div></dl></article>
+      <article class="service-detail"><p class="service-detail__number">01</p><div class="service-detail__copy"><h2>Brand strategy &amp; identity</h2><p>For new brands and teams whose identity no longer matches the business they are building. Positioning, messaging, identity, typography, colour and guidelines become one usable system.</p><a class="service-detail__evidence" href="work/rivo.html"><span>Evidence:</span> Rivo Studio ↗</a></div></article>
+      <article class="service-detail"><p class="service-detail__number">02</p><div class="service-detail__copy"><h2>Campaigns &amp; art direction</h2><p>One clear visual idea carried across key visuals, photography, social formats and presentations without losing its force.</p><a class="service-detail__evidence" href="work/tedx-rsu.html"><span>Evidence:</span> TEDx RSU ↗</a></div></article>
+      <article class="service-detail"><p class="service-detail__number">03</p><div class="service-detail__copy"><h2>Print &amp; production design</h2><p>Reports, books, packaging and physical applications prepared to survive production, not simply look right on screen.</p><a class="service-detail__evidence" href="work/chopbox.html"><span>Evidence:</span> ChopBox ↗</a></div></article>
     </section>
 
     <section class="section--tight container">
@@ -78,7 +79,6 @@
   <footer data-mount="footer">
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
-        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
         <a href="privacy.html">Privacy</a>
         <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>

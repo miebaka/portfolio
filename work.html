@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Each project starts with a question the brand couldn't answer on its own.">
   <meta name="twitter:image" content="https://miebaka.design/assets/images/optimized/miebaka-joshua-portrait-1080.jpg">
   <meta name="twitter:image:alt" content="Portrait of Miebaka Joshua">
-  <meta name="theme-color" content="#123524">
+  <meta name="theme-color" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
   <link rel="preload" as="font" type="font/ttf" href="assets/fonts/SchibstedGrotesk-Regular.ttf" crossorigin>
   <script type="application/ld+json">
@@ -34,7 +34,7 @@
     /* localStorage throws outright when storage is blocked (Safari private
        browsing, some enterprise policies). Unguarded, that exception kills
        the rest of this script. */
-    try { if (localStorage.getItem("color-theme") ==="dark") r.dataset.theme ="dark"; } catch (e) {}
+    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -57,16 +57,15 @@
   </header>
 
   <main id="main">
-    <section class="swiss-work-hero container" aria-labelledby="work-title"><h1 id="work-title">Selected work</h1><p>Identity, campaign and production work built around one clear decision.</p></section>
-    <section class="swiss-collection container" aria-label="Project collection">
-      <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
+    <section class="project-archive container" aria-labelledby="archive-title">
+      <div class="project-archive__head"><h1 id="archive-title">Selected work</h1><p>Identity, campaign, editorial and production work across different scales.</p></div>
+      <div data-project-archive><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li><li><a href="work/christian-poster-a-week.html">Poster A Week</a></li><li><a href="writing/designing-for-disability-in-nigeria.html">Designing for Disability</a></li><li><a href="writing/when-the-swoosh-lost-its-soul.html">When the Swoosh Lost Its Soul</a></li></ul></div>
     </section>
   </main>
 
   <footer data-mount="footer">
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
-        <a href="mailto:hello@miebaka.design">hello@miebaka.design</a>
         <a href="privacy.html">Privacy</a>
         <a href="https://behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>

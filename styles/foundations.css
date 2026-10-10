@@ -4,11 +4,53 @@
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Semibold.ttf") format("truetype");font-weight:600;font-display:swap}
 @font-face{font-family:"Josefin Sans";src:url("../assets/fonts/josefinsans-semibold.woff2") format("woff2");font-weight:600;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:block}
-:root{color-scheme:light;--starlo:#123524;--paper:#f3f7f4;--paper-2:#e3ece6;--ink:#123524;--muted:#526b5e;--line:#bdccc2;--accent:#286345;--accent-soft:#b9d5c2;--inverse:#0b2116;--inverse-ink:#edf6f0;--display:"BIZ UDPMincho",Georgia,serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;--ease-standard:cubic-bezier(.2,0,0,1);--ease-enter:cubic-bezier(.05,.7,.1,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:240ms;--dur-spatial:480ms}
-:root[data-theme="dark"]{color-scheme:dark;--paper:#07170f;--paper-2:#0d2417;--ink:#e5f0e8;--muted:#9db3a6;--line:#294738;--accent:#82b896;--accent-soft:#bdd8c6;--inverse:#05110b;--inverse-ink:#e9f4ed}
-*,*::before,*::after{box-sizing:border-box;margin:0}html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip}body{min-height:100vh;background:var(--paper);color:var(--ink);font:400 .9375rem/1.64 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}img,picture,svg{display:block;max-width:100%;height:auto}a{color:inherit;text-decoration:none}ul{padding:0;list-style:none}button,input,textarea,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}:focus-visible{outline:2px solid var(--accent);outline-offset:4px}::selection{background:var(--accent);color:#fff}h1,h2,h3,h4{font-family:var(--display);font-weight:400;letter-spacing:-.035em;text-wrap:balance}p{max-width:44rem}main{min-height:70vh}
+@font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
+:root{
+  color-scheme:light dark;
+  /* Reference tokens: canonical sRGB values. */
+  --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
+  --ref-blue-30:#1c3da4;--ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-navy-16:#1e283c;
+  --ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;--ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;
+  --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;
+
+  /* System tokens: roles, not swatches. Every text pair below is >=7:1. */
+  --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);--sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
+  --sys-color-on-surface:var(--ref-midnight);--sys-color-on-surface-variant:var(--ref-neutral-30);
+  --sys-color-primary:var(--ref-ultramarine);--sys-color-on-primary:var(--ref-paper);--sys-color-primary-container:var(--ref-air);--sys-color-on-primary-container:var(--ref-ultramarine);
+  --sys-color-secondary:var(--ref-blue-30);--sys-color-tertiary:var(--ref-coral-30);--sys-color-error:var(--ref-error-30);
+  --sys-color-focus:var(--ref-coral-30);--sys-color-outline:var(--ref-neutral-30);--sys-color-outline-variant:var(--ref-neutral-94);
+  --sys-color-selection:var(--ref-air);--sys-color-on-selection:var(--ref-midnight);
+  --sys-color-action:var(--ref-ultramarine);--sys-color-on-action:var(--ref-paper);--sys-color-action-hover:var(--ref-coral-30);--sys-color-on-action-hover:var(--ref-paper);
+
+  /* Compatibility aliases. New work must use --sys-* or --comp-* roles. */
+  --primary:var(--sys-color-primary);--primary-soft:var(--sys-color-primary-container);--secondary:var(--sys-color-secondary);--accent-solid:var(--sys-color-tertiary);--accent-interactive:var(--sys-color-tertiary);
+  --bg:var(--sys-color-surface);--surface:var(--sys-color-surface-container-low);--text:var(--sys-color-on-surface);--text-muted:var(--sys-color-on-surface-variant);--link:var(--sys-color-primary);--field:var(--ref-ultramarine);--on-field:var(--ref-paper);
+  --action-bg:var(--sys-color-action);--action-fg:var(--sys-color-on-action);--focus:var(--sys-color-focus);--border:var(--sys-color-outline-variant);--border-strong:var(--sys-color-outline);--selection-bg:var(--sys-color-selection);--selection-fg:var(--sys-color-on-selection);
+  --success:var(--sys-color-secondary);--info:var(--sys-color-primary);--warning:var(--sys-color-tertiary);--error:var(--sys-color-error);--starlo:var(--text);--paper:var(--bg);--paper-2:var(--surface);--ink:var(--text);--muted:var(--text-muted);--line:var(--border);--accent:var(--primary);--accent-soft:var(--primary-soft);--signal:var(--sys-color-tertiary);--inverse:var(--field);--inverse-ink:var(--on-field);
+
+  /* Type, spacing, shape, motion, and layout roles. */
+  --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;
+  --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
+  --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
+  --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:180ms;--dur-spatial:240ms;
+  --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);--comp-button-bg:var(--sys-color-action);--comp-button-fg:var(--sys-color-on-action);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;--sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);
+  --sys-color-on-surface:var(--ref-paper);--sys-color-on-surface-variant:var(--ref-neutral-80);--sys-color-primary:var(--ref-blue-80);--sys-color-on-primary:#032485;--sys-color-primary-container:var(--ref-ultramarine);--sys-color-on-primary-container:var(--ref-paper);
+  --sys-color-secondary:var(--ref-blue-80);--sys-color-tertiary:var(--ref-coral-75);--sys-color-error:var(--ref-error-75);--sys-color-focus:var(--ref-coral-75);--sys-color-outline:var(--ref-neutral-80);--sys-color-outline-variant:var(--ref-navy-13);
+  --sys-color-selection:var(--ref-navy-13);--sys-color-on-selection:var(--ref-paper);--sys-color-action:var(--ref-blue-80);--sys-color-on-action:#032485;--sys-color-action-hover:var(--ref-coral-75);--sys-color-on-action-hover:var(--ref-midnight);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;--sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);
+  --sys-color-on-surface:var(--ref-paper);--sys-color-on-surface-variant:var(--ref-neutral-80);--sys-color-primary:var(--ref-blue-80);--sys-color-on-primary:#032485;--sys-color-primary-container:var(--ref-ultramarine);--sys-color-on-primary-container:var(--ref-paper);
+  --sys-color-secondary:var(--ref-blue-80);--sys-color-tertiary:var(--ref-coral-75);--sys-color-error:var(--ref-error-75);--sys-color-focus:var(--ref-coral-75);--sys-color-outline:var(--ref-neutral-80);--sys-color-outline-variant:var(--ref-navy-13);
+  --sys-color-selection:var(--ref-navy-13);--sys-color-on-selection:var(--ref-paper);--sys-color-action:var(--ref-blue-80);--sys-color-on-action:#032485;--sys-color-action-hover:var(--ref-coral-75);--sys-color-on-action-hover:var(--ref-midnight);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0}html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip}body{min-height:100vh;background:var(--paper);color:var(--ink);font:400 .9375rem/1.64 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}img,picture,svg{display:block;max-width:100%;height:auto}a{color:inherit;text-decoration-line:underline;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,currentColor 34%,transparent);text-underline-offset:.26em;text-decoration-skip-ink:auto;transition:color 160ms var(--ease-standard),text-decoration-color 160ms var(--ease-standard)}ul{padding:0;list-style:none}button,input,textarea,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}:focus-visible{outline:2px solid var(--focus);outline-offset:4px}::selection{background:var(--selection-bg);color:var(--selection-fg)}h1,h2,h3,h4{font-family:var(--display);font-weight:400;letter-spacing:-.035em;text-wrap:balance}p{max-width:44rem;text-wrap:pretty}main{min-height:70vh}
 .container{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}.section{padding-block:clamp(6rem,11vw,10rem)}.section--tight{padding-block:clamp(5rem,8vw,8rem)}.stack>*+*{margin-top:var(--s3)}.stack>h2{margin-top:var(--s8);font-size:clamp(1.8rem,3vw,3rem)}.stack>h2:first-child{margin-top:0}.measure-hero{max-width:16ch}.meta,.section-head__label{font:600 .68rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .material-symbols-outlined{font:400 1.15rem/1 "Material Symbols Outlined";font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
 body{line-height:1.82}.section{padding-block:clamp(7.5rem,13vw,12rem)}.section--tight{padding-block:clamp(6.5rem,10vw,9.5rem)}.stack>*+*{margin-top:var(--s4)}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}.section{padding-block:6.5rem}.section--tight{padding-block:5.75rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}.decision-field,.reading-progress{display:none!important}}
+@media(forced-colors:active){:focus-visible{outline:2px solid Highlight}}

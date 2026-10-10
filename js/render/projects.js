@@ -12,55 +12,71 @@ function projectMarkup(project, i, base) {
   return '<a class="work-flick__item' + (i === 0 ? ' is-active' : '') + '" href="' + href + '" aria-label="View ' + esc(project.title) + '">' +
     '<div class="work-flick__media">' + media + '<span class="work-flick__veil" aria-hidden="true"></span></div>' +
     '<span class="work-flick__tab" aria-hidden="true"><span>' + String(i + 1).padStart(2, "0") + '</span><strong>' + esc(project.title) + '</strong></span>' +
-    '<div class="work-flick__content"><p class="work-flick__category">' + esc(project.category) + '</p><h3>' + esc(project.title) + '</h3>' +
-    '<div class="work-flick__detail"><p>' + esc(project.tagline) + '</p><span class="work-flick__action">View project</span></div></div></a>';
+    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3>' +
+    '<div class="work-flick__detail"><p>' + esc(project.tagline) + '</p></div></div></a>';
 }
 
-function homeProjectMarkup(project, i, base) {
-  return '<a class="home-work-index__row' + (i === 0 ? ' is-active' : '') + '" href="' + base + 'work/' + safeToken(project.slug) + '.html" data-project-cover="' + esc(project.cover) + '" data-project-title="' + esc(project.title) + '">' +
-    '<span class="home-work-index__number">' + String(i + 1).padStart(2, "0") + '</span>' +
-    '<span class="home-work-index__title">' + esc(project.title) + '</span>' +
-    '<span class="home-work-index__meta">' + esc(project.category) + ' · ' + esc(project.year) + '</span></a>';
+function moreWorkMarkup(i, base) {
+  return '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html" aria-label="See more work">' +
+    '<span class="work-flick__tab" aria-hidden="true"><span>' + String(i + 1).padStart(2, "0") + '</span><strong>See more</strong></span>' +
+    '<div class="work-flick__content"><h3>See more</h3><span class="work-flick__more-arrow" aria-hidden="true">→</span></div></a>';
+}
+
+function bindExpansion(scope) {
+  const groups = [...scope.querySelectorAll('.work-flick__pair')];
+  (groups.length ? groups : [scope]).forEach(group => {
+    const items = [...group.querySelectorAll('.work-flick__item')];
+    if (!items.some(item => item.classList.contains('is-active'))) items[0]?.classList.add('is-active');
+    const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
+    items.forEach(item => {
+      item.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(item); });
+      item.addEventListener('focus', () => activate(item));
+    });
+  });
+
+  const moreCard = scope.querySelector('.work-flick__item--more');
+  if (!moreCard || !('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver(([entry]) => {
+    moreCard.classList.toggle('is-in-view', entry.isIntersecting && !document.hidden);
+  }, { threshold: 0.35 });
+  observer.observe(moreCard);
+  const syncVisibility = () => moreCard.classList.toggle('is-in-view', !document.hidden && moreCard.getBoundingClientRect().top < innerHeight && moreCard.getBoundingClientRect().bottom > 0);
+  document.addEventListener('visibilitychange', syncVisibility);
+  addEventListener('pagehide', () => {
+    observer.disconnect();
+    document.removeEventListener('visibilitychange', syncVisibility);
+  }, { once: true });
 }
 
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   const archive = document.body.dataset.page === 'work';
-  const projects = (archive ? SITE.projects : SITE.projects.filter(p => p.featured)).filter(p => p.caseReady !== false);
-  if (!archive) {
+  const projects = SITE.projects.filter(p => p.featured && p.caseReady !== false);
+  el.className = archive ? 'work-flick work-flick--archive' : 'work-flick work-flick--home';
+  if (archive) {
+    const pairs = [];
+    for (let i = 0; i < projects.length; i += 2) {
+      pairs.push('<div class="work-flick__pair">' + projects.slice(i, i + 2).map((p, j) => projectMarkup(p, i + j, basePath())).join('') + '</div>');
+    }
+    el.innerHTML = pairs.join('');
+  } else {
     const base = basePath();
-    const first = projects[0];
-    const firstSrc = base + 'assets/images/optimized/' + safeToken(first.cover);
-    el.className = 'home-work-showcase';
-    el.innerHTML = '<figure class="home-work-preview" aria-hidden="true"><img src="' + firstSrc + '-810.webp" srcset="' + firstSrc + '-540.webp 540w, ' + firstSrc + '-810.webp 810w, ' + firstSrc + '-1080.webp 1080w" sizes="(max-width: 767px) 100vw, 42vw" alt="" width="810" height="1080" decoding="async"></figure>' +
-      '<div class="home-work-index">' + projects.map((p, i) => homeProjectMarkup(p, i, base)).join('') + '</div>';
-    const preview = el.querySelector('.home-work-preview img');
-    const rows = [...el.querySelectorAll('.home-work-index__row')];
-    const activate = row => {
-      if (!row || row.classList.contains('is-active')) return;
-      rows.forEach(item => item.classList.toggle('is-active', item === row));
-      const src = base + 'assets/images/optimized/' + safeToken(row.dataset.projectCover);
-      preview.src = src + '-810.webp';
-      preview.srcset = src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w';
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        preview.animate([{ opacity: .28, transform: 'scale(1.018)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 360, easing: 'cubic-bezier(.2,0,0,1)' });
-      }
-    };
-    rows.forEach(row => {
-      row.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(row); });
-      row.addEventListener('focus', () => activate(row));
-    });
-    return;
+    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + moreWorkMarkup(projects.length, base);
   }
-  el.className = 'work-flick';
-  el.innerHTML = projects.map((p, i) => projectMarkup(p, i, basePath())).join('');
-  const items = [...el.querySelectorAll('.work-flick__item')];
-  const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
-  items.forEach(item => {
-    item.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(item); });
-    item.addEventListener('focus', () => activate(item));
-  });
+  bindExpansion(el);
+}
+
+export function renderProjectArchive() {
+  const el = document.querySelector('[data-project-archive]');
+  if (!el) return;
+  const base = basePath();
+  el.className = 'project-archive__list';
+  el.innerHTML = SITE.projects.map((project, index) => {
+    const href = project.href ? base + project.href : project.caseReady === false ? '' : base + 'work/' + safeToken(project.slug) + '.html';
+    const action = href ? '<a href="' + href + '">Open project <span aria-hidden="true">↗</span></a>' : '<span class="project-archive__note">Selected artefacts available on request</span>';
+    return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
+  }).join('');
 }
 
 function clientItem(client) {
@@ -81,5 +97,18 @@ function clientItem(client) {
 export function renderClients() {
   const el = mount(MOUNT.CLIENTS);
   if (!el || !SITE.clients || !SITE.clients.length) return;
-  el.innerHTML = '<ul class="client-proof">' + SITE.clients.map(clientItem).join("") + '</ul>';
+  const items = SITE.clients.map(clientItem).join("");
+  el.className = 'client-marquee';
+  el.innerHTML = '<div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+
+  if (!('IntersectionObserver' in window)) return;
+  let visible = false;
+  const sync = () => el.classList.toggle('is-running', visible && !document.hidden);
+  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, { threshold: 0.1 });
+  observer.observe(el);
+  document.addEventListener('visibilitychange', sync);
+  addEventListener('pagehide', () => {
+    observer.disconnect();
+    document.removeEventListener('visibilitychange', sync);
+  }, { once: true });
 }
