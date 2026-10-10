@@ -127,6 +127,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
+  const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
@@ -140,6 +141,19 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.ok(css.includes('.site-nav a,.btn,.hero-noir__cta,.home-close__link,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
   assert.match(css, /\.site-footer__signature[^}]+opacity:\.48/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)[^{]*\{\.work-flick__more-arrow\{animation:none\}/);
+  assert.match(html, /data-mount="now-playing"/);
+  assert.match(css, /\.home-profile__listening\{grid-column:8\/13/);
+  assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
+  assert.match(listening, /What I listen to/);
+  assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
+});
+
+test("interactive controls share the documented role system", async () => {
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  assert.match(css, /\.btn,\.hero-noir__cta,\.home-close__link\{[^}]*min-height:3rem/);
+  assert.match(css, /\.site-nav__menu-btn,\.theme-toggle\{[^}]*min-height:2\.75rem/);
+  assert.match(css, /\.case-view button\[aria-pressed="true"\]\{background:var\(--sys-color-action\)/);
+  assert.doesNotMatch(css, /transition:\s*all/);
 });
 
 test("production language avoids typographic dash shortcuts", async () => {

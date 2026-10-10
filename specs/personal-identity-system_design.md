@@ -208,10 +208,20 @@ Rules:
 
 ### Buttons
 
-- Primary: `action` plus `on-action`.
-- Hover: `action-hover` plus `on-action-hover`.
-- Minimum height: 3rem.
-- One line at desktop; labels use the label role.
+- Primary actions use `action` plus `on-action`, with a 3rem minimum height.
+- Utility controls use a quiet surface, a 2.75rem minimum target and tertiary hover feedback.
+- Mutually exclusive reading modes use one segmented group; only the selected segment receives the action fill.
+- Hover uses `action-hover` plus `on-action-hover`; press feedback scales to no less than 97 percent.
+- Labels remain on one line at desktop and use the label role.
+- Links and large project surfaces are never restyled as generic buttons.
+
+### Listening status
+
+- The homepage always exposes one compact Last.fm link, even when live data is unavailable.
+- When data resolves, the fallback upgrades to the current or most recently played track without changing geometry.
+- The control shares the portrait's five-column measure and sits one `s2` step above it.
+- Live status may pulse; recent or unavailable status remains still. Reduced motion removes the pulse.
+- Track names truncate rather than widening the composition.
 
 ### Selected work
 
@@ -251,6 +261,8 @@ Every item follows one fixed reading sequence:
 - The homepage portrait remains discoverable by the preload scanner.
 - Three.js loads only on a page that mounts the 404 identity field.
 - Theme defaults to system preference and supports a manual override.
+- Case-study reading preference persists for the browser session.
+- Continuous marquees pause on hover or keyboard focus.
 - Focus remains visible in forced-colour mode.
 - Build output contains one bundled CSS request and no source-only directories.
 - HTML revalidates. Versioned or stable assets use long-lived caching where safe.

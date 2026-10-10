@@ -29,17 +29,19 @@ async function fetchNowPlaying() {
 }
 
 function buildChip(container) {
-  chip = document.createElement("span");
+  chip = document.createElement("a");
   chip.className = "now-playing";
+  chip.href = "https://www.last.fm/user/" + encodeURIComponent(SITE.lastfmUser);
+  chip.target = "_blank";
+  chip.rel = "noopener noreferrer";
   chip.setAttribute("aria-live", "polite");
-  chip.setAttribute("aria-label", "Currently listening");
+  chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
-    '<span class="now-playing__label" aria-hidden="true">Now Playing</span>' +
-    '<span class="now-playing__row">' +
-      '<span class="now-playing__dot" aria-hidden="true"></span>' +
-      '<span class="now-playing__track"></span>' +
-    "</span>";
-  chip.hidden = true;
+    '<span class="now-playing__dot" aria-hidden="true"></span>' +
+    '<span class="now-playing__label">What I listen to</span>' +
+    '<span class="now-playing__track">Last.fm</span>' +
+    '<span class="now-playing__arrow" aria-hidden="true">↗</span>';
+  chip.dataset.live = "false";
   container.appendChild(chip);
 }
 
@@ -47,13 +49,16 @@ function updateChip(track) {
   if (!chip) return;
   if (track) {
     chip.querySelector(".now-playing__track").textContent =
-      track.name + " - " + track.artist;
-    chip.querySelector(".now-playing__label").textContent = track.live ? "Now Playing" : "Last played";
-    chip.setAttribute("aria-label", track.live ? "Currently listening" : "Most recently played");
+      track.name + " · " + track.artist;
+    chip.querySelector(".now-playing__label").textContent = track.live ? "Now listening" : "Last listened";
+    chip.setAttribute("aria-label", (track.live ? "Now listening to " : "Last listened to ") + track.name + " by " + track.artist + ". Open Last.fm history");
     chip.dataset.live = String(track.live);
     chip.hidden = false;
   } else {
-    chip.hidden = true;
+    chip.querySelector(".now-playing__label").textContent = "What I listen to";
+    chip.querySelector(".now-playing__track").textContent = "Last.fm";
+    chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
+    chip.dataset.live = "false";
   }
 }
 

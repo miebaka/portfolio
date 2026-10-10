@@ -10,6 +10,7 @@ import { renderCapabilities, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
+import { initNowPlaying } from "./render/now-playing.js";
 import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
@@ -39,6 +40,7 @@ if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
 run("content slots", fillSlots);
+if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);

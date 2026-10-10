@@ -257,3 +257,11 @@
 .service-detail__copy{display:flex;flex-direction:column;align-items:flex-start;gap:1rem}
 .service-detail__evidence{display:inline-flex;align-items:center;min-height:2.75rem}
 @media(max-width:48rem){.service-detail{display:block}.service-detail__number,.service-detail__copy{grid-column:auto}}
+
+/* The listening status occupies the same five-column measure as the portrait.
+   It uses the portrait's existing lead-in space instead of interrupting copy. */
+.home-profile__listening{grid-column:8/13;width:100%;align-self:end;margin-top:clamp(2rem,6vw,6rem)}
+.home-profile__portrait{margin-top:calc(var(--s2) - var(--s4))}
+.site-footer__top{margin-top:.5rem}
+.client-marquee:hover .client-marquee__track,.client-marquee:focus-within .client-marquee__track{animation-play-state:paused}
+@media(max-width:48rem){.home-profile__listening{grid-column:1;width:min(78vw,28rem);margin:2.5rem 0 0 auto}.home-profile__portrait{margin-top:calc(var(--s2) - var(--s4))}}
