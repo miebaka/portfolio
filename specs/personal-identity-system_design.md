@@ -231,7 +231,7 @@ Rules:
 - Each authored project uses a compact inset label bar: project name at rest, one-sentence premise on hover or keyboard focus.
 - Label bars use semantic surface and action roles so their contrast remains correct in both themes.
 - Hover or focus expands one card at a time.
-- `See more` is a fixed navigation card and never participates in the accordion hover behaviour.
+- `See more` participates in the same hover and keyboard-focus expansion as every authored project.
 - `See more` uses the primary-container pair and has no looping or blinking animation.
 - Mobile removes the accordion behaviour and presents full stacked cards.
 
@@ -250,8 +250,8 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 
 - Three information groups: location, Explore with Privacy, and social links.
 - No email address.
-- A dot-matrix signature spans the viewport width. Pointer proximity disperses cells and an interruptible spring returns them home.
-- Reduced motion and no-JavaScript environments receive the static signature mask at 48 percent opacity.
+- A dot-matrix positioning statement spans the viewport width: “I design brand systems, then build the tools that keep them intact.” Pointer proximity disperses cells and an interruptible spring returns them home.
+- Reduced-motion environments receive the same statement as a static dot matrix; no-JavaScript environments receive the static text fallback at 48 percent opacity.
 
 ## 10. Content language
 

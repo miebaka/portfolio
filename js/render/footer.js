@@ -26,6 +26,6 @@ export function renderFooter() {
       '<nav class="site-footer__explore" aria-label="Footer"><p class="site-footer__label">Explore</p>' + explore + '</nav>' +
       '<div class="site-footer__contact"><p class="site-footer__label">Social</p><div class="site-footer__socials">' + socials + '</div><a class="site-footer__top" href="#main">Back to top ↑</a><span>&copy; <span data-year></span> ' + esc(SITE.name) + '</span></div>' +
     '</div>' +
-    '<div class="site-footer__signature" aria-hidden="true"></div>';
+    '<div class="site-footer__signature" data-text="I design brand systems, then build the tools that keep them intact." aria-hidden="true"></div>';
 
 }

@@ -40,12 +40,12 @@ export function renderWriting() {
         return (
           '<li class="writing-item">' +
             '<a class="writing-item__link" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
+              '<h3 class="writing-item__title">' + esc(a.title) + "</h3>" +
+              (a.summary ? '<p class="writing-item__summary">' + esc(a.summary) + "</p>" : "") +
               '<div class="writing-item__meta">' +
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +
               "</div>" +
-              '<h3 class="writing-item__title">' + esc(a.title) + "</h3>" +
-              (a.summary ? '<p class="writing-item__summary">' + esc(a.summary) + "</p>" : "") +
             "</a>" +
           "</li>"
         );

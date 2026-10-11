@@ -140,7 +140,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   assert.doesNotMatch(services, /Evidence:/);
-  assert.match(services, /service-detail__preview/);
+  assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /work-flick__bar/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
@@ -156,10 +156,26 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls share the documented role system", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn,\.hero-noir__cta,\.home-close__link\{[^}]*min-height:3rem/);
+  assert.match(css, /\.btn,\.btn--primary\{[^}]*min-height:3rem/);
   assert.match(css, /\.site-nav__menu-btn,\.theme-toggle\{[^}]*min-height:2\.75rem/);
-  assert.match(css, /\.case-view button\[aria-pressed="true"\]\{background:var\(--sys-color-action\)/);
+  assert.match(css, /\.btn:active,\.btn--primary:active\{transform:scale\(\.97\)/);
   assert.doesNotMatch(css, /transition:\s*all/);
+});
+
+test("alignment, service parity and article hierarchy stay systemic", async () => {
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  const services = await readFile(join(dist, "services.html"), "utf8");
+  const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
+  const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
+  assert.match(css, /main,\.site-footer\{text-align:left\}/);
+  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
+  assert.match(services, /data-mount="capabilities"/);
+  assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
+  const title = writing.indexOf('writing-item__title');
+  const summary = writing.indexOf('writing-item__summary');
+  const meta = writing.indexOf('writing-item__meta');
+  assert.ok(title > -1 && title < summary && summary < meta);
 });
 
 test("production language avoids typographic dash shortcuts", async () => {

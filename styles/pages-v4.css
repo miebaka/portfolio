@@ -392,3 +392,70 @@ a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-prim
   .site-footer__signature{width:100%;height:clamp(8rem,34vw,13rem);margin-inline:0}
 }
 @media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
+
+/* V13 — one alignment grid, one CTA contract and one content sequence. */
+main,.site-footer{text-align:left}
+:is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-lede,.case-chapter__copy,.case-next,.section,.section--tight)>*{text-align:left}
+.article-hero{align-items:start;text-align:left}
+.article-hero__title,.article-hero__summary,.article-hero__meta,.article-body :is(p,h2,h3,ul,ol,blockquote){margin-inline:0;text-align:left}
+.article-hero__title{max-width:18ch}
+.article-hero__summary{max-width:40rem;margin-top:var(--s3);color:var(--muted);font-size:clamp(1.05rem,1.4vw,1.3rem);line-height:1.65}
+.article-hero__meta{justify-content:flex-start;margin-top:var(--s2)}
+.about-statement{margin-left:0}
+
+.home-landing{align-items:flex-end}
+.home-landing__inner{align-items:end}
+.home-landing h1{grid-column:1/11;max-width:13ch;white-space:normal;font-size:clamp(3.4rem,7.6vw,8.4rem);line-height:.91;letter-spacing:-.06em;text-align:left;text-wrap:balance}
+.home-landing__descriptor{display:none}
+
+/* Filled CTA. This is the only primary action style: 48px minimum target,
+   stable padding, semantic colours, elevation on hover and compression on press. */
+.btn,.btn--primary{width:max-content;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.75rem 1.35rem;border:1px solid transparent;border-radius:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
+@media(hover:hover) and (pointer:fine){.btn:hover,.btn--primary:hover{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}}
+.btn:focus-visible,.btn--primary:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.btn:active,.btn--primary:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.home-close .btn{margin-top:var(--s4)}
+
+/* Compact controls are distinct from CTAs but share the same state logic. */
+.site-nav__menu-btn,.theme-toggle{border:1px solid transparent;border-radius:0;background:transparent;color:var(--sys-color-on-surface-variant);box-shadow:none}
+.site-nav__menu-btn:is(:hover,:focus-visible),.theme-toggle:is(:hover,:focus-visible){background:var(--sys-color-surface-container-high);color:var(--sys-color-tertiary)}
+
+.work-flick__item{transition:flex var(--dur-spatial) var(--ease-enter)}
+.work-flick .work-flick__item--more{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
+.work-flick .work-flick__item--more:hover,.work-flick .work-flick__item--more:focus-visible,.work-flick .work-flick__item--more.is-active{flex:4.5 1 0;background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
+.work-flick__item--more .work-flick__content{opacity:1}
+
+/* The Services page and homepage deliberately share the same renderer and
+   therefore the same row geometry, hierarchy and hover behaviour. */
+body[data-page="services"] .disciplines-index{display:grid;gap:clamp(2.5rem,5vw,5rem)}
+body[data-page="services"] .discipline{min-height:11.5rem}
+
+.writing-item__link{min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;gap:.75rem;padding:clamp(2rem,4vw,3.5rem) var(--s2);text-align:left}
+.writing-item__title,.writing-item__summary,.writing-item__meta{grid-column:1;grid-row:auto;text-align:left}
+.writing-item__title{order:1}
+.writing-item__summary{order:2;display:block;max-width:48rem}
+.writing-item__meta{order:3;display:flex;gap:var(--s2)}
+.writing-item__date::before{content:none}
+
+/* Compact horizontal footer frees the lower field for the positioning mark. */
+.site-footer__panel{width:min(calc(100% - 2 * var(--page)),var(--content));display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:clamp(.8rem,1.6vw,1.5rem);padding-block:clamp(1.5rem,3vw,2.5rem)}
+.site-footer__context,.site-footer__explore,.site-footer__contact,.site-footer__socials{display:flex;align-items:center;align-content:center;flex-wrap:nowrap;gap:.35rem clamp(.55rem,1vw,.9rem);white-space:nowrap}
+.site-footer__context,.site-footer__explore{flex:0 1 auto}
+.site-footer__contact{flex:0 1 auto}
+.site-footer__context{flex-shrink:0}.site-footer__context>p:last-child{white-space:nowrap;font-size:.82rem}
+.site-footer__label{flex:0 0 auto;margin-right:.25rem}
+.site-footer__top{margin:0}
+.site-footer a{min-height:2.75rem;font-size:clamp(.72rem,1vw,.9rem)}
+.site-footer__signature{height:clamp(18rem,34vw,34rem);margin:0;opacity:1}
+.site-footer__signature::before{content:attr(data-text);display:flex;align-items:center;padding:3vw;color:var(--ink);background:none;opacity:.48;-webkit-mask:none;mask:none;font:600 clamp(2.5rem,6vw,7rem)/.95 var(--body);letter-spacing:-.05em;text-align:left}
+.site-footer__signature.is-enhanced::before{opacity:0}
+
+@media(max-width:48rem){
+  .home-landing h1{grid-column:1/-1;font-size:clamp(3rem,14vw,5.2rem)}
+  .site-footer__panel{display:flex;gap:.75rem 1.25rem}
+  .site-footer__context,.site-footer__explore,.site-footer__contact{flex:1 1 100%;gap:.25rem .85rem}
+  .site-footer__signature{height:clamp(20rem,86vw,30rem)}
+}
+@media(max-width:68rem){.site-footer__panel{flex-wrap:wrap;justify-content:flex-start}.site-footer__context,.site-footer__explore,.site-footer__contact{flex:1 1 100%;flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:0}.site-footer__signature-canvas{display:block}}

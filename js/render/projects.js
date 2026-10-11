@@ -23,7 +23,7 @@ function moreWorkMarkup(i, base) {
 function bindExpansion(scope) {
   const groups = [...scope.querySelectorAll('.work-flick__pair')];
   (groups.length ? groups : [scope]).forEach(group => {
-    const items = [...group.querySelectorAll('.work-flick__item:not(.work-flick__item--more)')];
+    const items = [...group.querySelectorAll('.work-flick__item')];
     const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
     items.forEach(item => {
       item.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(item); });
