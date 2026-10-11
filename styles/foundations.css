@@ -1,4 +1,4 @@
-@font-face{font-family:"BIZ UDPMincho";src:url("../assets/fonts/BIZUDPMincho-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"BIZ UDPMincho";src:url("../assets/fonts/BIZUDPMincho-Latin.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Semibold.ttf") format("truetype");font-weight:600;font-display:swap}
@@ -63,3 +63,8 @@ body{min-height:100svh}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
 @media(hover:none),(pointer:coarse){input,select,textarea{font-size:16px}}
+.neutral-folds{position:fixed;inset:0;z-index:90;width:100%;height:100%;pointer-events:none;opacity:.075;mix-blend-mode:multiply}
+:root[data-theme="dark"] .neutral-folds{opacity:.11;mix-blend-mode:screen}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .neutral-folds{opacity:.11;mix-blend-mode:screen}}
+@media(prefers-reduced-transparency:reduce){.neutral-folds{opacity:.035;mix-blend-mode:normal}}
+@media(forced-colors:active){.neutral-folds{display:none}}

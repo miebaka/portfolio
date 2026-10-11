@@ -21,8 +21,8 @@ export function renderFooter() {
   el.innerHTML =
     '<div class="site-footer__panel">' +
       '<nav class="site-footer__groups" aria-label="Footer">' +
-        group('site-footer__explore', 'Explore', explore) +
         group('site-footer__location', 'Based in', '<span>' + esc(SITE.location) + '</span>') +
+        group('site-footer__explore', 'Explore', explore) +
         group('site-footer__socials', 'Social', socials) +
       '</nav>' +
     '</div>' +

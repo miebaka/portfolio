@@ -16,6 +16,7 @@ import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
+import { initNeutralFolds } from "./core/neutral-folds.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -29,6 +30,7 @@ const run = (label, task) => {
 };
 
 run("DOM contract", initContract);
+run("neutral folds background", initNeutralFolds);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);

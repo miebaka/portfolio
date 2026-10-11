@@ -441,7 +441,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .site-footer__label{margin:0}
 .site-footer a{min-height:2.75rem;font-size:clamp(.78rem,1vw,.95rem)}
 .site-footer__signature{height:clamp(18rem,34vw,34rem);margin:0;opacity:1}
-.site-footer__signature::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.48;-webkit-mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto;mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto}
+.site-footer__signature::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.48;-webkit-mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/contain;mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/contain}
 .site-footer__signature.is-enhanced::before{opacity:0}
 
 @media(max-width:48rem){
@@ -455,6 +455,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .work-flick__item--locked{cursor:default}
 .work-flick__status{position:absolute;z-index:4;inset:50% auto auto 50%;opacity:0;pointer-events:none;transform:translate(-50%,-40%);transition:opacity 180ms var(--ease-standard),transform 180ms var(--ease-enter)}
 .work-flick__item--locked:is(:hover,.is-active) .work-flick__status{opacity:1;transform:translate(-50%,-50%)}
+.work-flick__item--locked:is(:hover,.is-active) .work-flick__status .btn,.project-archive__item:is(:hover,[open]) .project-archive__status .btn{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}
 .work-flick__item--locked:is(:hover,.is-active) .work-flick__bar{opacity:0}
 .project-archive__status{opacity:0;transition:opacity 180ms var(--ease-standard)}
 .project-archive__item:is(:hover,[open]) .project-archive__status{opacity:1}

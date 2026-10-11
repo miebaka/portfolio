@@ -84,11 +84,11 @@ a[href]:hover,a[href]:focus-visible{color:var(--accent-interactive);text-decorat
 
 /* Responsive navigation and footer contracts. */
 .site-nav__inner{padding-left:max(var(--page),var(--safe-left));padding-right:max(var(--page),var(--safe-right))}
-.site-footer__groups{display:grid;grid-template-columns:minmax(0,2fr) minmax(10rem,.7fr) minmax(16rem,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:start}
+.site-footer__groups{display:grid;grid-template-columns:minmax(10rem,.7fr) minmax(0,2fr) minmax(16rem,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:start}
 .site-footer__group{display:grid;align-content:start;gap:.6rem;min-width:0}
 .site-footer__location .site-footer__links{color:var(--muted)}
 .site-footer__signature{padding-bottom:var(--safe-bottom)}
 @media(hover:hover) and (pointer:fine){.site-nav__menu-btn:hover,.theme-toggle:hover{background:var(--sys-color-surface-container-high);color:var(--sys-color-tertiary)}}
 @media(max-width:60rem){.site-nav__links{max-height:calc(100dvh - var(--nav-h) - var(--safe-bottom) - 1rem);overflow-y:auto;overscroll-behavior:contain}}
-@media(max-width:48rem){.site-footer__groups{grid-template-columns:1fr 1fr}.site-footer__explore{grid-column:1/-1}.site-footer__links{align-items:flex-start}.site-footer__socials .site-footer__links{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:48rem){.site-footer__groups{grid-template-columns:1fr}.site-footer__location,.site-footer__explore,.site-footer__socials{grid-column:1}.site-footer__links{align-items:flex-start}.site-footer__socials .site-footer__links{display:grid;grid-template-columns:1fr 1fr}}
 @media(max-width:23.5rem){.site-footer__groups{grid-template-columns:1fr}.site-footer__explore,.site-footer__location,.site-footer__socials{grid-column:1}.site-footer__socials .site-footer__links{grid-template-columns:1fr}.now-playing{grid-template-columns:auto 1fr auto}.now-playing__label{grid-column:2}.now-playing__track{grid-column:1/-1;grid-row:2}.now-playing__arrow{grid-column:3;grid-row:1}.site-nav__links{left:max(.75rem,var(--safe-left));right:max(.75rem,var(--safe-right))}}

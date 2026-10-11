@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -76,6 +76,9 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   await access(join(dist, "assets", "vendor", "three.module.js"));
   await access(join(dist, "assets", "vendor", "three.core.js"));
   await assert.rejects(access(join(dist, "node_modules")));
+  const displayFont = await stat(join(dist, "assets", "fonts", "BIZUDPMincho-Latin.ttf"));
+  assert.ok(displayFont.size < 150_000, `display font is ${displayFont.size} bytes`);
+  await assert.rejects(access(join(dist, "assets", "fonts", "BIZUDPMincho-Regular.ttf")));
 });
 
 test("ultramarine identity stays within its documented visual language", async () => {
@@ -170,6 +173,24 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /safe-area-inset-left/);
   assert.match(css, /@media\(hover:hover\) and \(pointer:fine\)/);
   assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{input,select,textarea\{font-size:16px/);
+  const primaryMarkup = [
+    await readFile(join(root, "index.html"), "utf8"),
+    await readFile(join(root, "services.html"), "utf8"),
+    await readFile(join(root, "contact.html"), "utf8"),
+    await readFile(join(root, "js", "render", "projects.js"), "utf8"),
+    await readFile(join(root, "js", "render", "case-markup.js"), "utf8")
+  ].join("\n");
+  assert.doesNotMatch(primaryMarkup, /class=["'`]btn\s+btn-/);
+});
+
+test("neutral folds stays dependency-free and power-aware", async () => {
+  const source = await readFile(join(root, "js", "core", "neutral-folds.js"), "utf8");
+  assert.doesNotMatch(source, /from\s+["']|import\s*\(/);
+  assert.match(source, /powerPreference:\s*"low-power"/);
+  assert.match(source, /saveData/);
+  assert.match(source, /prefers-reduced-motion/);
+  assert.match(source, /document\.hidden/);
+  await access(join(dist, "js", "core", "neutral-folds.js"));
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
@@ -242,6 +263,8 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(footer, /SITE\.socials/);
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
   assert.doesNotMatch(footer, /Back to top|data-year/);
+  assert.ok(footer.indexOf("'Based in'") < footer.indexOf("'Explore'"));
+  assert.ok(footer.indexOf("'Explore'") < footer.indexOf("'Social'"));
   assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });

@@ -43,8 +43,9 @@ export function initFooterSignature() {
     sample.width = width;
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
-    const markHeight = width * SVG_RATIO;
-    sampleContext.drawImage(image, 0, (height - markHeight) / 2, width, markHeight);
+    const markWidth = Math.min(width * .96, height / SVG_RATIO * .94);
+    const markHeight = markWidth * SVG_RATIO;
+    sampleContext.drawImage(image, (width - markWidth) / 2, (height - markHeight) / 2, markWidth, markHeight);
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const next = [];
     for (let y = PITCH / 2; y < height; y += PITCH) {

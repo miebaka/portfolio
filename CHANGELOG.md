@@ -1,3 +1,13 @@
+## [1.1.4] - 2026-10-11
+
+### Fixed
+- Made the Contact page primary-button interaction the rendered hover, focus, press, and disabled contract for every primary action and locked-project action.
+- Reordered the footer to Based in, Explore, Social and fitted the full dot-matrix signature inside its canvas.
+- Replaced the 5.6 MB display-font delivery with a 108 KB Latin subset.
+
+### Added
+- Added a dependency-free Neutral Folds WebGL background across the site with dark-mode, reduced-motion, reduced-transparency, Save Data, visibility, and low-power safeguards.
+
 ## [1.1.3] - 2026-10-11
 
 ### Fixed
