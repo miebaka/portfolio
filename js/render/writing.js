@@ -41,7 +41,6 @@ export function renderWriting() {
           '<li class="writing-item">' +
             '<a class="writing-item__link" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
               '<div class="writing-item__meta">' +
-                (a.tag ? '<span class="writing-item__tag">' + esc(a.tag) + "</span>" : "") +
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +
               "</div>" +

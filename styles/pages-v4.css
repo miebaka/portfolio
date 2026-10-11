@@ -227,9 +227,7 @@
 .work-flick__item--more{background:var(--primary);color:var(--on-field)}
 .work-flick__item--more .work-flick__content{inset:clamp(1.25rem,3vw,2.5rem);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start}
 .work-flick__item--more .work-flick__content h3{margin:0;max-width:6ch}
-.work-flick__more-arrow{display:block;margin-top:clamp(1.5rem,4vw,3.5rem);font:400 clamp(3rem,7vw,7rem)/1 var(--display);transform:rotate(0deg);opacity:1;animation:more-arrow-blink 1.8s steps(1,end) infinite;animation-play-state:paused}
-.work-flick__item--more.is-in-view .work-flick__more-arrow{animation-play-state:running}
-@keyframes more-arrow-blink{0%,44%,100%{opacity:1}50%,88%{opacity:.24}}
+.work-flick__more-arrow{display:block;margin-top:clamp(1.5rem,4vw,3.5rem);font:400 clamp(3rem,7vw,7rem)/1 var(--display);transform:rotate(0deg);opacity:1}
 
 .discipline{display:block}
 .discipline__copy{display:grid;grid-template-columns:1fr;gap:.85rem}
@@ -325,3 +323,72 @@
   .discipline,.service-detail{display:block;min-height:13rem;padding:1.25rem}.discipline__copy,.service-detail__copy{display:grid;grid-template-columns:1fr}.discipline__number,.service-detail__number,.discipline h2,.discipline h3,.service-detail h2,.discipline__copy>p,.service-detail__copy>p{grid-column:1;grid-row:auto}.discipline__preview,.service-detail__preview{width:42%;opacity:.12;transform:none}
 }
 @media(prefers-reduced-motion:reduce){.work-flick__bar::before,.work-flick__bar-arrow,.discipline,.discipline__preview,.service-detail,.service-detail__preview{transition:none}}
+
+/* V12 — density, adaptive actions and direct feedback. */
+:root{--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s6:3.15rem;--s8:4.2rem;--s12:6.3rem}
+html{scroll-padding-top:calc(var(--nav-h) + 1rem)}
+:is(a,button,input,textarea,summary){touch-action:manipulation}
+.section{padding-block:clamp(6.3rem,10.9vw,10.1rem)}
+.section--tight{padding-block:clamp(5.45rem,8.4vw,8rem)}
+.swiss-selected,.home-capabilities,.swiss-about,.journey,.home-close{padding-block:clamp(7.55rem,13.4vw,12.6rem)}
+.home-profile{padding-block:clamp(5.9rem,10.1vw,9.25rem) clamp(6.7rem,11.75vw,10.9rem)}
+.hero{padding-top:clamp(6.7rem,11.75vw,10.9rem)}
+.hero__title,.hero__intro,.hero__lede{grid-column:1/-1}
+
+.home-landing__descriptor{display:block;max-width:25rem;color:color-mix(in srgb,var(--ref-paper) 82%,transparent)}
+.home-profile__media{grid-column:8/13;grid-row:1/3;display:grid;align-self:start;gap:var(--s2);min-width:0}
+.home-profile__listening,.home-profile__portrait{grid-column:auto;grid-row:auto;width:100%;margin:0}
+
+.work-flick__bar{background:var(--sys-color-surface-container-high);color:var(--sys-color-on-surface)}
+.work-flick__bar::before{background:var(--sys-color-action)}
+.work-flick__item:is(:hover,:focus-visible) .work-flick__bar{color:var(--sys-color-on-action)}
+.work-flick__item--more{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
+a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-primary-container)}
+.work-flick__more-arrow{animation:none;opacity:1;color:currentColor}
+.work-flick__item--more.is-in-view .work-flick__more-arrow{animation:none}
+
+.client-marquee:hover .client-marquee__track,.client-marquee:focus-within .client-marquee__track{animation-play-state:running}
+.marquee__item{min-height:6.4rem}
+.marquee__item img{height:calc(4.08rem * var(--logo-scale,1));max-width:16.8rem}
+
+/* Filled action: stable geometry, immediate press response, one semantic
+   colour change and a small elevation cue. */
+.btn,.hero-noir__cta,.home-close__link{position:relative;isolation:isolate;min-height:3rem;padding:.75rem 1.35rem;border:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);text-decoration:none;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
+@media(hover:hover) and (pointer:fine){.btn:hover,.hero-noir__cta:hover,.home-close__link:hover{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}}
+.btn:active,.hero-noir__cta:active,.home-close__link:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+
+.case-index{gap:.35rem;border:0}
+.case-index a{min-height:3rem;align-content:center;border:0;background:var(--sys-color-surface-container-low);color:var(--sys-color-on-surface);text-decoration:none;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard)}
+.case-index a:last-child{border:0}
+.case-index a:is(:hover,:focus-visible){background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
+.case-index a:active{transform:scale(.97)}
+.case-index a span{color:var(--sys-color-secondary)}
+.case-lede__top,.case-kicker,.case-view{display:none}
+
+@media(hover:hover) and (pointer:fine){
+  .project-archive__item:hover,.writing-item__link:hover{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
+  .project-archive__item:hover :is(summary>span,time,.project-archive__reveal),.writing-item__link:hover :is(.writing-item__meta,.writing-item__summary){color:inherit}
+}
+
+.site-footer__explore .site-footer__legal{margin:0}
+.site-footer__signature{position:relative;width:100%;height:clamp(11rem,22vw,24rem);margin:clamp(3rem,6vw,6rem) 0 0;overflow:hidden;opacity:1;color:var(--ink)}
+.site-footer__signature::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.38;-webkit-mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto;mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto}
+.site-footer__signature.is-enhanced::before{opacity:0}
+.site-footer__signature-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.article-hero__tag,.writing-item__tag{display:none}
+.article-hero__meta{margin-top:var(--s3)}
+.case-chapter{content-visibility:auto;contain-intrinsic-size:auto 70rem}
+
+@media(max-width:60rem){.home-profile__media{grid-column:7/13}}
+@media(max-width:48rem){
+  .section{padding-block:5.45rem}.section--tight{padding-block:4.8rem}
+  .swiss-selected,.home-capabilities,.swiss-about,.journey,.home-close{padding-block:6.3rem}
+  .home-profile{padding-block:5rem 5.9rem}
+  .home-profile__media{grid-column:1;grid-row:auto;width:min(78vw,28rem);margin:2.5rem 0 0 auto;gap:var(--s2)}
+  .home-profile__listening,.home-profile__portrait{width:100%;margin:0}
+  .case-index{grid-template-columns:1fr 1fr}.case-index a{border:0}
+  .site-footer__signature{width:100%;height:clamp(8rem,34vw,13rem);margin-inline:0}
+}
+@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}

@@ -10,7 +10,7 @@ function projectMarkup(project, i, base) {
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
   const href = project.href ? base + project.href : base + 'work/' + safeToken(project.slug) + '.html';
   return '<a class="work-flick__item" href="' + href + '" aria-label="View ' + esc(project.title) + '">' +
-    '<div class="work-flick__media">' + media + '<span class="work-flick__veil" aria-hidden="true"></span></div>' +
+    '<div class="work-flick__media">' + media + '</div>' +
     '<span class="work-flick__bar" aria-hidden="true"><span class="material-symbols-outlined work-flick__bar-arrow">arrow_outward</span><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong><span>' + esc(project.tagline) + '</span></span></span>' +
     '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></a>';
 }
@@ -31,18 +31,6 @@ function bindExpansion(scope) {
     });
   });
 
-  const moreCard = scope.querySelector('.work-flick__item--more');
-  if (!moreCard || !('IntersectionObserver' in window)) return;
-  const observer = new IntersectionObserver(([entry]) => {
-    moreCard.classList.toggle('is-in-view', entry.isIntersecting && !document.hidden);
-  }, { threshold: 0.35 });
-  observer.observe(moreCard);
-  const syncVisibility = () => moreCard.classList.toggle('is-in-view', !document.hidden && moreCard.getBoundingClientRect().top < innerHeight && moreCard.getBoundingClientRect().bottom > 0);
-  document.addEventListener('visibilitychange', syncVisibility);
-  addEventListener('pagehide', () => {
-    observer.disconnect();
-    document.removeEventListener('visibilitychange', syncVisibility);
-  }, { once: true });
 }
 
 export function renderWork() {

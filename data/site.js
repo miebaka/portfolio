@@ -9,7 +9,7 @@ export const SITE = {
   lastfmUser: "sheikmoujabaa",
   lastfmKey:  "127872bcf2ccc619e4fb52bb4b81805f",
   role: "Brand & visual designer",
-  email: "hello@miebaka.design",
+  email: "miebakakiki@gmail.com",
   location: "Lagos, Nigeria",
   city: "Lagos",      // reserved — planned nav clock feature
   timezone: "WAT",    // reserved — planned nav clock feature
@@ -38,7 +38,6 @@ export const SITE = {
      - href:        Full URL (external blog) or path (e.g. "writing/slug.html")
      - date:        ISO 8601 date string — "YYYY-MM-DD"
      - summary:     One or two sentences shown on the card
-     - tag:         Category label (e.g. "Brand Strategy", "Process", "Design Thinking")
      - readingTime: Optional — e.g. "5 min read" */
   writing: [
     {
@@ -46,7 +45,6 @@ export const SITE = {
       href:  "writing/when-the-swoosh-lost-its-soul.html",
       date:  "2026-06-15",
       summary: "How Nike’s creative and commercial decisions weakened its cultural value.",
-      tag:  "Brand Strategy",
       readingTime: "10 min read",
     },
     {
@@ -54,7 +52,6 @@ export const SITE = {
       href:  "writing/designing-for-disability-in-nigeria.html",
       date:  "2023-09-29",
       summary: "What designing for millions of Nigerians with disabilities asks of the people shaping products and places.",
-      tag:  "Inclusive Design",
       readingTime: "8 min read",
     },
   ],

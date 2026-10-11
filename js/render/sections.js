@@ -10,7 +10,7 @@ export function renderCapabilities() {
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
   const base = basePath();
   el.innerHTML = SITE.capabilities.map((c, index) =>
-    '<article class="discipline" tabindex="0">' +
+    '<article class="discipline">' +
       '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></div>' +
       '<figure class="discipline__preview" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + esc(c.preview) + '-540.webp" alt="" width="540" height="720" loading="lazy" decoding="async"></figure></article>'
   ).join("");

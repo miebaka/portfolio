@@ -18,14 +18,14 @@ export function renderFooter() {
     .join("");
   const explore = (SITE.menu || []).map((item) =>
     '<a href="' + basePath() + esc(item.href) + '">' + esc(item.label) + '</a>'
-  ).join('');
+  ).join('') + '<a href="' + basePath() + 'privacy.html">Privacy</a>';
   el.className = "site-footer site-footer--seasats";
   el.innerHTML =
     '<div class="site-footer__panel">' +
       '<div class="site-footer__context"><p class="site-footer__label">Based in</p><p>' + esc(SITE.location) + '</p></div>' +
       '<nav class="site-footer__explore" aria-label="Footer"><p class="site-footer__label">Explore</p>' + explore + '</nav>' +
-      '<div class="site-footer__contact"><p class="site-footer__label">Social</p><div class="site-footer__socials">' + socials + '</div><a class="site-footer__top" href="#main">Back to top ↑</a><a class="site-footer__legal" href="' + basePath() + 'privacy.html">Privacy</a><span>&copy; <span data-year></span> ' + esc(SITE.name) + '</span></div>' +
+      '<div class="site-footer__contact"><p class="site-footer__label">Social</p><div class="site-footer__socials">' + socials + '</div><a class="site-footer__top" href="#main">Back to top ↑</a><span>&copy; <span data-year></span> ' + esc(SITE.name) + '</span></div>' +
     '</div>' +
-    '<div class="site-footer__signature" aria-hidden="true">MIEBAKA JOSHUA</div>';
+    '<div class="site-footer__signature" aria-hidden="true"></div>';
 
 }

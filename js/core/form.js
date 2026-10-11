@@ -105,7 +105,7 @@ export function initForm() {
       trimmed = true;
     }
 
-    const to = SITE.email || "hello@miebaka.design";
+    const to = SITE.email || "miebakakiki@gmail.com";
     const subject = encodeURIComponent("Project enquiry from " + name);
     const body = encodeURIComponent(sent + "\n\n" + name + " (" + email + ")");
     window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;

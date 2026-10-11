@@ -145,10 +145,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
   assert.ok(css.includes('.site-nav a,.btn,.hero-noir__cta,.home-close__link,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
-  assert.match(css, /\.site-footer__signature[^}]+opacity:\.48/);
-  assert.match(css, /@media\(prefers-reduced-motion:reduce\)[^{]*\{\.work-flick__more-arrow\{animation:none\}/);
+  assert.match(css, /\.site-footer__signature-canvas/);
+  assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
-  assert.match(css, /\.home-profile__listening\{grid-column:8\/13/);
+  assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
   assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
   assert.match(listening, /What I listen to/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
@@ -186,10 +186,25 @@ test("portfolio depth features are present without depending on JavaScript for c
   assert.doesNotMatch(work, /Work \/ 2019/);
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
-    assert.match(html, /data-case-view="brief"/);
-    assert.match(html, /data-case-view="full"/);
-    assert.match(html, /Full study/);
+    assert.doesNotMatch(html, /data-case-view|Brief view|Full study|Case study ·/);
+    assert.match(html, /class="case-index"/);
   }
+});
+
+test("requested language and contact details stay canonical", async () => {
+  const sourceFiles = [
+    join(dist, "index.html"), join(dist, "about.html"), join(dist, "services.html"),
+    join(dist, "contact.html"), join(dist, "playground.html"), join(dist, "privacy.html"),
+    join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
+    join(dist, "writing", "designing-for-disability-in-nigeria.html")
+  ];
+  const source = (await Promise.all(sourceFiles.map(file => readFile(file, "utf8")))).join("\n");
+  assert.doesNotMatch(source, /hello@miebaka\.design|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
+  assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
+  assert.match(source, /miebakakiki@gmail\.com/);
+  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brand systems, then build the tools that keep them intact\./);
+  assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
+  await access(join(dist, "js", "core", "footer-signature.js"));
 });
 
 test("all local HTML assets and links resolve", async () => {

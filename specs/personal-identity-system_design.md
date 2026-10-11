@@ -210,8 +210,9 @@ Rules:
 
 - Primary actions use `action` plus `on-action`, with a 3rem minimum height.
 - Utility controls use a quiet surface, a 2.75rem minimum target and tertiary hover feedback.
-- Mutually exclusive reading modes use one segmented group; only the selected segment receives the action fill.
-- Hover uses `action-hover` plus `on-action-hover`; press feedback scales to no less than 97 percent.
+- Hover uses `action-hover` plus `on-action-hover` and a restrained elevation cue.
+- Press feedback begins immediately, scales to no less than 97 percent and removes elevation.
+- Focus uses the shared two-pixel focus ring; disabled actions retain geometry at reduced opacity.
 - Labels remain on one line at desktop and use the label role.
 - Links and large project surfaces are never restyled as generic buttons.
 
@@ -219,7 +220,7 @@ Rules:
 
 - The homepage always exposes one compact Last.fm link, even when live data is unavailable.
 - When data resolves, the fallback upgrades to the current or most recently played track without changing geometry.
-- The control shares the portrait's five-column measure and sits one `s2` step above it.
+- The control and portrait live in one responsive media wrapper, so their edges and width remain identical at every breakpoint.
 - Live status may pulse; recent or unavailable status remains still. Reduced motion removes the pulse.
 - Track names truncate rather than widening the composition.
 
@@ -228,8 +229,10 @@ Rules:
 - Three authored projects plus one `See more` card.
 - The rail begins as four equal, collapsed cards within the shared content measure.
 - Each authored project uses a compact inset label bar: project name at rest, one-sentence premise on hover or keyboard focus.
+- Label bars use semantic surface and action roles so their contrast remains correct in both themes.
 - Hover or focus expands one card at a time.
 - `See more` is a fixed navigation card and never participates in the accordion hover behaviour.
+- `See more` uses the primary-container pair and has no looping or blinking animation.
 - Mobile removes the accordion behaviour and presents full stacked cards.
 
 ### What I do
@@ -245,9 +248,10 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 
 ### Footer
 
-- Three information groups: location, navigation, social and legal.
+- Three information groups: location, Explore with Privacy, and social links.
 - No email address.
-- Borges wordmark spans the viewport width at 48 percent opacity in both themes.
+- A dot-matrix signature spans the viewport width. Pointer proximity disperses cells and an interruptible spring returns them home.
+- Reduced motion and no-JavaScript environments receive the static signature mask at 48 percent opacity.
 
 ## 10. Content language
 
@@ -257,6 +261,8 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 - Project copy distinguishes observation, decision, execution and outcome.
 - Use one register: warm, direct and professionally exact.
 - No decorative metadata, fake status, weather, version labels or scroll instructions.
+- Writing metadata is factual only: publication date and reading length. Inferred category labels are not published.
+- Case studies open directly into the complete narrative; there is no `Case study` kicker or brief/full mode switch.
 
 ## 11. Runtime, accessibility and delivery
 
@@ -265,8 +271,7 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 - The homepage portrait remains discoverable by the preload scanner.
 - Three.js loads only on a page that mounts the 404 identity field.
 - Theme defaults to system preference and supports a manual override.
-- Case-study reading preference persists for the browser session.
-- Continuous marquees pause on hover or keyboard focus.
+- Continuous marquees remain continuous on hover; reduced motion replaces them with a wrapped static list.
 - Focus remains visible in forced-colour mode.
 - Build output contains one bundled CSS request and no source-only directories.
 - HTML revalidates. Versioned or stable assets use long-lived caching where safe.
