@@ -77,6 +77,7 @@
 .journey{background:var(--paper-2)}
 .home-close{min-height:42rem}
 .home-close h2{max-width:13ch;font-size:clamp(3.2rem,6vw,6.2rem);letter-spacing:-.05em}
+@media(max-width:48rem){.home-close{min-width:0}.home-close h2{font-size:clamp(2rem,10.7vw,3.2rem)}}
 
 .swiss-work-hero{padding-bottom:clamp(4rem,7vw,6rem)}
 .swiss-work-hero .page-kicker{margin-bottom:var(--s3)}
