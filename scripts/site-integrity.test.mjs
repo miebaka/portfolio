@@ -126,6 +126,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const html = await readFile(join(dist, "index.html"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
+  const services = await readFile(join(dist, "services.html"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
@@ -136,7 +137,12 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /aria-hidden="true"/);
-  assert.match(sections, /Evidence:/);
+  assert.doesNotMatch(sections, /Evidence:/);
+  assert.doesNotMatch(html, /Evidence:/);
+  assert.doesNotMatch(services, /Evidence:/);
+  assert.match(services, /service-detail__preview/);
+  assert.match(projects, /work-flick__bar/);
+  assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
   assert.ok(css.includes('.site-nav a,.btn,.hero-noir__cta,.home-close__link,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
   assert.match(css, /\.site-footer__signature[^}]+opacity:\.48/);

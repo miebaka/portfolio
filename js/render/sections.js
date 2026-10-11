@@ -1,6 +1,6 @@
 /* Render — home sections: capabilities list and text slots. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
+import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 export function renderCapabilities() {
@@ -8,9 +8,11 @@ export function renderCapabilities() {
   if (!el) return;
   el.className = "disciplines-index";
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
+  const base = basePath();
   el.innerHTML = SITE.capabilities.map((c, index) =>
-    '<article class="discipline">' +
-      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><div class="discipline__evidence"><p>' + esc(c.description) + '</p><a href="' + safeURL(c.href || 'work.html') + '"><span>Evidence:</span>' + esc(c.proof || 'View related work') + ' <span aria-hidden="true">↗</span></a></div></div></article>'
+    '<article class="discipline" tabindex="0">' +
+      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></div>' +
+      '<figure class="discipline__preview" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + esc(c.preview) + '-540.webp" alt="" width="540" height="720" loading="lazy" decoding="async"></figure></article>'
   ).join("");
 }
 

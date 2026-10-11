@@ -188,32 +188,27 @@ export const SITE = {
     {
       title: "Brand identity",
       description: "Identity systems teams can understand, use and keep consistent.",
-      proof: "Rivo identity guidelines and implementation system",
-      href: "work/rivo.html",
+      preview: "rivo-in-use",
     },
     {
       title: "Brand strategy",
       description: "Positioning and messaging that make later decisions clearer.",
-      proof: "Rivo positioning built around access rather than complexity",
-      href: "work/rivo.html#decision",
+      preview: "rivo-in-use",
     },
     {
       title: "Visual & graphic design",
       description: "Campaigns and presentations built around one clear idea.",
-      proof: "ChopBox campaign and packaging applications",
-      href: "work/chopbox.html#applications",
+      preview: "chopbox-platter",
     },
     {
       title: "Art direction",
       description: "A visual direction that keeps every asset in the same world.",
-      proof: "TEDx RSU’s pause-and-reflect visual system",
-      href: "work/tedx-rsu.html#system",
+      preview: "tedx-rsu-campus-banner",
     },
     {
       title: "Print & production design",
       description: "Books, reports and packaging prepared for production and handoff.",
-      proof: "Production-ready event, packaging and editorial assets",
-      href: "work.html#archive-title",
+      preview: "chopbox-platter",
     },
   ],
 

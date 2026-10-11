@@ -9,24 +9,21 @@ function projectMarkup(project, i, base) {
     ? '<img class="work-flick__image" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 64vw" alt="' + esc(project.tagline) + '" width="810" height="1080" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">'
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
   const href = project.href ? base + project.href : base + 'work/' + safeToken(project.slug) + '.html';
-  return '<a class="work-flick__item' + (i === 0 ? ' is-active' : '') + '" href="' + href + '" aria-label="View ' + esc(project.title) + '">' +
+  return '<a class="work-flick__item" href="' + href + '" aria-label="View ' + esc(project.title) + '">' +
     '<div class="work-flick__media">' + media + '<span class="work-flick__veil" aria-hidden="true"></span></div>' +
-    '<span class="work-flick__tab" aria-hidden="true"><span>' + String(i + 1).padStart(2, "0") + '</span><strong>' + esc(project.title) + '</strong></span>' +
-    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3>' +
-    '<div class="work-flick__detail"><p>' + esc(project.tagline) + '</p></div></div></a>';
+    '<span class="work-flick__bar" aria-hidden="true"><span class="material-symbols-outlined work-flick__bar-arrow">arrow_outward</span><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong><span>' + esc(project.tagline) + '</span></span></span>' +
+    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></a>';
 }
 
 function moreWorkMarkup(i, base) {
   return '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html" aria-label="See more work">' +
-    '<span class="work-flick__tab" aria-hidden="true"><span>' + String(i + 1).padStart(2, "0") + '</span><strong>See more</strong></span>' +
     '<div class="work-flick__content"><h3>See more</h3><span class="work-flick__more-arrow" aria-hidden="true">→</span></div></a>';
 }
 
 function bindExpansion(scope) {
   const groups = [...scope.querySelectorAll('.work-flick__pair')];
   (groups.length ? groups : [scope]).forEach(group => {
-    const items = [...group.querySelectorAll('.work-flick__item')];
-    if (!items.some(item => item.classList.contains('is-active'))) items[0]?.classList.add('is-active');
+    const items = [...group.querySelectorAll('.work-flick__item:not(.work-flick__item--more)')];
     const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
     items.forEach(item => {
       item.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(item); });

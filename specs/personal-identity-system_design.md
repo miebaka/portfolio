@@ -226,8 +226,10 @@ Rules:
 ### Selected work
 
 - Three authored projects plus one `See more` card.
-- Each project exposes title and one-sentence premise only.
+- The rail begins as four equal, collapsed cards within the shared content measure.
+- Each authored project uses a compact inset label bar: project name at rest, one-sentence premise on hover or keyboard focus.
 - Hover or focus expands one card at a time.
+- `See more` is a fixed navigation card and never participates in the accordion hover behaviour.
 - Mobile removes the accordion behaviour and presents full stacked cards.
 
 ### What I do
@@ -237,7 +239,9 @@ Every item follows one fixed reading sequence:
 1. number;
 2. capability name;
 3. plain-language explanation;
-4. underlined evidence link.
+4. a restrained project-image reveal on hover or keyboard focus.
+
+Evidence is shown rather than labelled: no `Evidence:` links or project-name captions appear in the service list.
 
 ### Footer
 
