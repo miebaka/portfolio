@@ -45,7 +45,8 @@ html[data-theme-transition="fade"]::view-transition-old(root),html[data-theme-tr
 .site-nav__links{border:0}
 .section-head,.swiss-section-head,.disciplines-heading{padding-bottom:0}
 .section-head::after,.swiss-section-head::after,.disciplines-heading::after{display:none}
-a[href]:hover,a[href]:focus-visible{color:var(--accent-interactive);text-decoration-color:currentColor}
+/* Link feedback must never override the shared button foreground. */
+a[href]:where(:not(.btn)):hover,a[href]:where(:not(.btn)):focus-visible{color:var(--accent-interactive);text-decoration-color:currentColor}
 .site-nav__link[aria-current="page"]{color:var(--accent-interactive)}
 .site-nav__link::after{display:none}
 .site-nav__brand,.theme-toggle{color:var(--ink)}
