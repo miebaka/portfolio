@@ -31,9 +31,9 @@
   /* Type, spacing, shape, motion, and layout roles. */
   --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
-  --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
+  --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
   --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:180ms;--dur-spatial:240ms;
-  --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);--comp-button-bg:var(--sys-color-action);--comp-button-fg:var(--sys-color-on-action);
+  --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;--sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);

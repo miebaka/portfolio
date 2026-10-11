@@ -234,6 +234,7 @@ Rules:
 - `See more` participates in the same hover and keyboard-focus expansion as every authored project.
 - `See more` uses the primary-container pair and has no looping or blinking animation.
 - Mobile removes the accordion behaviour and presents full stacked cards.
+- Authored project surfaces are temporarily locked. Hover reveals the canonical `Coming soon` button treatment; direct case-study URLs render the same locked state.
 
 ### What I do
 
@@ -248,10 +249,9 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 
 ### Footer
 
-- Three information groups: location, Explore with Privacy, and social links.
-- No email address.
-- A dot-matrix positioning statement spans the viewport width: “I design brand systems, then build the tools that keep them intact.” Pointer proximity disperses cells and an interruptible spring returns them home.
-- Reduced-motion environments receive the same statement as a static dot matrix; no-JavaScript environments receive the static text fallback at 48 percent opacity.
+- One information group only: `Explore`, followed by Work, About, Services, Writing, Contact and Privacy on one wrapping row.
+- A name-shaped dot-matrix signature spans the viewport width. Pointer proximity disperses cells and an interruptible spring returns them home.
+- Reduced-motion and no-JavaScript environments receive the static name-shaped signature mask at 48 percent opacity.
 
 ## 10. Content language
 

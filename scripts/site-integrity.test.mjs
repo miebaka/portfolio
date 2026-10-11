@@ -40,12 +40,13 @@ test("every production page has essential metadata and one heading", async () =>
   }
 });
 
-test("case studies ship complete HTML before JavaScript runs", async () => {
-  for (const [slug, study] of Object.entries(SITE.caseStudies)) {
+test("locked case studies ship their complete state before JavaScript runs", async () => {
+  for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.match(html, /data-prerendered="true"/);
-    assert.match(html, /<dt>My role<\/dt>/);
-    if (study.media?.length) assert.ok((html.match(/<img\b/g) || []).length >= 8, slug);
+    assert.match(html, /class="case-locked container"/);
+    assert.match(html, /Coming soon/);
+    assert.doesNotMatch(html, /class="case-index"/);
     assert.doesNotMatch(html, /filled by js|placeholder/i);
   }
 });
@@ -144,7 +145,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /work-flick__bar/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
-  assert.ok(css.includes('.site-nav a,.btn,.hero-noir__cta,.home-close__link,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
+  assert.ok(css.includes('.site-nav a,.btn,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
@@ -156,9 +157,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls share the documented role system", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn,\.btn--primary\{[^}]*min-height:3rem/);
+  assert.match(css, /\.btn\{[^}]*min-height:3rem/);
   assert.match(css, /\.site-nav__menu-btn,\.theme-toggle\{[^}]*min-height:2\.75rem/);
-  assert.match(css, /\.btn:active,\.btn--primary:active\{transform:scale\(\.97\)/);
+  assert.match(css, /\.btn:active\{transform:scale\(\.97\)/);
+  assert.equal((css.match(/^\.btn\{/gm) || []).length, 1);
   assert.doesNotMatch(css, /transition:\s*all/);
 });
 
@@ -203,7 +205,8 @@ test("portfolio depth features are present without depending on JavaScript for c
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.doesNotMatch(html, /data-case-view|Brief view|Full study|Case study ·/);
-    assert.match(html, /class="case-index"/);
+    assert.match(html, /class="case-locked container"/);
+    assert.match(html, /Coming soon/);
   }
 });
 
@@ -220,6 +223,13 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(source, /miebakakiki@gmail\.com/);
   assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brand systems, then build the tools that keep them intact\./);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
+  const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
+  assert.match(projects, /Coming soon/);
+  assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
+  const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
+  assert.match(footer, /site-footer__links/);
+  assert.doesNotMatch(footer, /Based in|Social|Back to top|data-year/);
+  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
 

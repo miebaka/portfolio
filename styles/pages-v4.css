@@ -353,10 +353,6 @@ a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-prim
 
 /* Filled action: stable geometry, immediate press response, one semantic
    colour change and a small elevation cue. */
-.btn,.hero-noir__cta,.home-close__link{position:relative;isolation:isolate;min-height:3rem;padding:.75rem 1.35rem;border:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);text-decoration:none;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
-@media(hover:hover) and (pointer:fine){.btn:hover,.hero-noir__cta:hover,.home-close__link:hover{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}}
-.btn:active,.hero-noir__cta:active,.home-close__link:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
-.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 
 .case-index{gap:.35rem;border:0}
 .case-index a{min-height:3rem;align-content:center;border:0;background:var(--sys-color-surface-container-low);color:var(--sys-color-on-surface);text-decoration:none;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard)}
@@ -410,10 +406,10 @@ main,.site-footer{text-align:left}
 
 /* Filled CTA. This is the only primary action style: 48px minimum target,
    stable padding, semantic colours, elevation on hover and compression on press. */
-.btn,.btn--primary{width:max-content;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.75rem 1.35rem;border:1px solid transparent;border-radius:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
-@media(hover:hover) and (pointer:fine){.btn:hover,.btn--primary:hover{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}}
-.btn:focus-visible,.btn--primary:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
-.btn:active,.btn--primary:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
+.btn{width:max-content;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.75rem 1.35rem;border:1px solid transparent;border-radius:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
+@media(hover:hover) and (pointer:fine){.btn:hover{background:var(--sys-color-action-hover);color:var(--sys-color-on-action-hover);box-shadow:0 3px 8px color-mix(in srgb,var(--sys-color-on-surface) 18%,transparent)}}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+.btn:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
 .btn:disabled,.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;box-shadow:none}
 .home-close .btn{margin-top:var(--s4)}
 
@@ -431,31 +427,37 @@ main,.site-footer{text-align:left}
 body[data-page="services"] .disciplines-index{display:grid;gap:clamp(2.5rem,5vw,5rem)}
 body[data-page="services"] .discipline{min-height:11.5rem}
 
-.writing-item__link{min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;gap:.75rem;padding:clamp(2rem,4vw,3.5rem) var(--s2);text-align:left}
+.project-archive__item,.writing-item__link,.exp__item{padding-inline:var(--list-item-inline)}
+.writing-item__link{min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;gap:.75rem;padding-block:clamp(2rem,4vw,3.5rem);text-align:left}
 .writing-item__title,.writing-item__summary,.writing-item__meta{grid-column:1;grid-row:auto;text-align:left}
 .writing-item__title{order:1}
 .writing-item__summary{order:2;display:block;max-width:48rem}
 .writing-item__meta{order:3;display:flex;gap:var(--s2)}
 .writing-item__date::before{content:none}
 
-/* Compact horizontal footer frees the lower field for the positioning mark. */
-.site-footer__panel{width:min(calc(100% - 2 * var(--page)),var(--content));display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:clamp(.8rem,1.6vw,1.5rem);padding-block:clamp(1.5rem,3vw,2.5rem)}
-.site-footer__context,.site-footer__explore,.site-footer__contact,.site-footer__socials{display:flex;align-items:center;align-content:center;flex-wrap:nowrap;gap:.35rem clamp(.55rem,1vw,.9rem);white-space:nowrap}
-.site-footer__context,.site-footer__explore{flex:0 1 auto}
-.site-footer__contact{flex:0 1 auto}
-.site-footer__context{flex-shrink:0}.site-footer__context>p:last-child{white-space:nowrap;font-size:.82rem}
-.site-footer__label{flex:0 0 auto;margin-right:.25rem}
-.site-footer__top{margin:0}
-.site-footer a{min-height:2.75rem;font-size:clamp(.72rem,1vw,.9rem)}
+/* Footer contract: one label, one horizontal navigation row, then the mark. */
+.site-footer__panel{width:min(calc(100% - 2 * var(--page)),var(--content));display:block;padding-block:clamp(1.5rem,3vw,2.5rem)}
+.site-footer__explore{display:grid;gap:.6rem}
+.site-footer__links{display:flex;align-items:center;flex-wrap:wrap;gap:.25rem clamp(.8rem,1.5vw,1.5rem)}
+.site-footer__label{margin:0}
+.site-footer a{min-height:2.75rem;font-size:clamp(.78rem,1vw,.95rem)}
 .site-footer__signature{height:clamp(18rem,34vw,34rem);margin:0;opacity:1}
-.site-footer__signature::before{content:attr(data-text);display:flex;align-items:center;padding:3vw;color:var(--ink);background:none;opacity:.48;-webkit-mask:none;mask:none;font:600 clamp(2.5rem,6vw,7rem)/.95 var(--body);letter-spacing:-.05em;text-align:left}
+.site-footer__signature::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.48;-webkit-mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto;mask:url("../assets/images/miebaka-joshua-script-name.svg") no-repeat center/100% auto}
 .site-footer__signature.is-enhanced::before{opacity:0}
 
 @media(max-width:48rem){
   .home-landing h1{grid-column:1/-1;font-size:clamp(3rem,14vw,5.2rem)}
-  .site-footer__panel{display:flex;gap:.75rem 1.25rem}
-  .site-footer__context,.site-footer__explore,.site-footer__contact{flex:1 1 100%;gap:.25rem .85rem}
   .site-footer__signature{height:clamp(20rem,86vw,30rem)}
 }
-@media(max-width:68rem){.site-footer__panel{flex-wrap:wrap;justify-content:flex-start}.site-footer__context,.site-footer__explore,.site-footer__contact{flex:1 1 100%;flex-wrap:wrap}}
-@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:0}.site-footer__signature-canvas{display:block}}
+@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
+
+.work-flick__item--locked{cursor:default}
+.work-flick__status{position:absolute;z-index:4;inset:50% auto auto 50%;opacity:0;pointer-events:none;transform:translate(-50%,-40%);transition:opacity 180ms var(--ease-standard),transform 180ms var(--ease-enter)}
+.work-flick__item--locked:is(:hover,.is-active) .work-flick__status{opacity:1;transform:translate(-50%,-50%)}
+.work-flick__item--locked:is(:hover,.is-active) .work-flick__bar{opacity:0}
+.project-archive__status{opacity:0;transition:opacity 180ms var(--ease-standard)}
+.project-archive__item:is(:hover,[open]) .project-archive__status{opacity:1}
+.case-locked{min-height:calc(100svh - var(--nav-h));display:grid;align-content:center;justify-items:start;gap:var(--s3);padding-block:var(--s8)}
+.case-locked__label{color:var(--muted);font:600 .68rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
+.case-locked h1{max-width:12ch;font-size:clamp(4rem,10vw,10rem);line-height:.88}
+@media(hover:none),(pointer:coarse){.work-flick__status,.project-archive__status{opacity:1}.work-flick__item--locked .work-flick__bar{opacity:0}}

@@ -8,11 +8,11 @@ function projectMarkup(project, i, base) {
   const media = src
     ? '<img class="work-flick__image" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 64vw" alt="' + esc(project.tagline) + '" width="810" height="1080" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">'
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
-  const href = project.href ? base + project.href : base + 'work/' + safeToken(project.slug) + '.html';
-  return '<a class="work-flick__item" href="' + href + '" aria-label="View ' + esc(project.title) + '">' +
+  return '<article class="work-flick__item work-flick__item--locked" aria-label="' + esc(project.title) + ', coming soon">' +
     '<div class="work-flick__media">' + media + '</div>' +
-    '<span class="work-flick__bar" aria-hidden="true"><span class="material-symbols-outlined work-flick__bar-arrow">arrow_outward</span><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong><span>' + esc(project.tagline) + '</span></span></span>' +
-    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></a>';
+    '<span class="work-flick__bar" aria-hidden="true"><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong></span></span>' +
+    '<span class="btn btn--primary work-flick__status" aria-hidden="true">Coming soon</span>' +
+    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></article>';
 }
 
 function moreWorkMarkup(i, base) {
@@ -55,11 +55,9 @@ export function renderWork() {
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
-  const base = basePath();
   el.className = 'project-archive__list';
-  el.innerHTML = SITE.projects.map((project, index) => {
-    const href = project.href ? base + project.href : project.caseReady === false ? '' : base + 'work/' + safeToken(project.slug) + '.html';
-    const action = href ? '<a href="' + href + '">Open project <span aria-hidden="true">↗</span></a>' : '<span class="project-archive__note">Selected artefacts available on request</span>';
+  el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
+    const action = '<span class="btn btn--primary project-archive__status" aria-disabled="true">Coming soon</span>';
     return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
   }).join('');
 }

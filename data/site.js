@@ -13,6 +13,7 @@ export const SITE = {
   location: "Lagos, Nigeria",
   city: "Lagos",      // reserved — planned nav clock feature
   timezone: "WAT",    // reserved — planned nav clock feature
+  workLocked: true,
 
   /* Standard world-class sections, shown in the primary navigation.
      (Hero, proof strip and footer are intentionally omitted —
