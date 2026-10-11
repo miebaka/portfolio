@@ -59,34 +59,33 @@
   </header>
 
   <main id="main">
-    <section class="home-landing" aria-labelledby="hero-title">
+    <section class="home-landing" aria-labelledby="hero-title" data-proof-name="Cover" data-proof-page="01">
       <div class="home-landing__inner container">
         <h1 id="hero-title">I design brand systems, then build the tools that keep them intact.</h1>
       </div>
     </section>
     <div class="home-content">
-    <section class="home-profile container" aria-labelledby="about-title">
+    <section class="home-profile container" id="about" aria-labelledby="about-title" data-proof-name="About" data-proof-page="02">
       <div class="home-profile__introduction">
-        <p class="page-kicker">About me</p>
+        <span class="eyebrow">About me</span>
         <h2 id="about-title">Hi, I&rsquo;m Miebaka. I design brand identities, campaigns and graphic systems. I care as much about how they survive production as how they look in the presentation.</h2>
         <p>Over the last seven years, I&rsquo;ve helped teams turn unclear ideas into useful, memorable systems. I like sharp thinking, expressive typography, generous collaborators and work that still makes sense after the handoff.</p>
         <p>My practice moves between strategy, art direction and production for technology, finance, culture and self-initiated projects. This site is a record of the decisions, experiments and finished things along the way.</p>
-        <a class="swiss-link" href="about.html">More about me</a>
+        <a class="text-link" href="about.html">More about me</a>
       </div>
       <div class="home-profile__media">
         <div class="home-profile__listening" data-mount="now-playing" aria-label="Listening status"></div>
-        <figure class="home-profile__portrait"><picture><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.avif" type="image/avif"><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.webp" type="image/webp"><img src="assets/images/optimized/miebaka-joshua-portrait-810.jpg" alt="Miebaka Joshua" width="810" height="1080" fetchpriority="high" decoding="async"></picture></figure>
+        <figure class="proof-portrait home-profile__portrait" data-cursor="Develop">
+          <div class="proof-portrait__frame"><canvas class="proof-portrait__dots" aria-hidden="true"></canvas><picture><source srcset="assets/images/optimized/miebaka-joshua-portrait-1080.avif" type="image/avif"><source srcset="assets/images/optimized/miebaka-joshua-portrait-1080.webp" type="image/webp"><img class="proof-portrait__photo" src="assets/images/optimized/miebaka-joshua-portrait-1080.jpg" alt="Miebaka Joshua, brand and visual designer, photographed in Lagos." width="1080" height="1350" fetchpriority="high" decoding="async"></picture></div>
+        </figure>
       </div>
     </section>
     <section class="swiss-selected container" id="work" aria-labelledby="selected-title">
       <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
     </section>
-    <section class="home-capabilities container" id="capabilities" aria-labelledby="capabilities-title">
-      <div class="disciplines-heading"><h2 id="capabilities-title">What I do</h2></div>
-      <div data-mount="capabilities"></div>
-    </section>
-    <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Selected brands I&rsquo;ve worked with</h2><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"></div></div></section>
+    <section class="proof-services" id="capabilities" data-proof-name="What I do" data-proof-page="04"><div data-mount="capabilities"></div></section>
+    <section class="proof-clients" aria-labelledby="journey-title" data-proof-name="Selected brands" data-proof-page="05"><h2 class="sr-only" id="journey-title">Selected brands I&rsquo;ve worked with</h2><div data-mount="clients"></div></section>
     <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Have something worth making unmistakable?</h2><a class="btn" href="contact.html">Work with me</a></section>
     </div>
   </main>

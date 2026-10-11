@@ -1,13 +1,11 @@
-/* Interactive name-shaped dot matrix sampled from the authored signature. */
-const SVG_SRC = "/assets/images/miebaka-joshua-script-name.svg";
-const SVG_RATIO = 280 / 705.67;
-const PITCH = 6;
-const DOT = 2.2;
+/* Interactive dot matrix sampled from the proof-sheet typographic signature. */
+const PITCH = 4.2;
+const DOT = 1.15;
 const RADIUS = 128;
 
 export function initFooterSignature() {
   const host = document.querySelector(".site-footer__signature");
-  if (!host || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!host) return;
   const canvas = document.createElement("canvas");
   canvas.className = "site-footer__signature-canvas";
   host.append(canvas);
@@ -16,13 +14,7 @@ export function initFooterSignature() {
   const pointer = { x: -9999, y: -9999, active: false };
   let points = [], width = 0, height = 0, frame = 0, running = false, generation = 0;
   let restColor = "rgba(255,255,255,.48)";
-
-  const loadImage = () => new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = SVG_SRC;
-  });
+  let accentColor = "#FFA08F";
 
   async function rebuild() {
     const current = ++generation;
@@ -36,16 +28,22 @@ export function initFooterSignature() {
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     const channels = getComputedStyle(host).color.match(/[\d.]+/g)?.slice(0, 3) || [255, 255, 255];
     restColor = `rgba(${channels.join(",")},.48)`;
-    let image;
-    try { image = await loadImage(); } catch { return; }
+    accentColor = getComputedStyle(document.documentElement).getPropertyValue("--sys-color-tertiary").trim() || accentColor;
+    await document.fonts.ready;
     if (current !== generation) return;
     const sample = document.createElement("canvas");
     sample.width = width;
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
-    const markWidth = Math.min(width * .96, height / SVG_RATIO * .94);
-    const markHeight = markWidth * SVG_RATIO;
-    sampleContext.drawImage(image, (width - markWidth) / 2, (height - markHeight) / 2, markWidth, markHeight);
+    let size = height * .78;
+    sampleContext.font = `400 ${size}px "BIZ UDPMincho", serif`;
+    const measured = sampleContext.measureText("Miebaka Joshua").width;
+    if (measured > width * .98) size *= (width * .98) / measured;
+    sampleContext.font = `400 ${size}px "BIZ UDPMincho", serif`;
+    sampleContext.textAlign = "center";
+    sampleContext.textBaseline = "middle";
+    sampleContext.fillStyle = "#000";
+    sampleContext.fillText("Miebaka Joshua", width / 2, height * .52);
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const next = [];
     for (let y = PITCH / 2; y < height; y += PITCH) {
@@ -56,11 +54,13 @@ export function initFooterSignature() {
     }
     points = next;
     host.classList.add("is-enhanced");
+    start();
   }
 
   function draw() {
     if (!running) return;
     context.clearRect(0, 0, width, height);
+    let energy = 0;
     for (const point of points) {
       const dx = point.x - pointer.x;
       const dy = point.y - pointer.y;
@@ -77,11 +77,14 @@ export function initFooterSignature() {
       point.vy *= .79;
       point.x += point.vx;
       point.y += point.vy;
-      context.fillStyle = proximity > .08 ? "rgba(255,160,143,.92)" : restColor;
+      energy += Math.abs(point.vx) + Math.abs(point.vy) + Math.abs(point.homeX - point.x) * .08 + Math.abs(point.homeY - point.y) * .08;
+      context.fillStyle = proximity > .08 ? accentColor : restColor;
       const size = DOT + proximity * 1.8;
       context.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     }
-    frame = requestAnimationFrame(draw);
+    if (document.documentElement.dataset.motion === "reduced") { running = false; return; }
+    if (pointer.active || energy > points.length * .008) frame = requestAnimationFrame(draw);
+    else running = false;
   }
   const start = () => { if (!running) { running = true; frame = requestAnimationFrame(draw); } };
   const stop = () => { running = false; cancelAnimationFrame(frame); };
@@ -90,10 +93,11 @@ export function initFooterSignature() {
     pointer.x = event.clientX - rect.left;
     pointer.y = event.clientY - rect.top;
     pointer.active = true;
+    start();
   }, { passive: true });
-  host.addEventListener("pointerleave", () => { pointer.active = false; });
+  host.addEventListener("pointerleave", () => { pointer.active = false; start(); });
   new ResizeObserver(rebuild).observe(host);
-  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   new IntersectionObserver(([entry]) => entry.isIntersecting && !document.hidden ? start() : stop(), { threshold: .01 }).observe(host);
   document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
   rebuild();

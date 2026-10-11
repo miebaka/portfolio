@@ -6,7 +6,7 @@ import { initContract } from "./core/contract.js";
 
 import { renderNavigation } from "./render/navigation.js";
 import { renderWork, renderClients, renderProjectArchive } from "./render/projects.js";
-import { renderCapabilities, fillSlots } from "./render/sections.js";
+import { renderCapabilities, renderExperience, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
@@ -16,7 +16,7 @@ import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
-import { initNeutralFolds } from "./core/neutral-folds.js";
+import { initProofSystem } from "./core/proof-system.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -37,10 +37,11 @@ if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", ren
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);
 if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
+if (has('[data-mount="experience"]')) run("experience render", renderExperience);
 if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
-run("neutral folds background", initNeutralFolds);
+run("proof system", initProofSystem);
 run("content slots", fillSlots);
 if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 

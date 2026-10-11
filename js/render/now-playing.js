@@ -30,17 +30,16 @@ async function fetchNowPlaying() {
 
 function buildChip(container) {
   chip = document.createElement("a");
-  chip.className = "now-playing";
+  chip.className = "record";
   chip.href = "https://www.last.fm/user/" + encodeURIComponent(SITE.lastfmUser);
   chip.target = "_blank";
   chip.rel = "noopener noreferrer";
   chip.setAttribute("aria-live", "polite");
   chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
-    '<span class="now-playing__dot" aria-hidden="true"></span>' +
-    '<span class="now-playing__label">What I listen to</span>' +
-    '<span class="now-playing__track">Last.fm</span>' +
-    '<span class="now-playing__arrow" aria-hidden="true">↗</span>';
+    '<span class="record__disc" aria-hidden="true"><i></i></span>' +
+    '<span class="record__txt"><span class="record__label proof-mono">On the studio speaker</span><b class="record__track">Last.fm</b></span>' +
+    '<span class="record__arrow" aria-hidden="true">↗</span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
 }
@@ -48,15 +47,15 @@ function buildChip(container) {
 function updateChip(track) {
   if (!chip) return;
   if (track) {
-    chip.querySelector(".now-playing__track").textContent =
+    chip.querySelector(".record__track").textContent =
       track.name + " · " + track.artist;
-    chip.querySelector(".now-playing__label").textContent = track.live ? "Now listening" : "Last listened";
+    chip.querySelector(".record__label").textContent = track.live ? "On the studio speaker" : "Last played in the studio";
     chip.setAttribute("aria-label", (track.live ? "Now listening to " : "Last listened to ") + track.name + " by " + track.artist + ". Open Last.fm history");
     chip.dataset.live = String(track.live);
     chip.hidden = false;
   } else {
-    chip.querySelector(".now-playing__label").textContent = "What I listen to";
-    chip.querySelector(".now-playing__track").textContent = "Last.fm";
+    chip.querySelector(".record__label").textContent = "On the studio speaker";
+    chip.querySelector(".record__track").textContent = "Last.fm";
     chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
     chip.dataset.live = "false";
   }

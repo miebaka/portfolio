@@ -80,7 +80,8 @@ function clientItem(client) {
 export function renderClients() {
   const el = mount(MOUNT.CLIENTS);
   if (!el || !SITE.clients || !SITE.clients.length) return;
-  const items = SITE.clients.map(clientItem).join("");
+  const separator = '<li class="client-registration" aria-hidden="true"><span></span></li>';
+  const items = SITE.clients.map(client => clientItem(client) + separator).join("");
   el.className = 'client-marquee';
   el.innerHTML = '<div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
 

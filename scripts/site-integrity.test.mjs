@@ -89,7 +89,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
   assert.match(css, /font-family:"Borges"/);
-  assert.doesNotMatch(css, /gradient\(/i);
+  assert.doesNotMatch(css, /\.pl--[cmy]\b|data-plates/i);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
   assert.doesNotMatch(css, /filter:saturate/i);
 });
@@ -155,9 +155,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
-  assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
-  assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
-  assert.match(listening, /What I listen to/);
+  assert.match(css, /\.proof-about__grid\{display:grid/);
+  assert.match(css, /\.record__track\{/);
+  assert.match(listening, /On the studio speaker/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
 });
 
@@ -183,14 +183,14 @@ test("interactive controls share the documented role system", async () => {
   assert.doesNotMatch(primaryMarkup, /class=["'`]btn\s+btn-/);
 });
 
-test("neutral folds stays dependency-free and power-aware", async () => {
-  const source = await readFile(join(root, "js", "core", "neutral-folds.js"), "utf8");
+test("proof system stays dependency-free, accessible and chroma-free", async () => {
+  const source = await readFile(join(root, "js", "core", "proof-system.js"), "utf8");
   assert.doesNotMatch(source, /from\s+["']|import\s*\(/);
-  assert.match(source, /powerPreference:\s*"low-power"/);
-  assert.match(source, /saveData/);
   assert.match(source, /prefers-reduced-motion/);
-  assert.match(source, /document\.hidden/);
-  await access(join(dist, "js", "core", "neutral-folds.js"));
+  assert.match(source, /press-crop/);
+  assert.match(source, /proof-portrait__dots/);
+  assert.doesNotMatch(source, /data-plates|misregistration|chroma/i);
+  await access(join(dist, "js", "core", "proof-system.js"));
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
@@ -201,6 +201,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main,\.site-footer\{text-align:left\}/);
   assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
+  assert.match(home, /class="home-profile container"/);
+  assert.doesNotMatch(home, /class="proof-ledger"/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
@@ -250,7 +252,8 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /hello@miebaka\.design|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
-  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brand systems, then build the tools that keep them intact\./);
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /Coming soon/);
@@ -262,10 +265,11 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(footer, /SITE\.location/);
   assert.match(footer, /SITE\.socials/);
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
-  assert.doesNotMatch(footer, /Back to top|data-year/);
-  assert.ok(footer.indexOf("'Based in'") < footer.indexOf("'Explore'"));
-  assert.ok(footer.indexOf("'Explore'") < footer.indexOf("'Social'"));
-  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
+  assert.doesNotMatch(footer, /Back to top/);
+  assert.doesNotMatch(footer, /Colophon|BIZ UDPMincho/);
+  assert.ok(footer.indexOf("Based in") < footer.indexOf("Explore"));
+  assert.ok(footer.indexOf("Explore") < footer.indexOf("Social"));
+  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /fillText\("Miebaka Joshua"/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
 
@@ -327,6 +331,6 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 3);
+  assert.equal((styles.match(/@import/g) || []).length, 4);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
