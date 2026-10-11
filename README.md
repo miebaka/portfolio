@@ -1,156 +1,54 @@
 # Miebaka Joshua — Portfolio
 
-A fast, scalable, **zero-build** portfolio site (static HTML + CSS + vanilla ES
-modules). Direction: a warm editorial frame that stays neutral so the work
-supplies the colour. [`engineering-specification.md`](engineering-specification.md)
-is the single governing document, covering positioning, art direction and voice
-as well as the engineering contract.
+An editorial, print-informed portfolio for Miebaka Joshua. It is a static site built with semantic HTML, a bundled CSS cascade and dependency-light ES modules. The interface uses one shared sheet, list, motion and colour system across every route.
 
-## Run it
+[`engineering-specification.md`](engineering-specification.md) is the implementation contract. [`specs/personal-identity-system_design.md`](specs/personal-identity-system_design.md) defines the identity rationale and colour system.
 
-No build step, no dependencies. Serve the folder over HTTP (ES modules need a
-server — `file://` won't load them):
+## Run and verify
 
 ```bash
-python3 scripts/dev-server.py 4180
-# then visit http://localhost:4180
+npm install
+npm run dev
+npm test
 ```
 
-Use `scripts/dev-server.py` rather than `python3 -m http.server`. The stock
-handler sends no cache headers, so the browser applies heuristic caching, and
-because the site is a graph of ES modules a cached `js/main.js` pins every
-module it imports at the old version. Edits then appear to do nothing until a
-manual hard reload. The dev server is the same thing with `no-store` added.
+Use an HTTP server rather than opening the HTML with `file://`; browser modules do not load reliably from the filesystem. The production command builds `dist/`, bundles the CSS into one request, prerenders case-study content and copies only referenced production assets.
 
-## Structure
+## Production structure
 
-```
-Portfolio/
-├── index.html              # Home: hero → proof marquee → work → capabilities → about → contact
-├── work.html               # Full work index
-├── about.html              # About page
-├── 404.html                # Styled not-found page (noindex)
-├── robots.txt · sitemap.xml
-├── work/                   # Case studies — thin shells, body rendered from data
-│   ├── rivo.html · chopbox.html · tedx-rsu.html · christian-poster-a-week.html
-├── styles/                 # Layered CSS (see below). Single entry: main.css
-│   ├── main.css            # @imports everything in cascade order
-│   ├── foundations.css     # Tokens, reset, type, layout primitives, platform baseline
-│   ├── components-v4.css   # Navigation, controls, footer and shared components
-│   └── pages-v4.css        # Page and section composition
-├── data/
-│   └── site.js             # Single source of truth (ESM export): profile, projects, case studies…
-├── js/                     # ES modules, one entry per page: <script type="module" src="js/main.js">
-│   ├── main.js             # Entry — renders from data, then wires behaviour
-│   ├── render/             # navigation · projects · sections · case-study · footer
-│   ├── core/               # scroll · navigation · menu · year · form
-│   └── utilities/dom.js    # escapeHTML · mount · basePath
-└── assets/
-    ├── fonts/              # Self-hosted woff/woff2 (3 type roles)
-    └── images/             # Portrait, logo (SVG), client logos
+```text
+index.html                 Home
+work.html                  Work archive
+about.html                 Profile and experience
+services.html              Capabilities
+playground.html            Writing
+contact.html               Contact
+privacy.html / 404.html    Utility pages
+data/site.js               Content source of truth
+styles/foundations.css     Tokens, type, sheet geometry, accessibility
+styles/components-v4.css   Shared controls and components
+styles/pages-v4.css        Route composition
+styles/proof-system.css    Print language, portrait, fan, index and signature
+js/render/                 Data-driven markup
+js/core/                   Interactions and progressive enhancement
+scripts/build-site.mjs     Production build
+scripts/site-integrity.test.mjs  Contract tests
 ```
 
-## Architecture
+## Governing contracts
 
-- **CSS cascade layers** are imported by `styles/main.css`: foundations →
-  components → pages. Rules: semantic tokens, shallow selectors, no inline styles.
-- **Design tokens** live at the top of `styles/foundations.css`. Change colour,
-  type, spacing, motion, and layout roles there before changing component rules.
-- **Data-driven rendering.** `data/site.js` exports `SITE`. On load, `js/main.js`
-  renders markup into `[data-mount="…"]` points, then attaches behaviour. The nav,
-  menu, work grid, capabilities, testimonial, footer, and case-study bodies are all
-  built from data.
-- **Motion.** Shared timing comes from the duration and easing roles in
-  `styles/foundations.css`; interface motion honours `prefers-reduced-motion`.
+- **Sheet:** every readable element stays inside the same `--page` / `--content` measure used by the logo and Index control. Trim marks describe the page edge; content never uses them as a layout margin.
+- **Type:** BIZ UDPMincho for display, Schibsted Grotesk for body, Josefin Sans for labels and Borges only as the footer-signature sampling face.
+- **Colour:** semantic roles derive from Ultramarine `#002080`; documented text pairs pass the 7:1 contrast floor.
+- **Rows:** Index, experience, work, services and writing use one interactive-row grammar: generous target, bottom-origin colour fill, short horizontal acknowledgement and explicit disclosure where content expands.
+- **Motion:** regular motion is expressive but input-led. Reduced motion removes loops and large spatial changes while retaining colour, opacity and the custom cursor.
+- **Surface:** a fixed, non-interactive procedural paper grain replaces the retired folds shader. It contains no image request and disappears for forced-colour or reduced-transparency users.
+- **Progressive enhancement:** navigation, content and links remain usable without JavaScript.
 
-## Progressive enhancements
+## Content changes
 
-All opt-in and degrade gracefully — the editorial base never depends on them:
+Edit `data/site.js` for profile, project, article, client and social data. Keep presentation values in CSS tokens. A new project requires a data entry, a matching `work/<slug>.html` shell and optimized cover/media variants.
 
-- **Theme transitions** — the navigation renderer uses the browser View Transition
-  API when available. Unsupported browsers switch immediately.
-- **Container queries** — the work grid responds to its container's width, not the
-  viewport (`#work` is the query container). Falls back to a single column where
-  `@container` is unsupported.
-- **Theme** — `color-scheme: light` by default, `dark` on case pages, so native UI
-  (scrollbars, controls) matches. Re-theme by editing the role tokens in
-  `styles/foundations.css`; the whole palette flows from a few role values.
-- **Film grain** — a faint, non-interactive `soft-light` texture over the dark
-  hero and case pages.
+## Deployment
 
-## How to add a project
-
-1. Add an entry to `projects` in [`data/site.js`](data/site.js) — this drives the
-   home/work grids:
-
-   ```js
-   {
-     slug: "new-project",          // must match work/new-project.html
-     title: "New Project",
-     category: "Fintech",
-     tags: ["Brand identity"],
-     year: "2025",
-     tone: "#1f4d3a",              // tile colour until a cover image exists
-     featured: true
-   }
-   ```
-
-2. Add a matching entry to `caseStudies` in the same file, following the shared
-   narrative shape: `overview` (question + body), `challenge`, `process`,
-   `solution`, `outcome` (body + metrics + optional note), three `media` bands,
-   and `next`.
-
-3. Copy any `work/*.html` to `work/new-project.html` and update only the static
-   `<head>` (title, description, canonical/OG/Twitter, JSON-LD) and the body's
-   `data-case="new-project"` + accent class `case-page--new-project`
-   (define any project-specific presentation in `styles/pages-v4.css`). The
-   `<article data-mount="case">` is filled automatically from the data.
-
-## Customise
-
-- **Colours / type / spacing / motion:** `styles/foundations.css` first.
-- **Name, email, socials, availability, projects, case studies:** `data/site.js`.
-- **Reading measures / touch targets:** `--measure-*`, `--tap-min` tokens; helpers
-  `.measure-hero` / `.measure-lead` / `.measure-reading` cap line length.
-
-## Contact form
-
-Works out of the box via a `mailto:` handoff (`js/core/form.js`). To collect
-submissions server-side, point it at [Formspree](https://formspree.io) or
-[Netlify Forms](https://docs.netlify.com/forms/setup/) — swap the handler for a
-`fetch()` POST to your endpoint.
-
-## SEO & deploy
-
-- Every page has a unique title/description, canonical, Open Graph, Twitter Card,
-  and JSON-LD (`Person` + `WebSite` on home, `BreadcrumbList` everywhere,
-  `CreativeWork` on case studies). Plus `robots.txt`, `sitemap.xml`, SVG favicon.
-- **Domain:** absolute URLs assume `https://miebaka.design`. If you deploy
-  elsewhere, update the base URL in every page `<head>`, `sitemap.xml`, and
-  `robots.txt`.
-
-## Accessibility & performance
-
-- Semantic landmarks, skip link, single `<h1>` per page, visible focus rings,
-  labelled form with `aria-describedby`, focus-trapped overlay menu, ≥44px touch
-  targets, `prefers-reduced-motion` respected, content usable with JS off.
-- Self-hosted fonts with `font-display: swap` and preloaded critical faces;
-  images carry explicit dimensions + `decoding`.
-
-## Image optimization (optional)
-
-The only step that needs Node. It generates responsive AVIF/WebP/JPG variants —
-everything else stays zero-build.
-
-```bash
-npm install            # once — pulls in sharp
-npm run optimize:images
-```
-
-This writes `<base>-540/810/1080.{avif,webp,jpg}` into `assets/images/optimized/`
-(see [`scripts/optimize-images.mjs`](scripts/optimize-images.mjs); add project
-covers to its `SOURCES` list). Then uncomment `portraitResponsive` in
-[`data/site.js`](data/site.js) — the hero portrait is rendered as `<picture>`
-with `srcset` and a JPG fallback. Until you run it, the site serves the original
-JPG with explicit dimensions; nothing breaks.
-```
+`vercel.json` serves `dist/` after `npm run build`. Pushes to the connected GitHub repository deploy through Vercel. Before pushing, run `npm test` and visually inspect the home, Index, work, services, writing and footer layouts at mobile and desktop widths.

@@ -1,6 +1,6 @@
 /* Render: home sections, capabilities and text slots. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, mount } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 export function renderCapabilities() {
@@ -8,27 +8,15 @@ export function renderCapabilities() {
   if (!el) return;
   const home = document.body.dataset.page === "home";
   if (home) {
-    const colours = [
-      ["MJ Ultramarine", "var(--ref-ultramarine)", "var(--ref-paper)", "#002080"],
-      ["MJ Blue 30", "var(--ref-blue-30)", "var(--ref-paper)", "#1C3DA4"],
-      ["MJ Air", "var(--ref-air)", "var(--ref-ultramarine)", "#E8EEFF"],
-      ["MJ Coral 30", "var(--ref-coral-30)", "var(--ref-paper)", "#83251D"],
-      ["MJ Midnight", "var(--ref-midnight)", "var(--ref-paper)", "#07112B"],
-    ];
+    const labels = ["Identity", "Strategy", "Graphic design", "Art direction", "Production"];
     el.className = "proof-services__pin";
-    el.innerHTML = '<div class="proof-fan" role="list" aria-label="What I do">' + SITE.capabilities.map((c, index) => {
-      const [code, colour, ink, values] = colours[index];
-      return '<article class="proof-swatch" role="listitem" style="--sw:' + colour + ';--sw-ink:' + ink + '"><div class="proof-swatch__chip"><span class="proof-mono">' + code + '</span><span class="proof-mono">0' + (index + 1) + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p><span class="proof-swatch__values proof-mono">' + values + '</span></div><span class="proof-swatch__rivet" aria-hidden="true"></span></article>';
-    }).join("") + '</div>';
+    el.innerHTML = '<div class="proof-services__frame"><h2 class="section-head__label">What I do</h2><ul class="proof-fan" aria-label="What I do">' + SITE.capabilities.map((c, index) => '<li class="proof-swatch"><div class="proof-swatch__chip"><span class="proof-mono">' + labels[index] + '</span><span class="proof-mono">0' + (index + 1) + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p></div><span class="proof-swatch__rivet" aria-hidden="true"></span></li>').join("") + '</ul></div>';
     return;
   }
-  el.className = "disciplines-index";
+  el.className = "disciplines-index system-list";
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
-  const base = basePath();
   el.innerHTML = SITE.capabilities.map((c, index) =>
-    '<article class="discipline">' +
-      '<div class="discipline__copy"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><p>' + esc(c.description) + '</p></div>' +
-      '<figure class="discipline__preview" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + esc(c.preview) + '-540.webp" alt="" width="540" height="720" loading="lazy" decoding="async"></figure></article>'
+    '<details class="discipline system-list__item"><summary class="system-list__row"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><span class="system-list__toggle" aria-hidden="true"></span></summary><div class="system-list__panel"><p>' + esc(c.description) + '</p></div></details>'
   ).join("");
 }
 

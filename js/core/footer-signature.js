@@ -36,10 +36,10 @@ export function initFooterSignature() {
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
     let size = height * .78;
-    sampleContext.font = `400 ${size}px "BIZ UDPMincho", serif`;
+    sampleContext.font = `400 ${size}px "Borges", monospace`;
     const measured = sampleContext.measureText("Miebaka Joshua").width;
     if (measured > width * .98) size *= (width * .98) / measured;
-    sampleContext.font = `400 ${size}px "BIZ UDPMincho", serif`;
+    sampleContext.font = `400 ${size}px "Borges", monospace`;
     sampleContext.textAlign = "center";
     sampleContext.textBaseline = "middle";
     sampleContext.fillStyle = "#000";

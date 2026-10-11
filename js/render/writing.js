@@ -31,15 +31,15 @@ export function renderWriting() {
   }
 
   el.innerHTML =
-    '<ul class="writing-list">' +
+    '<ul class="writing-list system-list">' +
     articles
       .map((a) => {
         const isExternal = /^https?:/i.test(a.href);
         const linkExtra  = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
         const date = formatDate(a.date);
         return (
-          '<li class="writing-item">' +
-            '<a class="writing-item__link" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
+          '<li class="writing-item system-list__item">' +
+            '<a class="writing-item__link system-list__row" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
               '<h3 class="writing-item__title">' + esc(a.title) + "</h3>" +
               (a.summary ? '<p class="writing-item__summary">' + esc(a.summary) + "</p>" : "") +
               '<div class="writing-item__meta">' +

@@ -39,7 +39,7 @@ function buildChip(container) {
   chip.innerHTML =
     '<span class="record__disc" aria-hidden="true"><i></i></span>' +
     '<span class="record__txt"><span class="record__label proof-mono">On the studio speaker</span><b class="record__track">Last.fm</b></span>' +
-    '<span class="record__arrow" aria-hidden="true">↗</span>';
+    '<span class="record__arrow" aria-hidden="true"><span>↗</span><span>↗</span></span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
 }

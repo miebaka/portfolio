@@ -80,17 +80,16 @@ export function renderNavigation() {
   if (!el) return;
   const base = basePath();
   const items = [
-    { label: "Cover", href: "index.html" },
-    { label: "About", href: "about.html" },
     { label: "Work", href: "work.html" },
+    { label: "About", href: "about.html" },
     { label: "Services", href: "services.html" },
-    { label: "Experience", href: "about.html#experience" },
+    { label: "Writing", href: "playground.html" },
     { label: "Contact", href: "contact.html" },
   ];
-  const links = items.map((item, index) => '<li><a href="' + base + safeURL(item.href) + '"><span class="proof-mono">p.' + String(index + 1).padStart(2, "0") + '</span><span class="proof-index__word">' + esc(item.label) + '</span></a></li>').join("");
+  const links = items.map(item => '<li><a href="' + base + safeURL(item.href) + '"><span class="proof-index__word">' + esc(item.label) + '</span></a></li>').join("");
   el.className = "proof-nav";
   el.innerHTML =
-    '<div class="press-crop press-crop--tl"></div><div class="press-crop press-crop--tr"></div>' +
+    '<div class="proof-trim-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>' +
     '<header class="slug proof-mono">' +
       '<a class="slug__brand" href="' + base + 'index.html" data-cursor="Top"><img src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="24" height="24"><span>Miebaka Joshua</span></a>' +
       '<span class="slug__role">Brand &amp; Visual Designer</span>' +
@@ -99,9 +98,7 @@ export function renderNavigation() {
       '<button class="slug__motion" type="button" aria-pressed="false" data-cursor="Motion"><span class="slug__motion-mark" aria-hidden="true"></span><span class="slug__motion-label">Motion</span></button>' +
       '<button class="slug__menu" type="button" aria-expanded="false" aria-controls="proof-index" data-cursor="Open"><span class="slug__menu-lines" aria-hidden="true"><i></i><i></i></span><span class="slug__menu-txt">Index</span></button>' +
     '</header>' +
-    '<nav class="proof-index" id="proof-index" aria-label="Index" hidden><div class="proof-index__inner"><ol>' + links + '</ol><aside class="proof-index__aside proof-mono"><p>Write<br><a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a></p><p>Elsewhere<br>' + SITE.socials.map(s => '<a href="' + safeURL(s.href) + '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + '</a>').join(' · ') + '</p></aside></div></nav>' +
-    '<div class="proof-folio proof-mono" aria-hidden="true"><span>p.<b>01</b></span><span class="proof-folio__name">Cover</span></div>' +
-    '<div class="proof-ink proof-mono" aria-hidden="true">Ink <b>0</b>%</div>';
+    '<nav class="proof-index" id="proof-index" aria-label="Index" hidden><div class="proof-index__inner"><ol>' + links + '</ol><aside class="proof-index__aside proof-mono"><p>Write<br><a href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a></p><p>Elsewhere<br>' + SITE.socials.map(s => '<a href="' + safeURL(s.href) + '" target="_blank" rel="noopener noreferrer">' + esc(s.label) + '</a>').join(' · ') + '</p></aside></div></nav>';
   setupThemeToggle();
   setupMotionToggle();
   setupIndex(el);

@@ -55,10 +55,10 @@ export function renderWork() {
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
-  el.className = 'project-archive__list';
+  el.className = 'project-archive__list system-list';
   el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
     const action = '<span class="project-archive__status" aria-disabled="true"><span class="btn">Coming soon</span></span>';
-    return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
+    return '<details class="project-archive__item system-list__item"><summary class="system-list__row"><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle system-list__toggle" aria-hidden="true"></span></summary><div class="project-archive__reveal system-list__panel"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
   }).join('');
 }
 

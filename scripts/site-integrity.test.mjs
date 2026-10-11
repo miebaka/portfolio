@@ -185,11 +185,22 @@ test("interactive controls share the documented role system", async () => {
 
 test("proof system stays dependency-free, accessible and chroma-free", async () => {
   const source = await readFile(join(root, "js", "core", "proof-system.js"), "utf8");
+  const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");
+  const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
+  const css = await readFile(join(root, "styles", "proof-system.css"), "utf8");
+  const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   assert.doesNotMatch(source, /from\s+["']|import\s*\(/);
   assert.match(source, /prefers-reduced-motion/);
-  assert.match(source, /press-crop/);
+  assert.doesNotMatch(source, /press-crop|data\.proofPage|proof-folio/);
   assert.match(source, /proof-portrait__dots/);
+  assert.match(source, /if \(motionReduced\(\)\) \{ x = tx; y = ty;/);
   assert.doesNotMatch(source, /data-plates|misregistration|chroma/i);
+  assert.doesNotMatch(navigation, /p\.\d|label:\s*"Cover"|label:\s*"Experience"/);
+  assert.match(navigation, /label:\s*"Writing"/);
+  assert.doesNotMatch(css, /IBM Plex Mono|press-crop|\.proof-folio|\.proof-ink\{/);
+  assert.match(signature, /"Borges", monospace/);
+  assert.doesNotMatch(css, /data-motion="reduced"\] \.proof-cursor\{display:none/);
+  assert.match(foundations, /feTurbulence/);
   await access(join(dist, "js", "core", "proof-system.js"));
 });
 
@@ -202,9 +213,14 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /main,\.site-footer\{text-align:left\}/);
   assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
   assert.match(home, /class="home-profile container"/);
+  assert.match(home, /Selected brands I&rsquo;ve worked with/);
   assert.doesNotMatch(home, /class="proof-ledger"/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
+  assert.match(projects, /system-list__row/);
+  const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
+  assert.match(sections, /section-head__label">What I do/);
+  assert.doesNotMatch(sections, /#002080|#1C3DA4|#E8EEFF|#83251D|#07112B/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
   const meta = writing.indexOf('writing-item__meta');

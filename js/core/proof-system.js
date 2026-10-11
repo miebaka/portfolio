@@ -31,7 +31,11 @@ function initCursor() {
     else frame = 0;
   };
   const wake = () => { if (!frame && !motionReduced()) frame = requestAnimationFrame(draw); };
-  addEventListener("pointermove", event => { tx = event.clientX; ty = event.clientY; wake(); }, { passive: true });
+  addEventListener("pointermove", event => {
+    tx = event.clientX; ty = event.clientY;
+    if (motionReduced()) { x = tx; y = ty; cursor.style.transform = `translate3d(${x}px,${y}px,0)`; }
+    else wake();
+  }, { passive: true });
   document.addEventListener("pointerover", event => {
     const target = event.target.closest?.("[data-cursor],a,button,summary");
     const text = event.target.closest?.("[data-cursor]")?.dataset.cursor || "";
@@ -41,40 +45,8 @@ function initCursor() {
   }, { passive: true });
   document.addEventListener("pointerdown", () => cursor.classList.add("is-down"), { passive: true });
   document.addEventListener("pointerup", () => cursor.classList.remove("is-down"), { passive: true });
-  document.addEventListener("motionpreferencechange", () => { if (motionReduced()) cancelAnimationFrame(frame); else wake(); });
+  document.addEventListener("motionpreferencechange", () => { if (motionReduced()) { cancelAnimationFrame(frame); frame = 0; cursor.style.transform = `translate3d(${tx}px,${ty}px,0)`; } else wake(); });
   addEventListener("pagehide", () => cancelAnimationFrame(frame), { once: true });
-}
-
-function initPrinterMarks() {
-  const sections = $$("main > section, .home-content > section, .proof-footer");
-  sections.forEach((section, index) => {
-    section.classList.add("proof-marked");
-    ["tl", "tr", "bl", "br"].forEach(position => {
-      const mark = document.createElement("span");
-      mark.className = `press-crop press-crop--${position}`;
-      mark.setAttribute("aria-hidden", "true");
-      section.append(mark);
-    });
-    if (!section.dataset.proofPage) section.dataset.proofPage = String(index + 1).padStart(2, "0");
-    if (!section.dataset.proofName) section.dataset.proofName = section.querySelector("h1,h2")?.textContent.trim().slice(0, 34) || "Proof";
-  });
-}
-
-function initFolio() {
-  const page = $(".proof-folio b"), name = $(".proof-folio__name"), ink = $(".proof-ink b");
-  const sections = $$("[data-proof-page]");
-  if (!page || !ink) return;
-  let ticking = false;
-  const update = () => {
-    ticking = false;
-    const middle = innerHeight * .5;
-    const active = sections.filter(section => { const rect = section.getBoundingClientRect(); return rect.top <= middle && rect.bottom >= middle; }).at(-1);
-    if (active) { page.textContent = active.dataset.proofPage; name.textContent = active.dataset.proofName; }
-    const max = document.documentElement.scrollHeight - innerHeight;
-    ink.textContent = max > 0 ? Math.round(scrollY / max * 100) : 0;
-  };
-  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-  update();
 }
 
 function initPortrait() {
@@ -122,7 +94,9 @@ function initPortrait() {
     for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) {
       const i = (row * cols + col) * 4;
       const luminance = (pixels[i] * .299 + pixels[i + 1] * .587 + pixels[i + 2] * .114) / 255;
-      const radius = (1 - luminance) * cell * .56;
+      const corrected = Math.pow(Math.max(0, Math.min(1, (luminance - .08) / .84)), 1.15);
+      const screen = document.documentElement.dataset.theme === "dark";
+      const radius = (screen ? corrected : 1 - corrected) * cell * .62;
       if (radius >= .3) points.push({ x: col * cell + cell / 2, y: row * cell + cell / 2, radius });
     }
     wake();
@@ -182,5 +156,5 @@ function initNavSurface() {
 }
 
 export function initProofSystem() {
-  initClock(); initPrinterMarks(); initFolio(); initCursor(); initPortrait(); initReveals(); initSwatchFan(); initDisclosures(); initNavSurface();
+  initClock(); initCursor(); initPortrait(); initReveals(); initSwatchFan(); initDisclosures(); initNavSurface();
 }
