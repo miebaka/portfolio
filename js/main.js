@@ -30,7 +30,6 @@ const run = (label, task) => {
 };
 
 run("DOM contract", initContract);
-run("neutral folds background", initNeutralFolds);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
@@ -41,6 +40,7 @@ if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabil
 if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
+run("neutral folds background", initNeutralFolds);
 run("content slots", fillSlots);
 if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 

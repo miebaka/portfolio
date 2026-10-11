@@ -18,16 +18,16 @@ float fold(vec2 p,float angle,float frequency,float phase){
 void main(){
   vec2 uv=(gl_FragCoord.xy-.5*uResolution)/max(uResolution.y,1.0);
   float drift=uTime*.035;
-  float f=fold(uv,2.62,5.2,drift)+fold(uv,-2.35,7.6,-drift*.72);
-  f+=fold(uv,2.95,11.0,drift*.44)*.38;
-  float ridge=smoothstep(.32,1.72,f);
-  float sheen=pow(clamp(f*.48,0.0,1.0),2.1);
-  vec3 lightBase=vec3(.965,.969,.985);
-  vec3 lightFold=vec3(.68,.72,.84);
-  vec3 darkBase=vec3(.027,.067,.169);
-  vec3 darkFold=vec3(.22,.31,.58);
-  vec3 colour=mix(lightBase,lightFold,ridge*.42+sheen*.15);
-  colour=mix(colour,mix(darkBase,darkFold,ridge*.54+sheen*.18),uDark);
+  // Broad, asymmetric pleats: a crisp crest and a long diffuse shadow.
+  float axis=uv.x*.82+uv.y*.58;
+  float bend=sin(uv.y*2.4+drift)*.32+sin(uv.x*1.6-drift)*.2;
+  float wave=sin((axis+bend)*9.0+drift);
+  float ridge=pow(.5+.5*wave,5.0);
+  float shadow=pow(.5+.5*sin((axis+bend)*9.0+drift+.65),2.0);
+  float broad=fold(uv,2.62,3.2,drift)*.12;
+  float shade=clamp(shadow*.62-ridge*.38+broad,0.0,1.0);
+  vec3 colour=mix(vec3(1.0),vec3(.38,.42,.51),shade);
+  colour=mix(colour,mix(vec3(0.0),vec3(.23,.29,.43),shade),uDark);
   gl_FragColor=vec4(colour,1.0);
 }
 `;
@@ -40,12 +40,11 @@ function compile(gl, type, source) {
   return shader;
 }
 
-export function initNeutralFolds() {
-  if (navigator.connection?.saveData) return;
+function initSurface(host) {
   const canvas = document.createElement("canvas");
   canvas.className = "neutral-folds";
   canvas.setAttribute("aria-hidden", "true");
-  document.body.prepend(canvas);
+  host.prepend(canvas);
   const gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, powerPreference: "low-power" });
   if (!gl) { canvas.remove(); return; }
   let program;
@@ -73,16 +72,17 @@ export function initNeutralFolds() {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let last = 0;
+  let visible = true;
   const resize = () => {
-    const ratio = Math.min(devicePixelRatio || 1, 1.25);
-    const width = Math.max(1, Math.round(innerWidth * ratio));
-    const height = Math.max(1, Math.round(innerHeight * ratio));
+    const ratio = Math.min(devicePixelRatio || 1, 1);
+    const width = Math.max(1, Math.round(canvas.clientWidth * ratio));
+    const height = Math.max(1, Math.round(canvas.clientHeight * ratio));
     if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
     gl.viewport(0, 0, width, height);
     gl.uniform2f(resolution, width, height);
   };
   const render = now => {
-    if (document.hidden) { frame = 0; return; }
+    if (document.hidden || !visible) { frame = 0; return; }
     if (!reduced.matches && now - last < 50) { frame = requestAnimationFrame(render); return; }
     last = now;
     resize();
@@ -95,5 +95,18 @@ export function initNeutralFolds() {
   addEventListener("resize", wake, { passive: true });
   document.addEventListener("visibilitychange", wake);
   new MutationObserver(wake).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (host !== document.body) {
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; wake(); }).observe(host);
+  }
+  reduced.addEventListener("change", wake);
   wake();
+}
+
+export function initNeutralFolds() {
+  if (navigator.connection?.saveData) return;
+  // Separate stacking surfaces preserve the sticky homepage reveal. Each
+  // canvas sits behind its content; offscreen surfaces stop rendering.
+  const homepage = document.querySelector(".home-content");
+  const surfaces = [...(homepage ? [] : [document.body]), ...document.querySelectorAll(".home-landing, .home-content, .site-footer")];
+  surfaces.forEach(initSurface);
 }

@@ -63,8 +63,10 @@ body{min-height:100svh}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
 @media(hover:none),(pointer:coarse){input,select,textarea{font-size:16px}}
-.neutral-folds{position:fixed;inset:0;z-index:90;width:100%;height:100%;pointer-events:none;opacity:.075;mix-blend-mode:multiply}
-:root[data-theme="dark"] .neutral-folds{opacity:.11;mix-blend-mode:screen}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .neutral-folds{opacity:.11;mix-blend-mode:screen}}
+body,.home-landing,.home-content,.site-footer{isolation:isolate}
+.neutral-folds{position:fixed;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none;opacity:.45;mix-blend-mode:multiply}
+.home-landing>.neutral-folds,.site-footer>.neutral-folds{position:absolute}
+:root[data-theme="dark"] .neutral-folds{opacity:.7;mix-blend-mode:screen}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .neutral-folds{opacity:.7;mix-blend-mode:screen}}
 @media(prefers-reduced-transparency:reduce){.neutral-folds{opacity:.035;mix-blend-mode:normal}}
 @media(forced-colors:active){.neutral-folds{display:none}}
