@@ -14,7 +14,6 @@ import { initNowPlaying } from "./render/now-playing.js";
 import { initNavigation } from "./core/navigation.js";
 import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
-import { initKineticSystem } from "./core/kinetic.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 
@@ -48,5 +47,4 @@ run("navigation behaviour", initNavigation);
 run("year", initYear);
 run("footer signature", initFooterSignature);
 if (page === "contact") run("contact form", initForm);
-run("kinetic editorial system", initKineticSystem);
 if (has("[data-decision-field]")) run("404 identity field", () => { void initDecisionField(); });

@@ -35,10 +35,9 @@ Portfolio/
 │   ├── rivo.html · chopbox.html · tedx-rsu.html · christian-poster-a-week.html
 ├── styles/                 # Layered CSS (see below). Single entry: main.css
 │   ├── main.css            # @imports everything in cascade order
-│   ├── tokens/             # Design tokens — one concern per file (edit here first)
-│   ├── base/               # reset · typography · utilities
-│   ├── components/         # navigation · menu · marquee · buttons · forms · footer
-│   └── sections/           # hero · work · home · about · contact · case-study
+│   ├── foundations.css     # Tokens, reset, type, layout primitives, platform baseline
+│   ├── components-v4.css   # Navigation, controls, footer and shared components
+│   └── pages-v4.css        # Page and section composition
 ├── data/
 │   └── site.js             # Single source of truth (ESM export): profile, projects, case studies…
 ├── js/                     # ES modules, one entry per page: <script type="module" src="js/main.js">
@@ -53,33 +52,29 @@ Portfolio/
 
 ## Architecture
 
-- **CSS cascade layers** (imported by `styles/main.css` in order): Tokens → Base →
-  Components → Sections. Rules: semantic tokens only, BEM naming, selector depth
-  ≤ 3, **no `!important`, no inline styles**.
-- **Design tokens** live in `styles/tokens/`. Change colour, type, spacing, motion,
-  radius, shadow, z-index, layout there — never hardcode values in components.
+- **CSS cascade layers** are imported by `styles/main.css`: foundations →
+  components → pages. Rules: semantic tokens, shallow selectors, no inline styles.
+- **Design tokens** live at the top of `styles/foundations.css`. Change colour,
+  type, spacing, motion, and layout roles there before changing component rules.
 - **Data-driven rendering.** `data/site.js` exports `SITE`. On load, `js/main.js`
   renders markup into `[data-mount="…"]` points, then attaches behaviour. The nav,
   menu, work grid, capabilities, testimonial, footer, and case-study bodies are all
   built from data.
-- **Motion.** All timing comes from `--duration-*` / `--ease-*` tokens
-  (`styles/tokens/motion.css`). Assignment: Hover→standard, Menus→emphasized,
-  Micro→snappy, Reading→gentle. Scroll reveals stagger via a `--reveal-i` index and
-  honour `prefers-reduced-motion`.
+- **Motion.** Shared timing comes from the duration and easing roles in
+  `styles/foundations.css`; interface motion honours `prefers-reduced-motion`.
 
 ## Progressive enhancements
 
 All opt-in and degrade gracefully — the editorial base never depends on them:
 
-- **View transitions** — cross-document crossfade on navigation
-  (`styles/base/view-transitions.css`); the nav/logo persist across pages.
-  Unsupported browsers just navigate; disabled under `prefers-reduced-motion`.
+- **Theme transitions** — the navigation renderer uses the browser View Transition
+  API when available. Unsupported browsers switch immediately.
 - **Container queries** — the work grid responds to its container's width, not the
   viewport (`#work` is the query container). Falls back to a single column where
   `@container` is unsupported.
 - **Theme** — `color-scheme: light` by default, `dark` on case pages, so native UI
   (scrollbars, controls) matches. Re-theme by editing the role tokens in
-  `styles/tokens/colors.css`; the whole palette flows from a few values.
+  `styles/foundations.css`; the whole palette flows from a few role values.
 - **Film grain** — a faint, non-interactive `soft-light` texture over the dark
   hero and case pages.
 
@@ -108,12 +103,12 @@ All opt-in and degrade gracefully — the editorial base never depends on them:
 3. Copy any `work/*.html` to `work/new-project.html` and update only the static
    `<head>` (title, description, canonical/OG/Twitter, JSON-LD) and the body's
    `data-case="new-project"` + accent class `case-page--new-project`
-   (define its `--case-accent` in `styles/sections/case-study.css`). The
+   (define any project-specific presentation in `styles/pages-v4.css`). The
    `<article data-mount="case">` is filled automatically from the data.
 
 ## Customise
 
-- **Colours / type / spacing / motion:** `styles/tokens/*` only.
+- **Colours / type / spacing / motion:** `styles/foundations.css` first.
 - **Name, email, socials, availability, projects, case studies:** `data/site.js`.
 - **Reading measures / touch targets:** `--measure-*`, `--tap-min` tokens; helpers
   `.measure-hero` / `.measure-lead` / `.measure-reading` cap line length.

@@ -435,9 +435,8 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .writing-item__meta{order:3;display:flex;gap:var(--s2)}
 .writing-item__date::before{content:none}
 
-/* Footer contract: one label, one horizontal navigation row, then the mark. */
+/* Footer contract: compact information groups followed by the full-width mark. */
 .site-footer__panel{width:min(calc(100% - 2 * var(--page)),var(--content));display:block;padding-block:clamp(1.5rem,3vw,2.5rem)}
-.site-footer__explore{display:grid;gap:.6rem}
 .site-footer__links{display:flex;align-items:center;flex-wrap:wrap;gap:.25rem clamp(.8rem,1.5vw,1.5rem)}
 .site-footer__label{margin:0}
 .site-footer a{min-height:2.75rem;font-size:clamp(.78rem,1vw,.95rem)}
@@ -448,6 +447,8 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 @media(max-width:48rem){
   .home-landing h1{grid-column:1/-1;font-size:clamp(3rem,14vw,5.2rem)}
   .site-footer__signature{height:clamp(20rem,86vw,30rem)}
+  .home-profile__media{width:100%;max-width:28rem;margin-left:0;margin-right:0}
+  .work-flick__item,.work-flick__item:first-child,.work-flick__item:nth-child(2),.work-flick__item.is-active,.work-flick__item--3,.work-flick--home .work-flick__item.is-active,.work-flick__pair .work-flick__item.is-active{min-height:clamp(28rem,70svh,42rem)}
 }
 @media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
 

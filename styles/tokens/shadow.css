@@ -1,9 +1,0 @@
-/* ==========================================================================
-   Tokens · Shadow — restrained elevation (the design is largely flat).
-   ========================================================================== */
-
-:root {
-  --shadow-sm: 0 1px 2px color-mix(in srgb, #16140f 6%, transparent);
-  --shadow-md: 0 6px 24px color-mix(in srgb, #16140f 10%, transparent);
-  --shadow-lg: 0 16px 48px color-mix(in srgb, #16140f 14%, transparent);
-}

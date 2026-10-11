@@ -22,7 +22,9 @@ function setupThemeToggle() {
   function sync() {
     btn.setAttribute("aria-pressed", String(isDark()));
     btn.setAttribute("aria-label", isDark() ? "Switch to light mode" : "Switch to dark mode");
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", isDark() ? "#07112B" : "#F8F9FC");
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute("content", isDark() ? "#07112B" : "#F8F9FC");
+    });
   }
   sync();
   btn.addEventListener("click", function () {

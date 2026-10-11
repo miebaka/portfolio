@@ -1,3 +1,14 @@
+## [1.1.3] - 2026-10-11
+
+### Fixed
+- Restored the footer's Based in and Social information inside the current horizontal information architecture.
+- Standardized every primary action on the contact form's single `.btn` interaction contract.
+- Added safe-area, mobile viewport, touch, form zoom, compact navigation, and narrow-screen layout safeguards across every route.
+
+### Refactored
+- Removed the empty global kinetic initializer and retired primary-button modifier markup.
+- Added regression coverage for footer content, scheme-aware browser colours, mobile viewport behavior, safe areas, and button ownership.
+
 ## [1.1.2] - 2026-09-22
 
 ### Added

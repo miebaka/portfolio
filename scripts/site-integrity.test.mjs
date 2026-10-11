@@ -36,6 +36,9 @@ test("every production page has essential metadata and one heading", async () =>
     if (!file.endsWith("404.html")) assert.match(html, /<link rel="canonical"/i, file);
     assert.match(html, /<main\b/i, file);
     assert.match(html, /class="skip-link"/i, file);
+    assert.match(html, /viewport-fit=cover/i, file);
+    assert.match(html, /interactive-widget=resizes-content/i, file);
+    assert.equal((html.match(/<meta name="theme-color"/gi) || []).length, 2, file);
     assert.equal((html.match(/<h1\b/gi) || []).length, 1, file);
   }
 });
@@ -161,7 +164,12 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /\.site-nav__menu-btn,\.theme-toggle\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.btn:active\{transform:scale\(\.97\)/);
   assert.equal((css.match(/^\.btn\{/gm) || []).length, 1);
+  assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
+  assert.match(css, /-webkit-text-size-adjust:100%/);
+  assert.match(css, /safe-area-inset-left/);
+  assert.match(css, /@media\(hover:hover\) and \(pointer:fine\)/);
+  assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{input,select,textarea\{font-size:16px/);
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
@@ -228,7 +236,12 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
-  assert.doesNotMatch(footer, /Based in|Social|Back to top|data-year/);
+  assert.match(footer, /Based in/);
+  assert.match(footer, /Social/);
+  assert.match(footer, /SITE\.location/);
+  assert.match(footer, /SITE\.socials/);
+  assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
+  assert.doesNotMatch(footer, /Back to top|data-year/);
   assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
@@ -281,4 +294,16 @@ test("production build excludes source and review directories", async () => {
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
   const publicData = await readFile(new URL("../dist/data/site.js", import.meta.url), "utf8");
   assert.match(publicData, /Poster A Week|christian-poster-a-week/);
+});
+
+test("retired source systems cannot return unnoticed", async () => {
+  for (const path of [
+    "styles/cohesion.css", "styles/editorial-system.css", "styles/swiss.css",
+    "js/core/case-rail.js", "js/core/motion-director.js", "js/core/kinetic.js"
+  ]) await assert.rejects(access(join(root, path)), path);
+  const main = await readFile(join(root, "js", "main.js"), "utf8");
+  const styles = await readFile(join(root, "styles", "main.css"), "utf8");
+  assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
+  assert.equal((styles.match(/@import/g) || []).length, 3);
+  assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });

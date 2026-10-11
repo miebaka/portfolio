@@ -39,7 +39,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const study = site.caseStudies?.[slug];
   if (!study) return "";
   const project = site.projects?.find(item => item.slug === slug);
-  if (site.workLocked) return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><span class="btn btn--primary" aria-disabled="true">Coming soon</span></section>`;
+  if (site.workLocked) return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><span class="btn" aria-disabled="true">Coming soon</span></section>`;
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];
   rest.forEach((item, index) => groups[Math.min(4, Math.floor(index * 5 / Math.max(1, rest.length)))].push(item));

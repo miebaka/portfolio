@@ -11,7 +11,7 @@ function projectMarkup(project, i, base) {
   return '<article class="work-flick__item work-flick__item--locked" aria-label="' + esc(project.title) + ', coming soon">' +
     '<div class="work-flick__media">' + media + '</div>' +
     '<span class="work-flick__bar" aria-hidden="true"><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong></span></span>' +
-    '<span class="btn btn--primary work-flick__status" aria-hidden="true">Coming soon</span>' +
+    '<span class="btn work-flick__status" aria-hidden="true">Coming soon</span>' +
     '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></article>';
 }
 
@@ -57,7 +57,7 @@ export function renderProjectArchive() {
   if (!el) return;
   el.className = 'project-archive__list';
   el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
-    const action = '<span class="btn btn--primary project-archive__status" aria-disabled="true">Coming soon</span>';
+    const action = '<span class="btn project-archive__status" aria-disabled="true">Coming soon</span>';
     return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
   }).join('');
 }
