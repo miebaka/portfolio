@@ -4,14 +4,13 @@
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Semibold.ttf") format("truetype");font-weight:600;font-display:swap}
 @font-face{font-family:"Josefin Sans";src:url("../assets/fonts/josefinsans-semibold.woff2") format("woff2");font-weight:600;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:block}
-@font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{
   color-scheme:light dark;
   /* Reference tokens: canonical sRGB values. */
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
   --ref-blue-30:#1c3da4;--ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-navy-16:#1e283c;
   --ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;--ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;
-  --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;
+  --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-tedx-deep:#32102c;--ref-tedx-container:#42163b;--ref-tedx-paper-container:#f1eaf0;--ref-tedx-paper-container-high:#e9dfe7;
 
   /* System tokens: roles, not swatches. Every text pair below is >=7:1. */
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);--sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
@@ -29,11 +28,11 @@
   --success:var(--sys-color-secondary);--info:var(--sys-color-primary);--warning:var(--sys-color-tertiary);--error:var(--sys-color-error);--starlo:var(--text);--paper:var(--bg);--paper-2:var(--surface);--ink:var(--text);--muted:var(--text-muted);--line:var(--border);--accent:var(--primary);--accent-soft:var(--primary-soft);--signal:var(--sys-color-tertiary);--inverse:var(--field);--inverse-ink:var(--on-field);
 
   /* Type, spacing, shape, motion, and layout roles. */
-  --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;
+  --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
   --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
-  --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:180ms;--dur-spatial:240ms;
-  --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);
+  --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:240ms;--dur-spatial:620ms;
+  --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);--comp-home-hero-bg:var(--ref-ultramarine);--comp-home-hero-fg:var(--ref-paper);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;--sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);

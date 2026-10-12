@@ -43,15 +43,33 @@ test("every production page has essential metadata and one heading", async () =>
   }
 });
 
-test("locked case studies ship their complete state before JavaScript runs", async () => {
+test("case studies ship complete reading content before JavaScript runs", async () => {
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.match(html, /data-prerendered="true"/);
-    assert.match(html, /class="case-locked container"/);
-    assert.match(html, /Coming soon/);
-    assert.doesNotMatch(html, /class="case-index"/);
+    assert.match(html, /class="case"/);
+    assert.match(html, /class="case-index"/);
+    assert.doesNotMatch(html, /Coming soon/);
     assert.doesNotMatch(html, /filled by js|placeholder/i);
   }
+});
+
+test("TEDx flagship preserves its verified concept, credits and evidence sequence", async () => {
+  const html = await readFile(join(dist, "work", "tedx-rsu.html"), "utf8");
+  const source = await readFile(join(root, "data", "site.js"), "utf8");
+  for (const phrase of [
+    "Pause was not a symbol to place on the work",
+    "Reflect", "Reconsider", "Reward",
+    "Carl Osimiri", "Onari Georgewill", "Anna Brands",
+    "18 February 2023", "Student Dialogue Centre"
+  ]) assert.match(html, new RegExp(phrase));
+  assert.match(html, /case-thesis/);
+  assert.match(html, /loading="eager"/);
+  assert.match(source, /chapter: "decision"/);
+  assert.match(source, /chapter: "system"/);
+  assert.match(source, /chapter: "applications"/);
+  assert.match(source, /chapter: "result"/);
+  assert.doesNotMatch(html, /views|appreciations|likes|engagement rate/i);
 });
 
 test("production CSS is bundled and dead runtime modules are absent", async () => {
@@ -88,10 +106,9 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /font-family:"Borges"/);
+  assert.doesNotMatch(css, /font-family:"Borges"/);
   assert.doesNotMatch(css, /\.pl--[cmy]\b|data-plates/i);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
-  assert.doesNotMatch(css, /filter:saturate/i);
 });
 
 test("documented interface colour pairs meet a 7:1 contrast floor", () => {
@@ -135,30 +152,51 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   const services = await readFile(join(dist, "services.html"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
-  const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
-  assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
+  assert.match(html, /View all work/i);
   assert.match(projects, /work-flick__item--more/);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
   assert.match(projects, /client-marquee__track/);
+  assert.match(projects, /client-marquee__control/);
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   assert.doesNotMatch(services, /Evidence:/);
   assert.match(services, /data-mount="capabilities"/);
-  assert.match(projects, /work-flick__bar/);
+  assert.match(projects, /work-flick__link/);
+  assert.match(projects, /PAUSE LOGOS/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
   assert.ok(css.includes('.site-nav a,.btn,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(css, /\.work-flick__more-arrow\{animation:none/);
+  assert.match(css, /\.client-marquee\.is-paused/);
   assert.match(html, /data-mount="now-playing"/);
+  assert.match(css, /\.now-playing-pill\s*\{/);
+  assert.match(css, /\.motion-fab\s*\{/);
+  assert.match(css, /\.home-landing\s*\{[^}]*position:\s*sticky/);
   assert.match(css, /\.proof-about__grid\{display:grid/);
   assert.match(css, /\.record__track\{/);
-  assert.match(listening, /On the studio speaker/);
-  assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
+  const orderedIds = ["about", "work", "services", "writing", "explorations", "community", "contact"];
+  let cursor = -1;
+  for (const id of orderedIds) {
+    const next = html.indexOf(`id="${id}"`);
+    assert.ok(next > cursor, `${id} is out of order on the homepage`);
+    cursor = next;
+  }
+});
+
+test("the adaptive index has one desktop destination mechanism and persistent Print Screen control", async () => {
+  const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
+  assert.doesNotMatch(navigation, /portfolio-nav__links/);
+  assert.match(navigation, /portfolio-nav__theme/);
+  assert.match(navigation, /PRINT/);
+  assert.match(navigation, /SCREEN/);
+  assert.match(navigation, /motion-fab/);
+  assert.doesNotMatch(navigation, /portfolio-index__label">MOTION/);
+  assert.match(navigation, /localStorage\.setItem\("color-theme", root\.dataset\.theme\)/);
+  assert.deepEqual(SITE.menu.map(item => item.label), ["About", "Work", "Services", "Writing", "Explorations", "Community", "Contact"]);
 });
 
 test("interactive controls share the documented role system", async () => {
@@ -183,22 +221,23 @@ test("interactive controls share the documented role system", async () => {
   assert.doesNotMatch(primaryMarkup, /class=["'`]btn\s+btn-/);
 });
 
-test("proof system stays dependency-free, accessible and chroma-free", async () => {
+test("remaining proof behaviours stay dependency-free and retired effects stay retired", async () => {
   const source = await readFile(join(root, "js", "core", "proof-system.js"), "utf8");
   const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");
   const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
   const css = await readFile(join(root, "styles", "proof-system.css"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   assert.doesNotMatch(source, /from\s+["']|import\s*\(/);
-  assert.match(source, /prefers-reduced-motion/);
   assert.doesNotMatch(source, /press-crop|data\.proofPage|proof-folio/);
-  assert.match(source, /proof-portrait__dots/);
-  assert.match(source, /if \(motionReduced\(\)\) \{ x = tx; y = ty;/);
+  assert.doesNotMatch(source, /proof-cursor|proof-portrait__dots|initReveals|initClock/);
+  assert.match(source, /initDisclosures/);
+  assert.match(source, /initNavSurface/);
   assert.doesNotMatch(source, /data-plates|misregistration|chroma/i);
   assert.doesNotMatch(navigation, /p\.\d|label:\s*"Cover"|label:\s*"Experience"/);
-  assert.match(navigation, /label:\s*"Writing"/);
+  assert.match(navigation, /SITE\.menu/);
   assert.doesNotMatch(css, /IBM Plex Mono|press-crop|\.proof-folio|\.proof-ink\{/);
-  assert.match(signature, /"Borges", monospace/);
+  assert.match(signature, /host\.dataset\.signatureSrc/);
+  assert.doesNotMatch(signature, /Borges/);
   assert.doesNotMatch(css, /data-motion="reduced"\] \.proof-cursor\{display:none/);
   assert.match(foundations, /feTurbulence/);
   await access(join(dist, "js", "core", "proof-system.js"));
@@ -219,7 +258,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   assert.match(projects, /system-list__row/);
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
-  assert.match(sections, /section-head__label">What I do/);
+  assert.match(sections, /proof-services__heading/);
+  assert.match(sections, /<h2>Services<\/h2>/);
   assert.doesNotMatch(sections, /#002080|#1C3DA4|#E8EEFF|#83251D|#07112B/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
@@ -252,8 +292,8 @@ test("portfolio depth features are present without depending on JavaScript for c
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.doesNotMatch(html, /data-case-view|Brief view|Full study|Case study ·/);
-    assert.match(html, /class="case-locked container"/);
-    assert.match(html, /Coming soon/);
+    assert.match(html, /class="case"/);
+    assert.doesNotMatch(html, /Coming soon/);
   }
 });
 
@@ -272,20 +312,20 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /Coming soon/);
+  assert.match(projects, /work-flick__link/);
   assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
-  assert.match(footer, /Based in/);
-  assert.match(footer, /Social/);
+  assert.match(footer, /BASED IN/);
+  assert.match(footer, /SOCIAL/);
   assert.match(footer, /SITE\.location/);
   assert.match(footer, /SITE\.socials/);
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
   assert.doesNotMatch(footer, /Back to top/);
   assert.doesNotMatch(footer, /Colophon|BIZ UDPMincho/);
-  assert.ok(footer.indexOf("Based in") < footer.indexOf("Explore"));
-  assert.ok(footer.indexOf("Explore") < footer.indexOf("Social"));
-  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /fillText\("Miebaka Joshua"/);
+  assert.ok(footer.indexOf("BASED IN") < footer.indexOf("EXPLORE"));
+  assert.ok(footer.indexOf("EXPLORE") < footer.indexOf("SOCIAL"));
+  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /drawImage\(artwork/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
 
@@ -347,6 +387,6 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 4);
+  assert.equal((styles.match(/@import/g) || []).length, 5);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });

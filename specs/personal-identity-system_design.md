@@ -134,14 +134,13 @@ The navigation's three-percent transparency is the maximum allowed glass approxi
 | Display | BIZ UDPMincho | Selected work titles, case-study statements and rare expressive moments |
 | Body | Schibsted Grotesk | Reading, navigation and explanatory copy |
 | Label | Josefin Sans Semibold | Short labels and compact metadata |
-| Signature | Borges Square Pixel | Footer wordmark only |
 
 Rules:
 
 - Body copy is at least 1rem where sustained reading occurs and remains below 65 characters per line.
 - Display type is reserved for short text. Long introductions use the body face.
 - Section labels stay small and rare. A label must orient, not decorate.
-- Borges is never used for body copy or controls.
+- The footer signature is not typography. It is an interactive dot-matrix sampling of `assets/images/miebaka-joshua-script-name.svg`, with the SVG silhouette retained as the static fallback.
 - All text colours use semantic roles. Project-card copy uses Paper over a bounded Midnight veil.
 
 ## 6. Layout and spacing
@@ -249,7 +248,7 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 
 ### Footer
 
-- The dot-matrix signature appears first, fits the shared sheet and is never cropped.
+- The dot-matrix signature appears first, samples `assets/images/miebaka-joshua-script-name.svg`, fits the shared sheet and is never cropped.
 - Three horizontal groups follow in order: `Based in`, `Explore`, `Social`.
 - Explore contains Work, About, Services, Writing, Contact and Privacy on one wrapping row.
 - Pointer proximity disperses signature cells and an interruptible spring returns them home.

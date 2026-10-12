@@ -1,4 +1,4 @@
-/* Interactive dot matrix sampled from the proof-sheet typographic signature. */
+/* Interactive dot matrix sampled from Miebaka's actual script-name artwork. */
 const PITCH = 4.2;
 const DOT = 1.15;
 const RADIUS = 128;
@@ -29,21 +29,18 @@ export function initFooterSignature() {
     const channels = getComputedStyle(host).color.match(/[\d.]+/g)?.slice(0, 3) || [255, 255, 255];
     restColor = `rgba(${channels.join(",")},.48)`;
     accentColor = getComputedStyle(document.documentElement).getPropertyValue("--sys-color-tertiary").trim() || accentColor;
-    await document.fonts.ready;
-    if (current !== generation) return;
     const sample = document.createElement("canvas");
     sample.width = width;
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
-    let size = height * .78;
-    sampleContext.font = `400 ${size}px "Borges", monospace`;
-    const measured = sampleContext.measureText("Miebaka Joshua").width;
-    if (measured > width * .98) size *= (width * .98) / measured;
-    sampleContext.font = `400 ${size}px "Borges", monospace`;
-    sampleContext.textAlign = "center";
-    sampleContext.textBaseline = "middle";
-    sampleContext.fillStyle = "#000";
-    sampleContext.fillText("Miebaka Joshua", width / 2, height * .52);
+    const artwork = new Image();
+    artwork.src = host.dataset.signatureSrc;
+    try { await artwork.decode(); } catch { return; }
+    if (current !== generation) return;
+    const scale = Math.min(width * .96 / artwork.naturalWidth, height * .84 / artwork.naturalHeight);
+    const drawWidth = artwork.naturalWidth * scale;
+    const drawHeight = artwork.naturalHeight * scale;
+    sampleContext.drawImage(artwork, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const next = [];
     for (let y = PITCH / 2; y < height; y += PITCH) {
