@@ -1,4 +1,6 @@
 const WIDTHS = [540, 810, 1080, 1440, 1920];
+import { safeURL } from "../utilities/dom.js";
+
 const esc = value => String(value ?? "").replace(/[&<>"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char]);
 const token = value => String(value ?? "").replace(/[^a-z0-9_-]/gi, "");
 const paras = list => (list || []).map(p => `<p>${esc(p)}</p>`).join("");
@@ -47,7 +49,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const assigned = chapterIds.indexOf(item.chapter);
     groups[assigned >= 0 ? assigned : Math.min(4, Math.floor(index * 5 / Math.max(1, rest.length)))].push(item);
   });
-  const sources = study.sources?.length ? `<div class="case-sources">${study.sources.map(source => `<a href="${esc(source.href)}" target="_blank" rel="noopener noreferrer">${esc(source.label)} <span aria-hidden="true">↗</span></a>`).join("")}</div>` : "";
+  const sources = study.sources?.length ? `<div class="case-sources">${study.sources.map(source => `<a href="${safeURL(source.href)}" target="_blank" rel="noopener noreferrer">${esc(source.label)} <span aria-hidden="true">↗</span></a>`).join("")}</div>` : "";
   const next = study.next?.slug ? `<section class="case-next container" aria-label="Next project">${sources}<p class="case-next__label">Next project</p><a class="case-next__link" href="${base}work/${token(study.next.slug)}.html">${esc(study.next.title)}</a></section>` : "";
   const index = '<nav class="case-index" aria-label="Case study chapters"><a href="#problem"><span>01</span>Problem</a><a href="#decision"><span>02</span>Decision</a><a href="#system"><span>03</span>System</a><a href="#applications"><span>04</span>Applications</a><a href="#result"><span>05</span>Outcome</a></nav>';
   const titleLabel = slug === "tedx-rsu" ? "" : `<p class="case-title__label">${esc(project?.category || "PROJECT")} / ${esc(project?.year || "")}</p>`;

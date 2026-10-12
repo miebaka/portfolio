@@ -41,6 +41,7 @@ not decorative noise.
 
 ## Do not introduce
 
-Arbitrary rotation, glass effects, generic rounded cards, ornamental grids,
+Arbitrary rotation, glass-card fields, transparency beyond the navigation's
+3% surface blend, generic rounded cards, ornamental grids,
 live coordinates, decorative clocks, hover-only meaning, disabled-looking
 content, fake metrics, Borges, or colour that competes with project work.

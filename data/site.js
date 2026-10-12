@@ -12,8 +12,8 @@ export const SITE = {
   email: "miebakakiki@gmail.com",
   cv: "assets/documents/miebaka-joshua-cv.pdf",
   location: "Lagos, Nigeria",
-  city: "Lagos",      // reserved — planned nav clock feature
-  timezone: "WAT",    // reserved — planned nav clock feature
+  city: "Lagos",
+  timezone: "WAT",
   workLocked: false,
 
   /* Standard world-class sections, shown in the primary navigation.

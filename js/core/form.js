@@ -6,6 +6,7 @@ import { SITE } from "../../data/site.js";
    that clearly cannot be delivered to; anything stricter starts refusing
    valid addresses, and the real check is whether the reply bounces. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX = { name: 120, email: 254, message: 6000 };
 
 export function initForm() {
   const form = document.querySelector(".contact__form");
@@ -80,9 +81,11 @@ export function initForm() {
     };
 
     if (!name) fail(nameInput, "Add your name so I can reply.");
+    else if (name.length > MAX.name) fail(nameInput, "Keep your name under 120 characters.");
     else setFieldError(nameInput, "");
 
     if (!email) fail(emailInput, "Add your email so I can reply.");
+    else if (email.length > MAX.email) fail(emailInput, "Keep your email under 254 characters.");
     else if (!EMAIL_RE.test(email)) fail(emailInput, "That email address looks incomplete.");
     else setFieldError(emailInput, "");
 
@@ -90,6 +93,7 @@ export function initForm() {
     else setFieldError(interestInput, "");
 
     if (!message) fail(messageInput, "Add a short message so I know how to help.");
+    else if (message.length > MAX.message) fail(messageInput, "Keep your message under 6,000 characters.");
     else setFieldError(messageInput, "");
 
     if (firstInvalid) {

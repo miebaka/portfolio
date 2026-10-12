@@ -96,7 +96,7 @@ for (const file of allHtml) {
   for (const match of html.matchAll(/assets\/images\/optimized\/([a-z0-9_-]+\.(?:avif|webp|jpg|png))/gi)) assets.add(match[1]);
 }
 for (const project of SITE.projects.filter(project => project.caseReady !== false && project.cover)) {
-  for (const width of [540, 810, 1080]) for (const ext of ["avif", "webp", "jpg"]) assets.add(`${project.cover}-${width}.${ext}`);
+  for (const width of [540, 810, 1080]) assets.add(`${project.cover}-${width}.webp`);
 }
 for (const asset of assets) {
   const source = join(root, "assets/images/optimized", asset);

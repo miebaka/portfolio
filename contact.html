@@ -83,11 +83,11 @@
           <p class="contact__handoff" id="contact-handoff">Your name, email, area of interest and message are emailed directly to me and used only to reply.</p>
           <div class="field">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="form-status">
+            <input type="text" id="name" name="name" autocomplete="name" maxlength="120" required aria-required="true" aria-describedby="form-status">
           </div>
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="form-status">
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="254" required aria-required="true" aria-describedby="form-status">
           </div>
           <div class="field">
             <label for="interest">What are you getting in touch about?</label>
@@ -101,7 +101,7 @@
           </div>
           <div class="field">
             <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" autocomplete="off" required aria-required="true" aria-describedby="form-status" placeholder="Tell me about the role, project or decision you need help with."></textarea>
+            <textarea id="message" name="message" rows="5" autocomplete="off" maxlength="6000" required aria-required="true" aria-describedby="form-status" placeholder="Tell me about the role, project or decision you need help with."></textarea>
           </div>
           <div class="field contact__trap" aria-hidden="true"><label for="company-site">Company website</label><input type="text" id="company-site" name="companySite" tabindex="-1" autocomplete="off"></div>
           <div class="contact__submit">

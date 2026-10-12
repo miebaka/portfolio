@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
+import contactHandler from "../api/contact.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -155,7 +156,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
-  assert.match(html, /View all work/i);
+  assert.match(html, /See the work/i);
   assert.match(projects, /work-flick__item--more/);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
   assert.match(projects, /client-marquee__track/);
@@ -174,27 +175,30 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(css, /\.client-marquee\.is-paused/);
   assert.match(html, /data-mount="now-playing"/);
   assert.match(css, /\.now-playing-pill\s*\{/);
-  assert.match(css, /\.motion-fab\s*\{/);
+  assert.match(sections, /proof-swatch\" tabindex=\"0\"/);
   assert.match(css, /\.home-landing\s*\{[^}]*position:\s*sticky/);
   assert.match(css, /\.proof-about__grid\{display:grid/);
   assert.match(css, /\.record__track\{/);
-  const orderedIds = ["about", "work", "services", "writing", "explorations", "community", "contact"];
+  const orderedIds = ["work", "about", "services", "proof", "process", "contact"];
   let cursor = -1;
   for (const id of orderedIds) {
     const next = html.indexOf(`id="${id}"`);
     assert.ok(next > cursor, `${id} is out of order on the homepage`);
     cursor = next;
   }
+  for (const retiredGateway of ["writing", "explorations", "community"]) assert.doesNotMatch(html, new RegExp(`id="${retiredGateway}"`));
+  assert.match(html, />WORK WITH ME<\/a>/);
 });
 
-test("the adaptive index has one desktop destination mechanism and persistent Print Screen control", async () => {
+test("the adaptive index contains both display preferences", async () => {
   const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
   assert.doesNotMatch(navigation, /portfolio-nav__links/);
   assert.match(navigation, /portfolio-nav__theme/);
   assert.match(navigation, /PRINT/);
   assert.match(navigation, /SCREEN/);
-  assert.match(navigation, /motion-fab/);
-  assert.doesNotMatch(navigation, /portfolio-index__label">MOTION/);
+  assert.match(navigation, /portfolio-index__preferences/);
+  assert.match(navigation, /portfolio-index__label">APPEARANCE/);
+  assert.match(navigation, /portfolio-index__label">MOTION/);
   assert.match(navigation, /localStorage\.setItem\("color-theme", root\.dataset\.theme\)/);
   assert.deepEqual(SITE.menu.map(item => item.label), ["About", "Work", "Services", "Writing", "Explorations", "Community", "Contact"]);
 });
@@ -273,7 +277,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(projects, /system-list__row/);
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   assert.match(sections, /proof-services__heading/);
-  assert.match(sections, /<h2>Services<\/h2>/);
+  assert.match(sections, /<h2>What I do<\/h2>/);
   assert.doesNotMatch(sections, /#002080|#1C3DA4|#E8EEFF|#83251D|#07112B/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
@@ -289,6 +293,56 @@ test("production language avoids typographic dash shortcuts", async () => {
       .replace(/<script\b[\s\S]*?<\/script>/gi, "")
       .replace(/<style\b[\s\S]*?<\/style>/gi, "");
     assert.doesNotMatch(visibleSource, /&(?:m|n)dash;|[—–]/, file);
+  }
+});
+
+test("the active design contract rejects known source-level drift", async () => {
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
+  const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
+  const data = await readFile(join(root, "data", "site.js"), "utf8");
+  assert.match(css, /\.portfolio-nav__bar\s*\{[^}]*background:\s*var\(--comp-nav-bg\)[^}]*backdrop-filter:\s*blur\(20px\)/i);
+  assert.match(css, /prefers-reduced-transparency:\s*reduce[\s\S]*\.portfolio-nav__bar\s*\{[^}]*background:\s*var\(--sys-color-surface\)[^}]*backdrop-filter:\s*none/i);
+  assert.match(css, /\.work-flick--home \.work-flick__item:nth-child\(1\)/);
+  assert.match(css, /\.portfolio-index li a\s*\{[^}]*var\(--label\)/);
+  assert.doesNotMatch(projects, /aria-disabled=\"true\">IN DEVELOPMENT/);
+  assert.doesNotMatch(navigation, /01[—–]07/);
+  assert.doesNotMatch(data, /planned nav clock feature/);
+});
+
+test("contact endpoint rejects invalid boundaries before delivery", async () => {
+  const invoke = async body => {
+    const headers = {};
+    let payload = "";
+    const res = {
+      statusCode: 200,
+      setHeader(name, value) { headers[name.toLowerCase()] = value; },
+      end(value) { payload = value; },
+    };
+    await contactHandler({ method: "POST", body }, res);
+    return { status: res.statusCode, headers, body: JSON.parse(payload) };
+  };
+  const base = { name: "Miebaka", email: "hello@example.com", interest: "Creative collaboration", message: "Hello" };
+  const originalKey = process.env.RESEND_API_KEY;
+  const originalFetch = globalThis.fetch;
+  try {
+    delete process.env.RESEND_API_KEY;
+    assert.equal((await invoke({ ...base, message: "x".repeat(6001) })).status, 413);
+    assert.equal((await invoke({ ...base, interest: "Injected option" })).status, 400);
+    for (const body of ["null", "[]", "42", "true", '"text"']) assert.equal((await invoke(body)).status, 400);
+    const unconfigured = await invoke(base);
+    assert.equal(unconfigured.status, 503);
+    assert.equal(unconfigured.headers["cache-control"], "no-store");
+
+    process.env.RESEND_API_KEY = "test-key";
+    globalThis.fetch = async () => ({ ok: true, status: 200, headers: new Headers() });
+    assert.equal((await invoke(base)).status, 200);
+    globalThis.fetch = async () => { throw new DOMException("Timed out", "TimeoutError"); };
+    assert.equal((await invoke(base)).status, 504);
+  } finally {
+    if (originalKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = originalKey;
+    globalThis.fetch = originalFetch;
   }
 });
 

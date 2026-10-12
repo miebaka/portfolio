@@ -1,6 +1,6 @@
 /* Project presentation for the editorial home index and cinematic work rail. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 function projectMarkup(project, i, base) {
@@ -8,7 +8,7 @@ function projectMarkup(project, i, base) {
   const media = src
     ? '<img class="work-flick__image" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 64vw" alt="' + esc(project.tagline) + '" width="810" height="1080" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">'
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
-  const href = project.href || ('work/' + safeToken(project.slug) + '.html');
+  const href = safeURL(project.href || ('work/' + safeToken(project.slug) + '.html'));
   return '<article class="work-flick__item" style="--project-tone:' + esc(project.tone) + '">' +
     '<a class="work-flick__link" href="' + base + href + '">' +
     '<div class="work-flick__media">' + media + '</div>' +
@@ -43,7 +43,7 @@ export function renderWork() {
     el.innerHTML = pairs.join('');
   } else {
     const base = basePath();
-    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html"><span class="work-flick__more-label">ARCHIVE / ' + String(SITE.projects.length).padStart(2, '0') + '</span><strong>VIEW ALL WORK</strong><span aria-hidden="true">→</span></a>';
+    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html"><span class="work-flick__more-label">ARCHIVE / ' + String(SITE.projects.length).padStart(2, '0') + '</span><strong>SEE THE WORK</strong><span aria-hidden="true">→</span></a>';
   }
   bindExpansion(el);
 }
@@ -52,11 +52,8 @@ export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
   el.className = 'project-archive__list system-list';
-  el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
-    const ready = project.caseReady !== false;
-    const action = ready
-      ? '<a class="project-archive__action" href="' + basePath() + (project.href || 'work/' + safeToken(project.slug) + '.html') + '">VIEW CASE STUDY <span aria-hidden="true">↗</span></a>'
-      : '<span class="project-archive__status" aria-disabled="true">IN DEVELOPMENT</span>';
+  el.innerHTML = SITE.projects.filter(project => project.caseReady !== false && !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
+    const action = '<a class="project-archive__action" href="' + basePath() + safeURL(project.href || 'work/' + safeToken(project.slug) + '.html') + '">VIEW CASE STUDY <span aria-hidden="true">↗</span></a>';
     return '<details class="project-archive__item system-list__item"><summary class="system-list__row"><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle system-list__toggle" aria-hidden="true"></span></summary><div class="project-archive__reveal system-list__panel"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
   }).join('');
 }

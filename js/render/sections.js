@@ -10,7 +10,7 @@ export function renderCapabilities() {
   if (home) {
     const labels = ["Identity", "Strategy", "Graphic design", "Art direction", "Production"];
     el.className = "proof-services__pin";
-    el.innerHTML = '<div class="proof-services__frame"><div class="proof-services__heading"><span class="section-index">03</span><h2>Services</h2><p>Five connected ways I help teams turn an unclear brief into a system they can use.</p></div><ul class="proof-fan is-fanned" aria-label="Services">' + SITE.capabilities.map((c, index) => '<li class="proof-swatch" tabindex="0"><div class="proof-swatch__chip"><span class="proof-mono">' + labels[index] + '</span><span class="proof-mono">0' + (index + 1) + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p></div><span class="proof-swatch__rivet" aria-hidden="true"></span></li>').join("") + '</ul></div>';
+    el.innerHTML = '<div class="proof-services__frame"><div class="proof-services__heading"><span class="section-index">03</span><h2>What I do</h2><p>Five connected ways I help teams turn an unclear brief into a system they can use.</p></div><ul class="proof-fan is-fanned" aria-label="Services">' + SITE.capabilities.map((c, index) => '<li class="proof-swatch" tabindex="0"><div class="proof-swatch__chip"><span class="proof-mono">' + labels[index] + '</span><span class="proof-mono">0' + (index + 1) + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p></div><span class="proof-swatch__rivet" aria-hidden="true"></span></li>').join("") + '</ul></div>';
     return;
   }
   el.className = "disciplines-index system-list";

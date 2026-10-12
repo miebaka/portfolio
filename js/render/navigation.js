@@ -4,43 +4,45 @@ import { MOUNT } from "../core/contract.js";
 
 function setupPreferences(nav) {
   const root = document.documentElement;
-  const theme = nav.querySelector('[data-preference="theme"]');
-  const motion = nav.querySelector('[data-preference="motion"]');
+  const themes = [...nav.querySelectorAll('[data-preference="theme"]')];
+  const motions = [...nav.querySelectorAll('[data-preference="motion"]')];
   let storedMotion = null;
   try { storedMotion = localStorage.getItem("motion-preference"); } catch {}
   root.dataset.motion = storedMotion || (matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduced" : "regular");
   const sync = () => {
     const dark = root.dataset.theme === "dark";
     const reduced = root.dataset.motion === "reduced";
-    theme.querySelector('[data-theme-name="print"]')?.toggleAttribute("data-active", !dark);
-    theme.querySelector('[data-theme-name="screen"]')?.toggleAttribute("data-active", dark);
+    themes.forEach(theme => {
+      theme.querySelector('[data-theme-name="print"]')?.toggleAttribute("data-active", !dark);
+      theme.querySelector('[data-theme-name="screen"]')?.toggleAttribute("data-active", dark);
+      theme.setAttribute("aria-pressed", String(dark));
+    });
     nav.querySelector(".portfolio-nav__theme-help").textContent = dark ? "Screen mode is active. Switch to Print mode." : "Print mode is active. Switch to Screen mode.";
-    theme.setAttribute("aria-pressed", String(dark));
-    if (motion) {
+    motions.forEach(motion => {
       const label = reduced ? "ENABLE MOTION" : "REDUCE MOTION";
       const icon = reduced
         ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
         : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
-      motion.querySelector(".motion-fab__icon").innerHTML = icon;
-      motion.querySelector(".motion-fab__label").textContent = label;
+      motion.querySelector(".preference-motion__icon").innerHTML = icon;
+      motion.querySelector(".preference-motion__label").textContent = label;
       motion.setAttribute("aria-label", label.toLowerCase().replace(/^./, char => char.toUpperCase()));
       motion.setAttribute("aria-pressed", String(reduced));
-    }
+    });
     document.dispatchEvent(new CustomEvent("motionpreferencechange", { detail: { reduced } }));
   };
-  theme.addEventListener("click", () => {
+  themes.forEach(theme => theme.addEventListener("click", () => {
     const apply = () => {
       root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
       try { localStorage.setItem("color-theme", root.dataset.theme); } catch {}
       sync();
     };
     if (document.startViewTransition && root.dataset.motion !== "reduced") document.startViewTransition(apply); else apply();
-  });
-  motion?.addEventListener("click", () => {
+  }));
+  motions.forEach(motion => motion.addEventListener("click", () => {
     root.dataset.motion = root.dataset.motion === "reduced" ? "regular" : "reduced";
     try { localStorage.setItem("motion-preference", root.dataset.motion); } catch {}
     sync();
-  });
+  }));
   sync();
 }
 
@@ -76,16 +78,21 @@ export function renderNavigation() {
   if (!el) return;
   const base = basePath();
   const current = document.body.dataset.page;
-  const link = item => '<a href="' + base + safeURL(item.href) + '"' + (current === item.key ? ' aria-current="page"' : '') + '>' + esc(item.label) + '</a>';
-  const all = SITE.menu.map((item, index) => '<li><span>' + String(index + 1).padStart(2, "0") + '</span>' + link(item) + '</li>').join("");
+  const link = item => '<a href="' + base + safeURL(item.href) + '"' + (current === item.key ? ' aria-current="page"' : '') + '>' + esc(item.label.toUpperCase()) + '</a>';
+  const indexRoutes = [
+    { label: "Home", href: "index.html", key: "home" },
+    ...SITE.menu,
+    { label: "Privacy", href: "privacy.html", key: "privacy" },
+    { label: "404", href: "404.html", key: "404" },
+  ];
+  const all = indexRoutes.map((item, index) => '<li><span>' + String(index + 1).padStart(2, "0") + '</span>' + link(item) + '</li>').join("");
   const desktopRoutes = SITE.menu.filter(item => ["work", "explorations", "community"].includes(item.key)).map(link).join("");
   const currentAttr = active => active ? ' aria-current="page"' : '';
   el.className = "portfolio-nav";
   el.innerHTML =
     '<nav class="portfolio-nav__bar" aria-label="Primary"><a class="portfolio-nav__brand" href="' + base + 'index.html" aria-label="Miebaka Joshua home"' + currentAttr(current === "home") + '><img src="' + base + 'assets/images/miebaka-joshua-logo.svg" width="28" height="28" alt=""><span>MIEBAKA JOSHUA</span></a><div class="portfolio-nav__routes">' + desktopRoutes + '</div><button class="portfolio-nav__theme" data-preference="theme" type="button" aria-describedby="theme-help"><span data-theme-name="print">PRINT</span><span>/</span><span data-theme-name="screen">SCREEN</span></button><span class="sr-only portfolio-nav__theme-help" id="theme-help"></span><button class="portfolio-nav__index" data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX <span aria-hidden="true">＋</span></button></nav>' +
     '<nav class="mobile-nav" aria-label="Mobile"><a href="' + base + 'index.html"' + currentAttr(current === "home") + '>HOME</a><a href="' + base + 'work.html"' + currentAttr(current === "work") + '>WORK</a><a href="' + base + 'explorations.html"' + currentAttr(current === "explorations") + '>EXPLORE</a><a href="' + base + 'contact.html"' + currentAttr(current === "contact") + '>CONTACT</a><button data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX</button></nav>' +
-    '<button class="motion-fab" data-preference="motion" type="button"><span class="motion-fab__icon"></span><span class="motion-fab__label"></span></button>' +
-    '<div class="portfolio-index" id="portfolio-index" role="dialog" aria-modal="true" aria-label="Site index" hidden><div class="portfolio-index__head"><span>INDEX / 01—07</span><button type="button" data-index-trigger aria-controls="portfolio-index">CLOSE ×</button></div><div class="portfolio-index__body"><ol>' + all + '</ol><aside><p class="portfolio-index__label">CONTACT</p><a href="' + base + 'contact.html">WORK WITH ME ↗</a><a href="' + base + safeURL(SITE.cv) + '" download>DOWNLOAD CV · PDF ↘</a><a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">VIEW LINKEDIN ↗</a></aside></div></div>';
+    '<div class="portfolio-index" id="portfolio-index" role="dialog" aria-modal="true" aria-label="Site index" hidden><div class="portfolio-index__head"><span>INDEX / 01-10</span><button type="button" data-index-trigger aria-controls="portfolio-index">CLOSE ×</button></div><div class="portfolio-index__body"><ol>' + all + '</ol><aside><div class="portfolio-index__preferences"><p class="portfolio-index__label">APPEARANCE</p><button class="portfolio-index__theme" data-preference="theme" type="button" aria-describedby="theme-help"><span data-theme-name="print">PRINT</span><span>/</span><span data-theme-name="screen">SCREEN</span></button><p class="portfolio-index__label">MOTION</p><button class="portfolio-index__motion" data-preference="motion" type="button"><span class="preference-motion__icon"></span><span class="preference-motion__label"></span></button></div><p class="portfolio-index__label">CONTACT</p><a href="' + base + 'contact.html">WORK WITH ME ↗</a><a href="' + base + safeURL(SITE.cv) + '" download>DOWNLOAD CV · PDF ↘</a><a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">VIEW LINKEDIN ↗</a></aside></div></div>';
   setupPreferences(el);
   setupIndex(el);
 }
