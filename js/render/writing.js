@@ -24,7 +24,7 @@ export function renderWriting() {
 
   if (!articles.length) {
     el.innerHTML =
-      '<div class="playground-empty">' +
+      '<div class="writing-empty">' +
         "<p>Nothing here yet. First post coming soon.</p>" +
       "</div>";
     return;

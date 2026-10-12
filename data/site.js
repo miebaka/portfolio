@@ -10,6 +10,7 @@ export const SITE = {
   lastfmKey:  "127872bcf2ccc619e4fb52bb4b81805f",
   role: "Brand & visual designer",
   email: "miebakakiki@gmail.com",
+  cv: "assets/documents/miebaka-joshua-cv.pdf",
   location: "Lagos, Nigeria",
   city: "Lagos",      // reserved — planned nav clock feature
   timezone: "WAT",    // reserved — planned nav clock feature
@@ -22,7 +23,7 @@ export const SITE = {
     { label: "About",      href: "about.html",      key: "about" },
     { label: "Work",       href: "work.html",       key: "work" },
     { label: "Services",    href: "services.html",   key: "services" },
-    { label: "Writing",    href: "playground.html", key: "playground" },
+    { label: "Writing",    href: "writing.html", key: "writing" },
     { label: "Explorations", href: "explorations.html", key: "explorations" },
     { label: "Community",  href: "community.html",  key: "community" },
     { label: "Contact",    href: "contact.html",    key: "contact" },

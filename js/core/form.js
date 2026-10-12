@@ -1,9 +1,5 @@
-/* Contact form — progressive mailto: handoff, no backend required.
-   Swap in a real endpoint (Formspree, Netlify Forms, etc.) when ready.
-
-   Validation is per-field: the message appears under the input that caused it
-   and the input is marked aria-invalid, so screen-reader users hear which
-   field is wrong rather than a summary line detached from the control. */
+/* Contact form — enhanced submission to the same-origin Vercel endpoint.
+   The HTML action and method remain usable without JavaScript. */
 import { SITE } from "../../data/site.js";
 
 /* Deliberately permissive. The only thing worth rejecting here is an address
@@ -56,22 +52,25 @@ export function initForm() {
 
   const nameInput = form.querySelector("#name");
   const emailInput = form.querySelector("#email");
+  const interestInput = form.querySelector("#interest");
   const messageInput = form.querySelector("#message");
+  const submit = form.querySelector('button[type="submit"]');
 
   /* Clear a field's error as soon as the user starts correcting it. Waiting
      for the next submit to clear it makes the form feel like it is arguing. */
-  [nameInput, emailInput, messageInput].forEach((input) => {
+  [nameInput, emailInput, interestInput, messageInput].forEach((input) => {
     if (!input) return;
     input.addEventListener("input", () => {
       if (input.getAttribute("aria-invalid")) setFieldError(input, "");
     });
   });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = (nameInput?.value || "").trim();
     const email = (emailInput?.value || "").trim();
+    const interest = (interestInput?.value || "").trim();
     const message = (messageInput?.value || "").trim();
 
     let firstInvalid = null;
@@ -87,37 +86,38 @@ export function initForm() {
     else if (!EMAIL_RE.test(email)) fail(emailInput, "That email address looks incomplete.");
     else setFieldError(emailInput, "");
 
+    if (!interest) fail(interestInput, "Choose what you are getting in touch about.");
+    else setFieldError(interestInput, "");
+
+    if (!message) fail(messageInput, "Add a short message so I know how to help.");
+    else setFieldError(messageInput, "");
+
     if (firstInvalid) {
       setStatus("Check the highlighted fields.", "error");
       firstInvalid.focus();
       return;
     }
 
-    /* mailto: is a URL, and long ones get truncated or silently dropped by
-       mail clients and by Windows' shell handler in particular. Trim the body
-       well short of any of those limits and tell the sender it happened,
-       rather than letting the end of their message disappear. */
-    const MAX_BODY = 1500;
-    let sent = message;
-    let trimmed = false;
-    if (sent.length > MAX_BODY) {
-      sent = sent.slice(0, MAX_BODY);
-      trimmed = true;
+    submit?.setAttribute("aria-busy", "true");
+    if (submit) { submit.disabled = true; submit.textContent = "SENDING…"; }
+    setStatus("Sending your enquiry…", "loading");
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ name, email, interest, message, companySite: form.elements.companySite?.value || "" }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "The message could not be sent.");
+      form.reset();
+      setStatus("Your enquiry has been sent. I’ll reply by email.", "success");
+    } catch {
+      const to = SITE.email || "miebakakiki@gmail.com";
+      setStatus("I couldn’t send that just now. Your message is still here; email " + to + " instead.", "error");
+    } finally {
+      submit?.removeAttribute("aria-busy");
+      if (submit) { submit.disabled = false; submit.textContent = "SEND ENQUIRY"; }
     }
-
-    const to = SITE.email || "miebakakiki@gmail.com";
-    const subject = encodeURIComponent("Project enquiry from " + name);
-    const body = encodeURIComponent(sent + "\n\n" + name + " (" + email + ")");
-    window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
-
-    /* Whether a mail client actually opened is not observable from here, so
-       the message names the address instead of asserting success. If nothing
-       happened, the visitor still has what they need. */
-    setStatus(
-      trimmed
-        ? "Your message was long, so it opens trimmed. Send to " + to + " if it looks cut short."
-        : "Opening your email app. If nothing happens, write to " + to + ".",
-      trimmed ? "error" : "success"
-    );
   });
 }

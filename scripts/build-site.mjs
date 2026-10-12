@@ -6,7 +6,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
-const rootFiles = ["404.html", "about.html", "community.html", "contact.html", "explorations.html", "index.html", "playground.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
+const rootFiles = ["404.html", "about.html", "community.html", "contact.html", "explorations.html", "index.html", "writing.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
 const caseFiles = ["rivo.html", "tedx-rsu.html", "chopbox.html", "christian-poster-a-week.html"];
 const articleFiles = ["designing-for-disability-in-nigeria.html", "when-the-swoosh-lost-its-soul.html"];
 
@@ -71,6 +71,7 @@ await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
+await ensureCopy(join(root, "assets/documents"), join(output, "assets/documents"));
 for (const file of articleFiles) await ensureCopy(join(root, "writing", file), join(output, "writing", file));
 
 for (const file of caseFiles) {

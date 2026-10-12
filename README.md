@@ -21,7 +21,7 @@ index.html                 Home
 work.html                  Work archive
 about.html                 Profile and experience
 services.html              Capabilities
-playground.html            Writing
+writing.html            Writing
 contact.html               Contact
 privacy.html / 404.html    Utility pages
 data/site.js               Content source of truth

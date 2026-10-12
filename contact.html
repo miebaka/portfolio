@@ -50,9 +50,11 @@
     <nav class="nav-fallback" aria-label="Primary">
         <a href="index.html">Home</a>
         <a href="work.html">Work</a>
+        <a href="explorations.html">Explorations</a>
+        <a href="community.html">Community</a>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
-        <a href="playground.html">Writing</a>
+        <a href="writing.html">Writing</a>
         <a href="contact.html">Contact</a>
     </nav>
   </header>
@@ -77,8 +79,8 @@
           </dl>
         </div>
 
-        <form class="contact__form" novalidate aria-describedby="contact-handoff form-status">
-          <p class="contact__handoff" id="contact-handoff">This opens a draft in your email app. The site does not store your message.</p>
+        <form class="contact__form" action="/api/contact" method="post" novalidate aria-describedby="contact-handoff form-status">
+          <p class="contact__handoff" id="contact-handoff">Your name, email, area of interest and message are emailed directly to me and used only to reply.</p>
           <div class="field">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="form-status">
@@ -88,11 +90,22 @@
             <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="form-status">
           </div>
           <div class="field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" autocomplete="off" placeholder="Tell me about the role, project or decision you need help with."></textarea>
+            <label for="interest">What are you getting in touch about?</label>
+            <select id="interest" name="interest" required aria-required="true" aria-describedby="form-status">
+              <option value="">Choose one</option>
+              <option>Senior design role</option>
+              <option>Brand or visual design project</option>
+              <option>Creative collaboration</option>
+              <option>Something else</option>
+            </select>
           </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" autocomplete="off" required aria-required="true" aria-describedby="form-status" placeholder="Tell me about the role, project or decision you need help with."></textarea>
+          </div>
+          <div class="field contact__trap" aria-hidden="true"><label for="company-site">Company website</label><input type="text" id="company-site" name="companySite" tabindex="-1" autocomplete="off"></div>
           <div class="contact__submit">
-            <button class="btn" type="submit">Open email draft</button>
+            <button class="btn" type="submit">SEND ENQUIRY</button>
           </div>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>

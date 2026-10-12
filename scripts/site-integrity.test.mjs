@@ -297,10 +297,36 @@ test("portfolio depth features are present without depending on JavaScript for c
   }
 });
 
+test("checkpoint 6 routes ship as one complete editorial system", async () => {
+  const routes = ["index.html", "work.html", "explorations.html", "community.html", "about.html", "services.html", "writing.html", "contact.html", "privacy.html", "404.html"];
+  for (const route of routes) await access(join(dist, route));
+  await assert.rejects(access(join(dist, "playground.html")));
+
+  const explorations = await readFile(join(dist, "explorations.html"), "utf8");
+  for (const label of ["PROMPT", "VISUAL DECISION", "DATE"]) assert.match(explorations, new RegExp(label));
+  const community = await readFile(join(dist, "community.html"), "utf8");
+  for (const label of ["FOR", "CONTRIBUTION", "ACCESS"]) assert.match(community, new RegExp(label));
+
+  const about = await readFile(join(dist, "about.html"), "utf8");
+  assert.match(about, /DOWNLOAD CV · PDF · 294 KB/);
+  const cv = await stat(join(dist, "assets", "documents", "miebaka-joshua-cv.pdf"));
+  assert.ok(cv.size > 250_000 && cv.size < 350_000);
+
+  const contact = await readFile(join(dist, "contact.html"), "utf8");
+  assert.match(contact, /action="\/api\/contact"/);
+  assert.match(contact, /SEND ENQUIRY/);
+  const endpoint = await readFile(join(root, "api", "contact.js"), "utf8");
+  assert.match(endpoint, /https:\/\/api\.resend\.com\/emails/);
+  assert.match(endpoint, /miebakakiki@gmail\.com/);
+
+  const notFound = await readFile(join(dist, "404.html"), "utf8");
+  assert.match(notFound, /data-decision-field/);
+});
+
 test("requested language and contact details stay canonical", async () => {
   const sourceFiles = [
     join(dist, "index.html"), join(dist, "about.html"), join(dist, "services.html"),
-    join(dist, "contact.html"), join(dist, "playground.html"), join(dist, "privacy.html"),
+    join(dist, "contact.html"), join(dist, "writing.html"), join(dist, "privacy.html"),
     join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
     join(dist, "writing", "designing-for-disability-in-nigeria.html")
   ];
