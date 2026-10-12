@@ -35,7 +35,6 @@ function buildChip(container) {
   chip.target = "_blank";
   chip.rel = "noopener noreferrer";
   chip.setAttribute("aria-live", "polite");
-  chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
     '<span class="now-playing-pill__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg><i></i></span>' +
     '<span class="now-playing-pill__copy"><span class="now-playing-pill__label">CHECKING LAST.FM</span><b class="now-playing-pill__track">LISTENING HISTORY</b></span>' +
@@ -50,13 +49,11 @@ function updateChip(track) {
     chip.querySelector(".now-playing-pill__track").textContent =
       track.name + " · " + track.artist;
     chip.querySelector(".now-playing-pill__label").textContent = track.live ? "NOW PLAYING" : "LAST PLAYED";
-    chip.setAttribute("aria-label", (track.live ? "Now listening to " : "Last listened to ") + track.name + " by " + track.artist + ". Open Last.fm history");
     chip.dataset.live = String(track.live);
     chip.hidden = false;
   } else {
     chip.querySelector(".now-playing-pill__label").textContent = "LISTENING HISTORY";
     chip.querySelector(".now-playing-pill__track").textContent = "OPEN LAST.FM";
-    chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
     chip.dataset.live = "false";
   }
 }

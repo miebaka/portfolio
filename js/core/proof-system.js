@@ -12,16 +12,15 @@ function initDisclosures() {
 function initNavSurface() {
   const hero = $(".home-landing");
   if (!hero) return;
-  let frame = 0;
-  const update = () => {
-    frame = 0;
-    document.documentElement.classList.toggle("proof-nav-on-hero", scrollY < hero.offsetHeight * .82);
-  };
-  addEventListener("scroll", () => {
-    if (!frame) frame = requestAnimationFrame(update);
-  }, { passive: true });
-  addEventListener("pagehide", () => cancelAnimationFrame(frame), { once: true });
-  update();
+  const marker = document.createElement("span");
+  marker.setAttribute("aria-hidden", "true");
+  marker.style.cssText = "position:absolute;top:82%;width:1px;height:1px;pointer-events:none";
+  hero.append(marker);
+  const observer = new IntersectionObserver(([entry]) => {
+    document.documentElement.classList.toggle("proof-nav-on-hero", entry.isIntersecting || entry.boundingClientRect.top > 0);
+  });
+  observer.observe(marker);
+  addEventListener("pagehide", () => observer.disconnect(), { once: true });
 }
 
 export function initProofSystem() {

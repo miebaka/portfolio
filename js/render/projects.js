@@ -10,7 +10,7 @@ function projectMarkup(project, i, base) {
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
   const href = project.href || ('work/' + safeToken(project.slug) + '.html');
   return '<article class="work-flick__item" style="--project-tone:' + esc(project.tone) + '">' +
-    '<a class="work-flick__link" href="' + base + href + '" aria-label="View ' + esc(project.title) + ' case study">' +
+    '<a class="work-flick__link" href="' + base + href + '">' +
     '<div class="work-flick__media">' + media + '</div>' +
     '<div class="work-flick__content"><span class="work-flick__number">' + String(i + 1).padStart(2, '0') + '</span><div><p>' + esc(project.category) + ' / ' + esc(project.year) + '</p><h3>' + esc(project.title) + '</h3></div><span class="work-flick__arrow" aria-hidden="true">↗</span></div></a></article>';
 }
@@ -43,7 +43,7 @@ export function renderWork() {
     el.innerHTML = pairs.join('');
   } else {
     const base = basePath();
-    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html" aria-label="View all work"><span class="work-flick__more-label">ARCHIVE / ' + String(SITE.projects.length).padStart(2, '0') + '</span><strong>VIEW ALL WORK</strong><span aria-hidden="true">→</span></a>';
+    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html"><span class="work-flick__more-label">ARCHIVE / ' + String(SITE.projects.length).padStart(2, '0') + '</span><strong>VIEW ALL WORK</strong><span aria-hidden="true">→</span></a>';
   }
   bindExpansion(el);
 }
@@ -82,14 +82,13 @@ export function renderClients() {
   const separator = '<li class="client-registration" aria-hidden="true"><span></span></li>';
   const items = SITE.clients.map(client => clientItem(client) + separator).join("");
   el.className = 'client-marquee';
-  el.innerHTML = '<div class="client-marquee__head container"><button class="client-marquee__control" type="button" aria-pressed="false" aria-label="Pause client logos"><span aria-hidden="true">Ⅱ</span><span>PAUSE LOGOS</span></button></div><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+  el.innerHTML = '<div class="client-marquee__head container"><button class="client-marquee__control" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span><span>PAUSE LOGOS</span></button></div><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
 
   const control = el.querySelector('.client-marquee__control');
   control.addEventListener('click', () => {
     const paused = el.classList.toggle('is-paused');
     control.setAttribute('aria-pressed', String(paused));
     control.innerHTML = paused ? '<span aria-hidden="true">▶</span><span>PLAY LOGOS</span>' : '<span aria-hidden="true">Ⅱ</span><span>PAUSE LOGOS</span>';
-    control.setAttribute('aria-label', paused ? 'Play client logos' : 'Pause client logos');
   });
 
   if (!('IntersectionObserver' in window)) return;

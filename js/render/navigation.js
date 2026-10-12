@@ -14,7 +14,7 @@ function setupPreferences(nav) {
     const reduced = root.dataset.motion === "reduced";
     theme.querySelector('[data-theme-name="print"]')?.toggleAttribute("data-active", !dark);
     theme.querySelector('[data-theme-name="screen"]')?.toggleAttribute("data-active", dark);
-    theme.setAttribute("aria-label", dark ? "Switch to Print mode" : "Switch to Screen mode");
+    nav.querySelector(".portfolio-nav__theme-help").textContent = dark ? "Screen mode is active. Switch to Print mode." : "Print mode is active. Switch to Screen mode.";
     theme.setAttribute("aria-pressed", String(dark));
     if (motion) {
       const label = reduced ? "ENABLE MOTION" : "REDUCE MOTION";
@@ -47,6 +47,8 @@ function setupPreferences(nav) {
 function setupIndex(nav) {
   const triggers = [...nav.querySelectorAll('[data-index-trigger]')];
   const menu = nav.querySelector(".portfolio-index");
+  const openTriggers = triggers.filter(button => !menu.contains(button));
+  const closeTrigger = menu.querySelector('[data-index-trigger]');
   let previousFocus = null;
   const focusables = () => [...menu.querySelectorAll('a,button:not([disabled])')];
   const setOpen = open => {
@@ -54,9 +56,10 @@ function setupIndex(nav) {
     triggers.forEach(button => button.setAttribute("aria-expanded", String(open)));
     menu.hidden = !open;
     if (open) { previousFocus = document.activeElement; focusables()[0]?.focus(); }
-    else previousFocus?.focus?.();
+    else requestAnimationFrame(() => previousFocus?.focus?.());
   };
-  triggers.forEach(button => button.addEventListener("click", () => setOpen(menu.hidden)));
+  openTriggers.forEach(button => button.addEventListener("click", () => setOpen(true)));
+  closeTrigger?.addEventListener("click", () => setOpen(false));
   menu.addEventListener("click", event => { if (event.target.closest("a")) setOpen(false); });
   document.addEventListener("keydown", event => {
     if (menu.hidden) return;
@@ -79,7 +82,7 @@ export function renderNavigation() {
   const currentAttr = active => active ? ' aria-current="page"' : '';
   el.className = "portfolio-nav";
   el.innerHTML =
-    '<nav class="portfolio-nav__bar" aria-label="Primary"><a class="portfolio-nav__brand" href="' + base + 'index.html"' + currentAttr(current === "home") + '><img src="' + base + 'assets/images/miebaka-joshua-logo.svg" width="28" height="28" alt=""><span>MIEBAKA JOSHUA</span></a><div class="portfolio-nav__routes">' + desktopRoutes + '</div><button class="portfolio-nav__theme" data-preference="theme" type="button"><span data-theme-name="print">PRINT</span><span aria-hidden="true">/</span><span data-theme-name="screen">SCREEN</span></button><button class="portfolio-nav__index" data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX <span aria-hidden="true">＋</span></button></nav>' +
+    '<nav class="portfolio-nav__bar" aria-label="Primary"><a class="portfolio-nav__brand" href="' + base + 'index.html" aria-label="Miebaka Joshua home"' + currentAttr(current === "home") + '><img src="' + base + 'assets/images/miebaka-joshua-logo.svg" width="28" height="28" alt=""><span>MIEBAKA JOSHUA</span></a><div class="portfolio-nav__routes">' + desktopRoutes + '</div><button class="portfolio-nav__theme" data-preference="theme" type="button" aria-describedby="theme-help"><span data-theme-name="print">PRINT</span><span>/</span><span data-theme-name="screen">SCREEN</span></button><span class="sr-only portfolio-nav__theme-help" id="theme-help"></span><button class="portfolio-nav__index" data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX <span aria-hidden="true">＋</span></button></nav>' +
     '<nav class="mobile-nav" aria-label="Mobile"><a href="' + base + 'index.html"' + currentAttr(current === "home") + '>HOME</a><a href="' + base + 'work.html"' + currentAttr(current === "work") + '>WORK</a><a href="' + base + 'explorations.html"' + currentAttr(current === "explorations") + '>EXPLORE</a><a href="' + base + 'contact.html"' + currentAttr(current === "contact") + '>CONTACT</a><button data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX</button></nav>' +
     '<button class="motion-fab" data-preference="motion" type="button"><span class="motion-fab__icon"></span><span class="motion-fab__label"></span></button>' +
     '<div class="portfolio-index" id="portfolio-index" role="dialog" aria-modal="true" aria-label="Site index" hidden><div class="portfolio-index__head"><span>INDEX / 01—07</span><button type="button" data-index-trigger aria-controls="portfolio-index">CLOSE ×</button></div><div class="portfolio-index__body"><ol>' + all + '</ol><aside><p class="portfolio-index__label">CONTACT</p><a href="' + base + 'contact.html">WORK WITH ME ↗</a><a href="' + base + safeURL(SITE.cv) + '" download>DOWNLOAD CV · PDF ↘</a><a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">VIEW LINKEDIN ↗</a></aside></div></div>';

@@ -221,6 +221,20 @@ test("interactive controls share the documented role system", async () => {
   assert.doesNotMatch(primaryMarkup, /class=["'`]btn\s+btn-/);
 });
 
+test("interactive labels remain visible, discernible and name-consistent", async () => {
+  const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");
+  const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
+  const nowPlaying = await readFile(join(root, "js", "render", "now-playing.js"), "utf8");
+  assert.match(navigation, /aria-label="Miebaka Joshua home"/);
+  assert.match(navigation, /aria-describedby="theme-help"/);
+  assert.match(navigation, /portfolio-nav__theme-help/);
+  assert.match(navigation, /openTriggers\.forEach/);
+  assert.match(navigation, /closeTrigger\?\.addEventListener/);
+  assert.doesNotMatch(projects, /aria-label="View [^\"]+(?:case study|work)/);
+  assert.doesNotMatch(projects, /aria-label="(?:Pause|Play) client logos"/);
+  assert.doesNotMatch(nowPlaying, /setAttribute\("aria-label"/);
+});
+
 test("remaining proof behaviours stay dependency-free and retired effects stay retired", async () => {
   const source = await readFile(join(root, "js", "core", "proof-system.js"), "utf8");
   const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");

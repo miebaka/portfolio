@@ -97,5 +97,4 @@ export function initFooterSignature() {
   new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   new IntersectionObserver(([entry]) => entry.isIntersecting && !document.hidden ? start() : stop(), { threshold: .01 }).observe(host);
   document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
-  rebuild();
 }
