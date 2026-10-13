@@ -504,6 +504,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-page--tedx .case-shot__plate{flex:none;font:600 .8125rem/1.4 var(--label);letter-spacing:.08em}
 .case-page--tedx .case-shot__caption p{max-width:65ch}
 .case-page--tedx .case-next{min-height:0;padding-block:clamp(4rem,7vw,7rem)}
+.case-page--tedx .case-next__title{margin-top:var(--s2);font:400 clamp(2.5rem,5vw,5rem)/1 var(--display);color:var(--sys-color-primary)}
 .case-page--tedx .case-next__state{margin-top:var(--s2);color:var(--sys-color-on-surface-variant);font-size:.875rem}
 @media(max-width:64rem){
   .case-page--tedx .case-lede{grid-template-columns:1fr}

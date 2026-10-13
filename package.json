@@ -8,11 +8,12 @@
     "validate:content": "node scripts/validate-content.mjs",
     "test:content": "node --test tests/content-schema.test.mjs",
     "test:navigation": "node --test tests/navigation.test.mjs",
+    "test:case": "node --test tests/case-study.test.mjs",
     "dev": "npx serve . --listen 4000 --no-clipboard",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
-    "test": "npm run test:content && npm run test:navigation && npm run build && npm run test:integrity && npm run test:contract"
+    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run build && npm run test:integrity && npm run test:contract"
   },
   "devDependencies": {
     "sharp": "^0.35.5"

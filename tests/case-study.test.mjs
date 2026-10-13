@@ -55,6 +55,13 @@ test("published narratives need one usable next destination and allow omitted un
   assert.equal(validateContent(structuredClone(CONTENT)).ok, true);
 });
 
+test("active next destinations require a published project and published case", () => {
+  reject(study => { study.next.interactive = true; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
+  reject(study => { delete study.next.interactive; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
+  reject((study, content) => { study.next.interactive = true; content.projects.find(project => project.slug === "chopbox").status = "published"; }, "NEXT_CASE_UNPUBLISHED", "next.slug");
+  reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
+});
+
 test("TEDx opens with its proposition, hero and supported project facts", () => {
   const html = markup();
   assert.doesNotMatch(html, /case-locked|aria-disabled/);
@@ -106,12 +113,23 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
   assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="lazy"')));
 });
 
-test("the next-project transition names its forthcoming state and has a real destination", () => {
+test("forthcoming next projects disclose their state without offering an active destination", () => {
   const html = markup();
   assert.match(html, /aria-label="Next project"/);
-  assert.match(html, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.match(html, /<p class="case-next__title">ChopBox<\/p>/);
   assert.match(html, /class="case-next__state">Coming soon<\/p>/);
-  assert.equal((html.match(/class="case-next__link"/g) || []).length, 1);
+  assert.doesNotMatch(html, /href="[^\"]*chopbox\.html"|class="case-next__link"|aria-disabled|tabindex/);
+});
+
+test("a published usable next case is linked while an unavailable case stays noninteractive", () => {
+  const site = structuredClone(SITE);
+  site.projects.find(project => project.slug === "chopbox").status = "published";
+  site.caseStudies["tedx-rsu"].next.interactive = true;
+  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /href="[^\"]*chopbox\.html"/);
+  site.caseStudies.chopbox.status = "published";
+  const html = renderCaseMarkup(site, "tedx-rsu");
+  assert.match(html, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
 test("chapter rendering honours authored media references and escapes content", () => {
@@ -143,7 +161,8 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.equal(article, markup());
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
-  assert.match(article, /href="\.\.\/work\/chopbox\.html"/);
+  assert.match(article, /<p class="case-next__title">ChopBox<\/p>/);
+  assert.doesNotMatch(article, /href="[^\"]*chopbox\.html"/);
   assert.match(html, /og:image" content="https:\/\/miebaka\.design\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");

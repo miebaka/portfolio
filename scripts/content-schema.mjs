@@ -136,6 +136,7 @@ export function validateContent(content) {
       else {
         if (!hasText(study.next.title)) add(`${path}.next.title`, "CASE_NEXT_TITLE_REQUIRED", "The next project needs a usable link title.");
         if (study.next.slug === slug) add(`${path}.next.slug`, "CASE_NEXT_SELF", "Next must lead to another project.");
+        if (study.next.interactive !== undefined && typeof study.next.interactive !== "boolean") add(`${path}.next.interactive`, "CASE_NEXT_INTERACTIVE_INVALID", "Next interactivity must be a boolean when specified.");
       }
       if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
       else {
@@ -164,6 +165,10 @@ export function validateContent(content) {
       if (!nextProject) add(`${path}.next.slug`, "NEXT_PROJECT_MISSING", "Next must reference an existing project.");
       else if (nextProject.status === PROJECT_STATUS.PRIVATE) add(`${path}.next.slug`, "NEXT_PROJECT_PRIVATE", "Next cannot expose a private project.");
       else if (!isRecord(studies[nextProject.slug]) || routePath(nextProject.href).startsWith("writing/")) add(`${path}.next.slug`, "NEXT_CASE_MISSING", "Next must reference a project with a usable case-study destination.");
+      else if (study.status === "published" && study.next.interactive !== false) {
+        if (nextProject.status !== PROJECT_STATUS.PUBLISHED) add(`${path}.next.slug`, "NEXT_PROJECT_UNPUBLISHED", "An active next destination must be a published project; forthcoming entries must be noninteractive.");
+        else if (studies[nextProject.slug].status !== "published") add(`${path}.next.slug`, "NEXT_CASE_UNPUBLISHED", "An active next destination must have a published case narrative.");
+      }
     }
     if (!Array.isArray(study.media)) { add(`${path}.media`, "MEDIA_INVALID", "Case media must be an array."); continue; }
     const seenMedia = new Set();

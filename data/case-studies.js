@@ -307,7 +307,8 @@ export const caseStudies = {
     ],
     "next": {
       "slug": "chopbox",
-      "title": "ChopBox"
+      "title": "ChopBox",
+      "interactive": false
     },
     "status": "published"
   },

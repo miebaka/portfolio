@@ -37,6 +37,17 @@ function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><p class="case-chapter__label">${esc(label)}</p><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
+function nextBlock(site, study, base) {
+  const next = study.next;
+  const project = site.projects?.find(item => item.slug === next?.slug);
+  if (!next?.slug || !project || project.status === "private") return "";
+  const published = project.status === "published" && site.caseStudies?.[next.slug]?.status === "published";
+  const title = published && next.interactive !== false
+    ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">${esc(next.title)}</a>`
+    : `<p class="case-next__title">${esc(next.title)}</p>`;
+  return `<section class="case-next container" aria-label="Next project"><p class="case-next__label">Next project</p>${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
+}
+
 export function renderCaseMarkup(site, slug, base = "../") {
   const study = site.caseStudies?.[slug];
   if (!study) return "";
@@ -50,14 +61,13 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const heroMarkup = shot(hero, "hero", base, nextPlate());
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
-    const nextProject = site.projects?.find(item => item.slug === study.next?.slug);
-    const next = study.next?.slug && nextProject?.status !== "private" ? `<section class="case-next container" aria-label="Next project"><p class="case-next__label">Next project</p><a class="case-next__link" href="${base}work/${token(study.next.slug)}.html">${esc(study.next.title)}</a>${nextProject?.status === "coming-soon" ? '<p class="case-next__state">Coming soon</p>' : ""}</section>` : "";
+    const next = nextBlock(site, study, base);
     return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><p class="case-project">${esc(study.title)}</p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];
   rest.forEach((item, index) => groups[Math.min(4, Math.floor(index * 5 / Math.max(1, rest.length)))].push(item));
-  const next = study.next?.slug ? `<section class="case-next container" aria-label="Next project"><p class="case-next__label">Next project</p><a class="case-next__link" href="${base}work/${token(study.next.slug)}.html">${esc(study.next.title)}</a></section>` : "";
+  const next = nextBlock(site, study, base);
   const index = '<nav class="case-index" aria-label="Case study chapters"><a href="#problem"><span>01</span>Problem</a><a href="#decision"><span>02</span>Decision</a><a href="#system"><span>03</span>Direction</a><a href="#applications"><span>04</span>Applications</a><a href="#result"><span>05</span>Delivery</a></nav>';
   return `${shot(hero, "hero", base)}<header class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main"><h1 class="case-statement">${esc(study.tagline)}</h1><div class="case-brief">${paras(study.overview?.body)}</div>${index}</div></header>${chapter("problem", "01 / Problem", study.overview?.question || "The problem", study.challenge, groups[0], false, base)}${chapter("decision", "02 / Decision", "The idea underneath the form", study.process, groups[1], true, base)}${chapter("system", "03 / Direction", "The choices that shaped it", study.solution, groups[2], false, base)}${chapter("applications", "04 / Applications", "Where the work appeared", study.applications, groups[3], false, base)}${chapter("result", "05 / Delivery", "What the system enabled", study.outcome?.body, groups[4], false, base)}${next}`;
 }
