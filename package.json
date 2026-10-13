@@ -4,12 +4,14 @@
   "private": true,
   "description": "Build and image-optimization tooling for Miebaka Joshua's static portfolio.",
   "scripts": {
-    "build": "node scripts/build-site.mjs",
+    "build": "npm run validate:content && node scripts/build-site.mjs",
+    "validate:content": "node scripts/validate-content.mjs",
+    "test:content": "node --test tests/content-schema.test.mjs",
     "dev": "npx serve . --listen 4000 --no-clipboard",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
-    "test": "npm run build && npm run test:integrity && npm run test:contract"
+    "test": "npm run test:content && npm run build && npm run test:integrity && npm run test:contract"
   },
   "devDependencies": {
     "sharp": "^0.35.5"

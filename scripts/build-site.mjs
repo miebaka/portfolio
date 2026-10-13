@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
+import { assertValidContent } from "./validate-content.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
@@ -64,6 +65,8 @@ async function htmlFiles(directory) {
   return found;
 }
 
+// Validate before touching dist, including when this script runs directly.
+assertValidContent();
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 for (const file of rootFiles) await ensureCopy(join(root, file), join(output, file));
