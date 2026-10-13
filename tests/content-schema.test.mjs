@@ -22,7 +22,10 @@ const fixture = (overrides = {}) => ({
   services: [{ title: "Brand identity", description: "Useful identity systems.", preview: "sample-hero" }],
   writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
-  navigation: { primary: [{ key: "work", label: "Work", href: "work.html" }] },
+  navigation: {
+    routes: [{ key: "work", label: "Work", href: "work.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] }],
+    primary: [{ key: "work", label: "Work", href: "work.html" }]
+  },
   projects: [project()], caseStudies: { sample: study() }, ...overrides
 });
 const expectError = (content, code, path) => {
@@ -138,8 +141,20 @@ test("registry sitemap routes require a build placement and a canonical HTTPS or
   }
   expectError(fixture({ navigation: { routes: [{ ...route, includeIn: ["sitemap"] }] } }), "ROUTE_BUILD_REQUIRED", "navigation.routes[0].includeIn");
 });
+test("content requires the registry and canonical origin consumed by the builder", () => {
+  for (const routes of [undefined, null, {}]) {
+    expectError(fixture({ navigation: { primary: fixture().navigation.primary, routes } }), "ROUTES_INVALID", "navigation.routes");
+  }
+  for (const canonicalUrl of [undefined, null, "", "http://example.com/", "https://example.com/path/"]) {
+    expectError(fixture({ siteConfig: { ...fixture().siteConfig, canonicalUrl } }), "SITE_CANONICAL_INVALID", "siteConfig.canonicalUrl");
+  }
+  const result = validateContent(fixture({ siteConfig: { ...fixture().siteConfig, canonicalUrl: undefined }, navigation: { primary: fixture().navigation.primary } }));
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.some(error => error.code === "ROUTES_INVALID"));
+  assert.ok(result.errors.some(error => error.code === "SITE_CANONICAL_INVALID"));
+});
 test("the same route can appear in different navigation placements", () => {
-  assert.equal(validateContent(fixture({ navigation: { primary: [{ href: "work.html" }], footer: [{ href: "work.html" }] } })).ok, true);
+  assert.equal(validateContent(fixture({ navigation: { ...fixture().navigation, primary: [{ href: "work.html" }], footer: [{ href: "work.html" }] } })).ok, true);
 });
 test("invalid route traversal and unsafe URLs are rejected", () => {
   for (const href of ["../work.html", "javascript:alert(1)", "", "//example.com/work.html"]) {
@@ -209,4 +224,63 @@ test("adding a validated root route generates its build output and sitemap entry
   assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka.design\/studio.html<\/loc>/);
   assert.match(await readFile(join(directory, "dist", "index.html"), "utf8"), /href="studio.html">Studio<\/a>/);
   assert.match(await readFile(join(directory, "dist", "writing", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
+});
+
+test("accepted local writing URL variants build their pathname and retain authored hrefs", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "portfolio-writing-build-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const sourceRoot = new URL("../", import.meta.url);
+  for (const folder of ["data", "scripts", "js", "styles", "work", "writing"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
+  for (const entry of await readdir(sourceRoot)) {
+    if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
+  }
+  for (const folder of ["assets", "node_modules"]) await symlink(new URL(folder, sourceRoot).pathname, join(directory, folder), "dir");
+  const pathname = "writing/when-the-swoosh-lost-its-soul.html";
+  const authoredSource = await readFile(join(directory, pathname), "utf8");
+  for (const href of [`./${pathname}`, `${pathname}#main`, `${pathname}?source=index`, `./${pathname}?source=index#main`]) {
+    await t.test(href, async () => {
+      const writing = [{ title: "An authored essay", href, date: "2024-02-29", summary: "An authored summary." }];
+      const module = `export const writing = ${JSON.stringify(writing)};`;
+      await writeFile(join(directory, "data", "writing.js"), module);
+      const result = spawnSync(process.execPath, [join(directory, "scripts", "build-site.mjs")], { encoding: "utf8" });
+      assert.equal(result.status, 0, result.stderr);
+      const builtArticle = await readFile(join(directory, "dist", pathname), "utf8");
+      assert.ok(builtArticle.includes(authoredSource.match(/<h1[\s\S]*?<\/h1>/)[0]));
+      const sitemap = await readFile(join(directory, "dist", "sitemap.xml"), "utf8");
+      assert.ok(sitemap.includes('<loc>https://miebaka.design/writing/when-the-swoosh-lost-its-soul.html</loc>'));
+      assert.doesNotMatch(sitemap, /#main|\?source=index/);
+      assert.equal(await readFile(join(directory, "dist", "data", "writing.js"), "utf8"), module);
+    });
+  }
+});
+
+test("missing build registry and origin fail with validation errors before dist changes", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "portfolio-registry-gate-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  await mkdir(join(directory, "scripts"));
+  await mkdir(join(directory, "js", "render"), { recursive: true });
+  await mkdir(join(directory, "dist"));
+  await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
+  for (const file of ["build-site.mjs", "content-schema.mjs", "validate-content.mjs"]) await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
+  await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
+  await writeFile(join(directory, "package.json"), '{"type":"module"}');
+  const previousOutput = "Keep the prior output.";
+  await writeFile(join(directory, "dist", "index.html"), previousOutput);
+  const { navigation } = await import("../data/navigation.js");
+  const { siteConfig } = await import("../data/site-config.js");
+  const missingRegistry = { ...navigation };
+  delete missingRegistry.routes;
+  const missingOrigin = { ...siteConfig };
+  delete missingOrigin.canonicalUrl;
+  for (const [nav, config, code] of [[missingRegistry, siteConfig, "ROUTES_INVALID"], [navigation, missingOrigin, "SITE_CANONICAL_INVALID"]]) {
+    await writeFile(join(directory, "data", "navigation.js"), `export const navigation = ${JSON.stringify(nav)};`);
+    await writeFile(join(directory, "data", "site-config.js"), `export const siteConfig = ${JSON.stringify(config)};`);
+    for (const script of ["validate-content.mjs", "build-site.mjs"]) {
+      const result = spawnSync(process.execPath, [join(directory, "scripts", script)], { encoding: "utf8" });
+      assert.equal(result.status, 1, script);
+      assert.match(result.stderr, new RegExp(`\\[${code}\\]`), script);
+      assert.doesNotMatch(result.stderr, /TypeError|ERR_MODULE_NOT_FOUND/, script);
+      assert.equal(await readFile(join(directory, "dist", "index.html"), "utf8"), previousOutput);
+    }
+  }
 });

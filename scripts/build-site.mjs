@@ -67,8 +67,12 @@ const content = assertValidContent();
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
 const rootFiles = routes.filter(route => route.includeIn.includes("build")).map(route => route.href);
-const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !project.href?.startsWith("writing/"));
-const articleFiles = content.writing.filter(entry => entry.href.startsWith("writing/")).map(entry => entry.href);
+// Authored links may contain ./, a query or a fragment; filesystem and sitemap
+// destinations use only the normalized local pathname, while href data stays intact.
+const localPath = href => typeof href === "string" && !/^https:\/\//i.test(href)
+  ? new URL(href, content.siteConfig.canonicalUrl).pathname.slice(1) : "";
+const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !localPath(project.href).startsWith("writing/"));
+const articleFiles = [...new Set(content.writing.map(entry => localPath(entry.href)).filter(path => path.startsWith("writing/")))];
 const canonicalUrl = href => new URL(href === "index.html" ? "" : href, content.siteConfig.canonicalUrl).href;
 const sitemapRoutes = [
   ...routes.filter(route => route.includeIn.includes("sitemap")).map(route => route.href),

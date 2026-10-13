@@ -28,6 +28,8 @@ export function validateContent(content) {
   if (!isRecord(content.siteConfig)) add("siteConfig", "SITE_CONFIG_INVALID", "Site configuration must be an object.");
   else {
     for (const field of ["name", "role", "location"]) if (!hasText(content.siteConfig[field])) add(`siteConfig.${field}`, "SITE_FIELD_REQUIRED", `Site ${field} is required.`);
+    const canonical = content.siteConfig.canonicalUrl;
+    if (!validHttpsUrl(canonical) || new URL(canonical).href !== new URL(canonical).origin + "/") add("siteConfig.canonicalUrl", "SITE_CANONICAL_INVALID", "A canonical HTTPS origin ending in a slash is required.");
     if (typeof content.siteConfig.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(content.siteConfig.email)) add("siteConfig.email", "SITE_EMAIL_INVALID", "A valid contact email is required.");
     if (!Array.isArray(content.siteConfig.socials)) add("siteConfig.socials", "SOCIALS_INVALID", "Social links must be an array.");
     else content.siteConfig.socials.forEach((social, index) => {
@@ -68,10 +70,7 @@ export function validateContent(content) {
   });
 
   if (!isRecord(content.navigation)) add("navigation", "NAVIGATION_INVALID", "Navigation must contain route groups.");
-  else if (content.navigation.routes !== undefined) {
-    const canonical = content.siteConfig?.canonicalUrl;
-    if (!validHttpsUrl(canonical) || new URL(canonical).href !== new URL(canonical).origin + "/") add("siteConfig.canonicalUrl", "SITE_CANONICAL_INVALID", "A registry needs a canonical HTTPS origin ending in a slash.");
-  }
+  else if (content.navigation.routes === undefined) add("navigation.routes", "ROUTES_INVALID", "A canonical route registry array is required.");
   if (isRecord(content.navigation)) for (const [group, routes] of Object.entries(content.navigation)) {
     if (!Array.isArray(routes)) { add(`navigation.${group}`, "ROUTES_INVALID", "A navigation group must be an array."); continue; }
     const seen = new Set();
