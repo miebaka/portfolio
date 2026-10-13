@@ -38,7 +38,12 @@ function header(req, name) {
 }
 
 function parseBody(req) {
-  if (req?.body && typeof req.body === "object" && !Buffer.isBuffer(req.body)) return req.body;
+  if (req?.body && typeof req.body === "object" && !Buffer.isBuffer(req.body)) {
+    let encoded;
+    try { encoded = JSON.stringify(req.body); } catch { throw Object.assign(new Error("Malformed JSON"), { status: 400 }); }
+    if (Buffer.byteLength(encoded, "utf8") > MAX_BODY_BYTES) throw Object.assign(new Error("Body too large"), { status: 413 });
+    return req.body;
+  }
   const raw = Buffer.isBuffer(req?.body) ? req.body.toString("utf8") : req?.body;
   if (typeof raw !== "string") return raw;
   if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) throw Object.assign(new Error("Body too large"), { status: 413 });

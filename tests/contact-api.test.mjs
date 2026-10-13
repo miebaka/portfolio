@@ -138,6 +138,12 @@ test("rejects malformed JSON and validation errors with 422", async () => {
   assert.deepEqual(invalid.payload.fieldErrors, { message: "Add a message." });
 });
 
+test("rejects an oversized pre-parsed body without trusting Content-Length", async () => {
+  const res = await invoke(request({ body: { ...validContact(), padding: "x".repeat(20_000) } }));
+  assert.equal(res.statusCode, 413);
+  assert.equal(res.payload.code, "INVALID_REQUEST");
+});
+
 test("silently accepts a honeypot submission without sending", async () => {
   let sent = false;
   const res = await invoke(request({ body: validContact({ website: "spam.example" }) }), dependencies({
@@ -212,6 +218,7 @@ test("the production origin check accepts configured or true same-origin request
   const req = request();
   assert.equal(isSameOriginRequest(req, ["https://miebaka.design"]), true);
   assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example" } }, ["https://miebaka.design"]), false);
+  assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example", "x-forwarded-host": "attacker.example", "x-forwarded-proto": "https" } }, ["https://miebaka.design"]), false);
   assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "not a URL" } }, []), false);
 });
 

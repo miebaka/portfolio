@@ -14,10 +14,10 @@ export function isSameOriginRequest(req, allowedOrigins = configuredOrigins()) {
 
   let origin;
   try { origin = new URL(supplied).origin; } catch { return false; }
-  if (allowedOrigins.includes(origin)) return true;
+  if (allowedOrigins.length) return allowedOrigins.includes(origin);
 
-  const host = firstHeader(req?.headers?.["x-forwarded-host"] || req?.headers?.host);
-  const protocol = firstHeader(req?.headers?.["x-forwarded-proto"]) || "https";
+  const host = firstHeader(req?.headers?.host);
+  const protocol = "https";
   if (!host || !["http", "https"].includes(protocol)) return false;
   try { return origin === new URL(`${protocol}://${host}`).origin; } catch { return false; }
 }
