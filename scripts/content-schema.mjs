@@ -6,6 +6,7 @@ const isSlug = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$
 const routePath = value => typeof value === "string" ? value.replace(/^\.\//, "").split(/[?#]/)[0] : "";
 const validRoute = value => hasText(value) && /^(?:\.\/)?[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html(?:[?#][^\s]*)?$/.test(value);
 const positiveInteger = value => Number.isInteger(value) && value > 0;
+const REQUIRED_CHAPTERS = ["context", "problem", "process", "decision", "system", "applications", "production", "reflection"];
 const validHttpsUrl = value => {
   if (!hasText(value) || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f]/.test(value)) return false;
   try {
@@ -126,6 +127,38 @@ export function validateContent(content) {
     if (!["draft", "published"].includes(study.status)) add(`${path}.status`, "CASE_STATUS_INVALID", "Use draft or published for narrative readiness.");
     if (study.status === "published" && project?.status !== PROJECT_STATUS.PUBLISHED) add(`${path}.status`, "CASE_PROJECT_NOT_PUBLISHED", "A published narrative needs a published project listing.");
     for (const field of ["title", "tagline"]) if (!hasText(study[field])) add(`${path}.${field}`, "CASE_FIELD_REQUIRED", `Case study ${field} is required.`);
+    if (study.status === "published") {
+      const mediaIds = new Set((Array.isArray(study.media) ? study.media : []).filter(isRecord).map(media => media.src));
+      if (!hasText(study.hero) || !mediaIds.has(study.hero)) add(`${path}.hero`, "CASE_HERO_INVALID", "A published case needs a hero referencing its media.");
+      if (!isRecord(study.facts)) add(`${path}.facts`, "CASE_FACTS_REQUIRED", "A published case needs supported role and deliverable facts.");
+      else for (const field of ["role", "delivered"]) if (!hasText(study.facts[field])) add(`${path}.facts.${field}`, "CASE_FACT_REQUIRED", `Published case ${field} is required.`);
+      if (!isRecord(study.next)) add(`${path}.next`, "CASE_NEXT_REQUIRED", "A published case needs a next-project destination.");
+      else {
+        if (!hasText(study.next.title)) add(`${path}.next.title`, "CASE_NEXT_TITLE_REQUIRED", "The next project needs a usable link title.");
+        if (study.next.slug === slug) add(`${path}.next.slug`, "CASE_NEXT_SELF", "Next must lead to another project.");
+      }
+      if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
+      else {
+        const ids = study.chapters.map(chapter => chapter?.id);
+        const wanted = ids.includes("outcomes") ? [...REQUIRED_CHAPTERS.slice(0, -1), "outcomes", "reflection"] : REQUIRED_CHAPTERS;
+        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use context, problem, process, decision, system, applications, production, optional verified outcomes, then reflection.");
+        const usedMedia = new Set([study.hero]);
+        study.chapters.forEach((chapter, index) => {
+          const chapterPath = `${path}.chapters[${index}]`;
+          if (!isRecord(chapter)) { add(chapterPath, "CASE_CHAPTER_INVALID", "A chapter must be an object."); return; }
+          if (!hasText(chapter.label)) add(`${chapterPath}.label`, "CASE_CHAPTER_LABEL_REQUIRED", "A chapter needs a usable orientation label.");
+          if (chapter.title !== undefined && !hasText(chapter.title)) add(`${chapterPath}.title`, "CASE_CHAPTER_TITLE_INVALID", "An optional chapter title must contain text.");
+          if (!Array.isArray(chapter.body) || !chapter.body.length || chapter.body.some(paragraph => !hasText(paragraph))) add(`${chapterPath}.body`, "CASE_CHAPTER_BODY_INVALID", "Every chapter needs nonempty authored paragraphs.");
+          if (chapter.media !== undefined) {
+            if (!Array.isArray(chapter.media) || chapter.media.some(id => !hasText(id) || !mediaIds.has(id))) add(`${chapterPath}.media`, "CASE_CHAPTER_MEDIA_INVALID", "Chapter media must reference declared media IDs.");
+            else for (const id of chapter.media) {
+              if (usedMedia.has(id)) add(`${chapterPath}.media`, "CASE_MEDIA_REUSED", "Each plate appears once in the narrative.");
+              usedMedia.add(id);
+            }
+          }
+        });
+      }
+    }
     if (study.next !== undefined) {
       const nextProject = projects.find(item => item?.slug === study.next?.slug);
       if (!nextProject) add(`${path}.next.slug`, "NEXT_PROJECT_MISSING", "Next must reference an existing project.");
@@ -133,13 +166,20 @@ export function validateContent(content) {
       else if (!isRecord(studies[nextProject.slug]) || routePath(nextProject.href).startsWith("writing/")) add(`${path}.next.slug`, "NEXT_CASE_MISSING", "Next must reference a project with a usable case-study destination.");
     }
     if (!Array.isArray(study.media)) { add(`${path}.media`, "MEDIA_INVALID", "Case media must be an array."); continue; }
+    const seenMedia = new Set();
     study.media.forEach((media, index) => {
       const mediaPath = `${path}.media[${index}]`;
       if (!isRecord(media)) { add(mediaPath, "MEDIA_INVALID", "A media item must be an object."); return; }
       for (const field of ["label", "src"]) if (!hasText(media[field])) add(`${mediaPath}.${field}`, "MEDIA_FIELD_REQUIRED", `Media ${field} is required.`);
+      if (hasText(media.src) && seenMedia.has(media.src)) add(`${mediaPath}.src`, "MEDIA_SOURCE_DUPLICATE", "Media IDs must be unique within a case study.");
+      seenMedia.add(media.src);
       for (const field of ["w", "h"]) if (!Number.isInteger(media[field]) || media[field] <= 0) add(`${mediaPath}.${field}`, "MEDIA_DIMENSIONS_INVALID", "Media dimensions must be positive integers.");
       if (!hasText(media.alt)) add(`${mediaPath}.alt`, "MEDIA_ALT_REQUIRED", "Media needs a meaningful alternative.");
       if (media.loading !== undefined && !["lazy", "eager"].includes(media.loading)) add(`${mediaPath}.loading`, "MEDIA_LOADING_INVALID", "Use lazy or eager loading.");
+      if (study.status === "published") {
+        if (!hasText(media.caption)) add(`${mediaPath}.caption`, "MEDIA_CAPTION_REQUIRED", "Published media needs a factual caption.");
+        if (media.loading === undefined) add(`${mediaPath}.loading`, "MEDIA_LOADING_REQUIRED", "Published media needs intentional loading priority.");
+      }
     });
   }
   return errors.length ? { ok: false, errors } : { ok: true, value: content };

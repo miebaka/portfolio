@@ -474,6 +474,50 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-locked{min-height:calc(100svh - var(--nav-h));display:grid;align-content:center;justify-items:start;gap:var(--s3);padding-block:var(--s8)}
 .case-locked__label{color:var(--muted);font:600 .68rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
 .case-locked h1{max-width:12ch;font-size:clamp(4rem,10vw,10rem);line-height:.88}
+
+/* Published narratives use the restored editorial measure. The work keeps its
+   full authored frame; chapter links and plate captions are quiet orientation. */
+.case-page--tedx .case{display:block}
+.case-page--tedx .case-opening{padding-block:clamp(4.5rem,8vw,8rem) var(--s4)}
+.case-page--tedx .case-back{margin-bottom:var(--s4)}
+.case-page--tedx .case-back a{display:inline-flex;align-items:center;min-height:2.75rem}
+.case-page--tedx .case-project{margin-bottom:var(--s2);font:600 .8125rem/1.4 var(--label);letter-spacing:.1em;text-transform:uppercase;color:var(--sys-color-primary)}
+.case-page--tedx .case-statement{max-width:19ch;font-size:clamp(2.6rem,6vw,6.5rem);line-height:1.05;letter-spacing:-.04em;overflow-wrap:break-word}
+.case-page--tedx .case-shot--hero{width:min(calc(100% - 2 * var(--page)),var(--content));height:auto;margin-inline:auto}
+.case-page--tedx .case-shot{overflow:visible;background:transparent}
+.case-page--tedx .case-shot picture,.case-page--tedx .case-shot img{width:100%;height:auto;max-height:none;object-fit:contain}
+.case-page--tedx .case-lede{padding-block:var(--s6) clamp(3rem,5vw,5rem);grid-template-columns:minmax(15rem,.65fr) minmax(0,1.35fr);gap:clamp(2rem,6vw,6rem)}
+.case-page--tedx .case-facts{grid-row:auto;gap:var(--s3);font-size:1rem;line-height:1.65}
+.case-page--tedx .case-facts dt,.case-page--tedx .case-chapter__label,.case-page--tedx .case-next__label{font-size:.8125rem;line-height:1.4}
+.case-page--tedx .case-index{display:block;margin:0}
+.case-page--tedx .case-index ol{padding:0;list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2)}
+.case-page--tedx .case-index a{display:flex;align-items:center;gap:.6rem;min-height:2.75rem;padding:.4rem 0;background:transparent;font-size:.8125rem;line-height:1.4;letter-spacing:.04em;transform:none;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:.3em;transition:color 160ms var(--ease-standard),text-decoration-color 160ms var(--ease-standard)}
+.case-page--tedx .case-index a:is(:hover,:focus-visible){background:transparent;color:var(--sys-color-primary);text-decoration-color:currentColor}
+.case-page--tedx .case-index a:active{transform:none}
+.case-page--tedx .case-chapter{padding-block:clamp(3rem,6vw,6rem);background:transparent;content-visibility:visible;contain-intrinsic-size:none;scroll-margin-top:calc(var(--nav-h) + 1rem)}
+.case-page--tedx .case-chapter__copy{grid-template-columns:minmax(7rem,.25fr) minmax(0,.75fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:start}
+.case-page--tedx .case-chapter__label{color:var(--sys-color-primary)}
+.case-page--tedx .case-chapter__copy h2{max-width:20ch;font-size:clamp(2rem,3.3vw,3.6rem);line-height:1.1;letter-spacing:-.035em;overflow-wrap:break-word}
+.case-page--tedx .case-chapter__body{max-width:65ch;font-size:1rem;line-height:1.65;color:var(--sys-color-on-surface-variant)}
+.case-page--tedx .case-chapter__media{margin-top:var(--s4);gap:var(--s4)}
+.case-page--tedx .case-shot__caption{display:flex;align-items:baseline;gap:var(--s2);padding-top:1rem;color:var(--sys-color-on-surface-variant);font-size:.875rem;line-height:1.6}
+.case-page--tedx .case-shot__plate{flex:none;font:600 .8125rem/1.4 var(--label);letter-spacing:.08em}
+.case-page--tedx .case-shot__caption p{max-width:65ch}
+.case-page--tedx .case-next{min-height:0;padding-block:clamp(4rem,7vw,7rem)}
+.case-page--tedx .case-next__state{margin-top:var(--s2);color:var(--sys-color-on-surface-variant);font-size:.875rem}
+@media(max-width:64rem){
+  .case-page--tedx .case-lede{grid-template-columns:1fr}
+  .case-page--tedx .case-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .case-page--tedx .case-chapter__copy{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+  .case-page--tedx .case-chapter__label{grid-column:1/-1}
+  .case-page--tedx .case-pair{grid-template-columns:1fr}
+}
+@media(max-width:48rem){
+  .case-page--tedx .case-statement{font-size:clamp(2.4rem,9vw,4rem)}
+  .case-page--tedx .case-index ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .case-page--tedx .case-facts,.case-page--tedx .case-chapter__copy{grid-template-columns:1fr}
+  .case-page--tedx .case-shot__caption{display:grid;gap:.5rem}
+}
 @media(hover:none),(pointer:coarse){.work-flick__status,.project-archive__status{opacity:1}.work-flick__item--locked .work-flick__bar{opacity:0}}
 
 /* Project publication states keep essential information visible for every input. */

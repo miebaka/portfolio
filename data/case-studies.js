@@ -149,103 +149,167 @@ export const caseStudies = {
   "tedx-rsu": {
     "title": "TEDx RSU",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
-    "rail": {
-      "servicesLabel": "What I did",
-      "services": "Brand identity, Creative direction, Print",
-      "metaLabel": "Industry",
-      "meta": "Event"
-    },
+    "hero": "tedx-rsu-campus-banner",
     "facts": {
       "context": "Identity commission for TEDx Rivers State University",
       "role": "Identity design, creative direction and print",
-      "delivered": "Event identity and rollout"
+      "delivered": "Event identity, social creative, programmes, merchandise, campus signage and stage applications"
     },
-    "overview": {
-      "question": "How do you honour a global brand while making it your own?",
-      "body": [
-        "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. The work had to feel unmistakably local without weakening the parent system."
-      ]
-    },
-    "challenge": [
-      "The identity needed one idea strong enough to hold across a phone, printed collateral and the event stage."
+    "chapters": [
+      {
+        "id": "context",
+        "label": "Context",
+        "title": "A local voice within a global identity",
+        "body": [
+          "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable."
+        ]
+      },
+      {
+        "id": "problem",
+        "label": "Problem",
+        "title": "One idea, from a phone to the stage",
+        "body": [
+          "The identity needed one idea strong enough to hold across social promotion, printed collateral and the event stage. The TEDx red and wordmark were fixed; the event’s own character had to come from the elements around them."
+        ]
+      },
+      {
+        "id": "process",
+        "label": "Process",
+        "title": "Build around the parts that stay fixed",
+        "body": [
+          "I worked within the TEDx rules. The final direction brings together the pause motif, a ripple pattern and typographic prompts that ask the reader to stop and reflect.",
+          "Neue Haas Grotesk carries the direct voice of the system. The type specimen turns the theme into a short reminder: “Remember to stay pause-itive.”"
+        ],
+        "media": ["tedx-rsu-typeface"]
+      },
+      {
+        "id": "decision",
+        "label": "Decision",
+        "title": "Give the event a pause",
+        "body": [
+          "“Pause…” is the organising idea. Its three dots leave the thought open; the line beneath it makes the invitation explicit: “Reflect. Reconsider. Reward.”",
+          "The theme mark sits alongside the TEDx identity in the applications, giving the event its own voice within the parent system."
+        ],
+        "media": ["tedx-rsu-logomark"]
+      },
+      {
+        "id": "system",
+        "label": "System",
+        "title": "Colour, type and a recurring ripple",
+        "body": [
+          "Porphyra, Kakhol and Red ochre form the theme palette. The colour sheet records the values and tint ramps used to carry the system across digital and print.",
+          "The ripple pattern supplies a recurring background, while the pause mark and typographic questions keep the central idea legible."
+        ],
+        "media": ["tedx-rsu-palette", "tedx-rsu-pattern"]
+      },
+      {
+        "id": "applications",
+        "label": "Applications",
+        "title": "An invitation people could encounter",
+        "body": [
+          "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
+          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt."
+        ],
+        "media": ["tedx-rsu-merch", "tedx-rsu-street-banner"]
+      },
+      {
+        "id": "production",
+        "label": "Production",
+        "title": "Print was part of the system from the start",
+        "body": [
+          "The programme, signage and social creative needed to carry the same pause-and-reflect rhythm as the stage. The delivered identity extended across printed collateral, merchandise, campus signage and the stage environment.",
+          "The campus and event photographs show the work in its physical setting. The colour sheet and type specimen document the parts behind those applications."
+        ],
+        "media": ["tedx-rsu-event"]
+      },
+      {
+        "id": "reflection",
+        "label": "Reflection",
+        "title": "A theme that holds across formats",
+        "body": [
+          "The final work keeps returning to the same invitation: pause and reflect. It appears as a mark on a garment, a question on a street banner and an invitation on campus, while the TEDx identity remains recognisable."
+        ]
+      }
     ],
-    "process": [
-      "I worked within the TEDx rules, not around them. The red and wordmark stayed fixed; character came from type, motion and a local visual motif that could move from a phone to a stage backdrop."
-    ],
-    "solution": [
-      "Print was part of the system from the start. The programme, signage and social creative needed to carry the same pause-and-reflect rhythm as the stage."
-    ],
-    "applications": [
-      "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage, with each format staying inside the TEDx parent rules."
-    ],
-    "outcome": {
-      "body": [
-        "The event identity was delivered across social promotion, printed collateral, merchandise, campus signage and the stage environment while remaining recognisably TEDx."
-      ]
-    },
     "media": [
       {
         "label": "Logomark",
         "src": "tedx-rsu-logomark",
         "w": 1240,
         "h": 496,
-        "alt": "The primary pause logomark, set above the line Reflect, Reconsider, Reward."
+        "alt": "The white pause wordmark ends with three dots above Reflect, Reconsider, Reward, on black.",
+        "caption": "The theme mark pairs “pause…” with “Reflect. Reconsider. Reward.”",
+        "loading": "lazy"
       },
       {
         "label": "Colour",
         "src": "tedx-rsu-palette",
         "w": 3840,
         "h": 2194,
-        "alt": "The three theme colours, Porphyra, Kakhol and Red ochre, each shown as a tint ramp."
+        "alt": "Porphyra, Kakhol and Red ochre swatches with colour values and light-to-dark tint ramps.",
+        "caption": "The theme palette records Porphyra (#702963), Kakhol (#0E4C92) and Red ochre (#FF1B1C).",
+        "loading": "lazy"
       },
       {
         "label": "Pattern",
         "src": "tedx-rsu-pattern",
         "w": 1240,
         "h": 1550,
-        "alt": "The ripple pattern: concentric rings radiating outward across a magenta field."
+        "alt": "Irregular concentric magenta rings radiate outward over a darker Porphyra field.",
+        "caption": "The ripple pattern repeats in the street-banner application.",
+        "loading": "lazy"
       },
       {
         "label": "Typeface",
         "src": "tedx-rsu-typeface",
         "w": 1240,
         "h": 1550,
-        "alt": "A poster reading Remember to stay pause-itive, set in Neue Haas Grotesk."
+        "alt": "Red type on black reads Remember to stay pause-itive above a Neue Haas Grotesk specimen.",
+        "caption": "The final type specimen names Neue Haas Grotesk and carries the pause-itive prompt.",
+        "loading": "lazy"
       },
       {
         "label": "Merchandise",
         "src": "tedx-rsu-merch",
         "w": 2800,
         "h": 4200,
-        "alt": "A white hoodie printed with the pause logomark, worn with headphones."
+        "alt": "A person wearing headphones and a white hoodie with the pause theme mark and TEDx RSU lockup.",
+        "caption": "The hoodie application places the theme mark alongside the TEDx Rivers State University lockup.",
+        "loading": "lazy"
       },
       {
         "label": "Street banners",
         "src": "tedx-rsu-street-banner",
         "w": 1240,
         "h": 1860,
-        "alt": "A street pole banner asking what lessons you would tell your ten-year-old self."
+        "alt": "A Porphyra street-pole banner asks what lessons you would tell your ten-year-old self, over the ripple pattern.",
+        "caption": "The street banner uses a reflective question, the ripple pattern and both identity marks.",
+        "loading": "lazy"
       },
       {
         "label": "On campus",
         "src": "tedx-rsu-campus-banner",
         "w": 1240,
         "h": 744,
-        "alt": "A campus banner reading Would you like to pause for a minute?"
+        "alt": "A campus banner reads Would you like to pause for a minute? above the venue and 18 February 2023 date.",
+        "caption": "The campus invitation names the Student Dialogue Center, Rivers State University, and 18 February 2023.",
+        "loading": "eager"
       },
       {
         "label": "Event day",
         "src": "tedx-rsu-event",
         "w": 3840,
         "h": 3072,
-        "alt": "Two attendees standing either side of the red TEDx X on the day of the conference."
+        "alt": "Two attendees stand beside a large red TEDx X, one holding a smaller red X, on event day.",
+        "caption": "An event-day photograph shows attendees beside the red TEDx X.",
+        "loading": "lazy"
       }
     ],
     "next": {
       "slug": "chopbox",
       "title": "ChopBox"
     },
-    "status": "draft"
+    "status": "published"
   },
   "chopbox": {
     "title": "ChopBox",
