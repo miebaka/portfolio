@@ -78,7 +78,9 @@ for (const file of caseFiles) {
   const slug = file.replace(".html", "");
   const source = await readFile(join(root, "work", file), "utf8");
   const article = `<article class="case" data-mount="case" data-prerendered="true">${renderCaseMarkup(SITE, slug, "../")}</article>`;
-  const rendered = source.replace(/<article class="case" data-mount="case">[\s\S]*?<\/article>/, article);
+  const marker = /<article class="case" data-mount="case">[\s\S]*?<\/article>/;
+  if (!marker.test(source)) throw new Error(`Cannot prerender ${file}: case mount marker is missing or malformed.`);
+  const rendered = source.replace(marker, article);
   await mkdir(join(output, "work"), { recursive: true });
   await writeFile(join(output, "work", file), rendered);
 }
@@ -100,7 +102,11 @@ for (const project of SITE.projects.filter(project => project.caseReady !== fals
 }
 for (const asset of assets) {
   const source = join(root, "assets/images/optimized", asset);
-  try { if ((await stat(source)).isFile()) await ensureCopy(source, join(output, "assets/images/optimized", asset)); } catch {}
+  let sourceStat;
+  try { sourceStat = await stat(source); }
+  catch { throw new Error(`Referenced image is missing: ${relative(root, source)}`); }
+  if (!sourceStat.isFile()) throw new Error(`Referenced image is not a file: ${relative(root, source)}`);
+  await ensureCopy(source, join(output, "assets/images/optimized", asset));
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");

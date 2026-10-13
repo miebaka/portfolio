@@ -5,11 +5,13 @@ const MAX = { name: 120, email: 254, interest: 120, message: 6000 };
 const INTERESTS = new Set(["Senior design role", "Brand or visual design project", "Creative collaboration", "Something else"]);
 
 const clean = value => String(value || "").trim();
-const singleLine = value => clean(value).replace(/[\r\n\t]+/g, " ");
+const singleLine = value => clean(value).replace(/[\u0000-\u001f\u007f]+/g, " ");
 const reply = (res, status, payload) => {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "no-referrer");
   res.end(JSON.stringify(payload));
 };
 
@@ -17,6 +19,15 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return reply(res, 405, { error: "Use the contact form to send a message." });
+  }
+
+  const fetchSite = String(req.headers?.["sec-fetch-site"] || "").toLowerCase();
+  if (fetchSite === "cross-site") {
+    return reply(res, 403, { error: "This form can only be submitted from the portfolio." });
+  }
+  const contentType = String(req.headers?.["content-type"] || "").toLowerCase();
+  if (contentType && !contentType.startsWith("application/json") && !contentType.startsWith("application/x-www-form-urlencoded")) {
+    return reply(res, 415, { error: "Use the portfolio form to send a message." });
   }
 
   let body = req.body || {};
@@ -32,7 +43,7 @@ export default async function handler(req, res) {
     return reply(res, 413, { error: "One or more fields are longer than the form allows." });
   }
   const name = singleLine(raw.name);
-  const email = clean(raw.email);
+  const email = singleLine(raw.email);
   const interest = singleLine(raw.interest);
   const message = clean(raw.message);
   if (!name || !EMAIL_RE.test(email) || !INTERESTS.has(interest) || !message) {

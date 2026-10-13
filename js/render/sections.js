@@ -10,13 +10,13 @@ export function renderCapabilities() {
   if (home) {
     const labels = ["Identity", "Strategy", "Graphic design", "Art direction", "Production"];
     el.className = "proof-services__pin";
-    el.innerHTML = '<div class="proof-services__frame"><div class="proof-services__heading"><span class="section-index">03</span><h2>What I do</h2><p>Five connected ways I help teams turn an unclear brief into a system they can use.</p></div><ul class="proof-fan is-fanned" aria-label="Services">' + SITE.capabilities.map((c, index) => '<li class="proof-swatch" tabindex="0"><div class="proof-swatch__chip"><span class="proof-mono">' + labels[index] + '</span><span class="proof-mono">0' + (index + 1) + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p></div><span class="proof-swatch__rivet" aria-hidden="true"></span></li>').join("") + '</ul></div>';
+    el.innerHTML = '<div class="proof-services__frame"><div class="proof-services__heading"><h2>What I do</h2></div><ul class="proof-fan is-fanned" aria-label="Services">' + SITE.capabilities.map((c, index) => '<li class="proof-swatch" tabindex="0"><div class="proof-swatch__chip"><span class="proof-mono">' + labels[index] + '</span></div><div class="proof-swatch__body"><h3>' + esc(c.title) + '</h3><p>' + esc(c.description) + '</p></div><span class="proof-swatch__rivet" aria-hidden="true"></span></li>').join("") + '</ul></div>';
     return;
   }
   el.className = "disciplines-index system-list";
   const heading = document.body.dataset.page === "services" ? "h2" : "h3";
-  el.innerHTML = SITE.capabilities.map((c, index) =>
-    '<details class="discipline system-list__item"><summary class="system-list__row"><span class="discipline__number">0' + (index + 1) + '</span><' + heading + '>' + esc(c.title) + '</' + heading + '><span class="system-list__toggle" aria-hidden="true"></span></summary><div class="system-list__panel"><p>' + esc(c.description) + '</p></div></details>'
+  el.innerHTML = SITE.capabilities.map(c =>
+    '<details class="discipline system-list__item"><summary class="system-list__row"><' + heading + '>' + esc(c.title) + '</' + heading + '><span class="system-list__toggle" aria-hidden="true"></span></summary><div class="system-list__panel"><p>' + esc(c.description) + '</p></div></details>'
   ).join("");
 }
 

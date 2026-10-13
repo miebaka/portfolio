@@ -156,8 +156,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
-  assert.match(html, /See the work/i);
-  assert.match(projects, /work-flick__item--more/);
+  assert.match(html, /All work/i);
+  assert.doesNotMatch(projects, /work-flick__item--more|See the work/i);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
@@ -268,7 +268,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main,\.site-footer\{text-align:left\}/);
-  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title">Brand systems, built to hold\.<\/h1>/);
   assert.match(home, /class="home-profile container"/);
   assert.match(home, /Selected brands I&rsquo;ve worked with/);
   assert.doesNotMatch(home, /class="proof-ledger"/);
@@ -311,7 +311,7 @@ test("the active design contract rejects known source-level drift", async () => 
 });
 
 test("contact endpoint rejects invalid boundaries before delivery", async () => {
-  const invoke = async body => {
+  const invoke = async (body, requestHeaders = {}) => {
     const headers = {};
     let payload = "";
     const res = {
@@ -319,7 +319,7 @@ test("contact endpoint rejects invalid boundaries before delivery", async () => 
       setHeader(name, value) { headers[name.toLowerCase()] = value; },
       end(value) { payload = value; },
     };
-    await contactHandler({ method: "POST", body }, res);
+    await contactHandler({ method: "POST", body, headers: requestHeaders }, res);
     return { status: res.statusCode, headers, body: JSON.parse(payload) };
   };
   const base = { name: "Miebaka", email: "hello@example.com", interest: "Creative collaboration", message: "Hello" };
@@ -329,14 +329,22 @@ test("contact endpoint rejects invalid boundaries before delivery", async () => 
     delete process.env.RESEND_API_KEY;
     assert.equal((await invoke({ ...base, message: "x".repeat(6001) })).status, 413);
     assert.equal((await invoke({ ...base, interest: "Injected option" })).status, 400);
+    assert.equal((await invoke(base, { "sec-fetch-site": "cross-site", "content-type": "application/json" })).status, 403);
+    assert.equal((await invoke(base, { "content-type": "multipart/form-data" })).status, 415);
     for (const body of ["null", "[]", "42", "true", '"text"']) assert.equal((await invoke(body)).status, 400);
     const unconfigured = await invoke(base);
     assert.equal(unconfigured.status, 503);
     assert.equal(unconfigured.headers["cache-control"], "no-store");
+    assert.equal(unconfigured.headers["x-content-type-options"], "nosniff");
 
     process.env.RESEND_API_KEY = "test-key";
-    globalThis.fetch = async () => ({ ok: true, status: 200, headers: new Headers() });
-    assert.equal((await invoke(base)).status, 200);
+    let providerPayload;
+    globalThis.fetch = async (_url, options) => {
+      providerPayload = JSON.parse(options.body);
+      return { ok: true, status: 200, headers: new Headers() };
+    };
+    assert.equal((await invoke({ ...base, name: "Mie\u0000baka\nJoshua" })).status, 200);
+    assert.equal(providerPayload.subject, "Creative collaboration: Mie baka Joshua");
     globalThis.fetch = async () => { throw new DOMException("Timed out", "TimeoutError"); };
     assert.equal((await invoke(base)).status, 504);
   } finally {
@@ -403,7 +411,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title">Brand systems, built to hold\.<\/h1>/);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /work-flick__link/);
