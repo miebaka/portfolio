@@ -6,7 +6,7 @@ import { initContract } from "./core/contract.js";
 
 import { renderNavigation } from "./render/navigation.js";
 import { renderWork, renderClients, renderProjectArchive } from "./render/projects.js";
-import { renderCapabilities, fillSlots } from "./render/sections.js";
+import { renderCapabilities, renderProfessionalEvidence, fillSlots } from "./render/sections.js";
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
@@ -36,6 +36,7 @@ if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", ren
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);
 if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
+if (has('[data-mount="experience"], [data-mount="cv"]')) run("professional evidence render", renderProfessionalEvidence);
 if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);

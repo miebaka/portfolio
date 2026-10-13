@@ -39,14 +39,36 @@ export function validateContent(content) {
       if (!hasText(social.label)) add(`${path}.label`, "SITE_FIELD_REQUIRED", "Social links need a label.");
       if (!validHttpsUrl(social.href)) add(`${path}.href`, "SOCIAL_URL_INVALID", "Social links need a valid HTTPS URL without credentials.");
     });
+    const cv = content.siteConfig.cv;
+    if (cv !== null && cv !== undefined) {
+      if (!isRecord(cv)) add("siteConfig.cv", "CV_INVALID", "CV must be approved metadata or null.");
+      else {
+        for (const field of ["href", "label", "mimeType", "sizeLabel"]) if (!hasText(cv[field])) add(`siteConfig.cv.${field}`, "CV_FIELD_REQUIRED", `CV ${field} is required.`);
+        if (hasText(cv.href) && !/^assets\/documents\/[a-z0-9_-]+\.pdf$/i.test(cv.href)) add("siteConfig.cv.href", "CV_PATH_INVALID", "CV must use a local PDF path.");
+        if (hasText(cv.mimeType) && cv.mimeType !== "application/pdf") add("siteConfig.cv.mimeType", "CV_MIME_INVALID", "CV must declare application/pdf.");
+      }
+    }
+    if (content.siteConfig.experience !== undefined && !Array.isArray(content.siteConfig.experience)) add("siteConfig.experience", "EXPERIENCE_INVALID", "Experience must be an array when supplied.");
+    else (content.siteConfig.experience || []).forEach((entry, index) => {
+      const path = `siteConfig.experience[${index}]`;
+      if (!isRecord(entry)) { add(path, "EXPERIENCE_ENTRY_INVALID", "An experience entry must be an object."); return; }
+      for (const field of ["organisation", "role", "period", "contribution"]) if (!hasText(entry[field])) add(`${path}.${field}`, "EXPERIENCE_FIELD_REQUIRED", `Experience ${field} is required.`);
+    });
   }
 
   if (!Array.isArray(content.services)) add("services", "SERVICES_INVALID", "Services must be an array.");
-  else content.services.forEach((service, index) => {
+  else {
+    if (content.services.length !== 5) add("services", "SERVICES_COUNT_INVALID", "Exactly five service records are required.");
+    const serviceIds = new Set();
+    content.services.forEach((service, index) => {
     const path = `services[${index}]`;
     if (!isRecord(service)) { add(path, "SERVICE_INVALID", "A service must be an object."); return; }
-    for (const field of ["title", "description", "preview"]) if (!hasText(service[field])) add(`${path}.${field}`, "SERVICE_FIELD_REQUIRED", `Service ${field} is required.`);
-  });
+    for (const field of ["id", "title", "description", "outputs", "fit"]) if (!hasText(service[field])) add(`${path}.${field}`, "SERVICE_FIELD_REQUIRED", `Service ${field} is required.`);
+    if (hasText(service.id) && !isSlug(service.id)) add(`${path}.id`, "SERVICE_ID_INVALID", "Service id must be lowercase and hyphenated.");
+    else if (serviceIds.has(service.id)) add(`${path}.id`, "SERVICE_ID_DUPLICATE", `Duplicate service id: ${service.id}.`);
+    serviceIds.add(service.id);
+    });
+  }
 
   if (!Array.isArray(content.writing)) add("writing", "WRITING_INVALID", "Writing must be an array.");
   else content.writing.forEach((entry, index) => {

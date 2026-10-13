@@ -19,7 +19,7 @@ const study = (overrides = {}) => ({
 });
 const fixture = (overrides = {}) => ({
   siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka.design/" },
-  services: [{ title: "Brand identity", description: "Useful identity systems.", preview: "sample-hero" }],
+  services: Array.from({ length: 5 }, (_, index) => ({ id: `service-${index + 1}`, title: `Service ${index + 1}`, description: "Useful identity systems.", outputs: "A practical system.", fit: "Teams needing clarity." })),
   writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
   navigation: {
@@ -94,10 +94,15 @@ test("site configuration requires usable identity and contact metadata", () => {
   expectError(fixture({ siteConfig: { ...fixture().siteConfig, socials: null } }), "SOCIALS_INVALID", "siteConfig.socials");
   expectError(fixture({ siteConfig: { ...fixture().siteConfig, socials: [{ label: "Blog", href: "javascript:alert(1)" }] } }), "SOCIAL_URL_INVALID", "siteConfig.socials[0].href");
 });
-test("services require their displayed copy and media preview", () => {
+test("services require exactly five complete shared records", () => {
   expectError(fixture({ services: {} }), "SERVICES_INVALID", "services");
   expectError(fixture({ services: [null] }), "SERVICE_INVALID", "services[0]");
-  for (const field of ["title", "description", "preview"]) expectError(fixture({ services: [{ ...fixture().services[0], [field]: "" }] }), "SERVICE_FIELD_REQUIRED", `services[0].${field}`);
+  expectError(fixture({ services: fixture().services.slice(0, 4) }), "SERVICES_COUNT_INVALID", "services");
+  for (const field of ["id", "title", "description", "outputs", "fit"]) {
+    const services = fixture().services;
+    services[0] = { ...services[0], [field]: "" };
+    expectError(fixture({ services }), "SERVICE_FIELD_REQUIRED", `services[0].${field}`);
+  }
 });
 test("writing requires titles summaries and valid dates", () => {
   expectError(fixture({ writing: [null] }), "WRITING_ENTRY_INVALID", "writing[0]");

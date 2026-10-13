@@ -108,6 +108,7 @@ html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .w
 .now-playing{min-width:0;min-height:2.75rem;display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:.65rem;padding:.65rem .85rem;background:var(--sys-color-surface-container);color:var(--sys-color-on-surface);border:1px solid var(--sys-color-outline);text-decoration:none;transition:transform var(--dur-fast) var(--ease-enter),background-color var(--dur-ui) var(--ease-standard),color var(--dur-ui) var(--ease-standard)}
 .now-playing:hover{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
 .now-playing:active{transform:scale(.98)}
+.service-swatch:active{transform:scale(.97);transition-duration:120ms}
 .now-playing[hidden]{display:none}
 .now-playing__dot{width:.45rem;height:.45rem;border-radius:50%;background:var(--sys-color-tertiary);animation:now-listening-pulse 1.8s steps(1,end) infinite}
 .now-playing[data-live="false"] .now-playing__dot{animation:none;opacity:.55}
