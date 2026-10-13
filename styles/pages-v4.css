@@ -249,7 +249,7 @@
 .marquee__item{flex:0 0 auto}
 @keyframes client-marquee{to{transform:translateX(-50%)}}
 
-@media(prefers-reduced-motion:reduce){.work-flick__more-arrow{animation:none}.client-marquee__track{width:100%;animation:none;will-change:auto}.client-proof[aria-hidden="true"]{display:none}.client-proof:not([aria-hidden]){width:100%;flex-wrap:wrap;justify-content:center;padding-inline:var(--page)}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .work-flick__more-arrow{animation:none}:root:not([data-motion-preference="full"]) .client-marquee__track{width:100%;animation:none;will-change:auto}:root:not([data-motion-preference="full"]) .client-proof[aria-hidden="true"]{display:none}:root:not([data-motion-preference="full"]) .client-proof:not([aria-hidden]){width:100%;flex-wrap:wrap;justify-content:center;padding-inline:var(--page)}}
 html[data-motion="reduced"] .client-marquee__track{width:100%;animation:none;will-change:auto}html[data-motion="reduced"] .client-proof[aria-hidden="true"]{display:none}html[data-motion="reduced"] .client-proof:not([aria-hidden]){width:100%;flex-wrap:wrap;justify-content:center;padding-inline:var(--page)}
 @media(max-width:48rem){.discipline{display:block}.discipline__copy{display:grid;grid-template-columns:1fr}.discipline__number,.discipline h2,.discipline h3,.discipline__evidence{grid-column:1}.work-flick__item--more{min-height:24rem!important}}
 
@@ -325,7 +325,7 @@ html[data-motion="reduced"] .client-marquee__track{width:100%;animation:none;wil
   .work-flick__bar{display:grid}
   .discipline,.service-detail{display:block;min-height:13rem;padding:1.25rem}.discipline__copy,.service-detail__copy{display:grid;grid-template-columns:1fr}.discipline__number,.service-detail__number,.discipline h2,.discipline h3,.service-detail h2,.discipline__copy>p,.service-detail__copy>p{grid-column:1;grid-row:auto}.discipline__preview,.service-detail__preview{width:42%;opacity:.12;transform:none}
 }
-@media(prefers-reduced-motion:reduce){.work-flick__bar::before,.work-flick__bar-arrow,.discipline,.discipline__preview,.service-detail,.service-detail__preview{transition:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) :is(.work-flick__bar::before,.work-flick__bar-arrow,.discipline,.discipline__preview,.service-detail,.service-detail__preview){transition:none}}
 html[data-motion="reduced"] .work-flick__bar::before,html[data-motion="reduced"] .work-flick__bar-arrow,html[data-motion="reduced"] .discipline,html[data-motion="reduced"] .discipline__preview,html[data-motion="reduced"] .service-detail,html[data-motion="reduced"] .service-detail__preview{transition:none}
 html[data-motion="reduced"] .work-flick__item,html[data-motion="reduced"] .work-flick__media img,html[data-motion="reduced"] .work-flick__detail,html[data-motion="reduced"] .work-flick__status,html[data-motion="reduced"] .home-work-index__row::before,html[data-motion="reduced"] .home-work-index__arrow,html[data-motion="reduced"] .project-archive__toggle{transition:none}
 html[data-motion="reduced"] .work-flick__media img,html[data-motion="reduced"] .home-work-index__arrow{transform:none!important}
@@ -394,7 +394,7 @@ a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-prim
   .case-index{grid-template-columns:1fr 1fr}.case-index a{border:0}
   .site-footer__signature{width:100%;height:clamp(8rem,34vw,13rem);margin-inline:0}
 }
-@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .site-footer__signature::before{opacity:.48}:root:not([data-motion-preference="full"]) .site-footer__signature-canvas{display:none}}
 html[data-motion="reduced"] .site-footer__signature::before{opacity:.48}html[data-motion="reduced"] .site-footer__signature-canvas{display:none}
 
 /* V13 — one alignment grid, one CTA contract and one content sequence. */
@@ -474,7 +474,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .service-swatches[data-input="keyboard"] .service-swatch{transition:none}
 @media(hover:hover) and (pointer:fine){.service-swatch:not([aria-selected="true"]):hover{z-index:1;transform:translate(.35rem,-.3rem) rotate(0)}}
 @media(max-width:48rem){.experience-ledger__item{grid-template-columns:1fr;gap:.65rem}.experience-ledger__contribution{grid-column:1}.service-swatches{display:grid;grid-template-columns:1fr;gap:var(--s4);min-height:0}.service-swatches__tabs{display:flex;gap:.75rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.25rem .15rem .8rem}.service-swatch,.service-swatch:first-child,.service-swatch:nth-child(2),.service-swatch:nth-child(3),.service-swatch:nth-child(4),.service-swatch:nth-child(5),.service-swatch[aria-selected="true"]{flex:0 0 min(82vw,20rem);min-height:9rem;margin:0;scroll-snap-align:start;transform:none}.service-panel dl{grid-template-columns:1fr}.service-swatch[aria-selected="true"]{outline-width:2px;outline-offset:-3px}}
-@media(prefers-reduced-motion:reduce){.service-swatch,.service-swatch:first-child,.service-swatch:nth-child(2),.service-swatch:nth-child(3),.service-swatch:nth-child(4),.service-swatch:nth-child(5),.service-swatch[aria-selected="true"]{transition:none;transform:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) :is(.service-swatch,.service-swatch:first-child,.service-swatch:nth-child(2),.service-swatch:nth-child(3),.service-swatch:nth-child(4),.service-swatch:nth-child(5),.service-swatch[aria-selected="true"]){transition:none;transform:none}}
 html[data-motion="reduced"] .service-swatch,html[data-motion="reduced"] .service-swatch:first-child,html[data-motion="reduced"] .service-swatch:nth-child(2),html[data-motion="reduced"] .service-swatch:nth-child(3),html[data-motion="reduced"] .service-swatch:nth-child(4),html[data-motion="reduced"] .service-swatch:nth-child(5),html[data-motion="reduced"] .service-swatch[aria-selected="true"]{transition:none;transform:none}
 
 .project-archive__item,.writing-item__link,.exp__item{padding-inline:var(--list-item-inline)}
@@ -500,7 +500,7 @@ html[data-motion="reduced"] .service-swatch,html[data-motion="reduced"] .service
   .home-profile__media{width:100%;max-width:28rem;margin-left:0;margin-right:0}
   .work-flick__item,.work-flick__item:first-child,.work-flick__item:nth-child(2),.work-flick__item.is-active,.work-flick__item--3,.work-flick--home .work-flick__item.is-active,.work-flick__pair .work-flick__item.is-active{min-height:clamp(28rem,70svh,42rem)}
 }
-@media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .site-footer__signature::before{opacity:.48}:root:not([data-motion-preference="full"]) .site-footer__signature-canvas{display:none}}
 
 .work-flick__item--locked{cursor:default}
 .work-flick__status{position:absolute;z-index:4;inset:50% auto auto 50%;opacity:0;pointer-events:none;transform:translate(-50%,-40%);transition:opacity 180ms var(--ease-standard),transform 180ms var(--ease-enter)}
@@ -581,7 +581,7 @@ html[data-motion="reduced"] .service-swatch,html[data-motion="reduced"] .service
 html[data-motion="reduced"] .work-flick .work-flick__item.is-active{flex:1 1 0}
 html[data-motion="reduced"] .work-flick .work-flick__item--more:hover{flex:1 1 0}
 html[data-motion="reduced"] .work-flick .work-flick__media img{transform:none}
-@media(prefers-reduced-motion:reduce){.work-flick .work-flick__item.is-active,.work-flick .work-flick__item--more:hover{flex:1 1 0}.work-flick .work-flick__media img{transform:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) :is(.work-flick .work-flick__item.is-active,.work-flick .work-flick__item--more:hover){flex:1 1 0}:root:not([data-motion-preference="full"]) .work-flick .work-flick__media img{transform:none}}
 
 /* Explicit Full motion is an accessibility preference too; it outranks the
    system query while retaining Save-Data and small-screen runtime guards. */

@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { createMarqueeController } from "../js/render/projects.js";
 import { createPreferencesController } from "../js/core/preferences.js";
+import { createFooterSignatureController } from "../js/core/footer-signature.js";
 
 class Target extends EventTarget {
   constructor() { super(); this.dataset = {}; this.attributes = new Map(); this.classList = { values: new Set(), toggle: (k, on) => on ? this.classList.values.add(k) : this.classList.values.delete(k) }; }
@@ -65,4 +67,45 @@ test("preference destroy removes system listeners", () => {
   const controller = createPreferencesController({ root: html, storage: null, reducedQuery: reduced, darkQuery: dark, onChange() { changes++; } });
   assert.equal(changes, 1); controller.destroy(); reduced.change(true); dark.change(true);
   assert.equal(changes, 1); assert.equal(html.dataset.motion, "full"); assert.equal(html.dataset.theme, "light");
+});
+
+test("preferences survive a throwing global localStorage getter", () => {
+  const descriptor = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+  Object.defineProperty(globalThis, "localStorage", { configurable: true, get() { throw Error("denied"); } });
+  try {
+    const html = new Target();
+    const controller = createPreferencesController({ root: html, reducedQuery: new Media(false), darkQuery: new Media(false) });
+    controller.setMotion("reduce");
+    assert.equal(html.dataset.motion, "reduced"); controller.destroy();
+  } finally {
+    if (descriptor) Object.defineProperty(globalThis, "localStorage", descriptor);
+    else delete globalThis.localStorage;
+  }
+});
+
+test("footer enhancement follows motion changes and fully cleans up", () => {
+  const doc = new Target(); doc.documentElement = new Target(); doc.documentElement.dataset.motion = "reduced"; doc.hidden = false;
+  let intersection, enhanced = 0, starts = 0, stops = 0, destroyed = 0, disconnected = 0;
+  class Observer { constructor(callback) { intersection = callback; } observe() {} disconnect() { disconnected++; } }
+  const controller = createFooterSignatureController(new Target(), {
+    document: doc, IntersectionObserver: Observer,
+    enhance() { enhanced++; return { start() { starts++; }, stop() { stops++; }, destroy() { destroyed++; } }; }
+  });
+  assert.equal(enhanced, 0);
+  doc.documentElement.dataset.motion = "full"; doc.dispatchEvent(new Event("motionpreferencechange"));
+  assert.equal(enhanced, 1); assert.equal(starts, 0);
+  intersection([{ isIntersecting: true }]); assert.equal(starts, 1);
+  doc.documentElement.dataset.motion = "reduced"; doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(stops, 2);
+  doc.documentElement.dataset.motion = "full"; doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(starts, 2);
+  controller.destroy(); assert.equal(disconnected, 1); assert.equal(destroyed, 1);
+  doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(starts, 2);
+});
+
+test("OS reduced-motion rules yield to an explicit full preference", async () => {
+  for (const file of ["foundations.css", "components-v4.css", "pages-v4.css"]) {
+    const css = await readFile(new URL(`../styles/${file}`, import.meta.url), "utf8");
+    const media = css.match(/@media\(prefers-reduced-motion:reduce\)\{/g) || [];
+    const scoped = css.match(/@media\(prefers-reduced-motion:reduce\)\{:root:not\(\[data-motion-preference="full"\]\)/g) || [];
+    assert.equal(scoped.length, media.length, file);
+  }
 });

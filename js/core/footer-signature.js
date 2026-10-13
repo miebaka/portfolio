@@ -5,9 +5,7 @@ const PITCH = 6;
 const DOT = 2.2;
 const RADIUS = 128;
 
-export function initFooterSignature() {
-  const host = document.querySelector(".site-footer__signature");
-  if (!host || document.documentElement.dataset.motion === "reduced") return;
+function enhanceFooterSignature(host) {
   const canvas = document.createElement("canvas");
   canvas.className = "site-footer__signature-canvas";
   host.append(canvas);
@@ -84,16 +82,60 @@ export function initFooterSignature() {
   }
   const start = () => { if (!running) { running = true; frame = requestAnimationFrame(draw); } };
   const stop = () => { running = false; cancelAnimationFrame(frame); };
-  host.addEventListener("pointermove", event => {
+  const onPointerMove = event => {
     const rect = host.getBoundingClientRect();
     pointer.x = event.clientX - rect.left;
     pointer.y = event.clientY - rect.top;
     pointer.active = true;
-  }, { passive: true });
-  host.addEventListener("pointerleave", () => { pointer.active = false; });
-  new ResizeObserver(rebuild).observe(host);
-  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  new IntersectionObserver(([entry]) => entry.isIntersecting && !document.hidden ? start() : stop(), { threshold: .01 }).observe(host);
-  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  };
+  const onPointerLeave = () => { pointer.active = false; };
+  const resizeObserver = new ResizeObserver(rebuild);
+  const mutationObserver = new MutationObserver(rebuild);
+  host.addEventListener("pointermove", onPointerMove, { passive: true });
+  host.addEventListener("pointerleave", onPointerLeave);
+  resizeObserver.observe(host);
+  mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   rebuild();
+  return {
+    start() { canvas.hidden = false; start(); },
+    stop() { stop(); canvas.hidden = true; context.clearRect(0, 0, width, height); },
+    destroy() {
+      stop(); generation++; resizeObserver.disconnect(); mutationObserver.disconnect();
+      host.removeEventListener("pointermove", onPointerMove); host.removeEventListener("pointerleave", onPointerLeave);
+      host.classList.remove("is-enhanced"); canvas.remove();
+    }
+  };
+}
+
+export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = IntersectionObserver } = {}) {
+  let enhanced, visible = false, destroyed = false;
+  const reduced = () => doc.documentElement.dataset.motion === "reduced";
+  const sync = () => {
+    if (destroyed) return;
+    if (reduced()) { enhanced?.stop(); return; }
+    enhanced ||= enhance(host);
+    if (visible && !doc.hidden) enhanced?.start(); else enhanced?.stop();
+  };
+  const onMotion = () => sync();
+  const onVisibility = () => sync();
+  doc.addEventListener("motionpreferencechange", onMotion);
+  doc.addEventListener("visibilitychange", onVisibility);
+  const observer = new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: .01 });
+  observer.observe(host);
+  sync();
+  return {
+    destroy() {
+      if (destroyed) return; destroyed = true; observer.disconnect();
+      doc.removeEventListener("motionpreferencechange", onMotion); doc.removeEventListener("visibilitychange", onVisibility);
+      enhanced?.destroy(); enhanced = null;
+    }
+  };
+}
+
+export function initFooterSignature() {
+  const host = document.querySelector(".site-footer__signature");
+  if (!host) return;
+  const controller = createFooterSignatureController(host);
+  addEventListener("pagehide", () => controller.destroy(), { once: true });
+  return controller;
 }

@@ -88,7 +88,7 @@ a[href]:hover,a[href]:focus-visible{color:var(--accent-interactive);text-decorat
 @media(hover:hover) and (pointer:fine){.site-index__link:hover,.site-index__close:hover,.site-index__contact a:hover{color:var(--accent-interactive)}}
 @media(max-width:60rem){.site-nav__links{display:none}.site-index__body{grid-template-columns:1fr;align-self:start;gap:var(--s5)}.site-index__link{min-height:3.6rem}.site-index__link>span:last-child{font-size:clamp(2rem,10vw,4.25rem)}.site-index__aside{grid-template-columns:1fr 1fr;align-self:start}}
 @media(max-width:36rem){.site-index__aside{grid-template-columns:1fr}.site-index__link{grid-template-columns:2.3rem 1fr}.site-index__body{padding-block:var(--s3)}}
-@media(prefers-reduced-motion:reduce){.site-index{clip-path:none;transition:opacity 120ms linear}.site-index[data-state="open"]{clip-path:none;transition-duration:120ms}.site-index__close{transition:color 120ms linear}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .site-index{clip-path:none;transition:opacity 120ms linear}:root:not([data-motion-preference="full"]) .site-index[data-state="open"]{clip-path:none;transition-duration:120ms}:root:not([data-motion-preference="full"]) .site-index__close{transition:color 120ms linear}}
 html[data-motion="reduced"] .site-index{clip-path:none;transition:opacity 120ms linear}
 html[data-motion="reduced"] .now-playing__dot{animation:none}
 html[data-motion="reduced"] .site-nav__brand,html[data-motion="reduced"] .site-nav__menu-btn,html[data-motion="reduced"] .theme-toggle,html[data-motion="reduced"] .site-index__close,html[data-motion="reduced"] .now-playing{transform:none!important;transition-property:color,background-color,opacity}
@@ -116,7 +116,7 @@ html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .w
 .now-playing__track{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sys-color-on-surface-variant);font-size:.78rem}
 .now-playing:hover .now-playing__track{color:inherit}.now-playing__arrow{font-size:.9rem}
 @keyframes now-listening-pulse{0%,44%,100%{opacity:1}50%,88%{opacity:.28}}
-@media(prefers-reduced-motion:reduce){.now-playing__dot{animation:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .now-playing__dot{animation:none}}
 
 /* Responsive navigation and footer contracts. */
 .site-nav__inner{padding-left:max(var(--page),var(--safe-left));padding-right:max(var(--page),var(--safe-right))}
@@ -139,7 +139,7 @@ html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .w
 .contact__submit .btn:active{transform:scale(.98)}.contact__submit .btn:disabled{cursor:wait;opacity:.72}
 .form-status{min-height:1.4em;margin:0;opacity:1;transition:opacity 120ms linear}.contact__form[data-state="submitting"] .form-status{opacity:.72}
 .contact__form[data-state="success"] .form-status{color:var(--ink)}.contact__fallback{color:var(--muted);font-size:.85rem}
-@media(prefers-reduced-motion:reduce){.contact__submit .btn,.form-status{transition:none}.contact__submit .btn:active{transform:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .contact__submit .btn,:root:not([data-motion-preference="full"]) .form-status{transition:none}:root:not([data-motion-preference="full"]) .contact__submit .btn:active{transform:none}}
 html[data-motion="reduced"] .contact__submit .btn{transform:none!important;transition-property:color,background-color,opacity}
 
 /* An explicit Full choice overrides the operating-system motion setting. */
