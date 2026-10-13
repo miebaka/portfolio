@@ -1,47 +1,33 @@
-# Miebaka Joshua — Living Archive / Editorial Instrument
+# Miebaka Joshua — Refined Editorial system
 
-Approved 12 October 2026. The normative source is the owner-supplied
-`design-thesis.md` v5.0. `engineering-specification.md` and
-`specs/personal-identity-system_design.md` are retained as history only.
+Updated 10 October 2026. The detailed source of truth is
+[`docs/design-system-v3.md`](docs/design-system-v3.md).
 
-## Governing direction
+## Direction
 
-The portfolio combines two complementary behaviours, never two competing
-styles. **Living Archive** governs discovery: the homepage, project index,
-image crops, changing proportions and controlled transitions. **Editorial
-Instrument** governs comprehension: navigation, labels, metadata, case-study
-reading, forms and system feedback.
+A forest-green editorial portfolio for hiring teams and selected clients. Pale
+sage paper, deep green ink, restrained accents, generous whitespace and
+hairline rules form the interface. Project imagery keeps its own colour.
 
-The site feels authored and alive while browsing, then exact and calm while
-reading. Expression is concentrated in work imagery, scale, crop and movement,
-not decorative noise.
+## Type and language
 
-## Identity
+- BIZ UDPMincho: display headlines and case-study statements.
+- Schibsted Grotesk: body copy, navigation and interface text.
+- Josefin Sans: compact uppercase labels only.
+- Copy moves from question, to decision, to a useful system a team can keep
+  using. It is first-person, plain-spoken and evidence-bounded.
+- “Work with me” is the contact CTA. “See the work” is the portfolio CTA.
 
-- Ultramarine, paper and ink are permanent. Coral is restrained feedback.
-- BIZ UDPMincho carries display statements and project titles. Schibsted
-  Grotesk carries prose. Josefin Sans carries every visible label, button,
-  navigation item and metadata string in capitals.
-- Surfaces are sharp and editorial. Controls become rounded only where their
-  function benefits from a contained target.
-- Paper grain, the swatch fan and the interactive dot-matrix signature remain.
+## Motion
 
-## Layout and movement
+The homepage decision field is the signature moment. Repeated navigation,
+reading and case-study interactions stay still or respond in 120–240ms. Motion
+uses transform and opacity, is interruptible where needed, and respects reduced
+motion. Keyboard-triggered navigation opens immediately.
 
-- The homepage is spacious: full-screen thesis, selected work, profile,
-  services, process and proof.
-- Project cards use predetermined asymmetry. Hover may alter proportion, crop,
-  colour and typography, but essential information never depends on hover.
-- Navigation uses a compact desktop bar, a mobile bottom bar and a full-screen
-  editorial Index. The Index also contains theme and motion preferences.
-- Print and Screen modes are equally authored. Every text/background pair
-  meets a universal 7:1 contrast floor.
-- Motion is controlled, interruptible and transform/opacity-led. Reduced motion
-  replaces spatial transitions with immediate state changes.
+## Implementation
 
-## Do not introduce
-
-Arbitrary rotation, glass-card fields, transparency beyond the navigation's
-3% surface blend, generic rounded cards, ornamental grids,
-live coordinates, decorative clocks, hover-only meaning, disabled-looking
-content, fake metrics, Borges, or colour that competes with project work.
+The live cascade is deliberately small: `styles/foundations.css`,
+`styles/components-v4.css` and `styles/pages-v4.css`, imported by
+`styles/main.css`. Older unimported CSS folders are historical and are not a
+source of truth.

@@ -1,635 +1,3064 @@
-# Engineering specification — Miebaka Joshua Portfolio
+# Engineering Specification — Miebaka Joshua Portfolio
+### "The Quiet Gallery"
 
-Status: normative
+> The interface is the wall. The work is the art. Everything the frame does is in service of making the work — bold, colourful, African brand design — the loudest thing in the room.
 
-Version: 4.0
+This is the single governing document for the project. It absorbs the former
+`creative-direction.md`: art direction, voice and positioning now live here
+alongside the engineering contract, so there is one place to look and no way for
+the two to drift apart. Where the two documents disagreed, the resolutions are
+recorded inline and marked **Resolved**.
 
-Owner: Miebaka Joshua
+---
 
-Last updated: 12 October 2026
+# 0. Positioning & Thesis
 
-## 1. Product definition
+* **Who:** Joshua Miebaka Williams Atubokiki — brand and visual designer, 7+ years, Lagos / WAT, remote-global.
+* **Thesis line (the spine of the whole site):** *"Building a standard for what brand and graphic design can be for African brands."*
+* **Promise:** World-class craft, premium and considered, hireable from anywhere.
+* **Feeling:** Considered, confident, warm. Restraint as proof of taste, never loud for its own sake.
 
-The portfolio is a rich, considered editorial experience supported by the system depth of Material 3. It must demonstrate senior-level art direction, brand-system thinking, visual design, interaction design and production discipline without resembling a Google product, software dashboard or component-library demo.
+Every page must reinforce the thesis and end with a single clear ask.
 
-The portfolio must feel rich, unique, deliberate and well considered. It must never feel inconsistent, jumbled or inexperienced.
+---
 
-### 1.1 Primary proposition
+# 1. Design Principles
 
-**I design brand systems, then build the tools that keep them intact.**
+The portfolio is **not** a SaaS dashboard.
 
-Support line:
+It is not a Behance clone.
 
-**Brand strategy, identities, campaigns and production systems designed to hold together in the real world.**
+It is not a marketing website.
 
-The proposition and support line appear together on the homepage. The proposition carries the memory; the support line explains the practical meaning of “tools”.
+It is a carefully designed editorial experience that demonstrates systems thinking, typography, composition, restraint, and engineering quality.
 
-### 1.2 Product outcomes
+Every design decision should satisfy the following principles.
 
-The portfolio must support three outcomes, in this order:
+## 1.1 Editorial First
 
-1. secure senior design employment;
-2. win suitable independent client work;
-3. establish a recognisable design point of view.
+Typography carries the experience.
 
-The primary conversion is contact. Secondary outcomes are viewing a complete case study, remembering Miebaka Joshua, downloading the CV and visiting LinkedIn.
+Whitespace carries hierarchy.
 
-### 1.3 Audience order
+Images support the story rather than becoming the story.
 
-1. Design leaders and hiring managers.
-2. Founders and potential clients.
-3. Creative directors and collaborators.
-4. General audiences.
-5. Other designers.
+---
 
-Target roles include Art Director, Senior Brand Designer and Senior Visual Designer. The site must work for remote international opportunities, Nigerian roles and relocation opportunities without presenting a different identity to each audience.
+## 1.2 System Before Components
 
-## 2. Governing model
+No component owns visual decisions.
 
-Material 3 supplies system discipline, not visual imitation. The portfolio adopts:
+Every component consumes design tokens.
 
-- reference, system and component token tiers;
-- semantic colour roles with explicit foreground pairs;
-- state layers and complete interaction states;
-- role-based typography, shape, elevation and motion;
-- adaptive navigation and responsive composition;
-- accessible components and equivalent keyboard behaviour;
-- documented loading, empty, error, offline and reduced-capability states;
-- measurable release gates.
+Never hardcode:
 
-The portfolio retains its own editorial identity:
+* spacing
+* colors
+* typography
+* shadows
+* transitions
+* radii
 
-- Ultramarine as the signature colour;
-- BIZ UDPMincho, Schibsted Grotesk and Josefin Sans;
-- sharp editorial surfaces;
-- full-screen proposition;
-- Print and Screen themes;
-- paper grain;
-- five-service swatch fan;
-- dot-matrix footer signature;
-- original project imagery and project-specific colour worlds.
+inside components.
 
-Material defaults such as widespread rounded cards, bubbly geometry, generic pills, Roboto, tonal-purple branding and app-dashboard composition are not adopted.
+---
 
-## 3. Precedence and sources of truth
+## 1.3 Intentional Simplicity
 
-1. Current owner direction.
-2. This engineering specification.
-3. `specs/personal-identity-system_design.md`.
-4. `DESIGN.md` and `docs/design-system-v3.md`.
-5. Shared tokens and component contracts in production code.
+Remove visual noise.
 
-When documentation and production disagree, repair both in the same approved change. Historical specifications may explain past decisions but do not override this document.
+Prefer:
 
-Content belongs in `data/site.js` or a successor content schema. Presentation values belong in design tokens. Templates must not duplicate content that can be modelled once.
+* whitespace
+* rhythm
+* typography
 
-## 4. Information architecture
+over decoration.
 
-### 4.1 Primary destinations
+Whitespace is a feature, not leftover space. Wide margins and big air are the
+deliberate output of the spacing scale, not what is left once content is placed.
 
-- Home
-- Work
-- Explorations
-- Community
-- About
-- Services
-- Writing
-- Contact
+---
 
-Supporting destinations include the CV, Privacy and the 404 page.
+## 1.4 Consistency
 
-### 4.2 Destination roles
+The same interaction should always behave identically.
 
-**Work** contains complete professional case studies and the strongest evidence of senior practice.
+The same typography role should always look identical.
 
-**Explorations** contains self-initiated visual work made outside client or employment briefs. It is curated, not a miscellaneous dump.
+The same spacing token should always produce identical rhythm.
 
-**Community** contains resources, teaching, tools, templates, events or other contributions that give back to the design community. Every entry must state what it gives the visitor.
+---
 
-**Writing** remains the name of the editorial section. It contains developed ideas rather than visual experiments or community resources.
+## 1.5 The Frame Stays Neutral; the Work Supplies the Colour
 
-**About** establishes Miebaka’s positioning, experience, working principles, availability and CV access.
+No decorative colour in the UI. Every colour a visitor sees beyond the core
+palette must come from the work itself: a project tile, a case-study band, a
+photograph. The chrome never competes with the portfolio.
 
-**Services** translates capabilities into clear client outcomes without turning the portfolio into an agency website.
+---
 
-**Contact** supports roles, commissions and collaborations through one accessible form, a direct email address and relevant external links.
+## 1.6 Show, Never List
 
-### 4.3 Homepage sequence
+Any reference to a project carries an image or a colour field. A project named
+in text with nothing to look at is a broken reference.
 
-1. Full-screen proposition and support line.
-2. Selected work.
-3. Short positioning statement and quiet editorial portrait.
-4. Five-service swatch fan under the visible label `WHAT I DO`.
-5. Slow client marquee.
-6. Short working-principles section.
-7. Contact invitation.
-8. Dot-matrix signature and footer navigation.
+---
 
-The homepage remains spacious and atmospheric. Proof is introduced through authored work, precise language and controlled interactions rather than dense feature grids.
+## 1.7 One Idea Per Screen
 
-## 5. Adaptive navigation
+Lead the eye to a single focal point. If a viewport contains two things
+competing to be read first, one of them is in the wrong place.
 
-Navigation uses one information architecture with two adaptive presentations.
+---
 
-### 5.1 Expanded and large layouts
+## 1.8 Restraint Over Options
 
-- A compact top navigation shows the logo, `WORK`, `EXPLORATIONS`, `COMMUNITY` and `INDEX`.
-- `INDEX` opens a full-screen editorial overlay containing every primary and supporting destination.
-- The current route is identified through colour, typography and accessible current-page semantics.
-- The navigation remains visible but may condense after downward scrolling. It must return immediately when the user reverses direction, focuses within it or reaches a route boundary.
-- Condensation must not change destination order or reduce targets below the minimum size.
+One accent, one weight of emphasis, one call to action per view.
 
-### 5.2 Compact layouts
+---
 
-- A bottom navigation contains five destinations: `HOME`, `WORK`, `EXPLORE`, `CONTACT` and `INDEX`.
-- `EXPLORE` leads to Explorations. Community remains one tap away inside Index.
-- `INDEX` opens the same full-screen editorial destination layer used on larger screens.
-- The bottom bar respects safe-area insets and never covers content, form actions or browser controls.
-- Labels remain visible. Icon-only navigation is forbidden.
+## 1.9 Every Project Is a Story
 
-### 5.3 Index overlay
+Challenge, role, decisions, outcome, with numbers. A case study that only shows
+the artefact has not explained the work.
 
-- The overlay is an editorial sheet, not a generic modal menu.
-- Opening and closing preserve focus, scroll position and route context.
-- Escape closes it. Focus remains trapped while open and returns to the trigger on close.
-- Navigation remains available without JavaScript through an ordinary fallback list.
-- Motion suggests a physical editorial sheet entering the composition. It remains predictable, interruptible and reversible.
+---
 
-## 6. Layout system
+# 2. Typography System
 
-### 6.1 Sheet geometry
+Typography is the primary communication layer.
 
-- `--content: 92rem` is the maximum editorial measure.
-- `--page: clamp(1.4rem, 4.8vw, 5.25rem)` is the common inline margin.
-- The left content edge aligns with the logo.
-- The right content edge aligns with the primary navigation boundary.
-- `.container`, navigation, Index, work archive, services, experience, case-study chapters and footer consume the same geometry.
-- Text, controls, project media, disclosures and signatures stay within this measure.
-- Case-study media does not become viewport full bleed.
-- One restrained fixed trim frame may describe the viewport edge. Repeated crop marks and decorative printer furniture are forbidden.
-- Safe-area insets may increase, never reduce, the page margin.
+Images are secondary.
 
-### 6.2 Responsive ranges
+---
 
-- Compact: below 600px.
-- Medium: 600–839px.
-- Expanded: 840–1199px.
-- Large: 1200px and above.
+## Font Roles
 
-Breakpoints respond to content failure rather than device names. Components may introduce local container-query changes where the shared page breakpoints are insufficient.
+| Role      | Typeface          | Usage                        |
+| --------- | ----------------- | ---------------------------- |
+| Display   | TeX Gyre Heros    | Headlines                    |
+| Reading   | Libre Baskerville | Long-form copy               |
+| Interface | Josefin Sans      | Labels, navigation, metadata |
 
-### 6.3 Composition rules
+Never interchange these roles.
 
-- Space is the primary grouping device.
-- Underlying grid precision remains invisible.
-- Repeated sections must not collapse into one interchangeable card grammar.
-- Responsive changes alter composition, not content priority or semantic colour roles.
-- Content order in the document must match reading and keyboard order.
-- Full-height moments use `100svh` or `100dvh`, never `100vh` alone.
+> **Resolved — type pairing.** The retired `creative-direction.md` specified
+> Fraunces (display) plus Inter (body), with an optional signature script. That
+> pairing is void. The three roles above are the only correct ones: they are
+> what is self-hosted in `assets/fonts/`, what `styles/tokens/typography.css`
+> declares, and what every page renders. Fraunces and Inter appear nowhere in
+> the build and must not be reintroduced.
+>
+> The signature script survives in one place only, and not as a typeface: the
+> footer wordmark is an SVG (`miebaka-joshua-script-name.svg`), used as a mask
+> and as the sampling source for the footer particle scene. It is artwork, never
+> a font, and never sets type.
 
-## 7. Typography
+---
 
-| Role | Typeface | Use |
-| --- | --- | --- |
-| Display | BIZ UDPMincho | Hero, project titles, section statements and authored display moments |
-| Body | Schibsted Grotesk | Reading, descriptions, navigation and form content |
-| Label | Josefin Sans Semibold | Every interface label, button label, navigation label, metadata label, tag and case-study fact label |
+## Display Typography
 
-### 7.1 Rules
+Used only for:
 
-- Visible labels are always uppercase and use Josefin Sans Semibold.
-- Button and navigation labels are labels, so they are uppercase.
-- BIZ UDPMincho is the only project-title face.
-- No fourth typeface is part of the production system.
-- Sustained reading uses at least 17px text. Compact interface text may use 16px.
-- Reading measures remain below 65 characters per line.
-- Display type is reserved for short text and must not carry essential long-form explanation.
-- Type scales use named roles rather than page-specific sizes.
-- Optical size, line height and letter spacing are documented for every role.
-- Faux bold, faux italic and uncontrolled font synthesis are forbidden.
+* Hero
+* H1
+* H2
+* Section titles
+* Case study titles
 
-## 8. Colour and themes
+Never use display font for:
 
-### 8.1 Identity roles
+* paragraphs
+* captions
+* testimonials
+* metadata
 
-- Ultramarine `#002080` remains the signature brand colour.
-- Paper and Ink form the editorial base.
-- Coral appears only during hover, focus, selection, validation or other active feedback.
-- Coral is not a decorative resting accent.
-- Project imagery retains authored colour.
+---
 
-### 8.2 Token tiers
+## Body Typography
 
-Reference tokens store canonical colour values. System tokens define semantic roles. Component tokens alias system roles for stable component contracts. Components do not consume raw colour values.
+Libre Baskerville is responsible for every reading experience.
 
-Every filled role has an explicit `on-*` foreground partner. Arbitrary foreground and background mixing is forbidden.
+Including:
 
-### 8.3 Print and Screen
+* hero introduction
+* about page
+* case studies
+* testimonials
+* articles
+* long captions
 
-- Print and Screen remain equally important, complete themes.
-- Print is a light paper environment with dark ink and Ultramarine structure.
-- Screen is a dark, luminous editorial environment without neon, glow-heavy or gaming aesthetics.
-- Theme changes preserve component roles, reading order and hierarchy.
-- Theme preference defaults to the operating system, supports manual override and persists locally.
-- Neither theme may be a superficial inversion of the other.
+Reading typography should never exceed 70 characters per line.
 
-### 8.4 Project theming
+---
 
-- A case study may temporarily tint the navigation and page background using an approved project palette.
-- Project palettes must be mapped into the same semantic roles as the core themes.
-- Project themes retain the site’s typography, spacing, state and accessibility contracts.
-- Leaving the case study restores the global theme without a flash of incorrect colour.
+## Interface Typography
 
-### 8.5 Contrast and conformance
+Josefin Sans is reserved for:
 
-- Every text placement must meet a strict 7:1 contrast floor in Print, Screen and project themes.
-- The 7:1 requirement applies regardless of text size, weight, state or function; large-text and inactive-text exceptions are not used.
-- The rule includes navigation, buttons, links, labels, metadata, captions, placeholders, validation messages, disabled text and text over imagery.
-- Text over variable imagery requires a tested semantic backing surface. Untested text directly over imagery is forbidden.
-- Essential icons and focus indicators remain clearly distinguishable in both themes and project themes and meet their documented non-text contrast requirement.
-- Decorative surface differences are not accepted as the only signal of state.
-- No expressive colour, project theme, state layer, image overlay or disabled treatment may weaken the universal 7:1 text rule.
-- Automated contrast tests cover every documented text foreground/background pair. Browser review verifies actual rendered states, including text over media.
+Navigation
 
-## 9. Shape, surface and material
+Buttons
 
-### 9.1 Shape scale
+Labels
 
-- Editorial surface: `0px`.
-- Functional container: `4px`.
-- Status, toggle and compact pill: fully rounded only when the function benefits from it.
-- Large generic rounded cards are forbidden.
+Dates
 
-Shape communicates function. It is not applied uniformly as decoration.
+Categories
 
-### 9.2 Surface hierarchy
+Metadata
 
-Depth is expressed through surface tone, scale and crop, controlled overlap, state layers, and restrained elevation only when a floating layer must separate from content.
+Tags
 
-Decorative shadows, glass-card fields, neon glows and gradients used as generic polish are forbidden.
+Captions
 
-### 9.3 Paper grain
+It should never appear in paragraphs.
 
-- The procedural monochrome paper grain remains fixed, pointer-inert and request-free.
-- Print uses a subtle multiply treatment.
-- Screen uses a quieter screen treatment.
-- Forced-colour and reduced-transparency environments remove it.
-- Grain never reduces text or focus visibility.
+---
 
-## 10. State model
+## Typography Scale
 
-Every interactive component documents and implements all applicable states:
+| Token      | Desktop | Mobile |
+| ---------- | ------: | -----: |
+| display-xl |      96 |     56 |
+| display-lg |      72 |     48 |
+| h1         |      56 |     40 |
+| h2         |      44 |     34 |
+| h3         |      34 |     28 |
+| h4         |      28 |     24 |
+| h5         |      22 |     20 |
+| h6         |      18 |     18 |
+| body-lg    |      20 |     18 |
+| body       |      18 |     17 |
+| body-sm    |      16 |     16 |
+| caption    |      14 |     14 |
+| label      |      12 |     12 |
 
-- enabled;
-- hover;
-- keyboard focus;
-- pressed;
-- selected or current;
-- expanded;
-- loading;
-- success;
-- warning;
-- error;
-- disabled;
-- unavailable;
-- reduced motion;
-- forced colours;
-- offline or failed dependency.
+All sizes should use `clamp()` for fluid scaling.
 
-Hover is never the only route to information or action. Focus and selected states do not rely on colour alone. Disabled controls remain legible but are not focusable unless their explanation must be discoverable.
+---
 
-## 11. Motion system
+## Font Weights
 
-Motion is expressive throughout but controlled, predictable and predefined.
+Display
 
-| Role | Range | Use |
-| --- | ---: | --- |
-| Immediate | 100–160ms | Press, hover acknowledgement and small state changes |
-| Interface | 200–320ms | Navigation, controls, cards and compact disclosures |
-| Authored spatial | 450–700ms | Page transitions, swatch fan and large compositional changes |
+400
 
-### 11.1 Principles
+500
 
-- Motion explains state, hierarchy, continuity or causality.
-- Page transitions are animated and communicate movement between editorial sheets.
-- Transitions remain interruptible and never delay navigation or keyboard activation.
-- Work cards may change shape and proportion on hover or focus. Crop, colour and typography reinforce the response.
-- Pointer velocity and drag force do not alter outcomes. Behaviour remains predictable.
-- Transform and opacity are preferred. Layout animation is limited to deliberate authored components.
-- No motion depends on cursor position for essential meaning.
-- The client marquee and live status are the only permitted continuous loops.
-- Continuous motion sleeps offscreen and when the document is hidden.
-- Motion does not make reading, navigation or comparison harder.
+700
 
-### 11.2 Reduced motion
+Body
 
-- System preference is respected automatically.
-- A manual override remains available.
-- Reduced motion removes loops, large spatial travel, parallax and shape morphing.
-- It preserves colour feedback, visible focus, immediate state changes and content access.
-- Reduced motion does not hide the cursor or replace interaction with zero-duration flashes.
+400
 
-## 12. Signature interactions
+700
 
-### 12.1 Hero material response
+Labels
 
-- The full-screen hero contains the proposition and support line.
-- A subtle material response may alter tone, grain density or a bounded surface field.
-- It feels native to paper, ink and Ultramarine rather than like a generic WebGL effect.
-- It may acknowledge pointer or focus position, but its outcome remains predefined.
-- Content remains fully legible without the effect.
-- Reduced motion, reduced transparency and low-power modes receive a static hero.
+400
 
-### 12.2 Selected work
+500
 
-- Selected work remains image-led and spacious.
-- More than three projects may appear when the composition remains legible and atmospheric.
-- Cards may change proportion on hover and keyboard focus.
-- Each transformation has an equivalent non-hover route on touch.
-- Project title, premise, role and availability remain readable without animation.
+600
 
-### 12.3 Portrait
+No artificial bolding.
 
-- The portrait becomes a quiet editorial photograph.
-- It uses authored crop, responsive sources and restrained theme treatment.
-- Halftone development lenses or other pointer-led reveals are retired unless a later visual checkpoint proves they strengthen the final direction.
+---
 
-### 12.4 Swatch fan
-
-- The visible heading remains `WHAT I DO`.
-- Five cards represent five services.
-- Expanded layouts present one centred stack that fans across the shared sheet on hover or focus.
-- Compact layouts use an accessible scroll-snapped or stacked treatment.
-- No hexadecimal values appear on the cards.
-- All five services remain readable and reachable without animation.
+## Letter Tracking
 
-### 12.5 Client marquee
-
-- Client marks move in one slow continuous loop.
-- The loop pauses offscreen, when the document is hidden and under reduced motion.
-- Reduced motion presents a wrapped static list.
-- Hover does not accelerate the loop.
-- Logos have accessible text equivalents and preserve their approved artwork.
-
-### 12.6 Footer signature
-
-- The dot-matrix name is the first and largest footer element.
-- Its canonical source is `assets/images/miebaka-joshua-script-name.svg`.
-- The source artwork is sampled into an interactive dot matrix; it is not typeset from a font.
-- The assembled dots preserve the SVG silhouette and remain inside the shared sheet without clipping.
-- Pointer proximity may disperse cells; an interruptible spring returns them.
-- Reduced motion retains the assembled signature.
-- Footer information follows in the order `BASED IN`, `EXPLORE`, `SOCIAL`.
-
-## 13. Component system
+| Role       | Tracking |
+| ---------- | -------- |
+| Display XL | -0.05em  |
+| Display    | -0.03em  |
+| Heading    | -0.02em  |
+| Body       | 0        |
+| Caption    | 0.01em   |
+| Label      | 0.16em   |
+| Button     | 0.12em   |
 
-The documentation covers the complete product system. Production implements only components supported by real portfolio requirements.
+Tracking values must exist only as tokens.
 
-### 13.1 Required families
+Never inside components.
 
-- site navigation and bottom navigation;
-- Index overlay;
-- buttons and editorial text links;
-- project cards and work rows;
-- service swatches;
-- tags and metadata;
-- disclosures and accordions;
-- form fields and validation;
-- tooltips;
-- theme and motion controls;
-- status and feedback messages;
-- dialogs and editorial sheets;
-- images, galleries, video and captions;
-- case-study chapter navigation;
-- pagination and next-project navigation;
-- loading, skeleton, empty, error and offline states;
-- copy-to-clipboard feedback;
-- download links;
-- marquees;
-- accessibility utilities.
-
-### 13.2 Buttons and links
-
-- Buttons remain visually quiet until interaction while retaining a clear affordance.
-- All button labels are uppercase Josefin Sans.
-- Primary, secondary, quiet and icon-plus-label actions are distinct roles.
-- Editorial links remain links and are never restyled as generic buttons.
-- Press, focus, loading, success and disabled states preserve geometry.
-- Minimum target size is 44×44 CSS pixels; 48×48 is preferred for bottom navigation and high-frequency touch controls.
-
-### 13.3 Cards
-
-- Card treatment follows content function rather than one universal visual shell.
-- Whitespace and crop define editorial project cards.
-- Surface tone defines grouped utilities.
-- Borders are used only where a boundary is necessary for comprehension.
-- A whole card is interactive only when it has one destination.
-- Nested interactive targets remain independently operable.
-
-### 13.4 Forms
-
-- Every field has a persistent visible uppercase label.
-- Placeholder text is supplementary and never substitutes for a label.
-- Required, optional, help, focus, valid, invalid, disabled, submitting, success and failure states are defined.
-- Errors identify the field and explain recovery in plain language.
-- Submission preserves entered data when the network or service fails.
-- Contact submissions are delivered to `miebakakiki@gmail.com` through an approved form service or serverless endpoint.
-- The approved delivery architecture is a Vercel serverless endpoint using Resend. Credentials remain server-side and are never exposed to the browser bundle.
-- The email address is visible and directly copyable, with accessible confirmation.
-- Anti-spam measures must not introduce an inaccessible challenge.
-
-## 14. Case-study system
-
-Professional projects are hosted as complete case studies on the portfolio.
-
-### 14.1 Chapter order
-
-1. Project proposition.
-2. Hero media.
-3. Role, collaborators, year and deliverables.
-4. Context.
-5. Central problem.
-6. Process evidence.
-7. Strategic decision.
-8. Identity or campaign system.
-9. Applications.
-10. Production and handoff.
-11. Measurable outcomes.
-12. Reflection.
-13. Next project.
-
-### 14.2 Evidence rules
-
-- Final work, process, measurable outcomes, precise role and collaborators may be published.
-- Rejected directions are never published.
-- Process appears inline rather than behind optional disclosures.
-- Outcomes are collected and verified project by project.
-- Unknown metrics are omitted. They are never estimated for presentation value.
-- Team contributions are credited precisely.
-- Confidential information is excluded even when it would strengthen the narrative.
-- Case-study media remains inside the editorial sheet measure.
-- Each case study ends with one next-project transition. Competing contact and related-work panels do not crowd the ending.
-
-### 14.3 Project media
-
-- Media may include final images, guidelines, presentations, production details, packaging photography, motion and video as supplied per project.
-- Every media item has dimensions, responsive sources, appropriate loading priority and meaningful alternative text or caption.
-- Video never autoplays with sound.
-- Motion media supplies a poster and a non-moving equivalent where required.
-
-## 15. Explorations and Community
-
-Both destinations are required for the first complete release. Their initial entries are supplied and approved during route implementation; placeholder projects, invented community activity and empty decorative cards are forbidden.
-
-### 15.1 Explorations
-
-- Entries are curated by idea, not uploaded chronologically without context.
-- Each entry states the self-imposed prompt, visual decision and date.
-- The section may be visually freer than Work but still consumes the same global tokens and accessibility contracts.
-- Experiments must not be mistaken for commissioned client work.
-
-### 15.2 Community
-
-- Each entry identifies the audience, contribution and access method.
-- Downloadable resources show format, licence, version and last-updated date.
-- Events or workshops distinguish past recordings from upcoming participation.
-- Community work is evaluated by usefulness, not decorative engagement metrics.
-- Empty launch state uses a purposeful introduction and clear future scope rather than fabricated entries.
-
-## 16. Content language
-
-- Lead with the decision, not process theatre.
-- Prefer concrete verbs: define, position, design, direct, produce, deliver.
-- Avoid inflated claims, generic agency language and unsupported outcomes.
-- Distinguish observation, decision, execution and result.
-- Use one register: warm, direct and professionally exact.
-- Interface labels are short, uppercase and destination-led.
-- No decorative status, weather, release version, fake availability or scroll instruction is published.
-- Dates, reading length, roles, collaborators and results are factual.
-- `WORK WITH ME` is the canonical contact action.
-- `SEE THE WORK` is reserved for portfolio navigation.
-
-## 17. Accessibility and input
-
-- Semantic HTML is the interaction foundation.
-- Navigation, content, links, case studies and contact information work without JavaScript.
-- Every pointer interaction has a keyboard and touch equivalent.
-- Focus order follows the visible reading order.
-- Focus is never removed and remains visible in forced-colour mode.
-- Interactive targets are at least 44×44 CSS pixels.
-- Current page, expanded state, validation and live feedback are programmatically exposed.
-- Decorative canvas and texture layers are ignored by assistive technology.
-- Images use meaningful alternative text; decorative images use empty alternatives.
-- Captions and transcripts accompany meaningful video or audio.
-- Zoom to 200% and text spacing overrides do not remove content or actions.
-- Layout remains usable at 320 CSS pixels without horizontal page scrolling.
-- Labels remain visible when fields contain values.
-- Colour, motion and shape never act as the only state signal.
-- Accessibility testing includes keyboard-only, screen-reader smoke tests, forced colours, reduced motion, reduced transparency and touch.
-
-## 18. Resilience and progressive enhancement
-
-- Static HTML exposes every primary destination and core page narrative.
-- JavaScript enhances navigation, transitions, responsive media and authored interactions.
-- Failed JavaScript leaves readable pages, working links and a usable contact path.
-- Failed optional services preserve stable geometry and show a truthful fallback.
-- Slow connections receive reserved media dimensions and progressive loading.
-- Save-Data, low-power and reduced-motion environments receive quieter media and no non-essential continuous work.
-- Graceful online failure is required. Full offline application behaviour is not required unless approved later.
-
-### 18.1 CV delivery
-
-- The approved source file is `/Users/mac/Desktop/Career/Miebaka Joshua's Resume.pdf`.
-- The production build copies it to a stable, URL-safe public asset name rather than exposing the local source path.
-- The public action label is `DOWNLOAD CV`.
-- The link identifies the PDF format and download size where it is presented.
-- The source PDF is verified before release and replaced only through an explicit content update.
-
-## 19. Performance budgets
-
-Budgets apply to production on a representative mid-range mobile device and constrained connection.
-
-| Measure | Budget |
-| --- | ---: |
-| Largest Contentful Paint | ≤2.0s target, ≤2.5s hard gate |
-| Interaction to Next Paint | ≤150ms target, ≤200ms hard gate |
-| Cumulative Layout Shift | ≤0.05 |
-| Initial JavaScript, compressed | ≤75KB, excluding route-lazy media players |
-| Initial CSS, compressed | ≤45KB |
-| Homepage media before interaction | ≤1.5MB |
-| Long tasks during ordinary navigation | none above 200ms |
-| Idle continuous main-thread work | none |
-| Regular-motion animation | 60fps target |
-
-Additional rules:
-
-- Production serves one bundled CSS request and a small ES-module graph.
-- Route-specific code and media load only where used.
-- Above-the-fold media has dimensions and intentional fetch priority.
-- Other media lazy-loads.
-- Canvas work sleeps offscreen and when settled.
-- No runtime module ships without an import and route-specific purpose.
-- Font files are subset where practical and preloaded only when immediately required.
-
-## 20. Browser and platform support
-
-The supported matrix is the latest two stable versions of Chrome, Safari, Firefox and Edge, plus current iOS Safari and current Android Chrome.
-
-The site supports pointer, keyboard and touch input; light and dark operating-system preferences; safe-area insets; modern viewport units with fallbacks; reduced motion; reduced transparency where available; forced colours; increased text size; and browser zoom.
-
-Unsupported enhancement APIs fail silently to the static editorial experience.
-
-## 21. Privacy, security and delivery
-
-- Contact collection is limited to information required to reply.
-- The form explains what is submitted and how it is used.
-- No advertising trackers are introduced.
-- Analytics, if later approved, are privacy-conscious and documented.
-- Security headers include a tested Content Security Policy, content-type protection, referrer policy, permissions policy and frame protection.
-- External links that open new contexts are marked safely.
-- Build output contains only production files and referenced assets.
-- Source maps, drafts, unused media and private notes do not ship.
-
-## 22. Implementation checkpoints
-
-The rebuild happens in the current site and current repository. Each checkpoint requires owner approval before the next visual layer becomes authoritative.
-
-1. Revised engineering specification.
-2. Information architecture and responsive wireframes.
-3. Two visual-system directions to compare.
-4. Approved homepage implementation.
-5. One complete TEDx RSU flagship case study.
-6. Remaining routes, including Explorations and Community.
-7. Accessibility, performance and browser QA.
-8. Deployment review.
-
-Existing interactions may be removed when they do not survive this system. Every material removal is named and justified before implementation.
-
-## 23. Release gate
-
-Before push or deployment:
-
-1. Run `npm test` and all new specification tests.
-2. Build the production `dist/` directory from a clean input state.
-3. Inspect Home, Work, Explorations, Community, About, Services, Writing, Contact, Privacy, 404 and every published case study.
-4. Inspect compact, medium, expanded and large layouts.
-5. Confirm `document.body.scrollWidth === innerWidth` on every production route at required widths.
-6. Confirm Print and Screen themes, including project-colour themes.
-7. Confirm regular and reduced motion.
-8. Confirm keyboard, touch and pointer access to every interaction.
-9. Confirm visible focus, forced-colour usability and form error recovery.
-10. Confirm no console errors, broken internal links, missing assets or failed font loads.
-11. Confirm performance budgets with production assets and a representative mobile profile.
-12. Confirm navigation and core content remain usable without JavaScript.
-13. Confirm no unverified outcome, testimonial or collaborator credit is published.
-14. Confirm only approved production files ship.
-
-Automated tests establish technical health. They do not replace browser and human visual review.
-
-## 24. Approved implementation anchors
-
-1. Every text placement uses a universal 7:1 minimum contrast ratio, with no size, state or inactive-text exception.
-2. TEDx RSU is the first complete flagship case study.
-3. The approved CV source is `/Users/mac/Desktop/Career/Miebaka Joshua's Resume.pdf`; the public action is `DOWNLOAD CV`.
-4. Contact delivery uses a Vercel serverless endpoint with Resend and sends to `miebakakiki@gmail.com`.
-5. Explorations and Community both ship as primary destinations. Their real launch entries are defined during implementation, without fabricated placeholder content.
+---
+
+## Line Heights
+
+| Role    | Value |
+| ------- | ----- |
+| Hero    | 1     |
+| Heading | 1.08  |
+| Intro   | 1.55  |
+| Body    | 1.75  |
+| Caption | 1.55  |
+| Label   | 1     |
+
+---
+
+## Reading Measures
+
+```
+--measure-hero:18ch;
+
+--measure-lead:34ch;
+
+--measure-reading:68ch;
+
+--measure-caption:42ch;
+
+--measure-wide:84ch;
+```
+
+Every content role gets its own measure.
+
+---
+
+## OpenType Features
+
+Enable globally.
+
+```
+font-kerning: normal;
+
+text-rendering: optimizeLegibility;
+
+font-feature-settings:
+"kern",
+"liga",
+"clig",
+"calt";
+
+font-variant-ligatures:
+common-ligatures
+contextual;
+```
+
+---
+
+## Typography Utility Classes
+
+```
+.display-xl
+
+.display-lg
+
+.display
+
+.headline
+
+.subhead
+
+.lead
+
+.body
+
+.small
+
+.caption
+
+.label
+
+.overline
+
+.quote
+```
+
+Components consume these classes.
+
+---
+
+# 3. Color System
+
+Current naming already communicates quality.
+
+Retain semantic naming.
+
+## Core Palette
+
+| Token   | Hex       | Use                                          |
+| ------- | --------- | -------------------------------------------- |
+| `paper` | `#F4F1EA` | Primary background                            |
+| `ink`   | `#16140F` | Primary text, inverted sections               |
+| `stone` | `#6B6256` | Secondary text                                |
+| `linen` | `#E4DED2` | Card and section separation, hairlines        |
+| `clay`  | `#C2531C` | Accent: links, the one CTA — sparingly        |
+
+Derived roles (`linen-strong`, `clay-hover`, `clay-text`, `clay-text-hover`,
+`bg`, `surface`, `text-*`, `border*`, `accent*`) are defined in
+`styles/tokens/colors.css` and are the only things components may consume. Dark
+mode redefines these token values; it never redefines a component.
+
+> **Resolved — accent contrast.** `--clay` is the brand colour and is 4.09:1 on
+> `--paper`, which clears WCAG AA for large text (3:1) but not for body text
+> (4.5:1). Small accent text therefore uses `--clay-text` (4.72:1 light,
+> 5.24:1 dark). Large display accents keep the true brand `--clay`. Do not
+> collapse these back into one token.
+
+> **Resolved — phantom tokens.** Earlier drafts of this section also named
+> `mist`, `forest`, `ember` and `gold`. None of them exist in
+> `styles/tokens/colors.css` and none are used anywhere in the build. They were
+> aspirational, never implemented, and are removed here rather than left as a
+> list that does not describe the product. Adding any of them back is a new
+> decision requiring a token definition first.
+
+**Accent budget:** `clay` appears on no more than roughly three elements per
+screen. All other colour on any page must come from the work itself. A single
+near-black `ink` section is permitted as a tonal break; invert text to `paper`
+inside it.
+
+Never expose numerical color names.
+
+Avoid:
+
+```
+gray-500
+
+gray-700
+```
+
+---
+
+## Color Categories
+
+Background
+
+Surface
+
+Text
+
+Border
+
+Interactive
+
+Accent
+
+Status
+
+Overlay
+
+---
+
+## Text Hierarchy
+
+Primary
+
+Secondary
+
+Muted
+
+Disabled
+
+Inverse
+
+Link
+
+Visited
+
+---
+
+## Contrast
+
+Minimum WCAG AA.
+
+Large headings
+
+4.5:1 minimum.
+
+Body copy
+
+7:1 preferred.
+
+---
+
+## Dark Mode
+
+Maintain semantic token names.
+
+Never redefine components.
+
+Only redefine tokens.
+
+---
+
+# 4. Spacing System
+
+Use an 8-point grid.
+
+```
+0
+
+4
+
+8
+
+12
+
+16
+
+24
+
+32
+
+40
+
+48
+
+64
+
+80
+
+96
+
+128
+
+160
+
+192
+```
+
+---
+
+## Tokens
+
+```
+--space-0
+
+--space-1
+
+...
+
+--space-12
+```
+
+No literal spacing inside components.
+
+---
+
+## Vertical Rhythm
+
+Every section must align to the spacing system.
+
+Paragraph spacing
+
+Heading spacing
+
+Section spacing
+
+Media spacing
+
+All tokenized.
+
+---
+
+# 5. Layout System
+
+Containers
+
+```
+--content-width
+
+--text-width
+
+--gallery-width
+
+--bleed-width
+
+--page-max
+```
+
+---
+
+## Layout Utilities
+
+```
+.container
+
+.container-wide
+
+.container-reading
+
+.container-gallery
+
+.container-bleed
+```
+
+---
+
+## Section Utilities
+
+```
+.section-xs
+
+.section-sm
+
+.section-md
+
+.section-lg
+
+.section-xl
+```
+
+Padding must never be manually declared inside pages.
+
+---
+
+# 6. Grid System
+
+Use CSS Grid exclusively for page layout.
+
+## Columns
+
+Desktop
+
+12 columns
+
+Tablet
+
+8 columns
+
+Mobile
+
+4 columns
+
+---
+
+## Gutter
+
+Desktop
+
+32px
+
+Tablet
+
+24px
+
+Mobile
+
+16px
+
+---
+
+## Grid Tokens
+
+```
+--grid-columns
+
+--grid-gap
+
+--grid-margin
+
+--grid-max
+```
+
+---
+
+## Rules
+
+No nested grids unless necessary.
+
+Avoid arbitrary column spans.
+
+Use semantic layout utilities instead of inline grid declarations.
+
+---
+
+## The Golden Ratio (φ ≈ 1.618)
+
+> **Resolved — grid systems.** The retired creative direction proportioned the
+> site on the golden ratio; this document specified a 12/8/4 column grid. These
+> were recorded as a conflict, but they are not one: they govern different
+> things and both are present in the build. The rule is which one applies where.
+
+**φ governs two-part splits.** Any layout that divides into a major and a minor
+column uses `--col-major` (`1.618fr`) and `--col-minor` (`1fr`), giving the
+61.8% / 38.2% division. In the build this covers the hero (statement : portrait),
+the about grid, the capability and experience rows, the contact page, and the
+footer.
+
+**The 12-column grid governs multi-item layouts.** The work grid and the
+case-study body use `repeat(12, 1fr)`, with each item claiming a span from data.
+Tablet collapses to 8 columns, mobile to 4.
+
+Further φ rules:
+
+* **Vertical placement:** anchor focal elements on the golden lines, not
+  arbitrary centres. The hero statement sits on the lower golden line.
+* **Spacing and type:** prefer steps that scale by φ, or √φ ≈ 1.272 for finer
+  increments.
+* **Tokens:** `--phi`, `--phi-inv`, `--col-major`, `--col-minor`, defined in
+  `styles/tokens/grid.css` alongside the 12-column tokens.
+* **Mobile:** the golden split collapses to a single column; work reverts to a
+  single-column stack before widening to 2 and then 12.
+
+Content max width is ~1400px with generous margins. Deliberate asymmetry is
+expected; work is shown full-bleed where it earns it.
+
+---
+
+# 7. Motion System
+
+## Motion Philosophy
+
+Motion should communicate hierarchy, continuity, and intent.
+
+It should never exist purely for decoration.
+
+Every animation must answer one of four questions:
+
+* Where did this come from?
+* Where is it going?
+* What changed?
+* What should I notice?
+
+If an animation cannot answer one of those questions, it should be removed.
+
+Motion confirms quality; it never performs. Specifically banned: auto-advancing
+carousels, bouncing, and any attention-grabbing loop. A visitor should never
+have to wait for the interface to finish moving before they can read it.
+
+---
+
+## Motion Characteristics
+
+The site should feel:
+
+* calm
+* confident
+* premium
+* editorial
+* deliberate
+
+It should never feel:
+
+* playful
+* bouncy
+* exaggerated
+* game-like
+* flashy
+
+---
+
+## Motion Categories
+
+## Entrance
+
+Fade
+
+Slide
+
+Reveal
+
+Scale
+
+Mask
+
+---
+
+## Interaction
+
+Hover
+
+Focus
+
+Active
+
+Pressed
+
+Disabled
+
+---
+
+## Navigation
+
+Menu
+
+Overlay
+
+Page transition
+
+Scroll restoration
+
+---
+
+## Scroll
+
+Fade-in
+
+Translate
+
+Parallax (minimal)
+
+Sticky transitions
+
+---
+
+## Feedback
+
+Button confirmation
+
+Form success
+
+Loading
+
+Error
+
+---
+
+## Timing Tokens
+
+```css
+--duration-instant:75ms;
+
+--duration-fast:150ms;
+
+--duration-standard:250ms;
+
+--duration-medium:350ms;
+
+--duration-slow:500ms;
+
+--duration-emphasis:700ms;
+```
+
+No component may hardcode durations.
+
+---
+
+## Easing Tokens
+
+```css
+--ease-linear;
+
+--ease-standard;
+
+--ease-snappy;
+
+--ease-gentle;
+
+--ease-emphasized;
+```
+
+Rules:
+
+Hover → Standard
+
+Menus → Emphasized
+
+Micro interactions → Snappy
+
+Reading transitions → Gentle
+
+---
+
+## Hover Standards
+
+Links
+
+Opacity
+
+Underline
+
+Color
+
+Never move more than 2px.
+
+---
+
+Buttons
+
+Background
+
+Border
+
+Shadow
+
+Never animate width.
+
+Never animate height.
+
+---
+
+Cards
+
+Elevation
+
+Shadow
+
+TranslateY
+
+Maximum translate:
+
+```text
+-4px
+```
+
+---
+
+Images
+
+Scale
+
+Maximum
+
+```text
+1.03
+```
+
+Never exceed
+
+```text
+1.05
+```
+
+---
+
+## Reduced Motion
+
+Always support
+
+```css
+prefers-reduced-motion
+```
+
+Disable
+
+* parallax
+
+* reveals
+
+* transitions
+
+* autoplay animations
+
+---
+
+## Scroll Reveals
+
+Allowed
+
+Opacity
+
+Translate
+
+Clip-path
+
+Not allowed
+
+Bounce
+
+Elastic
+
+Overshoot
+
+---
+
+# 8. Design Token Architecture
+
+Tokens are the single source of truth.
+
+No component owns visual values.
+
+---
+
+## Directory Structure
+
+```text
+styles/
+
+tokens/
+
+colors.css
+
+typography.css
+
+spacing.css
+
+layout.css
+
+grid.css
+
+motion.css
+
+radius.css
+
+shadow.css
+
+z-index.css
+
+opacity.css
+
+base/
+
+reset.css
+
+typography.css
+
+utilities.css
+
+components/
+
+navigation.css
+
+buttons.css
+
+cards.css
+
+forms.css
+
+footer.css
+
+sections/
+
+hero.css
+
+work.css
+
+about.css
+
+contact.css
+
+case-study.css
+```
+
+---
+
+## Token Rules
+
+Every token must be:
+
+Semantic
+
+Reusable
+
+Platform independent
+
+Never named by appearance.
+
+Bad
+
+```text
+gray500
+blue400
+```
+
+Good
+
+```text
+surface
+
+surface-raised
+
+text-primary
+
+text-secondary
+
+accent
+
+border-muted
+```
+
+---
+
+## Token Ownership
+
+Only tokens may define
+
+Colors
+
+Spacing
+
+Typography
+
+Radius
+
+Shadow
+
+Elevation
+
+Motion
+
+Opacity
+
+Layout
+
+Z-index
+
+---
+
+## Component Rules
+
+Components consume tokens.
+
+Components never create design language.
+
+---
+
+# 9. CSS Architecture
+
+Architecture
+
+```text
+Tokens
+
+↓
+
+Base
+
+↓
+
+Utilities
+
+↓
+
+Components
+
+↓
+
+Sections
+
+↓
+
+Overrides
+```
+
+Nothing skips layers.
+
+---
+
+## Naming Convention
+
+BEM
+
+```text
+.hero
+
+.hero__title
+
+.hero__content
+
+.hero--dark
+```
+
+No deep nesting.
+
+Maximum selector depth
+
+```text
+3
+```
+
+---
+
+## CSS Conventions
+
+Never use
+
+IDs
+
+Important
+
+Inline styles
+
+Deep selectors
+
+Element chains
+
+---
+
+Always use
+
+Custom properties
+
+Logical properties
+
+Container queries (future)
+
+Modern CSS
+
+---
+
+## Property Order
+
+Position
+
+Display
+
+Layout
+
+Box model
+
+Typography
+
+Visual
+
+Animation
+
+Misc
+
+Every rule follows identical order.
+
+---
+
+## File Size Limits
+
+tokens
+
+<250 lines
+
+component
+
+<300 lines
+
+section
+
+<350 lines
+
+If larger
+
+Split file.
+
+---
+
+## Responsive Strategy
+
+Desktop first layout
+
+Mobile first CSS
+
+Fluid typography
+
+Clamp spacing
+
+No breakpoint-specific typography.
+
+---
+
+## Utilities
+
+Allowed
+
+Typography
+
+Spacing
+
+Display
+
+Flex
+
+Grid
+
+Alignment
+
+Visibility
+
+Aspect ratio
+
+Not allowed
+
+Color utilities
+
+Component utilities
+
+Visual hacks
+
+---
+
+# 10. HTML Architecture
+
+HTML communicates meaning.
+
+CSS communicates appearance.
+
+---
+
+## Semantic Structure
+
+```text
+body
+
+header
+
+main
+
+section
+
+article
+
+aside
+
+footer
+```
+
+Never use div when a semantic element exists.
+
+---
+
+## Heading Structure
+
+One
+
+H1
+
+Per page.
+
+Never skip heading levels.
+
+---
+
+## Images
+
+Every image
+
+Width
+
+Height
+
+Alt
+
+Loading
+
+Decoding
+
+---
+
+## Links
+
+Descriptive text.
+
+Never
+
+Click here
+
+Learn more
+
+---
+
+## Forms
+
+Every control
+
+Label
+
+Description
+
+Error state
+
+Autocomplete
+
+---
+
+## Accessibility
+
+Landmarks
+
+ARIA
+
+Skip links
+
+Keyboard support
+
+Required everywhere.
+
+---
+
+## Inline Styles
+
+Forbidden.
+
+Move every inline declaration into CSS.
+
+---
+
+## Data Attributes
+
+Allowed only for
+
+JS hooks
+
+Analytics
+
+State
+
+Never for styling.
+
+---
+
+# 11. JavaScript Architecture
+
+JavaScript enhances.
+
+HTML should remain usable.
+
+---
+
+## Directory
+
+```text
+js/
+
+core/
+
+navigation.js
+
+menu.js
+
+scroll.js
+
+animation.js
+
+components/
+
+carousel.js
+
+accordion.js
+
+modal.js
+
+utilities/
+
+dom.js
+
+events.js
+
+helpers.js
+
+render/
+
+navigation.js
+
+footer.js
+
+projects.js
+```
+
+---
+
+## Principles
+
+Single responsibility.
+
+Pure functions.
+
+Small modules.
+
+Predictable naming.
+
+---
+
+## Naming
+
+Good
+
+```text
+renderProjects()
+
+mountNavigation()
+
+toggleMenu()
+
+updateClock()
+```
+
+Bad
+
+```text
+doStuff()
+
+run()
+
+handle()
+
+execute()
+```
+
+---
+
+## DOM Access
+
+Cache selectors.
+
+Avoid repeated queries.
+
+Batch DOM writes.
+
+Prefer
+
+```js
+DocumentFragment
+```
+
+for multiple insertions.
+
+---
+
+## Events
+
+Delegate where possible.
+
+Avoid attaching listeners repeatedly.
+
+---
+
+## State
+
+Never store UI state in the DOM unless required.
+
+Keep state centralized.
+
+---
+
+## Rendering
+
+Rendering functions should
+
+Receive data
+
+Return markup
+
+Never mutate unrelated state.
+
+---
+
+## Error Handling
+
+Gracefully handle
+
+Missing data
+
+Missing images
+
+Network failures
+
+Unexpected values
+
+---
+
+# 12. Art Direction
+
+Engineering decides how an image is delivered. This section decides which image
+is worth delivering.
+
+## Portraits
+
+Warm, natural light, with presence: eye contact, or caught in the act of making.
+Never passive or incidental.
+
+## Work
+
+High resolution, true colour, full-bleed where the piece earns it. The posters
+and identities are the subject; the page is the wall they hang on.
+
+## Consistency
+
+One treatment throughout. Do not mix black-and-white and colour portraits
+arbitrarily. The chosen lane is warm colour, for approachability and for the
+trust a remote hire has to establish quickly.
+
+## Credit
+
+Third-party imagery used editorially (campaign stills, documentary photography)
+carries its credit in the caption, below the image, never set over it.
+
+---
+
+# 13. Voice
+
+Inquisitive, warm, unhedged. The register is the writer's smartest, most curious
+self.
+
+Personal detail — comic books, dinosaurs, snakes, the ability to taste the
+difference in water — is encouraged rather than tolerated: it earns the craft and
+makes the work memorable.
+
+Lead client-facing copy with the African-brands mission. Keep personality
+concentrated in the About page and the writing.
+
+**Mechanics:**
+
+* Sentence case everywhere except small uppercase interface labels.
+* No em-dashes or en-dashes in any user-visible string, including page titles,
+  meta descriptions, alt text and button labels. Use a comma, colon, period or
+  plain hyphen. This applies to prose in the articles as much as to UI copy.
+* One label per intent across the whole site. The contact call to action is
+  "Start a project" everywhere it appears.
+* No scroll cues, no section-number eyebrows, no decorative status dots.
+* At most one small-caps eyebrow per three sections; a headline that names its
+  own section does not also need a label above it.
+
+---
+
+# 14. Component-by-Component Implementation Guide
+
+## Navigation
+
+### Responsibilities
+
+Global navigation
+
+Theme switching
+
+Menu state
+
+Clock
+
+Accessibility
+
+### Tasks
+
+* Remove duplicated markup generation.
+* Centralize navigation rendering.
+* Add focus trapping to overlay menu.
+* Ensure Escape closes menu.
+* Lock body scroll when open.
+* Tokenize spacing and typography.
+* Improve keyboard navigation.
+
+Acceptance Criteria
+
+* [ ] Keyboard accessible
+* [ ] Screen-reader friendly
+* [ ] No duplicated HTML
+* [ ] Token-driven styling
+
+---
+
+## Hero
+
+Responsibilities
+
+Identity
+
+Introduction
+
+Primary CTA
+
+Portrait
+
+### Tasks
+
+* Replace inline styles.
+* Use typography utility classes.
+* Constrain reading measure.
+* Improve image loading.
+* Standardize spacing.
+* Improve responsive composition.
+
+Acceptance Criteria
+
+* [ ] Editorial hierarchy
+* [ ] Responsive
+* [ ] Typography tokens only
+
+---
+
+## Work Grid
+
+Responsibilities
+
+Project discovery
+
+### Tasks
+
+* Replace manual sizing with layout utilities.
+* Normalize card spacing.
+* Improve hover interactions.
+* Lazy-load images.
+* Remove duplicated card styles.
+
+Acceptance Criteria
+
+* [ ] Consistent rhythm
+* [ ] Accessible links
+* [ ] Responsive grid
+
+---
+
+## Testimonials
+
+### Tasks
+
+* Move to serif typography.
+* Increase reading measure.
+* Improve quotation styling.
+* Add semantic `<blockquote>` and `<cite>` usage.
+
+Acceptance Criteria
+
+* [ ] Editorial appearance
+* [ ] Semantic HTML
+* [ ] Typography consistency
+
+---
+
+## Footer
+
+### Tasks
+
+* Simplify layout.
+* Tokenize spacing.
+* Improve navigation semantics.
+* Normalize social links.
+* Improve responsive layout.
+
+Acceptance Criteria
+
+* [ ] Accessible
+* [ ] Responsive
+* [ ] Consistent spacing
+
+---
+
+## Case Studies
+
+### Tasks
+
+* Standardize template.
+* Replace inline media colors.
+* Normalize rails.
+* Improve typography.
+* Improve media rhythm.
+* Create reusable content blocks.
+
+Acceptance Criteria
+
+* [ ] Shared layout system
+* [ ] Zero duplicated patterns
+* [ ] Consistent hierarchy
+
+---
+
+# 15. Acceptance Criteria
+
+## Typography
+
+* [ ] Every heading uses TeX Gyre Heros.
+* [ ] Every long-form paragraph uses Libre Baskerville.
+* [ ] Every label and UI element uses Josefin Sans.
+* [ ] No typography role leaks into another.
+* [ ] All font sizes use tokens.
+* [ ] All tracking values use tokens.
+* [ ] Reading measures are respected.
+
+## Color
+
+* [ ] No hardcoded colors remain.
+* [ ] Components consume semantic color tokens only.
+* [ ] All text meets contrast requirements.
+
+## Spacing
+
+* [ ] No literal margin or padding values remain.
+* [ ] All spacing derives from the spacing scale.
+* [ ] Vertical rhythm is consistent across pages.
+
+## Layout
+
+* [ ] Containers use layout tokens.
+* [ ] No inline widths remain.
+* [ ] All sections use spacing utilities.
+
+## Grid
+
+* [ ] Multi-item layouts follow the 12/8/4 column system.
+* [ ] Two-part splits use `--col-major` / `--col-minor`, not hand-written percentages.
+* [ ] Gutters are tokenized.
+* [ ] Components align to the grid consistently.
+
+## Art Direction
+
+* [ ] Every project reference carries an image or a colour field.
+* [ ] Portrait treatment is consistent across the site.
+* [ ] Third-party imagery is credited in a caption below the image.
+
+## Voice
+
+* [ ] No em-dash or en-dash appears in any user-visible string.
+* [ ] The contact call to action reads "Start a project" everywhere.
+* [ ] Eyebrow labels number at most one per three sections.
+* [ ] No scroll cues, section numbering, or decorative status dots.
+
+---
+
+# 16. Definition of Done — Implementation
+
+The implementation is complete only when:
+
+* [ ] No hardcoded design values remain in components.
+* [ ] All visual decisions originate from design tokens.
+* [ ] CSS follows the defined architecture.
+* [ ] HTML is fully semantic and accessible.
+* [ ] JavaScript is modular and predictable.
+* [ ] Every component passes accessibility review.
+* [ ] Motion is consistent with the defined system.
+* [ ] No inline styles remain.
+* [ ] All pages share a unified visual language.
+* [ ] The codebase is maintainable, scalable, and production-ready.
+
+# 17. File-by-File Refactor Tasks
+
+The project should be refactored from the foundation outward. Never begin with visual polish before completing the architectural work.
+
+Priority definitions:
+
+Critical — Blocks maintainability, accessibility, or scalability.
+High — Significant improvement to engineering or UX.
+Medium — Improves consistency and polish.
+Low — Cosmetic or future enhancement.
+styles/tokens.css
+
+Priority: Critical
+
+Current Issues
+Single file owns too many responsibilities.
+Typography, spacing, color, layout, and motion are coupled.
+File will become difficult to maintain.
+Tasks
+
+Split into dedicated token files.
+
+Standardize naming.
+
+Remove duplicated values.
+
+Introduce semantic token groups.
+
+Introduce token documentation.
+
+Alphabetize related token groups.
+
+Add comments describing ownership.
+
+Remove deprecated tokens.
+
+Acceptance Criteria
+
+One responsibility per token file.
+No duplicated token values.
+Components consume only semantic tokens.
+styles/base.css
+
+Priority: Critical
+
+Tasks
+
+Establish document defaults.
+
+Move typography defaults here.
+
+Configure OpenType features.
+
+Configure smooth font rendering.
+
+Configure focus styles.
+
+Configure selection styles.
+
+Normalize forms.
+
+Normalize media.
+
+Normalize lists.
+
+Normalize tables.
+
+Normalize code blocks.
+
+styles/components.css
+
+Priority: High
+
+Tasks
+
+Remove duplicated typography.
+
+Remove duplicated spacing.
+
+Replace literal values with tokens.
+
+Reduce selector depth.
+
+Split into smaller files:
+
+buttons
+navigation
+cards
+forms
+footer
+marquee
+quotes
+styles/sections.css
+
+Priority: High
+
+Tasks
+
+Separate page-specific sections.
+
+Normalize spacing.
+
+Normalize layout utilities.
+
+Remove inline layout decisions.
+
+Ensure every section consumes utilities.
+
+index.html
+
+Priority: Critical
+
+Tasks
+
+Verify semantic heading hierarchy.
+
+Ensure single H1.
+
+Improve landmark structure.
+
+Replace inline styles.
+
+Improve hero reading width.
+
+Improve CTA hierarchy.
+
+Optimize image loading.
+
+Improve metadata.
+
+work.html
+
+Priority: High
+
+Tasks
+
+Normalize work grid.
+
+Improve masonry consistency.
+
+Improve hover behavior.
+
+Improve card accessibility.
+
+Improve keyboard navigation.
+
+about.html
+
+Priority: High
+
+Tasks
+
+Improve typography rhythm.
+
+Reduce line length.
+
+Increase whitespace.
+
+Improve hierarchy.
+
+Improve portrait loading.
+
+contact.html
+
+Priority: High
+
+Tasks
+
+Improve form accessibility.
+
+Add autocomplete attributes.
+
+Improve validation messaging.
+
+Improve mobile spacing.
+
+work/*.html
+
+Each case study should use a shared template.
+
+Tasks
+
+Remove inline colors.
+
+Normalize rail layout.
+
+Normalize media spacing.
+
+Standardize metrics.
+
+Standardize next-project navigation.
+
+Standardize typography.
+
+Create reusable content blocks.
+
+data/site.js
+
+Priority: Medium
+
+Tasks
+
+Validate schema.
+
+Separate content from configuration.
+
+Normalize project objects.
+
+Add image metadata.
+
+Add SEO metadata.
+
+Add social metadata.
+
+Add accessibility metadata where required.
+
+js/render.js
+
+Priority: Critical
+
+Tasks
+
+Break into modules.
+
+Reduce repeated template logic.
+
+Reuse rendering helpers.
+
+Centralize escaping.
+
+Improve readability.
+
+Cache selectors.
+
+Improve error handling.
+
+js/main.js
+
+Priority: High
+
+Tasks
+
+Separate concerns.
+
+Improve event delegation.
+
+Remove duplicated listeners.
+
+Improve state management.
+
+Improve naming consistency.
+
+# 18. Accessibility Requirements (WCAG 2.2 AA)
+
+Accessibility is not an enhancement. It is a release requirement.
+
+Keyboard Navigation
+
+Every interactive element is reachable.
+
+Logical tab order.
+
+No keyboard traps.
+
+Escape closes overlays.
+
+Enter and Space activate controls.
+
+Focus returns to the invoking control after dialogs close.
+
+Focus Indicators
+
+Visible on every interactive element.
+
+Minimum 3:1 contrast.
+
+Never removed with outline: none.
+
+Consistent focus ring token.
+
+Color Contrast
+
+Normal text ≥ 4.5:1.
+
+Large text ≥ 3:1.
+
+UI controls ≥ 3:1.
+
+Focus indicators ≥ 3:1.
+
+Aim for 7:1 on body copy where practical.
+
+Images
+
+Decorative images have empty alt.
+
+Informative images have descriptive alt.
+
+Portraits describe the subject.
+
+Logos identify the organization.
+
+Width and height declared.
+
+Lazy-load below the fold.
+
+Forms
+
+Labels associated with inputs.
+
+Error messages linked using aria-describedby.
+
+Required fields announced.
+
+Autocomplete attributes used.
+
+Clear success state.
+
+Landmarks
+
+header
+
+nav
+
+main
+
+section
+
+article
+
+footer
+
+No redundant ARIA on native elements.
+
+Motion
+
+Honor prefers-reduced-motion.
+
+Disable non-essential animation.
+
+Preserve usability without animation.
+
+# 19. Performance Optimization Plan
+Core Web Vitals Targets
+| Metric | Target |
+| ------ | ------ |
+| LCP | < 2.5 s |
+| CLS | < 0.1 |
+| INP | < 200 ms |
+
+Fonts
+
+Subset fonts.
+
+Self-host.
+
+Use font-display: swap.
+
+Preload critical fonts.
+
+Avoid loading unused weights.
+
+Images
+
+Convert to AVIF/WebP.
+
+Responsive srcset.
+
+Explicit dimensions.
+
+Lazy-load below fold.
+
+Compress assets.
+
+CSS
+
+Remove unused rules.
+
+Reduce specificity.
+
+Minify production build.
+
+Eliminate duplicate declarations.
+
+JavaScript
+
+Defer non-critical scripts.
+
+Remove dead code.
+
+Minimize DOM queries.
+
+Batch DOM updates.
+
+Avoid layout thrashing.
+
+Rendering
+
+Avoid forced reflow.
+
+Minimize paint areas.
+
+Animate only transform and opacity.
+
+# 20. SEO Implementation Plan
+Metadata
+
+Every page requires:
+
+Unique title.
+
+Unique meta description.
+
+Canonical URL.
+
+Open Graph tags.
+
+Twitter Card tags.
+
+Structured Data
+
+Implement JSON-LD for:
+
+Person
+WebSite
+CreativeWork
+Breadcrumbs (case studies)
+Content
+
+One H1 per page.
+
+Logical heading hierarchy.
+
+Descriptive link text.
+
+Descriptive image alt text.
+
+Meaningful page introductions.
+
+Technical SEO
+
+XML sitemap.
+
+robots.txt.
+
+Favicon set.
+
+Social preview images.
+
+Clean URLs.
+
+404 page.
+
+Proper redirects where required.
+
+# 21. Responsive Design Standards
+
+Responsive behavior is part of the design system, not an afterthought.
+
+Breakpoints
+| Size | Width |
+| ---- | ----- |
+| Small | 0–599px |
+| Medium | 600–899px |
+| Large | 900–1199px |
+| XL | 1200–1599px |
+| XXL | 1600px+ |
+
+Layout Rules
+
+Fluid containers.
+
+Clamp typography.
+
+Clamp spacing.
+
+Flexible grids.
+
+No horizontal scrolling.
+
+No content clipping.
+
+Images
+
+Responsive sources.
+
+Maintain aspect ratio.
+
+No pixel stretching.
+
+Touch Targets
+
+Minimum:
+
+44 × 44 px.
+
+Testing Matrix
+Mobile portrait
+Mobile landscape
+Tablet portrait
+Tablet landscape
+Laptop
+Desktop
+Ultrawide
+# 22. Animation Standards
+
+> Detailed timing tokens, easing tokens, hover standards and reduced-motion
+> rules live in **§7 Motion System**. This section holds the acceptance-level
+> standards only; §7 is authoritative where the two describe the same value.
+
+Animation should reinforce the editorial character of the portfolio.
+
+Principles
+Deliberate
+Restrained
+Consistent
+Performance-friendly
+Allowed Properties
+opacity
+transform
+filter (sparingly)
+
+Avoid animating:
+
+width
+height
+margin
+padding
+top
+left
+Scroll Reveals
+Fade
+Translate (≤ 24px)
+Clip-path (where appropriate)
+
+Never use bounce, overshoot, or elastic easing.
+
+Hover States
+
+Links
+
+Color
+Underline
+Opacity
+
+Buttons
+
+Elevation
+Background
+Shadow
+
+Cards
+
+Elevation
+TranslateY (≤ 4px)
+Shadow
+
+Images
+
+Scale ≤ 1.03
+Timing
+Hover: 150–250 ms
+Section reveal: 350–500 ms
+Menu: 300–500 ms
+Page transitions: 400–700 ms
+Release Checklist
+Critical
+
+Token architecture complete.
+
+CSS refactor complete.
+
+HTML semantics complete.
+
+JavaScript modularized.
+
+Accessibility audit passed.
+
+Performance targets met.
+
+SEO implementation complete.
+
+Responsive QA complete.
+
+Animation system consistent.
+
+Only after every critical item is complete should visual polish and future enhancements be considered.
+
+# 23. Naming Conventions
+
+> CSS-specific naming (BEM, selector depth, file names) is defined in
+> **§9 CSS Architecture**. This section covers project-wide naming: branches,
+> commits, assets and tokens.
+
+Naming is architecture.
+
+Names should communicate intent, not implementation.
+
+A developer unfamiliar with the project should understand the purpose of any file, class, variable, or function without reading its implementation.
+
+General Principles
+
+Every identifier must be:
+
+Descriptive
+Predictable
+Consistent
+Singular in responsibility
+Stable over time
+
+Avoid abbreviations unless universally understood.
+
+Bad
+
+btn
+img
+el
+obj
+arr
+
+Good
+
+primaryButton
+heroImage
+navigationElement
+projectCollection
+featuredProjects
+File Naming
+
+Use kebab-case.
+
+Correct
+
+case-study.html
+project-card.js
+navigation.css
+design-tokens.css
+
+Incorrect
+
+CaseStudy.html
+ProjectCard.js
+Navigation.CSS
+CSS Custom Properties
+
+Use semantic names only.
+
+Correct
+
+--text-primary
+--surface-elevated
+--border-muted
+--space-6
+--duration-standard
+
+Incorrect
+
+--gray500
+--padding20
+--blue
+CSS Classes
+
+Follow BEM.
+
+.hero
+
+.hero__content
+
+.hero__headline
+
+.hero__summary
+
+.hero__actions
+
+.hero--compact
+
+Rules
+
+Maximum nesting depth: 3
+Never chain more than three selectors.
+Never style IDs.
+Never rely on tag selectors for component styling.
+JavaScript
+
+Variables
+
+featuredProjects
+navigationState
+currentTheme
+
+Booleans
+
+isOpen
+isVisible
+isLoading
+hasError
+canNavigate
+
+Functions
+
+Always begin with a verb.
+
+renderProjects()
+
+toggleMenu()
+
+loadTheme()
+
+initializeNavigation()
+
+updateClock()
+
+Avoid
+
+run()
+
+execute()
+
+handle()
+
+doStuff()
+Events
+onMenuOpen()
+
+onProjectSelect()
+
+onFormSubmit()
+Constants
+MAX_PROJECTS
+
+DEFAULT_THEME
+
+GRID_COLUMNS
+Data
+
+Object names should represent entities.
+
+project
+
+testimonial
+
+navigationItem
+
+contactLink
+
+Never
+
+item
+
+data
+
+object
+Folder Naming
+components/
+
+sections/
+
+utilities/
+
+tokens/
+
+assets/
+
+data/
+
+scripts/
+
+Folders represent architectural boundaries.
+
+Git Commit Convention
+
+Every commit should follow Conventional Commits.
+
+Examples
+
+feat: add responsive case study layout
+
+fix: improve keyboard navigation
+
+refactor: split typography tokens
+
+perf: optimize hero image loading
+
+docs: update engineering specification
+
+style: normalize spacing scale
+
+test: add Lighthouse regression checklist
+Branch Naming
+feature/design-system
+
+feature/navigation
+
+feature/case-study-layout
+
+fix/mobile-navigation
+
+refactor/css-architecture
+# 24. Quality Assurance Checklists
+
+Every feature must pass the following gates.
+
+Design QA
+Typography
+
+Correct typeface role
+
+Correct scale
+
+Correct tracking
+
+Correct line height
+
+Correct reading measure
+
+No typography leaks
+
+Consistent vertical rhythm
+
+Layout
+
+Grid alignment
+
+Consistent gutters
+
+Consistent section spacing
+
+Consistent container widths
+
+No alignment drift
+
+Color
+
+Semantic tokens only
+
+No hardcoded values
+
+Contrast verified
+
+Dark mode parity
+
+Motion
+
+Uses motion tokens
+
+No layout-shifting animation
+
+Reduced-motion support
+
+Consistent easing
+
+Frontend QA
+HTML
+
+Valid HTML
+
+One H1
+
+Landmark structure
+
+Heading hierarchy
+
+No inline styles
+
+No duplicate IDs
+
+CSS
+
+No duplicated declarations
+
+No magic numbers
+
+Token-driven values
+
+Selector depth ≤ 3
+
+No !important
+
+Logical properties preferred
+
+JavaScript
+
+No duplicated logic
+
+Pure rendering functions
+
+Event delegation where appropriate
+
+Error handling implemented
+
+Console free of warnings
+
+No unused variables
+
+Accessibility QA
+
+Keyboard navigation complete
+
+Focus visible
+
+Screen-reader labels verified
+
+Forms accessible
+
+Alt text complete
+
+Color contrast verified
+
+Reduced motion supported
+
+Performance QA
+
+LCP target met
+
+CLS target met
+
+INP target met
+
+Images optimized
+
+Fonts optimized
+
+CSS minimized
+
+JS minimized
+
+Lighthouse ≥ 95
+
+SEO QA
+
+Metadata complete
+
+Structured data valid
+
+Sitemap updated
+
+Canonical URLs
+
+Open Graph complete
+
+Twitter Cards complete
+
+# 25. Definition of Ready
+
+No implementation begins until:
+
+Requirements documented
+
+Acceptance criteria written
+
+Dependencies identified
+
+Design approved
+
+Tokens available
+
+Accessibility impact reviewed
+
+Responsive behaviour defined
+
+# 26. Definition of Done — Per Task
+
+> §16 defines when the *implementation as a whole* is complete. This section
+> defines when an *individual task* is complete. Both apply.
+
+A task is complete only when every requirement below is satisfied.
+
+Engineering
+
+Code reviewed
+
+No duplicated logic
+
+Consistent architecture
+
+Lint passes
+
+Build passes
+
+Design
+
+Matches design system
+
+Typography correct
+
+Spacing consistent
+
+Motion consistent
+
+Editorial quality maintained
+
+Accessibility
+
+WCAG AA compliant
+
+Keyboard tested
+
+Screen-reader tested
+
+Focus order verified
+
+Performance
+
+Performance budget met
+
+No regressions
+
+Lighthouse targets achieved
+
+Documentation
+
+Comments updated where required
+
+Changelog updated
+
+Engineering documentation updated
+
+# 27. Refactor Priorities
+Critical
+
+These block release.
+
+Token architecture
+
+Typography system
+
+CSS architecture
+
+HTML semantics
+
+Accessibility
+
+Navigation refactor
+
+Responsive layout
+
+Render pipeline cleanup
+
+High
+
+Motion system
+
+Component standardization
+
+Image optimization
+
+Performance optimization
+
+SEO implementation
+
+Case study template unification
+
+Medium
+
+Animation polish
+
+Utility class expansion
+
+Documentation improvements
+
+Component extraction
+
+Micro-interactions
+
+Low
+
+Theme customization
+
+Experimental transitions
+
+Future-proof container query enhancements
+
+Optional visual flourishes
+
+# 28. Progress Tracking
+Phase 1 — Foundation
+
+Split token architecture
+
+Typography system
+
+Color system
+
+Spacing system
+
+Layout system
+
+Motion system
+
+Phase 2 — Core Architecture
+
+Base styles
+
+Utility classes
+
+Component library
+
+Section architecture
+
+Phase 3 — HTML
+
+Home
+
+Work
+
+About
+
+Contact
+
+Case studies
+
+Phase 4 — JavaScript
+
+Rendering
+
+Navigation
+
+Utilities
+
+Events
+
+State management
+
+Phase 5 — Optimization
+
+Accessibility
+
+SEO
+
+Performance
+
+Responsive QA
+
+Cross-browser testing
+
+Phase 6 — Release
+
+Regression testing
+
+Documentation
+
+Final QA
+
+Production build
+
+Deployment
+
+# 29. Page-by-Page Acceptance Criteria
+Home
+Objectives
+
+Communicate identity, expertise, and credibility within the first viewport.
+
+Acceptance Criteria
+
+Hero communicates positioning immediately.
+
+Primary CTA is obvious.
+
+Editorial typography applied consistently.
+
+Featured work loads progressively.
+
+All interactions keyboard accessible.
+
+Performance budget met.
+
+Work
+Objectives
+
+Enable effortless exploration of projects.
+
+Acceptance Criteria
+
+Grid remains consistent at all breakpoints.
+
+Cards share identical interaction patterns.
+
+Filtering (if present) remains accessible.
+
+Every project card has descriptive metadata.
+
+Images lazy-load correctly.
+
+About
+Objectives
+
+Tell a compelling professional story with long-form readability.
+
+Acceptance Criteria
+
+Reading measure ≤ 68 characters.
+
+Serif typography used throughout prose.
+
+Portrait optimized.
+
+Timeline and achievements are semantically structured.
+
+Contact pathways are visible without overwhelming the page.
+
+Contact
+Objectives
+
+Reduce friction to initiating a conversation.
+
+Acceptance Criteria
+
+Form is fully accessible.
+
+Validation is clear and non-blocking.
+
+Email and social links are descriptive.
+
+Success and error states are announced to assistive technologies.
+
+Mobile interaction is effortless.
+
+Case Study Template
+Objectives
+
+Provide a repeatable narrative structure that scales across every project.
+
+Acceptance Criteria
+
+Shared template used by every case study.
+
+Consistent typography hierarchy.
+
+Consistent media spacing.
+
+Consistent navigation between projects.
+
+Semantic sections (Overview, Challenge, Process, Solution, Outcome).
+
+All images include dimensions, captions where appropriate, and optimized formats.
+
+Reading rhythm remains consistent from start to finish.
+
+Release Gate
+
+The portfolio is considered production-ready only when:
+
+Every Critical item is complete.
+
+Every page meets its acceptance criteria.
+
+Accessibility passes WCAG 2.2 AA.
+
+Lighthouse Performance, Accessibility, Best Practices, and SEO all score ≥ 95.
+
+No duplicated design decisions remain outside the design token system.
+
+The codebase is maintainable, documented, and capable of supporting future growth without architectural changes.
+# What This Locks
+
+* **Direction:** The Quiet Gallery — warm editorial, neutral frame, work-led colour.
+* **Type:** TeX Gyre Heros (display) · Libre Baskerville (reading) · Josefin Sans (interface). Fraunces and Inter are void.
+* **Palette:** Paper · Ink · Stone · Linen · Clay. No `mist`, `forest`, `ember` or `gold`.
+* **Proportion:** φ for two-part splits, 12/8/4 for multi-item grids.
+* **Principle:** show the work; the frame stays quiet.
+
+Everything built from here references this document, and only this document.
+
+---

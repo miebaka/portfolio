@@ -1,11 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { access, readFile, readdir, stat } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
-import contactHandler from "../api/contact.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -44,33 +43,15 @@ test("every production page has essential metadata and one heading", async () =>
   }
 });
 
-test("case studies ship complete reading content before JavaScript runs", async () => {
+test("locked case studies ship their complete state before JavaScript runs", async () => {
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.match(html, /data-prerendered="true"/);
-    assert.match(html, /class="case"/);
-    assert.match(html, /class="case-index"/);
-    assert.doesNotMatch(html, /Coming soon/);
+    assert.match(html, /class="case-locked container"/);
+    assert.match(html, /Coming soon/);
+    assert.doesNotMatch(html, /class="case-index"/);
     assert.doesNotMatch(html, /filled by js|placeholder/i);
   }
-});
-
-test("TEDx flagship preserves its verified concept, credits and evidence sequence", async () => {
-  const html = await readFile(join(dist, "work", "tedx-rsu.html"), "utf8");
-  const source = await readFile(join(root, "data", "site.js"), "utf8");
-  for (const phrase of [
-    "Pause was not a symbol to place on the work",
-    "Reflect", "Reconsider", "Reward",
-    "Carl Osimiri", "Onari Georgewill", "Anna Brands",
-    "18 February 2023", "Student Dialogue Centre"
-  ]) assert.match(html, new RegExp(phrase));
-  assert.match(html, /case-thesis/);
-  assert.match(html, /loading="eager"/);
-  assert.match(source, /chapter: "decision"/);
-  assert.match(source, /chapter: "system"/);
-  assert.match(source, /chapter: "applications"/);
-  assert.match(source, /chapter: "result"/);
-  assert.doesNotMatch(html, /views|appreciations|likes|engagement rate/i);
 });
 
 test("production CSS is bundled and dead runtime modules are absent", async () => {
@@ -95,9 +76,6 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   await access(join(dist, "assets", "vendor", "three.module.js"));
   await access(join(dist, "assets", "vendor", "three.core.js"));
   await assert.rejects(access(join(dist, "node_modules")));
-  const displayFont = await stat(join(dist, "assets", "fonts", "BIZUDPMincho-Latin.ttf"));
-  assert.ok(displayFont.size < 150_000, `display font is ${displayFont.size} bytes`);
-  await assert.rejects(access(join(dist, "assets", "fonts", "BIZUDPMincho-Regular.ttf")));
 });
 
 test("ultramarine identity stays within its documented visual language", async () => {
@@ -107,9 +85,10 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.doesNotMatch(css, /font-family:"Borges"/);
-  assert.doesNotMatch(css, /\.pl--[cmy]\b|data-plates/i);
+  assert.match(css, /font-family:"Borges"/);
+  assert.doesNotMatch(css, /gradient\(/i);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
+  assert.doesNotMatch(css, /filter:saturate/i);
 });
 
 test("documented interface colour pairs meet a 7:1 contrast floor", () => {
@@ -153,54 +132,30 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   const services = await readFile(join(dist, "services.html"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
+  const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
-  assert.match(html, /All work/i);
-  assert.doesNotMatch(projects, /work-flick__item--more|See the work/i);
+  assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
+  assert.match(projects, /work-flick__item--more/);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
   assert.match(projects, /client-marquee__track/);
-  assert.match(projects, /client-marquee__control/);
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   assert.doesNotMatch(services, /Evidence:/);
   assert.match(services, /data-mount="capabilities"/);
-  assert.match(projects, /work-flick__link/);
-  assert.match(projects, /PAUSE LOGOS/);
+  assert.match(projects, /work-flick__bar/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
   assert.ok(css.includes('.site-nav a,.btn,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(css, /\.client-marquee\.is-paused/);
+  assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
-  assert.match(css, /\.now-playing-pill\s*\{/);
-  assert.match(sections, /proof-swatch\" tabindex=\"0\"/);
-  assert.match(css, /\.home-landing\s*\{[^}]*position:\s*sticky/);
-  assert.match(css, /\.proof-about__grid\{display:grid/);
-  assert.match(css, /\.record__track\{/);
-  const orderedIds = ["work", "about", "services", "proof", "process", "contact"];
-  let cursor = -1;
-  for (const id of orderedIds) {
-    const next = html.indexOf(`id="${id}"`);
-    assert.ok(next > cursor, `${id} is out of order on the homepage`);
-    cursor = next;
-  }
-  for (const retiredGateway of ["writing", "explorations", "community"]) assert.doesNotMatch(html, new RegExp(`id="${retiredGateway}"`));
-  assert.match(html, />WORK WITH ME<\/a>/);
-});
-
-test("the adaptive index contains both display preferences", async () => {
-  const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
-  assert.doesNotMatch(navigation, /portfolio-nav__links/);
-  assert.match(navigation, /portfolio-nav__theme/);
-  assert.match(navigation, /PRINT/);
-  assert.match(navigation, /SCREEN/);
-  assert.match(navigation, /portfolio-index__preferences/);
-  assert.match(navigation, /portfolio-index__label">APPEARANCE/);
-  assert.match(navigation, /portfolio-index__label">MOTION/);
-  assert.match(navigation, /localStorage\.setItem\("color-theme", root\.dataset\.theme\)/);
-  assert.deepEqual(SITE.menu.map(item => item.label), ["About", "Work", "Services", "Writing", "Explorations", "Community", "Contact"]);
+  assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
+  assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
+  assert.match(listening, /What I listen to/);
+  assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
 });
 
 test("interactive controls share the documented role system", async () => {
@@ -215,50 +170,6 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /safe-area-inset-left/);
   assert.match(css, /@media\(hover:hover\) and \(pointer:fine\)/);
   assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{input,select,textarea\{font-size:16px/);
-  const primaryMarkup = [
-    await readFile(join(root, "index.html"), "utf8"),
-    await readFile(join(root, "services.html"), "utf8"),
-    await readFile(join(root, "contact.html"), "utf8"),
-    await readFile(join(root, "js", "render", "projects.js"), "utf8"),
-    await readFile(join(root, "js", "render", "case-markup.js"), "utf8")
-  ].join("\n");
-  assert.doesNotMatch(primaryMarkup, /class=["'`]btn\s+btn-/);
-});
-
-test("interactive labels remain visible, discernible and name-consistent", async () => {
-  const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");
-  const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  const nowPlaying = await readFile(join(root, "js", "render", "now-playing.js"), "utf8");
-  assert.match(navigation, /aria-label="Miebaka Joshua home"/);
-  assert.match(navigation, /aria-describedby="theme-help"/);
-  assert.match(navigation, /portfolio-nav__theme-help/);
-  assert.match(navigation, /openTriggers\.forEach/);
-  assert.match(navigation, /closeTrigger\?\.addEventListener/);
-  assert.doesNotMatch(projects, /aria-label="View [^\"]+(?:case study|work)/);
-  assert.doesNotMatch(projects, /aria-label="(?:Pause|Play) client logos"/);
-  assert.doesNotMatch(nowPlaying, /setAttribute\("aria-label"/);
-});
-
-test("remaining proof behaviours stay dependency-free and retired effects stay retired", async () => {
-  const source = await readFile(join(root, "js", "core", "proof-system.js"), "utf8");
-  const navigation = await readFile(join(root, "js", "render", "navigation.js"), "utf8");
-  const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
-  const css = await readFile(join(root, "styles", "proof-system.css"), "utf8");
-  const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
-  assert.doesNotMatch(source, /from\s+["']|import\s*\(/);
-  assert.doesNotMatch(source, /press-crop|data\.proofPage|proof-folio/);
-  assert.doesNotMatch(source, /proof-cursor|proof-portrait__dots|initReveals|initClock/);
-  assert.match(source, /initDisclosures/);
-  assert.match(source, /initNavSurface/);
-  assert.doesNotMatch(source, /data-plates|misregistration|chroma/i);
-  assert.doesNotMatch(navigation, /p\.\d|label:\s*"Cover"|label:\s*"Experience"/);
-  assert.match(navigation, /SITE\.menu/);
-  assert.doesNotMatch(css, /IBM Plex Mono|press-crop|\.proof-folio|\.proof-ink\{/);
-  assert.match(signature, /host\.dataset\.signatureSrc/);
-  assert.doesNotMatch(signature, /Borges/);
-  assert.doesNotMatch(css, /data-motion="reduced"\] \.proof-cursor\{display:none/);
-  assert.match(foundations, /feTurbulence/);
-  await access(join(dist, "js", "core", "proof-system.js"));
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
@@ -268,17 +179,9 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main,\.site-footer\{text-align:left\}/);
-  assert.match(home, /<h1 id="hero-title">Brand systems, built to hold\.<\/h1>/);
-  assert.match(home, /class="home-profile container"/);
-  assert.match(home, /Selected brands I&rsquo;ve worked with/);
-  assert.doesNotMatch(home, /class="proof-ledger"/);
+  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
-  assert.match(projects, /system-list__row/);
-  const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
-  assert.match(sections, /proof-services__heading/);
-  assert.match(sections, /<h2>What I do<\/h2>/);
-  assert.doesNotMatch(sections, /#002080|#1C3DA4|#E8EEFF|#83251D|#07112B/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
   const meta = writing.indexOf('writing-item__meta');
@@ -296,64 +199,6 @@ test("production language avoids typographic dash shortcuts", async () => {
   }
 });
 
-test("the active design contract rejects known source-level drift", async () => {
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
-  const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
-  const data = await readFile(join(root, "data", "site.js"), "utf8");
-  assert.match(css, /\.portfolio-nav__bar\s*\{[^}]*background:\s*var\(--comp-nav-bg\)[^}]*backdrop-filter:\s*blur\(20px\)/i);
-  assert.match(css, /prefers-reduced-transparency:\s*reduce[\s\S]*\.portfolio-nav__bar\s*\{[^}]*background:\s*var\(--sys-color-surface\)[^}]*backdrop-filter:\s*none/i);
-  assert.match(css, /\.work-flick--home \.work-flick__item:nth-child\(1\)/);
-  assert.match(css, /\.portfolio-index li a\s*\{[^}]*var\(--label\)/);
-  assert.doesNotMatch(projects, /aria-disabled=\"true\">IN DEVELOPMENT/);
-  assert.doesNotMatch(navigation, /01[—–]07/);
-  assert.doesNotMatch(data, /planned nav clock feature/);
-});
-
-test("contact endpoint rejects invalid boundaries before delivery", async () => {
-  const invoke = async (body, requestHeaders = {}) => {
-    const headers = {};
-    let payload = "";
-    const res = {
-      statusCode: 200,
-      setHeader(name, value) { headers[name.toLowerCase()] = value; },
-      end(value) { payload = value; },
-    };
-    await contactHandler({ method: "POST", body, headers: requestHeaders }, res);
-    return { status: res.statusCode, headers, body: JSON.parse(payload) };
-  };
-  const base = { name: "Miebaka", email: "hello@example.com", interest: "Creative collaboration", message: "Hello" };
-  const originalKey = process.env.RESEND_API_KEY;
-  const originalFetch = globalThis.fetch;
-  try {
-    delete process.env.RESEND_API_KEY;
-    assert.equal((await invoke({ ...base, message: "x".repeat(6001) })).status, 413);
-    assert.equal((await invoke({ ...base, interest: "Injected option" })).status, 400);
-    assert.equal((await invoke(base, { "sec-fetch-site": "cross-site", "content-type": "application/json" })).status, 403);
-    assert.equal((await invoke(base, { "content-type": "multipart/form-data" })).status, 415);
-    for (const body of ["null", "[]", "42", "true", '"text"']) assert.equal((await invoke(body)).status, 400);
-    const unconfigured = await invoke(base);
-    assert.equal(unconfigured.status, 503);
-    assert.equal(unconfigured.headers["cache-control"], "no-store");
-    assert.equal(unconfigured.headers["x-content-type-options"], "nosniff");
-
-    process.env.RESEND_API_KEY = "test-key";
-    let providerPayload;
-    globalThis.fetch = async (_url, options) => {
-      providerPayload = JSON.parse(options.body);
-      return { ok: true, status: 200, headers: new Headers() };
-    };
-    assert.equal((await invoke({ ...base, name: "Mie\u0000baka\nJoshua" })).status, 200);
-    assert.equal(providerPayload.subject, "Creative collaboration: Mie baka Joshua");
-    globalThis.fetch = async () => { throw new DOMException("Timed out", "TimeoutError"); };
-    assert.equal((await invoke(base)).status, 504);
-  } finally {
-    if (originalKey === undefined) delete process.env.RESEND_API_KEY;
-    else process.env.RESEND_API_KEY = originalKey;
-    globalThis.fetch = originalFetch;
-  }
-});
-
 test("Vercel configuration is valid and serves the static build", async () => {
   const config = JSON.parse(await readFile(join(root, "vercel.json"), "utf8"));
   assert.equal(config.outputDirectory, "dist");
@@ -368,41 +213,15 @@ test("portfolio depth features are present without depending on JavaScript for c
   for (const slug of Object.keys(SITE.caseStudies)) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.doesNotMatch(html, /data-case-view|Brief view|Full study|Case study ·/);
-    assert.match(html, /class="case"/);
-    assert.doesNotMatch(html, /Coming soon/);
+    assert.match(html, /class="case-locked container"/);
+    assert.match(html, /Coming soon/);
   }
-});
-
-test("checkpoint 6 routes ship as one complete editorial system", async () => {
-  const routes = ["index.html", "work.html", "explorations.html", "community.html", "about.html", "services.html", "writing.html", "contact.html", "privacy.html", "404.html"];
-  for (const route of routes) await access(join(dist, route));
-  await assert.rejects(access(join(dist, "playground.html")));
-
-  const explorations = await readFile(join(dist, "explorations.html"), "utf8");
-  for (const label of ["PROMPT", "VISUAL DECISION", "DATE"]) assert.match(explorations, new RegExp(label));
-  const community = await readFile(join(dist, "community.html"), "utf8");
-  for (const label of ["FOR", "CONTRIBUTION", "ACCESS"]) assert.match(community, new RegExp(label));
-
-  const about = await readFile(join(dist, "about.html"), "utf8");
-  assert.match(about, /DOWNLOAD CV · PDF · 294 KB/);
-  const cv = await stat(join(dist, "assets", "documents", "miebaka-joshua-cv.pdf"));
-  assert.ok(cv.size > 250_000 && cv.size < 350_000);
-
-  const contact = await readFile(join(dist, "contact.html"), "utf8");
-  assert.match(contact, /action="\/api\/contact"/);
-  assert.match(contact, /SEND ENQUIRY/);
-  const endpoint = await readFile(join(root, "api", "contact.js"), "utf8");
-  assert.match(endpoint, /https:\/\/api\.resend\.com\/emails/);
-  assert.match(endpoint, /miebakakiki@gmail\.com/);
-
-  const notFound = await readFile(join(dist, "404.html"), "utf8");
-  assert.match(notFound, /data-decision-field/);
 });
 
 test("requested language and contact details stay canonical", async () => {
   const sourceFiles = [
     join(dist, "index.html"), join(dist, "about.html"), join(dist, "services.html"),
-    join(dist, "contact.html"), join(dist, "writing.html"), join(dist, "privacy.html"),
+    join(dist, "contact.html"), join(dist, "playground.html"), join(dist, "privacy.html"),
     join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
     join(dist, "writing", "designing-for-disability-in-nigeria.html")
   ];
@@ -410,24 +229,20 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /hello@miebaka\.design|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
-  const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /<h1 id="hero-title">Brand systems, built to hold\.<\/h1>/);
+  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brand systems, then build the tools that keep them intact\./);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /work-flick__link/);
+  assert.match(projects, /Coming soon/);
   assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
-  assert.match(footer, /BASED IN/);
-  assert.match(footer, /SOCIAL/);
+  assert.match(footer, /Based in/);
+  assert.match(footer, /Social/);
   assert.match(footer, /SITE\.location/);
   assert.match(footer, /SITE\.socials/);
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
-  assert.doesNotMatch(footer, /Back to top/);
-  assert.doesNotMatch(footer, /Colophon|BIZ UDPMincho/);
-  assert.ok(footer.indexOf("BASED IN") < footer.indexOf("EXPLORE"));
-  assert.ok(footer.indexOf("EXPLORE") < footer.indexOf("SOCIAL"));
-  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /drawImage\(artwork/);
+  assert.doesNotMatch(footer, /Back to top|data-year/);
+  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
 
@@ -489,6 +304,6 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 5);
+  assert.equal((styles.match(/@import/g) || []).length, 3);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });

@@ -32,7 +32,7 @@ Material's default components, rounded visual language and baseline contrast tar
 - Primary audience: design leaders, hiring managers, collaborators and clients.
 - Atmosphere: gallery-airy, intelligent, exact, warm without being decorative.
 - Design variance: 7/10. Asymmetric but readable.
-- Motion intensity: 7/10. Tactile, responsive and personality-led, with every larger movement tied to a direct interaction.
+- Motion intensity: 5/10. Responsive and purposeful, never theatrical by default.
 - Visual density: 3/10. Space is the principal grouping device.
 - Shape language: sharp. Radius is zero unless a platform control requires otherwise.
 - Theme: one coherent light or dark theme at page level. Sections never invert independently.
@@ -134,13 +134,14 @@ The navigation's three-percent transparency is the maximum allowed glass approxi
 | Display | BIZ UDPMincho | Selected work titles, case-study statements and rare expressive moments |
 | Body | Schibsted Grotesk | Reading, navigation and explanatory copy |
 | Label | Josefin Sans Semibold | Short labels and compact metadata |
+| Signature | Borges Square Pixel | Footer wordmark only |
 
 Rules:
 
 - Body copy is at least 1rem where sustained reading occurs and remains below 65 characters per line.
 - Display type is reserved for short text. Long introductions use the body face.
 - Section labels stay small and rare. A label must orient, not decorate.
-- The footer signature is not typography. It is an interactive dot-matrix sampling of `assets/images/miebaka-joshua-script-name.svg`, with the SVG silhouette retained as the static fallback.
+- Borges is never used for body copy or controls.
 - All text colours use semantic roles. Project-card copy uses Paper over a bounded Midnight veil.
 
 ## 6. Layout and spacing
@@ -175,8 +176,8 @@ Motion scheme: standard, with one expressive exception on the rare 404 page.
 | Token | Value | Use |
 | --- | --- | --- |
 | `duration.fast` | 120ms | Press feedback |
-| `duration.ui` | 220ms | Colour and compact state changes |
-| `duration.spatial` | 720ms | Swatch fan and authored spatial changes |
+| `duration.ui` | 180ms | Colour and compact state changes |
+| `duration.spatial` | 240ms | Work-card expansion and small spatial changes |
 | `ease.standard` | `cubic-bezier(.23,1,.32,1)` | Entrances and responsive UI |
 | `ease.exit` | `cubic-bezier(.3,0,.8,.15)` | Deliberate exits only |
 
@@ -186,7 +187,7 @@ Rules:
 - Hover motion runs only with `hover:hover` and `pointer:fine`.
 - Pressable controls scale to .98 for 120ms.
 - The client marquee is the only perpetual motion on the homepage. It pauses offscreen and when the document is hidden.
-- Reduced motion removes spatial movement and loops while preserving immediate state feedback, opacity, colour and the custom cursor.
+- Reduced motion removes spatial movement and loops while preserving immediate state feedback.
 - Navigation and theme changes are high-frequency and remain nearly instant.
 - The 404 Three.js identity field is rare-page delight. Its custom shader uses a small normal displacement and Fresnel edge; it is omitted on compact, reduced-motion and save-data devices.
 
@@ -248,11 +249,9 @@ Evidence is shown rather than labelled: no `Evidence:` links or project-name cap
 
 ### Footer
 
-- The dot-matrix signature appears first, samples `assets/images/miebaka-joshua-script-name.svg`, fits the shared sheet and is never cropped.
-- Three horizontal groups follow in order: `Based in`, `Explore`, `Social`.
-- Explore contains Work, About, Services, Writing, Contact and Privacy on one wrapping row.
-- Pointer proximity disperses signature cells and an interruptible spring returns them home.
-- Reduced-motion environments retain the assembled signature without dispersal.
+- One information group only: `Explore`, followed by Work, About, Services, Writing, Contact and Privacy on one wrapping row.
+- A name-shaped dot-matrix signature spans the viewport width. Pointer proximity disperses cells and an interruptible spring returns them home.
+- Reduced-motion and no-JavaScript environments receive the static name-shaped signature mask at 48 percent opacity.
 
 ## 10. Content language
 

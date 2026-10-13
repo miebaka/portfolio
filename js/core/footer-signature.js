@@ -1,11 +1,13 @@
-/* Interactive dot matrix sampled from Miebaka's actual script-name artwork. */
-const PITCH = 4.2;
-const DOT = 1.15;
+/* Interactive name-shaped dot matrix sampled from the authored signature. */
+const SVG_SRC = "/assets/images/miebaka-joshua-script-name.svg";
+const SVG_RATIO = 280 / 705.67;
+const PITCH = 6;
+const DOT = 2.2;
 const RADIUS = 128;
 
 export function initFooterSignature() {
   const host = document.querySelector(".site-footer__signature");
-  if (!host) return;
+  if (!host || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const canvas = document.createElement("canvas");
   canvas.className = "site-footer__signature-canvas";
   host.append(canvas);
@@ -14,7 +16,13 @@ export function initFooterSignature() {
   const pointer = { x: -9999, y: -9999, active: false };
   let points = [], width = 0, height = 0, frame = 0, running = false, generation = 0;
   let restColor = "rgba(255,255,255,.48)";
-  let accentColor = "#FFA08F";
+
+  const loadImage = () => new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = SVG_SRC;
+  });
 
   async function rebuild() {
     const current = ++generation;
@@ -28,19 +36,15 @@ export function initFooterSignature() {
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     const channels = getComputedStyle(host).color.match(/[\d.]+/g)?.slice(0, 3) || [255, 255, 255];
     restColor = `rgba(${channels.join(",")},.48)`;
-    accentColor = getComputedStyle(document.documentElement).getPropertyValue("--sys-color-tertiary").trim() || accentColor;
+    let image;
+    try { image = await loadImage(); } catch { return; }
+    if (current !== generation) return;
     const sample = document.createElement("canvas");
     sample.width = width;
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
-    const artwork = new Image();
-    artwork.src = host.dataset.signatureSrc;
-    try { await artwork.decode(); } catch { return; }
-    if (current !== generation) return;
-    const scale = Math.min(width * .96 / artwork.naturalWidth, height * .84 / artwork.naturalHeight);
-    const drawWidth = artwork.naturalWidth * scale;
-    const drawHeight = artwork.naturalHeight * scale;
-    sampleContext.drawImage(artwork, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+    const markHeight = width * SVG_RATIO;
+    sampleContext.drawImage(image, 0, (height - markHeight) / 2, width, markHeight);
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const next = [];
     for (let y = PITCH / 2; y < height; y += PITCH) {
@@ -51,13 +55,11 @@ export function initFooterSignature() {
     }
     points = next;
     host.classList.add("is-enhanced");
-    start();
   }
 
   function draw() {
     if (!running) return;
     context.clearRect(0, 0, width, height);
-    let energy = 0;
     for (const point of points) {
       const dx = point.x - pointer.x;
       const dy = point.y - pointer.y;
@@ -74,14 +76,11 @@ export function initFooterSignature() {
       point.vy *= .79;
       point.x += point.vx;
       point.y += point.vy;
-      energy += Math.abs(point.vx) + Math.abs(point.vy) + Math.abs(point.homeX - point.x) * .08 + Math.abs(point.homeY - point.y) * .08;
-      context.fillStyle = proximity > .08 ? accentColor : restColor;
+      context.fillStyle = proximity > .08 ? "rgba(255,160,143,.92)" : restColor;
       const size = DOT + proximity * 1.8;
       context.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     }
-    if (document.documentElement.dataset.motion === "reduced") { running = false; return; }
-    if (pointer.active || energy > points.length * .008) frame = requestAnimationFrame(draw);
-    else running = false;
+    frame = requestAnimationFrame(draw);
   }
   const start = () => { if (!running) { running = true; frame = requestAnimationFrame(draw); } };
   const stop = () => { running = false; cancelAnimationFrame(frame); };
@@ -90,11 +89,11 @@ export function initFooterSignature() {
     pointer.x = event.clientX - rect.left;
     pointer.y = event.clientY - rect.top;
     pointer.active = true;
-    start();
   }, { passive: true });
-  host.addEventListener("pointerleave", () => { pointer.active = false; start(); });
+  host.addEventListener("pointerleave", () => { pointer.active = false; });
   new ResizeObserver(rebuild).observe(host);
-  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
+  new MutationObserver(rebuild).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   new IntersectionObserver(([entry]) => entry.isIntersecting && !document.hidden ? start() : stop(), { threshold: .01 }).observe(host);
   document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  rebuild();
 }

@@ -1,96 +1,117 @@
+/* Render — navigation bar (wordmark · inline links · theme toggle). */
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-function setupPreferences(nav) {
-  const root = document.documentElement;
-  const themes = [...nav.querySelectorAll('[data-preference="theme"]')];
-  const motions = [...nav.querySelectorAll('[data-preference="motion"]')];
-  let storedMotion = null;
-  try { storedMotion = localStorage.getItem("motion-preference"); } catch {}
-  root.dataset.motion = storedMotion || (matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduced" : "regular");
-  const sync = () => {
-    const dark = root.dataset.theme === "dark";
-    const reduced = root.dataset.motion === "reduced";
-    themes.forEach(theme => {
-      theme.querySelector('[data-theme-name="print"]')?.toggleAttribute("data-active", !dark);
-      theme.querySelector('[data-theme-name="screen"]')?.toggleAttribute("data-active", dark);
-      theme.setAttribute("aria-pressed", String(dark));
-    });
-    nav.querySelector(".portfolio-nav__theme-help").textContent = dark ? "Screen mode is active. Switch to Print mode." : "Print mode is active. Switch to Screen mode.";
-    motions.forEach(motion => {
-      const label = reduced ? "ENABLE MOTION" : "REDUCE MOTION";
-      const icon = reduced
-        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
-        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
-      motion.querySelector(".preference-motion__icon").innerHTML = icon;
-      motion.querySelector(".preference-motion__label").textContent = label;
-      motion.setAttribute("aria-label", label.toLowerCase().replace(/^./, char => char.toUpperCase()));
-      motion.setAttribute("aria-pressed", String(reduced));
-    });
-    document.dispatchEvent(new CustomEvent("motionpreferencechange", { detail: { reduced } }));
-  };
-  themes.forEach(theme => theme.addEventListener("click", () => {
-    const apply = () => {
-      root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
-      try { localStorage.setItem("color-theme", root.dataset.theme); } catch {}
-      sync();
-    };
-    if (document.startViewTransition && root.dataset.motion !== "reduced") document.startViewTransition(apply); else apply();
-  }));
-  motions.forEach(motion => motion.addEventListener("click", () => {
-    root.dataset.motion = root.dataset.motion === "reduced" ? "regular" : "reduced";
-    try { localStorage.setItem("motion-preference", root.dataset.motion); } catch {}
-    sync();
-  }));
-  sync();
+/* Material Symbols keep every interface glyph inside one coherent icon set. */
+function themeToggleHTML() {
+  return (
+    '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">' +
+      '<span class="material-symbols-outlined theme-toggle__dark" aria-hidden="true">dark_mode</span>' +
+      '<span class="material-symbols-outlined theme-toggle__light" aria-hidden="true">light_mode</span>' +
+    "</button>"
+  );
 }
 
-function setupIndex(nav) {
-  const triggers = [...nav.querySelectorAll('[data-index-trigger]')];
-  const menu = nav.querySelector(".portfolio-index");
-  const openTriggers = triggers.filter(button => !menu.contains(button));
-  const closeTrigger = menu.querySelector('[data-index-trigger]');
-  let previousFocus = null;
-  const focusables = () => [...menu.querySelectorAll('a,button:not([disabled])')];
-  const setOpen = open => {
-    document.documentElement.classList.toggle("portfolio-index-open", open);
-    triggers.forEach(button => button.setAttribute("aria-expanded", String(open)));
-    menu.hidden = !open;
-    menu.inert = !open;
-    if (open) { previousFocus = document.activeElement; focusables()[0]?.focus(); }
-    else requestAnimationFrame(() => previousFocus?.focus?.());
-  };
-  openTriggers.forEach(button => button.addEventListener("click", () => setOpen(true)));
-  closeTrigger?.addEventListener("click", () => setOpen(false));
-  menu.addEventListener("click", event => { if (event.target.closest("a")) setOpen(false); });
-  document.addEventListener("keydown", event => {
-    if (menu.hidden) return;
-    if (event.key === "Escape") return setOpen(false);
-    if (event.key !== "Tab") return;
-    const items = focusables(), first = items[0], last = items.at(-1);
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+/* Reads current theme state and syncs the toggle's aria-pressed attribute. */
+function setupThemeToggle() {
+  const btn = document.getElementById("theme-toggle");
+  if (!btn) return;
+  const html = document.documentElement;
+  function isDark() { return html.dataset.theme === "dark"; }
+  function sync() {
+    btn.setAttribute("aria-pressed", String(isDark()));
+    btn.setAttribute("aria-label", isDark() ? "Switch to light mode" : "Switch to dark mode");
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute("content", isDark() ? "#07112B" : "#F8F9FC");
+    });
+  }
+  sync();
+  btn.addEventListener("click", function () {
+    const next = isDark() ? "light" : "dark";
+    const apply = () => { html.dataset.theme = next; sync(); };
+    html.dataset.themeTransition = "fade";
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(apply).finished.finally(() => { delete html.dataset.themeTransition; });
+    } else {
+      apply();
+      delete html.dataset.themeTransition;
+    }
+    /* Persisting is best-effort. setItem throws when storage is blocked
+       (Safari private browsing, quota, enterprise policy); unguarded, that
+       exception fired after the theme had already flipped but before sync(),
+       leaving the button's aria-pressed permanently out of step with the
+       theme the visitor can see. */
+    try { localStorage.setItem("color-theme", next); } catch (e) {}
+  });
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  systemTheme.addEventListener?.("change", event => {
+    try { if (localStorage.getItem("color-theme")) return; } catch (e) {}
+    html.dataset.theme = event.matches ? "dark" : "light";
+    sync();
   });
 }
 
+/* Header: wordmark left, inline primary links and the theme toggle right.
+   The fullscreen overlay menu was retired in favour of these always-visible
+   links — one fewer interaction between a visitor and any page. */
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
   const base = basePath();
-  const current = document.body.dataset.page;
-  const link = item => '<a href="' + base + safeURL(item.href) + '"' + (current === item.key ? ' aria-current="page"' : '') + '>' + esc(item.label.toUpperCase()) + '</a>';
-  const indexRoutes = [
-    { label: "Home", href: "index.html", key: "home" },
-    ...SITE.menu,
-    { label: "Privacy", href: "privacy.html", key: "privacy" },
-  ];
-  const all = indexRoutes.map(item => '<li>' + link(item) + '</li>').join("");
-  const currentAttr = active => active ? ' aria-current="page"' : '';
-  el.className = "portfolio-nav";
+  const page = document.body.dataset.page || "";
+
+  const links = (SITE.menu || [])
+    .filter((m) => m && m.href && m.label)
+    .map((m) => {
+      const current = m.key === page ? ' aria-current="page"' : "";
+      return '<a class="site-nav__link" href="' + base + safeURL(m.href) + '"' + current + ">" + esc(m.label) + "</a>";
+    })
+    .join("");
+
+  el.className = "site-nav";
   el.innerHTML =
-    '<nav class="portfolio-nav__bar" aria-label="Primary"><a class="portfolio-nav__brand" href="' + base + 'index.html" aria-label="Miebaka Joshua home"' + currentAttr(current === "home") + '><img src="' + base + 'assets/images/miebaka-joshua-logo.svg" width="42" height="42" alt=""></a><button class="portfolio-nav__theme" data-preference="theme" type="button" aria-describedby="theme-help"><span data-theme-name="print">PRINT</span><span aria-hidden="true">/</span><span data-theme-name="screen">SCREEN</span></button><span class="sr-only portfolio-nav__theme-help" id="theme-help"></span><button class="portfolio-nav__index" data-index-trigger type="button" aria-controls="portfolio-index" aria-expanded="false">INDEX <span aria-hidden="true">＋</span></button></nav>' +
-    '<div class="portfolio-index" id="portfolio-index" role="dialog" aria-modal="true" aria-label="Site index" hidden inert><div class="portfolio-index__head"><span>INDEX</span><button class="portfolio-index__close" type="button" data-index-trigger aria-controls="portfolio-index">CLOSE <span aria-hidden="true">×</span></button></div><div class="portfolio-index__body"><ol>' + all + '</ol><aside><div class="portfolio-index__preferences"><p class="portfolio-index__label">APPEARANCE</p><button class="portfolio-index__theme" data-preference="theme" type="button" aria-describedby="theme-help"><span data-theme-name="print">PRINT</span><span>/</span><span data-theme-name="screen">SCREEN</span></button><p class="portfolio-index__label">MOTION</p><button class="portfolio-index__motion" data-preference="motion" type="button"><span class="preference-motion__icon"></span><span class="preference-motion__label"></span></button></div><div class="portfolio-index__contact"><p class="portfolio-index__label">CONTACT</p><a href="' + base + 'contact.html">WORK WITH ME ↗</a><a href="' + base + safeURL(SITE.cv) + '" download>DOWNLOAD CV · PDF ↘</a><a href="https://linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">VIEW LINKEDIN ↗</a></div></aside></div></div>';
-  setupPreferences(el);
-  setupIndex(el);
+    '<div class="container site-nav__inner">' +
+      '<a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home">' +
+        '<img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="52" height="52">' +
+      "</a>" +
+      /* Shown only below the mobile breakpoint; toggles the links panel. */
+      '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links"><span class="material-symbols-outlined" aria-hidden="true">menu</span><span>Menu</span></button>' +
+      '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + "</nav>" +
+      themeToggleHTML() +
+    "</div>";
+  setupThemeToggle();
+  setupMobileMenu(el);
+}
+
+/* Compact mobile menu. Desktop shows the links inline and the button is
+   hidden; below the breakpoint the button toggles a small dropdown panel (all
+   CSS state, driven by one class). Closes on link click, Escape, or an outside
+   click. Not the old fullscreen overlay. */
+function setupMobileMenu(nav) {
+  const btn = nav.querySelector(".site-nav__menu-btn");
+  const links = nav.querySelector(".site-nav__links");
+  if (!btn || !links) return;
+
+  /* Bound only while the menu is open, and torn down on close, so nothing
+     global stays registered on desktop or after the menu is dismissed. Clicks
+     on the button (or anywhere in the nav) are ignored here — the button's own
+     handler owns the toggle. */
+  function onDocClick(e) { if (!nav.contains(e.target)) setOpen(false); }
+  function onKeydown(e) { if (e.key === "Escape") setOpen(false); }
+
+  function setOpen(open) {
+    nav.classList.toggle("is-menu-open", open);
+    if (!open) nav.classList.remove("is-keyboard-open");
+    btn.setAttribute("aria-expanded", String(open));
+    const bind = open ? "addEventListener" : "removeEventListener";
+    document[bind]("click", onDocClick);
+    document[bind]("keydown", onKeydown);
+  }
+
+  btn.addEventListener("click", (event) => {
+    nav.classList.toggle("is-keyboard-open", event.detail === 0);
+    setOpen(!nav.classList.contains("is-menu-open"));
+  });
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
 }

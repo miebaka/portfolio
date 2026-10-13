@@ -6,7 +6,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
-const rootFiles = ["404.html", "about.html", "community.html", "contact.html", "explorations.html", "index.html", "writing.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
+const rootFiles = ["404.html", "about.html", "contact.html", "index.html", "playground.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
 const caseFiles = ["rivo.html", "tedx-rsu.html", "chopbox.html", "christian-poster-a-week.html"];
 const articleFiles = ["designing-for-disability-in-nigeria.html", "when-the-swoosh-lost-its-soul.html"];
 
@@ -71,16 +71,13 @@ await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
-await ensureCopy(join(root, "assets/documents"), join(output, "assets/documents"));
 for (const file of articleFiles) await ensureCopy(join(root, "writing", file), join(output, "writing", file));
 
 for (const file of caseFiles) {
   const slug = file.replace(".html", "");
   const source = await readFile(join(root, "work", file), "utf8");
   const article = `<article class="case" data-mount="case" data-prerendered="true">${renderCaseMarkup(SITE, slug, "../")}</article>`;
-  const marker = /<article class="case" data-mount="case">[\s\S]*?<\/article>/;
-  if (!marker.test(source)) throw new Error(`Cannot prerender ${file}: case mount marker is missing or malformed.`);
-  const rendered = source.replace(marker, article);
+  const rendered = source.replace(/<article class="case" data-mount="case">[\s\S]*?<\/article>/, article);
   await mkdir(join(output, "work"), { recursive: true });
   await writeFile(join(output, "work", file), rendered);
 }
@@ -98,15 +95,11 @@ for (const file of allHtml) {
   for (const match of html.matchAll(/assets\/images\/optimized\/([a-z0-9_-]+\.(?:avif|webp|jpg|png))/gi)) assets.add(match[1]);
 }
 for (const project of SITE.projects.filter(project => project.caseReady !== false && project.cover)) {
-  for (const width of [540, 810, 1080]) assets.add(`${project.cover}-${width}.webp`);
+  for (const width of [540, 810, 1080]) for (const ext of ["avif", "webp", "jpg"]) assets.add(`${project.cover}-${width}.${ext}`);
 }
 for (const asset of assets) {
   const source = join(root, "assets/images/optimized", asset);
-  let sourceStat;
-  try { sourceStat = await stat(source); }
-  catch { throw new Error(`Referenced image is missing: ${relative(root, source)}`); }
-  if (!sourceStat.isFile()) throw new Error(`Referenced image is not a file: ${relative(root, source)}`);
-  await ensureCopy(source, join(output, "assets/images/optimized", asset));
+  try { if ((await stat(source)).isFile()) await ensureCopy(source, join(output, "assets/images/optimized", asset)); } catch {}
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");

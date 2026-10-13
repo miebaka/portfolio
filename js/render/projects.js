@@ -1,20 +1,23 @@
 /* Project presentation for the editorial home index and cinematic work rail. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 function projectMarkup(project, i, base) {
   const src = project.cover ? base + 'assets/images/optimized/' + safeToken(project.cover) : '';
-  const hoverSource = SITE.caseStudies?.[project.slug]?.media?.find(item => item?.src && item.src !== project.cover)?.src;
-  const hoverSrc = hoverSource ? base + 'assets/images/optimized/' + safeToken(hoverSource) : '';
   const media = src
-    ? '<img class="work-flick__image work-flick__image--base" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 100vw" alt="' + esc(project.tagline) + '" width="1920" height="925" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">' + (hoverSrc ? '<img class="work-flick__image work-flick__image--hover" src="' + hoverSrc + '-810.webp" srcset="' + hoverSrc + '-540.webp 540w, ' + hoverSrc + '-810.webp 810w, ' + hoverSrc + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 100vw" alt="" width="1920" height="925" loading="lazy" decoding="async">' : '')
+    ? '<img class="work-flick__image" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 64vw" alt="' + esc(project.tagline) + '" width="810" height="1080" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">'
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
-  const href = safeURL(project.href || ('work/' + safeToken(project.slug) + '.html'));
-  return '<article class="work-flick__item" style="--project-tone:' + esc(project.tone) + '">' +
-    '<a class="work-flick__link" href="' + base + href + '">' +
+  return '<article class="work-flick__item work-flick__item--locked" aria-label="' + esc(project.title) + ', coming soon">' +
     '<div class="work-flick__media">' + media + '</div>' +
-    '<div class="work-flick__content"><div class="work-flick__copy"><h3>' + esc(project.title) + '</h3><p class="work-flick__description">' + esc(project.tagline) + '</p></div><span class="work-flick__arrow" aria-hidden="true">↗</span></div></a></article>';
+    '<span class="work-flick__bar" aria-hidden="true"><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong></span></span>' +
+    '<span class="btn work-flick__status" aria-hidden="true">Coming soon</span>' +
+    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></article>';
+}
+
+function moreWorkMarkup(i, base) {
+  return '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html" aria-label="See more work">' +
+    '<div class="work-flick__content"><h3>See more</h3><span class="work-flick__more-arrow" aria-hidden="true">→</span></div></a>';
 }
 
 function bindExpansion(scope) {
@@ -35,7 +38,6 @@ export function renderWork() {
   if (!el) return;
   const archive = document.body.dataset.page === 'work';
   const projects = SITE.projects.filter(p => p.featured && p.caseReady !== false);
-  if (!archive) projects.sort((a, b) => Number(b.slug === 'tedx-rsu') - Number(a.slug === 'tedx-rsu'));
   el.className = archive ? 'work-flick work-flick--archive' : 'work-flick work-flick--home';
   if (archive) {
     const pairs = [];
@@ -45,7 +47,7 @@ export function renderWork() {
     el.innerHTML = pairs.join('');
   } else {
     const base = basePath();
-    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('');
+    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + moreWorkMarkup(projects.length, base);
   }
   bindExpansion(el);
 }
@@ -53,10 +55,10 @@ export function renderWork() {
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
-  el.className = 'project-archive__list system-list';
-  el.innerHTML = SITE.projects.filter(project => project.caseReady !== false && !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map(project => {
-    const action = '<a class="project-archive__action" href="' + basePath() + safeURL(project.href || 'work/' + safeToken(project.slug) + '.html') + '">VIEW CASE STUDY <span aria-hidden="true">↗</span></a>';
-    return '<details class="project-archive__item system-list__item"><summary class="system-list__row"><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle system-list__toggle" aria-hidden="true"></span></summary><div class="project-archive__reveal system-list__panel"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
+  el.className = 'project-archive__list';
+  el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
+    const action = '<span class="btn project-archive__status" aria-disabled="true">Coming soon</span>';
+    return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
   }).join('');
 }
 
@@ -78,21 +80,13 @@ function clientItem(client) {
 export function renderClients() {
   const el = mount(MOUNT.CLIENTS);
   if (!el || !SITE.clients || !SITE.clients.length) return;
-  const separator = '<li class="client-registration" aria-hidden="true"><span></span></li>';
-  const items = SITE.clients.map(client => clientItem(client) + separator).join("");
+  const items = SITE.clients.map(clientItem).join("");
   el.className = 'client-marquee';
-  el.innerHTML = '<div class="client-marquee__head container"><button class="client-marquee__control" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span><span>PAUSE LOGOS</span></button></div><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
-
-  const control = el.querySelector('.client-marquee__control');
-  control.addEventListener('click', () => {
-    const paused = el.classList.toggle('is-paused');
-    control.setAttribute('aria-pressed', String(paused));
-    control.innerHTML = paused ? '<span aria-hidden="true">▶</span><span>PLAY LOGOS</span>' : '<span aria-hidden="true">Ⅱ</span><span>PAUSE LOGOS</span>';
-  });
+  el.innerHTML = '<div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
 
   if (!('IntersectionObserver' in window)) return;
   let visible = false;
-  const sync = () => el.classList.toggle('is-running', visible && !document.hidden && !el.classList.contains('is-paused'));
+  const sync = () => el.classList.toggle('is-running', visible && !document.hidden);
   const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, { threshold: 0.1 });
   observer.observe(el);
   document.addEventListener('visibilitychange', sync);

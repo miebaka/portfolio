@@ -26,7 +26,6 @@ export const MOUNT = {
   WRITING:     "writing",
   CASE:        "case",
   NOW_PLAYING: "now-playing",
-  EXPERIENCE:  "experience",
 };
 
 /* Behavioural hooks: attributes JS reads or binds to, which carry no value of
@@ -50,7 +49,6 @@ export const HOOK = {
 const OPTIONAL = new Set([
   MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
   MOUNT.WRITING, MOUNT.CASE, MOUNT.NOW_PLAYING,
-  MOUNT.EXPERIENCE,
 ]);
 
 const KNOWN = new Set(Object.values(MOUNT));
