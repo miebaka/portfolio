@@ -56,6 +56,22 @@ test("built Home and Work expose truthful project states without JavaScript", as
   }
 });
 
+test("project hit areas are full rows and hover expansion requires fine-pointer capability", async () => {
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  assert.match(css, /\.project-archive__item\[href\]\s*\{[^}]*display:\s*block/);
+  const scopes = [];
+  for (const match of css.matchAll(/([^{}]*)([{}])/g)) {
+    if (match[2] === "{") {
+      scopes.push(match[1].trim());
+    } else {
+      const selector = scopes.pop() || "";
+      if (selector.includes("work-flick__item--more") && selector.includes(":hover") && /flex:\s*[2-9]/.test(match[1])) {
+        assert.ok(scopes.some(scope => /@media/.test(scope) && /hover:\s*hover/.test(scope) && /pointer:\s*fine/.test(scope)), `Ungated expansion: ${selector}`);
+      }
+    }
+  }
+});
+
 test("the Index registry has unique destinations and keeps the persistent bar quiet", () => {
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
