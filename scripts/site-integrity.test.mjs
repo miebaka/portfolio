@@ -303,6 +303,20 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.ok(title > -1 && title < summary && summary < meta);
 });
 
+test("built service fallbacks contain one complete shared record per service", async () => {
+  for (const file of ["index.html", "about.html", "services.html"]) {
+    const html = await readFile(join(dist, file), "utf8");
+    assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
+    const start = html.indexOf('<div data-mount="capabilities"');
+    const capability = html.slice(start, html.indexOf("</section>", start));
+    for (const service of SITE.capabilities) for (const field of ["title", "description", "outputs", "fit"]) {
+      const value = service[field].replaceAll("&", "&amp;");
+      assert.equal(capability.split(value).length - 1, 1, `${file}: ${service.id}.${field}`);
+    }
+    assert.doesNotMatch(capability, /<\/ol><\/div><div><dt>Good fit/, file);
+  }
+});
+
 test("production language avoids typographic dash shortcuts", async () => {
   for (const file of await walk(dist, ".html")) {
     const html = await readFile(file, "utf8");

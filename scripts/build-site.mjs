@@ -92,7 +92,7 @@ function renderShell(source, href) {
     .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="work-flick work-flick--home" data-mount="work-grid" data-prerendered="true">' + renderWorkMarkup(content.projects, base) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/<div data-project-archive>[\s\S]*?<\/div>/, '<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
-  rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
+  rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
 }
 await rm(output, { recursive: true, force: true });
