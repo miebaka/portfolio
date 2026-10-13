@@ -92,6 +92,7 @@ a[href]:hover,a[href]:focus-visible{color:var(--accent-interactive);text-decorat
 html[data-motion="reduced"] .site-index{clip-path:none;transition:opacity 120ms linear}
 html[data-motion="reduced"] .now-playing__dot{animation:none}
 html[data-motion="reduced"] .site-nav__brand,html[data-motion="reduced"] .site-nav__menu-btn,html[data-motion="reduced"] .theme-toggle,html[data-motion="reduced"] .site-index__close,html[data-motion="reduced"] .now-playing{transform:none!important;transition-property:color,background-color,opacity}
+html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .writing-item__link,html[data-motion="reduced"] .exp__row,html[data-motion="reduced"] .case-view button{transform:none!important;transition-property:color,background-color,opacity}
 
 /* V12 controls: one geometry, three roles. Primary actions are filled;
    utility controls are quiet squares; view controls form one segmented unit. */
