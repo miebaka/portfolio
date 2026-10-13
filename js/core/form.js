@@ -74,8 +74,9 @@ export function createContactForm(form, { submitContact: send = submitContact, n
   async function onSubmit(event) {
     event.preventDefault();
     if (destroyed || state === "submitting") return;
+    transition("validating");
     const validation = clientErrors();
-    if (Object.keys(validation).length) { showErrors(validation); transition("invalid", "Check the highlighted fields."); return; }
+    if (Object.keys(validation).length) { showErrors(validation); transition("validation-error", "Check the highlighted fields."); return; }
     clearErrors(); transition("submitting", "Sending your message…"); activeController = new AbortController();
     const timer = setTimeout(() => activeController?.abort(), timeoutMs);
     try {
@@ -84,13 +85,13 @@ export function createContactForm(form, { submitContact: send = submitContact, n
       if (response.status === 202 && response.ok === true) {
         form.reset(); if (fields.startedAt) fields.startedAt.value = String(now()); transition("success", "Message sent. I’ll reply by email.");
       } else if (response.status === 422 && response.fieldErrors) {
-        showErrors(response.fieldErrors); transition("invalid", response.fieldErrors.form || "Check the highlighted fields.");
+        showErrors(response.fieldErrors); transition("validation-error", response.fieldErrors.form || "Check the highlighted fields.");
       } else if (response.status === 429 || response.code === "RATE_LIMITED") {
-        transition("server", "Too many attempts just now. Please wait and try again, or email me directly.");
+        transition("rate-limited", "Too many attempts just now. Please wait and try again, or email me directly.");
       } else if (response.status === 503 || response.code === "PROVIDER_UNAVAILABLE") {
-        transition("server", "The form is temporarily unavailable. Your message is still here; email me directly or try again.");
-      } else transition("server", NETWORK_COPY);
-    } catch { if (!destroyed) transition("network", NETWORK_COPY); }
+        transition("unavailable", "The form is temporarily unavailable. Your message is still here; email me directly or try again.");
+      } else transition("error", NETWORK_COPY);
+    } catch { if (!destroyed) transition("error", NETWORK_COPY); }
     finally { clearTimeout(timer); activeController = null; }
   }
   function onInput(event) {

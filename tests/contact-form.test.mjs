@@ -38,8 +38,10 @@ function fixture(overrides = {}) {
   const button = new FakeNode({ type: "submit" });
   button.textContent = "Work with me";
   const listeners = new Map();
+  const transitions = [];
+  const dataset = new Proxy({}, { set(target, property, value) { target[property] = value; if (property === "state") transitions.push(value); return true; } });
   const form = {
-    dataset: {}, fields, errors, helps, status, button,
+    dataset, fields, errors, helps, status, button, transitions,
     addEventListener(type, listener) { listeners.set(type, listener); },
     removeEventListener(type) { listeners.delete(type); },
     querySelector(selector) {
@@ -89,7 +91,8 @@ test("required message, merged descriptions and first-invalid focus", async () =
   const form = fixture({ name: "", email: "bad", message: "" });
   const controller = createContactForm(form, { submitContact: async () => { throw new Error("must not submit"); }, now: () => 5000 });
   await form.submit();
-  assert.equal(controller.state, "invalid");
+  assert.equal(controller.state, "validation-error");
+  assert.deepEqual(form.transitions.slice(-2), ["validating", "validation-error"]);
   assert.equal(form.fields.name.focused, true);
   assert.equal(form.fields.name.getAttribute("aria-invalid"), "true");
   assert.equal(form.fields.name.getAttribute("aria-describedby"), "name-help name-error");
@@ -107,6 +110,7 @@ test("prevents duplicate submits and clears only after a 202 success", async () 
   assert.equal(controller.state, "submitting");
   assert.equal(form.button.disabled, true);
   assert.equal(form.button.textContent, "Sending…");
+  assert.deepEqual(form.transitions.slice(-2), ["validating", "submitting"]);
   resolve({ status: 202, ok: true, requestId: "req_1" });
   await Promise.all([first, second]);
   assert.equal(calls, 1);
@@ -117,8 +121,9 @@ test("prevents duplicate submits and clears only after a 202 success", async () 
 
 test("server field errors retain inputs and merge stable error descriptions", async () => {
   const form = fixture();
-  createContactForm(form, { submitContact: async () => ({ status: 422, ok: false, code: "INVALID_REQUEST", fieldErrors: { email: "Enter a valid email address." } }), now: () => 5000 });
+  const controller = createContactForm(form, { submitContact: async () => ({ status: 422, ok: false, code: "INVALID_REQUEST", fieldErrors: { email: "Enter a valid email address." } }), now: () => 5000 });
   await form.submit();
+  assert.equal(controller.state, "validation-error");
   assert.equal(form.fields.name.value, "Ada");
   assert.equal(form.fields.email.value, "ada@example.com");
   assert.equal(form.fields.email.getAttribute("aria-describedby"), "email-help email-error");
@@ -127,11 +132,11 @@ test("server field errors retain inputs and merge stable error descriptions", as
 
 test("maps rate limit, provider, server and network failures without clearing values", async (t) => {
   const cases = [
-    [() => ({ status: 429, ok: false, code: "RATE_LIMITED" }), "server", "Too many attempts just now. Please wait and try again, or email me directly."],
-    [() => ({ status: 503, ok: false, code: "PROVIDER_UNAVAILABLE" }), "server", "The form is temporarily unavailable. Your message is still here; email me directly or try again."],
-    [() => ({ status: 500, ok: false, code: "INTERNAL_ERROR" }), "server", "That didn’t send. Your message is still here; try again or email me directly."],
-    [() => { throw new TypeError("offline"); }, "network", "That didn’t send. Your message is still here; try again or email me directly."],
-    [() => { throw new DOMException("timed out", "AbortError"); }, "network", "That didn’t send. Your message is still here; try again or email me directly."]
+    [() => ({ status: 429, ok: false, code: "RATE_LIMITED" }), "rate-limited", "Too many attempts just now. Please wait and try again, or email me directly."],
+    [() => ({ status: 503, ok: false, code: "PROVIDER_UNAVAILABLE" }), "unavailable", "The form is temporarily unavailable. Your message is still here; email me directly or try again."],
+    [() => ({ status: 500, ok: false, code: "INTERNAL_ERROR" }), "error", "That didn’t send. Your message is still here; try again or email me directly."],
+    [() => { throw new TypeError("offline"); }, "error", "That didn’t send. Your message is still here; try again or email me directly."],
+    [() => { throw new DOMException("timed out", "AbortError"); }, "error", "That didn’t send. Your message is still here; try again or email me directly."]
   ];
   for (const [response, state, copy] of cases) await t.test(copy.slice(0, 18), async () => {
     const form = fixture();
@@ -162,6 +167,6 @@ test("the client timeout aborts the request and preserves the message", async ()
     timeoutMs: 1
   });
   await form.submit();
-  assert.equal(controller.state, "network");
+  assert.equal(controller.state, "error");
   assert.equal(form.fields.message.value, "A considered project enquiry.");
 });
