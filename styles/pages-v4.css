@@ -325,6 +325,10 @@ html[data-motion="reduced"] .client-marquee__track{width:100%;animation:none;wil
 }
 @media(prefers-reduced-motion:reduce){.work-flick__bar::before,.work-flick__bar-arrow,.discipline,.discipline__preview,.service-detail,.service-detail__preview{transition:none}}
 html[data-motion="reduced"] .work-flick__bar::before,html[data-motion="reduced"] .work-flick__bar-arrow,html[data-motion="reduced"] .discipline,html[data-motion="reduced"] .discipline__preview,html[data-motion="reduced"] .service-detail,html[data-motion="reduced"] .service-detail__preview{transition:none}
+html[data-motion="reduced"] .work-flick__item,html[data-motion="reduced"] .work-flick__media img,html[data-motion="reduced"] .work-flick__detail,html[data-motion="reduced"] .work-flick__status,html[data-motion="reduced"] .home-work-index__row::before,html[data-motion="reduced"] .home-work-index__arrow,html[data-motion="reduced"] .project-archive__toggle{transition:none}
+html[data-motion="reduced"] .work-flick__media img,html[data-motion="reduced"] .home-work-index__arrow{transform:none!important}
+html[data-motion="reduced"] .work-flick__content,html[data-motion="reduced"] .project-archive__status{transition:opacity 120ms linear}
+html[data-motion="reduced"] .btn,html[data-motion="reduced"] .case-index a{transform:none!important;transition-property:color,background-color,opacity,box-shadow}
 
 /* V12 — density, adaptive actions and direct feedback. */
 :root{--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s6:3.15rem;--s8:4.2rem;--s12:6.3rem}
