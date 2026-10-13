@@ -6,9 +6,55 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { navigation } from "../data/navigation.js";
+import * as projectRender from "../js/render/projects.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
+
+test("homepage proof precedes biography in the source and built document", async () => {
+  for (const directory of [root, dist]) {
+    const html = await readFile(join(directory, "index.html"), "utf8");
+    assert.ok(html.includes('id="selected-work"'));
+    assert.ok(html.includes('id="profile"'));
+    assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
+  }
+});
+
+test("project cards link published work and leave unfinished work non-interactive", () => {
+  assert.equal(typeof projectRender.projectMarkup, "function");
+  const published = SITE.projects.find(project => project.slug === "tedx-rsu");
+  assert.match(projectRender.projectMarkup(published), /<a\b[^>]*href="work\/tedx-rsu.html"/);
+  assert.match(projectRender.projectMarkup(published, 1, "../"), /href="\.\.\/work\/tedx-rsu.html"/);
+  const unfinished = projectRender.projectMarkup({ ...published, status: "coming-soon" });
+  assert.match(unfinished, /^<article\b/);
+  assert.match(unfinished, /Coming soon/);
+  assert.doesNotMatch(unfinished, /<a\b|<button\b|tabindex|aria-disabled/);
+  assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
+});
+
+test("Work archive excludes private and writing records and only published rows are links", () => {
+  assert.equal(typeof projectRender.renderProjectArchiveMarkup, "function");
+  const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
+  const html = projectRender.renderProjectArchiveMarkup([
+    tedx, { ...tedx, title: "Unfinished", status: "coming-soon" },
+    { ...tedx, title: "Private fixture", status: "private" },
+    SITE.projects.find(project => project.href?.startsWith("writing/"))
+  ]);
+  assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
+  assert.match(html, /<article\b[^>]*>[\s\S]*Unfinished[\s\S]*Coming soon/);
+  assert.doesNotMatch(html, /Private fixture|Designing for Disability|<details|<summary/);
+  assert.equal((html.match(/<a\b/g) || []).length, 1);
+});
+
+test("built Home and Work expose truthful project states without JavaScript", async () => {
+  for (const file of ["index.html", "work.html"]) {
+    const html = await readFile(join(dist, file), "utf8");
+    assert.match(html, /data-prerendered="true"/);
+    assert.match(html, /href="work\/tedx-rsu.html"/);
+    assert.match(html, /Coming soon/);
+    assert.doesNotMatch(html, /href="work\/(?:rivo|chopbox|christian-poster-a-week)\.html"/);
+  }
+});
 
 test("the Index registry has unique destinations and keeps the persistent bar quiet", () => {
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
@@ -191,7 +237,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
   assert.match(projects, /work-flick__item--more/);
-  assert.doesNotMatch(projects, /work-flick__category|work-flick__action|View project/);
+  assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);

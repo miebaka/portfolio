@@ -1,18 +1,22 @@
 /* Project presentation for the editorial home index and cinematic work rail. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeToken, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
-function projectMarkup(project, i, base) {
+export function projectMarkup(project, i = 0, base = "") {
+  if (project.status === "private") return "";
+  const published = project.status === "published";
+  const tag = published ? "a" : "article";
+  const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
   const src = project.cover ? base + 'assets/images/optimized/' + safeToken(project.cover) : '';
   const media = src
     ? '<img class="work-flick__image" src="' + src + '-810.webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w, ' + src + '-1080.webp 1080w" sizes="(max-width: 760px) 100vw, 64vw" alt="' + esc(project.tagline) + '" width="810" height="1080" ' + (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">'
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
-  return '<article class="work-flick__item work-flick__item--locked" aria-label="' + esc(project.title) + ', coming soon">' +
+  return '<' + tag + ' class="work-flick__item' + (published ? '' : ' work-flick__item--locked') + '"' + href + ' aria-label="' + esc(project.title) + (published ? ', view project' : ', coming soon') + '">' +
     '<div class="work-flick__media">' + media + '</div>' +
-    '<span class="work-flick__bar" aria-hidden="true"><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong></span></span>' +
-    '<span class="btn work-flick__status" aria-hidden="true">Coming soon</span>' +
-    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></article>';
+    '<span class="work-flick__bar" aria-hidden="true">' + (published ? '<span class="work-flick__bar-arrow">↗</span>' : '') + '<span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong>' + (published ? '<span>View project</span>' : '') + '</span></span>' +
+    (published ? '' : '<span class="btn work-flick__status">Coming soon</span>') +
+    '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></' + tag + '>';
 }
 
 function moreWorkMarkup(i, base) {
@@ -21,14 +25,21 @@ function moreWorkMarkup(i, base) {
 }
 
 function bindExpansion(scope) {
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const groups = [...scope.querySelectorAll('.work-flick__pair')];
   (groups.length ? groups : [scope]).forEach(group => {
     const items = [...group.querySelectorAll('.work-flick__item')];
     const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
     items.forEach(item => {
-      item.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') activate(item); });
-      item.addEventListener('focus', () => activate(item));
+      item.addEventListener('pointerenter', event => {
+        if (finePointer.matches && !reducedMotion.matches && document.documentElement.dataset.motion !== 'reduced' && event.pointerType !== 'touch') activate(item);
+      });
+      item.addEventListener('focus', () => activate(null));
     });
+    group.addEventListener('pointerleave', () => activate(null));
+    finePointer.addEventListener('change', () => activate(null));
+    reducedMotion.addEventListener('change', () => activate(null));
   });
 
 }
@@ -37,28 +48,37 @@ export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   const archive = document.body.dataset.page === 'work';
-  const projects = SITE.projects.filter(p => p.featured && p.caseReady !== false);
   el.className = archive ? 'work-flick work-flick--archive' : 'work-flick work-flick--home';
+  if (el.dataset.prerendered !== 'true') el.innerHTML = renderWorkMarkup(SITE.projects, basePath(), archive);
+  bindExpansion(el);
+}
+
+export function renderWorkMarkup(allProjects = SITE.projects, base = "", archive = false) {
+  const projects = allProjects.filter(p => p.status !== 'private' && p.featured && p.caseReady !== false);
   if (archive) {
     const pairs = [];
     for (let i = 0; i < projects.length; i += 2) {
-      pairs.push('<div class="work-flick__pair">' + projects.slice(i, i + 2).map((p, j) => projectMarkup(p, i + j, basePath())).join('') + '</div>');
+      pairs.push('<div class="work-flick__pair">' + projects.slice(i, i + 2).map((p, j) => projectMarkup(p, i + j, base)).join('') + '</div>');
     }
-    el.innerHTML = pairs.join('');
+    return pairs.join('');
   } else {
-    const base = basePath();
-    el.innerHTML = projects.map((p, i) => projectMarkup(p, i, base)).join('') + moreWorkMarkup(projects.length, base);
+    return projects.map((p, i) => projectMarkup(p, i, base)).join('') + moreWorkMarkup(projects.length, base);
   }
-  bindExpansion(el);
 }
 
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
   el.className = 'project-archive__list';
-  el.innerHTML = SITE.projects.filter(project => !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
-    const action = '<span class="btn project-archive__status" aria-disabled="true">Coming soon</span>';
-    return '<details class="project-archive__item"><summary><span>' + String(index + 1).padStart(2, '0') + '</span><strong>' + esc(project.title) + '</strong><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__toggle" aria-hidden="true">+</span></summary><div class="project-archive__reveal"><p>' + esc(project.tagline) + '</p><p>' + (project.tags || []).map(esc).join(' · ') + '</p>' + action + '</div></details>';
+  if (el.dataset.prerendered !== 'true') el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath());
+}
+
+export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") {
+  return projects.filter(project => project.status !== 'private' && !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
+    const published = project.status === 'published';
+    const tag = published ? 'a' : 'article';
+    const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
+    return '<' + tag + ' class="project-archive__item"' + href + '><div class="project-archive__row"><span>' + String(index + 1).padStart(2, '0') + '</span><h2>' + esc(project.title) + '</h2><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__state">' + (published ? '<span aria-hidden="true">↗</span>' : 'Coming soon') + '</span></div></' + tag + '>';
   }).join('');
 }
 
