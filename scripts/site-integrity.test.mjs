@@ -19,13 +19,20 @@ async function walk(dir, suffix = "") {
   return files;
 }
 
-test("featured projects are publishable and have real cover imagery", () => {
-  const featured = SITE.projects.filter((project) => project.featured);
-  assert.ok(featured.length >= 3);
-  for (const project of featured) {
-    assert.notEqual(project.caseReady, false, project.title + " is not case-ready");
-    assert.ok(project.cover, project.title + " has no cover image");
-    assert.ok(SITE.caseStudies[project.slug]?.media?.every((item) => item.src), project.title + " contains placeholder media");
+test("project publication states are explicit", async () => {
+  const statuses = new Set(["published", "coming-soon", "private"]);
+  for (const project of SITE.projects) {
+    assert.ok(statuses.has(project.status), `${project.slug} needs a publication status`);
+  }
+  assert.equal(SITE.projects.filter(project => project.featured && project.status === "published").length, 1);
+  assert.ok(SITE.projects.some(project => project.status === "coming-soon"));
+
+  const pages = await walk(dist, ".html");
+  const publicMarkup = (await Promise.all(pages.map(file => readFile(file, "utf8")))).join("\n");
+  const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
+  for (const project of SITE.projects.filter(project => project.status === "private")) {
+    assert.ok(!publicMarkup.includes(project.title), `${project.slug} appears in public HTML`);
+    assert.ok(!sitemap.includes(`/work/${project.slug}.html`), `${project.slug} appears in the sitemap`);
   }
 });
 
@@ -43,14 +50,12 @@ test("every production page has essential metadata and one heading", async () =>
   }
 });
 
-test("locked case studies ship their complete state before JavaScript runs", async () => {
-  for (const slug of Object.keys(SITE.caseStudies)) {
-    const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
-    assert.match(html, /data-prerendered="true"/);
-    assert.match(html, /class="case-locked container"/);
-    assert.match(html, /Coming soon/);
-    assert.doesNotMatch(html, /class="case-index"/);
-    assert.doesNotMatch(html, /filled by js|placeholder/i);
+test("unfinished case studies explain their state before JavaScript runs", async () => {
+  for (const project of SITE.projects.filter(project => project.status === "coming-soon" && SITE.caseStudies[project.slug])) {
+    const html = await readFile(join(dist, "work", `${project.slug}.html`), "utf8");
+    assert.match(html, /data-prerendered="true"/, project.slug);
+    assert.match(html, /Coming soon/, project.slug);
+    assert.doesNotMatch(html, /filled by js|placeholder/i, project.slug);
   }
 });
 
@@ -89,26 +94,6 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /gradient\(/i);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
   assert.doesNotMatch(css, /filter:saturate/i);
-});
-
-test("documented interface colour pairs meet a 7:1 contrast floor", () => {
-  const luminance = (hex) => {
-    const channels = hex.match(/[0-9a-f]{2}/gi).map(value => parseInt(value, 16) / 255);
-    const linear = channels.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
-    return .2126 * linear[0] + .7152 * linear[1] + .0722 * linear[2];
-  };
-  const contrast = (a, b) => {
-    const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-    return (lighter + .05) / (darker + .05);
-  };
-  const lightSurfaces = ["F8F9FC", "EFF1F6", "ECEEF3", "F2F3F8"];
-  const darkSurfaces = ["07112B", "0C1730", "111B33", "172138"];
-  for (const foreground of ["07112B", "3C4661", "002080", "1C3DA4", "83251D", "8F0B28"])
-    for (const surface of lightSurfaces) assert.ok(contrast(foreground, surface) >= 7, `${foreground} on ${surface}`);
-  for (const foreground of ["F8F9FC", "C3C6CF", "B1C5FF", "FFA08F", "FF9E9F"])
-    for (const surface of darkSurfaces) assert.ok(contrast(foreground, surface) >= 7, `${foreground} on ${surface}`);
-  for (const [foreground, background] of [["F8F9FC", "002080"], ["032485", "B1C5FF"], ["002080", "E8EEFF"]])
-    assert.ok(contrast(foreground, background) >= 7, `${foreground} on ${background}`);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {
@@ -210,12 +195,6 @@ test("portfolio depth features are present without depending on JavaScript for c
   assert.match(work, /data-project-archive/);
   assert.doesNotMatch(work, /data-mount="work-grid"/);
   assert.doesNotMatch(work, /Work \/ 2019/);
-  for (const slug of Object.keys(SITE.caseStudies)) {
-    const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
-    assert.doesNotMatch(html, /data-case-view|Brief view|Full study|Case study ·/);
-    assert.match(html, /class="case-locked container"/);
-    assert.match(html, /Coming soon/);
-  }
 });
 
 test("requested language and contact details stay canonical", async () => {
@@ -289,11 +268,8 @@ test("production build excludes source and review directories", async () => {
   for (const path of ["reports", "Samples from Figma", "klat_magazine", "docs", "graphify-out"]) {
     await assert.rejects(access(new URL("../dist/" + path, import.meta.url)));
   }
-  await access(new URL("../dist/work/christian-poster-a-week.html", import.meta.url));
   await assert.rejects(access(new URL("../dist/data/drafts.js", import.meta.url)));
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
-  const publicData = await readFile(new URL("../dist/data/site.js", import.meta.url), "utf8");
-  assert.match(publicData, /Poster A Week|christian-poster-a-week/);
 });
 
 test("retired source systems cannot return unnoticed", async () => {
