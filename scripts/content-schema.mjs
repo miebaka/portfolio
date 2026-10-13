@@ -5,12 +5,67 @@ const hasText = value => typeof value === "string" && value.trim().length > 0;
 const isSlug = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);
 const routePath = value => typeof value === "string" ? value.replace(/^\.\//, "").split(/[?#]/)[0] : "";
 const validRoute = value => hasText(value) && /^(?:\.\/)?[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html(?:[?#][^\s]*)?$/.test(value);
+const positiveInteger = value => Number.isInteger(value) && value > 0;
+const validHttpsUrl = value => {
+  if (!hasText(value) || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f]/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && Boolean(url.hostname) && !url.username && !url.password;
+  } catch { return false; }
+};
+const validDate = value => {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+};
 
 /** Pure validation: report every error without normalizing or mutating content. */
 export function validateContent(content) {
   const errors = [];
   const add = (path, code, message) => errors.push({ path, code, message });
   if (!isRecord(content)) return { ok: false, errors: [{ path: "content", code: "CONTENT_INVALID", message: "Content must be an object." }] };
+
+  if (!isRecord(content.siteConfig)) add("siteConfig", "SITE_CONFIG_INVALID", "Site configuration must be an object.");
+  else {
+    for (const field of ["name", "role", "location"]) if (!hasText(content.siteConfig[field])) add(`siteConfig.${field}`, "SITE_FIELD_REQUIRED", `Site ${field} is required.`);
+    if (typeof content.siteConfig.email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(content.siteConfig.email)) add("siteConfig.email", "SITE_EMAIL_INVALID", "A valid contact email is required.");
+    if (!Array.isArray(content.siteConfig.socials)) add("siteConfig.socials", "SOCIALS_INVALID", "Social links must be an array.");
+    else content.siteConfig.socials.forEach((social, index) => {
+      const path = `siteConfig.socials[${index}]`;
+      if (!isRecord(social)) { add(path, "SOCIAL_INVALID", "A social link must be an object."); return; }
+      if (!hasText(social.label)) add(`${path}.label`, "SITE_FIELD_REQUIRED", "Social links need a label.");
+      if (!validHttpsUrl(social.href)) add(`${path}.href`, "SOCIAL_URL_INVALID", "Social links need a valid HTTPS URL without credentials.");
+    });
+  }
+
+  if (!Array.isArray(content.services)) add("services", "SERVICES_INVALID", "Services must be an array.");
+  else content.services.forEach((service, index) => {
+    const path = `services[${index}]`;
+    if (!isRecord(service)) { add(path, "SERVICE_INVALID", "A service must be an object."); return; }
+    for (const field of ["title", "description", "preview"]) if (!hasText(service[field])) add(`${path}.${field}`, "SERVICE_FIELD_REQUIRED", `Service ${field} is required.`);
+  });
+
+  if (!Array.isArray(content.writing)) add("writing", "WRITING_INVALID", "Writing must be an array.");
+  else content.writing.forEach((entry, index) => {
+    const path = `writing[${index}]`;
+    if (!isRecord(entry)) { add(path, "WRITING_ENTRY_INVALID", "A writing entry must be an object."); return; }
+    for (const field of ["title", "summary"]) if (!hasText(entry[field])) add(`${path}.${field}`, "WRITING_FIELD_REQUIRED", `Writing ${field} is required.`);
+    if (!validRoute(entry.href) && !validHttpsUrl(entry.href)) add(`${path}.href`, "WRITING_URL_INVALID", "Writing needs a local HTML route or a valid HTTPS URL without credentials.");
+    if (!validDate(entry.date)) add(`${path}.date`, "WRITING_DATE_INVALID", "Writing needs a real calendar date in YYYY-MM-DD format.");
+    if (entry.readingTime !== undefined && !hasText(entry.readingTime)) add(`${path}.readingTime`, "WRITING_FIELD_REQUIRED", "Reading time must contain text when provided.");
+  });
+
+  if (!Array.isArray(content.clients)) add("clients", "CLIENTS_INVALID", "Client proof must be an array.");
+  else content.clients.forEach((client, index) => {
+    const path = `clients[${index}]`;
+    if (!isRecord(client)) { add(path, "CLIENT_INVALID", "A client must be an object."); return; }
+    if (!hasText(client.name)) add(`${path}.name`, "CLIENT_NAME_REQUIRED", "Client proof needs a name.");
+    if (client.logo !== undefined) {
+      if (typeof client.logo !== "string" || !/^assets\/images\/(?:[a-z0-9_-]+\/)*[a-z0-9_-]+\.(?:svg|png|jpe?g|webp|avif)$/i.test(client.logo)) add(`${path}.logo`, "CLIENT_LOGO_INVALID", "Client logos must use a local image asset path without traversal.");
+      for (const field of ["logoW", "logoH"]) if (!positiveInteger(client[field])) add(`${path}.${field}`, "CLIENT_DIMENSIONS_INVALID", "Client logo dimensions must be positive integers.");
+    }
+    if (client.optical !== undefined && (!Number.isFinite(client.optical) || client.optical <= 0)) add(`${path}.optical`, "CLIENT_OPTICAL_INVALID", "Optical correction must be a positive number.");
+  });
 
   if (!isRecord(content.navigation)) add("navigation", "NAVIGATION_INVALID", "Navigation must contain route groups.");
   else for (const [group, routes] of Object.entries(content.navigation)) {
@@ -60,6 +115,7 @@ export function validateContent(content) {
       const nextProject = projects.find(item => item?.slug === study.next?.slug);
       if (!nextProject) add(`${path}.next.slug`, "NEXT_PROJECT_MISSING", "Next must reference an existing project.");
       else if (nextProject.status === PROJECT_STATUS.PRIVATE) add(`${path}.next.slug`, "NEXT_PROJECT_PRIVATE", "Next cannot expose a private project.");
+      else if (!isRecord(studies[nextProject.slug]) || routePath(nextProject.href).startsWith("writing/")) add(`${path}.next.slug`, "NEXT_CASE_MISSING", "Next must reference a project with a usable case-study destination.");
     }
     if (!Array.isArray(study.media)) { add(`${path}.media`, "MEDIA_INVALID", "Case media must be an array."); continue; }
     study.media.forEach((media, index) => {

@@ -18,6 +18,10 @@ const study = (overrides = {}) => ({
   ...overrides
 });
 const fixture = (overrides = {}) => ({
+  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [] },
+  services: [{ title: "Brand identity", description: "Useful identity systems.", preview: "sample-hero" }],
+  writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
+  clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
   navigation: { primary: [{ key: "work", label: "Work", href: "work.html" }] },
   projects: [project()], caseStudies: { sample: study() }, ...overrides
 });
@@ -66,6 +70,54 @@ test("media source and loading priority are validated", () => {
 test("next-project references must resolve to a public project", () => {
   expectError(fixture({ caseStudies: { sample: study({ next: { slug: "missing", title: "Missing" } }) } }), "NEXT_PROJECT_MISSING", "caseStudies.sample.next.slug");
   expectError(fixture({ projects: [project({ status: "private" })], caseStudies: { sample: study({ next: { slug: "sample", title: "Sample" } }) } }), "NEXT_PROJECT_PRIVATE", "caseStudies.sample.next.slug");
+});
+test("next cannot route a published writing project to a nonexistent case page", () => {
+  expectError(fixture({ projects: [project(), project({ slug: "essay", featured: false, href: "writing/essay.html" })], caseStudies: { sample: study({ next: { slug: "essay", title: "Essay" } }) } }), "NEXT_CASE_MISSING", "caseStudies.sample.next.slug");
+});
+test("next cannot route an unready project without a case destination", () => {
+  expectError(fixture({ projects: [project(), project({ slug: "unready", status: "coming-soon", featured: false })], caseStudies: { sample: study({ next: { slug: "unready", title: "Unready" } }) } }), "NEXT_CASE_MISSING", "caseStudies.sample.next.slug");
+});
+test("next can link to an existing draft case destination", () => {
+  assert.equal(validateContent(fixture({ projects: [project(), project({ slug: "up-next", status: "coming-soon", featured: false })], caseStudies: { sample: study({ next: { slug: "up-next", title: "Up next" } }), "up-next": study() } })).ok, true);
+});
+test("every public content domain rejects missing or null records", () => {
+  for (const [domain, code] of [["siteConfig", "SITE_CONFIG_INVALID"], ["services", "SERVICES_INVALID"], ["writing", "WRITING_INVALID"], ["clients", "CLIENTS_INVALID"]]) {
+    for (const value of [undefined, null]) expectError(fixture({ [domain]: value }), code, domain);
+  }
+});
+test("site configuration requires usable identity and contact metadata", () => {
+  for (const field of ["name", "role", "location"]) expectError(fixture({ siteConfig: { ...fixture().siteConfig, [field]: "" } }), "SITE_FIELD_REQUIRED", `siteConfig.${field}`);
+  expectError(fixture({ siteConfig: { ...fixture().siteConfig, email: "invalid" } }), "SITE_EMAIL_INVALID", "siteConfig.email");
+  expectError(fixture({ siteConfig: { ...fixture().siteConfig, socials: null } }), "SOCIALS_INVALID", "siteConfig.socials");
+  expectError(fixture({ siteConfig: { ...fixture().siteConfig, socials: [{ label: "Blog", href: "javascript:alert(1)" }] } }), "SOCIAL_URL_INVALID", "siteConfig.socials[0].href");
+});
+test("services require their displayed copy and media preview", () => {
+  expectError(fixture({ services: {} }), "SERVICES_INVALID", "services");
+  expectError(fixture({ services: [null] }), "SERVICE_INVALID", "services[0]");
+  for (const field of ["title", "description", "preview"]) expectError(fixture({ services: [{ ...fixture().services[0], [field]: "" }] }), "SERVICE_FIELD_REQUIRED", `services[0].${field}`);
+});
+test("writing requires titles summaries and valid dates", () => {
+  expectError(fixture({ writing: [null] }), "WRITING_ENTRY_INVALID", "writing[0]");
+  for (const field of ["title", "summary"]) expectError(fixture({ writing: [{ ...fixture().writing[0], [field]: "" }] }), "WRITING_FIELD_REQUIRED", `writing[0].${field}`);
+  for (const date of [undefined, "", "yesterday", "2026-02-30", "2025-02-29", "2026-13-01"]) expectError(fixture({ writing: [{ ...fixture().writing[0], date }] }), "WRITING_DATE_INVALID", "writing[0].date");
+  expectError(fixture({ writing: [{ ...fixture().writing[0], readingTime: "" }] }), "WRITING_FIELD_REQUIRED", "writing[0].readingTime");
+});
+test("writing rejects unsafe or invalid hrefs", () => {
+  for (const href of [undefined, "", "javascript:alert(1)", "../essay.html", "//example.com/essay", "https://", "https://user:password@example.com/essay", "ftp://example.com/essay"]) expectError(fixture({ writing: [{ ...fixture().writing[0], href }] }), "WRITING_URL_INVALID", "writing[0].href");
+});
+test("writing permits valid local or HTTPS article destinations", () => {
+  for (const href of ["writing/essay.html", "https://example.com/essay"]) assert.equal(validateContent(fixture({ writing: [{ ...fixture().writing[0], href }] })).ok, true);
+});
+test("client proof requires names and valid logo metadata", () => {
+  expectError(fixture({ clients: {} }), "CLIENTS_INVALID", "clients");
+  expectError(fixture({ clients: [null] }), "CLIENT_INVALID", "clients[0]");
+  expectError(fixture({ clients: [{ name: "" }] }), "CLIENT_NAME_REQUIRED", "clients[0].name");
+  expectError(fixture({ clients: [{ ...fixture().clients[0], logo: "../private.svg" }] }), "CLIENT_LOGO_INVALID", "clients[0].logo");
+  for (const field of ["logoW", "logoH"]) expectError(fixture({ clients: [{ ...fixture().clients[0], [field]: undefined }] }), "CLIENT_DIMENSIONS_INVALID", `clients[0].${field}`);
+  expectError(fixture({ clients: [{ ...fixture().clients[0], optical: -1 }] }), "CLIENT_OPTICAL_INVALID", "clients[0].optical");
+});
+test("client wordmarks can omit logo metadata", () => {
+  assert.equal(validateContent(fixture({ clients: [{ name: "Sample client" }] })).ok, true);
 });
 test("duplicate routes in one navigation group are rejected", () => {
   expectError(fixture({ navigation: { primary: [{ href: "work.html" }, { href: "./work.html#projects" }] } }), "ROUTE_DUPLICATE", "navigation.primary[1].href");
