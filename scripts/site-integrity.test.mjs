@@ -5,9 +5,77 @@ import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
+import { navigation } from "../data/navigation.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
+
+test("the Index registry has unique destinations and keeps the persistent bar quiet", () => {
+  assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
+  assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
+  assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
+  assert.deepEqual(navigation.index.map(route => route.label), ["Home", "Work", "Explorations", "Community", "About", "Services", "Writing", "Contact"]);
+  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "About", "Services", "Writing", "Contact"]);
+  assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
+  assert.ok(navigation.footer.some(route => route.href === "community.html"));
+});
+
+test("every production shell exposes the complete Index as fallback navigation", async () => {
+  const destinations = ["index.html", "work.html", "explorations.html", "community.html", "about.html", "services.html", "playground.html", "contact.html"];
+  for (const file of await walk(dist, ".html")) {
+    const html = await readFile(file, "utf8");
+    const header = html.match(/<header data-mount="nav">([\s\S]*?)<\/header>/)?.[1] || "";
+    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
+    for (const href of destinations) assert.ok(links.includes(join(dist, href)), `${file} omits fallback ${href}`);
+  }
+});
+
+test("registry routes build with canonical URLs and generated sitemap entries", async () => {
+  for (const [href, canonical] of [["index.html", "https://miebaka.design/"], ["explorations.html", "https://miebaka.design/explorations.html"], ["community.html", "https://miebaka.design/community.html"]]) {
+    const html = await readFile(join(dist, href), "utf8");
+    assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
+  }
+  const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  assert.equal(new Set(urls).size, urls.length);
+  assert.ok(urls.includes("https://miebaka.design/explorations.html"));
+  assert.ok(urls.includes("https://miebaka.design/community.html"));
+  assert.ok(!urls.some(url => url.endsWith("404.html")));
+  for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
+    assert.ok(!urls.includes(`https://miebaka.design/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
+  }
+  for (const url of urls) {
+    const pathname = new URL(url).pathname;
+    const html = await readFile(join(dist, pathname === "/" ? "index.html" : pathname), "utf8");
+    assert.ok(html.includes(`<link rel="canonical" href="${url}">`), url);
+  }
+});
+
+test("collection routes explain their empty state without invented entries", async () => {
+  for (const [href, title, message] of [
+    ["explorations.html", "Explorations", "Self-initiated studies in image, type and systems. The first entries are being prepared for publication."],
+    ["community.html", "Community", "Resources, contributions and shared work will appear here when they are ready to be useful."]
+  ]) {
+    const html = await readFile(join(dist, href), "utf8");
+    assert.match(html, /data-prerendered="true"/);
+    assert.ok(new RegExp(`<h1[^>]*>${title}</h1>`).test(html));
+    assert.ok(html.includes(message));
+    assert.doesNotMatch(html, /aria-disabled|<time\b|collection-entry/);
+  }
+});
+
+test("collection markup escapes authored content and renders usable real entries", async () => {
+  const { renderCollectionState } = await import("../js/render/collection.js");
+  const empty = renderCollectionState({ title: "Studies", introduction: "About <studies>", entries: [], emptyMessage: "Preparing & reviewing." });
+  assert.match(empty, /About &lt;studies&gt;/);
+  assert.match(empty, /Preparing &amp; reviewing\./);
+  assert.doesNotMatch(empty, /<ul|<a\b|collection-entry/);
+  const entries = renderCollectionState({ title: "Studies", introduction: "About studies", entries: [{ title: "Type & image", href: "explorations/type.html", summary: "A <study>" }], emptyMessage: "Preparing." });
+  assert.match(entries, /href="explorations\/type.html"/);
+  assert.match(entries, /Type &amp; image/);
+  assert.match(entries, /A &lt;study&gt;/);
+  assert.doesNotMatch(entries, /Preparing\./);
+});
 
 async function walk(dir, suffix = "") {
   const files = [];

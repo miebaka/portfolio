@@ -390,6 +390,12 @@ a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-prim
 @media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
 
 /* V13 — one alignment grid, one CTA contract and one content sequence. */
+/* Collection shells reuse the existing hero type, measure and spacing. */
+.collection-shell .hero__title{font-size:clamp(2.5rem,8vw,5.5rem)}
+/* Essential route links remain usable when JavaScript is unavailable. */
+.no-js .nav-fallback{flex-wrap:wrap}
+.no-js .nav-fallback a{display:inline-flex;align-items:center;min-width:2.75rem;min-height:2.75rem}
+
 main,.site-footer{text-align:left}
 :is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-lede,.case-chapter__copy,.case-next,.section,.section--tight)>*{text-align:left}
 .article-hero{align-items:start;text-align:left}

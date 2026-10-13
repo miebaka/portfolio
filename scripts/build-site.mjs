@@ -7,9 +7,6 @@ import { assertValidContent } from "./validate-content.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
-const rootFiles = ["404.html", "about.html", "contact.html", "index.html", "playground.html", "privacy.html", "robots.txt", "services.html", "sitemap.xml", "work.html"];
-const caseFiles = ["rivo.html", "tedx-rsu.html", "chopbox.html", "christian-poster-a-week.html"];
-const articleFiles = ["designing-for-disability-in-nigeria.html", "when-the-swoosh-lost-its-soul.html"];
 
 const ensureCopy = async (source, target) => {
   await mkdir(dirname(target), { recursive: true });
@@ -66,19 +63,49 @@ async function htmlFiles(directory) {
 }
 
 // Validate before touching dist, including when this script runs directly.
-assertValidContent();
+const content = assertValidContent();
+const { escapeHTML: esc } = await import("../js/utilities/dom.js");
+const routes = content.navigation.routes;
+const rootFiles = routes.filter(route => route.includeIn.includes("build")).map(route => route.href);
+const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !project.href?.startsWith("writing/"));
+const articleFiles = content.writing.filter(entry => entry.href.startsWith("writing/")).map(entry => entry.href);
+const canonicalUrl = href => new URL(href === "index.html" ? "" : href, content.siteConfig.canonicalUrl).href;
+const sitemapRoutes = [
+  ...routes.filter(route => route.includeIn.includes("sitemap")).map(route => route.href),
+  ...caseProjects.filter(project => content.caseStudies[project.slug].status === "published").map(project => `work/${project.slug}.html`),
+  ...articleFiles
+];
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
+function renderShell(source, href) {
+  const base = "../".repeat(href.split("/").length - 1);
+  const links = placement => routes.filter(route => route.includeIn.includes(placement))
+    .map(route => `        <a href="${base}${esc(route.href)}">${esc(route.label)}</a>`).join("\n");
+  return source
+    .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
+    .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
+}
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
-for (const file of rootFiles) await ensureCopy(join(root, file), join(output, file));
+for (const file of rootFiles) {
+  await mkdir(dirname(join(output, file)), { recursive: true });
+  await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
+}
+await ensureCopy(join(root, "robots.txt"), join(output, "robots.txt"));
+await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
-for (const file of articleFiles) await ensureCopy(join(root, "writing", file), join(output, "writing", file));
+for (const file of articleFiles) {
+  await mkdir(dirname(join(output, file)), { recursive: true });
+  await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
+}
 
-for (const file of caseFiles) {
-  const slug = file.replace(".html", "");
-  const source = await readFile(join(root, "work", file), "utf8");
+for (const project of caseProjects) {
+  const slug = project.slug;
+  const file = `${slug}.html`;
+  const source = renderShell(await readFile(join(root, "work", file), "utf8"), `work/${file}`);
   const article = `<article class="case" data-mount="case" data-prerendered="true">${renderCaseMarkup(SITE, slug, "../")}</article>`;
   const rendered = source.replace(/<article class="case" data-mount="case">[\s\S]*?<\/article>/, article);
   await mkdir(join(output, "work"), { recursive: true });

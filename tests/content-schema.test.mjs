@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { validateContent } from "../scripts/content-schema.mjs";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -18,7 +18,7 @@ const study = (overrides = {}) => ({
   ...overrides
 });
 const fixture = (overrides = {}) => ({
-  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [] },
+  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka.design/" },
   services: [{ title: "Brand identity", description: "Useful identity systems.", preview: "sample-hero" }],
   writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
@@ -122,6 +122,22 @@ test("client wordmarks can omit logo metadata", () => {
 test("duplicate routes in one navigation group are rejected", () => {
   expectError(fixture({ navigation: { primary: [{ href: "work.html" }, { href: "./work.html#projects" }] } }), "ROUTE_DUPLICATE", "navigation.primary[1].href");
 });
+test("canonical registry rejects duplicate keys and invalid placement metadata", () => {
+  const route = { key: "work", label: "Work", href: "work.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] };
+  expectError(fixture({ navigation: { routes: [route, { ...route, href: "about.html" }] } }), "ROUTE_KEY_DUPLICATE", "navigation.routes[1].key");
+  for (const includeIn of [undefined, [], ["unknown"], ["index", "index"]]) {
+    expectError(fixture({ navigation: { routes: [{ ...route, includeIn }] } }), "ROUTE_PLACEMENT_INVALID", "navigation.routes[0].includeIn");
+  }
+  expectError(fixture({ navigation: { routes: [{ ...route, label: "" }] } }), "ROUTE_FIELD_REQUIRED", "navigation.routes[0].label");
+  expectError(fixture({ navigation: { routes: [{ ...route, href: "./work.html#fragment" }] } }), "ROUTE_CANONICAL_INVALID", "navigation.routes[0].href");
+});
+test("registry sitemap routes require a build placement and a canonical HTTPS origin", () => {
+  const route = { key: "work", label: "Work", href: "work.html", includeIn: ["build", "sitemap"] };
+  for (const canonicalUrl of [undefined, "https://", "http://example.com/", "https://example.com/base/", "https://example.com/?query=1"]) {
+    expectError(fixture({ siteConfig: { ...fixture().siteConfig, canonicalUrl }, navigation: { routes: [route] } }), "SITE_CANONICAL_INVALID", "siteConfig.canonicalUrl");
+  }
+  expectError(fixture({ navigation: { routes: [{ ...route, includeIn: ["sitemap"] }] } }), "ROUTE_BUILD_REQUIRED", "navigation.routes[0].includeIn");
+});
 test("the same route can appear in different navigation placements", () => {
   assert.equal(validateContent(fixture({ navigation: { primary: [{ href: "work.html" }], footer: [{ href: "work.html" }] } })).ok, true);
 });
@@ -171,4 +187,26 @@ test("invalid content fails CLI and direct build without touching previous outpu
     assert.match(result.stderr, /PROJECT_STATUS_INVALID/, script);
     assert.equal(await readFile(join(directory, "dist", "index.html"), "utf8"), previousOutput);
   }
+});
+
+test("adding a validated root route generates its build output and sitemap entry", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "portfolio-route-build-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const sourceRoot = new URL("../", import.meta.url);
+  for (const folder of ["data", "scripts", "js", "styles", "work", "writing"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
+  for (const entry of await readdir(sourceRoot)) {
+    if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
+  }
+  for (const folder of ["assets", "node_modules"]) await symlink(new URL(folder, sourceRoot).pathname, join(directory, folder), "dir");
+  const navigationModule = await import("../data/navigation.js");
+  assert.ok(Array.isArray(navigationModule.navigation.routes), "Build routes need a canonical registry");
+  const routes = [...navigationModule.navigation.routes, { key: "studio", label: "Studio", href: "studio.html", includeIn: ["index", "footer", "build", "sitemap"] }];
+  await writeFile(join(directory, "data", "navigation.js"), `export const navigation = ${JSON.stringify({ routes, primary: routes.filter(route => route.includeIn.includes("primary")) })};`);
+  await writeFile(join(directory, "studio.html"), '<html><head><link rel="canonical" href="https://miebaka.design/studio.html"></head><body><h1>Studio</h1></body></html>');
+  const result = spawnSync(process.execPath, [join(directory, "scripts", "build-site.mjs")], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(await readFile(join(directory, "dist", "studio.html"), "utf8"), /<h1>Studio<\/h1>/);
+  assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka.design\/studio.html<\/loc>/);
+  assert.match(await readFile(join(directory, "dist", "index.html"), "utf8"), /href="studio.html">Studio<\/a>/);
+  assert.match(await readFile(join(directory, "dist", "writing", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
 });

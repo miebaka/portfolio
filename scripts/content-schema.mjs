@@ -68,12 +68,28 @@ export function validateContent(content) {
   });
 
   if (!isRecord(content.navigation)) add("navigation", "NAVIGATION_INVALID", "Navigation must contain route groups.");
-  else for (const [group, routes] of Object.entries(content.navigation)) {
+  else if (content.navigation.routes !== undefined) {
+    const canonical = content.siteConfig?.canonicalUrl;
+    if (!validHttpsUrl(canonical) || new URL(canonical).href !== new URL(canonical).origin + "/") add("siteConfig.canonicalUrl", "SITE_CANONICAL_INVALID", "A registry needs a canonical HTTPS origin ending in a slash.");
+  }
+  if (isRecord(content.navigation)) for (const [group, routes] of Object.entries(content.navigation)) {
     if (!Array.isArray(routes)) { add(`navigation.${group}`, "ROUTES_INVALID", "A navigation group must be an array."); continue; }
     const seen = new Set();
+    const keys = new Set();
     routes.forEach((route, index) => {
       const path = `navigation.${group}[${index}].href`;
       if (!validRoute(route?.href)) { add(path, "ROUTE_INVALID", "Routes must be local HTML paths without traversal."); return; }
+      if (group === "routes") {
+        const recordPath = `navigation.routes[${index}]`;
+        if (!isSlug(route.key)) add(`${recordPath}.key`, "ROUTE_KEY_INVALID", "A registry route needs a lowercase, hyphenated key.");
+        else if (keys.has(route.key)) add(`${recordPath}.key`, "ROUTE_KEY_DUPLICATE", `Duplicate route key: ${route.key}.`);
+        keys.add(route.key);
+        if (!hasText(route.label)) add(`${recordPath}.label`, "ROUTE_FIELD_REQUIRED", "A registry route needs a label.");
+        const placements = ["primary", "index", "footer", "build", "sitemap"];
+        if (!Array.isArray(route.includeIn) || !route.includeIn.length || route.includeIn.some(placement => !placements.includes(placement)) || new Set(route.includeIn).size !== route.includeIn.length) add(`${recordPath}.includeIn`, "ROUTE_PLACEMENT_INVALID", "Route placements must be unique known placements.");
+        else if (route.includeIn.some(placement => placement !== "build") && !route.includeIn.includes("build")) add(`${recordPath}.includeIn`, "ROUTE_BUILD_REQUIRED", "Public route placements need a build destination.");
+        if (route.href !== routePath(route.href)) add(path, "ROUTE_CANONICAL_INVALID", "Registry routes need one canonical HTML path without fragments or queries.");
+      }
       const destination = routePath(route.href);
       if (seen.has(destination)) add(path, "ROUTE_DUPLICATE", `Duplicate route: ${destination}.`);
       seen.add(destination);
