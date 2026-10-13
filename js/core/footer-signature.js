@@ -7,7 +7,7 @@ const RADIUS = 128;
 
 export function initFooterSignature() {
   const host = document.querySelector(".site-footer__signature");
-  if (!host || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!host || document.documentElement.dataset.motion === "reduced") return;
   const canvas = document.createElement("canvas");
   canvas.className = "site-footer__signature-canvas";
   host.append(canvas);

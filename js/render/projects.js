@@ -26,20 +26,18 @@ function moreWorkMarkup(i, base) {
 
 function bindExpansion(scope) {
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const groups = [...scope.querySelectorAll('.work-flick__pair')];
   (groups.length ? groups : [scope]).forEach(group => {
     const items = [...group.querySelectorAll('.work-flick__item')];
     const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
     items.forEach(item => {
       item.addEventListener('pointerenter', event => {
-        if (finePointer.matches && !reducedMotion.matches && document.documentElement.dataset.motion !== 'reduced' && event.pointerType !== 'touch') activate(item);
+        if (finePointer.matches && document.documentElement.dataset.motion !== 'reduced' && event.pointerType !== 'touch') activate(item);
       });
       item.addEventListener('focus', () => activate(null));
     });
     group.addEventListener('pointerleave', () => activate(null));
     finePointer.addEventListener('change', () => activate(null));
-    reducedMotion.addEventListener('change', () => activate(null));
   });
 
 }
@@ -102,16 +100,45 @@ export function renderClients() {
   if (!el || !SITE.clients || !SITE.clients.length) return;
   const items = SITE.clients.map(clientItem).join("");
   el.className = 'client-marquee';
-  el.innerHTML = '<div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+  el.innerHTML = '<button class="client-marquee__control" type="button" aria-label="Pause client logos" aria-pressed="false"><span data-marquee-label>Pause</span></button><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+  const controller = createMarqueeController(el);
+  addEventListener('pagehide', () => controller.destroy(), { once: true });
+}
 
-  if (!('IntersectionObserver' in window)) return;
-  let visible = false;
-  const sync = () => el.classList.toggle('is-running', visible && !document.hidden);
-  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, { threshold: 0.1 });
-  observer.observe(el);
-  document.addEventListener('visibilitychange', sync);
-  addEventListener('pagehide', () => {
-    observer.disconnect();
-    document.removeEventListener('visibilitychange', sync);
-  }, { once: true });
+export function createMarqueeController(root, deps = {}) {
+  const doc = deps.document || root.ownerDocument || document;
+  const button = deps.button || root.querySelector('.client-marquee__control');
+  const Observer = deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
+  const reduced = deps.reduced || (() => doc.documentElement?.dataset.motion === 'reduced');
+  let visible = !Observer, userPaused = false, destroyed = false;
+  const sync = () => {
+    const isReduced = reduced();
+    const running = !destroyed && !isReduced && !userPaused && visible && !doc.hidden;
+    root.classList.toggle('is-running', running);
+    root.dataset.marqueeState = isReduced ? 'static' : running ? 'playing' : 'paused';
+    button.setAttribute('aria-disabled', String(isReduced));
+    button.setAttribute('aria-pressed', String(userPaused));
+    button.setAttribute('aria-label', userPaused ? 'Play client logos' : 'Pause client logos');
+    const label = button.querySelector?.('[data-marquee-label]');
+    if (label) label.textContent = userPaused ? 'Play' : 'Pause';
+  };
+  const play = () => { userPaused = false; sync(); };
+  const pause = ({ user = true } = {}) => { if (user) userPaused = true; sync(); };
+  const toggle = () => userPaused ? play() : pause();
+  const onVisibility = () => sync();
+  const onMotion = () => sync();
+  button.addEventListener('click', toggle);
+  doc.addEventListener('visibilitychange', onVisibility);
+  doc.addEventListener('motionpreferencechange', onMotion);
+  const observer = Observer ? new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: 0.1 }) : null;
+  observer?.observe(root);
+  sync();
+  return {
+    play, pause,
+    destroy() {
+      if (destroyed) return; destroyed = true; observer?.disconnect();
+      button.removeEventListener('click', toggle); doc.removeEventListener('visibilitychange', onVisibility); doc.removeEventListener('motionpreferencechange', onMotion); sync();
+    },
+    isPaused: () => userPaused
+  };
 }

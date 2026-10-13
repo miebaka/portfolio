@@ -84,7 +84,7 @@ a[href]:hover,a[href]:focus-visible{color:var(--accent-interactive);text-decorat
 .site-index__themes{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
 .site-index__themes button{justify-content:space-between;padding:.7rem;background:var(--paper);transition:color 160ms var(--ease-standard),background-color 160ms var(--ease-standard)}
 .site-index__themes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.site-index__themes button span{font-size:.7rem;opacity:.7}.site-index__motion{gap:.65rem}
+.site-index__themes button span{font-size:.7rem;opacity:.7}.site-index__motion{gap:1px;background:var(--line)}.site-index__motion button{flex:1;justify-content:center;padding:.7rem;background:var(--paper);transition:color 160ms var(--ease-standard),background-color 160ms var(--ease-standard)}.site-index__motion button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 @media(hover:hover) and (pointer:fine){.site-index__link:hover,.site-index__close:hover,.site-index__contact a:hover{color:var(--accent-interactive)}}
 @media(max-width:60rem){.site-nav__links{display:none}.site-index__body{grid-template-columns:1fr;align-self:start;gap:var(--s5)}.site-index__link{min-height:3.6rem}.site-index__link>span:last-child{font-size:clamp(2rem,10vw,4.25rem)}.site-index__aside{grid-template-columns:1fr 1fr;align-self:start}}
 @media(max-width:36rem){.site-index__aside{grid-template-columns:1fr}.site-index__link{grid-template-columns:2.3rem 1fr}.site-index__body{padding-block:var(--s3)}}
@@ -141,3 +141,8 @@ html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .w
 .contact__form[data-state="success"] .form-status{color:var(--ink)}.contact__fallback{color:var(--muted);font-size:.85rem}
 @media(prefers-reduced-motion:reduce){.contact__submit .btn,.form-status{transition:none}.contact__submit .btn:active{transform:none}}
 html[data-motion="reduced"] .contact__submit .btn{transform:none!important;transition-property:color,background-color,opacity}
+
+/* An explicit Full choice overrides the operating-system motion setting. */
+html[data-motion-preference="full"] .site-index{clip-path:inset(0 0 100% 0);transition:opacity 160ms var(--ease-enter),clip-path 160ms var(--ease-enter)}
+html[data-motion-preference="full"] .site-index[data-state="open"]{clip-path:inset(0);transition-duration:220ms}
+html[data-motion-preference="full"] .now-playing__dot{animation:now-listening-pulse 1.8s steps(1,end) infinite}

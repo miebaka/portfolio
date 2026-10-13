@@ -2,7 +2,9 @@ const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const SMALL_SCREEN = "(max-width: 47.99rem)";
 
 function constrainedDevice() {
-  return matchMedia(REDUCED_MOTION).matches || matchMedia(SMALL_SCREEN).matches || navigator.connection?.saveData === true;
+  const preference = document.documentElement.dataset.motionPreference;
+  const reduce = preference === "reduce" || (preference !== "full" && matchMedia(REDUCED_MOTION).matches);
+  return reduce || matchMedia(SMALL_SCREEN).matches || navigator.connection?.saveData === true;
 }
 
 export async function initDecisionField() {

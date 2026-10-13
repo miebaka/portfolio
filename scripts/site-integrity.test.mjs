@@ -255,6 +255,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /work-flick__item--more/);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
+  assert.match(projects, /client-marquee__control/);
+  assert.match(projects, /Pause client logos/);
+  assert.match(projects, /createMarqueeController/);
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
@@ -281,6 +284,9 @@ test("interactive controls share the documented role system", async () => {
   assert.equal((css.match(/^\.btn\{/gm) || []).length, 1);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
+  assert.doesNotMatch(css, /animation-duration:1ms|transition-duration:1ms/);
+  assert.doesNotMatch(css, /transition:\s*flex/);
+  assert.doesNotMatch(css, /transition:[^}]*max-height/);
   assert.match(css, /-webkit-text-size-adjust:100%/);
   assert.match(css, /safe-area-inset-left/);
   assert.match(css, /@media\(hover:hover\) and \(pointer:fine\)/);

@@ -59,7 +59,7 @@ export function createIndexController({ root, trigger }) {
     if (restoreFocus && activeTrigger?.isConnected) activeTrigger.focus({ preventScroll: true });
     const finish = () => { root.hidden = true; root.dataset.state = "closed"; };
     if (root.dataset.source === "keyboard" || destroyed) finish();
-    else timer = setTimeout(finish, view.matchMedia("(prefers-reduced-motion: reduce)").matches || doc.documentElement.dataset.motion === "reduced" ? 120 : 160);
+    else timer = setTimeout(finish, doc.documentElement.dataset.motion === "reduced" ? 120 : 160);
   }
   const controller = {
     open, close,
