@@ -40,6 +40,7 @@ export function validateContent(content) {
       if (!validHttpsUrl(social.href)) add(`${path}.href`, "SOCIAL_URL_INVALID", "Social links need a valid HTTPS URL without credentials.");
     });
     const cv = content.siteConfig.cv;
+    if (!("cv" in content.siteConfig) || cv === undefined) add("siteConfig.cv", "CV_STATE_REQUIRED", "CV must be approved metadata or explicitly null.");
     if (cv !== null && cv !== undefined) {
       if (!isRecord(cv)) add("siteConfig.cv", "CV_INVALID", "CV must be approved metadata or null.");
       else {

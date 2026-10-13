@@ -18,7 +18,7 @@ const study = (overrides = {}) => ({
   ...overrides
 });
 const fixture = (overrides = {}) => ({
-  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka.design/" },
+  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka.design/", cv: null },
   services: Array.from({ length: 5 }, (_, index) => ({ id: `service-${index + 1}`, title: `Service ${index + 1}`, description: "Useful identity systems.", outputs: "A practical system.", fit: "Teams needing clarity." })),
   writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],

@@ -15,6 +15,12 @@ export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
   return '<div class="service-swatches" data-service-swatches><div class="service-swatches__tabs" role="tablist" aria-label="Services">' + tabs + '</div><div class="service-swatches__panels">' + panels + '</div></div>';
 }
 
+export function renderServiceFallbackMarkup(items = SITE.capabilities) {
+  return '<ol class="service-fallback">' + items.map(service =>
+    '<li><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></li>'
+  ).join("") + '</ol>';
+}
+
 export function createServiceSwatches(root) {
   if (!root) return () => {};
   const tabs = [...root.querySelectorAll('[role="tab"]')];
