@@ -79,24 +79,46 @@
           </dl>
         </div>
 
-        <form class="contact__form" novalidate aria-describedby="contact-handoff form-status">
-          <p class="contact__handoff" id="contact-handoff">This opens a draft in your email app. The site does not store your message.</p>
+        <form class="contact__form" action="mailto:miebakakiki@gmail.com" method="post" enctype="text/plain" aria-describedby="contact-handoff form-status">
+          <p class="contact__handoff" id="contact-handoff">Messages are delivered securely to my inbox. If the form is unavailable, email <a class="link" href="mailto:miebakakiki@gmail.com">miebakakiki@gmail.com</a> directly.</p>
           <div class="field">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" aria-describedby="form-status">
+            <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-help">
+            <p class="field__help" id="name-help">How I should address you.</p>
+            <p class="field__error" id="name-error"></p>
           </div>
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="form-status">
+            <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-help">
+            <p class="field__help" id="email-help">Where I should send my reply.</p>
+            <p class="field__error" id="email-error"></p>
+          </div>
+          <div class="field">
+            <label for="interest">What can I help with?</label>
+            <select id="interest" name="interest" aria-describedby="interest-help">
+              <option value="">Choose an area (optional)</option>
+              <option value="brand-identity">Brand identity</option>
+              <option value="campaign">Campaign</option>
+              <option value="design-role">Design role</option>
+              <option value="consulting">Consulting</option>
+              <option value="other">Something else</option>
+            </select>
+            <p class="field__help" id="interest-help">A quick route into the conversation.</p>
+            <p class="field__error" id="interest-error"></p>
           </div>
           <div class="field">
             <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" autocomplete="off" placeholder="Tell me about the role, project or decision you need help with."></textarea>
+            <textarea id="message" name="message" rows="5" maxlength="5000" required aria-describedby="message-help" placeholder="Tell me about the role, project or decision you need help with."></textarea>
+            <p class="field__help" id="message-help">Include the context, timing and decision you need help with.</p>
+            <p class="field__error" id="message-error"></p>
           </div>
+          <div class="contact__trap" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+          <input type="hidden" id="startedAt" name="startedAt" value="">
           <div class="contact__submit">
             <button class="btn" type="submit">Work with me</button>
           </div>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <p class="form-status" id="form-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          <noscript><p class="contact__fallback">Submitting opens your email app with these details. You can also email <a class="link" href="mailto:miebakakiki@gmail.com">miebakakiki@gmail.com</a> directly.</p></noscript>
         </form>
 
       </div>

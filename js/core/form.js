@@ -1,123 +1,107 @@
-/* Contact form — progressive mailto: handoff, no backend required.
-   Swap in a real endpoint (Formspree, Netlify Forms, etc.) when ready.
+/* Contact form — progressively enhances a usable email fallback with the
+   portfolio's JSON contact endpoint. Values are cleared only after the server
+   confirms acceptance with HTTP 202. */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const FIELD_NAMES = ["name", "email", "interest", "message"];
+const NETWORK_COPY = "That didn’t send. Your message is still here; try again or email me directly.";
 
-   Validation is per-field: the message appears under the input that caused it
-   and the input is marked aria-invalid, so screen-reader users hear which
-   field is wrong rather than a summary line detached from the control. */
-import { SITE } from "../../data/site.js";
+export async function submitContact(payload, { signal, fetchImpl = globalThis.fetch } = {}) {
+  if (typeof fetchImpl !== "function") throw new TypeError("fetch is unavailable");
+  const response = await fetchImpl("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(payload),
+    credentials: "same-origin",
+    signal
+  });
+  let envelope = {};
+  try { envelope = await response.json(); } catch { /* malformed server reply */ }
+  return { ...envelope, status: response.status };
+}
 
-/* Deliberately permissive. The only thing worth rejecting here is an address
-   that clearly cannot be delivered to; anything stricter starts refusing
-   valid addresses, and the real check is whether the reply bounces. */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const words = (value) => String(value || "").trim();
+const describedByWithoutError = (input) => words(input?.getAttribute("aria-describedby"))
+  .split(/\s+/u).filter((id) => id && !id.endsWith("-error"));
+
+export function createContactForm(form, { submitContact: send = submitContact, now = Date.now, timeoutMs = 10_000 } = {}) {
+  if (!form) throw new TypeError("form is required");
+  /* Native constraint validation remains available when JavaScript is off;
+     once enhanced, the stable inline errors below own the experience. */
+  form.noValidate = true;
+  const fields = Object.fromEntries([...FIELD_NAMES, "website", "startedAt"].map((name) => [name, form.querySelector(`[name="${name}"]`)]));
+  const errors = Object.fromEntries(FIELD_NAMES.map((name) => [name, form.querySelector(`#${name}-error`)]));
+  const status = form.querySelector("#form-status");
+  const button = form.querySelector('[type="submit"]');
+  const defaultButtonText = button?.textContent || "Send message";
+  const descriptions = Object.fromEntries(FIELD_NAMES.map((name) => [name, describedByWithoutError(fields[name])]));
+  let state = "idle";
+  let activeController = null;
+  let destroyed = false;
+  if (fields.startedAt && !words(fields.startedAt.value)) fields.startedAt.value = String(now());
+
+  function transition(next, message = "") {
+    state = next;
+    form.dataset.state = next;
+    if (status) { status.textContent = message; status.dataset.state = next; }
+    if (button) { button.disabled = next === "submitting"; button.textContent = next === "submitting" ? "Sending…" : defaultButtonText; }
+  }
+  function setFieldError(name, message = "") {
+    const input = fields[name]; const error = errors[name];
+    if (!input || !error) return;
+    error.textContent = message;
+    const ids = [...descriptions[name]];
+    if (message) { input.setAttribute("aria-invalid", "true"); ids.push(error.id || `${name}-error`); }
+    else input.removeAttribute("aria-invalid");
+    if (ids.length) input.setAttribute("aria-describedby", ids.join(" ")); else input.removeAttribute("aria-describedby");
+  }
+  const clearErrors = () => FIELD_NAMES.forEach((name) => setFieldError(name));
+  function clientErrors() {
+    const result = {}; const name = words(fields.name?.value); const email = words(fields.email?.value); const message = words(fields.message?.value);
+    if (!name) result.name = "Add your name."; else if (name.length > 120) result.name = "Keep your name under 120 characters.";
+    if (!email) result.email = "Add your email address."; else if (email.length > 254 || !EMAIL_RE.test(email)) result.email = "Enter a valid email address.";
+    if (!message) result.message = "Add a message."; else if (message.length > 5_000) result.message = "Keep your message under 5,000 characters.";
+    return result;
+  }
+  function showErrors(fieldErrors) {
+    clearErrors(); let first = null;
+    for (const name of FIELD_NAMES) if (fieldErrors?.[name]) { setFieldError(name, fieldErrors[name]); first ||= fields[name]; }
+    first?.focus();
+  }
+  const payload = () => ({
+    name: words(fields.name?.value), email: words(fields.email?.value), interest: words(fields.interest?.value),
+    message: words(fields.message?.value), website: words(fields.website?.value), startedAt: Number(fields.startedAt?.value)
+  });
+  async function onSubmit(event) {
+    event.preventDefault();
+    if (destroyed || state === "submitting") return;
+    const validation = clientErrors();
+    if (Object.keys(validation).length) { showErrors(validation); transition("invalid", "Check the highlighted fields."); return; }
+    clearErrors(); transition("submitting", "Sending your message…"); activeController = new AbortController();
+    const timer = setTimeout(() => activeController?.abort(), timeoutMs);
+    try {
+      const response = await send(payload(), { signal: activeController.signal });
+      if (destroyed) return;
+      if (response.status === 202 && response.ok === true) {
+        form.reset(); if (fields.startedAt) fields.startedAt.value = String(now()); transition("success", "Message sent. I’ll reply by email.");
+      } else if (response.status === 422 && response.fieldErrors) {
+        showErrors(response.fieldErrors); transition("invalid", response.fieldErrors.form || "Check the highlighted fields.");
+      } else if (response.status === 429 || response.code === "RATE_LIMITED") {
+        transition("server", "Too many attempts just now. Please wait and try again, or email me directly.");
+      } else if (response.status === 503 || response.code === "PROVIDER_UNAVAILABLE") {
+        transition("server", "The form is temporarily unavailable. Your message is still here; email me directly or try again.");
+      } else transition("server", NETWORK_COPY);
+    } catch { if (!destroyed) transition("network", NETWORK_COPY); }
+    finally { clearTimeout(timer); activeController = null; }
+  }
+  function onInput(event) {
+    const name = event?.target?.name;
+    if (FIELD_NAMES.includes(name) && event.target.getAttribute("aria-invalid")) setFieldError(name);
+  }
+  form.addEventListener("submit", onSubmit); form.addEventListener("input", onInput); transition("idle");
+  return { get state() { return state; }, destroy() { destroyed = true; activeController?.abort(); form.removeEventListener("submit", onSubmit); form.removeEventListener("input", onInput); } };
+}
 
 export function initForm() {
   const form = document.querySelector(".contact__form");
-  if (!form) return;
-  const status = form.querySelector(".form-status");
-
-  /* Each field gets an error node once, reused on every submit. */
-  function errorNodeFor(input) {
-    const field = input.closest(".field");
-    if (!field) return null;
-    let node = field.querySelector(".field__error");
-    if (!node) {
-      node = document.createElement("p");
-      node.className = "field__error";
-      node.id = input.id + "-error";
-      field.appendChild(node);
-    }
-    return node;
-  }
-
-  function setFieldError(input, message) {
-    const field = input.closest(".field");
-    const node = errorNodeFor(input);
-    if (!node || !field) return;
-    node.textContent = message || "";
-    field.classList.toggle("field--invalid", Boolean(message));
-    if (message) {
-      input.setAttribute("aria-invalid", "true");
-      input.setAttribute("aria-describedby", node.id);
-    } else {
-      input.removeAttribute("aria-invalid");
-      input.setAttribute("aria-describedby", "form-status");
-    }
-  }
-
-  function setStatus(text, state) {
-    if (!status) return;
-    status.textContent = text;
-    status.dataset.state = state;
-    status.classList.remove("is-visible");
-    void status.offsetWidth; /* force reflow so the animation restarts */
-    status.classList.add("is-visible");
-  }
-
-  const nameInput = form.querySelector("#name");
-  const emailInput = form.querySelector("#email");
-  const messageInput = form.querySelector("#message");
-
-  /* Clear a field's error as soon as the user starts correcting it. Waiting
-     for the next submit to clear it makes the form feel like it is arguing. */
-  [nameInput, emailInput, messageInput].forEach((input) => {
-    if (!input) return;
-    input.addEventListener("input", () => {
-      if (input.getAttribute("aria-invalid")) setFieldError(input, "");
-    });
-  });
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const name = (nameInput?.value || "").trim();
-    const email = (emailInput?.value || "").trim();
-    const message = (messageInput?.value || "").trim();
-
-    let firstInvalid = null;
-    const fail = (input, msg) => {
-      setFieldError(input, msg);
-      if (!firstInvalid) firstInvalid = input;
-    };
-
-    if (!name) fail(nameInput, "Add your name so I can reply.");
-    else setFieldError(nameInput, "");
-
-    if (!email) fail(emailInput, "Add your email so I can reply.");
-    else if (!EMAIL_RE.test(email)) fail(emailInput, "That email address looks incomplete.");
-    else setFieldError(emailInput, "");
-
-    if (firstInvalid) {
-      setStatus("Check the highlighted fields.", "error");
-      firstInvalid.focus();
-      return;
-    }
-
-    /* mailto: is a URL, and long ones get truncated or silently dropped by
-       mail clients and by Windows' shell handler in particular. Trim the body
-       well short of any of those limits and tell the sender it happened,
-       rather than letting the end of their message disappear. */
-    const MAX_BODY = 1500;
-    let sent = message;
-    let trimmed = false;
-    if (sent.length > MAX_BODY) {
-      sent = sent.slice(0, MAX_BODY);
-      trimmed = true;
-    }
-
-    const to = SITE.email || "miebakakiki@gmail.com";
-    const subject = encodeURIComponent("Project enquiry from " + name);
-    const body = encodeURIComponent(sent + "\n\n" + name + " (" + email + ")");
-    window.location.href = "mailto:" + to + "?subject=" + subject + "&body=" + body;
-
-    /* Whether a mail client actually opened is not observable from here, so
-       the message names the address instead of asserting success. If nothing
-       happened, the visitor still has what they need. */
-    setStatus(
-      trimmed
-        ? "Your message was long, so it opens trimmed. Send to " + to + " if it looks cut short."
-        : "Opening your email app. If nothing happens, write to " + to + ".",
-      trimmed ? "error" : "success"
-    );
-  });
+  return form ? createContactForm(form) : null;
 }

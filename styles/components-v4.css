@@ -128,3 +128,16 @@ html[data-motion="reduced"] .home-work-index__row,html[data-motion="reduced"] .w
 @media(max-width:60rem){.site-nav__links{max-height:calc(100dvh - var(--nav-h) - var(--safe-bottom) - 1rem);overflow-y:auto;overscroll-behavior:contain}}
 @media(max-width:48rem){.site-footer__groups{grid-template-columns:1fr 1fr}.site-footer__explore{grid-column:1/-1}.site-footer__links{align-items:flex-start}.site-footer__socials .site-footer__links{display:grid;grid-template-columns:1fr 1fr}}
 @media(max-width:23.5rem){.site-footer__groups{grid-template-columns:1fr}.site-footer__explore,.site-footer__location,.site-footer__socials{grid-column:1}.site-footer__socials .site-footer__links{grid-template-columns:1fr}.now-playing{grid-template-columns:auto 1fr auto}.now-playing__label{grid-column:2}.now-playing__track{grid-column:1/-1;grid-row:2}.now-playing__arrow{grid-column:3;grid-row:1}.site-nav__links{left:max(.75rem,var(--safe-left));right:max(.75rem,var(--safe-right))}}
+
+/* Contact states retain the established rule-led form language. */
+.field select{width:100%;min-height:3.5rem;padding:.85rem 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);font:inherit}
+.field input:focus-visible,.field textarea:focus-visible,.field select:focus-visible{outline:2px solid var(--accent-interactive);outline-offset:3px;border-color:var(--accent-interactive)}
+.field__help,.field__error{min-height:1em;margin:0;font-size:.78rem;line-height:1.45}.field__help{color:var(--muted)}
+.field__error:empty{display:none}.field [aria-invalid="true"]{border-color:var(--error)}
+.contact__trap{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+.contact__submit .btn{transition:transform 120ms var(--ease-enter),background-color 120ms var(--ease-standard),color 120ms var(--ease-standard),opacity 120ms linear}
+.contact__submit .btn:active{transform:scale(.98)}.contact__submit .btn:disabled{cursor:wait;opacity:.72}
+.form-status{min-height:1.4em;margin:0;opacity:1;transition:opacity 120ms linear}.contact__form[data-state="submitting"] .form-status{opacity:.72}
+.contact__form[data-state="success"] .form-status{color:var(--ink)}.contact__fallback{color:var(--muted);font-size:.85rem}
+@media(prefers-reduced-motion:reduce){.contact__submit .btn,.form-status{transition:none}.contact__submit .btn:active{transform:none}}
+html[data-motion="reduced"] .contact__submit .btn{transform:none!important;transition-property:color,background-color,opacity}
