@@ -32,31 +32,43 @@ function setupPreferences(nav, index) {
     html.dataset.theme = next; sync();
     try { localStorage.setItem("color-theme", next); } catch {}
   }
-  toggle.addEventListener("click", () => setTheme(html.dataset.theme === "dark" ? "light" : "dark"));
-  choices.forEach(btn => btn.addEventListener("click", () => setTheme(btn.dataset.themeChoice)));
+  const toggleTheme = () => setTheme(html.dataset.theme === "dark" ? "light" : "dark");
+  const chooseTheme = event => setTheme(event.currentTarget.dataset.themeChoice);
+  toggle.addEventListener("click", toggleTheme);
+  choices.forEach(btn => btn.addEventListener("click", chooseTheme));
   let savedMotion = false;
   try { savedMotion = localStorage.getItem("reduced-motion") === "true"; } catch {}
   function syncMotion() {
     motion.checked = reduced.matches || savedMotion; motion.disabled = reduced.matches;
     html.dataset.motion = motion.checked ? "reduced" : "full";
   }
-  motion.addEventListener("change", () => {
+  const chooseMotion = () => {
     savedMotion = motion.checked; syncMotion();
     try { localStorage.setItem("reduced-motion", String(savedMotion)); } catch {}
-  });
-  reduced.addEventListener?.("change", syncMotion);
-  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", event => {
+  };
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  const syncSystemTheme = event => {
     try { if (localStorage.getItem("color-theme")) return; } catch {}
     html.dataset.theme = event.matches ? "dark" : "light"; sync();
-  });
+  };
+  motion.addEventListener("change", chooseMotion);
+  reduced.addEventListener?.("change", syncMotion);
+  systemTheme.addEventListener?.("change", syncSystemTheme);
   sync(); syncMotion();
+  return () => {
+    toggle.removeEventListener("click", toggleTheme);
+    choices.forEach(btn => btn.removeEventListener("click", chooseTheme));
+    motion.removeEventListener("change", chooseMotion);
+    reduced.removeEventListener?.("change", syncMotion);
+    systemTheme.removeEventListener?.("change", syncSystemTheme);
+  };
 }
 
-let activeIndex;
+let activeIndex, cleanupPreferences;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
-  activeIndex?.destroy(); document.getElementById("site-index")?.remove();
+  activeIndex?.destroy(); cleanupPreferences?.(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
   const links = navigation.primary.map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
@@ -66,5 +78,5 @@ export function renderNavigation() {
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");
   activeIndex = createIndexController({ root: index, trigger: el.querySelector(".site-nav__menu-btn") });
-  setupPreferences(el, index);
+  cleanupPreferences = setupPreferences(el, index);
 }

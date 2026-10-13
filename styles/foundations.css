@@ -53,6 +53,7 @@
 body{line-height:1.82}.section{padding-block:clamp(7.5rem,13vw,12rem)}.section--tight{padding-block:clamp(6.5rem,10vw,9.5rem)}.stack>*+*{margin-top:var(--s4)}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}.section{padding-block:6.5rem}.section--tight{padding-block:5.75rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}.decision-field,.reading-progress{display:none!important}}
+html[data-motion="reduced"]{scroll-behavior:auto}html[data-motion="reduced"] .decision-field,html[data-motion="reduced"] .reading-progress{display:none!important}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}}
 
 /* Mobile platform baseline. Safe-area variables keep the existing spacing

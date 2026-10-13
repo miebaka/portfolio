@@ -247,6 +247,7 @@
 @keyframes client-marquee{to{transform:translateX(-50%)}}
 
 @media(prefers-reduced-motion:reduce){.work-flick__more-arrow{animation:none}.client-marquee__track{width:100%;animation:none;will-change:auto}.client-proof[aria-hidden="true"]{display:none}.client-proof:not([aria-hidden]){width:100%;flex-wrap:wrap;justify-content:center;padding-inline:var(--page)}}
+html[data-motion="reduced"] .client-marquee__track{width:100%;animation:none;will-change:auto}html[data-motion="reduced"] .client-proof[aria-hidden="true"]{display:none}html[data-motion="reduced"] .client-proof:not([aria-hidden]){width:100%;flex-wrap:wrap;justify-content:center;padding-inline:var(--page)}
 @media(max-width:48rem){.discipline{display:block}.discipline__copy{display:grid;grid-template-columns:1fr}.discipline__number,.discipline h2,.discipline h3,.discipline__evidence{grid-column:1}.work-flick__item--more{min-height:24rem!important}}
 
 /* Services repeats the same reading order as the home capability index. */
@@ -323,6 +324,7 @@
   .discipline,.service-detail{display:block;min-height:13rem;padding:1.25rem}.discipline__copy,.service-detail__copy{display:grid;grid-template-columns:1fr}.discipline__number,.service-detail__number,.discipline h2,.discipline h3,.service-detail h2,.discipline__copy>p,.service-detail__copy>p{grid-column:1;grid-row:auto}.discipline__preview,.service-detail__preview{width:42%;opacity:.12;transform:none}
 }
 @media(prefers-reduced-motion:reduce){.work-flick__bar::before,.work-flick__bar-arrow,.discipline,.discipline__preview,.service-detail,.service-detail__preview{transition:none}}
+html[data-motion="reduced"] .work-flick__bar::before,html[data-motion="reduced"] .work-flick__bar-arrow,html[data-motion="reduced"] .discipline,html[data-motion="reduced"] .discipline__preview,html[data-motion="reduced"] .service-detail,html[data-motion="reduced"] .service-detail__preview{transition:none}
 
 /* V12 — density, adaptive actions and direct feedback. */
 :root{--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s6:3.15rem;--s8:4.2rem;--s12:6.3rem}
@@ -388,6 +390,7 @@ a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-prim
   .site-footer__signature{width:100%;height:clamp(8rem,34vw,13rem);margin-inline:0}
 }
 @media(prefers-reduced-motion:reduce){.site-footer__signature::before{opacity:.48}.site-footer__signature-canvas{display:none}}
+html[data-motion="reduced"] .site-footer__signature::before{opacity:.48}html[data-motion="reduced"] .site-footer__signature-canvas{display:none}
 
 /* V13 — one alignment grid, one CTA contract and one content sequence. */
 /* Collection shells reuse the existing hero type, measure and spacing. */
