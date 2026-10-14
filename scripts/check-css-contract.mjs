@@ -26,6 +26,29 @@ const splitSelectors = selector => {
 const leafRules = source => [...withoutComments(source).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .map(match => ({ selector: match[1].trim(), declarations: match[2].trim() }))
   .filter(rule => rule.declarations.includes(":"));
+const contextualRules = source => {
+  let contextId = 0;
+  const records = [];
+  const scan = (start, end, contexts, ownerId) => {
+    let cursor = start;
+    while (cursor < end) {
+      const open = source.indexOf("{", cursor);
+      if (open === -1 || open >= end) break;
+      const prelude = source.slice(cursor, open).replace(/^\s*;+/, "").trim();
+      let depth = 1, close = open + 1;
+      while (close < end && depth) { if (source[close] === "{") depth += 1; else if (source[close] === "}") depth -= 1; close += 1; }
+      if (prelude.startsWith("@") && !/^@(?:font-face|page)\b/i.test(prelude)) {
+        const id = ++contextId;
+        scan(open + 1, close - 1, [...contexts, prelude], id);
+      } else if (prelude && !prelude.startsWith("@")) {
+        records.push({ selector: prelude, declarations: source.slice(open + 1, close - 1), contexts, ownerId });
+      }
+      cursor = close;
+    }
+  };
+  scan(0, source.length, [], 0);
+  return records;
+};
 
 reject(/transition\s*:\s*all(?:\s|;|$)/i.test(all), "transition: all is prohibited");
 reject(/transition-property\s*:[^;}]*\ball\b/i.test(all), "transition-property: all is prohibited");
@@ -65,6 +88,22 @@ const mediaBlocks = source => {
 };
 for (const coarse of mediaBlocks(withoutComments(all)).filter(block => /hover\s*:\s*none|pointer\s*:\s*coarse/i.test(block.query))) {
   for (const rule of leafRules(coarse.content)) reject(rule.selector.includes(":hover") && /transform\s*:\s*(?!none\b)/i.test(rule.declarations), `coarse-pointer hover transform is prohibited in ${rule.selector}`);
+}
+
+for (const [name, source] of entries) {
+  const seen = new Set();
+  let count = 0;
+  for (const rule of contextualRules(withoutComments(source))) for (const selector of splitSelectors(rule.selector)) {
+    if (/^(?:from|to|\d+%)$/.test(selector)) continue;
+    const key = `${rule.ownerId} || ${selector.replace(/\s+/g, " ")}`;
+    reject(seen.has(key), `${name} repeats selector in one cascade context: ${selector}`);
+    seen.add(key); count += 1;
+    if (selector.includes(":hover") && /(?:^|;)\s*transform\s*:/i.test(`;${rule.declarations}`)) {
+      const finePointer = rule.contexts.some(context => /@media/i.test(context) && /hover\s*:\s*hover/i.test(context) && /pointer\s*:\s*fine/i.test(context));
+      reject(!finePointer, `${name} has a transform-bearing :hover rule outside fine-pointer media: ${selector}`);
+    }
+  }
+  console.log(`${name}: ${count} selector-context groups, 0 duplicates.`);
 }
 
 const selectorOwners = new Map();

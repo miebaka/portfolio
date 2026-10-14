@@ -426,5 +426,22 @@ Captured in Chromium against the committed pre-consolidation CSS and the consoli
 
 - One stylesheet request: `styles/main.css`.
 - Imports: `foundations.css`, `components-v4.css`, `pages-v4.css`; no historical imports.
-- Production CSS: 18,919 gzip bytes, below the 45 KB limit.
+- Production CSS: 17,606 gzip bytes, below the 45 KB limit.
 - Screenshot comparison: 12/12 route-width checkpoints at absolute-error 0 after suppressing nondeterministic media pixels.
+
+## Selector ownership and reproducibility
+
+Every comma-separated selector now has one declaration group in its actual cascade context. The checker reports `53` foundation, `593` component and `377` page selector-context groups, with zero duplicates in each file. A base rule and a breakpoint, input-capability, theme or motion-state rule remain separate because they are different cascade contexts; repeated rules inside the same root or containing at-rule were merged, and overridden duplicate declarations inside each merged group were removed.
+
+Hover transforms are permitted only inside `@media (hover:hover) and (pointer:fine)`. Keyboard focus rules remain independent, while coarse-pointer rules no longer carry hover transforms.
+
+To reproduce the committed screenshot evidence from baseline `8100a58`:
+
+```bash
+npm run build
+python3 -m http.server 41777 --directory dist
+# In another terminal:
+node scripts/verify-task11-parity.mjs 8100a58 http://127.0.0.1:41777
+```
+
+The script intercepts only the three baseline CSS files for the `before` capture, uses the current CSS for `after`, suppresses nondeterministic image/canvas/marquee pixels, compares raw RGBA bytes, and writes route, width, dimensions and both SHA-256 values to `reports/qa/task11-parity-manifest.json`.
