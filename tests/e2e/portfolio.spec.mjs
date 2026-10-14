@@ -9,8 +9,11 @@ export const routes = [
 ];
 
 const settle = async page => {
-  await page.waitForLoadState("domcontentloaded");
-  await page.evaluate(async () => { await document.fonts?.ready; });
+  await page.waitForLoadState("load");
+  await page.evaluate(async () => {
+    await document.fonts?.ready;
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
 };
 
 for (const route of routes) {
@@ -22,6 +25,12 @@ for (const route of routes) {
       const url = new URL(request.url());
       if (url.origin === "http://127.0.0.1:4173") failedLocalResources.push(`${request.method()} ${url.pathname}`);
     });
+    page.on("response", response => {
+      const url = new URL(response.url());
+      if (url.origin === "http://127.0.0.1:4173" && response.status() >= 400) {
+        failedLocalResources.push(`${response.request().method()} ${url.pathname} (${response.status()})`);
+      }
+    });
     const response = await page.goto(route);
     await settle(page);
     expect(response?.status()).toBe(200);
@@ -32,11 +41,14 @@ for (const route of routes) {
     expect(consoleErrors).toEqual([]);
   });
 
-  test(`@a11y ${route} has no serious axe violations`, async ({ page }) => {
-    await page.goto(route);
-    await settle(page);
-    const results = await new AxeBuilder({ page }).disableRules(["color-contrast"]).analyze();
-    expect(results.violations.filter(item => ["serious", "critical"].includes(item.impact))).toEqual([]);
+  test(`@a11y ${route} has no serious axe violations in both themes`, async ({ page }) => {
+    for (const theme of ["light", "dark"]) {
+      await page.addInitScript(value => localStorage.setItem("color-theme", value), theme);
+      await page.goto(route);
+      await settle(page);
+      const results = await new AxeBuilder({ page }).analyze();
+      expect(results.violations.filter(item => ["serious", "critical"].includes(item.impact)), `${route} ${theme}`).toEqual([]);
+    }
   });
 }
 
@@ -56,6 +68,15 @@ test("Index opens, navigates, closes, traps focus and restores focus", async ({ 
   const dialog = page.getByRole("dialog", { name: "Index" });
   await expect(dialog).toBeVisible();
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  const controls = dialog.locator('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter({ visible: true });
+  const first = controls.first();
+  const last = controls.last();
+  await expect(first).toBeFocused();
+  const count = await controls.count();
+  for (let index = 0; index < count; index += 1) await page.keyboard.press("Tab");
+  await expect(first).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(last).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
@@ -108,7 +129,7 @@ test("client marquee can be paused", async ({ page }) => {
   await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "paused");
 });
 
-test("@a11y explicit focus, descriptions, reduced motion and text-spacing contracts", async ({ page }) => {
+test("@a11y explicit focus, descriptions and computed reduced-motion behavior", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/contact.html");
   await page.keyboard.press("Tab");
@@ -120,14 +141,40 @@ test("@a11y explicit focus, descriptions, reduced motion and text-spacing contra
     for (const id of ids) await expect(page.locator(`#${id}`)).toBeAttached();
   }
   await expect(page.locator("html")).toHaveAttribute("data-motion", "reduced");
-  await page.addStyleTag({ content: "*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}" });
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(1);
+  await page.goto("/index.html");
+  const motion = await page.locator(".client-marquee__track").evaluate(element => {
+    const style = getComputedStyle(element);
+    return { animationName: style.animationName, animationDuration: style.animationDuration, transform: style.transform };
+  });
+  expect(motion.animationName).toBe("none");
+  expect(motion.animationDuration).toBe("0s");
+  expect(motion.transform).toBe("none");
 });
 
-test("@a11y forced colours and 200% zoom retain the primary experience", async ({ page, browserName }) => {
+test("@a11y full WCAG text spacing does not hide content or create overflow", async ({ page }) => {
+  await page.goto("/contact.html");
+  await page.addStyleTag({ content: "*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}" });
+  await settle(page);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Work with me" })).toBeVisible();
+});
+
+test("@a11y forced colours retain the primary experience", async ({ page, browserName }) => {
   test.skip(browserName !== "chromium", "Forced colours are asserted in Chromium");
   await page.emulateMedia({ forcedColors: "active" });
+  await page.goto("/index.html");
+  expect(await page.evaluate(() => matchMedia("(forced-colors: active)").matches)).toBe(true);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
+  await page.getByRole("button", { name: "Index" }).focus();
+  const forced = await page.getByRole("button", { name: "Index" }).evaluate(element => ({ color: getComputedStyle(element).color, adjust: getComputedStyle(element).forcedColorAdjust }));
+  expect(forced.color).not.toBe("");
+  expect(forced.adjust).toBe("auto");
+});
+
+test("@a11y 200% zoom retains content and avoids horizontal overflow", async ({ page }) => {
   await page.goto("/index.html");
   await page.evaluate(() => { document.documentElement.style.zoom = "2"; });
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

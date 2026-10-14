@@ -29,7 +29,7 @@ export default defineConfig({
     { name: "reduced-motion", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 }, reducedMotion: "reduce" } }
   ],
   webServer: {
-    command: "npm run build && serve dist --listen 4173 --no-clipboard",
+    command: "npm run build && node scripts/serve-static.mjs dist 4173",
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000

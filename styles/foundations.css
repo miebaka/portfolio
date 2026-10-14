@@ -59,6 +59,7 @@ h2{font-family:var(--display);font-weight:400;letter-spacing:-.035em;text-wrap:b
 h1{font-family:var(--display);font-weight:400;letter-spacing:-.035em;text-wrap:balance}
 p{max-width:44rem;text-wrap:pretty}
 main{min-height:70vh;text-align:left}
+header[data-mount="nav"]{min-height:var(--nav-h)}
 .container{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}
 .section{padding-block:clamp(6.3rem,10.9vw,10.1rem)}
 .section--tight{padding-block:clamp(5.45rem,8.4vw,8rem)}

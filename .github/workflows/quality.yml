@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run quality
+      # audit:shipped blocks releases; audit:dev-tools reports pinned LHCI/tooling
+      # advisories without misrepresenting them as production dependencies.
       - name: Upload failure evidence
         if: failure()
         uses: actions/upload-artifact@v4

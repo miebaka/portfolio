@@ -16,8 +16,7 @@ for (const [name, route] of pages) {
       await page.addInitScript(value => localStorage.setItem("color-theme", value), theme);
       await page.goto(route);
       await page.evaluate(async () => { await document.fonts?.ready; window.scrollTo(0, 0); });
-      const live = page.locator('[data-mount="now-playing"]');
-      await expect(page).toHaveScreenshot(`${name}-${theme}.png`, { fullPage: true, mask: await live.count() ? [live] : [] });
+      await expect(page).toHaveScreenshot(`${name}-${theme}.png`, { fullPage: true });
     });
   }
 }
