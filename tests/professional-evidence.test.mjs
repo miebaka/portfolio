@@ -97,7 +97,7 @@ test("service swatches support pointer and complete roving-keyboard selection wi
 
 test("service selection has a non-colour cue and both reduced-motion paths", async () => {
   const markup = renderServiceSwatchesMarkup(services);
-  const css = await page("styles/pages-v4.css");
+  const css = await page("styles/components-v4.css");
   assert.match(markup, /aria-selected="true"/);
   assert.match(css, /service-swatch\[aria-selected="true"\][^{]*\{[^}]*outline:/s);
   assert.match(css, /service-swatch\[aria-selected="true"\]::after\{content:"Selected"/);

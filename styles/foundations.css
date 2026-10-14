@@ -7,14 +7,11 @@
 @font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{
   color-scheme:light dark;
-  /* Reference tokens: canonical sRGB values. */
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
   --ref-blue-30:#1c3da4;--ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-navy-16:#1e283c;
   --ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;--ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;
   --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;
   --ref-white:#fff;--ref-warm-paper:#e4ded7;--ref-midnight-overlay:rgb(7 17 43/.9);--ref-white-11:rgb(244 239 236/.11);--ref-white-13:rgb(255 255 255/.13);--ref-white-22:rgb(255 255 255/.22);--ref-white-45:rgb(255 255 255/.45);
-
-  /* System tokens: roles, not swatches. Every text pair below is >=7:1. */
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);--sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
   --sys-color-on-surface:var(--ref-midnight);--sys-color-on-surface-variant:var(--ref-neutral-30);
   --sys-color-primary:var(--ref-ultramarine);--sys-color-on-primary:var(--ref-paper);--sys-color-primary-container:var(--ref-air);--sys-color-on-primary-container:var(--ref-ultramarine);
@@ -22,15 +19,11 @@
   --sys-color-focus:var(--ref-coral-30);--sys-color-outline:var(--ref-neutral-30);--sys-color-outline-variant:var(--ref-neutral-94);
   --sys-color-selection:var(--ref-air);--sys-color-on-selection:var(--ref-midnight);
   --sys-color-action:var(--ref-ultramarine);--sys-color-on-action:var(--ref-paper);--sys-color-action-hover:var(--ref-coral-30);--sys-color-on-action-hover:var(--ref-paper);
-
-  /* Compatibility aliases. New work must use --sys-* or --comp-* roles. */
   --primary:var(--sys-color-primary);--primary-soft:var(--sys-color-primary-container);--secondary:var(--sys-color-secondary);--accent-solid:var(--sys-color-tertiary);--accent-interactive:var(--sys-color-tertiary);
   --bg:var(--sys-color-surface);--surface:var(--sys-color-surface-container-low);--text:var(--sys-color-on-surface);--text-muted:var(--sys-color-on-surface-variant);--link:var(--sys-color-primary);--field:var(--ref-ultramarine);--on-field:var(--ref-paper);
   --action-bg:var(--sys-color-action);--action-fg:var(--sys-color-on-action);--focus:var(--sys-color-focus);--border:var(--sys-color-outline-variant);--border-strong:var(--sys-color-outline);--selection-bg:var(--sys-color-selection);--selection-fg:var(--sys-color-on-selection);
   --success:var(--sys-color-secondary);--info:var(--sys-color-primary);--warning:var(--sys-color-tertiary);--error:var(--sys-color-error);--starlo:var(--text);--paper:var(--bg);--paper-2:var(--surface);--ink:var(--text);--muted:var(--text-muted);--line:var(--border);--accent:var(--primary);--accent-soft:var(--primary-soft);--signal:var(--sys-color-tertiary);--inverse:var(--field);--inverse-ink:var(--on-field);
-
-  /* Type, spacing, shape, motion, and layout roles. */
-  --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;
+  --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;--icon:"Material Symbols Outlined";
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
   --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
   --motion-press:120ms;--motion-hover:160ms;--motion-panel-in:220ms;--motion-panel-out:160ms;--ease-out-ui:cubic-bezier(.25,1,.5,1);--ease-in-out-ui:cubic-bezier(.65,0,.35,1);
@@ -51,18 +44,25 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0}html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip}body{min-height:100vh;background:var(--paper);color:var(--ink);font:400 .9375rem/1.64 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}img,picture,svg{display:block;max-width:100%;height:auto}a{color:inherit;text-decoration-line:underline;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,currentColor 34%,transparent);text-underline-offset:.26em;text-decoration-skip-ink:auto;transition:color 160ms var(--ease-standard),text-decoration-color 160ms var(--ease-standard)}ul{padding:0;list-style:none}button,input,textarea,select{font:inherit;color:inherit}button{border:0;background:none;cursor:pointer}:focus-visible{outline:2px solid var(--focus);outline-offset:4px}::selection{background:var(--selection-bg);color:var(--selection-fg)}h1,h2,h3,h4{font-family:var(--display);font-weight:400;letter-spacing:-.035em;text-wrap:balance}p{max-width:44rem;text-wrap:pretty}main{min-height:70vh}
 .container{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}.section{padding-block:clamp(6rem,11vw,10rem)}.section--tight{padding-block:clamp(5rem,8vw,8rem)}.stack>*+*{margin-top:var(--s3)}.stack>h2{margin-top:var(--s8);font-size:clamp(1.8rem,3vw,3rem)}.stack>h2:first-child{margin-top:0}.measure-hero{max-width:16ch}.meta,.section-head__label{font:600 .68rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.material-symbols-outlined{font:400 1.15rem/1 "Material Symbols Outlined";font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
+.material-symbols-outlined{font:400 1.15rem/1 var(--icon);font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
 body{line-height:1.82}.section{padding-block:clamp(7.5rem,13vw,12rem)}.section--tight{padding-block:clamp(6.5rem,10vw,9.5rem)}.stack>*+*{margin-top:var(--s4)}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}.section{padding-block:6.5rem}.section--tight{padding-block:5.75rem}}
 @media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}:root:not([data-motion-preference="full"]) .decision-field,:root:not([data-motion-preference="full"]) .reading-progress{display:none!important}}
 html[data-motion="reduced"]{scroll-behavior:auto}html[data-motion="reduced"] .decision-field,html[data-motion="reduced"] .reading-progress{display:none!important}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}}
-
-/* Mobile platform baseline. Safe-area variables keep the existing spacing
-   system intact while allowing edge controls to clear modern phone hardware. */
 :root{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px)}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{min-height:100svh}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
 @media(hover:none),(pointer:coarse){input,select,textarea{font-size:16px}}
+/*  Global layout and platform refinements.  */
+:root{--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s6:3.15rem;--s8:4.2rem;--s12:6.3rem}
+html{scroll-padding-top:calc(var(--nav-h) + 1rem)}
+:is(a,button,input,textarea,summary){touch-action:manipulation}
+.section{padding-block:clamp(6.3rem,10.9vw,10.1rem)}
+.section--tight{padding-block:clamp(5.45rem,8.4vw,8rem)}
+@media(max-width:48rem){
+  .section{padding-block:5.45rem}.section--tight{padding-block:4.8rem}
+}
+main{text-align:left}

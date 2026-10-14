@@ -266,7 +266,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /work-flick__bar/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
-  assert.ok(css.includes('.site-nav a,.btn,.work-flick__item,.writing-item__link,.case-next__link,.site-footer a{text-decoration:none}'));
+  assert.match(css, /\.site-nav a,\.btn,\.work-flick__item,\.writing-item__link,\.site-footer a\{text-decoration:none\}/);
+  assert.match(css, /\.case-next__link\{text-decoration:none\}/);
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
@@ -281,7 +282,7 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /\.btn\{[^}]*min-height:3rem/);
   assert.match(css, /\.site-nav__menu-btn,\.theme-toggle\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.btn:active\{transform:scale\(\.97\)/);
-  assert.equal((css.match(/^\.btn\{/gm) || []).length, 1);
+  assert.equal((css.match(/(?:^|})\.btn\{/g) || []).length, 1);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
   assert.doesNotMatch(css, /animation-duration:1ms|transition-duration:1ms/);
@@ -299,7 +300,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const services = await readFile(join(dist, "services.html"), "utf8");
   const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
-  assert.match(css, /main,\.site-footer\{text-align:left\}/);
+  assert.match(css, /main\{text-align:left\}/);
+  assert.match(css, /\.site-footer\{text-align:left\}/);
   assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
