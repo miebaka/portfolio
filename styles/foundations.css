@@ -12,6 +12,7 @@
   --ref-blue-30:#1c3da4;--ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-navy-16:#1e283c;
   --ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;--ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;
   --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;
+  --ref-white:#fff;--ref-warm-paper:#e4ded7;--ref-midnight-overlay:rgb(7 17 43/.9);--ref-white-11:rgb(244 239 236/.11);--ref-white-13:rgb(255 255 255/.13);--ref-white-22:rgb(255 255 255/.22);--ref-white-45:rgb(255 255 255/.45);
 
   /* System tokens: roles, not swatches. Every text pair below is >=7:1. */
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);--sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
@@ -32,7 +33,8 @@
   --display:"BIZ UDPMincho",serif;--body:"Schibsted Grotesk",Arial,sans-serif;--label:"Josefin Sans",Arial,sans-serif;--signature:"Borges",monospace;
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
   --page:clamp(1.4rem,4.8vw,5.25rem);--content:92rem;--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);--s1:.625rem;--s2:1.25rem;--s3:1.875rem;--s4:2.5rem;--s6:3.75rem;--s8:5rem;--s12:7.5rem;
-  --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:120ms;--dur-ui:180ms;--dur-spatial:240ms;
+  --motion-press:120ms;--motion-hover:160ms;--motion-panel-in:220ms;--motion-panel-out:160ms;--ease-out-ui:cubic-bezier(.25,1,.5,1);--ease-in-out-ui:cubic-bezier(.65,0,.35,1);
+  --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--ease-exit:cubic-bezier(.3,0,.8,.15);--dur-fast:var(--motion-press);--dur-ui:180ms;--dur-spatial:240ms;
   --comp-nav-bg:color-mix(in srgb,var(--sys-color-surface) 97%,transparent);--comp-link:var(--sys-color-primary);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
