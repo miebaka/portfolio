@@ -286,7 +286,7 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /\.site-nav__menu-btn\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.theme-toggle\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.btn:active\{transform:scale\(\.97\)/);
-  assert.equal((css.match(/(?:^|})\.btn\{/g) || []).length, 1);
+  assert.equal((css.match(/(?:^|})\s*\.btn\{/g) || []).length, 1);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
   assert.doesNotMatch(css, /animation-duration:1ms|transition-duration:1ms/);
@@ -294,8 +294,8 @@ test("interactive controls share the documented role system", async () => {
   assert.doesNotMatch(css, /transition:[^;}]*max-height/);
   assert.match(css, /-webkit-text-size-adjust:100%/);
   assert.match(css, /safe-area-inset-left/);
-  assert.match(css, /@media\(hover:hover\) and \(pointer:fine\)/);
-  assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{textarea\{font-size:16px\}select\{font-size:16px\}input\{font-size:16px\}\}/);
+  assert.match(css, /@media\s*\(hover:hover\) and \(pointer:fine\)/);
+  assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:16px\}\s*select\{font-size:16px\}\s*input\{font-size:16px\}\s*\}/);
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {

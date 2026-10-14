@@ -27,9 +27,9 @@ const leafRules = source => [...withoutComments(source).matchAll(/([^{}]+)\{([^{
   .map(match => ({ selector: match[1].trim(), declarations: match[2].trim() }))
   .filter(rule => rule.declarations.includes(":"));
 const contextualRules = source => {
-  let contextId = 0;
   const records = [];
-  const scan = (start, end, contexts, ownerId) => {
+  const normalizeContext = context => context.replace(/\s+/g, " ").replace(/\s*([():,])\s*/g, "$1").trim().toLowerCase();
+  const scan = (start, end, contexts) => {
     let cursor = start;
     while (cursor < end) {
       const open = source.indexOf("{", cursor);
@@ -38,15 +38,14 @@ const contextualRules = source => {
       let depth = 1, close = open + 1;
       while (close < end && depth) { if (source[close] === "{") depth += 1; else if (source[close] === "}") depth -= 1; close += 1; }
       if (prelude.startsWith("@") && !/^@(?:font-face|page)\b/i.test(prelude)) {
-        const id = ++contextId;
-        scan(open + 1, close - 1, [...contexts, prelude], id);
+        scan(open + 1, close - 1, [...contexts, normalizeContext(prelude)]);
       } else if (prelude && !prelude.startsWith("@")) {
-        records.push({ selector: prelude, declarations: source.slice(open + 1, close - 1), contexts, ownerId });
+        records.push({ selector: prelude, declarations: source.slice(open + 1, close - 1), contexts });
       }
       cursor = close;
     }
   };
-  scan(0, source.length, [], 0);
+  scan(0, source.length, []);
   return records;
 };
 
@@ -95,7 +94,7 @@ for (const [name, source] of entries) {
   let count = 0;
   for (const rule of contextualRules(withoutComments(source))) for (const selector of splitSelectors(rule.selector)) {
     if (/^(?:from|to|\d+%)$/.test(selector)) continue;
-    const key = `${rule.ownerId} || ${selector.replace(/\s+/g, " ")}`;
+    const key = `${JSON.stringify(rule.contexts)} || ${selector.replace(/\s+/g, " ")}`;
     reject(seen.has(key), `${name} repeats selector in one cascade context: ${selector}`);
     seen.add(key); count += 1;
     if (selector.includes(":hover") && /(?:^|;)\s*transform\s*:/i.test(`;${rule.declarations}`)) {

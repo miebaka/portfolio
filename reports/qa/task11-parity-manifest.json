@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "baselineCommit": "8100a58",
-  "currentCssSha256": "b7ef414b882ad88cd6cd3c2bdefa77bc2b3d53ce1c124fca486fc671e36985e9",
+  "currentCssSha256": "84ee8cfd8c1ce979f44ce91b06190984c28b3c551227a263a17d3dbb62f89121",
   "capture": {
     "viewportHeight": 900,
     "colorScheme": "light",
