@@ -29,7 +29,7 @@
     # Candidate policy removes the retired Last.fm API connection. It has no
     # report-uri because no approved receiver exists; browser console reports
     # are the staging signal before the enforced policy is changed.
-    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'sha256-DejhjEnE0qGjWCdM5ZUAHUSCZgjdWHcny5Yg+mSbXq8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'sha256-DejhjEnE0qGjWCdM5ZUAHUSCZgjdWHcny5Yg+mSbXq8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     # No feature on this site needs camera, mic, geolocation or payments.

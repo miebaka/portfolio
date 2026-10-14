@@ -125,3 +125,7 @@ Truthfully withheld or omitted:
 - A 25% slow-motion and next-day fresh-eye review remain pending.
 
 **Local release-candidate verdict:** technically ready for an owner-approved preview, with the limitations above. **Do not deploy, push, open a pull request, merge or publish until the owner explicitly authorizes the next step.**
+
+## Production release follow-up
+
+Owner authorization to push and deploy was received after the local gate. The first production browser pass found that Chromium reports `upgrade-insecure-requests` as ignored when it appears in a report-only CSP. The directive remained correctly enforced in the production CSP, was removed only from the report-only candidate, and is now covered by an integrity assertion. Production must be rechecked after this corrective commit before the release is considered complete.

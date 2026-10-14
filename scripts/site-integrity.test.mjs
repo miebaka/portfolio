@@ -424,6 +424,8 @@ test("CSP inventory permits every executable inline script and stages dependency
   const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(item => item.key === "Content-Security-Policy-Report-Only").value;
   assert.doesNotMatch(netlifyCandidate, /audioscrobbler|report-uri|report-to/i);
   assert.doesNotMatch(vercelCandidate, /audioscrobbler|report-uri|report-to/i);
+  assert.doesNotMatch(netlifyCandidate, /upgrade-insecure-requests/i);
+  assert.doesNotMatch(vercelCandidate, /upgrade-insecure-requests/i);
 });
 
 test("sitemap does not claim dates it cannot maintain", async () => {
