@@ -3,7 +3,6 @@ export const siteConfig = {
   "name": "Miebaka Joshua",
   "canonicalUrl": "https://miebaka.design/",
   "lastfmUser": "sheikmoujabaa",
-  "lastfmKey": "127872bcf2ccc619e4fb52bb4b81805f",
   "role": "Brand & visual designer",
   "email": "miebakakiki@gmail.com",
   "location": "Lagos, Nigeria",

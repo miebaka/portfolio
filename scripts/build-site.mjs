@@ -62,6 +62,16 @@ async function htmlFiles(directory) {
   return found;
 }
 
+async function outputFiles(directory) {
+  const found = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) found.push(...await outputFiles(path));
+    else found.push(path);
+  }
+  return found;
+}
+
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
 const { renderWorkMarkup, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
@@ -145,6 +155,13 @@ for (const asset of assets) {
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
 for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
+}
+
+// Fail closed if a future copy step leaks implementation or review material.
+const forbiddenOutput = /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out)(?:\/|$)|\.map$/i;
+for (const file of await outputFiles(output)) {
+  const shippedPath = relative(output, file).replaceAll("\\", "/");
+  if (forbiddenOutput.test(shippedPath)) throw new Error(`Production output contains forbidden file: ${shippedPath}`);
 }
 
 console.log(`Built ${allHtml.length} HTML pages with prerendered case studies, one CSS request and ${assets.size} referenced image variants.`);

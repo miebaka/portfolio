@@ -344,6 +344,15 @@ test("Vercel configuration is valid and serves the static build", async () => {
   const config = JSON.parse(await readFile(join(root, "vercel.json"), "utf8"));
   assert.equal(config.outputDirectory, "dist");
   assert.ok(config.headers?.length);
+  const header = (source, key) => config.headers.find(rule => rule.source === source)?.headers.find(item => item.key === key)?.value;
+  assert.equal(header("/api/(.*)", "Cache-Control"), "no-store");
+  assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
+  assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
+  for (const rule of config.headers) {
+    for (const item of rule.headers || []) {
+      if (/immutable/i.test(item.value)) assert.match(rule.source, /\[[^\]]*[a-f0-9][^\]]*\]|hash/i, `immutable cache on stable path ${rule.source}`);
+    }
+  }
 });
 
 test("portfolio depth features are present without depending on JavaScript for content", async () => {
@@ -397,15 +406,24 @@ test("all local HTML assets and links resolve", async () => {
   }
 });
 
-test("CSP permits every executable inline script", async () => {
-  const policy = await readFile(join(root, "netlify.toml"), "utf8");
+test("CSP inventory permits every executable inline script and stages dependency removal", async () => {
+  const netlify = await readFile(join(root, "netlify.toml"), "utf8");
+  const vercel = await readFile(join(root, "vercel.json"), "utf8");
   for (const file of await walk(dist, ".html")) {
     const html = await readFile(file, "utf8");
     for (const [, script] of html.matchAll(/<script(?![^>]*src)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)) {
       const hash = createHash("sha256").update(script).digest("base64");
-      assert.match(policy, new RegExp(hash.replace(/[+/]/g, "\\$&")), file);
+      const pattern = new RegExp(hash.replace(/[+/]/g, "\\$&"));
+      assert.match(netlify, pattern, file);
+      assert.match(vercel, pattern, file);
     }
   }
+  assert.match(netlify, /Content-Security-Policy-Report-Only/);
+  assert.match(vercel, /Content-Security-Policy-Report-Only/);
+  const netlifyCandidate = netlify.match(/Content-Security-Policy-Report-Only\s*=\s*"([^"]+)"/)?.[1] || "";
+  const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(item => item.key === "Content-Security-Policy-Report-Only").value;
+  assert.doesNotMatch(netlifyCandidate, /audioscrobbler|report-uri|report-to/i);
+  assert.doesNotMatch(vercelCandidate, /audioscrobbler|report-uri|report-to/i);
 });
 
 test("sitemap does not claim dates it cannot maintain", async () => {
@@ -426,6 +444,21 @@ test("production build excludes source and review directories", async () => {
   }
   await assert.rejects(access(new URL("../dist/data/drafts.js", import.meta.url)));
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
+  for (const file of await walk(dist)) {
+    const shippedPath = file.slice(dist.length + 1).replaceAll("\\", "/");
+    assert.doesNotMatch(shippedPath, /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out)(?:\/|$)|\.map$/i);
+  }
+});
+
+test("listening link is static and privacy copy matches network behavior", async () => {
+  const renderer = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
+  const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
+  const privacy = await readFile(join(dist, "privacy.html"), "utf8");
+  assert.doesNotMatch(renderer, /fetch\(|api_key|setTimeout|setInterval|audioscrobbler/i);
+  assert.doesNotMatch(config, /lastfmKey|127872bcf2ccc619e4fb52bb4b81805f/);
+  assert.match(renderer, /https:\/\/www\.last\.fm\/user\//);
+  assert.match(privacy, /does not ask Last\.fm for live track data/i);
+  assert.match(privacy, /only if you choose to open that link/i);
 });
 
 test("retired source systems cannot return unnoticed", async () => {
