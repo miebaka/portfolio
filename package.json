@@ -14,6 +14,12 @@
     "test:contact-form": "node --test tests/contact-form.test.mjs",
     "test:motion": "node --test tests/motion-preferences.test.mjs",
     "test:css": "node scripts/check-css-contract.mjs",
+    "test:e2e": "playwright test tests/e2e",
+    "test:visual": "playwright test tests/visual",
+    "test:a11y": "playwright test tests/e2e/portfolio.spec.mjs --grep @a11y",
+    "test:budgets": "npm run build && node scripts/check-budgets.mjs",
+    "test:lighthouse": "npm run build && lhci autorun",
+    "quality": "npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm audit --audit-level=moderate",
     "dev": "npx serve . --listen 4000 --no-clipboard",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
@@ -21,6 +27,10 @@
     "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run test:motion && npm run build && npm run test:css && npm run test:integrity && npm run test:contract"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.64.0",
+    "serve": "14.2.6",
     "sharp": "^0.35.5"
   },
   "type": "module",
