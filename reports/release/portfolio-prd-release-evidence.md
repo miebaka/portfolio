@@ -2,7 +2,8 @@
 
 ## Release candidate and release gate
 
-- Candidate source commit: `c9c01e635690ac2f11e9c8e1df60b407bd755f09` (`chore: harden portfolio deployment boundary`).
+- Candidate source commit: `b1a04300ff6ea22b17103cb206f14a082f6eb8f9` (`fix: stabilize local browser quality gate`).
+- Candidate chain: deployment-boundary candidate `c9c01e635690ac2f11e9c8e1df60b407bd755f09`, evidence draft `be6d64c83c4d22e197f5f164ef2af10b03160954`, then the isolated Playwright worker fix above.
 - Branch: `codex/portfolio-prd-implementation`.
 - Visual source baseline: `54dcc41`.
 - Evidence date: 2026-10-14 (Africa/Lagos).
@@ -12,24 +13,25 @@
 
 ## Clean candidate verification
 
-The candidate began clean at `c9c01e6`. `npm ci` installed the exact lockfile state. `git diff --check` passed before and after verification.
+The implementation candidate began clean at `c9c01e6`. `npm ci` installed the exact lockfile state. The first local quality attempt exposed a retained-trace race when Playwright selected five workers. The browser matrix itself passed when serialized, confirming the failures were runner-artifact cleanup errors rather than site assertions. Playwright was then capped at two workers in `b1a0430`, matching the existing CI concurrency while preserving every project, retry rule and test semantic. The 144-test browser suite passed at two workers before the full gate was rerun. `git diff --check` passed before and after verification.
 
-`npm run quality` was run first as authored. All unit, content, build, CSS and integrity checks passed, but the parallel Playwright stage ended 135/144 because concurrent workers lost retained trace files under `test-results/.playwright-artifacts-*` during browser-context cleanup (`ENOENT`). The failures were runner-artifact errors, not assertion failures. The complete browser suite was then rerun serially with `npx playwright test tests/e2e --workers=1` and passed **144/144**.
+The exact authored `npm run quality` command then passed end to end at `b1a0430`; no serial override or manual continuation was required.
 
-The remaining quality stages were rerun individually after the serial browser pass:
+The green exact quality run produced the following results:
 
 | Command | Result |
 | --- | --- |
-| `npm test` (inside the initial quality run) | Pass: 38 content, 5 navigation, 12 case, 6 professional, 25 contact API, 13 contact form, 8 motion, 31 integrity and 1 visual-contract tests; 16 pages built |
-| `npx playwright test tests/e2e --workers=1` | Pass: 144/144 across desktop, mobile and reduced-motion projects |
-| `npm run test:visual -- --workers=1` | Pass: 28 intended screenshots; 14 reduced-motion duplicates skipped by suite design |
+| `npm run quality` | Pass end to end with the repository configuration at two Playwright workers |
+| `npm test` (inside the exact quality command) | Pass: 38 content, 5 navigation, 12 case, 6 professional, 25 contact API, 13 contact form, 8 motion, 31 integrity and 1 visual-contract tests; 16 pages built |
+| `npm run test:e2e` (inside the exact quality command) | Pass: 144/144 across desktop, mobile and reduced-motion projects |
+| `npm run test:visual` (inside the exact quality command) | Pass: 28 intended screenshots; 14 reduced-motion duplicates skipped by suite design |
 | `npm run test:budgets` | Pass |
 | `npm run test:lighthouse` | Pass: 9/9 Lighthouse runs and all configured assertions |
 | `npm run audit:shipped` | Pass: 0 shipped dependency vulnerabilities |
 | `npm run audit:dev-tools` | Non-blocking report: 17 development-tool advisories (2 low, 4 moderate, 11 high), all in the Lighthouse/tooling tree; the suggested forced downgrade is breaking and was not applied |
 | `git diff --check` | Pass |
 
-The authored `npm run quality` command therefore has a local parallel trace-retention instability on this host. Its product assertions pass when the browser stage is serialized. CI uses two workers and retries; this local evidence does not conceal the initial failure.
+The earlier five-worker trace-retention failure remains part of the audit trail, but is no longer a candidate limitation: the checked-in two-worker configuration passed twice for the full interaction suite and once through the exact complete quality command.
 
 ## Measured budgets and local vitals
 
@@ -45,9 +47,9 @@ Lighthouse ran three times each against the locally built Home, Work and TEDx pa
 
 | Route | LCP range | CLS range | Total blocking time |
 | --- | ---: | ---: | ---: |
-| Home | 471–515 ms | 0.001646 | 0 ms |
-| Work | 502–511 ms | 0.000344–0.000348 | 0 ms |
-| TEDx | 577–607 ms | 0.000940 | 0 ms |
+| Home | 482–509 ms | 0.001643–0.001646 | 0 ms |
+| Work | 472–519 ms | 0.000344–0.000348 | 0 ms |
+| TEDx | 608–657 ms | 0.000940 | 0 ms |
 
 These are controlled local lab results, not field Web Vitals. Preview and production measurements remain required after an approved deployment.
 
@@ -118,7 +120,7 @@ Truthfully withheld or omitted:
 
 - No preview URL, deployment headers, live contact-provider path, platform logs or production Web Vitals exist yet.
 - Firefox could not launch locally; Edge and physical Safari/iOS/Android coverage remain outstanding.
-- The full quality command encountered a host-specific parallel trace-artifact race, although its complete browser assertions passed serially.
+- The original unconstrained local worker count triggered a trace-artifact race; the checked-in two-worker cap resolves it and the exact full quality command now passes.
 - Exact whole-site pixel identity with `54dcc41` is neither expected for intentionally rebuilt routes nor proven; owner review should focus especially on spacing density, artwork crops and the recomposed TEDx/About pages.
 - A 25% slow-motion and next-day fresh-eye review remain pending.
 
