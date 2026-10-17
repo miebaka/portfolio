@@ -66,6 +66,26 @@ test("Home mounts the official ultramarine Nighty night shader", async ({ page }
   const backdrop = page.locator('[data-shader-backdrop][data-preset="04 Nighty night — Ultramarine"]');
   await expect(backdrop).toBeVisible();
   await expect(backdrop.locator("canvas")).toHaveCount(1);
+  const cursorCapable = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches);
+  if (cursorCapable) {
+    await expect(backdrop).toHaveAttribute("data-interaction", "cursor");
+    await page.mouse.move(40, 40);
+    await page.mouse.move(900, 500, { steps: 4 });
+    await expect.poll(() => backdrop.getAttribute("data-cursor-x")).not.toBe("0.000");
+  } else {
+    await expect(backdrop).toHaveAttribute("data-interaction", "static");
+  }
+});
+
+test("Home keeps the shader visible through the full page and static for reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/index.html?shader-test=1");
+  const backdrop = page.locator("[data-shader-backdrop]");
+  await expect(backdrop).toHaveAttribute("data-interaction", "static");
+  await page.locator(".home-close").scrollIntoViewIfNeeded();
+  await expect(backdrop.locator("canvas")).toBeVisible();
+  const surface = await page.locator(".home-content").evaluate(element => getComputedStyle(element).backgroundColor);
+  expect(surface).toMatch(/\/(?:\s*0\.(?:7[0-9]|8[0-9]|9[0-8])\s*)\)|rgba\([^)]*,\s*0\.(?:7[0-9]|8[0-9]|9[0-8])\)/);
 });
 
 test("Index opens, navigates, closes, traps focus and restores focus", async ({ page }) => {

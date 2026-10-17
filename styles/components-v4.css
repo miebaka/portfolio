@@ -477,12 +477,15 @@ html[data-motion-preference="full"] .client-proof:not([aria-hidden]){width:auto;
 html[data-motion-preference="full"] .site-footer__signature-canvas{display:block}
 .project-archive__row{min-height:7rem;display:grid;grid-template-columns:3rem minmax(0,1fr) minmax(8rem,.55fr) 5rem 7rem;align-items:center;gap:var(--s2)}
 .project-archive__row h2{font:400 clamp(1.65rem,2.8vw,2.8rem)/1 var(--display);overflow-wrap:anywhere}
+.project-archive__identity{min-width:0;padding-block:1.4rem}
+.project-archive__identity p{max-width:48ch;margin-top:.65rem;color:var(--muted);font-size:.9rem;line-height:1.55}
 .project-archive__row time{color:var(--muted);font:600 .66rem/1.2 var(--label);letter-spacing:.08em;text-transform:uppercase}
 .project-archive__row>span{color:var(--muted);font:600 .66rem/1.2 var(--label);letter-spacing:.08em;text-transform:uppercase}
 .project-archive__state{text-align:right}
 .project-archive__item[href]{display:block}
 .project-archive__item[href]:focus-visible{outline:2px solid var(--focus);outline-offset:3px;background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
 .project-archive__item[href]:focus-visible :is(.project-archive__row>span,time){color:inherit}
+.project-archive__item[href]:is(:hover,:focus-visible) .project-archive__identity p{color:inherit}
 @media(max-width:48rem){.site-footer__panel{grid-template-columns:1fr 1fr}
 .site-footer__context{grid-column:1/-1}
 .site-footer__groups{grid-template-columns:1fr 1fr}
@@ -544,6 +547,8 @@ html[data-motion-preference="full"] .site-footer__signature-canvas{display:block
 .work-flick__item:first-child{grid-column:1;min-height:62vh;grid-column:1!important;min-height:70svh;flex:none;min-height:70svh;grid-column:1!important;min-height:clamp(28rem,70svh,42rem)}
 .work-flick__item{grid-column:1;min-height:62vh;grid-column:1!important;min-height:70svh;flex:none;min-height:70svh;grid-column:1!important;min-height:clamp(28rem,70svh,42rem)}
 .project-archive__row{grid-template-columns:1.5rem minmax(0,1fr);padding-block:1.25rem;gap:.75rem}
+.project-archive__identity{padding-block:.5rem}
+.project-archive__identity p{font-size:.88rem}
 .project-archive__row time{display:none}
 .project-archive__row>span:nth-child(3){display:none}
 .project-archive__state{grid-column:2;text-align:left}

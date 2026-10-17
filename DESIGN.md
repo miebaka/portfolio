@@ -5,9 +5,14 @@ Updated 10 October 2026. The detailed source of truth is
 
 ## Direction
 
-A forest-green editorial portfolio for hiring teams and selected clients. Pale
-sage paper, deep green ink, restrained accents, generous whitespace and
-hairline rules form the interface. Project imagery keeps its own colour.
+An ultramarine editorial portfolio for hiring teams and selected clients.
+Ultramarine, air, paper and midnight define the identity; coral is reserved for
+focused interaction and project imagery keeps its own colour. Generous
+whitespace and hairline rules form the interface.
+
+The object of the design is not an isolated page. It is an authored system that
+makes Miebaka's judgement visible: find the decision beneath the brief, build a
+usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
@@ -31,3 +36,20 @@ The live cascade is deliberately small: `styles/foundations.css`,
 `styles/components-v4.css` and `styles/pages-v4.css`, imported by
 `styles/main.css`. Older unimported CSS folders are historical and are not a
 source of truth.
+
+## Quality bar
+
+- **Specific before familiar.** Prefer language, imagery and interactions that
+  could only belong to this practice and this project. A polished convention is
+  not enough if it is interchangeable.
+- **Proof before biography.** Show the work and the decision inside it before
+  asking the visitor to trust a claim about the designer.
+- **Whole before part.** Judge pages as a hiring or client journey: arrival,
+  evidence, context, fit and contact.
+- **Built is not done.** Review at desktop and mobile, with keyboard and reduced
+  motion, then make a separate editorial pass for hierarchy, truth and craft.
+- **Care must be legible.** Add detail when it reveals anticipation, judgement
+  or production knowledge; remove it when it is merely decorative.
+- **Variation needs an invariant.** Projects can change colour and image
+  language, while the editorial grid, evidence-first copy and decision framing
+  keep the portfolio recognisable.

@@ -76,7 +76,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     const published = project.status === 'published';
     const tag = published ? 'a' : 'article';
     const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
-    return '<' + tag + ' class="project-archive__item"' + href + '><div class="project-archive__row"><span>' + String(index + 1).padStart(2, '0') + '</span><h2>' + esc(project.title) + '</h2><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__state">' + (published ? '<span aria-hidden="true">↗</span>' : 'Coming soon') + '</span></div></' + tag + '>';
+    return '<' + tag + ' class="project-archive__item"' + href + '><div class="project-archive__row"><span>' + String(index + 1).padStart(2, '0') + '</span><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p></div><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__state">' + (published ? '<span aria-hidden="true">View ↗</span>' : 'Coming soon') + '</span></div></' + tag + '>';
   }).join('');
 }
 

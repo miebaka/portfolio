@@ -20,6 +20,17 @@ test("homepage proof precedes biography in the source and built document", async
   }
 });
 
+test("homepage publishes the practice standard between proof and biography", async () => {
+  for (const directory of [root, dist]) {
+    const html = await readFile(join(directory, "index.html"), "utf8");
+    const proof = html.indexOf('id="selected-work"');
+    const standard = html.indexOf('class="practice-standard');
+    const biography = html.indexOf('id="profile"');
+    assert.ok(proof < standard && standard < biography, directory);
+    for (const phrase of ["Find the decision", "Build the system", "Edit until it holds"]) assert.ok(html.includes(phrase), phrase);
+  }
+});
+
 test("project cards link published work and leave unfinished work non-interactive", () => {
   assert.equal(typeof projectRender.projectMarkup, "function");
   const published = SITE.projects.find(project => project.slug === "tedx-rsu");
@@ -44,6 +55,7 @@ test("Work archive excludes private and writing records and only published rows 
   assert.match(html, /<article\b[^>]*>[\s\S]*Unfinished[\s\S]*Coming soon/);
   assert.doesNotMatch(html, /Private fixture|Designing for Disability|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 1);
+  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
@@ -235,10 +247,16 @@ test("theme shader backdrop preserves the Print and Nighty night contracts", asy
   assert.match(source, /04 Nighty night — Ultramarine/);
   for (const color of ["#f8f9fc", "#002080", "#1c3da4", "#b1c5ff"]) assert.match(source, new RegExp(color, "i"));
   assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(source, /pointermove/);
+  assert.match(source, /setPointer/);
+  assert.match(source, /shader-static/);
   assert.match(source, /connection\?\.saveData/);
   assert.match(island, /ShaderGradient preset 04, Nighty night/);
   for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
   assert.match(island, /ShaderGradientCanvas/);
+  assert.match(island, /function CursorCamera/);
+  assert.match(island, /MathUtils\.damp/);
   assert.match(island, /animate: reduced \? "off" : "on"/);
 });
 

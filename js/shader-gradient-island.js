@@ -1,5 +1,7 @@
 import React, { createElement } from "react";
 import { createRoot } from "react-dom/client";
+import { useFrame, useThree } from "@react-three/fiber";
+import { MathUtils } from "three";
 import { ShaderGradient } from "../node_modules/@shadergradient/react/dist/ShaderGradient/index.mjs";
 import { ShaderGradientCanvas } from "../node_modules/@shadergradient/react/dist/ShaderGradientCanvas.mjs";
 
@@ -23,7 +25,24 @@ const PALETTES = Object.freeze({
   dark: Object.freeze({ color1: "#002080", color2: "#1c3da4", color3: "#b1c5ff" }),
 });
 
-function Backdrop({ theme, reduced }) {
+function CursorCamera({ interaction, reduced }) {
+  const controls = useThree(state => state.controls);
+  useFrame((_, delta) => {
+    if (!controls) return;
+    const targetX = reduced ? 0 : interaction.targetX;
+    const targetY = reduced ? 0 : interaction.targetY;
+    interaction.currentX = MathUtils.damp(interaction.currentX, targetX, 7, delta);
+    interaction.currentY = MathUtils.damp(interaction.currentY, targetY, 7, delta);
+    controls.rotateTo(
+      MathUtils.degToRad(NIGHTY_NIGHT.cAzimuthAngle + interaction.currentX * 7),
+      MathUtils.degToRad(NIGHTY_NIGHT.cPolarAngle - interaction.currentY * 4),
+      false,
+    );
+  });
+  return null;
+}
+
+function Backdrop({ theme, reduced, interaction }) {
   const palette = PALETTES[theme] || PALETTES.light;
   return createElement(
     ShaderGradientCanvas,
@@ -36,25 +55,30 @@ function Backdrop({ theme, reduced }) {
       lazyLoad: false,
       powerPreference: "low-power",
     },
-    createElement(ShaderGradient, {
-      ...NIGHTY_NIGHT,
-      ...palette,
-      control: "props",
-      animate: reduced ? "off" : "on",
-      uTime: 8,
-      enableTransition: false,
-      enableCameraUpdate: false,
-    }),
+    createElement(React.Fragment, null,
+      createElement(ShaderGradient, {
+        ...NIGHTY_NIGHT,
+        ...palette,
+        control: "props",
+        animate: reduced ? "off" : "on",
+        uTime: 8,
+        enableTransition: false,
+        enableCameraUpdate: false,
+      }),
+      createElement(CursorCamera, { interaction, reduced }),
+    ),
   );
 }
 
 export function mountShaderGradient(host, initialState) {
   const root = createRoot(host);
   let state = { ...initialState };
-  const render = () => root.render(createElement(Backdrop, state));
+  const interaction = { targetX: 0, targetY: 0, currentX: 0, currentY: 0 };
+  const render = () => root.render(createElement(Backdrop, { ...state, interaction }));
   render();
   return {
     update(nextState) { state = { ...state, ...nextState }; render(); },
+    setPointer(x, y) { interaction.targetX = x; interaction.targetY = y; },
     destroy() { root.unmount(); },
   };
 }

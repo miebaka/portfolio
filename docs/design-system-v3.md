@@ -9,7 +9,7 @@ The portfolio makes the decision underneath each project visible. Editorial rest
 | Layer | Rule |
 | --- | --- |
 | Typography | BIZ UDPMincho gives display and heading roles an editorial voice; Schibsted Grotesk carries body and title text; Josefin Sans handles compact uppercase labels. |
-| Colour | Pale sage paper, deep forest-green ink and restrained green accents. Dark mode remaps roles rather than individual components. |
+| Colour | Ultramarine (`#002080`) is the identity anchor. Air, paper and midnight provide the light/dark field; the blue ramp supports hierarchy, and coral is reserved for focused interaction. Dark mode remaps semantic roles rather than individual components. |
 | Spacing | 8px base rhythm. Fluid section spacing resolves to named steps. |
 | Shape | Square editorial controls and image frames. Shape follows function rather than decoration. |
 | Elevation | Hairline rules and tonal contrast replace ornamental shadows. |

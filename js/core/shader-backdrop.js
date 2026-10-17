@@ -1,4 +1,5 @@
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
 export const SHADER_BACKDROP_PRESETS = Object.freeze({
   light: Object.freeze({
@@ -11,20 +12,20 @@ export const SHADER_BACKDROP_PRESETS = Object.freeze({
   }),
 });
 
-function resolvedState(root, reducedQuery, navigatorObject) {
+function resolvedState(root, reducedQuery, navigatorObject, allowWebdriverMotion = false) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
   const explicit = root.dataset.motionPreference;
   const reduced = explicit === "reduce" ||
     (explicit !== "full" && reducedQuery?.matches) ||
     navigatorObject?.connection?.saveData === true ||
-    navigatorObject?.webdriver === true;
+    (navigatorObject?.webdriver === true && !allowWebdriverMotion);
   return { theme, reduced };
 }
 
-function waitForActivation(win, immediate) {
+function waitForActivation(win, immediate, cursorCapable) {
   if (immediate) return Promise.resolve();
   return new Promise(resolve => {
-    const events = ["pointerdown", "keydown", "scroll"];
+    const events = cursorCapable ? ["pointermove", "pointerdown", "keydown", "scroll"] : ["pointerdown", "keydown", "scroll"];
     const activate = () => {
       win.clearTimeout(timer);
       events.forEach(type => win.removeEventListener(type, activate));
@@ -43,15 +44,21 @@ export async function initShaderBackdrop({
 } = {}) {
   const parameters = new URLSearchParams(win?.location?.search || "");
   const testOptIn = parameters.has("shader-test");
+  const forceStatic = parameters.has("shader-static");
   const automationOptIn = testOptIn || parameters.has("shader-perf");
   if (!doc?.body || !win || doc.body.dataset.page !== "home" ||
       (navigatorObject?.webdriver === true && !automationOptIn) ||
       doc.querySelector("[data-shader-backdrop]")) return null;
 
-  await waitForActivation(win, testOptIn);
+  const finePointerQuery = win.matchMedia?.(FINE_POINTER);
+  await waitForActivation(win, testOptIn, finePointerQuery?.matches === true);
 
   const root = doc.documentElement;
   const reducedQuery = win.matchMedia?.(REDUCED_MOTION);
+  const getState = () => {
+    const state = resolvedState(root, reducedQuery, navigatorObject, testOptIn);
+    return forceStatic ? { ...state, reduced: true } : state;
+  };
   const host = doc.createElement("div");
   host.className = "shader-backdrop";
   host.dataset.shaderBackdrop = "";
@@ -63,20 +70,51 @@ export async function initShaderBackdrop({
   catch (error) { host.remove(); console.warn("Shader backdrop unavailable", error); return null; }
 
   let island;
-  try { island = rendererModule.mountShaderGradient(host, resolvedState(root, reducedQuery, navigatorObject)); }
+  try { island = rendererModule.mountShaderGradient(host, getState()); }
   catch (error) { host.remove(); console.warn("Shader backdrop unavailable", error); return null; }
 
   let destroyed = false;
+  let pointerFrame = 0;
+  let pendingPointer = { x: 0, y: 0 };
+  const applyPointer = () => {
+    pointerFrame = 0;
+    const state = getState();
+    const interactive = !state.reduced && finePointerQuery?.matches === true;
+    const pointer = interactive ? pendingPointer : { x: 0, y: 0 };
+    host.dataset.interaction = interactive ? "cursor" : "static";
+    if (testOptIn) {
+      host.dataset.cursorX = pointer.x.toFixed(3);
+      host.dataset.cursorY = pointer.y.toFixed(3);
+    }
+    island.setPointer(pointer.x, pointer.y);
+  };
+  const onPointerMove = event => {
+    pendingPointer = {
+      x: Math.max(-1, Math.min(1, (event.clientX / win.innerWidth) * 2 - 1)),
+      y: Math.max(-1, Math.min(1, (event.clientY / win.innerHeight) * 2 - 1)),
+    };
+    if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
+  };
+  const resetPointer = event => {
+    if (event?.type === "pointerout" && event.relatedTarget) return;
+    pendingPointer = { x: 0, y: 0 };
+    if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
+  };
   const sync = () => {
     if (destroyed) return;
-    const state = resolvedState(root, reducedQuery, navigatorObject);
+    const state = getState();
     const preset = SHADER_BACKDROP_PRESETS[state.theme];
     host.dataset.preset = preset.name;
     island.update(state);
+    applyPointer();
   };
   const observer = new MutationObserver(sync);
   observer.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-motion", "data-motion-preference"] });
   reducedQuery?.addEventListener?.("change", sync);
+  finePointerQuery?.addEventListener?.("change", sync);
+  win.addEventListener("pointermove", onPointerMove, { passive: true });
+  win.addEventListener("pointerout", resetPointer, { passive: true });
+  win.addEventListener("blur", resetPointer);
 
   const markReady = () => {
     if (destroyed || !host.querySelector("canvas")) return win.requestAnimationFrame(markReady);
@@ -90,6 +128,11 @@ export async function initShaderBackdrop({
     destroyed = true;
     observer.disconnect();
     reducedQuery?.removeEventListener?.("change", sync);
+    finePointerQuery?.removeEventListener?.("change", sync);
+    win.removeEventListener("pointermove", onPointerMove);
+    win.removeEventListener("pointerout", resetPointer);
+    win.removeEventListener("blur", resetPointer);
+    if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     host.remove();
