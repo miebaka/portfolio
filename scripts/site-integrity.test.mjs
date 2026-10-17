@@ -208,6 +208,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     await assert.rejects(access(join(dist, "js", "core", file)));
   }
   await access(join(dist, "js", "core", "decision-field.js"));
+  await access(join(dist, "js", "core", "shader-backdrop.js"));
+  await access(join(dist, "assets", "runtime", "shader-gradient.js"));
   await access(join(dist, "assets", "vendor", "three.module.js"));
   await access(join(dist, "assets", "vendor", "three.core.js"));
   await assert.rejects(access(join(dist, "node_modules")));
@@ -224,6 +226,20 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /gradient\(/i);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
   assert.doesNotMatch(css, /filter:saturate/i);
+});
+
+test("theme shader backdrop preserves the Print and Nighty night contracts", async () => {
+  const source = await readFile(join(dist, "js", "core", "shader-backdrop.js"), "utf8");
+  const island = await readFile(join(root, "js", "shader-gradient-island.js"), "utf8");
+  assert.match(source, /Editorial press/);
+  assert.match(source, /04 Nighty night — Ultramarine/);
+  for (const color of ["#f8f9fc", "#002080", "#1c3da4", "#b1c5ff"]) assert.match(source, new RegExp(color, "i"));
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /connection\?\.saveData/);
+  assert.match(island, /ShaderGradient preset 04, Nighty night/);
+  for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
+  assert.match(island, /ShaderGradientCanvas/);
+  assert.match(island, /animate: reduced \? "off" : "on"/);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {

@@ -60,6 +60,14 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
+test("Home mounts the official ultramarine Nighty night shader", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
+  await page.goto("/index.html?shader-test=1");
+  const backdrop = page.locator('[data-shader-backdrop][data-preset="04 Nighty night — Ultramarine"]');
+  await expect(backdrop).toBeVisible();
+  await expect(backdrop.locator("canvas")).toHaveCount(1);
+});
+
 test("Index opens, navigates, closes, traps focus and restores focus", async ({ page }) => {
   await page.goto("/index.html");
   const trigger = page.getByRole("button", { name: "Index" });

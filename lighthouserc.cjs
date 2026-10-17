@@ -2,7 +2,7 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: "./dist",
-      url: ["http://localhost/index.html", "http://localhost/work.html", "http://localhost/work/tedx-rsu.html"],
+      url: ["http://localhost/index.html?shader-perf=1", "http://localhost/work.html", "http://localhost/work/tedx-rsu.html"],
       numberOfRuns: 3,
       settings: { chromeFlags: "--headless --no-sandbox --disable-dev-shm-usage", preset: "desktop" }
     },

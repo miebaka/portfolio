@@ -168,10 +168,13 @@
 .journey>h2{margin-bottom:var(--s4)}
 .home-profile__listening{align-self:end;margin-top:clamp(2rem,6vw,6rem);grid-column:auto;grid-row:auto;width:100%;margin:0}
 .home-landing{position:sticky;z-index:1;top:var(--nav-h);height:calc(100svh - var(--nav-h));min-height:32rem;display:flex;background:var(--ref-ultramarine);color:var(--ref-paper);overflow:hidden;align-items:flex-end}
+.has-shader-backdrop .home-landing{background:transparent;color:var(--ink)}
+:root[data-theme="dark"].has-shader-backdrop .home-landing{color:var(--ref-paper)}
 .home-landing__inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));padding-bottom:clamp(2rem,5vw,5rem);align-items:end}
 .home-landing h1{grid-column:1/11;max-width:13ch;white-space:normal;font-size:clamp(3.4rem,7.6vw,8.4rem);line-height:.91;letter-spacing:-.06em;text-align:left;text-wrap:balance}
 .home-landing__descriptor{grid-column:9/-1;margin-top:var(--s3);font-size:clamp(1rem,1.25vw,1.2rem);line-height:1.55;max-width:25rem;color:color-mix(in srgb,var(--ref-paper) 82%,transparent);display:none}
 .home-content{position:relative;z-index:2;background:var(--paper)}
+.has-shader-backdrop .home-content{background:var(--shader-reading-surface);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .home-profile__introduction h2{max-width:26ch;font-family:var(--body);font-size:clamp(1.75rem,3.15vw,3.5rem);font-weight:400;line-height:1.18;letter-spacing:-.035em;text-wrap:pretty}
 .discipline__copy>p{grid-column:1;grid-row:auto;max-width:38rem;color:var(--muted);background:none;line-height:1.65}
 .discipline__preview{position:absolute;z-index:1;inset:0 0 0 auto;width:34%;opacity:0;transform:translateX(1.25rem);transition:opacity var(--dur-ui) var(--ease-enter),transform var(--dur-spatial) var(--ease-enter)}

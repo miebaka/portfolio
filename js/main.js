@@ -16,6 +16,7 @@ import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
+import { initShaderBackdrop } from "./core/shader-backdrop.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -47,5 +48,6 @@ if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 run("navigation behaviour", initNavigation);
 run("year", initYear);
 run("footer signature", initFooterSignature);
+run("shader backdrop", () => { void initShaderBackdrop(); });
 if (page === "contact") run("contact form", initForm);
 if (has("[data-decision-field]")) run("404 identity field", () => { void initDecisionField(); });

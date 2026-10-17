@@ -4,7 +4,8 @@
   "private": true,
   "description": "Build and image-optimization tooling for Miebaka Joshua's static portfolio.",
   "scripts": {
-    "build": "npm run validate:content && node scripts/build-site.mjs",
+    "build": "npm run validate:content && npm run build:shader && node scripts/build-site.mjs",
+    "build:shader": "node scripts/build-shader-gradient.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "test:content": "node --test tests/content-schema.test.mjs",
     "test:navigation": "node --test tests/navigation.test.mjs",
@@ -22,7 +23,7 @@
     "audit:shipped": "npm audit --omit=dev --audit-level=moderate",
     "audit:dev-tools": "npm audit --audit-level=moderate || echo 'Non-blocking: review dev-tool advisories above; shipped dependencies are gated separately.'",
     "quality": "npm test && npm run test:e2e && npm run test:visual && npm run test:budgets && npm run test:lighthouse && npm run audit:shipped && npm run audit:dev-tools",
-    "dev": "node scripts/serve-static.mjs . 4000",
+    "dev": "npm run build:shader && node scripts/serve-static.mjs . 4000",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
@@ -32,10 +33,17 @@
     "@axe-core/playwright": "4.13.0",
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.64.0",
+    "esbuild": "^0.28.2",
     "sharp": "^0.35.5"
   },
   "type": "module",
   "dependencies": {
-    "three": "^0.180.0"
+    "@react-three/fiber": "^9.8.2",
+    "@shadergradient/react": "^2.4.20",
+    "camera-controls": "^3.1.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.180.0",
+    "three-stdlib": "^2.36.1"
   }
 }
