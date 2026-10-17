@@ -109,12 +109,14 @@ test("prevents duplicate submits and clears only after a 202 success", async () 
   const second = form.submit();
   assert.equal(controller.state, "submitting");
   assert.equal(form.button.disabled, true);
+  assert.equal(form.button.getAttribute("aria-busy"), "true");
   assert.equal(form.button.textContent, "Sending…");
   assert.deepEqual(form.transitions.slice(-2), ["validating", "submitting"]);
   resolve({ status: 202, ok: true, requestId: "req_1" });
   await Promise.all([first, second]);
   assert.equal(calls, 1);
   assert.equal(controller.state, "success");
+  assert.equal(form.button.getAttribute("aria-busy"), null);
   assert.equal(form.fields.name.value, "");
   assert.equal(form.status.textContent, "Message sent. I’ll reply by email.");
 });

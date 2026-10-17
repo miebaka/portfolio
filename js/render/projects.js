@@ -15,7 +15,7 @@ export function projectMarkup(project, i = 0, base = "") {
   return '<' + tag + ' class="work-flick__item' + (published ? '' : ' work-flick__item--locked') + '"' + href + ' aria-label="' + esc(project.title) + (published ? ', view project' : ', coming soon') + '">' +
     '<div class="work-flick__media">' + media + '</div>' +
     '<span class="work-flick__bar" aria-hidden="true">' + (published ? '<span class="work-flick__bar-arrow">↗</span>' : '') + '<span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong>' + (published ? '<span>View project</span>' : '') + '</span></span>' +
-    (published ? '' : '<span class="btn work-flick__status">Coming soon</span>') +
+    (published ? '' : '<span class="work-flick__status">Coming soon</span>') +
     '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></' + tag + '>';
 }
 

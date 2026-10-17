@@ -39,6 +39,8 @@ test("project cards link published work and leave unfinished work non-interactiv
   const unfinished = projectRender.projectMarkup({ ...published, status: "coming-soon" });
   assert.match(unfinished, /^<article\b/);
   assert.match(unfinished, /Coming soon/);
+  assert.match(unfinished, /class="work-flick__status"/);
+  assert.doesNotMatch(unfinished, /class="[^"]*\bbtn\b/);
   assert.doesNotMatch(unfinished, /<a\b|<button\b|tabindex|aria-disabled/);
   assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
 });
@@ -319,8 +321,11 @@ test("interactive controls share the documented role system", async () => {
   assert.match(css, /\.btn\{[^}]*min-height:3rem/);
   assert.match(css, /\.site-nav__menu-btn\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.theme-toggle\{[^}]*min-height:2\.75rem/);
-  assert.match(css, /\.btn:active\{transform:scale\(\.97\)/);
+  assert.match(css, /\.btn:active\{transform:scale\(\.98\)/);
+  assert.match(css, /\.btn\{[^}]*background-color 120ms[^}]*box-shadow 120ms[^}]*opacity 120ms/);
+  assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);
   assert.equal((css.match(/(?:^|})\s*\.btn\{/g) || []).length, 1);
+  assert.doesNotMatch(css, /\.contact__submit \.btn/);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
   assert.doesNotMatch(css, /animation-duration:1ms|transition-duration:1ms/);

@@ -73,7 +73,7 @@ html[data-theme-transition="fade"]::view-transition-old(root){animation-duration
 a[href]:focus-visible{color:var(--accent-interactive);text-decoration-color:currentColor}
 a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor}
 .work-flick__item{text-decoration:none;grid-column:span 6;position:relative;display:block;flex:1 1 0;min-width:5.5rem;min-height:0;grid-column:auto!important;background:var(--ref-midnight);color:var(--ref-paper);overflow:hidden;transition:none}
-.btn{width:max-content;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.75rem 1.35rem;border:1px solid transparent;border-radius:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:transform 120ms var(--ease-enter),background-color 180ms var(--ease-standard),color 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard)}
+.btn{width:max-content;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;gap:.55rem;padding:.75rem 1.35rem;border:1px solid transparent;border-radius:0;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:transform 120ms var(--ease-enter),background-color 120ms var(--ease-standard),color 120ms var(--ease-standard),box-shadow 120ms var(--ease-standard),opacity 120ms linear}
 .site-nav a{text-decoration:none}
 @media(prefers-reduced-transparency:reduce){.site-nav{background:var(--sys-color-surface);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
 }
@@ -162,9 +162,10 @@ html[data-motion="reduced"] .home-work-index__row{transform:none!important;trans
 .site-nav__links{left:max(.75rem,var(--safe-left));right:max(.75rem,var(--safe-right))}
 }
 .btn:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
-.btn:active{transform:scale(.97);box-shadow:none;transition-duration:100ms}
+.btn:active{transform:scale(.98);box-shadow:none;transition-duration:100ms}
 .btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed;box-shadow:none}
 .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn[aria-busy="true"]{opacity:.72;cursor:wait}
 .field select{width:100%;min-height:3.5rem;padding:.85rem 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);font:inherit}
 .field select:focus-visible{outline:2px solid var(--accent-interactive);outline-offset:3px;border-color:var(--accent-interactive)}
 .field textarea:focus-visible{outline:2px solid var(--accent-interactive);outline-offset:3px;border-color:var(--accent-interactive)}
@@ -174,14 +175,10 @@ html[data-motion="reduced"] .home-work-index__row{transform:none!important;trans
 .field__error:empty{display:none}
 .field [aria-invalid="true"]{border-color:var(--error)}
 .contact__trap{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}
-.contact__submit .btn{transition:transform 120ms var(--ease-enter),background-color 120ms var(--ease-standard),color 120ms var(--ease-standard),opacity 120ms linear}
-.contact__submit .btn:active{transform:scale(.98)}
-.contact__submit .btn:disabled{cursor:wait;opacity:.72}
 .form-status{min-height:1.4em;margin:0;opacity:1;transition:opacity 120ms linear;font-size:.8rem;color:var(--error)}
 .contact__form[data-state="submitting"] .form-status{opacity:.72}
 .contact__form[data-state="success"] .form-status{color:var(--ink)}
 .contact__fallback{color:var(--muted);font-size:.85rem}
-html[data-motion="reduced"] .contact__submit .btn{transform:none!important;transition-property:color,background-color,opacity}
 html[data-motion-preference="full"] .site-index{clip-path:inset(0 0 100% 0);transition:opacity 160ms var(--ease-enter),clip-path 160ms var(--ease-enter)}
 html[data-motion-preference="full"] .site-index[data-state="open"]{clip-path:inset(0);transition-duration:220ms}
 html[data-motion-preference="full"] .now-playing__dot{animation:now-listening-pulse 1.8s steps(1,end) infinite}
@@ -427,7 +424,7 @@ html[data-motion="reduced"] .service-swatch{transition:none;transform:none}
 .writing-item__date::before{content:none}
 .site-footer__links{display:flex;align-items:center;flex-wrap:wrap;gap:.25rem clamp(.8rem,1.5vw,1.5rem)}
 .work-flick__item--locked{cursor:default}
-.work-flick__status{position:absolute;z-index:4;inset:50% auto auto 50%;opacity:0;pointer-events:none;transform:translate(-50%,-40%);transition:opacity 180ms var(--ease-standard),transform 180ms var(--ease-enter)}
+.work-flick__status{position:absolute;z-index:4;inset:50% auto auto 50%;min-height:3rem;display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1.35rem;border:1px solid transparent;background:var(--sys-color-action);color:var(--sys-color-on-action);box-shadow:0 1px 2px color-mix(in srgb,var(--sys-color-on-surface) 16%,transparent);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;opacity:0;pointer-events:none;transform:translate(-50%,-40%);transition:opacity 180ms var(--ease-standard),transform 180ms var(--ease-enter)}
 .work-flick__item--locked.is-active .work-flick__status{opacity:1;transform:translate(-50%,-50%)}
 .work-flick__item--locked:is(:hover,.is-active) .work-flick__bar{opacity:0}
 .project-archive__status{opacity:0;transition:opacity 180ms var(--ease-standard)}
@@ -457,8 +454,6 @@ html[data-motion="reduced"] .work-flick .work-flick__media img{transform:none}
 :root:not([data-motion-preference="full"]) .site-index__close{transition:color 120ms linear}
 :root:not([data-motion-preference="full"]) .now-playing__dot{animation:none}
 :root:not([data-motion-preference="full"]) .form-status{transition:none}
-:root:not([data-motion-preference="full"]) .contact__submit .btn{transition:none}
-:root:not([data-motion-preference="full"]) .contact__submit .btn:active{transform:none}
 :root:not([data-motion-preference="full"]) .work-flick__more-arrow{animation:none}
 :root:not([data-motion-preference="full"]) .client-marquee__track{width:100%;animation:none;will-change:auto}
 :root:not([data-motion-preference="full"]) .client-proof[aria-hidden="true"]{display:none}

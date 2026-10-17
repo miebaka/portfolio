@@ -225,6 +225,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .about-cv span{font-size:.7rem;opacity:.74}
 .case-locked{min-height:calc(100svh - var(--nav-h));display:grid;align-content:center;justify-items:start;gap:var(--s3);padding-block:var(--s8)}
 .case-locked__label{color:var(--muted);font:600 .68rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
+.case-locked__status{color:var(--sys-color-primary);font:600 .7rem/1 var(--label);letter-spacing:.14em;text-transform:uppercase}
 .case-locked h1{max-width:12ch;font-size:clamp(4rem,10vw,10rem);line-height:.88}
 .case-page--tedx .case{display:block}
 .case-page--tedx .case-opening{padding-block:clamp(4.5rem,8vw,8rem) var(--s4)}

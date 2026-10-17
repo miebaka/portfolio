@@ -30,6 +30,20 @@ reading and case-study interactions stay still or respond in 120–240ms. Motion
 uses transform and opacity, is interruptible where needed, and respects reduced
 motion. Keyboard-triggered navigation opens immediately.
 
+## Primary actions
+
+The contact form's “Work with me” control defines the site-wide `.btn` contract.
+It is a square-cornered, 48px-minimum action using the semantic action colours:
+blue-80 on ultramarine at rest, coral-75 on midnight on pointer hover, and a
+theme-aware coral focus ring. Pressing compresses it to 98% for 100ms. Colour,
+shadow and opacity changes resolve in 120ms; reduced motion removes the scale.
+Disabled actions are visibly unavailable, while an active submission uses
+`aria-busy="true"`, a wait cursor and the legible 72% busy state.
+
+Use `.btn` only on real links and buttons that perform a primary action. Labels
+such as “Coming soon” are statuses, not disabled buttons, and must use their own
+status class even when they share the same visual vocabulary.
+
 ## Implementation
 
 The live cascade is deliberately small: `styles/foundations.css`,

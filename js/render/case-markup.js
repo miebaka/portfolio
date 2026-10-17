@@ -52,7 +52,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const study = site.caseStudies?.[slug];
   if (!study) return "";
   const project = site.projects?.find(item => item.slug === slug);
-  if (study.status !== "published") return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><span class="btn" aria-disabled="true">Coming soon</span></section>`;
+  if (study.status !== "published") return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><p class="case-locked__status">Coming soon</p></section>`;
   if (study.chapters?.length) {
     const hero = study.media?.find(media => media.src === study.hero);
     const lookup = new Map((study.media || []).map(media => [media.src, media]));

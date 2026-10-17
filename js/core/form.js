@@ -43,7 +43,13 @@ export function createContactForm(form, { submitContact: send = submitContact, n
     state = next;
     form.dataset.state = next;
     if (status) { status.textContent = message; status.dataset.state = next; }
-    if (button) { button.disabled = next === "submitting"; button.textContent = next === "submitting" ? "Sending…" : defaultButtonText; }
+    if (button) {
+      const busy = next === "submitting";
+      button.disabled = busy;
+      button.textContent = busy ? "Sending…" : defaultButtonText;
+      if (busy) button.setAttribute("aria-busy", "true");
+      else button.removeAttribute("aria-busy");
+    }
   }
   function setFieldError(name, message = "") {
     const input = fields[name]; const error = errors[name];
