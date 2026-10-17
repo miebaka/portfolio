@@ -318,7 +318,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls share the documented role system", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn\{[^}]*min-height:3rem/);
+  assert.match(css, /\.btn\{[^}]*width:100%[^}]*min-height:4rem/);
+  assert.match(css, /\.btn::after\{[^}]*content:"\\2192"/);
   assert.match(css, /\.site-nav__menu-btn\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.theme-toggle\{[^}]*min-height:2\.75rem/);
   assert.match(css, /\.btn:active\{transform:scale\(\.98\)/);
