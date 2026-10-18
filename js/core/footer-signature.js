@@ -41,8 +41,9 @@ function enhanceFooterSignature(host) {
     sample.width = width;
     sample.height = height;
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
-    const markHeight = width * SVG_RATIO;
-    sampleContext.drawImage(image, 0, (height - markHeight) / 2, width, markHeight);
+    const markWidth = Math.min(width, height / SVG_RATIO);
+    const markHeight = markWidth * SVG_RATIO;
+    sampleContext.drawImage(image, (width - markWidth) / 2, (height - markHeight) / 2, markWidth, markHeight);
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const next = [];
     for (let y = PITCH / 2; y < height; y += PITCH) {
@@ -53,6 +54,7 @@ function enhanceFooterSignature(host) {
     }
     points = next;
     host.classList.add("is-enhanced");
+    if (!running) drawStatic();
   }
 
   function draw() {
@@ -80,6 +82,11 @@ function enhanceFooterSignature(host) {
     }
     frame = requestAnimationFrame(draw);
   }
+  function drawStatic() {
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = restColor;
+    for (const point of points) context.fillRect(point.homeX - DOT / 2, point.homeY - DOT / 2, DOT, DOT);
+  }
   const start = () => { if (!running) { running = true; frame = requestAnimationFrame(draw); } };
   const stop = () => { running = false; cancelAnimationFrame(frame); };
   const onPointerMove = event => {
@@ -99,6 +106,7 @@ function enhanceFooterSignature(host) {
   return {
     start() { canvas.hidden = false; start(); },
     stop() { stop(); canvas.hidden = true; context.clearRect(0, 0, width, height); },
+    static() { stop(); canvas.hidden = false; drawStatic(); },
     destroy() {
       stop(); generation++; resizeObserver.disconnect(); mutationObserver.disconnect();
       host.removeEventListener("pointermove", onPointerMove); host.removeEventListener("pointerleave", onPointerLeave);
@@ -110,10 +118,11 @@ function enhanceFooterSignature(host) {
 export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = IntersectionObserver } = {}) {
   let enhanced, visible = false, destroyed = false;
   const reduced = () => doc.documentElement.dataset.motion === "reduced";
+  const forceStatic = doc.defaultView?.location?.search.includes("visual-static=1") || false;
   const sync = () => {
     if (destroyed) return;
-    if (reduced()) { enhanced?.stop(); return; }
     enhanced ||= enhance(host);
+    if (reduced() || forceStatic) { enhanced?.static?.(); return; }
     if (visible && !doc.hidden) enhanced?.start(); else enhanced?.stop();
   };
   const onMotion = () => sync();

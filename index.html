@@ -41,7 +41,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
-<body data-page="home" data-nav-theme="dark">
+<body class="home-page" data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav">
     <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
@@ -71,17 +71,6 @@
       <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li>Rivo Studio - Coming soon</li><li><a href="work/tedx-rsu.html">TEDx RSU</a></li><li>ChopBox - Coming soon</li></ul></div>
     </section>
-    <section class="practice-standard container" aria-labelledby="practice-title">
-      <div class="practice-standard__intro">
-        <p class="page-kicker">How I work</p>
-        <h2 id="practice-title">The work should show the thinking, not just the finish.</h2>
-      </div>
-      <ol class="practice-standard__steps">
-        <li><span>01</span><div><h3>Find the decision</h3><p>Reduce the brief to the choice that will make everything else clearer.</p></div></li>
-        <li><span>02</span><div><h3>Build the system</h3><p>Turn that choice into rules a team can apply across real formats and constraints.</p></div></li>
-        <li><span>03</span><div><h3>Edit until it holds</h3><p>Test the whole experience, remove the interchangeable parts and finish the details that carry meaning.</p></div></li>
-      </ol>
-    </section>
     <section class="home-profile container" id="profile" aria-labelledby="about-title">
       <div class="home-profile__introduction">
         <p class="page-kicker">About me</p>
@@ -92,7 +81,7 @@
       </div>
       <div class="home-profile__media">
         <div class="home-profile__listening" data-mount="now-playing" aria-label="Listening status"></div>
-        <figure class="home-profile__portrait"><picture><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.avif" type="image/avif"><source srcset="assets/images/optimized/miebaka-joshua-portrait-810.webp" type="image/webp"><img src="assets/images/optimized/miebaka-joshua-portrait-810.jpg" alt="Miebaka Joshua" width="810" height="1080" fetchpriority="high" decoding="async"></picture></figure>
+        <div class="home-profile__portrait home-profile__gif-placeholder" role="img" aria-label="Reserved space for Miebaka's animated portrait"></div>
       </div>
     </section>
     <section class="home-capabilities container" id="capabilities" aria-labelledby="capabilities-title">

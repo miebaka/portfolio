@@ -46,9 +46,28 @@ export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   const archive = document.body.dataset.page === 'work';
-  el.className = archive ? 'work-flick work-flick--archive' : 'work-flick work-flick--home';
-  if (el.dataset.prerendered !== 'true') el.innerHTML = renderWorkMarkup(SITE.projects, basePath(), archive);
+  if (!archive) {
+    el.className = 'home-project-list';
+    el.innerHTML = renderHomeProjectList(basePath());
+    return;
+  }
+  el.className = 'work-flick work-flick--archive';
+  if (el.dataset.prerendered !== 'true') el.innerHTML = renderWorkMarkup(SITE.projects, basePath(), true);
   bindExpansion(el);
+}
+
+export function renderHomeProjectList(base = "") {
+  const projects = [
+    { title: "TEDx RSU", href: base + "work/tedx-rsu.html" },
+    { title: "Rivo Studio" },
+    { title: "Chop Box" },
+    { title: "Detour" },
+    { title: "Out Of Office" }
+  ];
+  return '<ol>' + projects.map(project => {
+    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>';
+    return '<li>' + (project.href ? '<a href="' + safeURL(project.href) + '">' + content + '</a>' : '<button type="button" aria-disabled="true" tabindex="-1">' + content + '</button>') + '</li>';
+  }).join('') + '</ol>';
 }
 
 export function renderWorkMarkup(allProjects = SITE.projects, base = "", archive = false) {
@@ -91,7 +110,7 @@ function clientItem(client) {
   const aspect = client.logoW && client.logoH ? client.logoW / client.logoH : 1;
   const optical = typeof client.optical === "number" ? client.optical : 1;
   const scale = Math.min(1.25, Math.max(0.45, (1.15 / Math.sqrt(aspect)) * optical));
-  const style = ' style="--logo-scale:' + scale.toFixed(3) + '"';
+  const style = ' style="--logo-scale:' + scale.toFixed(3) + ';--logo-aspect:' + aspect.toFixed(3) + '"';
   return '<li class="marquee__item"' + style + ">" + inner + "</li>";
 }
 

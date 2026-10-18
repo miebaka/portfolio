@@ -45,13 +45,14 @@ export function renderNavigation() {
   if (!el) return;
   activeIndex?.destroy(); cleanupPreferences?.(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
-  const links = navigation.primary.map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
+  const order = ["work", "about", "explorations", "playground", "community", "contact"];
+  const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
-  el.innerHTML = '<div class="container site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="52" height="52"></a>' +
-    '<nav class="site-nav__links" aria-label="Primary">' + links + '</nav><button class="site-nav__menu-btn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="site-index">Index</button>' +
-    '<button class="theme-toggle" type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false"><span class="material-symbols-outlined theme-toggle__dark" aria-hidden="true">dark_mode</span><span class="material-symbols-outlined theme-toggle__light" aria-hidden="true">light_mode</span></button></div>';
-  document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
-  const index = document.getElementById("site-index");
-  activeIndex = createIndexController({ root: index, trigger: el.querySelector(".site-nav__menu-btn") });
-  cleanupPreferences = setupPreferences(el, index);
+  el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
+    '<nav class="site-nav__links" aria-label="Primary">' + links + '</nav></div>';
+  const preferences = createPreferencesController({
+    root: document.documentElement,
+    onChange: ({ resolvedTheme }) => document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"))
+  });
+  cleanupPreferences = () => preferences.destroy();
 }

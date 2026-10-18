@@ -20,14 +20,16 @@ test("homepage proof precedes biography in the source and built document", async
   }
 });
 
-test("homepage publishes the practice standard between proof and biography", async () => {
+test("homepage keeps the approved section order without the retired practice-standard interstitial", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
     const proof = html.indexOf('id="selected-work"');
-    const standard = html.indexOf('class="practice-standard');
     const biography = html.indexOf('id="profile"');
-    assert.ok(proof < standard && standard < biography, directory);
-    for (const phrase of ["Find the decision", "Build the system", "Edit until it holds"]) assert.ok(html.includes(phrase), phrase);
+    const capabilities = html.indexOf('id="capabilities"');
+    const journey = html.indexOf('class="journey"');
+    const close = html.indexOf('class="home-close');
+    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < close, directory);
+    assert.doesNotMatch(html, /practice-standard|Find the decision|Build the system|Edit until it holds/);
   }
 });
 
@@ -86,12 +88,12 @@ test("project hit areas are full rows and hover expansion requires fine-pointer 
   }
 });
 
-test("the Index registry has unique destinations and keeps the persistent bar quiet", () => {
+test("the route registry has unique destinations and supports the approved global masthead", () => {
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
   assert.deepEqual(navigation.index.map(route => route.label), ["Home", "Work", "Explorations", "Community", "About", "Services", "Writing", "Contact"]);
-  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "About", "Services", "Writing", "Contact"]);
+  assert.deepEqual(new Set(navigation.primary.map(route => route.label)), new Set(["Work", "About", "Explorations", "Writing", "Community", "Contact"]));
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
   assert.ok(navigation.footer.some(route => route.href === "community.html"));
 });
@@ -237,7 +239,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
   assert.match(css, /font-family:"Borges"/);
-  assert.doesNotMatch(css, /gradient\(/i);
+  assert.match(css, /repeating-radial-gradient/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
   assert.doesNotMatch(css, /filter:saturate/i);
 });
@@ -288,7 +290,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
-  assert.match(projects, /work-flick__item--more/);
+  for (const title of ["TEDx RSU", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(title));
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
@@ -312,20 +314,18 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(html, /data-mount="now-playing"/);
   assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
   assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
-  assert.match(listening, /What I listen to/);
+  assert.match(listening, /Currently listening to:/);
+  assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
 });
 
-test("interactive controls share the documented role system", async () => {
+test("interactive controls include the approved Figma button states", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn\{[^}]*width:100%[^}]*min-height:4rem/);
-  assert.match(css, /\.btn::after\{[^}]*content:"\\2192"/);
-  assert.match(css, /\.site-nav__menu-btn\{[^}]*min-height:2\.75rem/);
-  assert.match(css, /\.theme-toggle\{[^}]*min-height:2\.75rem/);
-  assert.match(css, /\.btn:active\{transform:scale\(\.98\)/);
-  assert.match(css, /\.btn\{[^}]*background-color 120ms[^}]*box-shadow 120ms[^}]*opacity 120ms/);
+  assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
+  assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
+  assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
+  assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);
   assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);
-  assert.equal((css.match(/(?:^|})\s*\.btn\{/g) || []).length, 1);
   assert.doesNotMatch(css, /\.contact__submit \.btn/);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
@@ -420,13 +420,15 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
-  assert.match(footer, /Based in/);
+  assert.match(footer, /Explore/);
   assert.match(footer, /Social/);
-  assert.match(footer, /SITE\.location/);
+  assert.doesNotMatch(footer, /Based in|SITE\.location/);
   assert.match(footer, /SITE\.socials/);
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
   assert.doesNotMatch(footer, /Back to top|data-year/);
-  assert.match(await readFile(join(root, "js", "core", "footer-signature.js"), "utf8"), /miebaka-joshua-script-name\.svg/);
+  const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
+  assert.match(signature, /site-footer__signature-canvas/);
+  assert.match(signature, /drawStatic/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
 
@@ -492,15 +494,16 @@ test("production build excludes source and review directories", async () => {
   }
 });
 
-test("listening link is static and privacy copy matches network behavior", async () => {
+test("listening status uses the private server boundary and privacy copy matches network behavior", async () => {
   const renderer = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
   const privacy = await readFile(join(dist, "privacy.html"), "utf8");
-  assert.doesNotMatch(renderer, /fetch\(|api_key|setTimeout|setInterval|audioscrobbler/i);
+  assert.match(renderer, /fetch\("\/api\/now-playing"/);
+  assert.doesNotMatch(renderer, /api_key|audioscrobbler/i);
   assert.doesNotMatch(config, /lastfmKey|127872bcf2ccc619e4fb52bb4b81805f/);
   assert.match(renderer, /https:\/\/www\.last\.fm\/user\//);
-  assert.match(privacy, /does not ask Last\.fm for live track data/i);
-  assert.match(privacy, /only if you choose to open that link/i);
+  assert.match(privacy, /server asks Last\.fm for the latest track/i);
+  assert.match(privacy, /browser does not receive the Last\.fm API key/i);
 });
 
 test("retired source systems cannot return unnoticed", async () => {

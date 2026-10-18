@@ -7,6 +7,12 @@ export const clients = [
     "logoH": 40
   },
   {
+    "name": "Celebration Church",
+    "logo": "assets/images/clients/celebration-church.svg",
+    "logoW": 163,
+    "logoH": 40
+  },
+  {
     "name": "Grey Finance",
     "logo": "assets/images/clients/grey-finance.svg",
     "logoW": 136,
@@ -32,11 +38,5 @@ export const clients = [
     "logoW": 360,
     "logoH": 40,
     "optical": 1.03
-  },
-  {
-    "name": "Celebration Church",
-    "logo": "assets/images/clients/celebration-church.svg",
-    "logoW": 163,
-    "logoH": 40
   }
 ];

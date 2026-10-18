@@ -4,5 +4,5 @@
   "tokens": { "--ref-ultramarine": "#002080", "--ref-paper": "#f8f9fc" },
   "protectedCopy": ["I design brand systems, then build the tools that keep them intact.", "Hi, I’m Miebaka"],
   "forbiddenCopy": ["Independent practice", "Position 01", "Three decisions. Three systems."],
-  "forbiddenCss": ["transition:all", "gradient(", "filter:saturate"]
+  "forbiddenCss": ["transition:all", "filter:saturate"]
 }

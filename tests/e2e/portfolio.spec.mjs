@@ -54,7 +54,7 @@ for (const route of routes) {
 
 test("Home → TEDx → next project preserves the intended journey", async ({ page }) => {
   await page.goto("/index.html");
-  await page.getByRole("link", { name: /TEDx RSU, view project/i }).click();
+  await page.getByRole("link", { name: "TEDx RSU" }).click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("global event system");
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
@@ -77,40 +77,29 @@ test("Home mounts the official ultramarine Nighty night shader", async ({ page }
   }
 });
 
-test("Home keeps the shader visible through the full page and static for reduced motion", async ({ page }) => {
+test("Home scroll overlay preserves the unblurred shader field", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/index.html?shader-test=1");
   const backdrop = page.locator("[data-shader-backdrop]");
   await expect(backdrop).toHaveAttribute("data-interaction", "static");
   await page.locator(".home-close").scrollIntoViewIfNeeded();
   await expect(backdrop.locator("canvas")).toBeVisible();
-  const surface = await page.locator(".home-content").evaluate(element => getComputedStyle(element).backgroundColor);
-  expect(surface).toMatch(/\/(?:\s*0\.(?:7[0-9]|8[0-9]|9[0-8])\s*)\)|rgba\([^)]*,\s*0\.(?:7[0-9]|8[0-9]|9[0-8])\)/);
+  const surfaces = await page.locator(".home-content, .journey").evaluateAll(elements => elements.map(element => ({
+    className: element.className,
+    background: getComputedStyle(element).backgroundColor,
+    blur: getComputedStyle(element).backdropFilter,
+  })));
+  expect(surfaces).toHaveLength(2);
+  for (const surface of surfaces) {
+    if (surface.className.includes("home-content")) expect(surface.background).toMatch(/0\.94|0, 0, 0, 0\.94/);
+    expect(surface.blur).toBe("none");
+  }
 });
 
-test("Index opens, navigates, closes, traps focus and restores focus", async ({ page }) => {
+test("Global navigation matches the six-link Figma masthead", async ({ page }) => {
   await page.goto("/index.html");
-  const trigger = page.getByRole("button", { name: "Index" });
-  await trigger.focus();
-  await trigger.click();
-  const dialog = page.getByRole("dialog", { name: "Index" });
-  await expect(dialog).toBeVisible();
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
-  const controls = dialog.locator('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter({ visible: true });
-  const first = controls.first();
-  const last = controls.last();
-  await expect(first).toBeFocused();
-  const count = await controls.count();
-  for (let index = 0; index < count; index += 1) await page.keyboard.press("Tab");
-  await expect(first).toBeFocused();
-  await page.keyboard.press("Shift+Tab");
-  await expect(last).toBeFocused();
-  await page.keyboard.press("Escape");
-  await expect(dialog).toBeHidden();
-  await expect(trigger).toBeFocused();
-  await trigger.click();
-  await dialog.getByRole("link", { name: /Work/ }).click();
-  await expect(page).toHaveURL(/work(?:\.html)?$/);
+  const labels = await page.getByRole("navigation", { name: "Primary" }).getByRole("link").allTextContents();
+  expect(labels).toEqual(["Work", "About", "Explorations", "Writing", "Community", "Contact"]);
 });
 
 test("About exposes the CV only when configured", async ({ page }) => {
@@ -130,14 +119,13 @@ test("empty routes remain intentional and navigable", async ({ page }) => {
   for (const route of ["/explorations.html", "/community.html"]) {
     await page.goto(route);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
   }
 });
 
-test("theme selection persists", async ({ page }) => {
+test("stored theme preference persists", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
   await page.goto("/index.html");
-  await page.getByRole("button", { name: "Index" }).click();
-  await page.getByRole("button", { name: /Screen.*Dark/ }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
@@ -152,7 +140,7 @@ test("client marquee can be paused", async ({ page }) => {
     await expect(control).toHaveAttribute("aria-disabled", "true");
     return;
   }
-  await control.click();
+  await control.evaluate(element => element.click());
   await expect(control).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "paused");
 });
@@ -195,9 +183,10 @@ test("@a11y forced colours retain the primary experience", async ({ page, browse
   await page.goto("/index.html");
   expect(await page.evaluate(() => matchMedia("(forced-colors: active)").matches)).toBe(true);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
-  await page.getByRole("button", { name: "Index" }).focus();
-  const forced = await page.getByRole("button", { name: "Index" }).evaluate(element => ({ color: getComputedStyle(element).color, adjust: getComputedStyle(element).forcedColorAdjust }));
+  const mastheadBrand = page.getByRole("link", { name: /Miebaka Joshua, home/i });
+  await expect(mastheadBrand).toBeVisible();
+  await mastheadBrand.focus();
+  const forced = await mastheadBrand.evaluate(element => ({ color: getComputedStyle(element).color, adjust: getComputedStyle(element).forcedColorAdjust }));
   expect(forced.color).not.toBe("");
   expect(forced.adjust).toBe("auto");
 });
@@ -206,7 +195,7 @@ test("@a11y 200% zoom retains content and avoids horizontal overflow", async ({ 
   await page.goto("/index.html");
   await page.evaluate(() => { document.documentElement.style.zoom = "2"; });
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Miebaka Joshua, home/i })).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });

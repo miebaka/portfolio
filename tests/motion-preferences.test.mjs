@@ -85,17 +85,17 @@ test("preferences survive a throwing global localStorage getter", () => {
 
 test("footer enhancement follows motion changes and fully cleans up", () => {
   const doc = new Target(); doc.documentElement = new Target(); doc.documentElement.dataset.motion = "reduced"; doc.hidden = false;
-  let intersection, enhanced = 0, starts = 0, stops = 0, destroyed = 0, disconnected = 0;
+  let intersection, enhanced = 0, starts = 0, stops = 0, statics = 0, destroyed = 0, disconnected = 0;
   class Observer { constructor(callback) { intersection = callback; } observe() {} disconnect() { disconnected++; } }
   const controller = createFooterSignatureController(new Target(), {
     document: doc, IntersectionObserver: Observer,
-    enhance() { enhanced++; return { start() { starts++; }, stop() { stops++; }, destroy() { destroyed++; } }; }
+    enhance() { enhanced++; return { start() { starts++; }, stop() { stops++; }, static() { statics++; }, destroy() { destroyed++; } }; }
   });
-  assert.equal(enhanced, 0);
+  assert.equal(enhanced, 1); assert.equal(statics, 1);
   doc.documentElement.dataset.motion = "full"; doc.dispatchEvent(new Event("motionpreferencechange"));
   assert.equal(enhanced, 1); assert.equal(starts, 0);
   intersection([{ isIntersecting: true }]); assert.equal(starts, 1);
-  doc.documentElement.dataset.motion = "reduced"; doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(stops, 2);
+  doc.documentElement.dataset.motion = "reduced"; doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(statics, 2);
   doc.documentElement.dataset.motion = "full"; doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(starts, 2);
   controller.destroy(); assert.equal(disconnected, 1); assert.equal(destroyed, 1);
   doc.dispatchEvent(new Event("motionpreferencechange")); assert.equal(starts, 2);

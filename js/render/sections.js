@@ -57,9 +57,10 @@ export function createServiceSwatches(root) {
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  el.className = "disciplines-index";
-  el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
-  createServiceSwatches(el.querySelector("[data-service-swatches]"));
+  el.className = "home-services";
+  el.innerHTML = '<div class="home-services__list">' + SITE.capabilities.map(service =>
+    '<details class="home-service"><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></div></details>'
+  ).join('') + '</div>';
 }
 
 export function renderExperienceLedger(entries = []) {

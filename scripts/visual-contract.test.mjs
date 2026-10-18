@@ -76,7 +76,8 @@ test("approved visual contract remains intact", async () => {
     assert.equal(stylesheets.length, 1, `${path}: expected one stylesheet request`);
     assert.match(stylesheets[0][0], /href=["'](?:\.\.\/)?styles\/main\.css["']/i, path);
   }
-  assert.match(css, /\.site-footer__signature::before\{[^}]*miebaka-joshua-script-name\.svg/);
+  assert.match(css, /body \.site-footer__signature::before\{display:none!important/);
+  assert.match(css, /\.site-footer__signature-canvas/);
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__signature/);
 });
