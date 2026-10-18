@@ -86,7 +86,10 @@ export async function initShaderBackdrop({
       host.dataset.cursorX = pointer.x.toFixed(3);
       host.dataset.cursorY = pointer.y.toFixed(3);
     }
-    island.setPointer(pointer.x, pointer.y);
+    // Older cached renderer modules did not expose pointer control. Keep the
+    // backdrop healthy while Vercel's stale-while-revalidate window rolls
+    // clients onto the interactive renderer.
+    if (typeof island.setPointer === "function") island.setPointer(pointer.x, pointer.y);
   };
   const onPointerMove = event => {
     pendingPointer = {
