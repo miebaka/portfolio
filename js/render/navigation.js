@@ -49,10 +49,20 @@ export function renderNavigation() {
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
   el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
-    '<nav class="site-nav__links" aria-label="Primary">' + links + '</nav></div>';
+    '<nav class="site-nav__links" aria-label="Primary">' + links + '</nav>' +
+    '<fieldset class="site-nav__themes" aria-label="Colour mode"><button type="button" data-nav-theme="light" aria-pressed="false">Print</button><span aria-hidden="true">|</span><button type="button" data-nav-theme="dark" aria-pressed="false">Screen</button></fieldset></div>';
+  const themeButtons = [...el.querySelectorAll("[data-nav-theme]")];
   const preferences = createPreferencesController({
     root: document.documentElement,
-    onChange: ({ resolvedTheme }) => document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"))
+    onChange: ({ resolvedTheme }) => {
+      themeButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.navTheme === resolvedTheme)));
+      document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
+    }
   });
-  cleanupPreferences = () => preferences.destroy();
+  const chooseTheme = event => preferences.setTheme(event.currentTarget.dataset.navTheme);
+  themeButtons.forEach(button => button.addEventListener("click", chooseTheme));
+  cleanupPreferences = () => {
+    themeButtons.forEach(button => button.removeEventListener("click", chooseTheme));
+    preferences.destroy();
+  };
 }

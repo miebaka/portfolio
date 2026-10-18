@@ -288,6 +288,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const services = await readFile(join(dist, "services.html"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
+  const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
@@ -319,6 +320,11 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(listening, /Currently listening to:/);
   assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
+  assert.match(navigation, /data-nav-theme="light"[^>]*>Print/);
+  assert.match(navigation, /data-nav-theme="dark"[^>]*>Screen/);
+  assert.match(navigation, /setTheme\(event\.currentTarget\.dataset\.navTheme\)/);
+  assert.match(css, /--home-section-gap:clamp\(8rem,17\.778vw,20rem\)/);
+  assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
 });
 
 test("interactive controls include the approved Figma button states", async () => {
@@ -429,7 +435,11 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(footer, /target="_blank" rel="noopener noreferrer"/);
   assert.doesNotMatch(footer, /Back to top|data-year/);
   const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(signature, /site-footer__signature-canvas/);
+  assert.match(signature, /canvas\.addEventListener\("pointermove"/);
+  assert.match(css, /site-footer__signature-canvas\{[^}]*pointer-events:auto/);
+  assert.match(css, /site-footer__panel\{[^}]*pointer-events:none/);
   assert.match(signature, /drawStatic/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });

@@ -94,7 +94,7 @@ test("Home scroll overlay preserves the unblurred shader field", async ({ page }
   })));
   expect(surfaces).toHaveLength(2);
   for (const surface of surfaces) {
-    if (surface.className.includes("home-content")) expect(surface.background).toMatch(/0\.94|0, 0, 0, 0\.94/);
+    if (surface.className.includes("home-content")) expect(surface.background).toMatch(/rgb\((?:248, 249, 252|7, 17, 43)\)/);
     expect(surface.blur).toBe("none");
   }
 });

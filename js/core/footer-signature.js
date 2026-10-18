@@ -13,7 +13,7 @@ function enhanceFooterSignature(host) {
   if (!context) return;
   const pointer = { x: -9999, y: -9999, active: false };
   let points = [], width = 0, height = 0, frame = 0, running = false, generation = 0;
-  let restColor = "rgba(255,255,255,.48)";
+  let restColor = "rgba(255,255,255,.48)", activeColor = "rgba(255,160,143,.92)";
 
   const loadImage = () => new Promise((resolve, reject) => {
     const image = new Image();
@@ -34,6 +34,7 @@ function enhanceFooterSignature(host) {
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     const channels = getComputedStyle(host).color.match(/[\d.]+/g)?.slice(0, 3) || [255, 255, 255];
     restColor = `rgba(${channels.join(",")},.48)`;
+    activeColor = getComputedStyle(host).getPropertyValue("--footer-signature-active").trim() || activeColor;
     let image;
     try { image = await loadImage(); } catch { return; }
     if (current !== generation) return;
@@ -76,7 +77,7 @@ function enhanceFooterSignature(host) {
       point.vy *= .79;
       point.x += point.vx;
       point.y += point.vy;
-      context.fillStyle = proximity > .08 ? "rgba(255,160,143,.92)" : restColor;
+      context.fillStyle = proximity > .08 ? activeColor : restColor;
       const size = DOT + proximity * 1.8;
       context.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     }
@@ -98,8 +99,8 @@ function enhanceFooterSignature(host) {
   const onPointerLeave = () => { pointer.active = false; };
   const resizeObserver = new ResizeObserver(rebuild);
   const mutationObserver = new MutationObserver(rebuild);
-  host.addEventListener("pointermove", onPointerMove, { passive: true });
-  host.addEventListener("pointerleave", onPointerLeave);
+  canvas.addEventListener("pointermove", onPointerMove, { passive: true });
+  canvas.addEventListener("pointerleave", onPointerLeave);
   resizeObserver.observe(host);
   mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   rebuild();
@@ -109,7 +110,7 @@ function enhanceFooterSignature(host) {
     static() { stop(); canvas.hidden = false; drawStatic(); },
     destroy() {
       stop(); generation++; resizeObserver.disconnect(); mutationObserver.disconnect();
-      host.removeEventListener("pointermove", onPointerMove); host.removeEventListener("pointerleave", onPointerLeave);
+      canvas.removeEventListener("pointermove", onPointerMove); canvas.removeEventListener("pointerleave", onPointerLeave);
       host.classList.remove("is-enhanced"); canvas.remove();
     }
   };
