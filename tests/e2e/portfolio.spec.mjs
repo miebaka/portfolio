@@ -112,10 +112,14 @@ test("About exposes the CV only when configured", async ({ page }) => {
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
 });
 
-test("Work distinguishes available and coming-soon projects", async ({ page }) => {
+test("Work index matches the five-project Figma composition", async ({ page }) => {
   await page.goto("/work.html");
-  await expect(page.getByRole("link", { name: /TEDx RSU/ })).toHaveAttribute("href", "work/tedx-rsu.html");
-  await expect(page.locator(".project-archive__state", { hasText: "Coming soon" })).toHaveCount(5);
+  await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
+  await expect(page.locator(".project-archive__item")).toHaveCount(5);
+  await expect(page.locator(".project-archive__identity h2")).toHaveText([
+    "TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"
+  ]);
+  await expect(page.locator(".project-archive__media")).toHaveCount(5);
 });
 
 test("empty routes remain intentional and navigable", async ({ page }) => {

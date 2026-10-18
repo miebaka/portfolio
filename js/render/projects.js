@@ -91,11 +91,20 @@ export function renderProjectArchive() {
 }
 
 export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") {
-  return projects.filter(project => project.status !== 'private' && !project.href?.startsWith('writing/') && !(project.tags || []).includes('Writing')).map((project, index) => {
+  const bySlug = new Map(projects.map(project => [project.slug, project]));
+  const workIndex = [
+    { ...bySlug.get('tedx-rsu'), title: 'TEDx Rivers State University' },
+    bySlug.get('rivo'),
+    { ...bySlug.get('chopbox'), title: 'Chop Box' },
+    { slug: 'detour', title: 'Detour', tagline: 'A software studio positioned around access, built to feel useful before it feels technical.', year: '2026', status: 'coming-soon' },
+    { slug: 'out-of-office', title: 'Out Of Office', tagline: 'A software studio positioned around access, built to feel useful before it feels technical.', year: '2026', status: 'coming-soon' }
+  ].filter(Boolean);
+  return workIndex.map(project => {
     const published = project.status === 'published';
     const tag = published ? 'a' : 'article';
     const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
-    return '<' + tag + ' class="project-archive__item"' + href + '><div class="project-archive__row"><span>' + String(index + 1).padStart(2, '0') + '</span><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p></div><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time><span class="project-archive__state">' + (published ? '<span aria-hidden="true">View ↗</span>' : 'Coming soon') + '</span></div></' + tag + '>';
+    const label = esc(project.title) + (published ? ', view project' : ', project preview');
+    return '<' + tag + ' class="project-archive__item"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true"></div></div></' + tag + '>';
   }).join('');
 }
 

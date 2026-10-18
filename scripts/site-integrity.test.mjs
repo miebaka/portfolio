@@ -47,29 +47,25 @@ test("project cards link published work and leave unfinished work non-interactiv
   assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
 });
 
-test("Work archive excludes private and writing records and only published rows are links", () => {
+test("Work archive matches the approved five-project index and only the published row links", () => {
   assert.equal(typeof projectRender.renderProjectArchiveMarkup, "function");
-  const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
-  const html = projectRender.renderProjectArchiveMarkup([
-    tedx, { ...tedx, title: "Unfinished", status: "coming-soon" },
-    { ...tedx, title: "Private fixture", status: "private" },
-    SITE.projects.find(project => project.href?.startsWith("writing/"))
-  ]);
+  const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
-  assert.match(html, /<article\b[^>]*>[\s\S]*Unfinished[\s\S]*Coming soon/);
-  assert.doesNotMatch(html, /Private fixture|Designing for Disability|<details|<summary/);
+  for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
+  assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 1);
+  assert.equal((html.match(/class="project-archive__media"/g) || []).length, 5);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
-  for (const file of ["index.html", "work.html"]) {
-    const html = await readFile(join(dist, file), "utf8");
-    assert.match(html, /data-prerendered="true"/);
-    assert.match(html, /href="work\/tedx-rsu.html"/);
-    assert.match(html, /Coming soon/);
-    assert.doesNotMatch(html, /href="work\/(?:rivo|chopbox|christian-poster-a-week)\.html"/);
-  }
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  const work = await readFile(join(dist, "work.html"), "utf8");
+  for (const html of [home, work]) assert.match(html, /data-prerendered="true"/);
+  for (const html of [home, work]) assert.match(html, /href="work\/tedx-rsu.html"/);
+  assert.match(home, /Coming soon/);
+  assert.match(work, /aria-label="(?:Rivo Studio|Chop Box|Detour|Out Of Office), project preview"/);
+  for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:rivo|chopbox|detour|out-of-office)\.html"/);
 });
 
 test("project hit areas are full rows and hover expansion requires fine-pointer capability", async () => {
@@ -425,7 +421,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /Coming soon/);
-  assert.match(projects, /!project\.href\?\.startsWith\('writing\/'\)/);
+  assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
   assert.match(footer, /Explore/);
