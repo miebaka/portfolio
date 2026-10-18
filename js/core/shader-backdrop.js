@@ -4,13 +4,20 @@ const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 export const SHADER_BACKDROP_PRESETS = Object.freeze({
   light: Object.freeze({
     name: "Light water plane",
-    colors: Object.freeze(["#ebedff", "#f3f2f8", "#dbf8ff"]),
   }),
   dark: Object.freeze({
     name: "Dark water plane",
-    colors: Object.freeze(["#606080", "#8d7dca", "#212121"]),
   }),
 });
+
+function resolvedColors(win, root) {
+  const styles = win.getComputedStyle?.(root);
+  const token = name => styles?.getPropertyValue(name).trim();
+  return {
+    colors: [token("--shader-color-1"), token("--shader-color-2"), token("--shader-color-3")],
+    backgrounds: [token("--shader-background-1"), token("--shader-background-2")],
+  };
+}
 
 function resolvedState(root, reducedQuery, navigatorObject, allowWebdriverMotion = false) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
@@ -57,7 +64,8 @@ export async function initShaderBackdrop({
   const reducedQuery = win.matchMedia?.(REDUCED_MOTION);
   const getState = () => {
     const state = resolvedState(root, reducedQuery, navigatorObject, testOptIn);
-    return forceStatic ? { ...state, reduced: true } : state;
+    const colors = resolvedColors(win, root);
+    return forceStatic ? { ...state, ...colors, reduced: true } : { ...state, ...colors };
   };
   const host = doc.createElement("div");
   host.className = "shader-backdrop";

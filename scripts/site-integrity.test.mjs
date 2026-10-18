@@ -249,7 +249,7 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   const island = await readFile(join(root, "js", "shader-gradient-island.js"), "utf8");
   assert.match(source, /Light water plane/);
   assert.match(source, /Dark water plane/);
-  for (const color of ["#ebedff", "#f3f2f8", "#dbf8ff", "#606080", "#8d7dca", "#212121"]) assert.match(source, new RegExp(color, "i"));
+  for (const token of ["--shader-color-1", "--shader-color-2", "--shader-color-3", "--shader-background-1", "--shader-background-2"]) assert.match(source, new RegExp(token));
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(source, /pointermove/);
@@ -257,7 +257,7 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   assert.match(source, /shader-static/);
   assert.match(source, /connection\?\.saveData/);
   assert.match(island, /separate\s+compositions/);
-  for (const value of ["#ebedff", "#f3f2f8", "#dbf8ff", "#606080", "#8d7dca", "#212121"]) assert.match(island, new RegExp(value));
+  for (const contract of [/colors\[0\]/, /colors\[1\]/, /colors\[2\]/, /backgrounds\[0\]/, /backgrounds\[1\]/]) assert.match(island, contract);
   for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
   for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
   assert.match(island, /ShaderGradientCanvas/);

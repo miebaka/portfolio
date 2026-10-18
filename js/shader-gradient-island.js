@@ -12,8 +12,6 @@ const PRESETS = Object.freeze({
     range: "disabled", rangeStart: 0, rangeEnd: 40,
     brightness: 1.2,
     cAzimuthAngle: 180, cDistance: 2.9, cPolarAngle: 120, cameraZoom: 1,
-    color1: "#ebedff", color2: "#f3f2f8", color3: "#dbf8ff",
-    bgColor1: "#000000", bgColor2: "#000000",
     envPreset: "city", grain: "off", lightType: "3d",
     positionX: 0, positionY: 1.8, positionZ: 0,
     reflection: 0.1,
@@ -27,7 +25,6 @@ const PRESETS = Object.freeze({
     range: "disabled", rangeStart: 0, rangeEnd: 40,
     brightness: 1,
     cAzimuthAngle: 180, cDistance: 2.8, cPolarAngle: 80, cameraZoom: 9.1,
-    color1: "#606080", color2: "#8d7dca", color3: "#212121",
     envPreset: "city", grain: "on", lightType: "3d",
     positionX: 0, positionY: 0, positionZ: 0,
     reflection: 0.1,
@@ -56,8 +53,12 @@ function CursorCamera({ interaction, reduced, preset }) {
   return null;
 }
 
-function Backdrop({ theme, reduced, interaction }) {
-  const preset = PRESETS[theme] || PRESETS.light;
+function Backdrop({ theme, reduced, interaction, colors, backgrounds }) {
+  const preset = {
+    ...(PRESETS[theme] || PRESETS.light),
+    color1: colors[0], color2: colors[1], color3: colors[2],
+    ...(theme === "light" ? { bgColor1: backgrounds[0], bgColor2: backgrounds[1] } : {}),
+  };
   return createElement(
     ShaderGradientCanvas,
     {
