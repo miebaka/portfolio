@@ -3,12 +3,12 @@ const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
 export const SHADER_BACKDROP_PRESETS = Object.freeze({
   light: Object.freeze({
-    name: "Editorial press",
-    colors: Object.freeze(["#f8f9fc", "#b1c5ff", "#002080"]),
+    name: "Light water plane",
+    colors: Object.freeze(["#ebedff", "#f3f2f8", "#dbf8ff"]),
   }),
   dark: Object.freeze({
-    name: "04 Nighty night — Ultramarine",
-    colors: Object.freeze(["#002080", "#1c3da4", "#b1c5ff"]),
+    name: "Dark water plane",
+    colors: Object.freeze(["#606080", "#8d7dca", "#212121"]),
   }),
 });
 

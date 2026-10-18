@@ -244,19 +244,21 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /filter:saturate/i);
 });
 
-test("theme shader backdrop preserves the Print and Nighty night contracts", async () => {
+test("theme shader backdrop preserves both authored water-plane contracts", async () => {
   const source = await readFile(join(dist, "js", "core", "shader-backdrop.js"), "utf8");
   const island = await readFile(join(root, "js", "shader-gradient-island.js"), "utf8");
-  assert.match(source, /Editorial press/);
-  assert.match(source, /04 Nighty night — Ultramarine/);
-  for (const color of ["#f8f9fc", "#002080", "#1c3da4", "#b1c5ff"]) assert.match(source, new RegExp(color, "i"));
+  assert.match(source, /Light water plane/);
+  assert.match(source, /Dark water plane/);
+  for (const color of ["#ebedff", "#f3f2f8", "#dbf8ff", "#606080", "#8d7dca", "#212121"]) assert.match(source, new RegExp(color, "i"));
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(source, /pointermove/);
   assert.match(source, /setPointer/);
   assert.match(source, /shader-static/);
   assert.match(source, /connection\?\.saveData/);
-  assert.match(island, /ShaderGradient preset 04, Nighty night/);
+  assert.match(island, /separate\s+compositions/);
+  for (const value of ["#ebedff", "#f3f2f8", "#dbf8ff", "#606080", "#8d7dca", "#212121"]) assert.match(island, new RegExp(value));
+  for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
   for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
   assert.match(island, /ShaderGradientCanvas/);
   assert.match(island, /function CursorCamera/);

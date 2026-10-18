@@ -5,27 +5,41 @@ import { MathUtils } from "three";
 import { ShaderGradient } from "../node_modules/@shadergradient/react/dist/ShaderGradient/index.mjs";
 import { ShaderGradientCanvas } from "../node_modules/@shadergradient/react/dist/ShaderGradientCanvas.mjs";
 
-/* ShaderGradient preset 04, Nighty night. Only its three colour inputs are
-   replaced below; mesh, camera, light, grain and motion remain canonical. */
-const NIGHTY_NIGHT = Object.freeze({
-  range: "disabled", rangeStart: 0, rangeEnd: 40,
-  animate: "on", brightness: 1,
-  cAzimuthAngle: 180, cDistance: 2.8, cPolarAngle: 80, cameraZoom: 9.1,
-  envPreset: "city", grain: "on", lightType: "3d",
-  positionX: 0, positionY: 0, positionZ: 0,
-  reflection: 0.1,
-  rotationX: 50, rotationY: 0, rotationZ: -60,
-  shader: "defaults", type: "waterPlane",
-  uAmplitude: 0, uDensity: 1.5, uFrequency: 0,
-  uSpeed: 0.3, uStrength: 1.5, uTime: 8,
-  wireframe: false, fov: 45,
-});
-const PALETTES = Object.freeze({
-  light: Object.freeze({ color1: "#f8f9fc", color2: "#b1c5ff", color3: "#002080" }),
-  dark: Object.freeze({ color1: "#002080", color2: "#1c3da4", color3: "#b1c5ff" }),
+/* Authored ShaderGradient URLs are the source of truth. These are separate
+   compositions, not one preset with theme colours swapped. */
+const PRESETS = Object.freeze({
+  light: Object.freeze({
+    range: "disabled", rangeStart: 0, rangeEnd: 40,
+    brightness: 1.2,
+    cAzimuthAngle: 180, cDistance: 2.9, cPolarAngle: 120, cameraZoom: 1,
+    color1: "#ebedff", color2: "#f3f2f8", color3: "#dbf8ff",
+    bgColor1: "#000000", bgColor2: "#000000",
+    envPreset: "city", grain: "off", lightType: "3d",
+    positionX: 0, positionY: 1.8, positionZ: 0,
+    reflection: 0.1,
+    rotationX: 0, rotationY: 0, rotationZ: -90,
+    shader: "defaults", type: "waterPlane",
+    uAmplitude: 0, uDensity: 1, uFrequency: 5.5,
+    uSpeed: 0.3, uStrength: 3, uTime: 0.2,
+    wireframe: false, fov: 45,
+  }),
+  dark: Object.freeze({
+    range: "disabled", rangeStart: 0, rangeEnd: 40,
+    brightness: 1,
+    cAzimuthAngle: 180, cDistance: 2.8, cPolarAngle: 80, cameraZoom: 9.1,
+    color1: "#606080", color2: "#8d7dca", color3: "#212121",
+    envPreset: "city", grain: "on", lightType: "3d",
+    positionX: 0, positionY: 0, positionZ: 0,
+    reflection: 0.1,
+    rotationX: 50, rotationY: 0, rotationZ: -60,
+    shader: "defaults", type: "waterPlane",
+    uAmplitude: 0, uDensity: 1.5, uFrequency: 0,
+    uSpeed: 0.3, uStrength: 1.5, uTime: 8,
+    wireframe: false, fov: 45,
+  }),
 });
 
-function CursorCamera({ interaction, reduced }) {
+function CursorCamera({ interaction, reduced, preset }) {
   const controls = useThree(state => state.controls);
   useFrame((_, delta) => {
     if (!controls) return;
@@ -34,8 +48,8 @@ function CursorCamera({ interaction, reduced }) {
     interaction.currentX = MathUtils.damp(interaction.currentX, targetX, 7, delta);
     interaction.currentY = MathUtils.damp(interaction.currentY, targetY, 7, delta);
     controls.rotateTo(
-      MathUtils.degToRad(NIGHTY_NIGHT.cAzimuthAngle + interaction.currentX * 7),
-      MathUtils.degToRad(NIGHTY_NIGHT.cPolarAngle - interaction.currentY * 4),
+      MathUtils.degToRad(preset.cAzimuthAngle + interaction.currentX * 7),
+      MathUtils.degToRad(preset.cPolarAngle - interaction.currentY * 4),
       false,
     );
   });
@@ -43,29 +57,27 @@ function CursorCamera({ interaction, reduced }) {
 }
 
 function Backdrop({ theme, reduced, interaction }) {
-  const palette = PALETTES[theme] || PALETTES.light;
+  const preset = PRESETS[theme] || PRESETS.light;
   return createElement(
     ShaderGradientCanvas,
     {
       className: "shader-backdrop__canvas",
       style: { position: "absolute", inset: 0 },
       pixelDensity: 1,
-      fov: NIGHTY_NIGHT.fov,
+      fov: preset.fov,
       pointerEvents: "none",
       lazyLoad: false,
       powerPreference: "low-power",
     },
     createElement(React.Fragment, null,
       createElement(ShaderGradient, {
-        ...NIGHTY_NIGHT,
-        ...palette,
+        ...preset,
         control: "props",
         animate: reduced ? "off" : "on",
-        uTime: 8,
         enableTransition: false,
         enableCameraUpdate: false,
       }),
-      createElement(CursorCamera, { interaction, reduced }),
+      createElement(CursorCamera, { interaction, reduced, preset }),
     ),
   );
 }

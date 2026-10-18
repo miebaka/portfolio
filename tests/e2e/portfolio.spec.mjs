@@ -60,13 +60,13 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
-test("Home mounts the official ultramarine Nighty night shader", async ({ page }) => {
+test("Home mounts the authored dark water-plane shader", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
   await page.goto("/index.html?shader-test=1");
-  const backdrop = page.locator('[data-shader-backdrop][data-preset="04 Nighty night — Ultramarine"]');
+  const backdrop = page.locator('[data-shader-backdrop][data-preset="Dark water plane"]');
   await expect(backdrop).toBeVisible();
   await expect(backdrop.locator("canvas")).toHaveCount(1);
-  const overlay = page.locator('[data-shader-overlay][data-preset="04 Nighty night — Ultramarine"]');
+  const overlay = page.locator('[data-shader-overlay][data-preset="Dark water plane"]');
   await expect(overlay).toBeVisible();
   await expect(overlay.locator("canvas")).toHaveCount(1);
   const cursorCapable = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches);
