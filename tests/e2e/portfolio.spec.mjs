@@ -66,6 +66,9 @@ test("Home mounts the official ultramarine Nighty night shader", async ({ page }
   const backdrop = page.locator('[data-shader-backdrop][data-preset="04 Nighty night — Ultramarine"]');
   await expect(backdrop).toBeVisible();
   await expect(backdrop.locator("canvas")).toHaveCount(1);
+  const overlay = page.locator('[data-shader-overlay][data-preset="04 Nighty night — Ultramarine"]');
+  await expect(overlay).toBeVisible();
+  await expect(overlay.locator("canvas")).toHaveCount(1);
   const cursorCapable = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches);
   if (cursorCapable) {
     await expect(backdrop).toHaveAttribute("data-interaction", "cursor");
