@@ -39,18 +39,50 @@ function setupPreferences(nav, index) {
   };
 }
 
-let activeIndex, cleanupPreferences;
+function setupMobileMenu(nav) {
+  const button = nav.querySelector(".site-nav__menu-btn");
+  const links = nav.querySelector(".site-nav__links");
+  if (!button || !links) return () => {};
+  const setOpen = open => {
+    nav.classList.toggle("is-menu-open", open);
+    button.setAttribute("aria-expanded", String(open));
+  };
+  const toggle = () => setOpen(!nav.classList.contains("is-menu-open"));
+  const closeFromLink = () => setOpen(false);
+  const closeFromKeyboard = event => {
+    if (event.key !== "Escape" || !nav.classList.contains("is-menu-open")) return;
+    setOpen(false);
+    button.focus();
+  };
+  const closeFromOutside = event => {
+    if (!nav.contains(event.target)) setOpen(false);
+  };
+  button.addEventListener("click", toggle);
+  links.addEventListener("click", closeFromLink);
+  document.addEventListener("keydown", closeFromKeyboard);
+  document.addEventListener("pointerdown", closeFromOutside);
+  return () => {
+    button.removeEventListener("click", toggle);
+    links.removeEventListener("click", closeFromLink);
+    document.removeEventListener("keydown", closeFromKeyboard);
+    document.removeEventListener("pointerdown", closeFromOutside);
+  };
+}
+
+let activeIndex, cleanupPreferences, cleanupMobileMenu;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
-  activeIndex?.destroy(); cleanupPreferences?.(); document.getElementById("site-index")?.remove();
+  activeIndex?.destroy(); cleanupPreferences?.(); cleanupMobileMenu?.(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
-  const order = ["work", "about", "explorations", "playground", "community", "contact"];
+  const order = ["work", "about", "explorations", "writing", "playground", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
   el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
-    '<nav class="site-nav__links" aria-label="Primary">' + links + '</nav>' +
+    '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-nav-links">Menu</button>' +
+    '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + '</nav>' +
     '<fieldset class="site-nav__themes" aria-label="Colour mode"><button type="button" data-nav-theme="light" aria-pressed="false">Print</button><span aria-hidden="true">|</span><button type="button" data-nav-theme="dark" aria-pressed="false">Screen</button></fieldset></div>';
+  cleanupMobileMenu = setupMobileMenu(el);
   const themeButtons = [...el.querySelectorAll("[data-nav-theme]")];
   const preferences = createPreferencesController({
     root: document.documentElement,

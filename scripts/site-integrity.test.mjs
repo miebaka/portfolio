@@ -128,7 +128,7 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
 test("collection routes explain their empty state without invented entries", async () => {
   for (const [href, title, message] of [
     ["explorations.html", "Explorations", "Self-initiated studies in image, type and systems. The first entries are being prepared for publication."],
-    ["community.html", "Community", "Resources, contributions and shared work will appear here when they are ready to be useful."]
+    ["community.html", "Playground", "Experiments, resources and shared work will appear here when they are ready to be useful."]
   ]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.match(html, /data-prerendered="true"/);
@@ -243,6 +243,7 @@ test("ultramarine identity stays within its documented visual language", async (
 test("theme shader backdrop preserves both authored water-plane contracts", async () => {
   const source = await readFile(join(dist, "js", "core", "shader-backdrop.js"), "utf8");
   const island = await readFile(join(root, "js", "shader-gradient-island.js"), "utf8");
+  const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   assert.match(source, /Light water plane/);
   assert.match(source, /Dark water plane/);
   for (const token of ["--shader-color-1", "--shader-color-2", "--shader-color-3", "--shader-background-1", "--shader-background-2"]) assert.match(source, new RegExp(token));
@@ -255,6 +256,9 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   assert.match(island, /separate\s+compositions/);
   for (const contract of [/colors\[0\]/, /colors\[1\]/, /colors\[2\]/, /backgrounds\[0\]/, /backgrounds\[1\]/]) assert.match(island, contract);
   for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
+  assert.match(foundations, /--ref-shader-light-1:var\(--ref-air\);--ref-shader-light-2:var\(--ref-paper\);--ref-shader-light-3:var\(--ref-neutral-96\)/);
+  assert.match(foundations, /--shader-background-1:var\(--ref-paper\);--shader-background-2:var\(--ref-neutral-95\)/);
+  assert.doesNotMatch(foundations, /--ref-shader-light-[123]:var\(--ref-(?:black|ultramarine|midnight)/);
   for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
   assert.match(island, /ShaderGradientCanvas/);
   assert.match(island, /function CursorCamera/);

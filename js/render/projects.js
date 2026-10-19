@@ -104,7 +104,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     const tag = published ? 'a' : 'article';
     const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
     const label = esc(project.title) + (published ? ', view project' : ', project preview');
-    return '<' + tag + ' class="project-archive__item"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true"></div></div></' + tag + '>';
+    return '<' + tag + ' class="project-archive__item project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true"></div></div></' + tag + '>';
   }).join('');
 }
 

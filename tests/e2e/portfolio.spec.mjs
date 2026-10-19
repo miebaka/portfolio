@@ -101,8 +101,29 @@ test("Home scroll overlay preserves the unblurred shader field", async ({ page }
 
 test("Global navigation matches the six-link Figma masthead", async ({ page }) => {
   await page.goto("/index.html");
+  const menu = page.getByRole("button", { name: "Menu" });
+  if (await menu.isVisible()) await menu.click();
   const labels = await page.getByRole("navigation", { name: "Primary" }).getByRole("link").allTextContents();
   expect(labels).toEqual(["Work", "About", "Explorations", "Writing", "Playground", "Contact"]);
+});
+
+test("Mobile navigation follows the compact dropdown contract", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/index.html");
+  const menu = page.getByRole("button", { name: "Menu" });
+  const primary = page.getByRole("navigation", { name: "Primary" });
+  await expect(menu).toBeVisible();
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await expect(primary).toBeHidden();
+  await menu.click();
+  await expect(menu).toHaveAttribute("aria-expanded", "true");
+  await expect(primary).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await expect(menu).toBeFocused();
+  await menu.click();
+  await page.locator("main").click({ position: { x: 10, y: 10 } });
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
 });
 
 test("About exposes the CV only when configured", async ({ page }) => {
@@ -126,6 +147,8 @@ test("empty routes remain intentional and navigable", async ({ page }) => {
   for (const route of ["/explorations.html", "/community.html"]) {
     await page.goto(route);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const menu = page.getByRole("button", { name: "Menu" });
+    if (await menu.isVisible()) await menu.click();
     await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
   }
 });
