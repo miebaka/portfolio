@@ -88,8 +88,8 @@ test("the route registry has unique destinations and supports the approved globa
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Home", "Work", "Explorations", "Community", "About", "Services", "Writing", "Contact"]);
-  assert.deepEqual(new Set(navigation.primary.map(route => route.label)), new Set(["Work", "About", "Explorations", "Writing", "Community", "Contact"]));
+  assert.deepEqual(navigation.index.map(route => route.label), ["Home", "Work", "Explorations", "Playground", "About", "Services", "Writing", "Contact"]);
+  assert.deepEqual(new Set(navigation.primary.map(route => route.label)), new Set(["Work", "About", "Explorations", "Writing", "Playground", "Contact"]));
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
   assert.ok(navigation.footer.some(route => route.href === "community.html"));
 });
@@ -319,7 +319,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(navigation, /data-nav-theme="light"[^>]*>Print/);
   assert.match(navigation, /data-nav-theme="dark"[^>]*>Screen/);
   assert.match(navigation, /setTheme\(event\.currentTarget\.dataset\.navTheme\)/);
-  assert.match(css, /--home-section-gap:clamp\(8rem,17\.778vw,20rem\)/);
+  assert.match(css, /--home-section-gap:clamp\(6rem,8\.889vw,10rem\)/);
   assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
 });
 

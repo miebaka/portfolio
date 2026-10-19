@@ -3,7 +3,7 @@ const routes = [
   { key: "home", label: "Home", href: "index.html", includeIn: ["index", "footer", "build", "sitemap"] },
   { key: "work", label: "Work", href: "work.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "explorations", label: "Explorations", href: "explorations.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
-  { key: "community", label: "Community", href: "community.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
+  { key: "community", label: "Playground", href: "community.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "about", label: "About", href: "about.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "services", label: "Services", href: "services.html", includeIn: ["index", "footer", "build", "sitemap"] },
   { key: "playground", label: "Writing", href: "playground.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },

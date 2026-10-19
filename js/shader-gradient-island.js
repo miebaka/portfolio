@@ -78,7 +78,7 @@ function Backdrop({ theme, reduced, interaction, colors, backgrounds }) {
         enableTransition: false,
         enableCameraUpdate: false,
       }),
-      createElement(CursorCamera, { interaction, reduced, preset }),
+      theme === "dark" ? createElement(CursorCamera, { interaction, reduced, preset }) : null,
     ),
   );
 }

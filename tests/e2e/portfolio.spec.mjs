@@ -102,7 +102,7 @@ test("Home scroll overlay preserves the unblurred shader field", async ({ page }
 test("Global navigation matches the six-link Figma masthead", async ({ page }) => {
   await page.goto("/index.html");
   const labels = await page.getByRole("navigation", { name: "Primary" }).getByRole("link").allTextContents();
-  expect(labels).toEqual(["Work", "About", "Explorations", "Writing", "Community", "Contact"]);
+  expect(labels).toEqual(["Work", "About", "Explorations", "Writing", "Playground", "Contact"]);
 });
 
 test("About exposes the CV only when configured", async ({ page }) => {
