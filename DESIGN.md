@@ -53,6 +53,21 @@ form, section or closing statement rather than floating as a small badge. Labels
 such as “Coming soon” are statuses, not disabled buttons, and must use their own
 status class even when they share the same visual vocabulary.
 
+## Reading and utility interactions
+
+Published case studies expose a compact chapter rail on wide screens. It is a
+static-site adaptation of Kokonut UI's MIT-licensed Scroll Index: each real
+chapter becomes a labelled button, the current chapter is programmatically
+identified, pointer movement swells nearby ticks, and the rail can be clicked
+or scrubbed. It stays out of the mobile composition, where the existing chapter
+index is the clearer control. Reduced motion keeps all navigation immediate.
+
+Visible email addresses retain their ordinary `mailto:` link and add a nearby
+copy control. The icon resolves from overlapping sheets into a drawn check and
+the label changes to confirm success; clipboard failure points the visitor back
+to the working link. This adapts Motion's Copy Button behavior without adding a
+framework or animation dependency.
+
 ## Implementation
 
 The live cascade is deliberately small: `styles/foundations.css`,

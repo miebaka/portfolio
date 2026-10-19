@@ -17,6 +17,8 @@ import { initForm } from "./core/form.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initShaderBackdrop } from "./core/shader-backdrop.js";
+import { initCaseScrollIndex } from "./core/case-scroll-index.js";
+import { initCopyEmail } from "./core/copy-email.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -43,11 +45,13 @@ if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
 run("content slots", fillSlots);
 if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
+run("copy email", initCopyEmail);
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
 run("year", initYear);
 run("footer signature", initFooterSignature);
 run("shader backdrop", () => { void initShaderBackdrop(); });
+if (isCaseStudy) run("case scroll index", initCaseScrollIndex);
 if (page === "contact") run("contact form", initForm);
 if (has("[data-decision-field]")) run("404 identity field", () => { void initDecisionField(); });

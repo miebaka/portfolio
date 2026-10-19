@@ -60,6 +60,43 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
+test("published case studies expose an accessible chapter scroll index on wide screens", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/work/tedx-rsu.html");
+  const index = page.getByRole("navigation", { name: "Case study progress" });
+  await expect(index).toBeVisible();
+  const ticks = index.getByRole("button");
+  await expect(ticks).toHaveCount(8);
+  await expect(ticks.first()).toHaveAttribute("aria-current", "step");
+  const decision = index.getByRole("button", { name: "Go to Decision" });
+  await decision.click();
+  await expect.poll(() => decision.getAttribute("aria-current")).toBe("step");
+  await expect(page.locator("#decision")).toBeInViewport();
+});
+
+test("chapter rail yields to the authored mobile chapter index", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/work/tedx-rsu.html");
+  await expect(page.getByRole("navigation", { name: "Case study progress" })).toBeHidden();
+  await expect(page.locator(".case-index")).toBeVisible();
+});
+
+test("visible email addresses can be copied without replacing the mail link", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: value => { window.__copiedEmail = value; return Promise.resolve(); } }
+    });
+  });
+  await page.goto("/contact.html");
+  const mail = page.locator('a[data-href="email"]').filter({ hasText: "@" });
+  await expect(mail).toHaveAttribute("href", /^mailto:/);
+  const copy = page.getByRole("button", { name: "Copy address to clipboard" });
+  await copy.click();
+  await expect(copy).toContainText("Copied");
+  await expect.poll(() => page.evaluate(() => window.__copiedEmail)).toBe("miebakakiki@gmail.com");
+});
+
 test("Home mounts the authored dark water-plane shader", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
   await page.goto("/index.html?shader-test=1&shader-static=1");
