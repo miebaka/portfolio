@@ -45,7 +45,8 @@ test('Vinyl spins like the reference and stops with the motion preference', asyn
   await page.locator('.now-playing').focus();
   expect(await page.locator('.now-playing__arrow-track').evaluate(el => getComputedStyle(el).transform)).toBe('none');
   const box = await page.locator('.now-playing').boundingBox();
-  expect(box.width).toBeLessThanOrEqual(460);
+  const portrait = await page.locator('.home-profile__portrait').boundingBox();
+  expect(Math.abs(box.width - portrait.width)).toBeLessThanOrEqual(1);
 });
 
 
