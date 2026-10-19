@@ -8,6 +8,9 @@ const pages = [
 for (const [name, route] of pages) {
   for (const theme of ["light", "dark"]) {
     test(`${name} — ${theme}`, async ({ page }, testInfo) => {
+      // Software WebGL on hosted runners needs time to capture the full-height
+      // homepage canvas. Keep the same pixel comparison and approved baseline.
+      if (name === "home" && process.env.CI) test.setTimeout(120_000);
       test.skip(testInfo.project.name === "reduced-motion", "Viewport baselines are captured by desktop and mobile projects");
       await page.addInitScript(value => localStorage.setItem("color-theme", value), theme);
       await page.goto(name === "home" ? `${route}?shader-test=1&shader-static=1&visual-static=1` : `${route}?visual-static=1`);
@@ -27,7 +30,10 @@ for (const [name, route] of pages) {
         .map(image => image.currentSrc || image.src)), { timeout: 20_000 }).toEqual([]);
       await page.waitForTimeout(500);
       await expect(page.locator(".site-footer__signature")).toHaveClass(/is-enhanced/);
-      await expect(page).toHaveScreenshot(`${name}-${theme}.png`, { fullPage: true });
+      await expect(page).toHaveScreenshot(`${name}-${theme}.png`, {
+        fullPage: true,
+        timeout: name === "home" && process.env.CI ? 60_000 : 10_000,
+      });
     });
   }
 }
