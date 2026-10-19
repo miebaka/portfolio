@@ -320,9 +320,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(listening, /Currently listening to:/);
   assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
-  assert.match(navigation, /data-nav-theme="light"[^>]*>Print/);
-  assert.match(navigation, /data-nav-theme="dark"[^>]*>Screen/);
-  assert.match(navigation, /setTheme\(event\.currentTarget\.dataset\.navTheme\)/);
+  assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
+  assert.match(navigation, /data-cord-mode>Print/);
+  assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
   assert.match(css, /--home-section-gap:clamp\(6rem,8\.889vw,10rem\)/);
   assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
 });

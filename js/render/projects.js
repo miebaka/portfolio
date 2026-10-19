@@ -59,14 +59,14 @@ export function renderWork() {
 export function renderHomeProjectList(base = "") {
   const projects = [
     { title: "TEDx RSU", href: base + "work/tedx-rsu.html" },
-    { title: "Rivo Studio" },
-    { title: "Chop Box" },
-    { title: "Detour" },
-    { title: "Out Of Office" }
+    { title: "Rivo Studio", status: "Case study in progress" },
+    { title: "Chop Box", status: "Case study in progress" },
+    { title: "Detour", status: "Case study in progress" },
+    { title: "Out Of Office", status: "Case study in progress" }
   ];
   return '<ol>' + projects.map(project => {
-    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>';
-    return '<li>' + (project.href ? '<a href="' + safeURL(project.href) + '">' + content + '</a>' : '<button type="button" aria-disabled="true" tabindex="-1">' + content + '</button>') + '</li>';
+    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>' + (project.status ? '<span class="home-project-list__status">' + esc(project.status) + '</span>' : '<span class="home-project-list__arrow" aria-hidden="true">↗</span>');
+    return '<li>' + (project.href ? '<a href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending">' + content + '</div>') + '</li>';
   }).join('') + '</ol>';
 }
 
@@ -96,8 +96,8 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     { ...bySlug.get('tedx-rsu'), title: 'TEDx Rivers State University' },
     bySlug.get('rivo'),
     { ...bySlug.get('chopbox'), title: 'Chop Box' },
-    { slug: 'detour', title: 'Detour', tagline: 'A software studio positioned around access, built to feel useful before it feels technical.', year: '2026', status: 'coming-soon' },
-    { slug: 'out-of-office', title: 'Out Of Office', tagline: 'A software studio positioned around access, built to feel useful before it feels technical.', year: '2026', status: 'coming-soon' }
+    { slug: 'detour', title: 'Detour', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' },
+    { slug: 'out-of-office', title: 'Out Of Office', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' }
   ].filter(Boolean);
   return workIndex.map(project => {
     const published = project.status === 'published';

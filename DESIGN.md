@@ -30,6 +30,12 @@ reading and case-study interactions stay still or respond in 120–240ms. Motion
 uses transform and opacity, is interruptible where needed, and respects reduced
 motion. Keyboard-triggered navigation opens immediately.
 
+The masthead theme control is a compact pull cord: a physical Print/Screen
+metaphor adapted from Kokonut UI's MIT-licensed rope simulation. Dragging the
+bead past its threshold or activating its switch toggles the theme. Reduced
+motion returns the cord directly to rest. The masthead labels, cord, bead and
+focus state use portfolio semantic tokens only.
+
 ## Primary actions
 
 The contact form's “Work with me” control defines the site-wide `.btn` contract.
@@ -70,3 +76,25 @@ source of truth.
 - **Variation needs an invariant.** Projects can change colour and image
   language, while the editorial grid, evidence-first copy and decision framing
   keep the portfolio recognisable.
+
+## Light shader and listening record
+
+The Print water field must interpolate only `--ref-paper`, `--ref-neutral-96`
+and `--ref-neutral-94`; its background uses paper and neutral-95. These are
+light-surface roles, not permission to use every colour present in the light
+UI. Keep the authored water displacement and camera. Its colourless lighting mask uses smooth normals sampled from the same water
+displacement. Remap that relief through a paper-biased curve and bounded token
+interpolation, without physical lighting or extrapolation changing the palette.
+Sub-tonal stationary dithering may soften 8-bit bands; it must stay inside the
+palette. Verify that the field retains a useful tonal range as well as satisfying
+colour bounds: a flat fill is not an acceptable texture. Screen keeps its separate authored material. Verify rendered pixels
+across animation and a Screen → Print switch, not just CSS token declarations.
+
+The listening record follows the owner's Proof Sheet reference: 56px grooved
+vinyl, a centred 20px label and spindle hole, reflective sectors rotating every
+3.2s, serif track title, compact monospaced status, 460px maximum pill width,
+outline-to-ink hover and a rolling arrow. Retain the current listening copy and
+Last.fm integration. Colours come from portfolio tokens. The reference's 500ms
+ink/arrow transition is a scoped exception to the ordinary UI duration limit.
+The motion preference stops the rotation and arrow translation; keyboard focus
+retains the visible ink state and focus ring.

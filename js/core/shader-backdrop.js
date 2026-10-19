@@ -83,7 +83,7 @@ export async function initShaderBackdrop({
 
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { host.remove(); console.warn("Shader backdrop unavailable", error); return null; }
+  catch (error) { host.remove(); overlayHost?.remove(); console.warn("Shader backdrop unavailable", error); return null; }
 
   let island;
   let overlayIsland;
@@ -92,6 +92,8 @@ export async function initShaderBackdrop({
     if (overlayHost) overlayIsland = rendererModule.mountShaderGradient(overlayHost, getState());
   }
   catch (error) {
+    island?.destroy();
+    overlayIsland?.destroy();
     host.remove();
     overlayHost?.remove();
     console.warn("Shader backdrop unavailable", error);
@@ -150,13 +152,15 @@ export async function initShaderBackdrop({
   win.addEventListener("pointerout", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
 
+  let readyFrame = 0;
   const markReady = () => {
-    if (destroyed || !host.querySelector("canvas") || (overlayHost && !overlayHost.querySelector("canvas"))) return win.requestAnimationFrame(markReady);
+    if (destroyed) return;
+    if (!host.querySelector("canvas") || (overlayHost && !overlayHost.querySelector("canvas"))) return (readyFrame = win.requestAnimationFrame(markReady));
     root.classList.add("has-shader-backdrop");
     host.classList.add("is-ready");
     overlayHost?.classList.add("is-ready");
   };
-  win.requestAnimationFrame(markReady);
+  readyFrame = win.requestAnimationFrame(markReady);
 
   const destroy = () => {
     if (destroyed) return;
@@ -168,6 +172,7 @@ export async function initShaderBackdrop({
     win.removeEventListener("pointerout", resetPointer);
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
+    if (readyFrame) win.cancelAnimationFrame(readyFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     overlayIsland?.destroy();

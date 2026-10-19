@@ -14,7 +14,7 @@ function buildChip(container) {
     '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
     '<span class="now-playing__copy"><span class="now-playing__label">Currently listening to:</span>' +
     '<span class="now-playing__track">Que Linda — DJ Habias</span></span>' +
-    '<span class="now-playing__arrow" aria-hidden="true">↗</span>';
+    '<span class="now-playing__arrow" aria-hidden="true"><span class="now-playing__arrow-track"><i>↗</i><i>↗</i></span></span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
   return chip;

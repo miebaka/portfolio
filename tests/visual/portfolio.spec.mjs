@@ -10,7 +10,7 @@ for (const [name, route] of pages) {
     test(`${name} — ${theme}`, async ({ page }, testInfo) => {
       // Software WebGL on hosted runners needs time to capture the full-height
       // homepage canvas. Keep the same pixel comparison and approved baseline.
-      if (name === "home" && process.env.CI) test.setTimeout(120_000);
+      if (name === "home") test.setTimeout(120_000);
       test.skip(testInfo.project.name === "reduced-motion", "Viewport baselines are captured by desktop and mobile projects");
       await page.addInitScript(value => localStorage.setItem("color-theme", value), theme);
       await page.goto(name === "home" ? `${route}?shader-test=1&shader-static=1&visual-static=1` : `${route}?visual-static=1`);
@@ -28,11 +28,16 @@ for (const [name, route] of pages) {
       await expect.poll(() => page.locator("img").evaluateAll(images => images
         .filter(image => !image.complete || image.naturalWidth === 0)
         .map(image => image.currentSrc || image.src)), { timeout: 20_000 }).toEqual([]);
+      if (name === "home") {
+        await expect(page.locator('[data-shader-backdrop]')).toHaveClass(/is-ready/);
+        await expect(page.locator('[data-shader-overlay]')).toHaveClass(/is-ready/);
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      }
       await page.waitForTimeout(500);
       await expect(page.locator(".site-footer__signature")).toHaveClass(/is-enhanced/);
       await expect(page).toHaveScreenshot(`${name}-${theme}.png`, {
         fullPage: true,
-        timeout: name === "home" && process.env.CI ? 60_000 : 10_000,
+        timeout: name === "home" ? 60_000 : 10_000,
       });
     });
   }

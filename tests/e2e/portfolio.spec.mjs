@@ -153,6 +153,18 @@ test("stored theme preference persists", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
+test("theme pull cord exposes and changes the Print/Screen state", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("color-theme", "light"));
+  await page.goto("/index.html");
+  const cord = page.getByRole("switch", { name: "Switch to Screen mode" });
+  await expect(cord).toHaveAttribute("aria-checked", "false");
+  await cord.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const changedCord = page.locator(".theme-cord");
+  await expect(changedCord).toHaveAttribute("aria-checked", "true");
+  await expect(changedCord).toHaveAccessibleName("Switch to Print mode");
+});
+
 test("client marquee can be paused", async ({ page }) => {
   await page.goto("/index.html");
   const control = page.locator(".client-marquee__control");
