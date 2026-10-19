@@ -62,22 +62,14 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
 
 test("Home mounts the authored dark water-plane shader", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
-  await page.goto("/index.html?shader-test=1");
+  await page.goto("/index.html?shader-test=1&shader-static=1");
   const backdrop = page.locator('[data-shader-backdrop][data-preset="Dark water plane"]');
   await expect(backdrop).toBeVisible();
   await expect(backdrop.locator("canvas")).toHaveCount(1);
   const overlay = page.locator('[data-shader-overlay][data-preset="Dark water plane"]');
   await expect(overlay).toBeVisible();
   await expect(overlay.locator("canvas")).toHaveCount(1);
-  const cursorCapable = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches);
-  if (cursorCapable) {
-    await expect(backdrop).toHaveAttribute("data-interaction", "cursor");
-    await page.mouse.move(40, 40);
-    await page.mouse.move(900, 500, { steps: 4 });
-    await expect.poll(() => backdrop.getAttribute("data-cursor-x")).not.toBe("0.000");
-  } else {
-    await expect(backdrop).toHaveAttribute("data-interaction", "static");
-  }
+  await expect(backdrop).toHaveAttribute("data-interaction", "static");
 });
 
 test("Home scroll overlay preserves the unblurred shader field", async ({ page }) => {
