@@ -7,7 +7,7 @@
     "build": "npm run validate:content && npm run build:shader && node scripts/build-site.mjs",
     "build:shader": "node scripts/build-shader-gradient.mjs",
     "validate:content": "node scripts/validate-content.mjs",
-    "test:content": "node --test tests/content-schema.test.mjs",
+    "test:content": "npm run build:shader && node --test tests/content-schema.test.mjs",
     "test:navigation": "node --test tests/navigation.test.mjs",
     "test:case": "node --test tests/case-study.test.mjs",
     "test:professional": "node --test tests/professional-evidence.test.mjs",
