@@ -256,9 +256,9 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   assert.match(island, /separate\s+compositions/);
   for (const contract of [/colors\[0\]/, /colors\[1\]/, /colors\[2\]/, /backgrounds\[0\]/, /backgrounds\[1\]/]) assert.match(island, contract);
   for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
-  assert.match(foundations, /--ref-shader-light-1:var\(--ref-air\);--ref-shader-light-2:var\(--ref-paper\);--ref-shader-light-3:var\(--ref-neutral-96\)/);
+  assert.match(foundations, /--ref-shader-light-1:var\(--ref-paper\);--ref-shader-light-2:var\(--ref-neutral-96\);--ref-shader-light-3:var\(--ref-neutral-94\)/);
   assert.match(foundations, /--shader-background-1:var\(--ref-paper\);--shader-background-2:var\(--ref-neutral-95\)/);
-  assert.doesNotMatch(foundations, /--ref-shader-light-[123]:var\(--ref-(?:black|ultramarine|midnight)/);
+  assert.doesNotMatch(foundations, /--ref-shader-light-[123]:var\(--ref-(?:air|black|blue|coral|midnight|navy|ultramarine)/);
   for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
   assert.match(island, /ShaderGradientCanvas/);
   assert.match(island, /function CursorCamera/);
