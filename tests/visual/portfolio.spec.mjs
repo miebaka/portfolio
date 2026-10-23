@@ -37,6 +37,10 @@ for (const [name, route] of pages) {
       await expect(page.locator(".site-footer__signature")).toHaveClass(/is-enhanced/);
       await expect(page).toHaveScreenshot(`${name}-${theme}.png`, {
         fullPage: true,
+        // Animated image frames are intentionally nondeterministic. Mask only
+        // the supplied portrait while retaining its exact rendered geometry.
+        mask: [page.locator('img[src$=".gif"]')],
+        maskColor: "#eceef3",
         timeout: name === "home" ? 60_000 : 10_000,
       });
     });

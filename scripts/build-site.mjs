@@ -116,6 +116,7 @@ await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
+await ensureCopy(join(root, "assets/images/miebaka-joshua.gif"), join(output, "assets/images/miebaka-joshua.gif"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
 for (const file of articleFiles) {
   await mkdir(dirname(join(output, file)), { recursive: true });
