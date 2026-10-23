@@ -16,7 +16,14 @@ the key:
     "title": "Kinetic Type Study",
     "category": "Motion",
     "alt": "Animated letterforms moving through a blue field",
-    "href": "https://example.com/project"
+    "href": "https://example.com/project",
+    "x": 420,
+    "y": 260,
+    "width": 360
   }
 }
 ```
+
+Positions use pixels inside the 3200 × 2200 spatial field. Invalid JSON or
+non-text labels and links stop the build instead of silently publishing an
+incorrect archive.

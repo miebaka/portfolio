@@ -13,6 +13,8 @@
 ### Fixed
 - Preserved safe-area spacing, visible current-page state and accessible labels in the mobile bottom navigation.
 - Kept the Experiments canvas readable in both themes and exposed a truthful empty state before owner assets are added.
+- Kept source and built footer fallbacks aligned with the five approved destinations when JavaScript is unavailable.
+- Validated experiment metadata during builds, encoded media filenames safely and removed false button semantics from non-linked images.
 
 ## [1.1.3] - 2026-10-11
 

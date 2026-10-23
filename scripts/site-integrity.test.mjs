@@ -104,6 +104,22 @@ test("every production shell exposes the complete Index as fallback navigation",
   }
 });
 
+test("source and built footer fallbacks match the approved public navigation", async () => {
+  const destinations = navigation.footer.map(route => route.href);
+  for (const directory of [root, dist]) {
+    for (const file of await walk(directory, ".html")) {
+      if (file.includes(`${directory}/prototype/`)) continue;
+      if (directory === root && file.startsWith(`${dist}/`)) continue;
+      const html = await readFile(file, "utf8");
+      const footer = html.match(/<footer\b[\s\S]*?<div class="nav-fallback">([\s\S]*?)<a href="https:/)?.[1];
+      if (!footer) continue;
+      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
+      for (const href of destinations) assert.ok(links.includes(join(directory, href)), `${file} omits footer fallback ${href}`);
+      assert.ok(!links.includes(join(directory, "community.html")), `${file} exposes retired Playground navigation`);
+    }
+  }
+});
+
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
   for (const [href, canonical] of [["index.html", "https://miebaka.design/"], ["explorations.html", "https://miebaka.design/explorations.html"], ["community.html", "https://miebaka.design/community.html"]]) {
     const html = await readFile(join(dist, href), "utf8");

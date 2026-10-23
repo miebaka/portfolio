@@ -10,12 +10,32 @@ const hash = value => [...value].reduce((total, character) => ((total << 5) - to
 const titleFromFile = file => file.replace(extname(file), "").replace(/[-_]+/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
 
 let metadata = {};
-try { metadata = JSON.parse(await readFile(join(directory, "metadata.json"), "utf8")); } catch {}
+try {
+  metadata = JSON.parse(await readFile(join(directory, "metadata.json"), "utf8"));
+} catch (error) {
+  if (error.code !== "ENOENT") throw new Error(`Invalid experiments metadata: ${error.message}`);
+}
+if (!metadata || Array.isArray(metadata) || typeof metadata !== "object") throw new Error("Experiments metadata must be an object keyed by filename.");
+
+const optionalText = ["title", "category", "alt", "href"];
+const optionalNumber = ["x", "y", "width"];
+const validateOverride = (file, override) => {
+  for (const key of optionalText) {
+    if (override[key] != null && typeof override[key] !== "string") throw new Error(`${file}: ${key} must be text.`);
+  }
+  for (const key of optionalNumber) {
+    if (override[key] != null && (!Number.isFinite(override[key]) || override[key] < 0)) throw new Error(`${file}: ${key} must be a non-negative number.`);
+  }
+  if (override.width === 0) throw new Error(`${file}: width must be greater than zero.`);
+};
 
 const files = (await readdir(directory)).filter(file => supported.has(extname(file).toLowerCase())).sort();
 const entries = files.map((file, index) => {
   const seed = hash(file);
-  const override = metadata[file] && typeof metadata[file] === "object" ? metadata[file] : {};
+  const authored = metadata[file];
+  if (authored != null && (Array.isArray(authored) || typeof authored !== "object")) throw new Error(`${file}: metadata must be an object.`);
+  const override = authored || {};
+  validateOverride(file, override);
   return {
     file,
     type: video.has(extname(file).toLowerCase()) ? "video" : "image",

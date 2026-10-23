@@ -2,8 +2,8 @@ import { basePath, escapeHTML as esc, safeURL } from "../utilities/dom.js";
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const mediaMarkup = (entry, base) => entry.type === "video"
-  ? `<video src="${base}assets/experiments/${esc(entry.file)}" muted playsinline loop preload="metadata" aria-label="${esc(entry.title)}"></video>`
-  : `<img src="${base}assets/experiments/${esc(entry.file)}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
+  ? `<video src="${base}assets/experiments/${encodeURIComponent(entry.file)}" muted playsinline loop preload="metadata" aria-label="${esc(entry.title)}"></video>`
+  : `<img src="${base}assets/experiments/${encodeURIComponent(entry.file)}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
 
 export async function initExperimentsSpatial() {
   const root = document.querySelector("[data-experiments-spatial]");
@@ -31,8 +31,9 @@ export async function initExperimentsSpatial() {
   stage.style.setProperty("--stage-w", `${virtual.width}px`);
   stage.style.setProperty("--stage-h", `${virtual.height}px`);
   stage.innerHTML = entries.map((entry, index) => {
-    const tag = entry.href ? "a" : "button";
-    const href = entry.href ? ` href="${safeURL(entry.href)}" target="_blank" rel="noopener noreferrer"` : ' type="button"';
+    const tag = entry.href ? "a" : entry.type === "video" ? "button" : "figure";
+    const external = /^https?:/i.test(entry.href || "");
+    const href = entry.href ? ` href="${safeURL(entry.href)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ""}` : entry.type === "video" ? ' type="button" aria-label="Play or pause ' + esc(entry.title) + '"' : ' tabindex="0"';
     return `<${tag} class="experiment-object"${href} style="--x:${entry.x}px;--y:${entry.y}px;--w:${entry.width}px;--z:${index + 1}" data-title="${esc(entry.title)}" data-meta="${esc(entry.category || "Experiment")}">${mediaMarkup(entry, base)}</${tag}>`;
   }).join("");
   count.textContent = `${String(entries.length).padStart(2, "0")} works`;
@@ -55,6 +56,9 @@ export async function initExperimentsSpatial() {
     const video = object.querySelector("video");
     object.addEventListener("pointerenter", () => video?.play().catch(() => {}));
     object.addEventListener("pointerleave", () => video?.pause());
+    object.addEventListener("focus", () => video?.play().catch(() => {}));
+    object.addEventListener("blur", () => video?.pause());
+    if (video && object.tagName === "BUTTON") object.addEventListener("click", () => video.paused ? video.play().catch(() => {}) : video.pause());
   });
 
   const camera = { x: 0, y: 0 };
