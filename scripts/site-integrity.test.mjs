@@ -354,7 +354,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main\{[^}]*text-align:left/);
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
-  assert.match(home, /<h1 id="hero-title">I design brand systems, then build the tools that keep them intact\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title" aria-label="I design brands, build useful things & ask a lot of questions\.">/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
@@ -421,7 +421,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /hello@miebaka\.design|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
-  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brand systems, then build the tools that keep them intact\./);
+  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brands, build useful things & ask a lot of questions\./);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /Coming soon/);

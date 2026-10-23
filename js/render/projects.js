@@ -99,12 +99,18 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     { slug: 'detour', title: 'Detour', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' },
     { slug: 'out-of-office', title: 'Out Of Office', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' }
   ].filter(Boolean);
+  const previewFrames = {
+    rivo: ["rivo-wordmark", "rivo-palette", "rivo-in-use"],
+    "tedx-rsu": ["tedx-rsu-typeface", "tedx-rsu-logomark", "tedx-rsu-campus-banner"],
+    chopbox: ["chopbox-logo-lockups", "chopbox-packaging", "chopbox-platter"]
+  };
   return workIndex.map(project => {
     const published = project.status === 'published';
     const tag = published ? 'a' : 'article';
     const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
     const label = esc(project.title) + (published ? ', view project' : ', project preview');
-    return '<' + tag + ' class="project-archive__item project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true"></div></div></' + tag + '>';
+    const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
+    return '<' + tag + ' class="project-archive__item project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div></' + tag + '>';
   }).join('');
 }
 

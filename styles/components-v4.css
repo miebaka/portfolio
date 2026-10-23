@@ -179,6 +179,12 @@ html[data-motion="reduced"] .home-work-index__row{transform:none!important;trans
 .form-status{min-height:1.4em;margin:0;opacity:1;transition:opacity 120ms linear;font-size:.8rem;color:var(--error)}
 .contact__form[data-state="submitting"] .form-status{opacity:.72}
 .contact__form[data-state="success"] .form-status{color:var(--ink)}
+.form-result{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:.65rem;min-height:1.4em}
+.form-success-mark{display:block;width:2.4rem;height:1.15rem;color:var(--accent);opacity:0;overflow:visible}
+.form-success-mark path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:72;stroke-dashoffset:72}
+.contact__form[data-state="success"] .form-success-mark{opacity:1}
+.contact__form[data-state="success"] .form-success-mark path{animation:form-success-stroke 520ms var(--ease-enter) forwards}
+@keyframes form-success-stroke{to{stroke-dashoffset:0}}
 .contact__fallback{color:var(--muted);font-size:.85rem}
 html[data-motion-preference="full"] .site-index{clip-path:inset(0 0 100% 0);transition:opacity 160ms var(--ease-enter),clip-path 160ms var(--ease-enter)}
 html[data-motion-preference="full"] .site-index[data-state="open"]{clip-path:inset(0);transition-duration:220ms}
@@ -431,6 +437,8 @@ html[data-motion="reduced"] .work-flick .work-flick__media img{transform:none}
 :root:not([data-motion-preference="full"]) .site-index__close{transition:color 120ms linear}
 :root:not([data-motion-preference="full"]) .now-playing__dot{animation:none}
 :root:not([data-motion-preference="full"]) .form-status{transition:none}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .contact__form[data-state="success"] .form-success-mark path{animation:none;stroke-dashoffset:0}}
+html[data-motion="reduced"] .contact__form[data-state="success"] .form-success-mark path{animation:none;stroke-dashoffset:0}
 :root:not([data-motion-preference="full"]) .work-flick__more-arrow{animation:none}
 :root:not([data-motion-preference="full"]) .client-marquee__track{width:100%;animation:none;will-change:auto}
 :root:not([data-motion-preference="full"]) .client-proof[aria-hidden="true"]{display:none}

@@ -90,6 +90,9 @@ html[data-motion="reduced"] .decision-field{display:none!important}
 html[data-motion="reduced"] .shader-backdrop{transition:none}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}
 }
+@view-transition{navigation:auto}
+::view-transition-group(project-tedx-rsu){animation-duration:420ms;animation-timing-function:var(--ease-in-out-ui)}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) ::view-transition-group(project-tedx-rsu){animation-duration:180ms}}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
 @media(hover:none),(pointer:coarse){textarea{font-size:16px}

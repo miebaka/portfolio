@@ -19,6 +19,7 @@ import { initFooterSignature } from "./core/footer-signature.js";
 import { initShaderBackdrop } from "./core/shader-backdrop.js";
 import { initCaseScrollIndex } from "./core/case-scroll-index.js";
 import { initCopyEmail } from "./core/copy-email.js";
+import { initEditorialReveals } from "./core/editorial-reveals.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -46,6 +47,7 @@ run("footer render", renderFooter);
 run("content slots", fillSlots);
 if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 run("copy email", initCopyEmail);
+run("editorial reveals", initEditorialReveals);
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
