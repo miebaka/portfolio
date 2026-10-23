@@ -510,6 +510,36 @@ body[data-page="work"] .project-archive__item[href]{display:block;transition:bac
 body[data-page="work"] .project-archive__item[href]:active{transform:scale(.99)}
 body[data-page="work"] .site-footer{--comp-footer-ink:var(--ink);--comp-footer-muted:var(--muted);--comp-footer-signature:var(--ink);background:var(--paper);color:var(--ink)}
 
+/* Experiments — a spatial, pannable archive. Assets are indexed at build time. */
+body[data-page="explorations"]{overflow:hidden;background:var(--ref-neutral-94);color:var(--ref-midnight)}
+body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
+.experiments-page{height:100dvh;overflow:hidden;background:var(--ref-neutral-94)}
+.experiments-spatial{position:relative;height:100dvh;overflow:hidden;isolation:isolate}
+.experiments-spatial__viewport{position:absolute;inset:var(--nav-h) 0 0;overflow:hidden;cursor:grab;touch-action:none;overscroll-behavior:none;outline:none}
+.experiments-spatial__viewport.is-dragging{cursor:grabbing}
+.experiments-spatial__viewport:focus-visible{box-shadow:inset 0 0 0 2px var(--ref-coral-75)}
+.experiments-spatial__stage{position:absolute;left:0;top:0;width:var(--stage-w,3200px);height:var(--stage-h,2200px);transform:translate3d(0,0,0)}
+.experiment-object{position:absolute;z-index:var(--z);left:var(--x);top:var(--y);width:var(--w);max-width:42rem;display:block;padding:0;border:0;background:var(--paper);color:inherit;box-shadow:0 1rem 2.5rem color-mix(in srgb,var(--ref-midnight) 12%,transparent);cursor:pointer;transition:opacity 180ms var(--ease-standard),box-shadow 180ms var(--ease-standard);touch-action:none}
+.experiment-object :is(img,video){display:block;width:100%;height:auto;max-height:32rem;object-fit:cover;background:var(--ref-neutral-96);pointer-events:none}
+.experiment-object:focus-visible{outline:3px solid var(--ref-coral-75);outline-offset:4px}
+.experiments-spatial__chrome{position:fixed;z-index:12;inset:calc(var(--nav-h) + 1.5rem) var(--page) auto;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;pointer-events:none}
+.experiments-spatial__eyebrow,.experiments-spatial__hint,.experiments-spatial__count{font:600 .62rem/1 var(--label);letter-spacing:.16em;text-transform:uppercase}
+.experiments-spatial__chrome h1{margin-top:.5rem;font:400 clamp(2.75rem,5vw,5.5rem)/.9 var(--display);letter-spacing:-.055em}
+.experiments-spatial__chrome .experiments-spatial__hint{padding-top:.4rem}
+.experiments-spatial__caption{position:fixed;z-index:12;left:var(--page);bottom:max(2rem,var(--safe-bottom));max-width:min(28rem,65vw);pointer-events:none}
+.experiments-spatial__caption p{font:400 clamp(1.35rem,2.4vw,2.5rem)/1.02 var(--display);letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.experiments-spatial__caption span{display:block;margin-top:.4rem;color:var(--ref-midnight);font-size:.75rem}
+.experiments-spatial>.experiments-spatial__count{position:fixed;z-index:12;right:var(--page);bottom:max(2rem,var(--safe-bottom));pointer-events:none}
+.experiments-spatial__empty{position:fixed;z-index:10;inset:50% auto auto 50%;width:min(30rem,calc(100vw - 3rem));text-align:center;transform:translate(-50%,-50%)}
+.experiments-spatial__empty p{font:400 clamp(2.5rem,6vw,5.5rem)/.92 var(--display);letter-spacing:-.05em}
+.experiments-spatial__empty span{display:block;margin-top:1rem;color:var(--ref-midnight)}
+@media(hover:hover) and (pointer:fine){
+  .experiments-spatial__stage:has(.experiment-object:hover) .experiment-object:not(:hover){opacity:.2}
+  .experiment-object:hover{z-index:100;box-shadow:0 1.5rem 4rem color-mix(in srgb,var(--ref-midnight) 22%,transparent)}
+}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) .experiment-object{transition:opacity 120ms linear}}
+html[data-motion="reduced"] .experiment-object{transition:opacity 120ms linear}
+
 @media (hover:hover) and (pointer:fine){
   body[data-page="work"] .project-archive__item[href]:hover{background:var(--primary-soft);color:var(--ink)}
   body[data-page="work"] .project-archive__item[href]:hover .project-archive__identity p{color:var(--muted)}
@@ -530,5 +560,8 @@ body[data-page="work"] .site-footer{--comp-footer-ink:var(--ink);--comp-footer-m
 }
 @media(max-width:40rem){
   body .site-nav__links{display:none}
-  body .site-nav.is-menu-open .site-nav__links{display:grid}
+  body[data-page="explorations"]{padding-bottom:0}
+  .experiments-spatial__viewport{inset:var(--nav-h) 0 calc(4.5rem + var(--safe-bottom))}
+  .experiments-spatial__chrome{inset:calc(var(--nav-h) + 1rem) 1.25rem auto}.experiments-spatial__chrome h1{font-size:clamp(2.75rem,14vw,4rem)}.experiments-spatial__hint{max-width:7rem;text-align:right;line-height:1.35}
+  .experiments-spatial__caption{left:1.25rem;bottom:calc(5.5rem + var(--safe-bottom));max-width:70vw}.experiments-spatial__caption p{font-size:1.35rem}.experiments-spatial__count{right:1.25rem;bottom:calc(5.65rem + var(--safe-bottom));font-size:.5rem}
 }

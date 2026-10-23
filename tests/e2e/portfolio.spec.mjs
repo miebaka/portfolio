@@ -128,31 +128,33 @@ test("Home scroll overlay preserves the unblurred shader field", async ({ page }
   }
 });
 
-test("Global navigation matches the six-link Figma masthead", async ({ page }) => {
+test("Global navigation uses the five approved destinations", async ({ page }) => {
   await page.goto("/index.html");
-  const menu = page.getByRole("button", { name: "Menu" });
-  if (await menu.isVisible()) await menu.click();
-  const labels = await page.getByRole("navigation", { name: "Primary" }).getByRole("link").allTextContents();
-  expect(labels).toEqual(["Work", "About", "Explorations", "Writing", "Playground", "Contact"]);
+  const navigation = page.viewportSize().width <= 640
+    ? page.getByRole("navigation", { name: "Primary mobile navigation" })
+    : page.getByRole("navigation", { name: "Primary", exact: true });
+  const labels = await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
+  expect(labels).toEqual(["Work", "About", "Experiments", "Notes", "Contact"]);
 });
 
-test("Mobile navigation follows the compact dropdown contract", async ({ page }) => {
+test("Mobile navigation has a persistent bottom bar and a focus-trapped index", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/index.html");
-  const menu = page.getByRole("button", { name: "Menu" });
-  const primary = page.getByRole("navigation", { name: "Primary" });
+  const menu = page.getByRole("button", { name: "Index" });
+  const bottom = page.getByRole("navigation", { name: "Primary mobile navigation" });
+  const dialog = page.getByRole("dialog", { name: "Index" });
   await expect(menu).toBeVisible();
+  await expect(bottom).toBeVisible();
+  await expect(bottom.getByRole("link")).toHaveCount(5);
   await expect(menu).toHaveAttribute("aria-expanded", "false");
-  await expect(primary).toBeHidden();
+  await expect(dialog).toBeHidden();
   await menu.click();
   await expect(menu).toHaveAttribute("aria-expanded", "true");
-  await expect(primary).toBeVisible();
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("link", { name: "Work" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(menu).toHaveAttribute("aria-expanded", "false");
   await expect(menu).toBeFocused();
-  await menu.click();
-  await page.locator("main").click({ position: { x: 10, y: 10 } });
-  await expect(menu).toHaveAttribute("aria-expanded", "false");
 });
 
 test("About exposes the CV only when configured", async ({ page }) => {
@@ -172,14 +174,19 @@ test("Work index matches the five-project Figma composition", async ({ page }) =
   await expect(page.locator(".project-archive__media")).toHaveCount(5);
 });
 
-test("empty routes remain intentional and navigable", async ({ page }) => {
-  for (const route of ["/explorations.html", "/community.html"]) {
-    await page.goto(route);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    const menu = page.getByRole("button", { name: "Menu" });
-    if (await menu.isVisible()) await menu.click();
-    await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-  }
+test("Experiments exposes a spatial canvas and remains globally navigable", async ({ page }) => {
+  await page.goto("/explorations.html");
+  await expect(page.getByRole("heading", { level: 1, name: "Experiments" })).toBeVisible();
+  await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
+  const navigation = page.viewportSize().width <= 640
+    ? page.getByRole("navigation", { name: "Primary mobile navigation" })
+    : page.getByRole("navigation", { name: "Primary", exact: true });
+  await expect(navigation).toBeVisible();
+});
+
+test("Playground retains its truthful empty state", async ({ page }) => {
+  await page.goto("/community.html");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
 test("stored theme preference persists", async ({ page }) => {

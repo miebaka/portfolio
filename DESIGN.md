@@ -1,6 +1,6 @@
 # Miebaka Joshua — Refined Editorial system
 
-Updated 10 October 2026. The detailed source of truth is
+Updated 23 October 2026. The detailed source of truth is
 [`docs/design-system-v3.md`](docs/design-system-v3.md).
 
 ## Direction
@@ -35,6 +35,20 @@ metaphor adapted from Kokonut UI's MIT-licensed rope simulation. Dragging the
 bead past its threshold or activating its switch toggles the theme. Reduced
 motion returns the cord directly to rest. The masthead labels, cord, bead and
 focus state use portfolio semantic tokens only.
+
+## Navigation and spatial work
+
+The global destination set is Work, About, Experiments, Notes and Contact.
+Desktop keeps the restrained masthead. Mobile adds two complementary controls:
+a persistent five-item bottom bar for direct wayfinding and a full-screen,
+numbered Index for orientation. The Index is modal, traps focus, closes on
+Escape and restores focus to its trigger.
+
+Experiments is a deliberately different browsing mode within the same visual
+system. It is a full-viewport spatial field for image and video studies, with
+drag, wheel, arrow-key and tab navigation. Titles and categories stay anchored
+to the viewport so the work can move without losing context. The empty state is
+published truthfully until owner assets are placed in `assets/experiments/`.
 
 ## Primary actions
 

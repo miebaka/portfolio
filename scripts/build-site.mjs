@@ -118,6 +118,7 @@ await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(outpu
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua.gif"), join(output, "assets/images/miebaka-joshua.gif"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
+await ensureCopy(join(root, "assets/experiments"), join(output, "assets/experiments"));
 for (const file of articleFiles) {
   await mkdir(dirname(join(output, file)), { recursive: true });
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));

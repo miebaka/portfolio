@@ -11,6 +11,26 @@ recorded inline and marked **Resolved**.
 
 ---
 
+## Current implementation contract, 23 October 2026
+
+This section supersedes older navigation and Experiments requirements elsewhere
+in this document when they conflict.
+
+- Global navigation is exactly: Work, About, Experiments, Notes, Contact.
+- The identity mark is the route back to Home. Privacy remains a footer route.
+- Mobile navigation combines a persistent five-item safe-area-aware bottom bar
+  with a full-screen numbered Index. The Index must trap focus, close on Escape,
+  restore trigger focus and remain usable with reduced motion.
+- Experiments uses `explorations.html` as a full-viewport spatial archive. It
+  supports drag, wheel, arrow-key and sequential-keyboard navigation, mixed
+  image/video media and an honest empty state.
+- Experiment media belongs only in `assets/experiments/`. The build generates
+  `manifest.json`; optional `metadata.json` may override presentation metadata.
+- `npm run build` must validate public content, generate the Experiments
+  manifest, build the shader bundle and emit the static production site.
+
+---
+
 # 0. Positioning & Thesis
 
 * **Who:** Joshua Miebaka Williams Atubokiki — brand and visual designer, 7+ years, Lagos / WAT, remote-global.

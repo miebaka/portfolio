@@ -88,14 +88,14 @@ test("the route registry has unique destinations and supports the approved globa
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Home", "Work", "Explorations", "Playground", "About", "Services", "Writing", "Contact"]);
-  assert.deepEqual(new Set(navigation.primary.map(route => route.label)), new Set(["Work", "About", "Explorations", "Writing", "Playground", "Contact"]));
+  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "About", "Experiments", "Notes", "Contact"]);
+  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "About", "Experiments", "Notes", "Contact"]);
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
-  assert.ok(navigation.footer.some(route => route.href === "community.html"));
+  assert.ok(navigation.footer.some(route => route.href === "playground.html"));
 });
 
 test("every production shell exposes the complete Index as fallback navigation", async () => {
-  const destinations = ["index.html", "work.html", "explorations.html", "community.html", "about.html", "services.html", "playground.html", "contact.html"];
+  const destinations = navigation.index.map(route => route.href);
   for (const file of await walk(dist, ".html")) {
     const html = await readFile(file, "utf8");
     const header = html.match(/<header data-mount="nav">([\s\S]*?)<\/header>/)?.[1] || "";
@@ -125,17 +125,17 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("collection routes explain their empty state without invented entries", async () => {
-  for (const [href, title, message] of [
-    ["explorations.html", "Explorations", "Self-initiated studies in image, type and systems. The first entries are being prepared for publication."],
-    ["community.html", "Playground", "Experiments, resources and shared work will appear here when they are ready to be useful."]
-  ]) {
-    const html = await readFile(join(dist, href), "utf8");
-    assert.match(html, /data-prerendered="true"/);
-    assert.ok(new RegExp(`<h1[^>]*>${title}</h1>`).test(html));
-    assert.ok(html.includes(message));
-    assert.doesNotMatch(html, /aria-disabled|<time\b|collection-entry/);
-  }
+test("Experiments ships a truthful spatial shell and Playground retains its empty state", async () => {
+  const experiments = await readFile(join(dist, "explorations.html"), "utf8");
+  assert.match(experiments, /data-experiments-spatial/);
+  assert.match(experiments, /<h1[^>]*>Experiments<\/h1>/);
+  assert.match(experiments, /The archive is being assembled\./);
+  assert.doesNotMatch(experiments, /aria-disabled|<time\b|collection-entry/);
+
+  const playground = await readFile(join(dist, "community.html"), "utf8");
+  assert.match(playground, /data-prerendered="true"/);
+  assert.match(playground, /<h1[^>]*>Playground<\/h1>/);
+  assert.match(playground, /Experiments, resources and shared work will appear here when they are ready to be useful\./);
 });
 
 test("collection markup escapes authored content and renders usable real entries", async () => {
