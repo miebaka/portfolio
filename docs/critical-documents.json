@@ -1,0 +1,10 @@
+{
+  "documents": [
+    { "path": "README.md", "purpose": "Setup, repository map and contributor entry point", "requiredHeadings": ["Run it", "Structure", "Architecture", "Documentation workflow"] },
+    { "path": "engineering-specification.md", "purpose": "Current implementation, quality and release contract", "requiredHeadings": ["Product contract", "Architecture", "Build contract", "Quality and release"] },
+    { "path": "DESIGN.md", "purpose": "Concise creative direction and interaction rules", "requiredHeadings": ["Direction", "Type and language", "Motion", "Quality bar"] },
+    { "path": "docs/design-system-v3.md", "purpose": "Detailed foundations, components and state contract", "requiredHeadings": ["Governing idea", "Foundation", "Components", "Accessibility and resilience"] },
+    { "path": "CHANGELOG.md", "purpose": "Release history", "requiredHeadings": [] },
+    { "path": "assets/experiments/README.md", "purpose": "Experiment asset and metadata authoring guide", "requiredHeadings": ["Experiments assets"] }
+  ]
+}

@@ -10,3 +10,16 @@ playwright-report/
 test-results/
 .lighthouseci/
 assets/runtime/
+assets/vendor/
+assets/experiments/manifest.json
+
+# Local design sources and generated review material. Keep these outside Git;
+# only production-ready assets belong in the repository.
+New Look/
+Portfolio GIF/
+Portfolio Image GIF.psb
+Portfolio Image.gif
+Samples from Figma/
+output/
+reports/
+klat_magazine/

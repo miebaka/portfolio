@@ -71,6 +71,33 @@ Portfolio/
   `assets/experiments/` into a deterministic spatial archive. Drag, wheel,
   arrow-key and tab navigation all reach the same work.
 
+## Documentation workflow
+
+Critical documents are registered in
+[`docs/critical-documents.json`](docs/critical-documents.json). When the product,
+design system, architecture or release process changes, edit the owning document
+in the same commit and run:
+
+```bash
+npm run docs:update
+npm run docs:check
+```
+
+`docs:update` refreshes the index below. `docs:check` verifies required sections,
+local Markdown links and release-version alignment; CI runs it as part of
+`npm run quality`.
+
+<!-- critical-docs:start -->
+| Document | Owns |
+| --- | --- |
+| [`README.md`](README.md) | Setup, repository map and contributor entry point |
+| [`engineering-specification.md`](engineering-specification.md) | Current implementation, quality and release contract |
+| [`DESIGN.md`](DESIGN.md) | Concise creative direction and interaction rules |
+| [`docs/design-system-v3.md`](docs/design-system-v3.md) | Detailed foundations, components and state contract |
+| [`CHANGELOG.md`](CHANGELOG.md) | Release history |
+| [`assets/experiments/README.md`](assets/experiments/README.md) | Experiment asset and metadata authoring guide |
+<!-- critical-docs:end -->
+
 ## Add an experiment
 
 1. Place an image or video in `assets/experiments/`.
@@ -133,10 +160,10 @@ All opt-in and degrade gracefully — the editorial base never depends on them:
 
 ## Contact form
 
-Works out of the box via a `mailto:` handoff (`js/core/form.js`). To collect
-submissions server-side, point it at [Formspree](https://formspree.io) or
-[Netlify Forms](https://docs.netlify.com/forms/setup/) — swap the handler for a
-`fetch()` POST to your endpoint.
+JavaScript submits JSON to `/api/contact`; the Vercel function validates input,
+applies abuse controls and sends through Resend. Configure the environment
+variables documented in [`.env.example`](.env.example). The authored HTML keeps
+a `mailto:` action and direct email link as the no-JavaScript fallback.
 
 ## SEO & deploy
 
@@ -155,20 +182,16 @@ submissions server-side, point it at [Formspree](https://formspree.io) or
 - Self-hosted fonts with `font-display: swap` and preloaded critical faces;
   images carry explicit dimensions + `decoding`.
 
-## Image optimization (optional)
+## Image optimization
 
-The only step that needs Node. It generates responsive AVIF/WebP/JPG variants —
-everything else stays zero-build.
+The production build uses Node. When a project master changes, regenerate its
+responsive AVIF/WebP/JPG variants:
 
 ```bash
 npm install            # once — pulls in sharp
 npm run optimize:images
 ```
 
-This writes `<base>-540/810/1080.{avif,webp,jpg}` into `assets/images/optimized/`
-(see [`scripts/optimize-images.mjs`](scripts/optimize-images.mjs); add project
-covers to its `SOURCES` list). Then uncomment `portraitResponsive` in
-[`data/site.js`](data/site.js) — the hero portrait is rendered as `<picture>`
-with `srcset` and a JPG fallback. Until you run it, the site serves the original
-JPG with explicit dimensions; nothing breaks.
-```
+This writes the responsive variants into `assets/images/optimized/` (see
+[`scripts/optimize-images.mjs`](scripts/optimize-images.mjs)). The production
+builder copies only variants referenced by published pages.

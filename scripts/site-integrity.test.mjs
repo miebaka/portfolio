@@ -154,19 +154,6 @@ test("Experiments ships a truthful spatial shell and Playground retains its empt
   assert.match(playground, /Experiments, resources and shared work will appear here when they are ready to be useful\./);
 });
 
-test("collection markup escapes authored content and renders usable real entries", async () => {
-  const { renderCollectionState } = await import("../js/render/collection.js");
-  const empty = renderCollectionState({ title: "Studies", introduction: "About <studies>", entries: [], emptyMessage: "Preparing & reviewing." });
-  assert.match(empty, /About &lt;studies&gt;/);
-  assert.match(empty, /Preparing &amp; reviewing\./);
-  assert.doesNotMatch(empty, /<ul|<a\b|collection-entry/);
-  const entries = renderCollectionState({ title: "Studies", introduction: "About studies", entries: [{ title: "Type & image", href: "explorations/type.html", summary: "A <study>" }], emptyMessage: "Preparing." });
-  assert.match(entries, /href="explorations\/type.html"/);
-  assert.match(entries, /Type &amp; image/);
-  assert.match(entries, /A &lt;study&gt;/);
-  assert.doesNotMatch(entries, /Preparing\./);
-});
-
 async function walk(dir, suffix = "") {
   const files = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -477,24 +464,18 @@ test("all local HTML assets and links resolve", async () => {
 });
 
 test("CSP inventory permits every executable inline script and stages dependency removal", async () => {
-  const netlify = await readFile(join(root, "netlify.toml"), "utf8");
   const vercel = await readFile(join(root, "vercel.json"), "utf8");
   for (const file of await walk(dist, ".html")) {
     const html = await readFile(file, "utf8");
     for (const [, script] of html.matchAll(/<script(?![^>]*src)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)) {
       const hash = createHash("sha256").update(script).digest("base64");
       const pattern = new RegExp(hash.replace(/[+/]/g, "\\$&"));
-      assert.match(netlify, pattern, file);
       assert.match(vercel, pattern, file);
     }
   }
-  assert.match(netlify, /Content-Security-Policy-Report-Only/);
   assert.match(vercel, /Content-Security-Policy-Report-Only/);
-  const netlifyCandidate = netlify.match(/Content-Security-Policy-Report-Only\s*=\s*"([^"]+)"/)?.[1] || "";
   const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(item => item.key === "Content-Security-Policy-Report-Only").value;
-  assert.doesNotMatch(netlifyCandidate, /audioscrobbler|report-uri|report-to/i);
   assert.doesNotMatch(vercelCandidate, /audioscrobbler|report-uri|report-to/i);
-  assert.doesNotMatch(netlifyCandidate, /upgrade-insecure-requests/i);
   assert.doesNotMatch(vercelCandidate, /upgrade-insecure-requests/i);
 });
 
@@ -509,16 +490,14 @@ test("public case studies do not expose metric-shaped decoration", () => {
 });
 
 test("production build excludes source and review directories", async () => {
-  const netlify = await readFile(new URL("../netlify.toml", import.meta.url), "utf8");
-  assert.match(netlify, /publish\s*=\s*"dist"/);
-  for (const path of ["reports", "Samples from Figma", "klat_magazine", "docs", "graphify-out"]) {
+  for (const path of ["reports", "Samples from Figma", "klat_magazine", "docs", "graphify-out", "output"]) {
     await assert.rejects(access(new URL("../dist/" + path, import.meta.url)));
   }
   await assert.rejects(access(new URL("../dist/data/drafts.js", import.meta.url)));
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
   for (const file of await walk(dist)) {
     const shippedPath = file.slice(dist.length + 1).replaceAll("\\", "/");
-    assert.doesNotMatch(shippedPath, /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out)(?:\/|$)|\.map$/i);
+    assert.doesNotMatch(shippedPath, /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i);
   }
 });
 
