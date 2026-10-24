@@ -1,26 +1,24 @@
 # Miebaka Joshua — Portfolio
 
-A fast, scalable, **zero-build** portfolio site (static HTML + CSS + vanilla ES
-modules). Direction: a warm editorial frame that stays neutral so the work
+A fast, scalable portfolio site built from static HTML, CSS and vanilla ES
+modules. A small Node build validates content, generates the Experiments index,
+bundles production CSS and emits the deployable site. Direction: a warm editorial frame that stays neutral so the work
 supplies the colour. [`engineering-specification.md`](engineering-specification.md)
 is the single governing document, covering positioning, art direction and voice
 as well as the engineering contract.
 
 ## Run it
 
-No build step, no dependencies. Serve the folder over HTTP (ES modules need a
-server — `file://` won't load them):
+Install dependencies once, then use the project development command:
 
 ```bash
-python3 scripts/dev-server.py 4180
-# then visit http://localhost:4180
+npm install
+npm run dev
+# then visit http://localhost:4000
 ```
 
-Use `scripts/dev-server.py` rather than `python3 -m http.server`. The stock
-handler sends no cache headers, so the browser applies heuristic caching, and
-because the site is a graph of ES modules a cached `js/main.js` pins every
-module it imports at the old version. Edits then appear to do nothing until a
-manual hard reload. The dev server is the same thing with `no-store` added.
+`npm run dev` refreshes the generated Experiments manifest and shader bundle
+before serving the site with development-safe caching.
 
 ## Structure
 
@@ -29,6 +27,9 @@ Portfolio/
 ├── index.html              # Home: hero → proof marquee → work → capabilities → about → contact
 ├── work.html               # Full work index
 ├── about.html              # About page
+├── explorations.html       # Experiments: draggable spatial archive
+├── playground.html         # Notes index
+├── contact.html            # Contact page
 ├── 404.html                # Styled not-found page (noindex)
 ├── robots.txt · sitemap.xml
 ├── work/                   # Case studies — thin shells, body rendered from data
@@ -42,10 +43,11 @@ Portfolio/
 │   └── site.js             # Single source of truth (ESM export): profile, projects, case studies…
 ├── js/                     # ES modules, one entry per page: <script type="module" src="js/main.js">
 │   ├── main.js             # Entry — renders from data, then wires behaviour
-│   ├── render/             # navigation · projects · sections · case-study · footer
+│   ├── render/             # navigation · experiments · projects · sections · case-study · footer
 │   ├── core/               # scroll · navigation · menu · year · form
 │   └── utilities/dom.js    # escapeHTML · mount · basePath
 └── assets/
+    ├── experiments/        # Dedicated image/video source folder + generated manifest
     ├── fonts/              # Self-hosted woff/woff2 (3 type roles)
     └── images/             # Portrait, logo (SVG), client logos
 ```
@@ -62,6 +64,22 @@ Portfolio/
   built from data.
 - **Motion.** Shared timing comes from the duration and easing roles in
   `styles/foundations.css`; interface motion honours `prefers-reduced-motion`.
+- **Navigation.** The shared route registry exposes Work, About, Experiments,
+  Notes and Contact. Mobile adds a persistent five-destination bottom bar and a
+  focus-trapped full-screen Index.
+- **Experiments.** `scripts/build-experiments.mjs` turns media placed in
+  `assets/experiments/` into a deterministic spatial archive. Drag, wheel,
+  arrow-key and tab navigation all reach the same work.
+
+## Add an experiment
+
+1. Place an image or video in `assets/experiments/`.
+2. Run `npm run build:experiments`, `npm run dev`, or `npm run build`.
+3. Optionally add `assets/experiments/metadata.json` to override the generated
+   title, category, alternative text, link, position or width.
+
+See [`assets/experiments/README.md`](assets/experiments/README.md) for the
+supported formats and metadata shape.
 
 ## Progressive enhancements
 

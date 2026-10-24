@@ -9,7 +9,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: 2,
+  // Shared macOS runners serialize GPU work poorly; one CI worker keeps the
+  // WebGL assertions deterministic without weakening coverage or timeouts.
+  workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI
     ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]]
     : [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]],

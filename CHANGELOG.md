@@ -1,3 +1,21 @@
+## [1.2.0] - 2026-10-23
+
+### Added
+- Added an Oyin-inspired, focus-trapped full-screen mobile Index and a persistent five-item mobile bottom navigation.
+- Added a full-viewport Experiments spatial archive with drag, wheel, arrow-key and tab navigation for image and video work.
+- Added a dedicated `assets/experiments/` source folder and build-time manifest generator with optional metadata overrides.
+
+### Changed
+- Standardized global navigation as Work, About, Experiments, Notes and Contact across mastheads, footers and no-JavaScript fallbacks.
+- Renamed the public Explorations destination to Experiments and Writing to Notes while retaining stable file URLs.
+- Updated the build and development commands to generate the Experiments manifest before serving or publishing.
+
+### Fixed
+- Preserved safe-area spacing, visible current-page state and accessible labels in the mobile bottom navigation.
+- Kept the Experiments canvas readable in both themes and exposed a truthful empty state before owner assets are added.
+- Kept source and built footer fallbacks aligned with the five approved destinations when JavaScript is unavailable.
+- Validated experiment metadata during builds, encoded media filenames safely and removed false button semantics from non-linked images.
+
 ## [1.1.3] - 2026-10-11
 
 ### Fixed

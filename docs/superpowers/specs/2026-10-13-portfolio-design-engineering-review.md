@@ -1,6 +1,6 @@
 # Portfolio Design Engineering Review
 
-**Status:** Approved direction for planning  
+**Status:** Implemented, with the navigation decision superseded on 23 October 2026
 **Date:** 13 October 2026  
 **Visual authority:** The restored production site at commit `54dcc41`  
 **Supporting sources:** `design-thesis.md` version 5.0, owner answers, production code, deployed site, frontend audit, backend audit
@@ -58,6 +58,14 @@ The contact form validates only name and email, does not require a message and u
 The current tests pass because they require locked case studies and the restored route set. Tests must become an executable expression of the approved visual baseline plus the new structural requirements.
 
 ## Proposed information architecture
+
+> **Implementation update, 23 October 2026:** The owner approved a tighter
+> five-destination public navigation: Work, About, Experiments, Notes and
+> Contact. Home remains available through the identity mark; Services and
+> Community remain built routes but are no longer global destinations. The
+> permanent mobile bottom bar was approved because the final set fits five
+> stable destinations and provides direct one-tap wayfinding. This update
+> supersedes the proposal below where the names or navigation behavior differ.
 
 ### Primary destinations
 
@@ -126,9 +134,12 @@ The exact support line from the thesis may be added to the hero only if it can b
 
 ### Explorations
 
-- Create a real route using the site's existing visual grammar.
+- Publish it as **Experiments**, using a full-viewport spatial field within the
+  site's existing visual grammar.
 - Each entry needs a self-initiated prompt, visual decision and date.
 - If no entry is ready, publish a truthful introductory empty state rather than invented cards.
+- Source image and video assets from `assets/experiments/`; generate placement
+  data at build time and keep drag, wheel, arrow-key and tab access equivalent.
 
 ### Community
 
@@ -152,7 +163,8 @@ The exact support line from the thesis may be added to the hero only if it can b
 
 ### Writing
 
-- Keep the name Writing.
+- Publish it as **Notes** in global navigation while retaining the existing
+  `playground.html` route and editorial article structure.
 - Use only factual publication date and reading length metadata.
 - Preserve the current editorial article design.
 

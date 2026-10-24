@@ -10,7 +10,7 @@ export function renderFooter() {
   /* target="_blank" was missing, which made the rel attribute inert and sent
      visitors off-site in the same tab from the footer while the same links in
      the menu opened a new one. */
-  const footerOrder = ["home", "work", "about", "explorations", "writing", "playground", "contact", "privacy"];
+  const footerOrder = ["work", "about", "explorations", "writing", "contact", "privacy"];
   const explore = footerOrder.map(key => navigation.routes.find(item => item.key === key)).filter(Boolean).map((item) =>
     '<a href="' + basePath() + esc(item.href) + '">' + esc(item.label) + '</a>'
   ).join('');

@@ -109,6 +109,7 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .site-index__themes button span{font-size:.7rem;opacity:.7}
 .site-index__motion button{flex:1;justify-content:center;padding:.7rem;background:var(--paper);transition:color 160ms var(--ease-standard),background-color 160ms var(--ease-standard)}
 .site-index__motion button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.mobile-tabbar{display:none}
 @media(max-width:36rem){.site-index__aside{grid-template-columns:1fr}
 .site-index__link{grid-template-columns:2.3rem 1fr}
 .site-index__body{padding-block:var(--s3)}
@@ -306,6 +307,29 @@ html[data-motion-preference="full"] .now-playing__dot{animation:now-listening-pu
 .work-flick__content h3{font-size:clamp(2.4rem,6vw,4rem)}
 .work-flick__detail{grid-template-columns:1fr}
 .work-flick__action{margin-top:.5rem}
+
+/* Mobile wayfinding: five permanent destinations and an Oyin-inspired index. */
+body:not([data-page="explorations"]){padding-bottom:calc(4.5rem + var(--safe-bottom))}
+.mobile-tabbar{position:fixed;z-index:300;inset:auto 0 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:calc(4.5rem + var(--safe-bottom));padding:0 max(.35rem,var(--safe-right)) var(--safe-bottom) max(.35rem,var(--safe-left));background:var(--ref-midnight);color:var(--ref-paper);border-top:1px solid color-mix(in srgb,var(--ref-paper) 20%,transparent)}
+.mobile-tabbar__link{position:relative;min-width:0;min-height:3.75rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.42rem;padding:.4rem .1rem;color:color-mix(in srgb,var(--ref-paper) 62%,transparent);font:600 clamp(.43rem,2vw,.58rem)/1 var(--label);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mobile-tabbar__mark{color:var(--ref-neutral-80);font:400 .48rem/1 var(--label);letter-spacing:.06em}
+.mobile-tabbar__link[aria-current="page"]{color:var(--ref-paper)}
+.mobile-tabbar__link[aria-current="page"]::before{content:"";position:absolute;inset:0 .35rem auto;height:2px;background:var(--ref-coral-75)}
+.mobile-tabbar__link:focus-visible{outline:2px solid var(--ref-coral-75);outline-offset:-4px}
+.site-index{z-index:500;background:var(--ref-midnight);color:var(--ref-paper);clip-path:inset(0 0 100% 0)}
+.site-index__inner{min-height:100dvh;padding:1.25rem max(1.25rem,var(--safe-right)) calc(5.5rem + var(--safe-bottom)) max(1.25rem,var(--safe-left))}
+.site-index__heading{border-bottom:1px solid color-mix(in srgb,var(--ref-paper) 18%,transparent)}
+.site-index__heading h2,.site-index__close,.site-index__label,.site-index__preferences legend{color:var(--ref-paper)}
+.site-index .site-index__close{font-size:.64rem}
+.site-index .site-index__body{min-height:calc(100dvh - 8rem - var(--safe-bottom));display:grid;grid-template-rows:1fr auto;gap:2rem;padding:clamp(2rem,8vh,4.5rem) 0 0}
+.site-index__destinations{align-content:start}
+.site-index .site-index__link{grid-template-columns:2.25rem 1fr;min-height:clamp(4rem,11vh,5.8rem);color:var(--ref-paper)}
+.site-index .site-index__link>span:last-child{font:400 clamp(3.2rem,15vw,5.25rem)/.84 var(--body);letter-spacing:-.07em}
+.site-index__number{font-size:.55rem;color:color-mix(in srgb,var(--ref-paper) 48%,transparent)}
+.site-index__link[aria-current="page"]{color:var(--ref-coral-75)}
+.site-index .site-index__aside{grid-template-columns:1fr;gap:1.25rem;padding-top:1.25rem;border-top:1px solid color-mix(in srgb,var(--ref-paper) 18%,transparent)}
+.site-index__contact{gap:.2rem}.site-index__contact a{color:var(--ref-paper);font-size:.8rem}
+.site-index__preferences{display:none}
 }
 .case-view button+button{border-left:1px solid var(--border-strong);border:0}
 .work-flick__item[href]:focus-visible{color:var(--ref-coral-75)}
