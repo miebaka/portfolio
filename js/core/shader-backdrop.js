@@ -152,15 +152,15 @@ export async function initShaderBackdrop({
   win.addEventListener("pointerout", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
 
-  let readyFrame = 0;
-  const markReady = () => {
+  const markReady = async () => {
+    await Promise.all([island?.ready, overlayIsland?.ready].filter(Boolean));
     if (destroyed) return;
-    if (!host.querySelector("canvas") || (overlayHost && !overlayHost.querySelector("canvas"))) return (readyFrame = win.requestAnimationFrame(markReady));
+    if (!host.querySelector("canvas") || (overlayHost && !overlayHost.querySelector("canvas"))) return;
     root.classList.add("has-shader-backdrop");
     host.classList.add("is-ready");
     overlayHost?.classList.add("is-ready");
   };
-  readyFrame = win.requestAnimationFrame(markReady);
+  void markReady();
 
   const destroy = () => {
     if (destroyed) return;
@@ -172,7 +172,6 @@ export async function initShaderBackdrop({
     win.removeEventListener("pointerout", resetPointer);
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
-    if (readyFrame) win.cancelAnimationFrame(readyFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     overlayIsland?.destroy();

@@ -46,5 +46,11 @@ test("every published case makes context decision system and production visible"
   for (const study of published) {
     const chapters = new Set(study.chapters?.map(chapter => chapter.id));
     for (const id of ["context", "decision", "system", "production"]) assert.ok(chapters.has(id), `${study.title} needs ${id}`);
+    const proof = new Map(study.proof?.map(item => [item.type, item]));
+    for (const type of ["decision", "system", "survival"]) assert.ok(proof.has(type), `${study.title} needs ${type} proof`);
+    for (const item of proof.values()) {
+      assert.match(item.strength, /^(verified|partial)$/);
+      assert.ok(item.statement.length >= 40, `${study.title} ${item.type} proof needs a bounded statement`);
+    }
   }
 });

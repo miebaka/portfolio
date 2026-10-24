@@ -74,7 +74,7 @@ async function outputFiles(directory) {
 
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
-const { renderWorkMarkup, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
+const { renderHomeProjectList, renderWorkMarkup, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
 const { renderServiceFallbackMarkup } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
@@ -100,7 +100,7 @@ function renderShell(source, href) {
   let rendered = source
     .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
     .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
-  if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="work-flick work-flick--home" data-mount="work-grid" data-prerendered="true">' + renderWorkMarkup(content.projects, base) + '</div>');
+  if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/<div data-project-archive>[\s\S]*?<\/div>/, '<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
@@ -129,7 +129,7 @@ for (const project of caseProjects) {
   const file = `${slug}.html`;
   const source = renderShell(await readFile(join(root, "work", file), "utf8"), `work/${file}`);
   const article = `<article class="case" data-mount="case" data-prerendered="true">${renderCaseMarkup(SITE, slug, "../")}</article>`;
-  const rendered = source.replace(/<article class="case" data-mount="case">[\s\S]*?<\/article>/, article);
+  const rendered = source.replace(/<article class="case" data-mount="case"(?: data-prerendered="true")?>[\s\S]*?<\/article>/, article);
   await mkdir(join(output, "work"), { recursive: true });
   await writeFile(join(output, "work", file), rendered);
 }

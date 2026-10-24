@@ -167,6 +167,7 @@ test("About exposes the CV only when configured", async ({ page }) => {
 test("Work index matches the five-project Figma composition", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
+  await expect(page.getByRole("link", { name: /Rivo Studio/ })).toHaveAttribute("href", "work/rivo.html");
   await expect(page.locator(".project-archive__item")).toHaveCount(5);
   await expect(page.locator(".project-archive__identity h2")).toHaveText([
     "TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"

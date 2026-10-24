@@ -170,6 +170,12 @@ test("published case studies require a published project", () => {
   expectError(fixture({ projects: [project({ status: "coming-soon" })], caseStudies: { sample: study({ status: "published" }) } }), "CASE_PROJECT_NOT_PUBLISHED", "caseStudies.sample.status");
   expectError(fixture({ caseStudies: { sample: study({ status: "ready" }) } }), "CASE_STATUS_INVALID", "caseStudies.sample.status");
 });
+test("published case proof is explicit, bounded and unique", () => {
+  const base = study({ status: "published" });
+  expectError(fixture({ caseStudies: { sample: base } }), "CASE_PROOF_REQUIRED", "caseStudies.sample.proof");
+  expectError(fixture({ caseStudies: { sample: study({ status: "published", proof: [{ type: "impact", statement: "A claim.", strength: "certain" }] }) } }), "CASE_PROOF_TYPE_INVALID", "caseStudies.sample.proof[0].type");
+  expectError(fixture({ caseStudies: { sample: study({ status: "published", proof: [{ type: "decision", statement: "First.", strength: "verified" }, { type: "decision", statement: "Again.", strength: "partial" }] }) } }), "CASE_PROOF_TYPE_DUPLICATE", "caseStudies.sample.proof[1].type");
+});
 test("draft case narratives remain locked despite a published project listing", () => {
   const markup = renderCaseMarkup(fixture(), "sample");
   assert.match(markup, /Coming soon/);

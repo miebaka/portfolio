@@ -18,7 +18,7 @@ export const projects = [
     "span": 7,
     "ratio": "4 / 3",
     "featured": true,
-    "status": "coming-soon"
+    "status": "published"
   },
   {
     "slug": "tedx-rsu",
@@ -54,7 +54,7 @@ export const projects = [
     "span": 7,
     "ratio": "16 / 10",
     "featured": true,
-    "status": "coming-soon"
+    "status": "published"
   },
   {
     "slug": "christian-poster-a-week",

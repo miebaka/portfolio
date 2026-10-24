@@ -48,7 +48,7 @@ export function renderWork() {
   const archive = document.body.dataset.page === 'work';
   if (!archive) {
     el.className = 'home-project-list';
-    el.innerHTML = renderHomeProjectList(basePath());
+    el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath());
     return;
   }
   el.className = 'work-flick work-flick--archive';
@@ -56,16 +56,22 @@ export function renderWork() {
   bindExpansion(el);
 }
 
-export function renderHomeProjectList(base = "") {
-  const projects = [
-    { title: "TEDx RSU", href: base + "work/tedx-rsu.html" },
-    { title: "Rivo Studio", status: "Case study in progress" },
-    { title: "Chop Box", status: "Case study in progress" },
+export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
+  const bySlug = new Map(projects.map(project => [project.slug, project]));
+  const selected = ["tedx-rsu", "rivo", "chopbox"].map(slug => {
+    const project = bySlug.get(slug);
+    const published = project?.status === "published" && studies?.[slug]?.status === "published";
+    const decision = studies?.[slug]?.proof?.find(item => item.type === "decision")?.statement;
+    return { title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", decision, status: published ? "" : "Case study in progress" };
+  }).concat([
     { title: "Detour", status: "Case study in progress" },
     { title: "Out Of Office", status: "Case study in progress" }
-  ];
-  return '<ol>' + projects.map(project => {
-    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>' + (project.status ? '<span class="home-project-list__status">' + esc(project.status) + '</span>' : '<span class="home-project-list__arrow" aria-hidden="true">↗</span>');
+  ]);
+  return '<ol>' + selected.map(project => {
+    const trailing = project.status
+      ? '<span class="home-project-list__status">' + esc(project.status) + '</span>'
+      : '<span class="home-project-list__meta"><span class="home-project-list__decision">' + esc(project.decision) + '</span><span class="home-project-list__arrow" aria-hidden="true">↗</span></span>';
+    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>' + trailing;
     return '<li>' + (project.href ? '<a href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending">' + content + '</div>') + '</li>';
   }).join('') + '</ol>';
 }

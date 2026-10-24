@@ -75,3 +75,27 @@ test('Print relief stays textured and paper-dominant in its still state', async 
   expect(paper / count).toBeGreaterThan(0.55);
   expect(deep / count).toBeLessThan(0.2);
 });
+
+test('Homepage proof remains visibly rendered after the shader reports ready', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('color-theme', 'light'));
+  await page.goto('/?shader-test=1&shader-static=1');
+  await expect(page.locator('[data-shader-backdrop]')).toHaveClass(/is-ready/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
+  const hero = await page.screenshot({
+    scale: 'css',
+    clip: { x: 0, y: 0, width: page.viewportSize().width, height: page.viewportSize().height },
+  });
+  const heroStats = await sharp(hero).stats();
+  expect(Math.max(...heroStats.channels.slice(0, 3).map(channel => channel.max)) - Math.min(...heroStats.channels.slice(0, 3).map(channel => channel.min))).toBeGreaterThan(150);
+
+  await page.locator('.journey').scrollIntoViewIfNeeded();
+  await expect(page.locator('.marquee__item img').first()).toBeVisible();
+  const proof = await page.locator('.journey').screenshot({ scale: 'css' });
+  const { data, info } = await sharp(proof).raw().toBuffer({ resolveWithObject: true });
+  let lightPixels = 0;
+  for (let index = 0; index < data.length; index += info.channels) {
+    if (data[index] > 180 && data[index + 1] > 180 && data[index + 2] > 180) lightPixels++;
+  }
+  expect(lightPixels / (info.width * info.height)).toBeGreaterThan(0.002);
+});

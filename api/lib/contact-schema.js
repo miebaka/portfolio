@@ -1,5 +1,5 @@
 const LIMITS = Object.freeze({ name: 120, email: 254, message: 5_000, interest: 80 });
-const ALLOWED_INTERESTS = new Set(["brand-identity", "campaign", "design-role", "consulting", "other"]);
+const ALLOWED_INTERESTS = new Set(["brand-identity", "brand-strategy", "visual-design", "art-direction", "print-production", "design-role", "other"]);
 const FORBIDDEN_CONTROLS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/u;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 

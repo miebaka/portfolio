@@ -47,104 +47,178 @@ export const caseStudies = {
   "rivo": {
     "title": "Rivo Studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
-    "rail": {
-      "servicesLabel": "What I did",
-      "services": "Brand identity, Brand strategy, Guidelines",
-      "metaLabel": "Industry",
-      "meta": "Software studio"
-    },
+    "hero": "rivo-in-use",
     "facts": {
       "context": "In-house identity work at Rivo Studios",
       "role": "Brand strategy, identity design and guidelines",
       "delivered": "Identity system and rollout"
     },
-    "overview": {
-      "question": "How do you brand a software studio around access?",
-      "body": [
-        "Rivo Studio builds software for people the category often designs past. The identity had to make access feel native to the brand, rather than a compliance claim added afterwards."
-      ]
-    },
-    "challenge": [
-      "Software brands often confuse capability with complexity. Rivo needed to signal technical confidence without looking clinical, crowded or difficult to use.",
-      "Underneath that is a design problem, not a feature problem. Products get built without inclusivity in mind, which shuts out whole segments of the people they were meant to serve."
+    "proof": [
+      {
+        "type": "decision",
+        "statement": "Access became the organising idea, expressed through an open, softened wordmark rather than a clinical technology code.",
+        "strength": "verified"
+      },
+      {
+        "type": "system",
+        "statement": "The wordmark, Clar blue field, signal yellow and guidelines form a deliberately limited identity kit.",
+        "strength": "verified"
+      },
+      {
+        "type": "survival",
+        "statement": "Application visualisations test the system from stationery to carried and environmental formats; they do not prove production.",
+        "strength": "partial"
+      }
     ],
-    "process": [
-      "I built the identity around the pronunciation, /ˈraɪvoʊ/, and a wordmark with the corners taken off: soft, low-contrast letterforms that read cleanly at small sizes and never feel clinical. Almarai carries the interface voice for the same reason."
+    "chapters": [
+      {
+        "id": "context",
+        "label": "Context",
+        "title": "Access as a brand position",
+        "body": [
+          "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design."
+        ]
+      },
+      {
+        "id": "problem",
+        "label": "Problem",
+        "title": "Technical without becoming clinical",
+        "body": [
+          "The category often uses complexity as shorthand for capability. Rivo needed to communicate technical confidence while remaining clear, approachable and useful across everyday brand materials."
+        ]
+      },
+      {
+        "id": "process",
+        "label": "Process",
+        "title": "Start with the word people will use",
+        "body": [
+          "I worked from the spoken name, /ˈraɪvoʊ/, then tested how the wordmark behaved at small sizes, in strong colour pairings and beside practical information. The identity was developed as a set of repeatable decisions rather than a single launch image."
+        ]
+      },
+      {
+        "id": "decision",
+        "label": "Decision",
+        "title": "Soften the technical signal",
+        "body": [
+          "The wordmark removes hard corners and keeps the letterforms open. Its job is to feel assured without becoming severe, giving the studio a recognisable voice before supporting graphics are added."
+        ],
+        "media": ["rivo-wordmark"]
+      },
+      {
+        "id": "system",
+        "label": "System",
+        "title": "One primary field, one signal colour",
+        "body": [
+          "Clar blue anchors the identity against deep navy. Signal yellow is reserved for emphasis, allowing hierarchy to come from a controlled contrast rather than a growing collection of accents. The guidelines record how the wordmark, colour and typography work together."
+        ],
+        "media": ["rivo-palette"]
+      },
+      {
+        "id": "applications",
+        "label": "Applications",
+        "title": "Stress-test the idea across scales",
+        "body": [
+          "Application visualisations tested the system from a carried object to a large environmental surface. The same short proposition and yellow signal had to remain legible without turning every touchpoint into the same composition."
+        ],
+        "media": ["rivo-tote", "rivo-stage", "rivo-flag"]
+      },
+      {
+        "id": "production",
+        "label": "Production",
+        "title": "Leave a usable set of parts",
+        "body": [
+          "The delivered system included guidelines and stationery alongside the identity assets. These plates show the intended production system and presentation of those materials; they are not presented as evidence of later team adoption."
+        ],
+        "media": ["rivo-stationery", "rivo-guidelines"]
+      },
+      {
+        "id": "reflection",
+        "label": "Reflection",
+        "title": "Usefulness needs restraint",
+        "body": [
+          "The strongest part of the system is its limited vocabulary. A softened wordmark, a stable blue field and one signal colour create enough distinction while leaving room for the information each application needs to carry."
+        ]
+      }
     ],
-    "solution": [
-      "Clar, a full-strength #0000FF, anchors the system against a deep navy, with signal yellow reserved for the moment that matters on any given surface. One accent doing one job keeps a studio brand legible across a pitch deck, a hoodie and a flag."
-    ],
-    "applications": [
-      "I carried the identity from the core guidelines into stationery, merchandise, flags and campaign applications, checking that the wordmark stayed legible at small sizes and against the strongest colour pairings."
-    ],
-    "outcome": {
-      "body": [
-        "The identity was delivered across guidelines, stationery, merchandise, environmental graphics and campaign applications, giving the team a clear set of parts to keep using."
-      ]
-    },
     "media": [
       {
         "label": "The wordmark",
         "src": "rivo-wordmark",
         "w": 3840,
         "h": 3080,
-        "alt": "The Rivo wordmark in black, centred on a full field of signal yellow."
+        "alt": "The Rivo wordmark in black, centred on a full field of signal yellow.",
+        "caption": "The softened Rivo wordmark shown on the identity's signal-yellow field.",
+        "loading": "lazy"
       },
       {
         "label": "Colour",
         "src": "rivo-palette",
         "w": 2800,
         "h": 2240,
-        "alt": "The Clar swatch at hex 0000FF beside four progressively lighter tints."
+        "alt": "The Clar swatch at hex 0000FF beside four progressively lighter tints.",
+        "caption": "Clar blue and its tint range form the primary colour family.",
+        "loading": "lazy"
       },
       {
         "label": "Stationery",
         "src": "rivo-stationery",
         "w": 2800,
         "h": 2240,
-        "alt": "Business cards with a blue-to-yellow gradient face, fanned across dark cloth."
+        "alt": "Business-card application visualisation with blue and yellow faces arranged on dark cloth.",
+        "caption": "A stationery visualisation tests the identity at a small, information-heavy scale.",
+        "loading": "lazy"
       },
       {
         "label": "Guidelines",
         "src": "rivo-guidelines",
         "w": 1240,
         "h": 995,
-        "alt": "The printed Rivo brand guidelines, cover facing up."
+        "alt": "Brand-guidelines book visualisation with the Rivo cover facing up.",
+        "caption": "The guidelines visualisation presents the system as a reference another person can use.",
+        "loading": "lazy"
       },
       {
         "label": "Identity in use",
         "src": "rivo-in-use",
         "w": 3840,
         "h": 3080,
-        "alt": "A commuter in headphones using a phone, the yellow Rivo wordmark set over the scene."
+        "alt": "Identity application showing a person in headphones using a phone with the yellow Rivo wordmark over the image.",
+        "caption": "A campaign application pairs the signal-yellow wordmark with an everyday technology scene.",
+        "loading": "eager"
       },
       {
         "label": "Merchandise",
         "src": "rivo-tote",
         "w": 1240,
         "h": 995,
-        "alt": "A black tote bag reading Software that simply works for all, in yellow."
+        "alt": "Tote-bag application visualisation reading Software that simply works for all in yellow.",
+        "caption": "A tote visualisation tests the proposition as a single carried message.",
+        "loading": "lazy"
       },
       {
         "label": "On stage",
         "src": "rivo-stage",
         "w": 1240,
         "h": 995,
-        "alt": "A conference screen reading From village squares to virtual spaces."
+        "alt": "Stage-screen application visualisation reading From village squares to virtual spaces.",
+        "caption": "A stage-screen visualisation tests the system at environmental scale.",
+        "loading": "lazy"
       },
       {
         "label": "Environmental",
         "src": "rivo-flag",
         "w": 1240,
         "h": 995,
-        "alt": "A blue Rivo flag against open sky, reading Software that simply works for all."
+        "alt": "Flag application visualisation reading Software that simply works for all against open sky.",
+        "caption": "A flag visualisation checks the short proposition and wordmark against a moving outdoor format.",
+        "loading": "lazy"
       }
     ],
     "next": {
       "slug": "tedx-rsu",
       "title": "TEDx Rivers State University"
     },
-    "status": "draft"
+    "status": "published"
   },
   "tedx-rsu": {
     "title": "TEDx RSU",
@@ -155,6 +229,28 @@ export const caseStudies = {
       "role": "Identity design, creative direction and print",
       "delivered": "Event identity, social creative, programmes, merchandise, campus signage and stage applications"
     },
+    "proof": [
+      {
+        "type": "decision",
+        "statement": "“Pause…” became the organising idea inside TEDx’s fixed global identity.",
+        "strength": "verified"
+      },
+      {
+        "type": "system",
+        "statement": "A pause mark, ripple pattern, colour palette, type and prompts create one repeatable event language.",
+        "strength": "verified"
+      },
+      {
+        "type": "survival",
+        "statement": "The system is documented across social, print, merchandise, campus signage and the event stage.",
+        "strength": "verified"
+      },
+      {
+        "type": "adoption",
+        "statement": "Event-day and campus photographs show public encounter, not audience impact.",
+        "strength": "partial"
+      }
+    ],
     "chapters": [
       {
         "id": "context",
@@ -307,110 +403,185 @@ export const caseStudies = {
     ],
     "next": {
       "slug": "chopbox",
-      "title": "ChopBox",
-      "interactive": false
+      "title": "ChopBox"
     },
     "status": "published"
   },
   "chopbox": {
     "title": "ChopBox",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",
-    "rail": {
-      "servicesLabel": "What I did",
-      "services": "Brand identity, Brand strategy, Packaging",
-      "metaLabel": "Industry",
-      "meta": "Food brand"
-    },
+    "hero": "chopbox-platter",
     "facts": {
       "context": "Independent brand identity commission",
       "role": "Brand strategy, identity design and packaging",
       "delivered": "Identity, packaging and rollout"
     },
-    "overview": {
-      "question": "How do you make a brand you’d order from twice?",
-      "body": [
-        "ChopBox needed to feel warm, generous and immediately appetising: a food brand people could trust with dinner before the first order arrived."
-      ]
-    },
-    "challenge": [
-      "The identity had to make the food feel worth ordering, then hold together across packaging, uniforms, campaigns and social."
+    "proof": [
+      {
+        "type": "decision",
+        "statement": "Every identity choice was tested against one practical question: does this make the food feel worth ordering?",
+        "strength": "verified"
+      },
+      {
+        "type": "system",
+        "statement": "The lockups, toasted palette, DM Sans typography and direct verbal voice form one repeatable food-brand kit.",
+        "strength": "verified"
+      },
+      {
+        "type": "survival",
+        "statement": "Presentation visualisations test the system across packaging, uniform, campaign and outdoor formats; they do not prove production.",
+        "strength": "partial"
+      }
     ],
-    "process": [
-      "I built the brand from strategy out, checking every decision against one question: does this make you hungry? Warmth over neon; a friendly, rounded logotype over the loud reds every food app defaults to."
+    "chapters": [
+      {
+        "id": "context",
+        "label": "Context",
+        "title": "A food brand people could trust with dinner",
+        "body": [
+          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout."
+        ]
+      },
+      {
+        "id": "problem",
+        "label": "Problem",
+        "title": "Appetite without the category clichés",
+        "body": [
+          "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct."
+        ]
+      },
+      {
+        "id": "process",
+        "label": "Process",
+        "title": "Use appetite as the filter",
+        "body": [
+          "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration."
+        ],
+        "media": ["chopbox-typeface"]
+      },
+      {
+        "id": "decision",
+        "label": "Decision",
+        "title": "Choose toasted warmth over neon urgency",
+        "body": [
+          "A friendly rounded logotype and toasted yellow-red palette replace the category's harder, louder shorthand. The result aims to feel ready to order without making every application shout."
+        ],
+        "media": ["chopbox-logo-lockups"]
+      },
+      {
+        "id": "system",
+        "label": "System",
+        "title": "Build the identity for the box and the screen",
+        "body": [
+          "The full logo, wordmark and CB monogram provide different levels of recognition. Deepfry Yellow and Fireside Red carry the appetite signal, while DM Sans keeps supporting information direct and legible."
+        ],
+        "media": ["chopbox-palette"]
+      },
+      {
+        "id": "applications",
+        "label": "Applications",
+        "title": "Stress-test one voice across formats",
+        "body": [
+          "Packaging, uniform, campaign and out-of-home visualisations test whether the same rounded voice and warm palette can remain recognisable at very different scales.",
+          "These images document intended applications. They are labelled as visualisations and are not presented as photographs of produced rollout materials."
+        ],
+        "media": ["chopbox-packaging", "chopbox-apron", "chopbox-campaign", "chopbox-billboard"]
+      },
+      {
+        "id": "production",
+        "label": "Production",
+        "title": "Separate delivery from deployment",
+        "body": [
+          "The delivered scope covered identity, packaging and rollout direction. The surviving portfolio material documents the designed system and its presentation, but does not verify which applications entered production or continued in team use."
+        ]
+      },
+      {
+        "id": "reflection",
+        "label": "Reflection",
+        "title": "A useful filter makes the system cohere",
+        "body": [
+          "The strongest connective tissue is not a single shape or colour. It is the appetite test: every part should make the food feel warm, generous and worth ordering."
+        ]
+      }
     ],
-    "solution": [
-      "I built the system for packaging from day one. A toasted, appetising palette steps away from the category’s loud reds, while the simple shapes and lockups survive the box as well as the screen."
-    ],
-    "applications": [
-      "Packaging was the first stress test, followed by uniforms, campaign graphics and out-of-home. The same warm palette and rounded voice had to make food look appetising at every scale."
-    ],
-    "outcome": {
-      "body": [
-        "The identity was delivered across packaging, uniforms, campaign graphics and out-of-home applications, giving the team a practical visual language for future products."
-      ]
-    },
     "media": [
       {
         "label": "The Chop Platter",
         "src": "chopbox-platter",
         "w": 1080,
         "h": 1080,
-        "alt": "A hand holding a foil tray of samosas and puff-puff, framed by the yellow dotted Chop Platter device."
+        "alt": "A hand holding a foil tray of samosas and puff-puff, framed by the yellow dotted Chop Platter device.",
+        "caption": "The Chop Platter image combines prepared food with the yellow dotted campaign device.",
+        "loading": "eager"
       },
       {
         "label": "Logo system",
         "src": "chopbox-logo-lockups",
         "w": 3840,
         "h": 2160,
-        "alt": "Three ChopBox lockups in yellow and red on black: full logo, wordmark, and the CB monogram."
+        "alt": "Three ChopBox lockups in yellow and red on black: full logo, wordmark, and the CB monogram.",
+        "caption": "The full logo, wordmark and CB monogram provide three levels of the identity.",
+        "loading": "lazy"
       },
       {
         "label": "Colour",
         "src": "chopbox-palette",
         "w": 3840,
         "h": 2160,
-        "alt": "The ChopBox palette: Deepfry Yellow, Fireside Red, black and white, each with usage notes."
+        "alt": "The ChopBox palette: Deepfry Yellow, Fireside Red, black and white, each with usage notes.",
+        "caption": "Deepfry Yellow and Fireside Red anchor the palette beside black and white.",
+        "loading": "lazy"
       },
       {
         "label": "Typeface",
         "src": "chopbox-typeface",
         "w": 853,
         "h": 480,
-        "alt": "DM Sans shown as a full character set in black on Deepfry Yellow."
+        "alt": "DM Sans shown as a full character set in black on Deepfry Yellow.",
+        "caption": "The type specimen records DM Sans as the supporting typeface.",
+        "loading": "lazy"
       },
       {
         "label": "Packaging",
         "src": "chopbox-packaging",
         "w": 3500,
         "h": 3000,
-        "alt": "A red lid for The Chop Dip pepper sauce, shown against black."
+        "alt": "A red lid for The Chop Dip pepper sauce, shown against black.",
+        "caption": "A packaging visualisation applies the identity to The Chop Dip pepper sauce.",
+        "loading": "lazy"
       },
       {
         "label": "Uniform",
         "src": "chopbox-apron",
         "w": 3840,
         "h": 3840,
-        "alt": "A red ChopBox apron printed with the line Hello, I am the chef."
+        "alt": "A red ChopBox apron printed with the line Hello, I am the chef.",
+        "caption": "A uniform visualisation tests the direct verbal voice on an apron.",
+        "loading": "lazy"
       },
       {
         "label": "Campaign",
         "src": "chopbox-campaign",
         "w": 2248,
         "h": 3200,
-        "alt": "A campaign poster reading Abobi, chop life, make life no chop you, surrounded by flying small chops."
+        "alt": "A campaign poster reading Abobi, chop life, make life no chop you, surrounded by flying small chops.",
+        "caption": "A campaign visualisation pairs the brand voice with small-chop imagery.",
+        "loading": "lazy"
       },
       {
         "label": "Out of home",
         "src": "chopbox-billboard",
         "w": 2800,
         "h": 4000,
-        "alt": "A ChopBox advert wrapped around a water tower against a blue sky."
+        "alt": "A ChopBox advert wrapped around a water tower against a blue sky.",
+        "caption": "An outdoor visualisation tests the palette, logo and message at environmental scale.",
+        "loading": "lazy"
       }
     ],
     "next": {
       "slug": "rivo",
       "title": "Rivo"
     },
-    "status": "draft"
+    "status": "published"
   }
 };

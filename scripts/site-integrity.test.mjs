@@ -47,13 +47,14 @@ test("project cards link published work and leave unfinished work non-interactiv
   assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
 });
 
-test("Work archive matches the approved five-project index and only the published row links", () => {
+test("Work archive matches the approved five-project index and only published rows link", () => {
   assert.equal(typeof projectRender.renderProjectArchiveMarkup, "function");
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
+  assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
-  assert.equal((html.match(/<a\b/g) || []).length, 1);
+  assert.equal((html.match(/<a\b/g) || []).length, 3);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 5);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
 });
@@ -63,9 +64,11 @@ test("built Home and Work expose truthful project states without JavaScript", as
   const work = await readFile(join(dist, "work.html"), "utf8");
   for (const html of [home, work]) assert.match(html, /data-prerendered="true"/);
   for (const html of [home, work]) assert.match(html, /href="work\/tedx-rsu.html"/);
-  assert.match(home, /Coming soon/);
-  assert.match(work, /aria-label="(?:Rivo Studio|Chop Box|Detour|Out Of Office), project preview"/);
-  for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:rivo|chopbox|detour|out-of-office)\.html"/);
+  for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
+  assert.match(home, /Case study in progress/);
+  assert.match(work, /aria-label="(?:Detour|Out Of Office), project preview"/);
+  for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
+  for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:detour|out-of-office)\.html"/);
 });
 
 test("project hit areas are full rows and hover expansion requires fine-pointer capability", async () => {
@@ -169,7 +172,7 @@ test("project publication states are explicit", async () => {
   for (const project of SITE.projects) {
     assert.ok(statuses.has(project.status), `${project.slug} needs a publication status`);
   }
-  assert.equal(SITE.projects.filter(project => project.featured && project.status === "published").length, 1);
+  assert.equal(SITE.projects.filter(project => project.featured && project.status === "published").length, 3);
   assert.ok(SITE.projects.some(project => project.status === "coming-soon"));
 
   const pages = await walk(dist, ".html");
@@ -296,7 +299,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
-  for (const title of ["TEDx RSU", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(title));
+  for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
+  assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);

@@ -7,6 +7,8 @@ const routePath = value => typeof value === "string" ? value.replace(/^\.\//, ""
 const validRoute = value => hasText(value) && /^(?:\.\/)?[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html(?:[?#][^\s]*)?$/.test(value);
 const positiveInteger = value => Number.isInteger(value) && value > 0;
 const REQUIRED_CHAPTERS = ["context", "problem", "process", "decision", "system", "applications", "production", "reflection"];
+const PROOF_TYPES = ["decision", "system", "survival", "adoption"];
+const PROOF_STRENGTHS = ["verified", "partial"];
 const validHttpsUrl = value => {
   if (!hasText(value) || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f]/.test(value)) return false;
   try {
@@ -155,6 +157,19 @@ export function validateContent(content) {
       if (!hasText(study.hero) || !mediaIds.has(study.hero)) add(`${path}.hero`, "CASE_HERO_INVALID", "A published case needs a hero referencing its media.");
       if (!isRecord(study.facts)) add(`${path}.facts`, "CASE_FACTS_REQUIRED", "A published case needs supported role and deliverable facts.");
       else for (const field of ["role", "delivered"]) if (!hasText(study.facts[field])) add(`${path}.facts.${field}`, "CASE_FACT_REQUIRED", `Published case ${field} is required.`);
+      if (!Array.isArray(study.proof) || !study.proof.length) add(`${path}.proof`, "CASE_PROOF_REQUIRED", "A published case needs at least one explicit proof record.");
+      else {
+        const proofTypes = new Set();
+        study.proof.forEach((proof, index) => {
+          const proofPath = `${path}.proof[${index}]`;
+          if (!isRecord(proof)) { add(proofPath, "CASE_PROOF_INVALID", "A proof record must be an object."); return; }
+          if (!PROOF_TYPES.includes(proof.type)) add(`${proofPath}.type`, "CASE_PROOF_TYPE_INVALID", "Use decision, system, survival or adoption.");
+          else if (proofTypes.has(proof.type)) add(`${proofPath}.type`, "CASE_PROOF_TYPE_DUPLICATE", "Proof types must be unique within a case.");
+          proofTypes.add(proof.type);
+          if (!hasText(proof.statement)) add(`${proofPath}.statement`, "CASE_PROOF_STATEMENT_REQUIRED", "A proof record needs a bounded evidence statement.");
+          if (!PROOF_STRENGTHS.includes(proof.strength)) add(`${proofPath}.strength`, "CASE_PROOF_STRENGTH_INVALID", "Use verified or partial evidence strength.");
+        });
+      }
       if (!isRecord(study.next)) add(`${path}.next`, "CASE_NEXT_REQUIRED", "A published case needs a next-project destination.");
       else {
         if (!hasText(study.next.title)) add(`${path}.next.title`, "CASE_NEXT_TITLE_REQUIRED", "The next project needs a usable link title.");

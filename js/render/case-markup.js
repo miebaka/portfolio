@@ -31,6 +31,12 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
+function proofBlock(study) {
+  if (!study.proof?.length) return "";
+  const items = study.proof.map(item => `<li class="case-proof__item"><p class="case-proof__type">${esc(item.type)}</p><p>${esc(item.statement)}</p>${item.strength === "partial" ? '<p class="case-proof__scope">Bounded evidence</p>' : ""}</li>`).join("");
+  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><p class="case-proof__kicker">Evidence ledger</p><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
+}
+
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
@@ -62,7 +68,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><p class="case-project">${esc(study.title)}</p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><p class="case-project">${esc(study.title)}</p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];

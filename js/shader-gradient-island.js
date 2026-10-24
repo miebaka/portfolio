@@ -1,4 +1,4 @@
-import React, { createElement, useLayoutEffect } from "react";
+import React, { createElement, useLayoutEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { useFrame, useThree } from "@react-three/fiber";
 import { MathUtils } from "three";
@@ -127,7 +127,17 @@ function CursorCamera({ interaction, reduced, preset }) {
   return null;
 }
 
-function Backdrop({ theme, reduced, interaction, colors, backgrounds }) {
+function RenderReady({ onReady }) {
+  const didSignal = useRef(false);
+  useFrame(() => {
+    if (didSignal.current) return;
+    didSignal.current = true;
+    onReady();
+  });
+  return null;
+}
+
+function Backdrop({ theme, reduced, interaction, colors, backgrounds, onReady }) {
   const preset = {
     ...(PRESETS[theme] || PRESETS.light),
     color1: colors[0], color2: colors[1], color3: colors[2],
@@ -154,6 +164,7 @@ function Backdrop({ theme, reduced, interaction, colors, backgrounds }) {
       }),
       theme === "light" ? createElement(LightPalette, { colors }) : null,
       theme === "dark" ? createElement(CursorCamera, { interaction, reduced, preset }) : null,
+      createElement(RenderReady, { onReady }),
     ),
   );
 }
@@ -161,10 +172,19 @@ function Backdrop({ theme, reduced, interaction, colors, backgrounds }) {
 export function mountShaderGradient(host, initialState) {
   const root = createRoot(host);
   let state = { ...initialState };
+  let signalReady;
+  let didSignalReady = false;
+  const ready = new Promise(resolve => { signalReady = resolve; });
+  const onReady = () => {
+    if (didSignalReady) return;
+    didSignalReady = true;
+    signalReady();
+  };
   const interaction = { targetX: 0, targetY: 0, currentX: 0, currentY: 0 };
-  const render = () => root.render(createElement(Backdrop, { ...state, interaction }));
+  const render = () => root.render(createElement(Backdrop, { ...state, interaction, onReady }));
   render();
   return {
+    ready,
     update(nextState) { state = { ...state, ...nextState }; render(); },
     setPointer(x, y) { interaction.targetX = x; interaction.targetY = y; },
     destroy() { root.unmount(); },

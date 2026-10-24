@@ -56,9 +56,8 @@ test("published narratives need one usable next destination and allow omitted un
 });
 
 test("active next destinations require a published project and published case", () => {
-  reject(study => { study.next.interactive = true; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
-  reject(study => { delete study.next.interactive; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
-  reject((study, content) => { study.next.interactive = true; content.projects.find(project => project.slug === "chopbox").status = "published"; }, "NEXT_CASE_UNPUBLISHED", "next.slug");
+  reject((study, content) => { content.projects.find(project => project.slug === "chopbox").status = "coming-soon"; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
+  reject((study, content) => { content.caseStudies.chopbox.status = "draft"; }, "NEXT_CASE_UNPUBLISHED", "next.slug");
   reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
 });
 
@@ -76,6 +75,31 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
   assert.match(html, /<dt>Deliverables<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
+});
+
+test("Rivo publishes as an evidence-bounded identity case", () => {
+  const study = SITE.caseStudies.rivo;
+  const markup = renderCaseMarkup(SITE, "rivo");
+  assert.equal(study.status, "published");
+  assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
+  assert.match(markup, /Access as a brand position/);
+  assert.match(markup, /application visualisation/i);
+  assert.match(markup, /not presented as evidence of later team adoption/i);
+  assert.match(markup, /What this case can prove/);
+  assert.match(markup, /Bounded evidence/);
+  assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
+});
+
+test("ChopBox publishes without converting presentation visualisations into production claims", () => {
+  const study = SITE.caseStudies.chopbox;
+  const html = renderCaseMarkup(SITE, "chopbox");
+  assert.equal(study.status, "published");
+  assert.equal(SITE.projects.find(project => project.slug === "chopbox").status, "published");
+  assert.match(html, /does this make the food feel worth ordering/i);
+  assert.match(html, /not presented as photographs of produced rollout materials/i);
+  assert.match(html, /does not verify which applications entered production/i);
+  assert.match(html, /Bounded evidence/);
+  assert.doesNotMatch(html, /audience impact|sales|conversion|continued team use/i);
 });
 
 test("the complete narrative and chapter links follow the approved sequence", () => {
@@ -113,20 +137,21 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
   assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="lazy"')));
 });
 
-test("forthcoming next projects disclose their state without offering an active destination", () => {
+test("the next published project is an active destination", () => {
   const html = markup();
   assert.match(html, /aria-label="Next project"/);
-  assert.match(html, /<p class="case-next__title">ChopBox<\/p>/);
-  assert.match(html, /class="case-next__state">Coming soon<\/p>/);
-  assert.doesNotMatch(html, /href="[^\"]*chopbox\.html"|class="case-next__link"|aria-disabled|tabindex/);
+  assert.match(html, /href="\.\.\/work\/chopbox\.html"/);
+  assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
 test("a published usable next case is linked while an unavailable case stays noninteractive", () => {
   const site = structuredClone(SITE);
-  site.projects.find(project => project.slug === "chopbox").status = "published";
-  site.caseStudies["tedx-rsu"].next.interactive = true;
+  site.projects.find(project => project.slug === "chopbox").status = "coming-soon";
+  site.caseStudies["tedx-rsu"].next.interactive = false;
   assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /href="[^\"]*chopbox\.html"/);
+  site.projects.find(project => project.slug === "chopbox").status = "published";
   site.caseStudies.chopbox.status = "published";
+  delete site.caseStudies["tedx-rsu"].next.interactive;
   const html = renderCaseMarkup(site, "tedx-rsu");
   assert.match(html, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
   assert.doesNotMatch(html, /class="case-next__state"/);
@@ -161,8 +186,7 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.equal(article, markup());
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
-  assert.match(article, /<p class="case-next__title">ChopBox<\/p>/);
-  assert.doesNotMatch(article, /href="[^\"]*chopbox\.html"/);
+  assert.match(article, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
   assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");
