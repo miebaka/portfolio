@@ -1,7 +1,7 @@
 /* Public site config content. */
 export const siteConfig = {
   "name": "Miebaka Joshua",
-  "canonicalUrl": "https://miebaka.design/",
+  "canonicalUrl": "https://miebaka-portfolio.vercel.app/",
   "lastfmUser": "sheikmoujabaa",
   "role": "Brand & visual designer",
   "email": "miebakakiki@gmail.com",

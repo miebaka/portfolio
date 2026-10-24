@@ -18,7 +18,7 @@ const study = (overrides = {}) => ({
   ...overrides
 });
 const fixture = (overrides = {}) => ({
-  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka.design/", cv: null },
+  siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka-portfolio.vercel.app/", cv: null },
   services: Array.from({ length: 5 }, (_, index) => ({ id: `service-${index + 1}`, title: `Service ${index + 1}`, description: "Useful identity systems.", outputs: "A practical system.", fit: "Teams needing clarity." })),
   writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
@@ -222,11 +222,11 @@ test("adding a validated root route generates its build output and sitemap entry
   assert.ok(Array.isArray(navigationModule.navigation.routes), "Build routes need a canonical registry");
   const routes = [...navigationModule.navigation.routes, { key: "studio", label: "Studio", href: "studio.html", includeIn: ["index", "footer", "build", "sitemap"] }];
   await writeFile(join(directory, "data", "navigation.js"), `export const navigation = ${JSON.stringify({ routes, primary: routes.filter(route => route.includeIn.includes("primary")) })};`);
-  await writeFile(join(directory, "studio.html"), '<html><head><link rel="canonical" href="https://miebaka.design/studio.html"></head><body><h1>Studio</h1></body></html>');
+  await writeFile(join(directory, "studio.html"), '<html><head><link rel="canonical" href="https://miebaka-portfolio.vercel.app/studio.html"></head><body><h1>Studio</h1></body></html>');
   const result = spawnSync(process.execPath, [join(directory, "scripts", "build-site.mjs")], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
   assert.match(await readFile(join(directory, "dist", "studio.html"), "utf8"), /<h1>Studio<\/h1>/);
-  assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka.design\/studio.html<\/loc>/);
+  assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka-portfolio.vercel.app\/studio.html<\/loc>/);
   assert.match(await readFile(join(directory, "dist", "index.html"), "utf8"), /href="studio.html">Studio<\/a>/);
   assert.match(await readFile(join(directory, "dist", "writing", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
 });
@@ -252,7 +252,7 @@ test("accepted local writing URL variants build their pathname and retain author
       const builtArticle = await readFile(join(directory, "dist", pathname), "utf8");
       assert.ok(builtArticle.includes(authoredSource.match(/<h1[\s\S]*?<\/h1>/)[0]));
       const sitemap = await readFile(join(directory, "dist", "sitemap.xml"), "utf8");
-      assert.ok(sitemap.includes('<loc>https://miebaka.design/writing/when-the-swoosh-lost-its-soul.html</loc>'));
+      assert.ok(sitemap.includes('<loc>https://miebaka-portfolio.vercel.app/writing/when-the-swoosh-lost-its-soul.html</loc>'));
       assert.doesNotMatch(sitemap, /#main|\?source=index/);
       assert.equal(await readFile(join(directory, "dist", "data", "writing.js"), "utf8"), module);
     });

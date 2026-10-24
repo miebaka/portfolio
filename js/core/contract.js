@@ -44,14 +44,14 @@ export const HOOK = {
   PORTRAIT:    "data-hero-portrait",
 };
 
-/* Mounts that are page-specific rather than sitewide. A page missing one of
-   these is normal; a page missing NAV or FOOTER is not. */
+/* Mounts that are page-specific rather than sitewide. */
 const OPTIONAL = new Set([
   MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
   MOUNT.WRITING, MOUNT.CASE, MOUNT.NOW_PLAYING,
 ]);
 
 const KNOWN = new Set(Object.values(MOUNT));
+const IMMERSIVE_PAGES = new Set(["explorations"]);
 
 /* Reports mount points that exist in one half of the contract but not the
    other. Returns the findings rather than logging them, so callers decide
@@ -72,7 +72,7 @@ export function validateContract() {
 
   /* Known to the code and required everywhere, but absent from this page. */
   const missing = [...KNOWN].filter(
-    (name) => !OPTIONAL.has(name) && !declared.has(name)
+    (name) => !OPTIONAL.has(name) && !declared.has(name) && !IMMERSIVE_PAGES.has(document.body.dataset.page)
   );
 
   return { declared: [...declared], unknown, missing };

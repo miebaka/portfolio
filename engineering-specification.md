@@ -6,6 +6,10 @@ contract lives in [`docs/design-system-v3.md`](docs/design-system-v3.md).
 
 ## Product contract
 
+The public canonical host is `https://miebaka-portfolio.vercel.app`.
+`miebaka.design` is not owned or active and must not appear in shipped metadata
+or project documentation without explicit owner confirmation.
+
 The portfolio presents Miebaka Joshua’s brand and visual-design practice to
 hiring teams and selected clients. It must make the work, the decisions behind
 it and a clear contact path available without depending on JavaScript.
