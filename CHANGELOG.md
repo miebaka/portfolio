@@ -1,3 +1,16 @@
+# Changelog
+
+## [1.2.1] - 2026-10-24
+
+### Changed
+- Added a checked critical-document workflow and replaced the stale engineering archive with the current implementation contract.
+- Converted Experiment artwork from oversized PNGs to high-quality WebP assets, cutting their combined transfer size by more than 90%.
+- Made Vercel the single deployment configuration and tightened the production allow-list.
+
+### Removed
+- Removed historical reports, exported mockups, publication tooling, superseded plans, unused fonts, unreferenced image variants, generated vendor files and dead collection code.
+- Untracked local design working files while preserving the owner's files outside Git.
+
 ## [1.2.0] - 2026-10-23
 
 ### Added

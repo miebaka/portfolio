@@ -161,7 +161,7 @@ for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:
 }
 
 // Fail closed if a future copy step leaks implementation or review material.
-const forbiddenOutput = /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out)(?:\/|$)|\.map$/i;
+const forbiddenOutput = /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i;
 for (const file of await outputFiles(output)) {
   const shippedPath = relative(output, file).replaceAll("\\", "/");
   if (forbiddenOutput.test(shippedPath)) throw new Error(`Production output contains forbidden file: ${shippedPath}`);
