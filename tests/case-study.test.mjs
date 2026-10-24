@@ -163,7 +163,7 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.match(article, /<figcaption/);
   assert.match(article, /<p class="case-next__title">ChopBox<\/p>/);
   assert.doesNotMatch(article, /href="[^\"]*chopbox\.html"/);
-  assert.match(html, /og:image" content="https:\/\/miebaka\.design\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
+  assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");
 });

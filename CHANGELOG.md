@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.2] - 2026-10-24
+
+### Changed
+- Rebuilt Experiments as an art-only spatial field with a denser editorial composition, direct two-axis panning, drag momentum, responsive framing and keyboard navigation.
+- Removed every visible interface label from Experiments except “Drag or Scroll To Explore,” while retaining accessible artwork names.
+- Replaced the unowned `miebaka.design` metadata with the public `miebaka-portfolio.vercel.app` host and documented the ownership constraint.
+
+### Fixed
+- Scoped navigation and heading integrity rules to allow the intentionally immersive Experiments shell without runtime contract warnings.
+
 ## [1.2.1] - 2026-10-24
 
 ### Changed

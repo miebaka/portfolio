@@ -44,11 +44,11 @@ a persistent five-item bottom bar for direct wayfinding and a full-screen,
 numbered Index for orientation. The Index is modal, traps focus, closes on
 Escape and restores focus to its trigger.
 
-Experiments is a deliberately different browsing mode within the same visual
-system. It is a full-viewport spatial field for image and video studies, with
-drag, wheel, arrow-key and tab navigation. Titles and categories stay anchored
-to the viewport so the work can move without losing context. The empty state is
-published truthfully until owner assets are placed in `assets/experiments/`.
+Experiments is a deliberately different browsing mode: a full-viewport spatial
+field with no visible interface copy except “Drag or Scroll To Explore.” The
+artwork is the navigation. Dragging has restrained momentum, wheel input pans in
+two dimensions, and arrow keys plus tab preserve a usable keyboard path. Names
+remain available as accessible labels without adding visual captions.
 
 ## Primary actions
 

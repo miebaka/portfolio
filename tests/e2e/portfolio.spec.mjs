@@ -34,7 +34,7 @@ for (const route of routes) {
     const response = await page.goto(route);
     await settle(page);
     expect(response?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveCount(route === "/explorations.html" ? 0 : 1);
     const overflow = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
     expect(overflow.scroll, `horizontal overflow on ${route}`).toBeLessThanOrEqual(overflow.client + 1);
     expect(failedLocalResources).toEqual([]);
@@ -174,14 +174,12 @@ test("Work index matches the five-project Figma composition", async ({ page }) =
   await expect(page.locator(".project-archive__media")).toHaveCount(5);
 });
 
-test("Experiments exposes a spatial canvas and remains globally navigable", async ({ page }) => {
+test("Experiments exposes an art-only spatial canvas", async ({ page }) => {
   await page.goto("/explorations.html");
-  await expect(page.getByRole("heading", { level: 1, name: "Experiments" })).toBeVisible();
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
-  const navigation = page.viewportSize().width <= 640
-    ? page.getByRole("navigation", { name: "Primary mobile navigation" })
-    : page.getByRole("navigation", { name: "Primary", exact: true });
-  await expect(navigation).toBeVisible();
+  await expect(page.getByText("Drag or Scroll To Explore", { exact: true })).toBeVisible();
+  await expect(page.locator(".experiment-object")).toHaveCount(7);
+  await expect(page.getByRole("navigation")).toHaveCount(0);
 });
 
 test("Playground retains its truthful empty state", async ({ page }) => {

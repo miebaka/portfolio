@@ -170,9 +170,10 @@ a `mailto:` action and direct email link as the no-JavaScript fallback.
 - Every page has a unique title/description, canonical, Open Graph, Twitter Card,
   and JSON-LD (`Person` + `WebSite` on home, `BreadcrumbList` everywhere,
   `CreativeWork` on case studies). Plus `robots.txt`, `sitemap.xml`, SVG favicon.
-- **Domain:** absolute URLs assume `https://miebaka.design`. If you deploy
-  elsewhere, update the base URL in every page `<head>`, `sitemap.xml`, and
-  `robots.txt`.
+- **Canonical host:** `https://miebaka-portfolio.vercel.app` is the current public
+  production URL. `miebaka.design` is not owned or active and must not be used in
+  metadata, documentation, release notes, or deployment reporting unless that
+  changes and the owner explicitly confirms it.
 
 ## Accessibility & performance
 

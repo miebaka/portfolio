@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://miebaka.design/sitemap.xml
+Sitemap: https://miebaka-portfolio.vercel.app/sitemap.xml

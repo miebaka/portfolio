@@ -22,8 +22,8 @@ function request(overrides = {}) {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      origin: "https://miebaka.design",
-      host: "miebaka.design"
+      origin: "https://miebaka-portfolio.vercel.app",
+      host: "miebaka-portfolio.vercel.app"
     },
     body: validContact(),
     socket: { remoteAddress: "203.0.113.8" },
@@ -216,9 +216,9 @@ test("safe logs contain operational metadata but no submitted content", async ()
 
 test("the production origin check accepts configured or true same-origin requests only", () => {
   const req = request();
-  assert.equal(isSameOriginRequest(req, ["https://miebaka.design"]), true);
-  assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example" } }, ["https://miebaka.design"]), false);
-  assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example", "x-forwarded-host": "attacker.example", "x-forwarded-proto": "https" } }, ["https://miebaka.design"]), false);
+  assert.equal(isSameOriginRequest(req, ["https://miebaka-portfolio.vercel.app"]), true);
+  assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example" } }, ["https://miebaka-portfolio.vercel.app"]), false);
+  assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "https://attacker.example", "x-forwarded-host": "attacker.example", "x-forwarded-proto": "https" } }, ["https://miebaka-portfolio.vercel.app"]), false);
   assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "not a URL" } }, []), false);
 });
 

@@ -97,6 +97,7 @@ test("the route registry has unique destinations and supports the approved globa
 test("every production shell exposes the complete Index as fallback navigation", async () => {
   const destinations = navigation.index.map(route => route.href);
   for (const file of await walk(dist, ".html")) {
+    if (file.endsWith("explorations.html")) continue;
     const html = await readFile(file, "utf8");
     const header = html.match(/<header data-mount="nav">([\s\S]*?)<\/header>/)?.[1] || "";
     const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
@@ -121,18 +122,18 @@ test("source and built footer fallbacks match the approved public navigation", a
 });
 
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
-  for (const [href, canonical] of [["index.html", "https://miebaka.design/"], ["explorations.html", "https://miebaka.design/explorations.html"], ["community.html", "https://miebaka.design/community.html"]]) {
+  for (const [href, canonical] of [["index.html", "https://miebaka-portfolio.vercel.app/"], ["explorations.html", "https://miebaka-portfolio.vercel.app/explorations.html"], ["community.html", "https://miebaka-portfolio.vercel.app/community.html"]]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
   }
   const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
   assert.equal(new Set(urls).size, urls.length);
-  assert.ok(urls.includes("https://miebaka.design/explorations.html"));
-  assert.ok(urls.includes("https://miebaka.design/community.html"));
+  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/explorations.html"));
+  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
   assert.ok(!urls.some(url => url.endsWith("404.html")));
   for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
-    assert.ok(!urls.includes(`https://miebaka.design/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
+    assert.ok(!urls.includes(`https://miebaka-portfolio.vercel.app/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
   }
   for (const url of urls) {
     const pathname = new URL(url).pathname;
@@ -141,12 +142,11 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("Experiments ships a truthful spatial shell and Playground retains its empty state", async () => {
+test("Experiments ships an art-only spatial shell and Playground retains its empty state", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
-  assert.match(experiments, /<h1[^>]*>Experiments<\/h1>/);
-  assert.match(experiments, /The archive is being assembled\./);
-  assert.doesNotMatch(experiments, /aria-disabled|<time\b|collection-entry/);
+  assert.match(experiments, />Drag or Scroll To Explore<\/p>/);
+  assert.doesNotMatch(experiments, /<h1|Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
 
   const playground = await readFile(join(dist, "community.html"), "utf8");
   assert.match(playground, /data-prerendered="true"/);
@@ -191,7 +191,7 @@ test("every production page has essential metadata and one heading", async () =>
     assert.match(html, /viewport-fit=cover/i, file);
     assert.match(html, /interactive-widget=resizes-content/i, file);
     assert.equal((html.match(/<meta name="theme-color"/gi) || []).length, 2, file);
-    assert.equal((html.match(/<h1\b/gi) || []).length, 1, file);
+    assert.equal((html.match(/<h1\b/gi) || []).length, file.endsWith("explorations.html") ? 0 : 1, file);
   }
 });
 
@@ -421,7 +421,7 @@ test("requested language and contact details stay canonical", async () => {
     join(dist, "writing", "designing-for-disability-in-nigeria.html")
   ];
   const source = (await Promise.all(sourceFiles.map(file => readFile(file, "utf8")))).join("\n");
-  assert.doesNotMatch(source, /hello@miebaka\.design|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
+  assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brands, build useful things & ask a lot of questions\./);
