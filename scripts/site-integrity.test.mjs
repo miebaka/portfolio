@@ -67,6 +67,7 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
   assert.match(home, /Case study in progress/);
   assert.match(work, /aria-label="(?:Detour|Out Of Office), project preview"/);
+  assert.equal((work.match(/class="project-archive__item/g) || []).length, 5);
   for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
   for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:detour|out-of-office)\.html"/);
 });

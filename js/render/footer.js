@@ -19,7 +19,8 @@ export function renderFooter() {
   ).join('');
   const group = (className, label, content) =>
     '<div class="site-footer__group ' + className + '"><p class="site-footer__label">' + esc(label) + '</p><div class="site-footer__links">' + content + '</div></div>';
-  el.className = "site-footer site-footer--seasats";
+  const compact = ["contact", "privacy", "404"].includes(document.body.dataset.page);
+  el.className = "site-footer site-footer--seasats" + (compact ? " site-footer--compact" : "");
   el.innerHTML =
     '<div class="site-footer__panel">' +
       '<nav class="site-footer__groups" aria-label="Footer">' +

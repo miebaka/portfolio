@@ -60,15 +60,27 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
+test("published case studies preserve the editorial reading order", async ({ page }) => {
+  for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
+    await page.goto(`/work/${slug}.html`);
+    await settle(page);
+    const positions = await page.locator(".case").evaluate(caseStudy => {
+      const top = selector => caseStudy.querySelector(selector)?.getBoundingClientRect().top + scrollY;
+      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-proof", ".case-chapter"].map(top);
+    });
+    expect(positions, `${slug} proposition, hero, context, proof and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+  }
+});
+
 test("published case studies expose an accessible chapter scroll index on wide screens", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/work/tedx-rsu.html");
   const index = page.getByRole("navigation", { name: "Case study progress" });
   await expect(index).toBeVisible();
   const ticks = index.getByRole("button");
-  await expect(ticks).toHaveCount(8);
+  await expect(ticks).toHaveCount(5);
   await expect(ticks.first()).toHaveAttribute("aria-current", "step");
-  const decision = index.getByRole("button", { name: "Go to Decision" });
+  const decision = index.getByRole("button", { name: "Go to Governing decision" });
   await decision.click();
   await expect.poll(() => decision.getAttribute("aria-current")).toBe("step");
   await expect(page.locator("#decision")).toBeInViewport();
@@ -79,6 +91,20 @@ test("chapter rail yields to the authored mobile chapter index", async ({ page }
   await page.goto("/work/tedx-rsu.html");
   await expect(page.getByRole("navigation", { name: "Case study progress" })).toBeHidden();
   await expect(page.locator(".case-index")).toBeVisible();
+});
+
+test("Notes inherits the Selected Work editorial-list interaction", async ({ page }) => {
+  await page.goto("/playground.html");
+  await settle(page);
+  const rows = page.locator(".editorial-index--notes .editorial-index__row");
+  await expect(rows).toHaveCount(2);
+  await expect(rows.first()).toHaveCSS("min-height", /\d+px/);
+  const canHover = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches);
+  if (!canHover) return;
+  await rows.first().hover();
+  await expect(rows.nth(1)).toHaveCSS("opacity", "0.28");
+  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
+  await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
 });
 
 test("visible email addresses can be copied without replacing the mail link", async ({ page }) => {
@@ -173,6 +199,21 @@ test("Work index matches the five-project Figma composition", async ({ page }) =
     "TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"
   ]);
   await expect(page.locator(".project-archive__media")).toHaveCount(5);
+});
+
+test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
+  test.skip(isMobile, "The reciprocal hover treatment is reserved for fine pointers");
+  await page.goto("/work.html");
+  const archive = page.locator(".editorial-index--archive");
+  const rows = archive.locator(".editorial-index__row");
+  const rivo = archive.getByRole("link", { name: /Rivo Studio/ });
+  await expect(rows).toHaveCount(5);
+  await rivo.hover();
+  await expect(rivo).toHaveCSS("opacity", "1");
+  await expect(rows.first()).toHaveCSS("opacity", "0.28");
+  await expect(rows.last()).toHaveCSS("opacity", "0.28");
+  await expect(rivo.locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
+  await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 
 test("Experiments exposes an art-only spatial canvas", async ({ page }) => {

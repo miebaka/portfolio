@@ -31,21 +31,26 @@ export function renderWriting() {
   }
 
   el.innerHTML =
-    '<ul class="writing-list">' +
+    '<ul class="writing-list editorial-index editorial-index--notes">' +
     articles
       .map((a) => {
         const isExternal = /^https?:/i.test(a.href);
         const linkExtra  = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
         const date = formatDate(a.date);
         return (
-          '<li class="writing-item">' +
-            '<a class="writing-item__link" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
-              '<h3 class="writing-item__title">' + esc(a.title) + "</h3>" +
-              (a.summary ? '<p class="writing-item__summary">' + esc(a.summary) + "</p>" : "") +
-              '<div class="writing-item__meta">' +
+          '<li class="writing-item editorial-index__item">' +
+            '<a class="writing-item__link editorial-index__row" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
+              '<span class="writing-item__identity">' +
+                '<h3 class="writing-item__title editorial-index__title">' + esc(a.title) + "</h3>" +
+              "</span>" +
+              '<span class="writing-item__trailing editorial-index__meta">' +
+                (a.summary ? '<span class="writing-item__summary editorial-index__description">' + esc(a.summary) + "</span>" : "") +
+                '<span class="writing-item__meta">' +
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +
-              "</div>" +
+                "</span>" +
+                '<span class="writing-item__arrow editorial-index__arrow" aria-hidden="true">↗</span>' +
+              "</span>" +
             "</a>" +
           "</li>"
         );

@@ -8,7 +8,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 
 const root = new URL("../", import.meta.url);
-const chapterIds = ["context", "problem", "process", "decision", "system", "applications", "production", "reflection"];
+const chapterIds = ["context", "decision", "system", "applications", "reflection"];
 const markup = () => renderCaseMarkup(SITE, "tedx-rsu", "../");
 const reject = (change, code, path) => {
   const content = structuredClone(CONTENT);
@@ -31,7 +31,7 @@ test("published narratives reject missing, reordered, duplicated or empty chapte
   reject(study => { study.chapters.pop(); }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { [study.chapters[0], study.chapters[1]] = [study.chapters[1], study.chapters[0]]; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { study.chapters[1].id = "context"; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
-  reject(study => { study.chapters[7].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[7].body");
+  reject(study => { study.chapters[4].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[4].body");
   reject(study => { study.chapters[0].body = [null]; }, "CASE_CHAPTER_BODY_INVALID", "chapters[0].body");
   reject(study => { study.chapters[0].label = ""; }, "CASE_CHAPTER_LABEL_REQUIRED", "chapters[0].label");
 });
@@ -82,7 +82,7 @@ test("Rivo publishes as an evidence-bounded identity case", () => {
   const markup = renderCaseMarkup(SITE, "rivo");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
-  assert.match(markup, /Access as a brand position/);
+  assert.match(markup, /How can access feel like a brand position\?/);
   assert.match(markup, /application visualisation/i);
   assert.match(markup, /not presented as evidence of later team adoption/i);
   assert.match(markup, /What this case can prove/);

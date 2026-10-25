@@ -73,33 +73,19 @@ export const caseStudies = {
     "chapters": [
       {
         "id": "context",
-        "label": "Context",
-        "title": "Access as a brand position",
+        "label": "Question",
+        "title": "How can access feel like a brand position?",
         "body": [
-          "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design."
-        ]
-      },
-      {
-        "id": "problem",
-        "label": "Problem",
-        "title": "Technical without becoming clinical",
-        "body": [
+          "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design.",
           "The category often uses complexity as shorthand for capability. Rivo needed to communicate technical confidence while remaining clear, approachable and useful across everyday brand materials."
         ]
       },
       {
-        "id": "process",
-        "label": "Process",
-        "title": "Start with the word people will use",
-        "body": [
-          "I worked from the spoken name, /ˈraɪvoʊ/, then tested how the wordmark behaved at small sizes, in strong colour pairings and beside practical information. The identity was developed as a set of repeatable decisions rather than a single launch image."
-        ]
-      },
-      {
         "id": "decision",
-        "label": "Decision",
+        "label": "Governing decision",
         "title": "Soften the technical signal",
         "body": [
+          "I worked from the spoken name, /ˈraɪvoʊ/, then tested how it behaved at small sizes, in strong colour pairings and beside practical information.",
           "The wordmark removes hard corners and keeps the letterforms open. Its job is to feel assured without becoming severe, giving the studio a recognisable voice before supporting graphics are added."
         ],
         "media": ["rivo-wordmark"]
@@ -115,25 +101,17 @@ export const caseStudies = {
       },
       {
         "id": "applications",
-        "label": "Applications",
-        "title": "Stress-test the idea across scales",
+        "label": "System in use",
+        "title": "Stress-test one limited vocabulary across scales",
         "body": [
-          "Application visualisations tested the system from a carried object to a large environmental surface. The same short proposition and yellow signal had to remain legible without turning every touchpoint into the same composition."
-        ],
-        "media": ["rivo-tote", "rivo-stage", "rivo-flag"]
-      },
-      {
-        "id": "production",
-        "label": "Production",
-        "title": "Leave a usable set of parts",
-        "body": [
+          "Application visualisations tested the system from a carried object to a large environmental surface. The same short proposition and yellow signal had to remain legible without turning every touchpoint into the same composition.",
           "The delivered system included guidelines and stationery alongside the identity assets. These plates show the intended production system and presentation of those materials; they are not presented as evidence of later team adoption."
         ],
-        "media": ["rivo-stationery", "rivo-guidelines"]
+        "media": ["rivo-tote", "rivo-stage", "rivo-flag", "rivo-stationery", "rivo-guidelines"]
       },
       {
         "id": "reflection",
-        "label": "Reflection",
+        "label": "What survived",
         "title": "Usefulness needs restraint",
         "body": [
           "The strongest part of the system is its limited vocabulary. A softened wordmark, a stable blue field and one signal colour create enough distinction while leaving room for the information each application needs to carry."
@@ -254,39 +232,22 @@ export const caseStudies = {
     "chapters": [
       {
         "id": "context",
-        "label": "Context",
-        "title": "A local voice within a global identity",
+        "label": "Question",
+        "title": "How can a local event speak inside a fixed global identity?",
         "body": [
-          "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable."
-        ]
-      },
-      {
-        "id": "problem",
-        "label": "Problem",
-        "title": "One idea, from a phone to the stage",
-        "body": [
+          "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable.",
           "The identity needed one idea strong enough to hold across social promotion, printed collateral and the event stage. The TEDx red and wordmark were fixed; the event’s own character had to come from the elements around them."
         ]
       },
       {
-        "id": "process",
-        "label": "Process",
-        "title": "Build around the parts that stay fixed",
-        "body": [
-          "I worked within the TEDx rules. The final direction brings together the pause motif, a ripple pattern and typographic prompts that ask the reader to stop and reflect.",
-          "Neue Haas Grotesk carries the direct voice of the system. The type specimen turns the theme into a short reminder: “Remember to stay pause-itive.”"
-        ],
-        "media": ["tedx-rsu-typeface"]
-      },
-      {
         "id": "decision",
-        "label": "Decision",
+        "label": "Governing decision",
         "title": "Give the event a pause",
         "body": [
           "“Pause…” is the organising idea. Its three dots leave the thought open; the line beneath it makes the invitation explicit: “Reflect. Reconsider. Reward.”",
-          "The theme mark sits alongside the TEDx identity in the applications, giving the event its own voice within the parent system."
+          "The theme mark sits alongside the TEDx identity in the applications, giving the event its own voice within the parent system. Neue Haas Grotesk carries the direct voice, while the type specimen turns the theme into a short reminder: “Remember to stay pause-itive.”"
         ],
-        "media": ["tedx-rsu-logomark"]
+        "media": ["tedx-rsu-logomark", "tedx-rsu-typeface"]
       },
       {
         "id": "system",
@@ -300,27 +261,17 @@ export const caseStudies = {
       },
       {
         "id": "applications",
-        "label": "Applications",
+        "label": "System in use",
         "title": "An invitation people could encounter",
         "body": [
           "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
-          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt."
+          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt. Event-day and campus photographs document public encounter, not audience impact."
         ],
-        "media": ["tedx-rsu-merch", "tedx-rsu-street-banner"]
-      },
-      {
-        "id": "production",
-        "label": "Production",
-        "title": "Print was part of the system from the start",
-        "body": [
-          "The programme, signage and social creative needed to carry the same pause-and-reflect rhythm as the stage. The delivered identity extended across printed collateral, merchandise, campus signage and the stage environment.",
-          "The campus and event photographs show the work in its physical setting. The colour sheet and type specimen document the parts behind those applications."
-        ],
-        "media": ["tedx-rsu-event"]
+        "media": ["tedx-rsu-merch", "tedx-rsu-street-banner", "tedx-rsu-event"]
       },
       {
         "id": "reflection",
-        "label": "Reflection",
+        "label": "What survived",
         "title": "A theme that holds across formats",
         "body": [
           "The final work keeps returning to the same invitation: pause and reflect. It appears as a mark on a garment, a question on a street banner and an invitation on campus, while the TEDx identity remains recognisable."
@@ -436,37 +387,22 @@ export const caseStudies = {
     "chapters": [
       {
         "id": "context",
-        "label": "Context",
-        "title": "A food brand people could trust with dinner",
+        "label": "Question",
+        "title": "How can a food brand feel worth ordering before the first bite?",
         "body": [
-          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout."
-        ]
-      },
-      {
-        "id": "problem",
-        "label": "Problem",
-        "title": "Appetite without the category clichés",
-        "body": [
+          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout.",
           "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct."
         ]
       },
       {
-        "id": "process",
-        "label": "Process",
+        "id": "decision",
+        "label": "Governing decision",
         "title": "Use appetite as the filter",
         "body": [
-          "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration."
-        ],
-        "media": ["chopbox-typeface"]
-      },
-      {
-        "id": "decision",
-        "label": "Decision",
-        "title": "Choose toasted warmth over neon urgency",
-        "body": [
+          "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration.",
           "A friendly rounded logotype and toasted yellow-red palette replace the category's harder, louder shorthand. The result aims to feel ready to order without making every application shout."
         ],
-        "media": ["chopbox-logo-lockups"]
+        "media": ["chopbox-logo-lockups", "chopbox-typeface"]
       },
       {
         "id": "system",
@@ -479,25 +415,17 @@ export const caseStudies = {
       },
       {
         "id": "applications",
-        "label": "Applications",
+        "label": "System in use",
         "title": "Stress-test one voice across formats",
         "body": [
           "Packaging, uniform, campaign and out-of-home visualisations test whether the same rounded voice and warm palette can remain recognisable at very different scales.",
-          "These images document intended applications. They are labelled as visualisations and are not presented as photographs of produced rollout materials."
+          "These images document intended applications. They are labelled as visualisations and are not presented as photographs of produced rollout materials. The surviving material does not verify which applications entered production or continued in team use."
         ],
         "media": ["chopbox-packaging", "chopbox-apron", "chopbox-campaign", "chopbox-billboard"]
       },
       {
-        "id": "production",
-        "label": "Production",
-        "title": "Separate delivery from deployment",
-        "body": [
-          "The delivered scope covered identity, packaging and rollout direction. The surviving portfolio material documents the designed system and its presentation, but does not verify which applications entered production or continued in team use."
-        ]
-      },
-      {
         "id": "reflection",
-        "label": "Reflection",
+        "label": "What survived",
         "title": "A useful filter makes the system cohere",
         "body": [
           "The strongest connective tissue is not a single shape or colour. It is the appetite test: every part should make the food feel warm, generous and worth ordering."

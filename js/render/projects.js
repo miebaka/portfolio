@@ -67,12 +67,12 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     { title: "Detour", status: "Case study in progress" },
     { title: "Out Of Office", status: "Case study in progress" }
   ]);
-  return '<ol>' + selected.map(project => {
+  return '<ol class="editorial-index editorial-index--work">' + selected.map(project => {
     const trailing = project.status
-      ? '<span class="home-project-list__status">' + esc(project.status) + '</span>'
-      : '<span class="home-project-list__meta"><span class="home-project-list__decision">' + esc(project.decision) + '</span><span class="home-project-list__arrow" aria-hidden="true">↗</span></span>';
-    const content = '<span class="home-project-list__title">' + esc(project.title) + '</span>' + trailing;
-    return '<li>' + (project.href ? '<a href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending">' + content + '</div>') + '</li>';
+      ? '<span class="home-project-list__status editorial-index__status">' + esc(project.status) + '</span>'
+      : '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span><span class="home-project-list__arrow editorial-index__arrow" aria-hidden="true">↗</span></span>';
+    const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + trailing;
+    return '<li class="editorial-index__item">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
   }).join('') + '</ol>';
 }
 
@@ -92,7 +92,7 @@ export function renderWorkMarkup(allProjects = SITE.projects, base = "", archive
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
-  el.className = 'project-archive__list';
+  el.className = 'project-archive__list editorial-index editorial-index--archive';
   if (el.dataset.prerendered !== 'true') el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath());
 }
 
@@ -116,7 +116,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
     const label = esc(project.title) + (published ? ', view project' : ', project preview');
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
-    return '<' + tag + ' class="project-archive__item project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2>' + esc(project.title) + '</h2><p>' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div></' + tag + '>';
+    return '<' + tag + ' class="project-archive__item editorial-index__item editorial-index__row project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div></' + tag + '>';
   }).join('');
 }
 

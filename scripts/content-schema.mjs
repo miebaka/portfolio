@@ -6,7 +6,6 @@ const isSlug = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$
 const routePath = value => typeof value === "string" ? value.replace(/^\.\//, "").split(/[?#]/)[0] : "";
 const validRoute = value => hasText(value) && /^(?:\.\/)?[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html(?:[?#][^\s]*)?$/.test(value);
 const positiveInteger = value => Number.isInteger(value) && value > 0;
-const REQUIRED_CHAPTERS = ["context", "problem", "process", "decision", "system", "applications", "production", "reflection"];
 const PROOF_TYPES = ["decision", "system", "survival", "adoption"];
 const PROOF_STRENGTHS = ["verified", "partial"];
 const validHttpsUrl = value => {
@@ -179,8 +178,8 @@ export function validateContent(content) {
       if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
       else {
         const ids = study.chapters.map(chapter => chapter?.id);
-        const wanted = ids.includes("outcomes") ? [...REQUIRED_CHAPTERS.slice(0, -1), "outcomes", "reflection"] : REQUIRED_CHAPTERS;
-        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use context, problem, process, decision, system, applications, production, optional verified outcomes, then reflection.");
+        const wanted = ["context", "decision", "system", "applications", "reflection"];
+        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use question, governing decision, system, system in use, then reflection.");
         const usedMedia = new Set([study.hero]);
         study.chapters.forEach((chapter, index) => {
           const chapterPath = `${path}.chapters[${index}]`;

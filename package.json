@@ -7,6 +7,8 @@
     "build": "npm run validate:content && npm run build:experiments && npm run build:shader && node scripts/build-site.mjs",
     "build:experiments": "node scripts/build-experiments.mjs",
     "build:shader": "node scripts/build-shader-gradient.mjs",
+    "sync:cases": "node scripts/sync-case-shells.mjs",
+    "sync:fallbacks": "node scripts/sync-case-shells.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "test:content": "npm run build:shader && node --test tests/content-schema.test.mjs",
     "test:navigation": "node --test tests/navigation.test.mjs",

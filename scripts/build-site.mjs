@@ -101,7 +101,7 @@ function renderShell(source, href) {
     .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
     .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
-  if (href === "work.html") rendered = rendered.replace(/<div data-project-archive>[\s\S]*?<\/div>/, '<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
+  if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list editorial-index editorial-index--archive" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
 }

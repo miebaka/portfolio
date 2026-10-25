@@ -14,37 +14,37 @@ export const siteConfig = {
       "organisation": "Rise",
       "role": "Marketing Designer",
       "period": "Jul 2025 - Present",
-      "contribution": "In-house brand and campaign design across six marketing teams."
+      "contribution": "One brand, six marketing teams: daily campaign work without letting the system lose its shape."
     },
     {
       "organisation": "Anakle",
       "role": "Creative Design Executive",
       "period": "Feb - Nov 2025",
-      "contribution": "Creative and art-direction work across campaign and identity briefs."
+      "contribution": "Moved between campaign and identity briefs, finding the useful idea before building its visual world."
     },
     {
       "organisation": "Rivo Studios",
       "role": "Visual Designer",
       "period": "Jun - Nov 2024",
-      "contribution": "Built the identity system and production applications across print and day-to-day brand work."
+      "contribution": "Built the identity from a softened wordmark into guidelines, print and day-to-day applications."
     },
     {
       "organisation": "Grey Finance",
       "role": "Brand Designer",
       "period": "Oct 2022 - Feb 2023",
-      "contribution": "Created campaign, launch and editorial assets for a cross-border fintech."
+      "contribution": "Turned cross-border finance launches, campaigns and editorial information into clear visual stories."
     },
     {
       "organisation": "WellaHealth Technologies",
       "role": "Brand Designer",
       "period": "May - Sep 2022",
-      "contribution": "Designed brand, campaign and product-education work for healthcare audiences."
+      "contribution": "Designed brand, campaign and product-education work where healthcare information had to stay clear."
     },
     {
       "organisation": "Riv-TechCreek",
       "role": "Generalist Designer",
       "period": "2018 - 2021",
-      "contribution": "Worked across brand, print and digital briefs for a range of clients."
+      "contribution": "The generalist years: brand, print and digital briefs for a range of clients."
     }
   ],
   "socials": [
