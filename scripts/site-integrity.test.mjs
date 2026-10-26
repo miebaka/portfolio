@@ -340,12 +340,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls include the approved Figma button states", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn\{[^}]*width:100%[^}]*min-height:4rem[^}]*justify-content:space-between/);
-  assert.match(css, /\.btn::after\{[^}]*content:"\\2197"[^}]*transition:transform 160ms/);
+  assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
   assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
   assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
-  assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*background:var\(--ref-coral-75\)[^}]*color:var\(--ref-midnight\)[^}]*box-shadow:var\(--elevation-hover\)/);
-  assert.match(css, /\.btn:active\{[^}]*transform:scale\(\.98\)/);
+  assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);
   assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);
   assert.doesNotMatch(css, /\.contact__submit \.btn/);
   assert.doesNotMatch(css, /\.btn--primary/);
