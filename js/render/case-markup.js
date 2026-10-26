@@ -36,7 +36,7 @@ function factsBlock(study, project) {
 
 function proofBlock(study) {
   if (!study.proof?.length) return "";
-  const items = study.proof.map(item => `<li class="case-proof__item"><p class="case-proof__type">${esc(item.type)}</p><p>${esc(item.statement)}</p>${item.strength === "partial" ? '<p class="case-proof__scope">Bounded evidence</p>' : ""}</li>`).join("");
+  const items = study.proof.map(item => `<li class="case-proof__item"><p class="case-proof__type">${esc(item.type)}</p><p>${esc(item.statement)}</p><p class="case-proof__scope">${item.strength === "partial" ? "Bounded evidence" : "Documented evidence"}</p></li>`).join("");
   return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><p class="case-proof__kicker">Evidence ledger</p><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
 }
 

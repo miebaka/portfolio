@@ -19,6 +19,9 @@ usable system around it, and edit until every surviving detail earns its place.
 - BIZ UDPMincho: display headlines and case-study statements.
 - Schibsted Grotesk: body copy, navigation and interface text.
 - Josefin Sans: compact uppercase labels only.
+- Primary display headings use the shared 12-column container rather than a
+  character-count measure. At wide desktop sizes they resolve to one or two
+  lines and never extend beyond the grid.
 - Copy moves from question, to decision, to a useful system a team can keep
   using. It is first-person, plain-spoken and evidence-bounded.
 - “Work with me” is the contact CTA. “See the work” is the portfolio CTA.
@@ -49,6 +52,32 @@ field with no visible interface copy except “Drag or Scroll To Explore.” The
 artwork is the navigation. Dragging has restrained momentum, wheel input pans in
 two dimensions, and arrow keys plus tab preserve a usable keyboard path. Names
 remain available as accessible labels without adding visual captions.
+
+“Experiments” is the only public name for this area. The retired Community and
+Playground experiment route redirects to the spatial archive; “Notes” remains
+the separate writing destination.
+
+## Work hierarchy and project expression
+
+The homepage presents only the three complete flagship cases. Each row carries
+a persistent, non-essential project image so visual proof does not depend on
+hover. Unfinished studies live in a quieter “In progress” register on Work and
+must not compete with published case studies.
+
+Case studies share one evidence-first shell, but project colour may tint the
+ledger and alternating chapters. That variation stays inside the case content:
+Rivo uses its blue signal, ChopBox its warm appetite palette and TEDx its
+Porphyra field. Navigation, typography, grid, captions and footer remain
+portfolio-owned invariants.
+
+Every evidence item names its confidence as “Documented evidence” or “Bounded
+evidence.” Missing production, adoption or outcome evidence is never inferred.
+
+## Long-form reading
+
+Long articles add a generated contents index, a two-pixel reading-progress
+rule and an explicit next-note path. Article source remains complete and usable
+without JavaScript; enhancement only supplies orientation and continuity.
 
 ## Primary actions
 

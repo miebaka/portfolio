@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
-  "/index.html", "/work.html", "/explorations.html", "/community.html", "/about.html",
+  "/index.html", "/work.html", "/explorations.html", "/about.html",
   "/services.html", "/playground.html", "/contact.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
   "/writing/designing-for-disability-in-nigeria.html", "/writing/when-the-swoosh-lost-its-soul.html"
@@ -51,6 +51,54 @@ for (const route of routes) {
     }
   });
 }
+
+test("every route fits narrow and large phone viewports", async ({ page }) => {
+  for (const width of [320, 360, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const route of routes) {
+      await page.goto(route);
+      await settle(page);
+      const geometry = await page.evaluate(() => {
+        const navigation = document.querySelector('[aria-label="Primary mobile navigation"]');
+        const bounds = navigation?.getBoundingClientRect();
+        return {
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          navigationLeft: bounds?.left ?? 0,
+          navigationRight: bounds?.right ?? innerWidth,
+          viewportWidth: innerWidth,
+        };
+      });
+      expect(geometry.overflow, `${route} at ${width}px`).toBeLessThanOrEqual(1);
+      expect(geometry.navigationLeft, `${route} mobile navigation left edge at ${width}px`).toBeGreaterThanOrEqual(0);
+      expect(geometry.navigationRight, `${route} mobile navigation right edge at ${width}px`).toBeLessThanOrEqual(geometry.viewportWidth);
+    }
+  }
+});
+
+test("desktop display headings use the shared grid without forced three-line measures", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  for (const route of routes.filter(route => route !== "/explorations.html")) {
+    await page.goto(route);
+    await settle(page);
+    const geometry = await page.locator("h1").evaluate(element => {
+      const style = getComputedStyle(element);
+      const bounds = element.getBoundingClientRect();
+      const container = element.closest(".container")?.getBoundingClientRect();
+      return {
+        lines: Math.round(bounds.height / Number.parseFloat(style.lineHeight)),
+        left: bounds.left,
+        right: bounds.right,
+        containerLeft: container?.left ?? 0,
+        containerRight: container?.right ?? innerWidth,
+        overflow: element.scrollWidth > element.clientWidth,
+      };
+    });
+    expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(2);
+    expect(geometry.left, `${route} primary heading left grid edge`).toBeGreaterThanOrEqual(geometry.containerLeft - 1);
+    expect(geometry.right, `${route} primary heading right grid edge`).toBeLessThanOrEqual(geometry.containerRight + 1);
+    expect(geometry.overflow, `${route} primary heading overflow`).toBe(false);
+  }
+});
 
 test("Home → TEDx → next project preserves the intended journey", async ({ page }) => {
   await page.goto("/index.html");
@@ -105,6 +153,15 @@ test("Notes inherits the Selected Work editorial-list interaction", async ({ pag
   await expect(rows.nth(1)).toHaveCSS("opacity", "0.28");
   await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
   await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
+});
+
+test("long-form notes expose contents, progress and a next article", async ({ page }) => {
+  await page.goto("/writing/designing-for-disability-in-nigeria.html");
+  const contents = page.getByRole("navigation", { name: "On this page" });
+  await expect(contents).toBeVisible();
+  await expect(contents.getByRole("link")).toHaveCount(4);
+  await expect(page.locator(".article-progress")).toBeAttached();
+  await expect(page.getByRole("complementary", { name: "Next article" }).getByRole("link")).toHaveAttribute("href", "when-the-swoosh-lost-its-soul.html");
 });
 
 test("visible email addresses can be copied without replacing the mail link", async ({ page }) => {
@@ -190,15 +247,16 @@ test("About exposes the CV only when configured", async ({ page }) => {
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
 });
 
-test("Work index matches the five-project Figma composition", async ({ page }) => {
+test("Work index separates complete cases from studies in progress", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
   await expect(page.getByRole("link", { name: /Rivo Studio/ })).toHaveAttribute("href", "work/rivo.html");
-  await expect(page.locator(".project-archive__item")).toHaveCount(5);
+  await expect(page.locator(".project-archive__item")).toHaveCount(3);
   await expect(page.locator(".project-archive__identity h2")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"
+    "TEDx Rivers State University", "Rivo Studio", "Chop Box"
   ]);
-  await expect(page.locator(".project-archive__media")).toHaveCount(5);
+  await expect(page.locator(".project-archive__media")).toHaveCount(3);
+  await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);
 });
 
 test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
@@ -207,7 +265,7 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   const archive = page.locator(".editorial-index--archive");
   const rows = archive.locator(".editorial-index__row");
   const rivo = archive.getByRole("link", { name: /Rivo Studio/ });
-  await expect(rows).toHaveCount(5);
+  await expect(rows).toHaveCount(3);
   await rivo.hover();
   await expect(rivo).toHaveCSS("opacity", "1");
   await expect(rows.first()).toHaveCSS("opacity", "0.28");
@@ -224,9 +282,10 @@ test("Experiments exposes an art-only spatial canvas", async ({ page }) => {
   await expect(page.getByRole("navigation")).toHaveCount(0);
 });
 
-test("Playground retains its truthful empty state", async ({ page }) => {
+test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page).toHaveURL(/\/explorations\.html$/);
+  await expect(page.getByText("Drag or Scroll To Explore", { exact: true })).toBeVisible();
 });
 
 test("stored theme preference persists", async ({ page }) => {

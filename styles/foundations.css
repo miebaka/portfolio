@@ -9,7 +9,7 @@
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
   --ref-blue-30:#1c3da4;--ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-navy-16:#1e283c;
   --ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;--ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;
-  --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-on-blue:#032485;--ref-near-black:#111;--ref-black:#000;
+  --ref-coral-30:#83251d;--ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-on-blue:#032485;--ref-near-black:#111;--ref-black:#000;--ref-rivo:#0000a8;--ref-rivo-light:#b1c5ff;--ref-chopbox:#b84314;--ref-chopbox-light:#ffcf2f;--ref-tedx:#702963;--ref-tedx-light:#e6b8dd;
   --ref-shader-light-1:var(--ref-paper);--ref-shader-light-2:var(--ref-neutral-96);--ref-shader-light-3:var(--ref-neutral-94);--ref-shader-dark-1:#606080;--ref-shader-dark-2:#8d7dca;--ref-shader-dark-3:#212121;--shader-color-1:var(--ref-shader-light-1);--shader-color-2:var(--ref-shader-light-2);--shader-color-3:var(--ref-shader-light-3);--shader-background-1:var(--ref-paper);--shader-background-2:var(--ref-neutral-95);
   --ref-white:#fff;--ref-warm-paper:#e4ded7;--ref-vinyl:#292929;--ref-midnight-overlay:rgb(7 17 43/.9);--ref-white-11:rgb(244 239 236/.11);--ref-white-13:rgb(255 255 255/.13);--ref-white-22:rgb(255 255 255/.22);--ref-white-45:rgb(255 255 255/.45);--elevation-hover:0 1px 2px rgb(0 0 0/.3),0 1px 3px 1px rgb(0 0 0/.15);--shader-scrim:color-mix(in srgb,var(--ref-paper) 68%,transparent);--shader-section-surface:color-mix(in srgb,var(--ref-paper) 18%,transparent);--shader-field-surface:color-mix(in srgb,var(--ref-ultramarine) 82%,transparent);
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);--sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
@@ -75,7 +75,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 .stack>*+*{margin-top:var(--s4)}
 .stack>h2{margin-top:var(--s8);font-size:clamp(1.8rem,3vw,3rem)}
 .stack>h2:first-child{margin-top:0}
-.measure-hero{max-width:16ch}
+.measure-hero{max-width:none}
 .section-head__label{font:600 .68rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .meta{font:600 .68rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .material-symbols-outlined{font:400 1.15rem/1 var(--icon);font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}

@@ -47,7 +47,7 @@ test("project cards link published work and leave unfinished work non-interactiv
   assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
 });
 
-test("Work archive matches the approved five-project index and only published rows link", () => {
+test("Work archive separates published cases from work in progress", () => {
   assert.equal(typeof projectRender.renderProjectArchiveMarkup, "function");
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
@@ -55,7 +55,8 @@ test("Work archive matches the approved five-project index and only published ro
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 3);
-  assert.equal((html.match(/class="project-archive__media"/g) || []).length, 5);
+  assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
+  assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
 });
 
@@ -65,9 +66,9 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.match(html, /data-prerendered="true"/);
   for (const html of [home, work]) assert.match(html, /href="work\/tedx-rsu.html"/);
   for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
-  assert.match(home, /Case study in progress/);
-  assert.match(work, /aria-label="(?:Detour|Out Of Office), project preview"/);
-  assert.equal((work.match(/class="project-archive__item/g) || []).length, 5);
+  assert.doesNotMatch(home, /Case study in progress|Detour|Out Of Office/);
+  assert.match(work, /<h2 id="in-progress-title">In progress<\/h2>/);
+  assert.equal((work.match(/class="project-archive__item/g) || []).length, 3);
   for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
   for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:detour|out-of-office)\.html"/);
 });
@@ -126,7 +127,7 @@ test("source and built footer fallbacks match the approved public navigation", a
 });
 
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
-  for (const [href, canonical] of [["index.html", "https://miebaka-portfolio.vercel.app/"], ["explorations.html", "https://miebaka-portfolio.vercel.app/explorations.html"], ["community.html", "https://miebaka-portfolio.vercel.app/community.html"]]) {
+  for (const [href, canonical] of [["index.html", "https://miebaka-portfolio.vercel.app/"], ["explorations.html", "https://miebaka-portfolio.vercel.app/explorations.html"], ["community.html", "https://miebaka-portfolio.vercel.app/explorations.html"]]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
   }
@@ -134,7 +135,7 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
   assert.equal(new Set(urls).size, urls.length);
   assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/explorations.html"));
-  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
+  assert.ok(!urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
   assert.ok(!urls.some(url => url.endsWith("404.html")));
   for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
     assert.ok(!urls.includes(`https://miebaka-portfolio.vercel.app/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
@@ -146,16 +147,16 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("Experiments ships an art-only spatial shell and Playground retains its empty state", async () => {
+test("Experiments ships an art-only spatial shell and the retired route points to it", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
   assert.match(experiments, />Drag or Scroll To Explore<\/p>/);
   assert.doesNotMatch(experiments, /<h1|Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
 
   const playground = await readFile(join(dist, "community.html"), "utf8");
-  assert.match(playground, /data-prerendered="true"/);
-  assert.match(playground, /<h1[^>]*>Playground<\/h1>/);
-  assert.match(playground, /Experiments, resources and shared work will appear here when they are ready to be useful\./);
+  assert.match(playground, /<h1[^>]*>Experiments have moved\.<\/h1>/);
+  assert.match(playground, /href="explorations\.html"/);
+  assert.match(playground, /name="robots" content="noindex,follow"/);
 });
 
 async function walk(dir, suffix = "") {
@@ -305,6 +306,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
+  assert.match(css, /\.home-page \.client-marquee\{[^}]*width:calc\(100% \+ 2 \* var\(--home-gutter\)\)[^}]*margin-inline:calc\(-1 \* var\(--home-gutter\)\)[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
+  assert.match(css, /\.home-page \.marquee__item img\{[^}]*max-width:25\.5rem[^}]*height:calc\(5\.25rem \* var\(--logo-scale,1\)\)/);
   assert.match(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
   assert.match(projects, /aria-hidden="true"/);
@@ -337,10 +340,12 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls include the approved Figma button states", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
+  assert.match(css, /\.btn\{[^}]*width:100%[^}]*min-height:4rem[^}]*justify-content:space-between/);
+  assert.match(css, /\.btn::after\{[^}]*content:"\\2197"[^}]*transition:transform 160ms/);
   assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
   assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
-  assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);
+  assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*background:var\(--ref-coral-75\)[^}]*color:var\(--ref-midnight\)[^}]*box-shadow:var\(--elevation-hover\)/);
+  assert.match(css, /\.btn:active\{[^}]*transform:scale\(\.98\)/);
   assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);
   assert.doesNotMatch(css, /\.contact__submit \.btn/);
   assert.doesNotMatch(css, /\.btn--primary/);
@@ -362,6 +367,11 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main\{[^}]*text-align:left/);
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
+  assert.match(css, /\.measure-hero\{max-width:none\}/);
+  assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
+  assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
+  assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
+  assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title" aria-label="I design brands, build useful things & ask a lot of questions\.">/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
