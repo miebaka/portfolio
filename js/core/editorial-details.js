@@ -1,9 +1,5 @@
 /* Original line-field treatment; no third-party texture code or assets. */
 export function initEditorialDetails() {
-  const css = document.createElement('link');
-  css.rel = 'stylesheet';
-  css.href = new URL('../../styles/editorial-details.css', import.meta.url).href;
-  document.head.append(css);
   const gate = matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)');
   let cleanup = () => {};
   function setup() {
