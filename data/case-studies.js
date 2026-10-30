@@ -50,6 +50,7 @@ export const caseStudies = {
     "hero": "rivo-in-use",
     "facts": {
       "context": "In-house identity work at Rivo Studios",
+      "yearLabel": "Published",
       "role": "Brand strategy, identity design and guidelines",
       "delivered": "Identity system and rollout"
     },

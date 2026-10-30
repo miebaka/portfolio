@@ -18,7 +18,9 @@ usable system around it, and edit until every surviving detail earns its place.
 
 - BIZ UDPMincho: display headlines and case-study statements.
 - Schibsted Grotesk: body copy, navigation and interface text.
-- Josefin Sans: compact uppercase labels only.
+- Josefin Sans: compact functional metadata only. Decorative eyebrow labels are not used.
+- Section headings stand alone. Case-study project names belong in the facts list;
+  chapter navigation retains its useful labels without repeating them above headings.
 - Primary display headings use the shared 12-column container rather than a
   character-count measure. At wide desktop sizes they resolve to one or two
   lines and never extend beyond the grid.

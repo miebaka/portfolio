@@ -83,6 +83,7 @@ test("Rivo publishes as an evidence-bounded identity case", () => {
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
   assert.match(markup, /How can access feel like a brand position\?/);
+  assert.match(markup, /<dt>Published<\/dt><dd>2025<\/dd>/);
   assert.match(markup, /application visualisation/i);
   assert.match(markup, /not presented as evidence of later team adoption/i);
   assert.match(markup, /What this case can prove/);
@@ -153,7 +154,7 @@ test("a published usable next case is linked while an unavailable case stays non
   site.caseStudies.chopbox.status = "published";
   delete site.caseStudies["tedx-rsu"].next.interactive;
   const html = renderCaseMarkup(site, "tedx-rsu");
-  assert.match(html, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.match(html, /href="\.\.\/work\/chopbox\.html">Next project: ChopBox<\/a>/);
   assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
@@ -186,7 +187,7 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.equal(article, markup());
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
-  assert.match(article, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.match(article, /href="\.\.\/work\/chopbox\.html">Next project: ChopBox<\/a>/);
   assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");

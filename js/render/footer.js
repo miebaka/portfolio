@@ -18,7 +18,7 @@ export function renderFooter() {
     '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer">' + esc(item.label) + '</a>'
   ).join('');
   const group = (className, label, content) =>
-    '<div class="site-footer__group ' + className + '"><p class="site-footer__label">' + esc(label) + '</p><div class="site-footer__links">' + content + '</div></div>';
+    '<div class="site-footer__group ' + className + '" role="group" aria-label="' + esc(label) + '"><div class="site-footer__links">' + content + '</div></div>';
   const compact = ["contact", "privacy", "404"].includes(document.body.dataset.page);
   el.className = "site-footer site-footer--seasats" + (compact ? " site-footer--compact" : "");
   el.innerHTML =

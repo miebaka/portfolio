@@ -13,7 +13,7 @@ export function initCaseScrollIndex() {
   const label = nav.querySelector(".case-scroll-index__label");
   const head = nav.querySelector(".case-scroll-index__head");
   const buttons = chapters.map((chapter, index) => {
-    const text = chapter.querySelector(".case-chapter__label")?.textContent?.replace(/^\d+\s*\/\s*/, "").trim() || `Chapter ${index + 1}`;
+    const text = document.querySelector(`.case-index a[href="#${chapter.id}"]`)?.textContent?.replace(/^\d+\s*/, "").trim() || chapter.querySelector("h2")?.textContent?.trim() || `Chapter ${index + 1}`;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "case-scroll-index__tick";
