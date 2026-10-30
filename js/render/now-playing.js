@@ -1,3 +1,4 @@
+import { publishListening } from '../core/listening-tempo.js';
 /* Live listening status. Last.fm credentials stay on the server boundary. */
 import { SITE } from "../../data/site.js";
 import { MOUNT } from "../core/contract.js";
@@ -53,6 +54,7 @@ export function initNowPlaying() {
   async function poll() {
     if (document.hidden) { timer = 0; return; }
     const value = await fetchNowPlaying();
+    publishListening(value ? { name: value.track, artist: value.artist, live: value.nowPlaying } : null);
     update(value);
     backoff = value ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
     schedule(backoff);

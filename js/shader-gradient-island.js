@@ -127,6 +127,24 @@ function CursorCamera({ interaction, reduced, preset }) {
   return null;
 }
 
+function TempoMotion({ interaction, reduced }) {
+  const scene = useThree(state => state.scene);
+  const motion = useRef({ phase: 0, strength: 0, bpm: 120 });
+  useFrame((_, delta) => {
+    const mesh = scene.getObjectByName('shadergradient-mesh');
+    if (!mesh) return;
+    const tempo = interaction.tempo;
+    const active = !reduced && !document.hidden && tempo?.expires > Date.now() && Number.isFinite(tempo.bpm) && tempo.bpm >= 30 && tempo.bpm <= 300;
+    const dt = Math.min(delta, .1);
+    const value = motion.current;
+    value.bpm = MathUtils.damp(value.bpm, active ? tempo.bpm : 120, 2, dt);
+    value.strength = MathUtils.damp(value.strength, active ? 1 : 0, 2, dt);
+    if (!document.hidden) value.phase += dt * value.bpm / 60 * Math.PI / 2;
+    mesh.scale.setScalar(reduced ? 1 : 1 + Math.sin(value.phase) * .012 * value.strength);
+  });
+  return null;
+}
+
 function RenderReady({ onReady }) {
   const didSignal = useRef(false);
   useFrame(() => {
@@ -165,6 +183,7 @@ function Backdrop({ theme, reduced, interaction, colors, backgrounds, onReady })
       theme === "light" ? createElement(LightPalette, { colors }) : null,
       theme === "dark" ? createElement(CursorCamera, { interaction, reduced, preset }) : null,
       createElement(RenderReady, { onReady }),
+      createElement(TempoMotion, { interaction, reduced }),
     ),
   );
 }
@@ -187,6 +206,7 @@ export function mountShaderGradient(host, initialState) {
     ready,
     update(nextState) { state = { ...state, ...nextState }; render(); },
     setPointer(x, y) { interaction.targetX = x; interaction.targetY = y; },
+    setTempo(tempo) { interaction.tempo = tempo; },
     destroy() { root.unmount(); },
   };
 }

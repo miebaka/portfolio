@@ -1,3 +1,4 @@
+import { currentTempo } from './listening-tempo.js';
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
@@ -101,6 +102,11 @@ export async function initShaderBackdrop({
   }
 
   let destroyed = false;
+  const syncTempo = () => {
+    for (const renderer of [island, overlayIsland]) renderer?.setTempo?.(currentTempo());
+  };
+  win.addEventListener('listening-tempo', syncTempo);
+  syncTempo();
   let pointerFrame = 0;
   let pendingPointer = { x: 0, y: 0 };
   const applyPointer = () => {
@@ -165,6 +171,7 @@ export async function initShaderBackdrop({
   const destroy = () => {
     if (destroyed) return;
     destroyed = true;
+    win.removeEventListener('listening-tempo', syncTempo);
     observer.disconnect();
     reducedQuery?.removeEventListener?.("change", sync);
     finePointerQuery?.removeEventListener?.("change", sync);
