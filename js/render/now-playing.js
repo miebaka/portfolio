@@ -13,8 +13,8 @@ function buildChip(container) {
   chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
     '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
-    '<span class="now-playing__copy"><span class="now-playing__label">Currently listening to:</span>' +
-    '<span class="now-playing__track">Que Linda — DJ Habias</span></span>' +
+    '<span class="now-playing__copy">' +
+    '<span class="now-playing__track">Listening history on Last.fm</span></span>' +
     '<span class="now-playing__arrow" aria-hidden="true"><span class="now-playing__arrow-track"><i>↗</i><i>↗</i></span></span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
@@ -39,17 +39,16 @@ export function initNowPlaying() {
   if (!container) return;
   const chip = buildChip(container);
   const track = chip.querySelector(".now-playing__track");
-  const label = chip.querySelector(".now-playing__label");
   let timer = 0;
   let backoff = POLL_MS;
   const schedule = delay => { clearTimeout(timer); timer = setTimeout(poll, delay); };
   const update = value => {
     if (!value) return;
-    track.textContent = `${value.track} — ${value.artist}`;
-    label.textContent = value.nowPlaying ? "Currently listening to:" : "Recently listened to:";
+    const status = value.nowPlaying ? "Listening now" : "Last listened";
+    track.textContent = `${status}: ${value.track} — ${value.artist}`;
     chip.dataset.live = String(Boolean(value.nowPlaying));
     chip.href = value.url || chip.href;
-    chip.setAttribute("aria-label", `${label.textContent} ${track.textContent}. Open on Last.fm`);
+    chip.setAttribute("aria-label", `${track.textContent}. Open on Last.fm`);
   };
   async function poll() {
     if (document.hidden) { timer = 0; return; }

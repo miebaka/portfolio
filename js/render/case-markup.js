@@ -30,20 +30,20 @@ function sequence(media, base, nextPlate) {
 
 function factsBlock(study, project) {
   const facts = study.facts || {};
-  const rows = [["Context", facts.context], ["My role", facts.role], ["Year", project?.year], ["Deliverables", facts.delivered], ["Collaborators", facts.collaborators]].filter(([, value]) => value);
+  const rows = [["Project", project?.title || study.title], ["Context", facts.context], ["My role", facts.role], [facts.yearLabel || "Year", project?.year], ["Deliverables", facts.delivered], ["Collaborators", facts.collaborators]].filter(([, value]) => value);
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
 function proofBlock(study) {
   if (!study.proof?.length) return "";
-  const items = study.proof.map(item => `<li class="case-proof__item"><p class="case-proof__type">${esc(item.type)}</p><p>${esc(item.statement)}</p><p class="case-proof__scope">${item.strength === "partial" ? "Bounded evidence" : "Documented evidence"}</p></li>`).join("");
-  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><p class="case-proof__kicker">Evidence ledger</p><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
+  const items = study.proof.map(item => `<li class="case-proof__item"><p>${esc(item.statement)}</p><p class="case-proof__scope">${item.strength === "partial" ? "Bounded evidence" : "Documented evidence"}</p></li>`).join("");
+  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
 }
 
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><p class="case-chapter__label">${esc(label)}</p><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -52,16 +52,16 @@ function nextBlock(site, study, base) {
   if (!next?.slug || !project || project.status === "private") return "";
   const published = project.status === "published" && site.caseStudies?.[next.slug]?.status === "published";
   const title = published && next.interactive !== false
-    ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">${esc(next.title)}</a>`
-    : `<p class="case-next__title">${esc(next.title)}</p>`;
-  return `<section class="case-next container" aria-label="Next project"><p class="case-next__label">Next project</p>${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
+    ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">Next project: ${esc(next.title)}</a>`
+    : `<p class="case-next__title">Next project: ${esc(next.title)}</p>`;
+  return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
 }
 
 export function renderCaseMarkup(site, slug, base = "../") {
   const study = site.caseStudies?.[slug];
   if (!study) return "";
   const project = site.projects?.find(item => item.slug === slug);
-  if (study.status !== "published") return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><p class="case-locked__status">Coming soon</p></section>`;
+  if (study.status !== "published") return `<section class="case-locked container"><h1>${esc(project?.title || study.title)}</h1><p class="case-locked__status">Coming soon</p></section>`;
   if (study.chapters?.length) {
     const hero = study.media?.find(media => media.src === study.hero);
     const lookup = new Map((study.media || []).map(media => [media.src, media]));
@@ -71,7 +71,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><p class="case-project">${esc(study.title)}</p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];
