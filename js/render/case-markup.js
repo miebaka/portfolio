@@ -34,16 +34,11 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
-function proofBlock(study) {
-  if (!study.proof?.length) return "";
-  const items = study.proof.map(item => `<li class="case-proof__item"><p>${esc(item.statement)}</p><p class="case-proof__scope">${item.strength === "partial" ? "Bounded evidence" : "Documented evidence"}</p></li>`).join("");
-  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
-}
 
-function chapter(id, label, heading, body, media, featured, base, nextPlate) {
+function chapter(id, label, heading, body, media, featured, base, nextPlate, aliases = []) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title">${aliases.map(alias => `<span class="case-anchor" id="${token(alias)}" aria-hidden="true"></span>`).join("")}<div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -69,9 +64,9 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const nextPlate = () => ++plate;
     const heroMarkup = shot(hero, "hero", base, nextPlate());
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
-    const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
+    const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate, item.aliases)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1 class="case-statement">${esc(study.title)}</h1><p class="case-proposition">${esc(study.tagline)}</p></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}${study.presentationNote ? `<p class="case-scope-note">${esc(study.presentationNote)}</p>` : ""}</div></div>${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];

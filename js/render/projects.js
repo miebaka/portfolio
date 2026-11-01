@@ -97,7 +97,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
   const workIndex = [
     { ...bySlug.get('tedx-rsu'), title: 'TEDx Rivers State University' },
     bySlug.get('rivo'),
-    { ...bySlug.get('chopbox'), title: 'Chop Box' },
+    bySlug.get('chopbox'),
     { slug: 'detour', title: 'Detour', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' },
     { slug: 'out-of-office', title: 'Out Of Office', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' }
   ].filter(Boolean);

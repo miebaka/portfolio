@@ -19,21 +19,16 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
     '<fieldset class="site-index__preferences"><legend>Preferences</legend><div class="site-index__themes"><button type="button" data-theme-choice="light" aria-pressed="false">Print<span>Light</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">Screen<span>Dark</span></button></div><div class="site-index__motion" role="group" aria-label="Motion"><button type="button" data-motion-choice="system" aria-pressed="false">System</button><button type="button" data-motion-choice="reduce" aria-pressed="false">Reduce</button><button type="button" data-motion-choice="full" aria-pressed="false">Full</button></div></fieldset></div></div></div></section>';
 }
 
-function setupPreferences(nav, index) {
-  const html = document.documentElement;
-  const choices = [...index.querySelectorAll("[data-theme-choice]")], motionChoices = [...index.querySelectorAll("[data-motion-choice]")];
-  const sync = ({ theme, resolvedTheme, motion }) => {
-    const dark = resolvedTheme === "dark";
-    choices.forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
-    motionChoices.forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
-    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", dark ? "#07112B" : "#F8F9FC"));
-  };
-  const preferences = createPreferencesController({ root: html, onChange: sync });
+function setupPreferences(index, preferences) {
+  const choices = [...index.querySelectorAll("[data-theme-choice]")];
+  const motionChoices = [...index.querySelectorAll("[data-motion-choice]")];
   const chooseTheme = event => preferences.setTheme(event.currentTarget.dataset.themeChoice);
   const chooseMotion = event => preferences.setMotion(event.currentTarget.dataset.motionChoice);
-  choices.forEach(btn => btn.addEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.addEventListener("click", chooseMotion));
+  choices.forEach(btn => btn.addEventListener("click", chooseTheme));
+  motionChoices.forEach(btn => btn.addEventListener("click", chooseMotion));
   return () => {
-    choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); preferences.destroy();
+    choices.forEach(btn => btn.removeEventListener("click", chooseTheme));
+    motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion));
   };
 }
 
@@ -41,7 +36,7 @@ let activeIndex, cleanupPreferences, themeCord;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
-  activeIndex?.destroy(); cleanupPreferences?.(); themeCord?.destroy(); document.getElementById("site-index")?.remove(); document.querySelector(".mobile-tabbar")?.remove();
+  activeIndex?.destroy(); cleanupPreferences?.(); themeCord?.destroy(); themeCord = null; document.getElementById("site-index")?.remove(); document.querySelector(".mobile-tabbar")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
   const order = ["work", "about", "explorations", "writing", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
@@ -63,14 +58,16 @@ export function renderNavigation() {
   const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   preferences = createPreferencesController({
     root: document.documentElement,
-    onChange: ({ resolvedTheme }) => {
+    onChange: ({ theme, resolvedTheme, motion }) => {
+      index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
+      index.querySelectorAll("[data-motion-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
       themeCord?.setChecked(resolvedTheme === "dark");
       document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
     }
   });
   themeCord = createThemePullCord(cordButton, { onToggle: toggleTheme });
   themeCord.setChecked(document.documentElement.dataset.theme === "dark");
-  const cleanupIndexPreferences = setupPreferences(el, index);
+  const cleanupIndexPreferences = setupPreferences(index, preferences);
   cleanupPreferences = () => {
     cleanupIndexPreferences();
     preferences.destroy();

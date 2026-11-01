@@ -40,11 +40,11 @@ test("project introductions expose specific propositions rather than generic lab
   }
 });
 
-test("every published case makes question decision system and use visible", () => {
+test("published cases preserve orientation and bounded project scope", () => {
   const published = Object.values(SITE.caseStudies).filter(study => study.status === "published");
   assert.ok(published.length > 0);
   for (const study of published) {
-    const chapters = new Set(study.chapters?.map(chapter => chapter.id));
+    const chapters = new Set(study.chapters?.flatMap(chapter => [chapter.id, ...(chapter.aliases || [])]));
     for (const id of ["context", "decision", "system", "applications", "reflection"]) assert.ok(chapters.has(id), `${study.title} needs ${id}`);
     const proof = new Map(study.proof?.map(item => [item.type, item]));
     for (const type of ["decision", "system", "survival"]) assert.ok(proof.has(type), `${study.title} needs ${type} proof`);

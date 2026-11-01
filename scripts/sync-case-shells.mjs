@@ -8,7 +8,7 @@ const root = resolve(new URL("..", import.meta.url).pathname);
 
 for (const project of SITE.projects) {
   const study = SITE.caseStudies?.[project.slug];
-  if (!study || study.status !== "published" || project.status === "private") continue;
+  if (!study || project.status === "private") continue;
   const path = resolve(root, "work", `${project.slug}.html`);
   const source = await readFile(path, "utf8");
   const article = `<article class="case" data-mount="case">${renderCaseMarkup(SITE, project.slug, "../")}</article>`;

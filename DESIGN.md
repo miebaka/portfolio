@@ -66,14 +66,20 @@ a persistent, non-essential project image so visual proof does not depend on
 hover. Unfinished studies live in a quieter “In progress” register on Work and
 must not compete with published case studies.
 
-Case studies share one evidence-first shell, but project colour may tint the
-ledger and alternating chapters. That variation stays inside the case content:
+Case studies share a project-first opening and image-scope note, but use authored
+chapter counts and titles. Project colour may tint alternating chapters. That variation stays inside the case content:
 Rivo uses its blue signal, ChopBox its warm appetite palette and TEDx its
 Porphyra field. Navigation, typography, grid, captions and footer remain
 portfolio-owned invariants.
 
-Every evidence item names its confidence as “Documented evidence” or “Bounded
-evidence.” Missing production, adoption or outcome evidence is never inferred.
+A concise image-scope note distinguishes visualisations from documented use.
+Internal proof records support editing without presenting self-awarded confidence
+badges to readers. Missing production, adoption or outcome evidence is never inferred.
+Legacy chapter links remain available when chapters are combined.
+
+Article and privacy pages omit the pointer-reactive field. Other pages respect
+the shared resolved motion preference; the Index and pull cord use one preference
+controller.
 
 ## Long-form reading
 
@@ -99,6 +105,13 @@ such as “Coming soon” are statuses, not disabled buttons, and must use their
 status class even when they share the same visual vocabulary.
 
 ## Reading and utility interactions
+
+Case-study chapters reveal as one authored sequence: heading, body, then imagery.
+The motion is short, composited and removed by the site motion preference. Native
+cross-document view transitions connect supported Work thumbnails to their case
+heroes as progressive enhancement. Do not add global parallax, scroll hijacking
+or a page-transition runtime; long-form work keeps native scrolling and ordinary
+navigation as its baseline.
 
 Published case studies expose a compact chapter rail on wide screens. It is a
 static-site adaptation of Kokonut UI's MIT-licensed Scroll Index: each real

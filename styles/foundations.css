@@ -101,6 +101,6 @@ input{font-size:16px}
 }
 :is(a,button,input,textarea,summary){touch-action:manipulation}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}
-.section{padding-block:6.5rem;padding-block:5.45rem}
-.section--tight{padding-block:5.75rem;padding-block:4.8rem}
+.section{padding-block:5.45rem}
+.section--tight{padding-block:4.8rem}
 }

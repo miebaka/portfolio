@@ -52,12 +52,12 @@ test("Work archive separates published cases from work in progress", () => {
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
-  for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
+  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 3);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
   assert.match(html, /class="project-archive__progress"/);
-  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
+  assert.match(html, /The Pause theme for TEDx Rivers State University, across print, campus and stage\./);
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
@@ -286,7 +286,7 @@ test("rejected homepage language cannot return unnoticed", async () => {
     "From the first question to the final file."
   ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
-  assert.match(html, /Over the last seven years/);
+  assert.match(html, /I started during NYSC in 2017/);
 });
 
 test("homepage hierarchy and motion affordances cannot regress", async () => {
@@ -370,7 +370,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title" aria-label="I design brands, build useful things & ask a lot of questions\.">/);
+  assert.match(home, /<h1 id="hero-title" aria-label="Brand identities, campaigns and print\. Designed in Lagos\.">/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
@@ -437,7 +437,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
-  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brands, build useful things & ask a lot of questions\./);
+  assert.match(await readFile(join(dist, "index.html"), "utf8"), /Brand identities, campaigns and print\. Designed in Lagos\./);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /Coming soon/);

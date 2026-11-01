@@ -4,8 +4,8 @@ export const writing = [
     "title": "When the Swoosh Lost Its Soul",
     "href": "writing/when-the-swoosh-lost-its-soul.html",
     "date": "2026-06-15",
-    "summary": "How Nike’s creative and commercial decisions weakened its cultural value.",
-    "readingTime": "10 min read"
+    "summary": "A designer’s reading of Nike’s creative and commercial choices, and what they mean for brand value.",
+    "readingTime": "11 min read"
   },
   {
     "title": "Making the World More Accessible",

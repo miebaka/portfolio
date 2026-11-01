@@ -102,3 +102,22 @@ The most convincing improvement is specificity: actual work, accurate states, co
 - Git diff whitespace check passed. No contact message was sent and no factual outcome was invented.
 
 The review and implementation are prepared on a separate GitHub branch for review. They are not a claim that production has been deployed.
+
+## Implementation follow-up, 1 November 2026
+
+The deeper research pass expanded the initial review to 24 sources, all 525 tracked repository paths, 66 source files, 15 primary routes plus the legacy redirect, 60 route/theme/viewport checks and an inventory of 359 image files. It reinforced the review's central conclusion: there is no defensible visual checklist that proves a website was made with AI. Explicit provenance records can identify a tool or an assisted contribution; stylistic repetition and implementation defects are reasons to improve the work, not reliable authorship detectors. No cryptographic C2PA or provider-watermark detection was performed.
+
+The follow-up implementation now addresses the material recommendations:
+
+- Home, About and Services copy names actual disciplines, deliverables and project decisions instead of repeating abstract systems language.
+- Published cases use project-first titles, project-specific chapter structures and a visible scope note. Rivo has four chapters, TEDx five and ChopBox three; legacy anchors remain compatible.
+- Self-awarded proof labels were removed. Evidence boundaries remain in plain language, including the distinction between event photographs and presentation visualisations.
+- The draft Poster A Week route now uses its actual locked-case state instead of an obsolete fallback story.
+- Listening status expires to a neutral Last.fm history state after 90 seconds, on hidden tabs and on failed refreshes.
+- The privacy page now accurately describes local theme and motion storage.
+- One preference controller owns theme and motion state, including the controls previously hidden on small screens.
+- Pointer-reactive texture is absent from articles and privacy content, and explicit reduced motion stops it on other pages.
+- The Nike and accessibility essays received separate claim-by-claim source reviews. Unsupported numbers, quotations and single-inventor stories were removed rather than replaced with guesses.
+- Case-study reveals now apply to all published cases and sequence copy before imagery. The motion review records why global parallax and page-transition libraries were not added.
+
+Distinctive choices were deliberately retained: the ultramarine print/screen system, display and body typefaces, square action controls, project imagery, case plate captions, custom cursor language where functional, and the owner's personal accounts. The goal is stronger authorship and accuracy, not the erasure of development history, credits or provenance.

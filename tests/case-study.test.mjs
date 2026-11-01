@@ -26,14 +26,20 @@ test("published narratives cannot lose their proposition, hero or supported fact
   for (const field of ["role", "delivered"]) reject(study => { study.facts[field] = ""; }, "CASE_FACT_REQUIRED", `facts.${field}`);
 });
 
-test("published narratives reject missing, reordered, duplicated or empty chapters", () => {
+test("published narratives allow authored structures but reject missing, duplicated or empty chapters", () => {
   reject(study => { delete study.chapters; }, "CASE_CHAPTERS_INVALID", "chapters");
-  reject(study => { study.chapters.pop(); }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
-  reject(study => { [study.chapters[0], study.chapters[1]] = [study.chapters[1], study.chapters[0]]; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
-  reject(study => { study.chapters[1].id = "context"; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
+  reject(study => { study.chapters = []; }, "CASE_CHAPTERS_INVALID", "chapters");
+  reject(study => { study.chapters[1].id = "context"; }, "CASE_CHAPTER_ID_INVALID", "chapters");
+  reject(study => { study.chapters[1].aliases = ["context"]; }, "CASE_CHAPTER_ID_INVALID", "chapters");
+  reject(study => { study.chapters[1].aliases = "legacy"; }, "CASE_CHAPTER_ALIASES_INVALID", "chapters[1].aliases");
   reject(study => { study.chapters[4].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[4].body");
   reject(study => { study.chapters[0].body = [null]; }, "CASE_CHAPTER_BODY_INVALID", "chapters[0].body");
   reject(study => { study.chapters[0].label = ""; }, "CASE_CHAPTER_LABEL_REQUIRED", "chapters[0].label");
+  reject(study => { study.presentationNote = ""; }, "CASE_SCOPE_REQUIRED", "presentationNote");
+  assert.deepEqual([SITE.caseStudies.chopbox.chapters.length, SITE.caseStudies.rivo.chapters.length, SITE.caseStudies["tedx-rsu"].chapters.length], [3, 4, 5]);
+  const content = structuredClone(CONTENT);
+  content.caseStudies["tedx-rsu"].chapters.reverse();
+  assert.equal(validateContent(content).ok, true, "Authored ordering is not forced into a universal template.");
 });
 
 test("published media references cannot silently disappear or duplicate a plate", () => {
@@ -69,7 +75,7 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   const hero = html.indexOf('case-shot--hero');
   const facts = html.indexOf('<dl class="case-facts">');
   assert.ok(opening >= 0 && opening < hero && hero < facts);
-  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
+  assert.match(html, /The Pause theme for TEDx Rivers State University, across print, campus and stage\./);
   assert.match(html, /tedx-rsu-campus-banner-1080\.jpg/);
   assert.match(html, /<dt>My role<\/dt><dd>Identity design, creative direction and print<\/dd>/);
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
@@ -82,12 +88,13 @@ test("Rivo publishes as an evidence-bounded identity case", () => {
   const markup = renderCaseMarkup(SITE, "rivo");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
-  assert.match(markup, /How can access feel like a brand position\?/);
+  assert.match(markup, /A software studio built around access/);
   assert.match(markup, /<dt>Published<\/dt><dd>2025<\/dd>/);
   assert.match(markup, /application visualisation/i);
   assert.match(markup, /not presented as evidence of later team adoption/i);
-  assert.match(markup, /What this case can prove/);
-  assert.match(markup, /Bounded evidence/);
+  assert.doesNotMatch(markup, /What this case can prove|Documented evidence|Bounded evidence/);
+  assert.match(markup, /<h1 class="case-statement">Rivo Studio<\/h1>/);
+  assert.match(markup, /class="case-anchor" id="system"/);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
 });
 
@@ -97,9 +104,10 @@ test("ChopBox publishes without converting presentation visualisations into prod
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "chopbox").status, "published");
   assert.match(html, /does this make the food feel worth ordering/i);
-  assert.match(html, /not presented as photographs of produced rollout materials/i);
+  assert.match(html, /not photographs of produced rollout materials|not presented as photographs of produced rollout materials/i);
   assert.match(html, /does not verify which applications entered production/i);
-  assert.match(html, /Bounded evidence/);
+  assert.match(html, /class="case-scope-note"/);
+  assert.match(html, /class="case-anchor" id="reflection"/);
   assert.doesNotMatch(html, /audience impact|sales|conversion|continued team use/i);
 });
 

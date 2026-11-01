@@ -40,15 +40,24 @@ export function initNowPlaying() {
   const chip = buildChip(container);
   const track = chip.querySelector(".now-playing__track");
   let timer = 0;
+  let expiryTimer = 0;
   let backoff = POLL_MS;
   const schedule = delay => { clearTimeout(timer); timer = setTimeout(poll, delay); };
   const update = value => {
-    if (!value) return;
+    clearTimeout(expiryTimer);
+    if (!value) {
+      track.textContent = 'Listening history on Last.fm';
+      chip.dataset.live = 'false';
+      chip.href = 'https://www.last.fm/user/' + encodeURIComponent(SITE.lastfmUser);
+      chip.setAttribute('aria-label', "Open Miebaka's listening history on Last.fm");
+      return;
+    }
     const status = value.nowPlaying ? "Listening now" : "Last listened";
     track.textContent = `${status}: ${value.track} — ${value.artist}`;
     chip.dataset.live = String(Boolean(value.nowPlaying));
     chip.href = value.url || chip.href;
     chip.setAttribute("aria-label", `${track.textContent}. Open on Last.fm`);
+    if (value.nowPlaying) expiryTimer = setTimeout(() => update(null), 90_000);
   };
   async function poll() {
     if (document.hidden) { timer = 0; return; }
@@ -59,13 +68,14 @@ export function initNowPlaying() {
     schedule(backoff);
   }
   const visibility = () => {
-    if (document.hidden) { clearTimeout(timer); timer = 0; }
+    if (document.hidden) { clearTimeout(timer); timer = 0; update(null); }
     else if (!timer) { backoff = POLL_MS; schedule(0); }
   };
   document.addEventListener("visibilitychange", visibility);
   if (!['localhost', '127.0.0.1'].includes(location.hostname)) schedule(0);
   addEventListener("pagehide", () => {
     clearTimeout(timer);
+    clearTimeout(expiryTimer);
     document.removeEventListener("visibilitychange", visibility);
   }, { once: true });
 }

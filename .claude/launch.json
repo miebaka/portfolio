@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "portfolio",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["scripts/dev-server.py", "4180"],
-      "port": 4180
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 4000
     }
   ]
 }

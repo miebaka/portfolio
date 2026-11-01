@@ -6,7 +6,7 @@ export const projects = [
     "slug": "rivo",
     "title": "Rivo Studio",
     "category": "Software studio",
-    "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
+    "tagline": "An open wordmark, Clar blue and signal yellow for a software studio.",
     "tags": [
       "Brand identity",
       "Brand strategy",
@@ -24,7 +24,7 @@ export const projects = [
     "slug": "tedx-rsu",
     "title": "TEDx RSU",
     "category": "Event",
-    "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
+    "tagline": "The Pause theme for TEDx Rivers State University, across print, campus and stage.",
     "tags": [
       "Brand identity",
       "Creative direction",
@@ -42,7 +42,7 @@ export const projects = [
     "slug": "chopbox",
     "title": "ChopBox",
     "category": "Food brand",
-    "tagline": "A food identity designed to feel warm, generous and ready to order.",
+    "tagline": "A rounded wordmark and toasted colours for food packaging and campaigns.",
     "tags": [
       "Brand identity",
       "Brand strategy",

@@ -1,5 +1,7 @@
 /* Original line-field treatment; no third-party texture code or assets. */
 export function initEditorialDetails() {
+  // Articles and privacy copy should remain still while someone reads.
+  if (document.body.classList.contains('article-page') || document.body.dataset.page === 'privacy') return;
   const gate = matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)');
   let cleanup = () => {};
   function setup() {
@@ -17,7 +19,7 @@ export function initEditorialDetails() {
       ctx.lineWidth = 1.25;
       const angle = Math.atan2(y - previousY, x - previousX);
       for (let py = 14; py < field.height; py += 30) for (let px = 12; px < field.width; px += 28) {
-        const strength = scrolling || !gate.matches ? 0 : Math.max(0, 1 - Math.hypot(px - x, py - y) / 160);
+        const strength = scrolling || !gate.matches || document.documentElement.dataset.motion === 'reduced' ? 0 : Math.max(0, 1 - Math.hypot(px - x, py - y) / 160);
         const a = angle * strength * .35;
         ctx.beginPath(); ctx.moveTo(px - Math.cos(a) * 6, py - Math.sin(a) * 6);
         ctx.lineTo(px + Math.cos(a) * 6, py + Math.sin(a) * 6); ctx.stroke();
@@ -36,6 +38,7 @@ export function initEditorialDetails() {
     window.addEventListener('resize', resize);
     window.addEventListener('scroll', scroll, { passive: true });
     document.addEventListener('visibilitychange', leave);
+    document.addEventListener('motionpreferencechange', leave);
     resize();
     const themeObserver = new MutationObserver(queue);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -46,6 +49,7 @@ export function initEditorialDetails() {
       document.documentElement.removeEventListener('pointerleave', leave);
       window.removeEventListener('resize', resize); window.removeEventListener('scroll', scroll);
       document.removeEventListener('visibilitychange', leave);
+      document.removeEventListener('motionpreferencechange', leave);
     };
   }
   gate.addEventListener('change', setup);

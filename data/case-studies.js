@@ -46,7 +46,7 @@ export const caseStudies = {
   },
   "rivo": {
     "title": "Rivo Studio",
-    "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
+    "tagline": "An open wordmark, Clar blue and signal yellow for a software studio.",
     "hero": "rivo-in-use",
     "facts": {
       "context": "In-house identity work at Rivo Studios",
@@ -57,7 +57,7 @@ export const caseStudies = {
     "proof": [
       {
         "type": "decision",
-        "statement": "Access became the organising idea, expressed through an open, softened wordmark rather than a clinical technology code.",
+        "statement": "Open letterforms and softened corners carry the studio’s access proposition.",
         "strength": "verified"
       },
       {
@@ -67,55 +67,58 @@ export const caseStudies = {
       },
       {
         "type": "survival",
-        "statement": "Application visualisations test the system from stationery to carried and environmental formats; they do not prove production.",
+        "statement": "The application images are visualisations; production and later adoption are not established.",
         "strength": "partial"
       }
     ],
     "chapters": [
       {
         "id": "context",
-        "label": "Question",
-        "title": "How can access feel like a brand position?",
+        "label": "The brief",
+        "title": "A software studio built around access",
         "body": [
-          "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design.",
-          "The category often uses complexity as shorthand for capability. Rivo needed to communicate technical confidence while remaining clear, approachable and useful across everyday brand materials."
+          "Rivo Studio needed an identity for a software practice positioned around access. I worked on the strategy, visual identity and guidelines in-house.",
+          "The wordmark and supporting materials needed to feel approachable alongside the studio’s technical work."
         ]
       },
       {
         "id": "decision",
-        "label": "Governing decision",
-        "title": "Soften the technical signal",
+        "label": "Wordmark and colour",
+        "title": "Open letters, blue and yellow",
         "body": [
-          "I worked from the spoken name, /ˈraɪvoʊ/, then tested how it behaved at small sizes, in strong colour pairings and beside practical information.",
-          "The wordmark removes hard corners and keeps the letterforms open. Its job is to feel assured without becoming severe, giving the studio a recognisable voice before supporting graphics are added."
+          "I worked from the spoken name, /ˈraɪvoʊ/, and gave the wordmark open letterforms and softened corners.",
+          "Clar blue anchors the palette against deep navy. Signal yellow carries emphasis in the wordmark and short messages. The guidelines bring these colours, typography and logo use together."
         ],
-        "media": ["rivo-wordmark"]
-      },
-      {
-        "id": "system",
-        "label": "System",
-        "title": "One primary field, one signal colour",
-        "body": [
-          "Clar blue anchors the identity against deep navy. Signal yellow is reserved for emphasis, allowing hierarchy to come from a controlled contrast rather than a growing collection of accents. The guidelines record how the wordmark, colour and typography work together."
+        "media": [
+          "rivo-wordmark",
+          "rivo-palette"
         ],
-        "media": ["rivo-palette"]
+        "aliases": [
+          "system"
+        ]
       },
       {
         "id": "applications",
-        "label": "System in use",
-        "title": "Stress-test one limited vocabulary across scales",
+        "label": "Applications",
+        "title": "From stationery to stage graphics",
         "body": [
-          "Application visualisations tested the system from a carried object to a large environmental surface. The same short proposition and yellow signal had to remain legible without turning every touchpoint into the same composition.",
-          "The delivered system included guidelines and stationery alongside the identity assets. These plates show the intended production system and presentation of those materials; they are not presented as evidence of later team adoption."
+          "The application visualisations show the identity on stationery, a tote, a flag and a stage screen. Each format gives the wordmark and short messages a different amount of space.",
+          "The delivered identity included guidelines and stationery alongside the logo and colour assets."
         ],
-        "media": ["rivo-tote", "rivo-stage", "rivo-flag", "rivo-stationery", "rivo-guidelines"]
+        "media": [
+          "rivo-tote",
+          "rivo-stage",
+          "rivo-flag",
+          "rivo-stationery",
+          "rivo-guidelines"
+        ]
       },
       {
         "id": "reflection",
-        "label": "What survived",
-        "title": "Usefulness needs restraint",
+        "label": "Looking back",
+        "title": "A small set of recognisable parts",
         "body": [
-          "The strongest part of the system is its limited vocabulary. A softened wordmark, a stable blue field and one signal colour create enough distinction while leaving room for the information each application needs to carry."
+          "The wordmark, blue field and yellow accent can change scale and composition without needing new graphic devices for every application. That is the part of this identity I would carry into further work."
         ]
       }
     ],
@@ -126,7 +129,7 @@ export const caseStudies = {
         "w": 3840,
         "h": 3080,
         "alt": "The Rivo wordmark in black, centred on a full field of signal yellow.",
-        "caption": "The softened Rivo wordmark shown on the identity's signal-yellow field.",
+        "caption": "The open letterforms and softened corners carry into the smaller wordmark applications.",
         "loading": "lazy"
       },
       {
@@ -135,7 +138,7 @@ export const caseStudies = {
         "w": 2800,
         "h": 2240,
         "alt": "The Clar swatch at hex 0000FF beside four progressively lighter tints.",
-        "caption": "Clar blue and its tint range form the primary colour family.",
+        "caption": "Clar blue anchors the palette; its tints support quieter backgrounds.",
         "loading": "lazy"
       },
       {
@@ -144,7 +147,7 @@ export const caseStudies = {
         "w": 2800,
         "h": 2240,
         "alt": "Business-card application visualisation with blue and yellow faces arranged on dark cloth.",
-        "caption": "A stationery visualisation tests the identity at a small, information-heavy scale.",
+        "caption": "Business-card visualisation: blue and yellow separate the information faces.",
         "loading": "lazy"
       },
       {
@@ -153,7 +156,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Brand-guidelines book visualisation with the Rivo cover facing up.",
-        "caption": "The guidelines visualisation presents the system as a reference another person can use.",
+        "caption": "The guidelines are shown here as a presentation visualisation.",
         "loading": "lazy"
       },
       {
@@ -171,7 +174,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Tote-bag application visualisation reading Software that simply works for all in yellow.",
-        "caption": "A tote visualisation tests the proposition as a single carried message.",
+        "caption": "Tote visualisation carrying “Software that simply works for all.”",
         "loading": "lazy"
       },
       {
@@ -180,7 +183,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Stage-screen application visualisation reading From village squares to virtual spaces.",
-        "caption": "A stage-screen visualisation tests the system at environmental scale.",
+        "caption": "Stage-screen visualisation carrying “From village squares to virtual spaces.”",
         "loading": "lazy"
       },
       {
@@ -189,7 +192,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Flag application visualisation reading Software that simply works for all against open sky.",
-        "caption": "A flag visualisation checks the short proposition and wordmark against a moving outdoor format.",
+        "caption": "Flag visualisation pairing the short proposition with the wordmark.",
         "loading": "lazy"
       }
     ],
@@ -197,11 +200,12 @@ export const caseStudies = {
       "slug": "tedx-rsu",
       "title": "TEDx Rivers State University"
     },
-    "status": "published"
+    "status": "published",
+    "presentationNote": "These application visualisations do not prove production and are not presented as evidence of later team adoption."
   },
   "tedx-rsu": {
     "title": "TEDx RSU",
-    "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
+    "tagline": "The Pause theme for TEDx Rivers State University, across print, campus and stage.",
     "hero": "tedx-rsu-campus-banner",
     "facts": {
       "context": "Identity commission for TEDx Rivers State University",
@@ -233,8 +237,8 @@ export const caseStudies = {
     "chapters": [
       {
         "id": "context",
-        "label": "Question",
-        "title": "How can a local event speak inside a fixed global identity?",
+        "label": "The constraints",
+        "title": "Working within the TEDx identity",
         "body": [
           "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable.",
           "The identity needed one idea strong enough to hold across social promotion, printed collateral and the event stage. The TEDx red and wordmark were fixed; the event’s own character had to come from the elements around them."
@@ -242,38 +246,48 @@ export const caseStudies = {
       },
       {
         "id": "decision",
-        "label": "Governing decision",
-        "title": "Give the event a pause",
+        "label": "The Pause theme",
+        "title": "An invitation to pause",
         "body": [
           "“Pause…” is the organising idea. Its three dots leave the thought open; the line beneath it makes the invitation explicit: “Reflect. Reconsider. Reward.”",
           "The theme mark sits alongside the TEDx identity in the applications, giving the event its own voice within the parent system. Neue Haas Grotesk carries the direct voice, while the type specimen turns the theme into a short reminder: “Remember to stay pause-itive.”"
         ],
-        "media": ["tedx-rsu-logomark", "tedx-rsu-typeface"]
+        "media": [
+          "tedx-rsu-logomark",
+          "tedx-rsu-typeface"
+        ]
       },
       {
         "id": "system",
-        "label": "System",
-        "title": "Colour, type and a recurring ripple",
+        "label": "Colour and pattern",
+        "title": "A ripple across the applications",
         "body": [
           "Porphyra, Kakhol and Red ochre form the theme palette. The colour sheet records the values and tint ramps used to carry the system across digital and print.",
           "The ripple pattern supplies a recurring background, while the pause mark and typographic questions keep the central idea legible."
         ],
-        "media": ["tedx-rsu-palette", "tedx-rsu-pattern"]
+        "media": [
+          "tedx-rsu-palette",
+          "tedx-rsu-pattern"
+        ]
       },
       {
         "id": "applications",
-        "label": "System in use",
-        "title": "An invitation people could encounter",
+        "label": "On campus",
+        "title": "From a campus invitation to event day",
         "body": [
           "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
-          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt. Event-day and campus photographs document public encounter, not audience impact."
+          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt."
         ],
-        "media": ["tedx-rsu-merch", "tedx-rsu-street-banner", "tedx-rsu-event"]
+        "media": [
+          "tedx-rsu-merch",
+          "tedx-rsu-street-banner",
+          "tedx-rsu-event"
+        ]
       },
       {
         "id": "reflection",
-        "label": "What survived",
-        "title": "A theme that holds across formats",
+        "label": "Looking back",
+        "title": "The theme alongside the parent identity",
         "body": [
           "The final work keeps returning to the same invitation: pause and reflect. It appears as a mark on a garment, a question on a street banner and an invitation on campus, while the TEDx identity remains recognisable."
         ]
@@ -357,11 +371,12 @@ export const caseStudies = {
       "slug": "chopbox",
       "title": "ChopBox"
     },
-    "status": "published"
+    "status": "published",
+    "presentationNote": "The campus and event-day photographs document the identity in use; they do not establish audience impact."
   },
   "chopbox": {
     "title": "ChopBox",
-    "tagline": "A food identity designed to feel warm, generous and ready to order.",
+    "tagline": "A rounded wordmark and toasted colours for food packaging and campaigns.",
     "hero": "chopbox-platter",
     "facts": {
       "context": "Independent brand identity commission",
@@ -371,7 +386,7 @@ export const caseStudies = {
     "proof": [
       {
         "type": "decision",
-        "statement": "Every identity choice was tested against one practical question: does this make the food feel worth ordering?",
+        "statement": "The rounded wordmark and warm palette express the brief’s emphasis on appetite and generosity.",
         "strength": "verified"
       },
       {
@@ -381,55 +396,53 @@ export const caseStudies = {
       },
       {
         "type": "survival",
-        "statement": "Presentation visualisations test the system across packaging, uniform, campaign and outdoor formats; they do not prove production.",
+        "statement": "Presentation visualisations show packaging, uniform and campaign applications without proving production.",
         "strength": "partial"
       }
     ],
     "chapters": [
       {
         "id": "context",
-        "label": "Question",
-        "title": "How can a food brand feel worth ordering before the first bite?",
+        "label": "The brief",
+        "title": "Make the food feel ready to order",
         "body": [
-          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout.",
-          "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct."
+          "ChopBox was an independent identity commission spanning brand strategy, packaging and rollout visuals. The brief called for a warm, generous and appetising food brand.",
+          "I used appetite as the design question: does this make the food feel worth ordering?"
         ]
       },
       {
         "id": "decision",
-        "label": "Governing decision",
-        "title": "Use appetite as the filter",
+        "label": "The identity",
+        "title": "Rounded letters and toasted colours",
         "body": [
-          "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration.",
-          "A friendly rounded logotype and toasted yellow-red palette replace the category's harder, louder shorthand. The result aims to feel ready to order without making every application shout."
+          "A rounded logotype sets the tone, with a full lockup, a wordmark and a CB monogram for different sizes.",
+          "Deepfry Yellow and Fireside Red carry the palette. DM Sans supports the rounded wordmark in product and campaign information."
         ],
-        "media": ["chopbox-logo-lockups", "chopbox-typeface"]
-      },
-      {
-        "id": "system",
-        "label": "System",
-        "title": "Build the identity for the box and the screen",
-        "body": [
-          "The full logo, wordmark and CB monogram provide different levels of recognition. Deepfry Yellow and Fireside Red carry the appetite signal, while DM Sans keeps supporting information direct and legible."
+        "media": [
+          "chopbox-logo-lockups",
+          "chopbox-typeface",
+          "chopbox-palette"
         ],
-        "media": ["chopbox-palette"]
+        "aliases": [
+          "system"
+        ]
       },
       {
         "id": "applications",
-        "label": "System in use",
-        "title": "Stress-test one voice across formats",
+        "label": "Packaging and campaigns",
+        "title": "The identity across food and delivery formats",
         "body": [
-          "Packaging, uniform, campaign and out-of-home visualisations test whether the same rounded voice and warm palette can remain recognisable at very different scales.",
-          "These images document intended applications. They are labelled as visualisations and are not presented as photographs of produced rollout materials. The surviving material does not verify which applications entered production or continued in team use."
+          "The presentation images show the identity on packaging, an apron, campaign graphics and outdoor formats. They explore how the logo, palette and voice fit those surfaces.",
+          "The most useful part of the direction is the relationship between the rounded lettering, warm colours and food imagery."
         ],
-        "media": ["chopbox-packaging", "chopbox-apron", "chopbox-campaign", "chopbox-billboard"]
-      },
-      {
-        "id": "reflection",
-        "label": "What survived",
-        "title": "A useful filter makes the system cohere",
-        "body": [
-          "The strongest connective tissue is not a single shape or colour. It is the appetite test: every part should make the food feel warm, generous and worth ordering."
+        "media": [
+          "chopbox-packaging",
+          "chopbox-apron",
+          "chopbox-campaign",
+          "chopbox-billboard"
+        ],
+        "aliases": [
+          "reflection"
         ]
       }
     ],
@@ -467,7 +480,7 @@ export const caseStudies = {
         "w": 853,
         "h": 480,
         "alt": "DM Sans shown as a full character set in black on Deepfry Yellow.",
-        "caption": "The type specimen records DM Sans as the supporting typeface.",
+        "caption": "DM Sans supports the rounded wordmark in product and campaign information.",
         "loading": "lazy"
       },
       {
@@ -511,6 +524,7 @@ export const caseStudies = {
       "slug": "rivo",
       "title": "Rivo"
     },
-    "status": "published"
+    "status": "published",
+    "presentationNote": "These applications are presentation visualisations, not photographs of produced rollout materials. The surviving material does not verify which applications entered production or continued in team use."
   }
 };

@@ -104,7 +104,7 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await page.goto("/index.html");
   await page.getByRole("link", { name: "TEDx RSU" }).click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("global event system");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx RSU");
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
@@ -114,9 +114,9 @@ test("published case studies preserve the editorial reading order", async ({ pag
     await settle(page);
     const positions = await page.locator(".case").evaluate(caseStudy => {
       const top = selector => caseStudy.querySelector(selector)?.getBoundingClientRect().top + scrollY;
-      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-proof", ".case-chapter"].map(top);
+      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-chapter"].map(top);
     });
-    expect(positions, `${slug} proposition, hero, context, proof and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+    expect(positions, `${slug} project, hero, context and narrative order`).toEqual([...positions].sort((a, b) => a - b));
   }
 });
 
@@ -128,7 +128,7 @@ test("published case studies expose an accessible chapter scroll index on wide s
   const ticks = index.getByRole("button");
   await expect(ticks).toHaveCount(5);
   await expect(ticks.first()).toHaveAttribute("aria-current", "step");
-  const decision = index.getByRole("button", { name: "Go to Governing decision" });
+  const decision = index.getByRole("button", { name: "Go to The Pause theme" });
   await decision.click();
   await expect.poll(() => decision.getAttribute("aria-current")).toBe("step");
   await expect(page.locator("#decision")).toBeInViewport();
@@ -253,7 +253,7 @@ test("Work index separates complete cases from studies in progress", async ({ pa
   await expect(page.getByRole("link", { name: /Rivo Studio/ })).toHaveAttribute("href", "work/rivo.html");
   await expect(page.locator(".project-archive__item")).toHaveCount(3);
   await expect(page.locator(".project-archive__identity h2")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "Chop Box"
+    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
   await expect(page.locator(".project-archive__media")).toHaveCount(3);
   await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);

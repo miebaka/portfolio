@@ -154,6 +154,7 @@ export function validateContent(content) {
     if (study.status === "published") {
       const mediaIds = new Set((Array.isArray(study.media) ? study.media : []).filter(isRecord).map(media => media.src));
       if (!hasText(study.hero) || !mediaIds.has(study.hero)) add(`${path}.hero`, "CASE_HERO_INVALID", "A published case needs a hero referencing its media.");
+      if (!hasText(study.presentationNote)) add(`${path}.presentationNote`, "CASE_SCOPE_REQUIRED", "Published cases need a clear image and outcome scope note.");
       if (!isRecord(study.facts)) add(`${path}.facts`, "CASE_FACTS_REQUIRED", "A published case needs supported role and deliverable facts.");
       else for (const field of ["role", "delivered"]) if (!hasText(study.facts[field])) add(`${path}.facts.${field}`, "CASE_FACT_REQUIRED", `Published case ${field} is required.`);
       if (!Array.isArray(study.proof) || !study.proof.length) add(`${path}.proof`, "CASE_PROOF_REQUIRED", "A published case needs at least one explicit proof record.");
@@ -178,12 +179,14 @@ export function validateContent(content) {
       if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
       else {
         const ids = study.chapters.map(chapter => chapter?.id);
-        const wanted = ["context", "decision", "system", "applications", "reflection"];
-        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use question, governing decision, system, system in use, then reflection.");
+        if (ids.length < 2) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs at least two authored chapters.");
+        const anchors = [...ids, ...study.chapters.flatMap(chapter => Array.isArray(chapter?.aliases) ? chapter.aliases : [])];
+        if (anchors.some(id => typeof id !== "string" || !/^[a-z][a-z0-9-]*$/.test(id)) || new Set(anchors).size !== anchors.length) add(`${path}.chapters`, "CASE_CHAPTER_ID_INVALID", "Chapter IDs and legacy anchors must be safe and unique.");
         const usedMedia = new Set([study.hero]);
         study.chapters.forEach((chapter, index) => {
           const chapterPath = `${path}.chapters[${index}]`;
           if (!isRecord(chapter)) { add(chapterPath, "CASE_CHAPTER_INVALID", "A chapter must be an object."); return; }
+          if (chapter.aliases !== undefined && !Array.isArray(chapter.aliases)) add(`${chapterPath}.aliases`, "CASE_CHAPTER_ALIASES_INVALID", "Legacy anchors must be an array.");
           if (!hasText(chapter.label)) add(`${chapterPath}.label`, "CASE_CHAPTER_LABEL_REQUIRED", "A chapter needs a usable orientation label.");
           if (chapter.title !== undefined && !hasText(chapter.title)) add(`${chapterPath}.title`, "CASE_CHAPTER_TITLE_INVALID", "An optional chapter title must contain text.");
           if (!Array.isArray(chapter.body) || !chapter.body.length || chapter.body.some(paragraph => !hasText(paragraph))) add(`${chapterPath}.body`, "CASE_CHAPTER_BODY_INVALID", "Every chapter needs nonempty authored paragraphs.");
