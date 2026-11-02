@@ -64,7 +64,6 @@ html[data-theme-transition="fade"]::view-transition-old(root){animation-duration
 .site-nav__identity span{font-size:.72rem;line-height:1.2;color:var(--muted)}
 .site-nav__availability{justify-self:center;display:flex;align-items:center;gap:.55rem;max-width:none;color:var(--muted);font-size:.72rem;white-space:nowrap}
 .site-nav__availability>span{width:.45rem;height:.45rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 .25rem color-mix(in srgb,var(--accent) 13%,transparent)}
-.page-kicker{font:600 .68rem/1.2 var(--label);letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
 .disciplines-heading>p{color:var(--muted);font-size:.78rem}
 .swiss-section-head>p{color:var(--muted);font-size:.78rem}
 @media(max-width:72rem){.site-nav__availability{display:none}

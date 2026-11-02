@@ -37,13 +37,13 @@ function factsBlock(study, project) {
 function proofBlock(study) {
   if (!study.proof?.length) return "";
   const items = study.proof.map(item => `<li class="case-proof__item"><p class="case-proof__type">${esc(item.type)}</p><p>${esc(item.statement)}</p><p class="case-proof__scope">${item.strength === "partial" ? "Bounded evidence" : "Documented evidence"}</p></li>`).join("");
-  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><p class="case-proof__kicker">Evidence ledger</p><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
+  return `<section class="case-proof container" aria-labelledby="case-proof-title"><div class="case-proof__heading"><h2 id="case-proof-title">What this case can prove</h2></div><ol>${items}</ol></section>`;
 }
 
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><p class="case-chapter__label">${esc(label)}</p><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -54,7 +54,7 @@ function nextBlock(site, study, base) {
   const title = published && next.interactive !== false
     ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">${esc(next.title)}</a>`
     : `<p class="case-next__title">${esc(next.title)}</p>`;
-  return `<section class="case-next container" aria-label="Next project"><p class="case-next__label">Next project</p>${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
+  return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
 }
 
 export function renderCaseMarkup(site, slug, base = "../") {

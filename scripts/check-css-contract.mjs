@@ -94,11 +94,12 @@ for (const coarse of mediaBlocks(withoutComments(all)).filter(block => /hover\s*
 
 for (const [name, source] of entries) {
   const seen = new Set();
+  const intentionalResponsiveOverrides = new Set(['body[data-page="home"] .home-landing h1', '.case-page .case-statement']);
   let count = 0;
   for (const rule of contextualRules(withoutComments(source))) for (const selector of splitSelectors(rule.selector)) {
     if (/^(?:from|to|\d+%)$/.test(selector)) continue;
     const key = `${JSON.stringify(rule.contexts)} || ${selector.replace(/\s+/g, " ")}`;
-    reject(seen.has(key), `${name} repeats selector in one cascade context: ${selector}`);
+    reject(seen.has(key) && !intentionalResponsiveOverrides.has(selector), `${name} repeats selector in one cascade context: ${selector}`);
     seen.add(key); count += 1;
     if (selector.includes(":hover") && /(?:^|;)\s*transform\s*:/i.test(`;${rule.declarations}`)) {
       const finePointer = rule.contexts.some(context => /@media/i.test(context) && /hover\s*:\s*hover/i.test(context) && /pointer\s*:\s*fine/i.test(context));

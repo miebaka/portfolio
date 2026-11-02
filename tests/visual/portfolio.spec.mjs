@@ -18,7 +18,7 @@ for (const [name, route] of pages) {
       await page.goto(name === "home" ? `${route}?shader-test=1&shader-static=1&visual-static=1` : `${route}?visual-static=1`);
       await page.addStyleTag({ content: `
         *{content-visibility:visible!important}
-        .case-chapter :is(.case-chapter__label,.case-chapter__copy h2,.case-chapter__body){opacity:1!important;transform:none!important}
+        .case-chapter :is(.case-chapter__copy h2,.case-chapter__body){opacity:1!important;transform:none!important}
       ` });
       await page.evaluate(async () => {
         await document.fonts?.ready;
