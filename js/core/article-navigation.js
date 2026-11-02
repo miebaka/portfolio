@@ -43,7 +43,7 @@ export function initArticleNavigation() {
     const section = document.createElement("aside");
     section.className = "article-next container";
     section.setAttribute("aria-label", "Next article");
-    section.innerHTML = '<p>' + next.context + '</p><a href="' + next.href + '">' + next.title + '<span aria-hidden="true">↗</span></a>';
+    section.innerHTML = '<p>' + next.context + '</p><a href="' + next.href + '">' + next.title + '</a>';
     (document.querySelector(".article-reading") || article).after(section);
   }
 

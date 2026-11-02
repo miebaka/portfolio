@@ -63,7 +63,7 @@ Portfolio/
   menu, work grid, capabilities, testimonial, footer, and case-study bodies are all
   built from data.
 - **Motion.** Shared timing comes from the duration and easing roles in
-  `styles/foundations.css`; interface motion honours `prefers-reduced-motion`.
+  `styles/foundations.css`; interface motion is part of the authored presentation.
 - **Navigation.** The shared route registry exposes Work, About, Experiments,
   Notes and Contact. Mobile adds a persistent five-destination bottom bar and a
   focus-trapped full-screen Index.
@@ -179,7 +179,7 @@ a `mailto:` action and direct email link as the no-JavaScript fallback.
 
 - Semantic landmarks, skip link, single `<h1>` per page, visible focus rings,
   labelled form with `aria-describedby`, focus-trapped overlay menu, ≥44px touch
-  targets, `prefers-reduced-motion` respected, content usable with JS off.
+  targets, consistent motion, and content usable with JS off.
 - Self-hosted fonts with `font-display: swap` and preloaded critical faces;
   images carry explicit dimensions + `decoding`.
 

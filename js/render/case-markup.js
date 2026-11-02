@@ -61,7 +61,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const study = site.caseStudies?.[slug];
   if (!study) return "";
   const project = site.projects?.find(item => item.slug === slug);
-  if (study.status !== "published") return `<section class="case-locked container"><p class="case-locked__label">Selected work</p><h1>${esc(project?.title || study.title)}</h1><p class="case-locked__status">Coming soon</p></section>`;
+  if (study.status !== "published") return `<section class="case-locked container"><h1>${esc(project?.title || study.title)}</h1><p class="case-locked__status">Coming soon</p></section>`;
   if (study.chapters?.length) {
     const hero = study.media?.find(media => media.src === study.hero);
     const lookup = new Map((study.media || []).map(media => [media.src, media]));
@@ -71,7 +71,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><p class="case-project">${esc(study.title)}</p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${proofBlock(study)}${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];

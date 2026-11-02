@@ -17,7 +17,7 @@ export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
 
 export function renderServiceFallbackMarkup(items = SITE.capabilities) {
   return '<ol class="service-fallback">' + items.map(service =>
-    '<li><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></li>'
+    '<li><h2>' + esc(service.title) + '</h2><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></li>'
   ).join("") + '</ol>';
 }
 

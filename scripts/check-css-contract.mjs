@@ -66,7 +66,7 @@ for (const [name, source] of entries) for (const rule of leafRules(source)) {
     const isSignatureReveal = rule.selector.includes("decision-field__canvas") && value.includes("opacity 700ms");
     // Owner-requested Proof Sheet record: its ink inversion and rolling arrow
     // intentionally retain the reference's 500ms timing. No other UI is exempt.
-    const isReferenceRecord = [".home-page .now-playing", 'html:not([data-motion="reduced"]) .now-playing:hover .now-playing__arrow-track'].includes(rule.selector) && durations.every(duration => duration <= 500);
+    const isReferenceRecord = rule.selector === ".home-page .now-playing" && durations.every(duration => duration <= 500);
     reject(!isSignatureReveal && !isReferenceRecord && durations.some(duration => duration > 300), `${name} has a transition longer than 300ms in ${rule.selector}: ${value}`);
     if (/^transition\s*:/i.test(declaration[0])) for (const item of value.split(",")) {
       const property = item.trim().split(/\s+/)[0];

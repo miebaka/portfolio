@@ -34,12 +34,7 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
-    { name: "mobile", use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } },
-    {
-      name: "reduced-motion",
-      grep: /@a11y/,
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 }, reducedMotion: "reduce" }
-    }
+    { name: "mobile", use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } }
   ],
   webServer: {
     command: "npm run build && node scripts/serve-static.mjs dist 4173",

@@ -29,15 +29,14 @@ usable system around it, and edit until every surviving detail earns its place.
 ## Motion
 
 The homepage decision field is the signature moment. Repeated navigation,
-reading and case-study interactions stay still or respond in 120–240ms. Motion
-uses transform and opacity, is interruptible where needed, and respects reduced
-motion. Keyboard-triggered navigation opens immediately.
+reading and case-study interactions respond in 120–240ms. Motion uses transform
+and opacity and is interruptible where needed. Keyboard-triggered navigation
+opens immediately.
 
 The masthead theme control is a compact pull cord: a physical Print/Screen
 metaphor adapted from Kokonut UI's MIT-licensed rope simulation. Dragging the
-bead past its threshold or activating its switch toggles the theme. Reduced
-motion returns the cord directly to rest. The masthead labels, cord, bead and
-focus state use portfolio semantic tokens only.
+bead past its threshold or activating its switch toggles the theme. The
+masthead labels, cord, bead and focus state use portfolio semantic tokens only.
 
 ## Navigation and spatial work
 
@@ -83,10 +82,10 @@ without JavaScript; enhancement only supplies orientation and continuity.
 
 The contact form's “Work with me” control defines the site-wide `.btn` contract.
 It is a square-cornered, full-width editorial action rail with a 64px minimum
-height and a directional arrow. It uses the semantic action colours:
+height. It uses the semantic action colours:
 blue-80 on ultramarine at rest, coral-75 on midnight on pointer hover, and a
 theme-aware coral focus ring. Pressing compresses it to 98% for 100ms. Colour,
-shadow and opacity changes resolve in 120ms; reduced motion removes the scale.
+shadow and opacity changes resolve in 120ms.
 Disabled actions are visibly unavailable, while an active submission uses
 `aria-busy="true"`, a wait cursor and the legible 72% busy state.
 
@@ -127,8 +126,8 @@ source of truth.
   asking the visitor to trust a claim about the designer.
 - **Whole before part.** Judge pages as a hiring or client journey: arrival,
   evidence, context, fit and contact.
-- **Built is not done.** Review at desktop and mobile, with keyboard and reduced
-  motion, then make a separate editorial pass for hierarchy, truth and craft.
+- **Built is not done.** Review at desktop and mobile with keyboard, then make a
+  separate editorial pass for hierarchy, truth and craft.
 - **Care must be legible.** Add detail when it reveals anticipation, judgement
   or production knowledge; remove it when it is merely decorative.
 - **Variation needs an invariant.** Projects can change colour and image

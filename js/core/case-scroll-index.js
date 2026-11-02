@@ -30,7 +30,6 @@ export function initCaseScrollIndex() {
   let frame = 0;
   let dragging = false;
   let hideTimer = 0;
-  const reduced = () => document.documentElement.dataset.motion === "reduced";
   const measure = () => {
     positions = chapters.map(chapter => chapter.getBoundingClientRect().top + scrollY);
   };
@@ -61,7 +60,7 @@ export function initCaseScrollIndex() {
     }
   };
   const schedule = () => { if (!frame) frame = requestAnimationFrame(paint); };
-  const jump = (index, immediate = false) => chapters[index]?.scrollIntoView({ behavior: immediate || reduced() ? "auto" : "smooth", block: "start" });
+  const jump = (index, immediate = false) => chapters[index]?.scrollIntoView({ behavior: immediate ? "auto" : "smooth", block: "start" });
   const onClick = event => jump(Number(event.currentTarget.dataset.index));
   const onEnter = event => showLabel(Number(event.currentTarget.dataset.index), true);
   const onLeave = () => nav.classList.remove("is-label-visible");

@@ -1,10 +1,8 @@
-/* Rare-page editorial reveals. Motion explains authored process and biography;
-   it is disabled when the visitor asks for reduced motion. */
+/* Rare-page editorial reveals. Motion explains authored process and biography. */
 export function initEditorialReveals({ document: doc = document, IntersectionObserver: Observer = globalThis.IntersectionObserver } = {}) {
   const roots = [...doc.querySelectorAll("[data-editorial-reveal], .case-page--tedx .case-chapter")];
   if (!roots.length) return null;
-  const reduced = doc.documentElement?.dataset.motion === "reduced";
-  if (reduced || !Observer) {
+  if (!Observer) {
     roots.forEach(root => root.classList.add("is-revealed"));
     return { destroy() {} };
   }

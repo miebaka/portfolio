@@ -1,5 +1,4 @@
 import { currentTempo } from './listening-tempo.js';
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
 export const SHADER_BACKDROP_PRESETS = Object.freeze({
@@ -20,14 +19,9 @@ function resolvedColors(win, root) {
   };
 }
 
-function resolvedState(root, reducedQuery, navigatorObject, allowWebdriverMotion = false) {
+function resolvedState(root) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
-  const explicit = root.dataset.motionPreference;
-  const reduced = explicit === "reduce" ||
-    (explicit !== "full" && reducedQuery?.matches) ||
-    navigatorObject?.connection?.saveData === true ||
-    (navigatorObject?.webdriver === true && !allowWebdriverMotion);
-  return { theme, reduced };
+  return { theme, animate: true };
 }
 
 function waitForActivation(win, immediate, cursorCapable) {
@@ -62,11 +56,10 @@ export async function initShaderBackdrop({
   await waitForActivation(win, testOptIn, finePointerQuery?.matches === true);
 
   const root = doc.documentElement;
-  const reducedQuery = win.matchMedia?.(REDUCED_MOTION);
   const getState = () => {
-    const state = resolvedState(root, reducedQuery, navigatorObject, testOptIn);
+    const state = resolvedState(root);
     const colors = resolvedColors(win, root);
-    return forceStatic ? { ...state, ...colors, reduced: true } : { ...state, ...colors };
+    return forceStatic ? { ...state, ...colors, animate: false } : { ...state, ...colors };
   };
   const host = doc.createElement("div");
   host.className = "shader-backdrop";
@@ -99,7 +92,7 @@ export async function initShaderBackdrop({
   const applyPointer = () => {
     pointerFrame = 0;
     const state = getState();
-    const interactive = !state.reduced && finePointerQuery?.matches === true;
+    const interactive = state.animate && finePointerQuery?.matches === true;
     const pointer = interactive ? pendingPointer : { x: 0, y: 0 };
     host.dataset.interaction = interactive ? "cursor" : "static";
     if (testOptIn) {
@@ -132,8 +125,7 @@ export async function initShaderBackdrop({
     applyPointer();
   };
   const observer = new MutationObserver(sync);
-  observer.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-motion", "data-motion-preference"] });
-  reducedQuery?.addEventListener?.("change", sync);
+  observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
   finePointerQuery?.addEventListener?.("change", sync);
   win.addEventListener("pointermove", onPointerMove, { passive: true });
   win.addEventListener("pointerout", resetPointer, { passive: true });
@@ -153,7 +145,6 @@ export async function initShaderBackdrop({
     destroyed = true;
     win.removeEventListener('listening-tempo', syncTempo);
     observer.disconnect();
-    reducedQuery?.removeEventListener?.("change", sync);
     finePointerQuery?.removeEventListener?.("change", sync);
     win.removeEventListener("pointermove", onPointerMove);
     win.removeEventListener("pointerout", resetPointer);

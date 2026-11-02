@@ -13,7 +13,6 @@ for (const [name, route] of pages) {
       // Software WebGL on hosted runners needs time to capture the full-height
       // homepage canvas. Keep the same pixel comparison and approved baseline.
       if (name === "home") test.setTimeout(120_000);
-      test.skip(testInfo.project.name === "reduced-motion", "Viewport baselines are captured by desktop and mobile projects");
       await page.addInitScript(value => localStorage.setItem("color-theme", value), theme);
       await page.goto(name === "home" ? `${route}?shader-test=1&shader-static=1&visual-static=1` : `${route}?visual-static=1`);
       await page.addStyleTag({ content: `

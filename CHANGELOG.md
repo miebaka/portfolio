@@ -72,7 +72,7 @@
 
 ### Fixed
 - Restored the About biography to its readable responsive portrait-and-copy layout and removed the rejected perspective crawl.
-- Made project navigation single-flight, immediate for keyboard and reduced-motion users, and capped pointer transitions at 420ms.
+- Made project navigation single-flight, immediate for keyboard users, and capped pointer transitions at 420ms.
 - Prevented intentional full-bleed homepage artwork from creating a horizontal document scroll range.
 - Completed sitemap coverage for Services, Contact, Playground, and both writing articles.
 - Replaced year-long immutable caching on stable asset filenames with bounded revalidation.

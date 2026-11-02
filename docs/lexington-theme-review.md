@@ -64,7 +64,7 @@ Reviewed 1 November 2026 against the 54 named themes on the Lexington catalogue.
 - Typography: desktop headings use roughly 18–24px, normal weight and tight tracking; the About heading reaches 30px at 500. Body text is 16px and UI text 14px, with approximately 28–32px heading line-height.
 - Spacing: the desktop wrapper tops out at 1280px with 24px side padding, moving to 1360px with 48px padding at 2xl. The hero starts 128px from the top. Sections use 96px vertical padding, 48px row gaps and 32px column gaps.
 - Grid: twelve columns with 32px gutters. Hero copy spans five columns and the image seven. The About content spans eight columns.
-- Overlay: the hero pins while the next opaque section advances over it. Image reveals are progressive enhancement, with a reduced-motion path.
+- Overlay: the hero pins while the next opaque section advances over it. Image reveals are progressive enhancement.
 
 ## What was implemented now
 

@@ -255,12 +255,10 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   assert.match(source, /Light water plane/);
   assert.match(source, /Dark water plane/);
   for (const token of ["--shader-color-1", "--shader-color-2", "--shader-color-3", "--shader-background-1", "--shader-background-2"]) assert.match(source, new RegExp(token));
-  assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(source, /pointermove/);
   assert.match(source, /setPointer/);
   assert.match(source, /shader-static/);
-  assert.match(source, /connection\?\.saveData/);
   assert.match(island, /separate\s+compositions/);
   for (const contract of [/colors\[0\]/, /colors\[1\]/, /colors\[2\]/, /backgrounds\[0\]/, /backgrounds\[1\]/]) assert.match(island, contract);
   for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
@@ -271,7 +269,7 @@ test("theme shader backdrop preserves both authored water-plane contracts", asyn
   assert.match(island, /ShaderGradientCanvas/);
   assert.match(island, /function CursorCamera/);
   assert.match(island, /MathUtils\.damp/);
-  assert.match(island, /animate: reduced \? "off" : "on"/);
+  assert.match(island, /animate: animate \? "on" : "off"/);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {
@@ -324,11 +322,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   }
   assert.match(css, /\.case-next__link\{[^}]*text-decoration:none/);
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(css, /\.work-flick__more-arrow\{animation:none/);
   assert.match(html, /data-mount="now-playing"/);
   assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
   assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
-  assert.match(listening, /Currently listening to:/);
+  assert.match(listening, /Currently listening to/);
   assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);

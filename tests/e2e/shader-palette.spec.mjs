@@ -32,19 +32,14 @@ test('Light water pixels remain inside the delegated palette, including after a 
   expect(blueExcess).toBeLessThanOrEqual(8);
 });
 
-test('Vinyl spins like the reference and stops with the motion preference', async ({ page }) => {
+test('Vinyl keeps the authored rotation', async ({ page }) => {
   await page.goto('/');
   const disc = page.locator('.now-playing__vinyl');
   await expect(disc).toBeAttached();
-  await page.evaluate(() => { document.documentElement.dataset.motion = 'full'; document.documentElement.dataset.motionPreference = 'full'; });
   expect(await disc.evaluate(el => getComputedStyle(el).animationDuration)).toBe('3.2s');
   const before = await disc.evaluate(el => getComputedStyle(el).transform);
   await page.waitForTimeout(100);
   expect(await disc.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-  await page.evaluate(() => { document.documentElement.dataset.motion = 'reduced'; document.documentElement.dataset.motionPreference = 'reduce'; });
-  expect(await disc.evaluate(el => getComputedStyle(el).animationName)).toBe('none');
-  await page.locator('.now-playing').focus();
-  expect(await page.locator('.now-playing__arrow-track').evaluate(el => getComputedStyle(el).transform)).toBe('none');
   const box = await page.locator('.now-playing').boundingBox();
   const portrait = await page.locator('.home-profile__portrait').boundingBox();
   expect(Math.abs(box.width - portrait.width)).toBeLessThanOrEqual(1);

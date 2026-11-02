@@ -40,7 +40,7 @@ Status: **implemented; full quality gate pending**
 - Treat a shader as ready only after its render loop produces a frame.
 - Keep the static Print/Screen fallbacks intact.
 - Assert that the hero and client proof remain visibly rendered after enhancement.
-- Verify desktop, narrow, reduced-motion and both theme states.
+- Verify desktop, narrow and both theme states.
 
 Exit condition: focused WebGL and proof-band tests pass, then the repository quality gate passes.
 
@@ -121,7 +121,7 @@ Status: **implemented with restrained spatial continuity**
 
 - Preserve the shader, pull cord, listening object and editorial transitions as the signature motion layer.
 - Add motion only where it explains state, sequence or spatial continuity.
-- Keep reduced motion equivalent and avoid generic section-reveal wallpaper.
+- Keep motion purposeful and avoid generic section-reveal wallpaper.
 
 Exit condition: interaction improves comprehension and remains quiet during reading.
 

@@ -14,14 +14,14 @@ export function projectMarkup(project, i = 0, base = "") {
     : '<div class="work-flick__placeholder" aria-hidden="true"></div>';
   return '<' + tag + ' class="work-flick__item' + (published ? '' : ' work-flick__item--locked') + '"' + href + ' aria-label="' + esc(project.title) + (published ? ', view project' : ', coming soon') + '">' +
     '<div class="work-flick__media">' + media + '</div>' +
-    '<span class="work-flick__bar" aria-hidden="true">' + (published ? '<span class="work-flick__bar-arrow">↗</span>' : '') + '<span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong>' + (published ? '<span>View project</span>' : '') + '</span></span>' +
+    '<span class="work-flick__bar" aria-hidden="true"><span class="work-flick__bar-copy"><strong>' + esc(project.title) + '</strong>' + (published ? '<span>View project</span>' : '') + '</span></span>' +
     (published ? '' : '<span class="work-flick__status">Coming soon</span>') +
     '<div class="work-flick__content"><h3>' + esc(project.title) + '</h3></div></' + tag + '>';
 }
 
 function moreWorkMarkup(i, base) {
   return '<a class="work-flick__item work-flick__item--more" href="' + base + 'work.html" aria-label="See more work">' +
-    '<div class="work-flick__content"><h3>See more</h3><span class="work-flick__more-arrow" aria-hidden="true">→</span></div></a>';
+    '<div class="work-flick__content"><h3>See more</h3></div></a>';
 }
 
 function bindExpansion(scope) {
@@ -32,7 +32,7 @@ function bindExpansion(scope) {
     const activate = item => items.forEach(panel => panel.classList.toggle('is-active', panel === item));
     items.forEach(item => {
       item.addEventListener('pointerenter', event => {
-        if (finePointer.matches && document.documentElement.dataset.motion !== 'reduced' && event.pointerType !== 'touch') activate(item);
+        if (finePointer.matches && event.pointerType !== 'touch') activate(item);
       });
       item.addEventListener('focus', () => activate(null));
     });
@@ -66,9 +66,10 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
   });
   return '<ol class="editorial-index editorial-index--work">' + selected.map(project => {
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
-    const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span><span class="home-project-list__arrow editorial-index__arrow" aria-hidden="true">↗</span></span>';
+    const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span></span>';
     const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual + trailing;
-    return '<li class="editorial-index__item">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
+    const slug = project.title.toLowerCase().includes('tedx') ? 'tedx-rsu' : safeToken(project.title.toLowerCase());
+    return '<li class="editorial-index__item project-tone project-tone--' + slug + '">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
   }).join('') + '</ol>';
 }
 
@@ -149,14 +150,12 @@ export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
   const button = deps.button || root.querySelector('.client-marquee__control');
   const Observer = deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
-  const reduced = deps.reduced || (() => doc.documentElement?.dataset.motion === 'reduced');
   let visible = !Observer, userPaused = false, destroyed = false;
   const sync = () => {
-    const isReduced = reduced();
-    const running = !destroyed && !isReduced && !userPaused && visible && !doc.hidden;
+    const running = !destroyed && !userPaused && visible && !doc.hidden;
     root.classList.toggle('is-running', running);
-    root.dataset.marqueeState = isReduced ? 'static' : running ? 'playing' : 'paused';
-    button.setAttribute('aria-disabled', String(isReduced));
+    root.dataset.marqueeState = running ? 'playing' : 'paused';
+    button.setAttribute('aria-disabled', 'false');
     button.setAttribute('aria-pressed', String(userPaused));
     button.setAttribute('aria-label', userPaused ? 'Play client logos' : 'Pause client logos');
     const label = button.querySelector?.('[data-marquee-label]');
@@ -166,10 +165,8 @@ export function createMarqueeController(root, deps = {}) {
   const pause = ({ user = true } = {}) => { if (user) userPaused = true; sync(); };
   const toggle = () => userPaused ? play() : pause();
   const onVisibility = () => sync();
-  const onMotion = () => sync();
   button.addEventListener('click', toggle);
   doc.addEventListener('visibilitychange', onVisibility);
-  doc.addEventListener('motionpreferencechange', onMotion);
   const observer = Observer ? new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: 0.1 }) : null;
   observer?.observe(root);
   sync();
@@ -177,7 +174,7 @@ export function createMarqueeController(root, deps = {}) {
     play, pause,
     destroy() {
       if (destroyed) return; destroyed = true; observer?.disconnect();
-      button.removeEventListener('click', toggle); doc.removeEventListener('visibilitychange', onVisibility); doc.removeEventListener('motionpreferencechange', onMotion); sync();
+      button.removeEventListener('click', toggle); doc.removeEventListener('visibilitychange', onVisibility); sync();
     },
     isPaused: () => userPaused
   };

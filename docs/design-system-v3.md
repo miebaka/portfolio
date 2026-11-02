@@ -48,6 +48,6 @@ container edges.
 ## Accessibility and resilience
 
 - Native HTML remains the interaction layer.
-- Focus, hover, active, current, invalid, open and reduced-motion states are explicit.
+- Focus, hover, active, current, invalid and open states are explicit.
 - Navigation and content remain usable without JavaScript or WebGL.
 - Interactive controls meet the Material 3 minimum target size; inline text links remain inline.

@@ -118,17 +118,14 @@ function enhanceFooterSignature(host) {
 
 export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = IntersectionObserver } = {}) {
   let enhanced, visible = false, destroyed = false;
-  const reduced = () => doc.documentElement.dataset.motion === "reduced";
   const forceStatic = doc.defaultView?.location?.search.includes("visual-static=1") || false;
   const sync = () => {
     if (destroyed) return;
     enhanced ||= enhance(host);
-    if (reduced() || forceStatic) { enhanced?.static?.(); return; }
+    if (forceStatic) { enhanced?.static?.(); return; }
     if (visible && !doc.hidden) enhanced?.start(); else enhanced?.stop();
   };
-  const onMotion = () => sync();
   const onVisibility = () => sync();
-  doc.addEventListener("motionpreferencechange", onMotion);
   doc.addEventListener("visibilitychange", onVisibility);
   const observer = new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: .01 });
   observer.observe(host);
@@ -136,7 +133,7 @@ export function createFooterSignatureController(host, { document: doc = document
   return {
     destroy() {
       if (destroyed) return; destroyed = true; observer.disconnect();
-      doc.removeEventListener("motionpreferencechange", onMotion); doc.removeEventListener("visibilitychange", onVisibility);
+      doc.removeEventListener("visibilitychange", onVisibility);
       enhanced?.destroy(); enhanced = null;
     }
   };

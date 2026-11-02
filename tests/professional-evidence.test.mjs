@@ -95,14 +95,12 @@ test("service swatches support pointer and complete roving-keyboard selection wi
   assert.ok(tabs.every(tab => tab.listeners.size === 0));
 });
 
-test("service selection has a non-colour cue and both reduced-motion paths", async () => {
+test("service selection has a persistent non-colour cue", async () => {
   const markup = renderServiceSwatchesMarkup(services);
   const css = await page("styles/components-v4.css");
   assert.match(markup, /aria-selected="true"/);
   assert.match(css, /service-swatch\[aria-selected="true"\][^{]*\{[^}]*outline:/s);
   assert.match(css, /service-swatch\[aria-selected="true"\]::after\{content:"Selected"/);
-  assert.match(css, /@media\(prefers-reduced-motion:reduce\)[\s\S]*?service-swatch/);
-  assert.match(css, /html\[data-motion="reduced"\] \.service-swatch/);
 });
 
 test("experience ledger uses one bounded contribution and no numeric outcome claims", () => {

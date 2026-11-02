@@ -110,12 +110,12 @@ function LightPalette({ colors }) {
   return null;
 }
 
-function CursorCamera({ interaction, reduced, preset }) {
+function CursorCamera({ interaction, preset }) {
   const controls = useThree(state => state.controls);
   useFrame((_, delta) => {
     if (!controls) return;
-    const targetX = reduced ? 0 : interaction.targetX;
-    const targetY = reduced ? 0 : interaction.targetY;
+    const targetX = interaction.targetX;
+    const targetY = interaction.targetY;
     interaction.currentX = MathUtils.damp(interaction.currentX, targetX, 7, delta);
     interaction.currentY = MathUtils.damp(interaction.currentY, targetY, 7, delta);
     controls.rotateTo(
@@ -127,20 +127,20 @@ function CursorCamera({ interaction, reduced, preset }) {
   return null;
 }
 
-function TempoMotion({ interaction, reduced }) {
+function TempoMotion({ interaction }) {
   const scene = useThree(state => state.scene);
   const motion = useRef({ phase: 0, strength: 0, bpm: 120 });
   useFrame((_, delta) => {
     const mesh = scene.getObjectByName('shadergradient-mesh');
     if (!mesh) return;
     const tempo = interaction.tempo;
-    const active = !reduced && !document.hidden && tempo?.expires > Date.now() && Number.isFinite(tempo.bpm) && tempo.bpm >= 30 && tempo.bpm <= 300;
+    const active = !document.hidden && tempo?.expires > Date.now() && Number.isFinite(tempo.bpm) && tempo.bpm >= 30 && tempo.bpm <= 300;
     const dt = Math.min(delta, .1);
     const value = motion.current;
     value.bpm = MathUtils.damp(value.bpm, active ? tempo.bpm : 120, 2, dt);
     value.strength = MathUtils.damp(value.strength, active ? 1 : 0, 2, dt);
     if (!document.hidden) value.phase += dt * value.bpm / 60 * Math.PI / 2;
-    mesh.scale.setScalar(reduced ? 1 : 1 + Math.sin(value.phase) * .012 * value.strength);
+    mesh.scale.setScalar(1 + Math.sin(value.phase) * .012 * value.strength);
   });
   return null;
 }
@@ -155,7 +155,7 @@ function RenderReady({ onReady }) {
   return null;
 }
 
-function Backdrop({ theme, reduced, interaction, colors, backgrounds, onReady }) {
+function Backdrop({ theme, animate, interaction, colors, backgrounds, onReady }) {
   const preset = {
     ...(PRESETS[theme] || PRESETS.light),
     color1: colors[0], color2: colors[1], color3: colors[2],
@@ -176,14 +176,14 @@ function Backdrop({ theme, reduced, interaction, colors, backgrounds, onReady })
       createElement(ShaderGradient, {
         ...preset,
         control: "props",
-        animate: reduced ? "off" : "on",
+        animate: animate ? "on" : "off",
         enableTransition: false,
         enableCameraUpdate: false,
       }),
       theme === "light" ? createElement(LightPalette, { colors }) : null,
-      theme === "dark" ? createElement(CursorCamera, { interaction, reduced, preset }) : null,
+      theme === "dark" ? createElement(CursorCamera, { interaction, preset }) : null,
       createElement(RenderReady, { onReady }),
-      createElement(TempoMotion, { interaction, reduced }),
+      createElement(TempoMotion, { interaction }),
     ),
   );
 }

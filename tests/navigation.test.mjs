@@ -84,6 +84,6 @@ test("Index has the complete registry, named preferences, contact and only a con
   const html = renderIndexMarkup({ base: "../", page: "work", site: { email: "test@example.com" } });
   for (const route of navigation.index) assert.ok(html.includes(`href="../${route.href}"`));
   assert.match(html, /aria-labelledby="site-index-title"/); assert.match(html, /mailto:test@example.com/);
-  assert.match(html, /Preferences/); assert.doesNotMatch(html, /download/);
+  assert.match(html, /Theme/); assert.doesNotMatch(html, /download/);
   assert.match(renderIndexMarkup({ site: { cv: { href: "assets/cv.pdf", label: "Download CV", mimeType: "application/pdf", sizeLabel: "120 KB" } } }), /download[^>]*>Download CV/);
 });

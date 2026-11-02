@@ -1,10 +1,7 @@
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 const SMALL_SCREEN = "(max-width: 47.99rem)";
 
 function constrainedDevice() {
-  const preference = document.documentElement.dataset.motionPreference;
-  const reduce = preference === "reduce" || (preference !== "full" && matchMedia(REDUCED_MOTION).matches);
-  return reduce || matchMedia(SMALL_SCREEN).matches || navigator.connection?.saveData === true;
+  return matchMedia(SMALL_SCREEN).matches || navigator.connection?.saveData === true;
 }
 
 export async function initDecisionField() {
@@ -28,7 +25,7 @@ export async function initDecisionField() {
   const geometry = new THREE.BoxGeometry(1.25, .28, .28);
   /* Rare-page delight only: a small custom shader turns the identity bars into
      a responsive ultramarine material. It is decorative, skipped entirely for
-     reduced motion, small screens, and save-data devices. */
+     small screens and save-data devices. */
   const material = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },

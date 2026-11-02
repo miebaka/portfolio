@@ -49,7 +49,6 @@ export function renderWriting() {
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +
                 "</span>" +
-                '<span class="writing-item__arrow editorial-index__arrow" aria-hidden="true">↗</span>' +
               "</span>" +
             "</a>" +
           "</li>"

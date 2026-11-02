@@ -84,7 +84,7 @@ build artifacts and are not committed.
 - Keyboard access, focus visibility, modal focus management and focus return
   are release requirements.
 - Pointer targets are at least 44px where they are controls.
-- Motion respects `prefers-reduced-motion`; essential state changes remain
+- Motion remains consistent across routes and themes; essential state changes remain
   immediate and understandable.
 - WebGL, View Transitions, clipboard and Last.fm are enhancements. Failure in
   one enhancement must not block unrelated page behaviour.

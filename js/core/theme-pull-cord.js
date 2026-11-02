@@ -56,7 +56,6 @@ export function createThemePullCord(button, { onToggle } = {}) {
     ys[i] = pys[i] = anchor.y + i * LINK;
   }
   const state = { xs, ys, pxs, pys, held: -1, targetX: 0, targetY: 0, raf: 0, last: 0, carry: 0, still: 0, toggled: false, suppressClick: false };
-  const reduced = () => document.documentElement.dataset.motion === "reduced";
   const draw = () => {
     const d = curve(xs, ys);
     line.setAttribute("d", d);
@@ -123,15 +122,12 @@ export function createThemePullCord(button, { onToggle } = {}) {
   const pointerUp = () => {
     if (state.held < 0) return;
     state.held = -1; button.classList.remove("is-grabbing");
-    if (reduced()) {
-      for (let i = 0; i <= LINKS; i += 1) { xs[i] = pxs[i] = anchor.x; ys[i] = pys[i] = anchor.y + i * LINK; }
-      draw();
-    } else wake();
+    wake();
   };
   const click = () => {
     if (state.suppressClick) { state.suppressClick = false; return; }
     onToggle?.();
-    if (!reduced()) { pys[LINKS] = ys[LINKS] - 4; wake(); }
+    pys[LINKS] = ys[LINKS] - 4; wake();
   };
   hit.addEventListener("pointerdown", pointerDown);
   bead.addEventListener("pointerdown", pointerDown);
