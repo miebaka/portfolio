@@ -28,22 +28,6 @@ export const MOUNT = {
   NOW_PLAYING: "now-playing",
 };
 
-/* Behavioural hooks: attributes JS reads or binds to, which carry no value of
-   their own but must match the markup exactly. */
-export const HOOK = {
-  /* filled from SITE by fillSlots() */
-  FILL:        "data-fill",
-  EMAIL_HREF:  "data-href",
-  /* page identity, read by renderers to decide what to draw */
-  PAGE:        "data-page",
-  BASE:        "data-base",
-  CASE_SLUG:   "data-case",
-  NAV_THEME:   "data-nav-theme",
-  /* misc */
-  YEAR:        "data-year",
-  PORTRAIT:    "data-hero-portrait",
-};
-
 /* Mounts that are page-specific rather than sitewide. */
 const OPTIONAL = new Set([
   MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
@@ -51,7 +35,6 @@ const OPTIONAL = new Set([
 ]);
 
 const KNOWN = new Set(Object.values(MOUNT));
-const IMMERSIVE_PAGES = new Set(["explorations"]);
 
 /* Reports mount points that exist in one half of the contract but not the
    other. Returns the findings rather than logging them, so callers decide
@@ -72,7 +55,7 @@ export function validateContract() {
 
   /* Known to the code and required everywhere, but absent from this page. */
   const missing = [...KNOWN].filter(
-    (name) => !OPTIONAL.has(name) && !declared.has(name) && !IMMERSIVE_PAGES.has(document.body.dataset.page)
+    (name) => !OPTIONAL.has(name) && !declared.has(name)
   );
 
   return { declared: [...declared], unknown, missing };

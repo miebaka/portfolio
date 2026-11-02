@@ -62,14 +62,13 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     const project = bySlug.get(slug);
     const published = project?.status === "published" && studies?.[slug]?.status === "published";
     const decision = studies?.[slug]?.proof?.find(item => item.type === "decision")?.statement;
-    return { title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", decision, cover: project?.cover || "" };
+    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", decision, cover: project?.cover || "" };
   });
   return '<ol class="editorial-index editorial-index--work">' + selected.map(project => {
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
     const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span></span>';
     const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual + trailing;
-    const slug = project.title.toLowerCase().includes('tedx') ? 'tedx-rsu' : safeToken(project.title.toLowerCase());
-    return '<li class="editorial-index__item project-tone project-tone--' + slug + '">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
+    return '<li class="editorial-index__item project-tone project-tone--' + safeToken(project.slug) + '">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
   }).join('') + '</ol>';
 }
 

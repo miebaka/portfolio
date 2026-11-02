@@ -19,20 +19,11 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
     '<fieldset class="site-index__preferences"><legend>Theme</legend><div class="site-index__themes"><button type="button" data-theme-choice="light" aria-pressed="false">Print<span>Light</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">Screen<span>Dark</span></button></div></fieldset></div></div></div></section>';
 }
 
-function setupPreferences(nav, index) {
-  const html = document.documentElement;
+function setupPreferences(index, preferences) {
   const choices = [...index.querySelectorAll("[data-theme-choice]")];
-  const sync = ({ theme, resolvedTheme }) => {
-    const dark = resolvedTheme === "dark";
-    choices.forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
-    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", dark ? "#07112B" : "#F8F9FC"));
-  };
-  const preferences = createPreferencesController({ root: html, onChange: sync });
   const chooseTheme = event => preferences.setTheme(event.currentTarget.dataset.themeChoice);
   choices.forEach(btn => btn.addEventListener("click", chooseTheme));
-  return () => {
-    choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); preferences.destroy();
-  };
+  return () => choices.forEach(btn => btn.removeEventListener("click", chooseTheme));
 }
 
 let activeIndex, cleanupPreferences, themeCord;
@@ -61,14 +52,15 @@ export function renderNavigation() {
   const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   preferences = createPreferencesController({
     root: document.documentElement,
-    onChange: ({ resolvedTheme }) => {
+    onChange: ({ theme, resolvedTheme }) => {
       themeCord?.setChecked(resolvedTheme === "dark");
+      index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
       document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
     }
   });
   themeCord = createThemePullCord(cordButton, { onToggle: toggleTheme });
   themeCord.setChecked(document.documentElement.dataset.theme === "dark");
-  const cleanupIndexPreferences = setupPreferences(el, index);
+  const cleanupIndexPreferences = setupPreferences(index, preferences);
   cleanupPreferences = () => {
     cleanupIndexPreferences();
     preferences.destroy();

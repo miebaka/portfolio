@@ -53,7 +53,7 @@ for (const [name, route] of pages) {
       }
       await page.waitForTimeout(500);
       await expect(page.locator(".site-footer__signature")).toHaveClass(/is-enhanced/);
-      const masks = [page.locator('img[src$=".gif"]')];
+      const masks = [page.locator('img[src$="miebaka-joshua.webp"]')];
       if (name === "case") masks.push(page.locator(".case-shot img"));
       await expect(page).toHaveScreenshot(`${name}-${theme}.png`, {
         fullPage: true,

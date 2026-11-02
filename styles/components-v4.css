@@ -242,8 +242,6 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .home-work-index__row.is-active{color:var(--ink)}
 .home-work-index__decision{color:var(--muted);font-size:.82rem;line-height:1.55}
 .home-work-index__decision small{display:block;margin-bottom:.5rem;color:var(--accent);font:600 .62rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
-.home-work-index__arrow{font-size:1.2rem;transition:transform 160ms var(--ease-standard)}
-.home-work-index__row:focus-visible .home-work-index__arrow{transform:translate(3px,-3px)}
 .work-flick__item--3{position:relative;display:block;flex:1 1 0;min-width:5.5rem;min-height:0;grid-column:auto!important;background:var(--ref-midnight);color:var(--ref-paper);overflow:hidden;transition:none}
 .work-flick__topline{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:.9rem;border-bottom:1px solid var(--ref-white-45);font:600 .66rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase;border:0}
 .work-flick__detail p span{display:block;margin-bottom:.45rem;color:var(--signal);font:600 .62rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
@@ -272,7 +270,6 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .home-work-index__row{grid-template-columns:2rem 1fr auto}
 .home-work-index__decision{grid-column:2}
 .home-work-index__meta{grid-column:3;grid-row:1}
-.home-work-index__arrow{grid-column:3;grid-row:2}
 .work-flick__item--3{grid-column:span 6!important;min-height:38rem}
 .work-flick__item.is-active{grid-column:span 6!important;min-height:38rem}
 .work-flick__item:nth-child(2){grid-column:span 6;grid-column:span 6!important;min-height:38rem}
@@ -500,7 +497,6 @@ body:not([data-page="explorations"]){padding-bottom:calc(4.5rem + var(--safe-bot
 .work-flick__pair .work-flick__item.is-active{flex:2.15 1 0}
 .site-nav__link:hover::after{transform:scaleX(1);transform-origin:left}
 .work-flick__item:hover .work-flick__media img{transform:scale(1.025);transform:scale(1.015);transform:scale(1.025);transform:scale(1.025)}
-.home-work-index__row:hover .home-work-index__arrow{transform:translate(3px,-3px)}
 .work-flick__item:hover .work-flick__bar::before{transform:scaleX(1)}
 .work-flick__item--locked:hover .work-flick__status{opacity:1;transform:translate(-50%,-50%)}
 }

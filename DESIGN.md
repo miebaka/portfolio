@@ -150,8 +150,7 @@ across animation and a Screen → Print switch, not just CSS token declarations.
 The listening record follows the owner's Proof Sheet reference: 56px grooved
 vinyl, a centred 20px label and spindle hole, reflective sectors rotating every
 3.2s, serif track title, compact monospaced status, 460px maximum pill width,
-outline-to-ink hover and a rolling arrow. Retain the current listening copy and
+outline-to-ink hover. Retain the current listening copy and
 Last.fm integration. Colours come from portfolio tokens. The reference's 500ms
-ink/arrow transition is a scoped exception to the ordinary UI duration limit.
-The motion preference stops the rotation and arrow translation; keyboard focus
-retains the visible ink state and focus ring.
+ink transition is a scoped exception to the ordinary UI duration limit.
+Keyboard focus retains the visible ink state and focus ring.

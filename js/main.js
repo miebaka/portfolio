@@ -12,7 +12,6 @@ import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { initNavigation } from "./core/navigation.js";
-import { initYear } from "./core/year.js";
 import { initForm } from "./core/form.js";
 import { initDecisionField } from "./core/decision-field.js";
 import { initFooterSignature } from "./core/footer-signature.js";
@@ -57,7 +56,6 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
-run("year", initYear);
 run("footer signature", initFooterSignature);
 run("shader backdrop", () => { void initShaderBackdrop(); });
 if (isCaseStudy) run("case scroll index", initCaseScrollIndex);

@@ -83,6 +83,10 @@ export async function initExperimentsSpatial() {
   centre();
   requestAnimationFrame(() => root.classList.add("is-ready"));
   viewport.addEventListener("wheel", event => {
+    const { minY } = bounds();
+    const leavingAtTop = event.deltaY < 0 && camera.y >= 0;
+    const leavingAtBottom = event.deltaY > 0 && camera.y <= minY;
+    if (!event.shiftKey && (leavingAtTop || leavingAtBottom)) return;
     event.preventDefault();
     const dx = -event.deltaX - (event.shiftKey ? event.deltaY : 0);
     const dy = event.shiftKey ? 0 : -event.deltaY;
@@ -96,7 +100,7 @@ export async function initExperimentsSpatial() {
   viewport.addEventListener("pointermove", event => {
     if (!pointer || pointer.id !== event.pointerId) return;
     const now = performance.now(); const elapsed = Math.max(8, now - pointer.time);
-    const dx = event.clientX - pointer.x; const dy = event.clientY - pointer.y;
+    const dx = event.clientX - pointer.x; const dy = event.pointerType === "touch" ? 0 : event.clientY - pointer.y;
     camera.vx = dx * (16 / elapsed); camera.vy = dy * (16 / elapsed); move(dx, dy);
     pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, time: now };
   });

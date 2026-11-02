@@ -25,8 +25,6 @@ export function createPreferencesController({
     const resolvedTheme = theme === "system" ? (darkQuery?.matches ? "dark" : "light") : theme;
     root.dataset.theme = resolvedTheme;
     root.dataset.colorPreference = theme;
-    delete root.dataset.motion;
-    delete root.dataset.motionPreference;
     onChange?.({ theme, resolvedTheme });
   };
   const onSystemTheme = () => { if (theme === "system") sync(); };

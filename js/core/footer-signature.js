@@ -116,7 +116,7 @@ function enhanceFooterSignature(host) {
   };
 }
 
-export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = IntersectionObserver } = {}) {
+export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = globalThis.IntersectionObserver } = {}) {
   let enhanced, visible = false, destroyed = false;
   const forceStatic = doc.defaultView?.location?.search.includes("visual-static=1") || false;
   const sync = () => {
@@ -126,6 +126,7 @@ export function createFooterSignatureController(host, { document: doc = document
     if (visible && !doc.hidden) enhanced?.start(); else enhanced?.stop();
   };
   const onVisibility = () => sync();
+  if (!Observer) return { destroy() {} };
   doc.addEventListener("visibilitychange", onVisibility);
   const observer = new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: .01 });
   observer.observe(host);
