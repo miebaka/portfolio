@@ -186,9 +186,8 @@ test("Home mounts the authored dark water-plane shader", async ({ page }) => {
   const backdrop = page.locator('[data-shader-backdrop][data-preset="Dark water plane"]');
   await expect(backdrop).toBeVisible();
   await expect(backdrop.locator("canvas")).toHaveCount(1);
-  const overlay = page.locator('[data-shader-overlay][data-preset="Dark water plane"]');
-  await expect(overlay).toBeVisible();
-  await expect(overlay.locator("canvas")).toHaveCount(1);
+  await expect(page.locator('[data-shader-overlay]')).toHaveCount(0);
+  await expect(page.locator('[data-shader-backdrop]')).toHaveCount(1);
   await expect(backdrop).toHaveAttribute("data-interaction", "static");
 });
 

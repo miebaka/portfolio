@@ -334,7 +334,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-cord-mode>Print/);
   assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
-  assert.match(css, /--home-section-gap:clamp\(6rem,8\.889vw,10rem\)/);
+  assert.match(css, /--home-section-gap:clamp\(8rem,10\.5vw,12rem\)/);
+  assert.match(css, /--home-inner-gap:clamp\(5rem,7\.5vw,8rem\)/);
+  assert.doesNotMatch(css, /cursor:\s*url\(/);
+  assert.doesNotMatch(css, /\.editorial-field/);
   assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
 });
 

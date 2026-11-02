@@ -109,3 +109,22 @@ test("OS reduced-motion rules yield to an explicit full preference", async () =>
     assert.equal(scoped.length, media.length, file);
   }
 });
+
+test("the shader is homepage-only and uses one field beneath the scrolling sheet", async () => {
+  const source = await readFile(new URL("../js/core/shader-backdrop.js", import.meta.url), "utf8");
+  assert.match(source, /doc\.body\.dataset\.page !== "home"/);
+  assert.doesNotMatch(source, /shaderOverlay|overlayHost|overlayIsland/);
+});
+
+test("fine pointers retain native browser cursors", async () => {
+  const css = await readFile(new URL("../styles/components-v4.css", import.meta.url), "utf8");
+  assert.doesNotMatch(css, /cursor:\s*url\(/);
+  assert.doesNotMatch(css, /data:image\/svg\+xml/);
+});
+
+test("inner pages do not mount a cursor-sensitive editorial field", async () => {
+  const source = await readFile(new URL("../js/main.js", import.meta.url), "utf8");
+  const css = await readFile(new URL("../styles/components-v4.css", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /initEditorialDetails|editorial details/);
+  assert.doesNotMatch(css, /\.editorial-field/);
+});

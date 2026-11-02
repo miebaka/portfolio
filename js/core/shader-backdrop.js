@@ -73,37 +73,24 @@ export async function initShaderBackdrop({
   host.dataset.shaderBackdrop = "";
   host.setAttribute("aria-hidden", "true");
   doc.body.prepend(host);
-  const content = doc.querySelector(".home-content");
-  const overlayHost = content ? doc.createElement("div") : null;
-  if (overlayHost) {
-    overlayHost.className = "shader-backdrop shader-backdrop--overlay";
-    overlayHost.dataset.shaderOverlay = "";
-    overlayHost.setAttribute("aria-hidden", "true");
-    content.prepend(overlayHost);
-  }
-
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { host.remove(); overlayHost?.remove(); console.warn("Shader backdrop unavailable", error); return null; }
+  catch (error) { host.remove(); console.warn("Shader backdrop unavailable", error); return null; }
 
   let island;
-  let overlayIsland;
   try {
     island = rendererModule.mountShaderGradient(host, getState());
-    if (overlayHost) overlayIsland = rendererModule.mountShaderGradient(overlayHost, getState());
   }
   catch (error) {
     island?.destroy();
-    overlayIsland?.destroy();
     host.remove();
-    overlayHost?.remove();
     console.warn("Shader backdrop unavailable", error);
     return null;
   }
 
   let destroyed = false;
   const syncTempo = () => {
-    for (const renderer of [island, overlayIsland]) renderer?.setTempo?.(currentTempo());
+    island?.setTempo?.(currentTempo());
   };
   win.addEventListener('listening-tempo', syncTempo);
   syncTempo();
@@ -122,9 +109,7 @@ export async function initShaderBackdrop({
     // Older cached renderer modules did not expose pointer control. Keep the
     // backdrop healthy while Vercel's stale-while-revalidate window rolls
     // clients onto the interactive renderer.
-    for (const renderer of [island, overlayIsland]) {
-      if (typeof renderer?.setPointer === "function") renderer.setPointer(pointer.x, pointer.y);
-    }
+    if (typeof island?.setPointer === "function") island.setPointer(pointer.x, pointer.y);
   };
   const onPointerMove = event => {
     pendingPointer = {
@@ -144,10 +129,6 @@ export async function initShaderBackdrop({
     const preset = SHADER_BACKDROP_PRESETS[state.theme];
     host.dataset.preset = preset.name;
     island.update(state);
-    if (overlayHost && overlayIsland) {
-      overlayHost.dataset.preset = preset.name;
-      overlayIsland.update(state);
-    }
     applyPointer();
   };
   const observer = new MutationObserver(sync);
@@ -159,12 +140,11 @@ export async function initShaderBackdrop({
   win.addEventListener("blur", resetPointer);
 
   const markReady = async () => {
-    await Promise.all([island?.ready, overlayIsland?.ready].filter(Boolean));
+    await island?.ready;
     if (destroyed) return;
-    if (!host.querySelector("canvas") || (overlayHost && !overlayHost.querySelector("canvas"))) return;
+    if (!host.querySelector("canvas")) return;
     root.classList.add("has-shader-backdrop");
     host.classList.add("is-ready");
-    overlayHost?.classList.add("is-ready");
   };
   void markReady();
 
@@ -181,9 +161,7 @@ export async function initShaderBackdrop({
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
-    overlayIsland?.destroy();
     host.remove();
-    overlayHost?.remove();
     root.classList.remove("has-shader-backdrop");
   };
   win.addEventListener("pagehide", destroy, { once: true });

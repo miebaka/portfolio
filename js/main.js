@@ -1,4 +1,3 @@
-import { initEditorialDetails } from './core/editorial-details.js';
 /* ==========================================================================
    main.js — module entry. Renders the data-driven DOM, then wires behaviour.
    Order matters: the nav must be rendered before its handlers attach.
@@ -62,5 +61,3 @@ run("shader backdrop", () => { void initShaderBackdrop(); });
 if (isCaseStudy) run("case scroll index", initCaseScrollIndex);
 if (page === "contact") run("contact form", initForm);
 if (has("[data-decision-field]")) run("404 identity field", () => { void initDecisionField(); });
-
-run('editorial details', initEditorialDetails);

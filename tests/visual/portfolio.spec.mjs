@@ -49,7 +49,7 @@ for (const [name, route] of pages) {
       }
       if (name === "home") {
         await expect(page.locator('[data-shader-backdrop]')).toHaveClass(/is-ready/);
-        await expect(page.locator('[data-shader-overlay]')).toHaveClass(/is-ready/);
+        await expect(page.locator('[data-shader-overlay]')).toHaveCount(0);
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       }
       await page.waitForTimeout(500);
