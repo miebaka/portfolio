@@ -2,6 +2,7 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
+import { renderEditorialIndex } from "./editorial-index.js";
 
 export function projectMarkup(project, i = 0, base = "") {
   if (project.status === "private") return "";
@@ -64,12 +65,12 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     const decision = studies?.[slug]?.proof?.find(item => item.type === "decision")?.statement;
     return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", decision, cover: project?.cover || "" };
   });
-  return '<ol class="editorial-index editorial-index--work">' + selected.map(project => {
+  return renderEditorialIndex(selected.map(project => {
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
     const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span></span>';
     const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual + trailing;
-    return '<li class="editorial-index__item project-tone project-tone--' + safeToken(project.slug) + '">' + (project.href ? '<a class="editorial-index__row" href="' + safeURL(project.href) + '">' + content + '</a>' : '<div class="home-project-list__pending editorial-index__row">' + content + '</div>') + '</li>';
-  }).join('') + '</ol>';
+    return { tag: project.href ? 'a' : 'div', href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
+  }), { variant: 'work', ordered: true });
 }
 
 export function renderWorkMarkup(allProjects = SITE.projects, base = "", archive = false) {
@@ -88,7 +89,7 @@ export function renderWorkMarkup(allProjects = SITE.projects, base = "", archive
 export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
-  el.className = 'project-archive__list editorial-index editorial-index--archive';
+  el.className = 'project-archive__list';
   if (el.dataset.prerendered !== 'true') el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath());
 }
 
@@ -108,16 +109,13 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
   };
   const published = workIndex.filter(project => project.status === 'published');
   const inProgress = workIndex.filter(project => project.status !== 'published');
-  const publishedMarkup = published.map(project => {
-    const published = project.status === 'published';
-    const tag = published ? 'a' : 'article';
-    const href = published ? ' href="' + safeURL(base + (project.href || 'work/' + safeToken(project.slug) + '.html')) + '"' : '';
-    const label = esc(project.title) + (published ? ', view project' : ', project preview');
+  const publishedMarkup = renderEditorialIndex(published.map(project => {
+    const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
-    return '<' + tag + ' class="project-archive__item editorial-index__item editorial-index__row project-archive__item--' + safeToken(project.slug) + '"' + href + ' aria-label="' + label + '"><div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div></' + tag + '>';
-  }).join('');
+    return { tag: 'a', href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
+  }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
-  return '<div class="project-archive__published">' + publishedMarkup + '</div>' + progressMarkup;
+  return publishedMarkup + progressMarkup;
 }
 
 function clientItem(client) {

@@ -20,7 +20,7 @@ for (const project of SITE.projects) {
 
 const workPath = resolve(root, "work.html");
 const workSource = await readFile(workPath, "utf8");
-const workMarkup = `<div class="project-archive__list editorial-index editorial-index--archive" data-project-archive>${renderProjectArchiveMarkup(SITE.projects)}</div>`;
+const workMarkup = `<div class="project-archive__list" data-project-archive>${renderProjectArchiveMarkup(SITE.projects)}</div>`;
 const workPattern = /(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/;
 if (!workPattern.test(workSource)) throw new Error("Could not find Work archive fallback.");
 const workUpdated = workSource.replace(workPattern, `$1${workMarkup}`);

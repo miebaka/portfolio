@@ -1,7 +1,8 @@
 /* Render — writing list for the Writing page. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeURL, mount } from "../utilities/dom.js";
+import { escapeHTML as esc, mount } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
+import { renderEditorialIndex } from "./editorial-index.js";
 
 /* Returns "" for a missing or unparseable date rather than "Invalid Date",
    which is what toLocaleDateString emits and which would otherwise be
@@ -30,16 +31,12 @@ export function renderWriting() {
     return;
   }
 
-  el.innerHTML =
-    '<ul class="writing-list editorial-index editorial-index--notes">' +
-    articles
-      .map((a) => {
+  el.innerHTML = renderEditorialIndex(articles.map((a) => {
         const isExternal = /^https?:/i.test(a.href);
-        const linkExtra  = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
         const date = formatDate(a.date);
-        return (
-          '<li class="writing-item editorial-index__item">' +
-            '<a class="writing-item__link editorial-index__row" href="' + safeURL(a.href) + '"' + linkExtra + ">" +
+        return {
+          tag: 'a', href: a.href, external: isExternal, className: 'writing-item__link',
+          content: (
               '<span class="writing-item__identity">' +
                 '<h3 class="writing-item__title editorial-index__title">' + esc(a.title) + "</h3>" +
               "</span>" +
@@ -49,11 +46,8 @@ export function renderWriting() {
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +
                 "</span>" +
-              "</span>" +
-            "</a>" +
-          "</li>"
-        );
-      })
-      .join("") +
-    "</ul>";
+              "</span>"
+          )
+        };
+      }), { variant: 'notes', className: 'writing-list' });
 }
