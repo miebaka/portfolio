@@ -3,8 +3,8 @@ import { basePath, escapeHTML as esc, safeURL } from "../utilities/dom.js";
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const layout = [[90,110,520,0],[710,40,430,2],[1240,180,610,1],[1880,70,470,3],[320,760,570,2],[1030,680,500,4],[1640,760,640,1],[50,1240,460,3],[690,1190,590,1],[1420,1240,520,2],[2030,1160,430,4]];
 const mediaMarkup = (entry, base) => entry.type === "video"
-  ? `<video src="${base}assets/experiments/${encodeURIComponent(entry.file)}" muted playsinline loop preload="metadata" aria-label="${esc(entry.title)}"></video>`
-  : `<img src="${base}assets/experiments/${encodeURIComponent(entry.file)}" alt="${esc(entry.alt || entry.title)}" loading="eager" decoding="async">`;
+  ? `<video src="${base}assets/experiments/${encodeURIComponent(entry.file)}" muted playsinline loop preload="none" aria-label="${esc(entry.title)}"></video>`
+  : `<img src="${base}assets/experiments/${encodeURIComponent(entry.file)}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
 
 export async function initExperimentsSpatial() {
   const root = document.querySelector("[data-experiments-spatial]");
@@ -14,12 +14,13 @@ export async function initExperimentsSpatial() {
   const status = root.querySelector("[data-experiments-status]");
   const base = basePath();
   let entries = [];
+  let requestFailed = false;
   try {
     const response = await fetch(`${base}assets/experiments/manifest.json`);
     if (response.ok) entries = await response.json();
-  } catch {}
+  } catch { requestFailed = true; }
   if (!Array.isArray(entries) || !entries.length) {
-    status.textContent = "No experiments are currently available.";
+    status.textContent = requestFailed ? "Experiments could not be loaded. Please try again." : "No experiments are currently available.";
     return;
   }
 
@@ -40,6 +41,7 @@ export async function initExperimentsSpatial() {
   }).join("");
 
   const objects = [...stage.querySelectorAll(".experiment-object")];
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const camera = { x: 0, y: 0, scale: 1, vx: 0, vy: 0 };
   let pointer = null;
   let frame = 0;
@@ -58,6 +60,7 @@ export async function initExperimentsSpatial() {
   };
   const coast = () => {
     cancelAnimationFrame(frame);
+    if (reducedMotion) return;
     const tick = () => {
       camera.vx *= .91; camera.vy *= .91;
       if (Math.abs(camera.vx) + Math.abs(camera.vy) < .12) return;
@@ -68,7 +71,7 @@ export async function initExperimentsSpatial() {
 
   objects.forEach(object => {
     const video = object.querySelector("video");
-    for (const name of ["pointerenter", "focus"]) object.addEventListener(name, () => video?.play().catch(() => {}));
+    if (!reducedMotion) for (const name of ["pointerenter", "focus"]) object.addEventListener(name, () => video?.play().catch(() => {}));
     for (const name of ["pointerleave", "blur"]) object.addEventListener(name, () => video?.pause());
     if (video && object.tagName === "BUTTON") object.addEventListener("click", () => video.paused ? video.play().catch(() => {}) : video.pause());
     object.addEventListener("focus", () => {

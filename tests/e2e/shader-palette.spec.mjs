@@ -32,14 +32,13 @@ test('Light water pixels remain inside the delegated palette, including after a 
   expect(blueExcess).toBeLessThanOrEqual(8);
 });
 
-test('Vinyl keeps the authored rotation', async ({ page }) => {
+test('Vinyl only rotates for a live listening state', async ({ page }) => {
   await page.goto('/');
   const disc = page.locator('.now-playing__vinyl');
   await expect(disc).toBeAttached();
   expect(await disc.evaluate(el => getComputedStyle(el).animationDuration)).toBe('3.2s');
-  const before = await disc.evaluate(el => getComputedStyle(el).transform);
-  await page.waitForTimeout(100);
-  expect(await disc.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
+  await expect(page.locator('.now-playing')).toHaveAttribute('data-live', 'false');
+  expect(await disc.evaluate(el => getComputedStyle(el).animationPlayState)).toBe('paused');
   const box = await page.locator('.now-playing').boundingBox();
   const portrait = await page.locator('.home-profile__portrait').boundingBox();
   expect(Math.abs(box.width - portrait.width)).toBeLessThanOrEqual(1);

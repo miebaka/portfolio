@@ -10,12 +10,11 @@ function buildChip(container) {
   chip.href = "https://www.last.fm/user/" + encodeURIComponent(SITE.lastfmUser);
   chip.target = "_blank";
   chip.rel = "noopener noreferrer";
-  chip.setAttribute("aria-live", "polite");
   chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
     '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
     '<span class="now-playing__copy"><span class="now-playing__label">Recently listened to:</span>' +
-    '<span class="now-playing__track">Que Linda — DJ Habias</span></span>';
+    '<span class="now-playing__track" aria-live="polite">Que Linda — DJ Habias</span></span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
   return chip;

@@ -76,7 +76,7 @@ export function renderCvMarkup(cv, base = "") {
 
 export function renderProfessionalEvidence() {
   const experience = document.querySelector('[data-mount="experience"]');
-  if (experience) experience.innerHTML = renderExperienceLedger(SITE.experience || []);
+  if (experience && SITE.experience?.length) experience.innerHTML = renderExperienceLedger(SITE.experience);
   const cv = document.querySelector('[data-mount="cv"]');
   if (cv) cv.innerHTML = renderCvMarkup(SITE.cv, basePath());
 }

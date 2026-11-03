@@ -19,7 +19,7 @@ export function renderFooter() {
   ).join('');
   const group = (className, label, content) =>
     '<div class="site-footer__group ' + className + '"><div class="site-footer__links" aria-label="' + esc(label) + '">' + content + '</div></div>';
-  el.className = "site-footer site-footer--seasats";
+  el.className = "site-footer";
   el.innerHTML =
     '<div class="site-footer__panel">' +
       '<nav class="site-footer__groups" aria-label="Footer">' +

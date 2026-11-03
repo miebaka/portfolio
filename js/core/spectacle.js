@@ -1,8 +1,6 @@
 export function initSpectacle({ doc = document, win = window, Observer = globalThis.IntersectionObserver } = {}) {
   const root = doc.documentElement;
   const revealTargets = [...doc.querySelectorAll("main section:not(.home-landing), .case-shot, .project-archive__item")];
-  revealTargets.forEach(node => node.setAttribute("data-spectacle-reveal", ""));
-
   const staticPresentation = win.location?.search.includes("visual-static=1") || win.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   if (staticPresentation) revealTargets.forEach(node => node.classList.add("is-visible"));
 
@@ -13,6 +11,8 @@ export function initSpectacle({ doc = document, win = window, Observer = globalT
       observer.unobserve(entry.target);
     });
   }, { rootMargin: "0px 0px -8%", threshold: .08 }) : null;
+  if (observer) root.classList.add("js-reveal");
+  revealTargets.forEach(node => node.setAttribute("data-spectacle-reveal", ""));
   if (!staticPresentation) revealTargets.forEach(node => observer ? observer.observe(node) : node.classList.add("is-visible"));
 
   [...doc.querySelectorAll(".case-chapter")].forEach((chapter, index) => {
@@ -22,18 +22,10 @@ export function initSpectacle({ doc = document, win = window, Observer = globalT
   let frame = 0;
   const paint = () => {
     frame = 0;
-    const range = Math.max(1, doc.documentElement.scrollHeight - win.innerHeight);
-    root.style.setProperty("--scroll-progress", String(Math.min(1, win.scrollY / range)));
     root.style.setProperty("--hero-shift", String(Math.min(1, win.scrollY / Math.max(1, win.innerHeight))));
   };
   const onScroll = () => { if (!frame) frame = win.requestAnimationFrame(paint); };
-  const onPointer = event => {
-    if (event.pointerType === "touch") return;
-    root.style.setProperty("--pointer-x", `${event.clientX}px`);
-    root.style.setProperty("--pointer-y", `${event.clientY}px`);
-  };
   win.addEventListener("scroll", onScroll, { passive: true });
-  win.addEventListener("pointermove", onPointer, { passive: true });
   paint();
-  return { destroy() { observer?.disconnect(); win.removeEventListener("scroll", onScroll); win.removeEventListener("pointermove", onPointer); if (frame) win.cancelAnimationFrame(frame); } };
+  return { destroy() { observer?.disconnect(); root.classList.remove("js-reveal"); win.removeEventListener("scroll", onScroll); if (frame) win.cancelAnimationFrame(frame); } };
 }

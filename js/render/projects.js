@@ -149,9 +149,10 @@ export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
   const button = deps.button || root.querySelector('.client-marquee__control');
   const Observer = deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
+  const reducedMotion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
   let visible = !Observer, userPaused = false, destroyed = false;
   const sync = () => {
-    const running = !destroyed && !userPaused && visible && !doc.hidden;
+    const running = !reducedMotion && !destroyed && !userPaused && visible && !doc.hidden;
     root.classList.toggle('is-running', running);
     root.dataset.marqueeState = running ? 'playing' : 'paused';
     button.setAttribute('aria-disabled', 'false');

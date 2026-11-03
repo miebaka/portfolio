@@ -3,7 +3,7 @@
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
 @font-face{font-family:"Schibsted Grotesk";src:url("../assets/fonts/SchibstedGrotesk-Semibold.ttf") format("truetype");font-weight:600;font-display:swap}
 @font-face{font-family:"Josefin Sans";src:url("../assets/fonts/josefinsans-semibold.woff2") format("woff2");font-weight:600;font-display:swap}
-@font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:block}
+@font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
   --font-size-sm:clamp(.8rem,.17vw + .76rem,.89rem);--font-size-base:clamp(1rem,.34vw + .91rem,1.19rem);--font-size-md:clamp(1.25rem,.61vw + 1.1rem,1.58rem);--font-size-lg:clamp(1.56rem,1.02vw + 1.31rem,2.12rem);--font-size-xl:clamp(1.95rem,1.63vw + 1.55rem,2.85rem);--font-size-2xl:clamp(2.44rem,2.53vw + 1.81rem,3.83rem);
@@ -43,10 +43,8 @@
 *::after{box-sizing:border-box;margin:0}
 *::before{box-sizing:border-box;margin:0}
 *{box-sizing:border-box;margin:0}
-html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + 1rem);--scroll-progress:0;--pointer-x:50vw;--pointer-y:50vh}
-body{background:var(--paper);color:var(--ink);font:400 .9375rem/1.64 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip;line-height:1.82;min-height:100svh}
-body::before{content:"";position:fixed;z-index:90;inset:0 auto auto 0;width:calc(var(--scroll-progress)*100%);height:2px;background:var(--signal);transform-origin:left;pointer-events:none}
-body::after{content:"";position:fixed;z-index:0;width:34rem;height:34rem;left:var(--pointer-x);top:var(--pointer-y);translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--signal) 11%,transparent),transparent 68%);opacity:.55;pointer-events:none;transition:opacity 240ms var(--ease-standard)}
+html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + 1rem)}
+body{background:var(--paper);color:var(--ink);font:400 .9375rem/1.7 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip;min-height:100svh}
 .has-shader-backdrop body{background:transparent}
 .shader-backdrop{position:fixed;z-index:0;inset:0;overflow:hidden;pointer-events:none;opacity:0;background:var(--paper);transition:opacity var(--dur-spatial) var(--ease-enter)}
 .shader-backdrop::after{content:"";position:absolute;inset:0;background:var(--shader-scrim)}
@@ -75,8 +73,8 @@ h1{font-family:var(--display);font-size:var(--font-size-2xl);font-weight:400;let
 p{max-width:44rem;text-wrap:pretty}
 main{min-height:70vh;text-align:left;position:relative;z-index:1}
 footer{position:relative;z-index:1}
-[data-spectacle-reveal]{transform:translate3d(0,3rem,0);clip-path:inset(0 0 16%);transition:transform 300ms var(--ease-standard),clip-path 300ms var(--ease-standard)}
-[data-spectacle-reveal].is-visible{transform:none;clip-path:inset(0)}
+.js-reveal [data-spectacle-reveal]{transform:translate3d(0,3rem,0);clip-path:inset(0 0 16%);transition:transform 300ms var(--ease-standard),clip-path 300ms var(--ease-standard)}
+.js-reveal [data-spectacle-reveal].is-visible{transform:none;clip-path:inset(0)}
 header[data-mount="nav"]{min-height:var(--nav-h)}
 .container{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}
 .section{padding-block:clamp(6.3rem,10.9vw,10.1rem)}
@@ -90,7 +88,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}
 }
 @view-transition{navigation:auto}
-::view-transition-group(project-tedx-rsu),::view-transition-group(project-rivo){animation-duration:420ms;animation-timing-function:var(--ease-in-out-ui)}
+::view-transition-group(project-tedx-rsu),::view-transition-group(project-rivo),::view-transition-group(project-chopbox){animation-duration:420ms;animation-timing-function:var(--ease-in-out-ui)}
 @media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}:root:not([data-motion-preference="full"]) *, :root:not([data-motion-preference="full"]) *::before, :root:not([data-motion-preference="full"]) *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}:root:not([data-motion-preference="full"]) body::after,:root:not([data-motion-preference="full"]) .shader-backdrop{display:none!important}}
 html[data-motion="reduced"]{scroll-behavior:auto}html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}html[data-motion="reduced"] body::after,html[data-motion="reduced"] .shader-backdrop{display:none!important}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
@@ -101,6 +99,6 @@ input{font-size:16px}
 }
 :is(a,button,input,textarea,summary){touch-action:manipulation}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}
-.section{padding-block:6.5rem;padding-block:5.45rem}
-.section--tight{padding-block:5.75rem;padding-block:4.8rem}
+.section{padding-block:5.45rem}
+.section--tight{padding-block:4.8rem}
 }
