@@ -1,13 +1,10 @@
 # Images
 
-Drop project covers and portraits here, then reference them:
+Source rasters live here, in `writing/`, or in `work/<slug>/`. Register each
+source in `scripts/optimize-images.mjs`, run `npm run optimize:images`, and
+reference the generated stem from the relevant data module. Production pages
+serve only the responsive files in `optimized/`; source masters are retained
+for regeneration.
 
-- **Project covers:** set `cover: "assets/images/<file>.jpg"` in `../../data/site.js`.
-  Recommended ratio 4:3, ~1600px wide, optimised (WebP/JPG).
-- **Portraits:** referenced in the HTML `.about-portrait` blocks. Recommended 4:5.
-- **Case-study figures:** referenced in `work/*.html` `.case-figure` blocks. 16:9.
-
-Until a `cover` is added, project tiles show a coloured placeholder using the
-project's `tone` — this is intentional, so the grid never looks broken.
-
-Always add meaningful `alt` text for every image.
+Keep logos as SVG where possible. Every meaningful image needs accurate alt
+text in its content record; decorative preview images use an empty alt value.

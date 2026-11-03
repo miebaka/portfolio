@@ -235,7 +235,6 @@
 .service-detail:is(:hover,:focus-visible) .service-detail__number{color:inherit}
 .service-detail:focus-visible .service-detail__preview{opacity:.76;transform:none}
 .home-profile__media{grid-column:8/13;grid-row:1/3;display:grid;align-self:start;gap:var(--s2);min-width:0}
-a.work-flick__item--more:is(:hover,:focus-visible){color:var(--sys-color-on-primary-container)}
 .case-index a:active{transform:scale(.97)}
 @media(max-width:60rem){.hero-noir__statement{font-size:clamp(3.8rem,8vw,6rem)}
 .hero-noir__note{width:32vw}
@@ -311,16 +310,16 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-shot--hero{height:56vh;margin-inline:0}
 .case-facts{grid-row:auto;grid-template-columns:1fr 1fr}
 .case-pair{grid-template-columns:1fr}
-.discipline p{display:none;display:block;grid-column:2;grid-row:2;padding:.6rem 0 0;background:none}
-.discipline__media{display:none;display:none}
+.discipline p{display:block;grid-column:2;grid-row:2;padding:.6rem 0 0;background:none}
+.discipline__media{display:none}
 .hero-noir__note{position:relative;right:auto;bottom:auto;width:auto;margin:0 var(--page) 3rem}
-.hero-noir__content{min-height:42rem;padding:5.5rem var(--page) 2.5rem;min-height:38rem}
-.hero-noir__statement{font-size:clamp(2.7rem,11.5vw,4rem);font-size:clamp(3.25rem,14vw,4.7rem)}
+.hero-noir__content{min-height:38rem;padding:5.5rem var(--page) 2.5rem}
+.hero-noir__statement{font-size:clamp(3.25rem,14vw,4.7rem)}
 .hero{min-height:68vh;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;padding-top:8rem}
 .hero__title{font-size:clamp(3.4rem,14vw,5.2rem)}
 .case-lede__main{display:grid}
 .case-chapter__copy{grid-template-columns:1fr}
-.case-statement{font-size:clamp(2.8rem,13vw,4.6rem);font-size:clamp(3.25rem,14vw,5rem)}
+.case-statement{font-size:clamp(3.25rem,14vw,5rem)}
 .home-intro{min-height:auto;display:grid;grid-template-columns:1fr}
 .home-intro__copy{min-height:38rem;padding:6rem var(--page) 3rem}
 .home-intro h1{font-size:clamp(4rem,19vw,6rem)}
@@ -333,7 +332,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .discipline__evidence>p{display:block;grid-column:auto;grid-row:auto}
 .hero--404{display:flex;min-height:calc(100svh - var(--nav-h));justify-content:center}
 .hero--404 .decision-field{display:none}
-.discipline__evidence{grid-column:2;grid-row:2;display:grid;padding:1rem 0 0;grid-column:1}
+.discipline__evidence{grid-column:1;grid-row:2;display:grid;padding:1rem 0 0}
 .home-landing{min-height:30rem}
 .home-landing__descriptor{grid-column:1/-1}
 .home-profile__introduction{grid-column:1;grid-row:auto}
@@ -357,7 +356,7 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-index{grid-template-columns:1fr 1fr}
 .case-index a{border-bottom:1px solid var(--line);border:0}
 .home-landing h1{white-space:normal;grid-column:1/-1;font-size:clamp(3rem,14vw,5.2rem);line-height:.91}
-.home-profile__media{grid-column:1;grid-row:auto;width:min(78vw,28rem);margin:2.5rem 0 0 auto;gap:var(--s2);width:100%;max-width:28rem;margin-left:0;margin-right:0}
+.home-profile__media{grid-column:1;grid-row:auto;width:100%;max-width:28rem;margin:2.5rem 0 0;gap:var(--s2)}
 .case-page .case-opening{padding-top:clamp(3rem,12vw,5rem)}
 .case-page .case-statement{font-size:clamp(2.4rem,9vw,4rem);text-wrap:pretty}
 .case-page .case-index ol{grid-template-columns:repeat(2,minmax(0,1fr))}

@@ -46,20 +46,6 @@ test("homepage keeps the approved section order without the retired practice-sta
   }
 });
 
-test("project cards link published work and leave unfinished work non-interactive", () => {
-  assert.equal(typeof projectRender.projectMarkup, "function");
-  const published = SITE.projects.find(project => project.slug === "tedx-rsu");
-  assert.match(projectRender.projectMarkup(published), /<a\b[^>]*href="work\/tedx-rsu.html"/);
-  assert.match(projectRender.projectMarkup(published, 1, "../"), /href="\.\.\/work\/tedx-rsu.html"/);
-  const unfinished = projectRender.projectMarkup({ ...published, status: "coming-soon" });
-  assert.match(unfinished, /^<article\b/);
-  assert.match(unfinished, /Coming soon/);
-  assert.match(unfinished, /class="work-flick__status"/);
-  assert.doesNotMatch(unfinished, /class="[^"]*\bbtn\b/);
-  assert.doesNotMatch(unfinished, /<a\b|<button\b|tabindex|aria-disabled/);
-  assert.equal(projectRender.projectMarkup({ ...published, status: "private" }), "");
-});
-
 test("Work archive separates published cases from work in progress", () => {
   assert.equal(typeof projectRender.renderProjectArchiveMarkup, "function");
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
@@ -86,20 +72,9 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:detour|out-of-office)\.html"/);
 });
 
-test("project hit areas are full rows and hover expansion requires fine-pointer capability", async () => {
+test("project hit areas are full rows", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(css, /\.project-archive__item\[href\]\s*\{[^}]*display:\s*block/);
-  const scopes = [];
-  for (const match of css.matchAll(/([^{}]*)([{}])/g)) {
-    if (match[2] === "{") {
-      scopes.push(match[1].trim());
-    } else {
-      const selector = scopes.pop() || "";
-      if (selector.includes("work-flick__item--more") && selector.includes(":hover") && /flex:\s*[2-9]/.test(match[1])) {
-        assert.ok(scopes.some(scope => /@media/.test(scope) && /hover:\s*hover/.test(scope) && /pointer:\s*fine/.test(scope)), `Ungated expansion: ${selector}`);
-      }
-    }
-  }
 });
 
 test("the route registry has unique destinations and supports the approved global masthead", () => {
@@ -313,7 +288,6 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
   for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
   assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
-  assert.doesNotMatch(projects, /work-flick__category|work-flick__action/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
   assert.match(css, /\.home-page \.client-marquee\{[^}]*width:calc\(100% \+ 2 \* var\(--home-gutter\)\)[^}]*margin-inline:calc\(-1 \* var\(--home-gutter\)\)[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
@@ -324,10 +298,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
-  assert.match(projects, /work-flick__bar/);
-  assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
-  for (const selector of [".site-nav a", ".btn", ".work-flick__item", ".writing-item__link", ".site-footer a"]) {
+  for (const selector of [".site-nav a", ".btn", ".writing-item__link", ".site-footer a"]) {
     const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     assert.match(css, new RegExp(`${escaped}\\{[^}]*text-decoration:none`));
   }
@@ -384,7 +356,6 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
-  assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
   const meta = writing.indexOf('writing-item__meta');
@@ -453,9 +424,7 @@ test("requested language and contact details stay canonical", async () => {
   const home = await readFile(join(dist, "index.html"), "utf8");
   assert.match(home, /I design brands, build useful things/);
   assert.match(home, /&amp; ask a lot of questions\./);
-  assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /Coming soon/);
   assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);

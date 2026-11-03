@@ -74,7 +74,7 @@ async function outputFiles(directory) {
 
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
-const { renderHomeProjectList, renderWorkMarkup, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
+const { renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
 const { renderServiceFallbackMarkup } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;

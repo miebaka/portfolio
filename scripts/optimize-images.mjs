@@ -2,15 +2,13 @@
 /* ==========================================================================
    optimize-images.mjs — generate responsive AVIF / WebP / JPG variants.
 
-   The site itself is zero-build; this is optional tooling. Run it whenever you
-   add or change a raster image:
+   Run this whenever a source raster image is added or changed:
 
        npm install        # once, to get sharp
        npm run optimize:images
 
-   Outputs <base>-<width>.{avif,webp,jpg} into assets/images/optimized/, then
-   uncomment `portraitResponsive` in data/site.js so the portrait is served as
-   <picture> with srcset. SVGs (logos) need no processing.
+   Outputs <base>-<width>.{avif,webp,jpg} into assets/images/optimized/.
+   SVGs (logos) need no processing.
    ========================================================================== */
 import sharp from "sharp";
 import { mkdir, access } from "node:fs/promises";
