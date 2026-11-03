@@ -14,8 +14,8 @@ function buildChip(container) {
   chip.setAttribute("aria-label", "Open Miebaka's listening history on Last.fm");
   chip.innerHTML =
     '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
-    '<span class="now-playing__copy"><span class="now-playing__track">Que Linda — DJ Habias</span></span>' +
-    '<span class="sr-only"> (opens in a new tab)</span>';
+    '<span class="now-playing__copy"><span class="now-playing__label">Recently listened to:</span>' +
+    '<span class="now-playing__track">Que Linda — DJ Habias</span></span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
   return chip;
@@ -39,6 +39,7 @@ export function initNowPlaying() {
   if (!container) return;
   const chip = buildChip(container);
   const track = chip.querySelector(".now-playing__track");
+  const label = chip.querySelector(".now-playing__label");
   let timer = 0;
   let backoff = POLL_MS;
   const schedule = delay => { clearTimeout(timer); timer = setTimeout(poll, delay); };
@@ -46,6 +47,7 @@ export function initNowPlaying() {
     if (!value) return;
     track.textContent = `${value.track} — ${value.artist}`;
     const listeningState = value.nowPlaying ? "Currently listening to" : "Recently listened to";
+    label.textContent = `${listeningState}:`;
     chip.dataset.live = String(Boolean(value.nowPlaying));
     chip.href = value.url || chip.href;
     chip.setAttribute("aria-label", `${listeningState} ${track.textContent}. Open on Last.fm`);

@@ -89,7 +89,7 @@ test("Index has the complete registry, named preferences, contact and only a con
   assert.match(renderIndexMarkup({ site: { cv: { href: "assets/cv.pdf", label: "Download CV", mimeType: "application/pdf", sizeLabel: "120 KB" } } }), /download[^>]*>Download CV/);
 });
 
-test("footer social links announce new tabs", () => {
+test("footer social links stay visually clean", () => {
   const previousDocument = globalThis.document;
   const mount = { className: "", innerHTML: "" };
   globalThis.document = {
@@ -98,7 +98,8 @@ test("footer social links announce new tabs", () => {
   };
   try {
     renderFooter();
-    assert.match(mount.innerHTML, /LinkedIn<span class="sr-only"> \(opens in a new tab\)<\/span>/);
+    assert.match(mount.innerHTML, />LinkedIn<\/a>/);
+    assert.doesNotMatch(mount.innerHTML, /opens in a new tab|aria-hidden="true"> ↗/);
     assert.match(mount.innerHTML, /target="_blank" rel="noopener noreferrer"/);
   } finally {
     globalThis.document = previousDocument;

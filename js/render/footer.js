@@ -15,7 +15,7 @@ export function renderFooter() {
     '<a href="' + basePath() + esc(item.href) + '">' + esc(item.label) + '</a>'
   ).join('');
   const socials = (SITE.socials || []).filter(item => ["LinkedIn", "Instagram", "Twitter"].includes(item.label)).map((item) =>
-    '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer">' + esc(item.label) + '<span class="sr-only"> (opens in a new tab)</span><span aria-hidden="true"> ↗</span></a>'
+    '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer">' + esc(item.label) + '</a>'
   ).join('');
   const group = (className, label, content) =>
     '<div class="site-footer__group ' + className + '"><div class="site-footer__links" aria-label="' + esc(label) + '">' + content + '</div></div>';

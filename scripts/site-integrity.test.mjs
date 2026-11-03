@@ -339,6 +339,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
   assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
   assert.match(listening, /Currently listening to/);
+  assert.match(listening, /Recently listened to/);
+  assert.match(listening, /now-playing__label/);
   assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
