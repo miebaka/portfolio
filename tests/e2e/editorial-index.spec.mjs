@@ -31,7 +31,7 @@ for (const [name, path, selector] of [
     await rows.first().focus();
     await expect(rows.first()).toHaveCSS("opacity", "1");
     await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
-    if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "0.28");
+    if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
     const focusColors = await rows.first().evaluate(element => ({
       foreground: getComputedStyle(element).color,
       background: getComputedStyle(element, "::before").backgroundColor

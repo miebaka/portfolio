@@ -150,7 +150,7 @@ test("Notes inherits the Selected Work editorial-list interaction", async ({ pag
   const canHover = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches);
   if (!canHover) return;
   await rows.first().hover();
-  await expect(rows.nth(1)).toHaveCSS("opacity", "0.28");
+  await expect(rows.nth(1)).toHaveCSS("opacity", "1");
   await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
   await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
 });
