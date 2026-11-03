@@ -35,7 +35,7 @@ export function renderWriting() {
         const isExternal = /^https?:/i.test(a.href);
         const date = formatDate(a.date);
         return {
-          tag: 'a', href: a.href, external: isExternal, className: 'writing-item__link',
+          href: a.href, external: isExternal, className: 'writing-item__link',
           content: (
               '<span class="writing-item__identity">' +
                 '<h3 class="writing-item__title editorial-index__title">' + esc(a.title) + "</h3>" +

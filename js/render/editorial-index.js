@@ -1,9 +1,7 @@
 import { escapeHTML as esc, safeToken, safeURL } from "../utilities/dom.js";
 
-const TAGS = new Set(["a", "article", "div"]);
-
 function renderRow(item) {
-  const tag = TAGS.has(item.tag) ? item.tag : item.href ? "a" : "div";
+  const tag = item.href ? "a" : "div";
   const href = tag === "a" && item.href ? ` href="${safeURL(item.href)}"` : "";
   const external = tag === "a" && item.external ? ' target="_blank" rel="noopener noreferrer"' : "";
   const label = item.label ? ` aria-label="${esc(item.label)}"` : "";

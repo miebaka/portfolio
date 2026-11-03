@@ -69,7 +69,7 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
     const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span></span>';
     const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual + trailing;
-    return { tag: project.href ? 'a' : 'div', href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
+    return { href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
   }), { variant: 'work', ordered: true });
 }
 
@@ -112,7 +112,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
   const publishedMarkup = renderEditorialIndex(published.map(project => {
     const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
-    return { tag: 'a', href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
+    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
   return publishedMarkup + progressMarkup;
