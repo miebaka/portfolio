@@ -104,17 +104,17 @@ export const caseStudies = {
         "label": "System in use",
         "title": "Stress-test one limited vocabulary across scales",
         "body": [
-          "Application visualisations tested the system from a carried object to a large environmental surface. The same short proposition and yellow signal had to remain legible without turning every touchpoint into the same composition.",
-          "The delivered system included guidelines and stationery alongside the identity assets. These plates show the intended production system and presentation of those materials; they are not presented as evidence of later team adoption."
+          "The system was extended from a carried object to a large environmental surface. The same short proposition and yellow signal remain legible without turning every touchpoint into the same composition.",
+          "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward."
         ],
         "media": ["rivo-tote", "rivo-stage", "rivo-flag", "rivo-stationery", "rivo-guidelines"]
       },
       {
         "id": "reflection",
-        "label": "What survived",
-        "title": "Usefulness needs restraint",
+        "label": "Result",
+        "title": "A focused system built for everyday use",
         "body": [
-          "The strongest part of the system is its limited vocabulary. A softened wordmark, a stable blue field and one signal colour create enough distinction while leaving room for the information each application needs to carry."
+          "The final identity gives Rivo a recognisable wordmark, a stable blue field, one signal colour and a documented set of rules for applying them across brand materials."
         ]
       }
     ],
@@ -143,7 +143,7 @@ export const caseStudies = {
         "w": 2800,
         "h": 2240,
         "alt": "Business-card application visualisation with blue and yellow faces arranged on dark cloth.",
-        "caption": "A stationery visualisation tests the identity at a small, information-heavy scale.",
+        "caption": "The stationery application carries the identity at a small, information-heavy scale.",
         "loading": "lazy"
       },
       {
@@ -152,7 +152,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Brand-guidelines book visualisation with the Rivo cover facing up.",
-        "caption": "The guidelines visualisation presents the system as a reference another person can use.",
+        "caption": "The guidelines package the system as a reference another person can use.",
         "loading": "lazy"
       },
       {
@@ -170,7 +170,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Tote-bag application visualisation reading Software that simply works for all in yellow.",
-        "caption": "A tote visualisation tests the proposition as a single carried message.",
+        "caption": "The tote carries the proposition as a single portable message.",
         "loading": "lazy"
       },
       {
@@ -179,7 +179,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Stage-screen application visualisation reading From village squares to virtual spaces.",
-        "caption": "A stage-screen visualisation tests the system at environmental scale.",
+        "caption": "The stage screen extends the system to an environmental scale.",
         "loading": "lazy"
       },
       {
@@ -188,7 +188,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Flag application visualisation reading Software that simply works for all against open sky.",
-        "caption": "A flag visualisation checks the short proposition and wordmark against a moving outdoor format.",
+        "caption": "The flag pairs the short proposition and wordmark in a moving outdoor format.",
         "loading": "lazy"
       }
     ],
@@ -265,16 +265,16 @@ export const caseStudies = {
         "title": "An invitation people could encounter",
         "body": [
           "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
-          "The hoodie places the theme mark beside the TEDx lockup. The street banner uses a question about advice to your ten-year-old self, turning the same idea into a public prompt. Event-day and campus photographs document public encounter, not audience impact."
+          "The hoodie places the theme mark beside the TEDx lockup. The street banner turns the idea into a public prompt, while campus and event-day photographs show the identity in use with attendees."
         ],
         "media": ["tedx-rsu-merch", "tedx-rsu-street-banner", "tedx-rsu-event"]
       },
       {
         "id": "reflection",
-        "label": "What survived",
-        "title": "A theme that holds across formats",
+        "label": "Result",
+        "title": "A theme that held across the event",
         "body": [
-          "The final work keeps returning to the same invitation: pause and reflect. It appears as a mark on a garment, a question on a street banner and an invitation on campus, while the TEDx identity remains recognisable."
+          "The final identity carried one invitation to pause and reflect, from social promotion into garments, campus signage, printed materials and the event-day environment, while keeping TEDx recognisable."
         ]
       }
     ],
@@ -418,17 +418,17 @@ export const caseStudies = {
         "label": "System in use",
         "title": "Stress-test one voice across formats",
         "body": [
-          "Packaging, uniform, campaign and out-of-home visualisations test whether the same rounded voice and warm palette can remain recognisable at very different scales.",
-          "These images document intended applications. They are labelled as visualisations and are not presented as photographs of produced rollout materials. The surviving material does not verify which applications entered production or continued in team use."
+          "Packaging, uniform, campaign and out-of-home applications show how the rounded voice and warm palette stay recognisable at very different scales.",
+          "Together, the applications establish a consistent kit for presenting food, packaging offers and direct campaign messages."
         ],
         "media": ["chopbox-packaging", "chopbox-apron", "chopbox-campaign", "chopbox-billboard"]
       },
       {
         "id": "reflection",
-        "label": "What survived",
-        "title": "A useful filter makes the system cohere",
+        "label": "Result",
+        "title": "One appetite-led system across every touchpoint",
         "body": [
-          "The strongest connective tissue is not a single shape or colour. It is the appetite test: every part should make the food feel warm, generous and worth ordering."
+          "The final system connects packaging, uniform, campaign and outdoor applications through one appetite test: every part should make the food feel warm, generous and worth ordering."
         ]
       }
     ],
@@ -475,7 +475,7 @@ export const caseStudies = {
         "w": 3500,
         "h": 3000,
         "alt": "A red lid for The Chop Dip pepper sauce, shown against black.",
-        "caption": "A packaging visualisation applies the identity to The Chop Dip pepper sauce.",
+        "caption": "The packaging application brings the identity to The Chop Dip pepper sauce.",
         "loading": "lazy"
       },
       {
@@ -484,7 +484,7 @@ export const caseStudies = {
         "w": 3840,
         "h": 3840,
         "alt": "A red ChopBox apron printed with the line Hello, I am the chef.",
-        "caption": "A uniform visualisation tests the direct verbal voice on an apron.",
+        "caption": "The apron carries the brand's direct verbal voice into uniform design.",
         "loading": "lazy"
       },
       {
@@ -493,7 +493,7 @@ export const caseStudies = {
         "w": 2248,
         "h": 3200,
         "alt": "A campaign poster reading Abobi, chop life, make life no chop you, surrounded by flying small chops.",
-        "caption": "A campaign visualisation pairs the brand voice with small-chop imagery.",
+        "caption": "The campaign application pairs the brand voice with small-chop imagery.",
         "loading": "lazy"
       },
       {
@@ -502,7 +502,7 @@ export const caseStudies = {
         "w": 2800,
         "h": 4000,
         "alt": "A ChopBox advert wrapped around a water tower against a blue sky.",
-        "caption": "An outdoor visualisation tests the palette, logo and message at environmental scale.",
+        "caption": "The outdoor application carries the palette, logo and message at environmental scale.",
         "loading": "lazy"
       }
     ],

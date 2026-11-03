@@ -289,22 +289,21 @@ test("rejected homepage language cannot return unnoticed", async () => {
   const html = await readFile(join(dist, "index.html"), "utf8");
   for (const phrase of [
     "Independent practice",
-    "Brand & visual designer",
     "Position 01",
     "Brand thinking should survive",
     "Open to remote roles",
     "Three decisions. Three systems.",
     "From the first question to the final file."
   ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.match(html, /Brand &amp; visual designer · Lagos, Nigeria · Available for select projects/);
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
-  assert.match(html, /Over the last seven years/);
+  assert.match(html, /Since 2017/);
 });
 
 test("homepage hierarchy and motion affordances cannot regress", async () => {
   const html = await readFile(join(dist, "index.html"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
-  const services = await readFile(join(dist, "services.html"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
@@ -324,8 +323,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
-  assert.doesNotMatch(services, /Evidence:/);
-  assert.match(services, /data-mount="capabilities"/);
+  await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
   assert.match(projects, /work-flick__bar/);
   assert.doesNotMatch(projects, /i === 0 \? ' is-active'/);
   assert.doesNotMatch(footer, /mailto:/);
@@ -375,7 +373,6 @@ test("interactive controls include the approved Figma button states", async () =
 test("alignment, service parity and article hierarchy stay systemic", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   const home = await readFile(join(dist, "index.html"), "utf8");
-  const services = await readFile(join(dist, "services.html"), "utf8");
   const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   assert.match(css, /main\{[^}]*text-align:left/);
@@ -385,9 +382,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title"><span class="home-landing__line">I design brands, build useful things<\/span>/);
+  assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
-  assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
   const summary = writing.indexOf('writing-item__summary');
@@ -396,7 +392,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
 });
 
 test("built service fallbacks contain one complete shared record per service", async () => {
-  for (const file of ["index.html", "about.html", "services.html"]) {
+  for (const file of ["index.html", "about.html"]) {
     const html = await readFile(join(dist, file), "utf8");
     assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
     const start = html.indexOf('<div data-mount="capabilities"');
@@ -407,6 +403,7 @@ test("built service fallbacks contain one complete shared record per service", a
     }
     assert.doesNotMatch(capability, /<\/ol><\/div><div><dt>Good fit/, file);
   }
+  await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
 });
 
 test("production language avoids typographic dash shortcuts", async () => {
@@ -444,7 +441,7 @@ test("portfolio depth features are present without depending on JavaScript for c
 
 test("requested language and contact details stay canonical", async () => {
   const sourceFiles = [
-    join(dist, "index.html"), join(dist, "about.html"), join(dist, "services.html"),
+    join(dist, "index.html"), join(dist, "about.html"),
     join(dist, "contact.html"), join(dist, "playground.html"), join(dist, "privacy.html"),
     join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
     join(dist, "writing", "designing-for-disability-in-nigeria.html")

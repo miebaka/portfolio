@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 const pages = [
   ["home", "/index.html"], ["work", "/work.html"],
-  ["about", "/about.html"], ["services", "/services.html"], ["contact", "/contact.html"],
+  ["about", "/about.html"], ["contact", "/contact.html"],
   ["notes", "/playground.html"], ["case", "/work/rivo.html"],
   ["article", "/writing/designing-for-disability-in-nigeria.html"], ["privacy", "/privacy.html"]
 ];

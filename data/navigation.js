@@ -7,7 +7,6 @@ const routes = [
   { key: "writing", label: "Notes", href: "playground.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "contact", label: "Contact", href: "contact.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "experiments-legacy", label: "Experiments", href: "community.html", includeIn: ["build"] },
-  { key: "services", label: "Services", href: "services.html", includeIn: ["build", "sitemap"] },
   { key: "privacy", label: "Privacy", href: "privacy.html", includeIn: ["footer", "build", "sitemap"] },
   { key: "not-found", label: "Page not found", href: "404.html", includeIn: ["build"] }
 ];

@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
   "/index.html", "/work.html", "/explorations.html", "/about.html",
-  "/services.html", "/playground.html", "/contact.html", "/privacy.html", "/404.html",
+  "/playground.html", "/contact.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
   "/writing/designing-for-disability-in-nigeria.html", "/writing/when-the-swoosh-lost-its-soul.html"
 ];
@@ -114,9 +114,9 @@ test("published case studies preserve the editorial reading order", async ({ pag
     await settle(page);
     const positions = await page.locator(".case").evaluate(caseStudy => {
       const top = selector => caseStudy.querySelector(selector)?.getBoundingClientRect().top + scrollY;
-      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-proof", ".case-chapter"].map(top);
+      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-chapter"].map(top);
     });
-    expect(positions, `${slug} proposition, hero, context, proof and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+    expect(positions, `${slug} proposition, hero, context and narrative order`).toEqual([...positions].sort((a, b) => a - b));
   }
 });
 

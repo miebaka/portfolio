@@ -21,7 +21,7 @@ function resolvedColors(win, root) {
 
 function resolvedState(root) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
-  return { theme, animate: true };
+  return { theme, animate: root.dataset.motion !== "reduced" };
 }
 
 function waitForActivation(win, immediate, cursorCapable) {
@@ -56,19 +56,27 @@ export async function initShaderBackdrop({
   await waitForActivation(win, testOptIn, finePointerQuery?.matches === true);
 
   const root = doc.documentElement;
+  if (root.dataset.motion === "reduced" && !testOptIn) return null;
+  let userPaused = false;
   const getState = () => {
     const state = resolvedState(root);
     const colors = resolvedColors(win, root);
-    return forceStatic ? { ...state, ...colors, animate: false } : { ...state, ...colors };
+    return forceStatic || userPaused ? { ...state, ...colors, animate: false } : { ...state, ...colors };
   };
   const host = doc.createElement("div");
   host.className = "shader-backdrop";
   host.dataset.shaderBackdrop = "";
   host.setAttribute("aria-hidden", "true");
   doc.body.prepend(host);
+  const control = doc.createElement("button");
+  control.className = "shader-motion-control";
+  control.type = "button";
+  control.textContent = "Pause background motion";
+  control.setAttribute("aria-pressed", "false");
+  host.after(control);
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { host.remove(); console.warn("Shader backdrop unavailable", error); return null; }
+  catch (error) { host.remove(); control.remove(); console.warn("Shader backdrop unavailable", error); return null; }
 
   let island;
   try {
@@ -77,6 +85,7 @@ export async function initShaderBackdrop({
   catch (error) {
     island?.destroy();
     host.remove();
+    control.remove();
     console.warn("Shader backdrop unavailable", error);
     return null;
   }
@@ -125,11 +134,18 @@ export async function initShaderBackdrop({
     applyPointer();
   };
   const observer = new MutationObserver(sync);
-  observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  observer.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   finePointerQuery?.addEventListener?.("change", sync);
   win.addEventListener("pointermove", onPointerMove, { passive: true });
   win.addEventListener("pointerout", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
+  const toggleMotion = () => {
+    userPaused = !userPaused;
+    control.setAttribute("aria-pressed", String(userPaused));
+    control.textContent = userPaused ? "Play background motion" : "Pause background motion";
+    sync();
+  };
+  control.addEventListener("click", toggleMotion);
 
   const markReady = async () => {
     await island?.ready;
@@ -149,10 +165,12 @@ export async function initShaderBackdrop({
     win.removeEventListener("pointermove", onPointerMove);
     win.removeEventListener("pointerout", resetPointer);
     win.removeEventListener("blur", resetPointer);
+    control.removeEventListener("click", toggleMotion);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     host.remove();
+    control.remove();
     root.classList.remove("has-shader-backdrop");
   };
   win.addEventListener("pagehide", destroy, { once: true });

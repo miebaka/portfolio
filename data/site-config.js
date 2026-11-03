@@ -4,6 +4,8 @@ export const siteConfig = {
   "canonicalUrl": "https://miebaka-portfolio.vercel.app/",
   "lastfmUser": "sheikmoujabaa",
   "role": "Brand & visual designer",
+  "positioning": "I design brands, build useful things & ask a lot of questions.",
+  "availability": "Available for select freelance and collaborative projects",
   "email": "miebakakiki@gmail.com",
   "location": "Lagos, Nigeria",
   "city": "Lagos",
@@ -19,13 +21,13 @@ export const siteConfig = {
     {
       "organisation": "Anakle",
       "role": "Creative Design Executive",
-      "period": "Feb - Nov 2025",
+      "period": "2025",
       "contribution": "Moved between campaign and identity briefs, finding the useful idea before building its visual world."
     },
     {
       "organisation": "Rivo Studios",
       "role": "Visual Designer",
-      "period": "Jun - Nov 2024",
+      "period": "2024",
       "contribution": "Built the identity from a softened wordmark into guidelines, print and day-to-day applications."
     },
     {

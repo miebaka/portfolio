@@ -19,15 +19,17 @@ import { assertValidContent } from "../scripts/validate-content.mjs";
 const root = new URL("../", import.meta.url);
 const page = name => readFile(new URL(name, root), "utf8");
 
-test("CV is either complete approved metadata or truthfully absent", () => {
+test("CV is either downloadable or truthfully available by request", () => {
   assert.equal(siteConfig.cv, null);
   assert.equal(renderCvMarkup(siteConfig.cv), "");
-  assert.doesNotMatch(renderIndexMarkup({ site: siteConfig }), /site-index__cv/);
+  assert.match(renderIndexMarkup({ site: siteConfig }), /Request CV/);
+  assert.match(renderIndexMarkup({ site: siteConfig }), /Available by email/);
 
   const cv = { href: "assets/documents/miebaka-joshua-cv.pdf", label: "Download CV", mimeType: "application/pdf", sizeLabel: "184 KB" };
   assert.match(renderCvMarkup(cv), /download/);
   assert.match(renderCvMarkup(cv), /PDF · 184 KB/);
   assert.match(renderIndexMarkup({ site: { ...siteConfig, cv } }), /site-index__cv/);
+  assert.doesNotMatch(renderIndexMarkup({ site: { ...siteConfig, cv } }), /Request CV/);
 
   const missingState = validateContent({ ...CONTENT, siteConfig: { ...siteConfig, cv: undefined } });
   assert.equal(missingState.ok, false);
@@ -51,14 +53,15 @@ test("the service system has exactly five complete shared records", () => {
   }
 });
 
-test("Home, About and Services expose the same progressive service source", async () => {
-  for (const file of ["index.html", "about.html", "services.html"]) {
+test("Home and About expose the same progressive service source without an orphan route", async () => {
+  for (const file of ["index.html", "about.html"]) {
     const html = await page(file);
     assert.match(html, /data-mount="capabilities"/, file);
     for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
       assert.ok(html.includes(service[field].replaceAll("&", "&amp;")), `${file}: ${service.id}.${field}`);
     }
   }
+  await assert.rejects(page("services.html"));
   assert.match(await page("scripts/build-site.mjs"), /renderServiceFallbackMarkup\(content\.services\)/);
 });
 

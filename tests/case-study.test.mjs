@@ -77,29 +77,28 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
 });
 
-test("Rivo publishes as an evidence-bounded identity case", () => {
+test("Rivo publishes as a confident identity case with a concrete delivery result", () => {
   const study = SITE.caseStudies.rivo;
   const markup = renderCaseMarkup(SITE, "rivo");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
   assert.match(markup, /How can access feel like a brand position\?/);
-  assert.match(markup, /application visualisation/i);
-  assert.match(markup, /not presented as evidence of later team adoption/i);
-  assert.match(markup, /What this case can prove/);
-  assert.match(markup, /Bounded evidence/);
+  assert.match(markup, /delivered identity included guidelines, stationery and a practical application system/i);
+  assert.match(markup, /A focused system built for everyday use/);
+  assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
+  assert.doesNotMatch(markup, /What this case can prove|Bounded evidence|do not prove production|later team adoption/i);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
 });
 
-test("ChopBox publishes without converting presentation visualisations into production claims", () => {
+test("ChopBox publishes as a focused application system", () => {
   const study = SITE.caseStudies.chopbox;
   const html = renderCaseMarkup(SITE, "chopbox");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "chopbox").status, "published");
-  assert.match(html, /does this make the food feel worth ordering/i);
-  assert.match(html, /not presented as photographs of produced rollout materials/i);
-  assert.match(html, /does not verify which applications entered production/i);
-  assert.match(html, /Bounded evidence/);
-  assert.doesNotMatch(html, /audience impact|sales|conversion|continued team use/i);
+  assert.match(html, /does this make you hungry/i);
+  assert.match(html, /Packaging, uniform, campaign and out-of-home applications/i);
+  assert.match(html, /One appetite-led system across every touchpoint/i);
+  assert.doesNotMatch(html, /What this case can prove|Bounded evidence|do not prove production|does not verify/i);
 });
 
 test("the complete narrative and chapter links follow the approved sequence", () => {

@@ -1,4 +1,3 @@
-@layer reset, tokens, base, components, pages, utilities;
 @import "foundations.css";
 @import "components-v4.css";
 @import "pages-v4.css";

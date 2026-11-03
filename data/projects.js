@@ -12,7 +12,7 @@ export const projects = [
       "Brand strategy",
       "Guidelines"
     ],
-    "year": "2025",
+    "year": "2024",
     "tone": "#000041",
     "cover": "rivo-in-use",
     "span": 7,

@@ -11,19 +11,24 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
   const destinations = navigation.index.map((route, i) =>
     '<a class="site-index__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : '') + '><span class="site-index__number" aria-hidden="true">' + String(i + 1).padStart(2, "0") + '</span><span>' + esc(route.label) + '</span></a>'
   ).join("");
-  const cv = site.cv?.href ? '<a class="site-index__cv" href="' + base + safeURL(site.cv.href) + '" type="' + esc(site.cv.mimeType) + '" download>' + esc(site.cv.label) + '<span>PDF · ' + esc(site.cv.sizeLabel) + '</span></a>' : "";
+  const cv = site.cv?.href
+    ? '<a class="site-index__cv" href="' + base + safeURL(site.cv.href) + '" type="' + esc(site.cv.mimeType) + '" download>' + esc(site.cv.label) + '<span>PDF · ' + esc(site.cv.sizeLabel) + '</span></a>'
+    : '<a class="site-index__cv" href="' + safeURL('mailto:' + (site.email || "") + '?subject=CV%20request') + '">Request CV<span>Available by email</span></a>';
   return '<section class="site-index" id="site-index" role="dialog" aria-modal="true" aria-labelledby="site-index-title" tabindex="-1" hidden inert>' +
     '<div class="site-index__inner container"><div class="site-index__heading"><h2 id="site-index-title">Index</h2><button class="site-index__close" type="button" data-index-close>Close<span aria-hidden="true"> ×</span></button></div>' +
     '<div class="site-index__body"><nav class="site-index__destinations" aria-label="All destinations">' + destinations + '</nav>' +
     '<div class="site-index__aside"><div class="site-index__contact"><a href="' + safeURL('mailto:' + (site.email || "")) + '">' + esc(site.email) + '</a>' + cv + '</div>' +
-    '<fieldset class="site-index__preferences"><legend>Theme</legend><div class="site-index__themes"><button type="button" data-theme-choice="light" aria-pressed="false">Print<span>Light</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">Screen<span>Dark</span></button></div></fieldset></div></div></div></section>';
+    '<fieldset class="site-index__preferences"><legend>Theme</legend><div class="site-index__themes"><button type="button" data-theme-choice="light" aria-pressed="false">Print<span>Light</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">Screen<span>Dark</span></button></div><div class="site-index__motion" role="group" aria-label="Motion"><button type="button" data-motion-choice="system" aria-pressed="false">System</button><button type="button" data-motion-choice="reduce" aria-pressed="false">Reduce</button><button type="button" data-motion-choice="full" aria-pressed="false">Full</button></div></fieldset></div></div></div></section>';
 }
 
 function setupPreferences(index, preferences) {
   const choices = [...index.querySelectorAll("[data-theme-choice]")];
+  const motionChoices = [...index.querySelectorAll("[data-motion-choice]")];
   const chooseTheme = event => preferences.setTheme(event.currentTarget.dataset.themeChoice);
+  const chooseMotion = event => preferences.setMotion(event.currentTarget.dataset.motionChoice);
   choices.forEach(btn => btn.addEventListener("click", chooseTheme));
-  return () => choices.forEach(btn => btn.removeEventListener("click", chooseTheme));
+  motionChoices.forEach(btn => btn.addEventListener("click", chooseMotion));
+  return () => { choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); };
 }
 
 let activeIndex, cleanupPreferences, themeCord;
@@ -52,9 +57,10 @@ export function renderNavigation() {
   const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   preferences = createPreferencesController({
     root: document.documentElement,
-    onChange: ({ theme, resolvedTheme }) => {
+    onChange: ({ theme, resolvedTheme, motion }) => {
       themeCord?.setChecked(resolvedTheme === "dark");
       index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
+      index.querySelectorAll("[data-motion-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
       document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
     }
   });
