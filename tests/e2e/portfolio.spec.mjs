@@ -151,7 +151,7 @@ test("Notes inherits the Selected Work editorial-list interaction", async ({ pag
   if (!canHover) return;
   await rows.first().hover();
   await expect(rows.nth(1)).toHaveCSS("opacity", "1");
-  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
+  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "500");
   await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
 });
 
@@ -268,7 +268,7 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rivo).toHaveCSS("opacity", "1");
   await expect(rows.first()).toHaveCSS("opacity", "1");
   await expect(rows.last()).toHaveCSS("opacity", "1");
-  await expect(rivo.locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
+  await expect(rivo.locator(".editorial-index__title")).toHaveCSS("font-weight", "500");
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 

@@ -16,9 +16,11 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- BIZ UDPMincho: display headlines and case-study statements.
-- Schibsted Grotesk: body copy, navigation and interface text.
-- Josefin Sans: compact uppercase labels only.
+- Besley 400/500: display headlines and case-study statements.
+- Uncut Sans 400/500: body copy, navigation and interface text.
+- The responsive scale follows Jacobsen's restrained hierarchy: 12px labels,
+  14–16px UI and body text, 18–30px section headings, and 36–60px only for
+  primary editorial statements.
 - Primary display headings use the shared 12-column container rather than a
   character-count measure. At wide desktop sizes they resolve to one or two
   lines and never extend beyond the grid.

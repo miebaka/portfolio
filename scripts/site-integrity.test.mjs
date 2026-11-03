@@ -203,9 +203,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"BIZ UDPMincho"/);
-  assert.match(css, /font-family:\s*"Schibsted Grotesk"/);
-  assert.match(css, /font-family:\s*"Josefin Sans"/);
+  assert.match(css, /font-family:\s*"Besley"/);
+  assert.match(css, /font-family:\s*"Uncut Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
     const value = match[1];
