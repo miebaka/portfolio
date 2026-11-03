@@ -5,7 +5,6 @@ const baseURL = "http://127.0.0.1:4173";
 export default defineConfig({
   testDir: "./tests",
   outputDir: "test-results",
-  snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{-projectName}{ext}",
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
@@ -15,14 +14,7 @@ export default defineConfig({
   reporter: process.env.CI
     ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]]
     : [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]],
-  expect: {
-    timeout: 10_000,
-    toHaveScreenshot: {
-      animations: "disabled",
-      caret: "hide",
-      maxDiffPixelRatio: 0.002,
-    },
-  },
+  expect: { timeout: 10_000 },
   use: {
     baseURL,
     browserName: "chromium",
