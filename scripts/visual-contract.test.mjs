@@ -26,6 +26,7 @@ function visibleText(html) {
     .replaceAll("&rsquo;", "’")
     .replaceAll("&#8217;", "’")
     .replaceAll("&#x2019;", "’")
+    .replaceAll("&amp;", "&")
     .replace(/\s+/g, " ");
 }
 

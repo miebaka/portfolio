@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createIndexController } from "../js/core/navigation.js";
 import { renderIndexMarkup } from "../js/render/navigation.js";
 import { navigation } from "../data/navigation.js";
+import { renderFooter } from "../js/render/footer.js";
 
 class Element extends EventTarget {
   constructor(document) {
@@ -86,4 +87,20 @@ test("Index has the complete registry, named preferences, contact and only a con
   assert.match(html, /aria-labelledby="site-index-title"/); assert.match(html, /mailto:test@example.com/);
   assert.match(html, /Theme/); assert.doesNotMatch(html, /download/);
   assert.match(renderIndexMarkup({ site: { cv: { href: "assets/cv.pdf", label: "Download CV", mimeType: "application/pdf", sizeLabel: "120 KB" } } }), /download[^>]*>Download CV/);
+});
+
+test("footer social links announce new tabs", () => {
+  const previousDocument = globalThis.document;
+  const mount = { className: "", innerHTML: "" };
+  globalThis.document = {
+    body: { dataset: { page: "home" } },
+    querySelector: selector => selector === '[data-mount="footer"]' ? mount : null
+  };
+  try {
+    renderFooter();
+    assert.match(mount.innerHTML, /LinkedIn<span class="sr-only"> \(opens in a new tab\)<\/span>/);
+    assert.match(mount.innerHTML, /target="_blank" rel="noopener noreferrer"/);
+  } finally {
+    globalThis.document = previousDocument;
+  }
 });

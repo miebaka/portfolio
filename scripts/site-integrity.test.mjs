@@ -20,6 +20,19 @@ test("homepage proof precedes biography in the source and built document", async
   }
 });
 
+test("homepage hero and listening fallback remain useful without JavaScript", async () => {
+  for (const directory of [root, dist]) {
+    const html = await readFile(join(directory, "index.html"), "utf8");
+    const hero = html.match(/<h1 id="hero-title"[^>]*>([\s\S]*?)<\/h1>/)?.[0] || "";
+    assert.doesNotMatch(hero, /aria-label|aria-hidden/);
+    assert.match(hero, /I design brands, build useful things/);
+    assert.match(hero, /ask a lot of questions/);
+    const listening = html.match(/<div class="home-profile__listening"[\s\S]*?<\/div>/)?.[0] || "";
+    assert.match(listening, /last\.fm\/user\/miebaka/);
+    assert.match(listening, /See what Miebaka has been playing/);
+  }
+});
+
 test("homepage keeps the approved section order without the retired practice-standard interstitial", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
@@ -370,7 +383,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title" aria-label="I design brands, build useful things & ask a lot of questions\.">/);
+  assert.match(home, /<h1 id="hero-title"><span class="home-landing__line">I design brands, build useful things<\/span>/);
+  assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   assert.match(services, /data-mount="capabilities"/);
   assert.match(projects, /querySelectorAll\('\.work-flick__item'\)/);
   const title = writing.indexOf('writing-item__title');
@@ -437,7 +451,9 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
-  assert.match(await readFile(join(dist, "index.html"), "utf8"), /I design brands, build useful things & ask a lot of questions\./);
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  assert.match(home, /I design brands, build useful things/);
+  assert.match(home, /&amp; ask a lot of questions\./);
   assert.doesNotMatch(await readFile(join(root, "js", "render", "projects.js"), "utf8"), /work-flick__veil/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /Coming soon/);

@@ -4,6 +4,7 @@ import { SITE } from "../../data/site.js";
 import { MOUNT } from "../core/contract.js";
 
 function buildChip(container) {
+  container.replaceChildren();
   const chip = document.createElement("a");
   chip.className = "now-playing";
   chip.href = "https://www.last.fm/user/" + encodeURIComponent(SITE.lastfmUser);
@@ -14,7 +15,7 @@ function buildChip(container) {
   chip.innerHTML =
     '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
     '<span class="now-playing__copy"><span class="now-playing__track">Que Linda — DJ Habias</span></span>' +
-    '';
+    '<span class="sr-only"> (opens in a new tab)</span>';
   chip.dataset.live = "false";
   container.appendChild(chip);
   return chip;
