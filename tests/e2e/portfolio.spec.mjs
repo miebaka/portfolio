@@ -266,8 +266,8 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rows).toHaveCount(3);
   await rivo.hover();
   await expect(rivo).toHaveCSS("opacity", "1");
-  await expect(rows.first()).toHaveCSS("opacity", "0.28");
-  await expect(rows.last()).toHaveCSS("opacity", "0.28");
+  await expect(rows.first()).toHaveCSS("opacity", "1");
+  await expect(rows.last()).toHaveCSS("opacity", "1");
   await expect(rivo.locator(".editorial-index__title")).toHaveCSS("font-weight", "700");
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
