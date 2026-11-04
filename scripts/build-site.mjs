@@ -98,7 +98,7 @@ function renderShell(source, href) {
   const links = placement => routes.filter(route => route.includeIn.includes(placement))
     .map(route => `        <a href="${base}${esc(route.href)}">${esc(route.label)}</a>`).join("\n");
   let rendered = source
-    .replace(/(<link rel="preload" as="font"[^>]+UncutSans-Regular\.woff2" crossorigin>)/, `<link rel="preload" as="font" type="font/woff2" href="${base}assets/fonts/FacultyGlyphic-Regular.woff2" crossorigin>\n  $1`)
+    .replace(/(<link rel="preload" as="font"[^>]+GoogleSansFlex-Regular\.ttf" crossorigin>)/, `<link rel="preload" as="font" type="font/ttf" href="${base}assets/fonts/Brygada1918-Regular.ttf" crossorigin>\n  $1`)
     .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
     .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');

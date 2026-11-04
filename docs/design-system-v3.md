@@ -8,7 +8,7 @@ The portfolio makes the decision underneath each project visible. Editorial rest
 
 | Layer | Rule |
 | --- | --- |
-| Typography | Faculty Glyphic gives display and heading roles an editorial voice; Uncut Sans carries body, navigation, interface and compact uppercase label text. |
+| Typography | Brygada 1918 gives display roles an editorial voice; Google Sans Flex carries body and headings; Josefin Sans handles compact uppercase labels. |
 | Colour | Ultramarine (`#002080`) is the identity anchor. Air, paper and midnight provide the light/dark field; the blue ramp supports hierarchy, and coral is reserved for focused interaction. Dark mode remaps semantic roles rather than individual components. |
 | Spacing | 8px base rhythm. Fluid section spacing resolves to named steps. |
 | Shape | Square editorial controls and image frames. Shape follows function rather than decoration. |
@@ -20,6 +20,12 @@ set by grid columns, not `ch` values, so wide viewports use the available space
 without producing arbitrary three-line compositions. At 1440px and above, a
 primary heading should occupy no more than two lines and remain inside the
 container edges.
+
+The canonical desktop frame is 1800px wide with 84px outer margins, twelve
+114px columns and eleven 24px gutters. The resulting 1632px content width is a
+hard maximum; full-bleed fields may carry colour, but content and media do not
+cross the grid edges. Type follows the Figma roles: 10.9/12.5/14px labels,
+14/19.2px body, 24/48px headings, and 48/64/88/136px display.
 
 ## Components
 

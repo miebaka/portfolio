@@ -203,8 +203,9 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Faculty Glyphic"/);
-  assert.match(css, /font-family:\s*"Uncut Sans"/);
+  assert.match(css, /font-family:\s*"Brygada 1918"/);
+  assert.match(css, /font-family:\s*"Google Sans Flex"/);
+  assert.match(css, /font-family:\s*"Josefin Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
     const value = match[1];
@@ -269,7 +270,9 @@ test("rejected homepage language cannot return unnoticed", async () => {
     "Three decisions. Three systems.",
     "From the first question to the final file."
   ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
-  assert.match(html, /Brand &amp; visual designer · Lagos, Nigeria · Available for select projects/);
+  assert.match(html, /Brand &amp; visual designer · Lagos, Nigeria/);
+  assert.match(html, /Available for select projects/);
+  assert.match(html, /data-lagos-time/);
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
   assert.match(html, /Since 2017/);
 });
@@ -289,7 +292,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
-  assert.match(css, /\.home-page \.client-marquee\{[^}]*width:calc\(100% \+ 2 \* var\(--home-gutter\)\)[^}]*margin-inline:calc\(-1 \* var\(--home-gutter\)\)[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
+  assert.match(css, /\.home-page \.client-marquee\{[^}]*width:100%[^}]*margin-inline:0[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
+  assert.match(css, /--content:102rem/);
   assert.match(css, /\.home-page \.marquee__item img\{[^}]*max-width:25\.5rem[^}]*height:calc\(5\.25rem \* var\(--logo-scale,1\)\)/);
   assert.match(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);

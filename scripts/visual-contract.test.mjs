@@ -45,15 +45,14 @@ test("approved visual contract remains intact", async () => {
   }
 
   // Borges draws the inherited signature; Material Symbols is an icon font.
-  // The three editorial text roles must keep their approved assignments. Body
-  // and label intentionally share Uncut Sans, so only two text families ship.
+  // The three editorial text roles must keep their approved assignments.
   const roleFonts = ["display", "body", "label"].map(role => {
     const match = css.match(new RegExp(`--${role}:\\s*"([^"]+)"`));
     assert.ok(match, `missing --${role} typography role`);
     return match[1];
   });
   assert.deepEqual(roleFonts, contract.fonts);
-  assert.equal(new Set(roleFonts).size, 2);
+  assert.equal(new Set(roleFonts).size, 3);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");

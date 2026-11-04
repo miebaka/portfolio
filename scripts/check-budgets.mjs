@@ -23,7 +23,7 @@ const homepageMedia = unique(initialImages).reduce((sum, file) => sum + statSync
 const shaderIsland = gzipSync(readFileSync(resolve(dist, "assets/runtime/shader-gradient.js"))).byteLength;
 const fontFiles = unique([...readFileSync(resolve(dist, "styles/main.css"), "utf8").matchAll(/url\(["']?\.\.\/assets\/fonts\/([^"')]+)["']?\)/giu)].map(match => `assets/fonts/${match[1]}`));
 const fontBytes = gzipBytes(fontFiles);
-const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/FacultyGlyphic-Regular.woff2"))).byteLength;
+const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/Brygada1918-Regular.ttf"))).byteLength;
 
 function assertBudget(label, actual, budget) {
   const display = bytes => `${(bytes / 1024).toFixed(1)} KiB`;

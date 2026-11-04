@@ -3,7 +3,7 @@
 .nav-fallback{display:flex;gap:var(--s2);padding:var(--s2) var(--page)}
 .has-js .nav-fallback{display:none}
 .site-nav{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--line);height:var(--nav-h);background:var(--comp-nav-bg);backdrop-filter:blur(18px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sys-color-on-surface) 9%,transparent);border:0}
-.site-nav__inner{height:100%;display:grid;align-items:center;gap:var(--s2);grid-template-columns:auto minmax(12rem,1fr) auto auto;max-width:none;padding-left:max(var(--page),var(--safe-left));padding-right:max(var(--page),var(--safe-right))}
+.site-nav__inner{height:100%;width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto;display:grid;align-items:center;gap:var(--s2);grid-template-columns:auto minmax(12rem,1fr) auto auto;padding-left:var(--safe-left);padding-right:var(--safe-right)}
 .site-nav__brand{display:grid;place-items:center;min-width:2.75rem;min-height:2.75rem;transition:transform 140ms var(--ease-standard),color 180ms var(--ease-standard),background-color 180ms var(--ease-standard);width:auto;height:auto;gap:.8rem;justify-self:start;color:var(--ink)}
 .nav-logo{width:1.75rem;height:1.75rem;flex:0 0 auto}
 :root[data-theme="dark"] .nav-logo{filter:invert(1)}

@@ -16,11 +16,13 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Faculty Glyphic 400: display headlines and case-study statements.
-- Uncut Sans 400/500: body copy, navigation and interface text.
-- The responsive scale follows Jacobsen's restrained hierarchy: 12px labels,
-  14–16px UI and body text, 18–30px section headings, and 36–60px only for
-  primary editorial statements.
+- Brygada 1918 400: display headlines and case-study statements.
+- Google Sans Flex 400/500: body copy, navigation and interface text.
+- Josefin Sans 600: compact labels, navigation and metadata.
+- The responsive scale follows the approved Figma roles: 10.9/12.5/14px
+  labels, 14/19.2px body copy, 24/48px headings, and 48/64/88/136px display.
+- The shared 1800px reference grid has 84px outer margins, 12 columns and
+  24px gutters. Its 1632px content width is the maximum at wider viewports.
 - Primary display headings use the shared 12-column container rather than a
   character-count measure. At wide desktop sizes they resolve to one or two
   lines and never extend beyond the grid.
