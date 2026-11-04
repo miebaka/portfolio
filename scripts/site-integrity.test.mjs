@@ -203,7 +203,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Besley"/);
+  assert.match(css, /font-family:\s*"Faculty Glyphic"/);
   assert.match(css, /font-family:\s*"Uncut Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -315,8 +315,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-cord-mode>Print/);
   assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
-  assert.match(css, /--home-section-gap:clamp\(8rem,10\.5vw,12rem\)/);
-  assert.match(css, /--home-inner-gap:clamp\(5rem,7\.5vw,8rem\)/);
+  assert.match(css, /--home-section-gap:clamp\(6\.5rem,8\.5vw,9\.5rem\)/);
+  assert.match(css, /--home-inner-gap:clamp\(4rem,6vw,6\.5rem\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);
   assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
@@ -519,4 +519,11 @@ test("retired source systems cannot return unnoticed", async () => {
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
   assert.equal((styles.match(/@import/g) || []).length, 3);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
+});
+
+test("every published case chapter can reveal and reduced motion stays readable", async () => {
+  const reveals = await readFile(join(root, "js", "core", "editorial-reveals.js"), "utf8");
+  assert.match(reveals, /\.case-page \.case-chapter/);
+  assert.match(reveals, /prefers-reduced-motion: reduce/);
+  assert.doesNotMatch(reveals, /\.case-page--tedx \.case-chapter/);
 });

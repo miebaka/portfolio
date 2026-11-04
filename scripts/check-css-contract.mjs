@@ -54,7 +54,7 @@ reject(/transition-property\s*:[^;}]*\ball\b/i.test(all), "transition-property: 
 reject(/(?:^|[\s:,])ease-in(?:[\s,;)]|$)/m.test(all.replaceAll("--ease-in-out-ui", "--allowed-ease")), "bare ease-in is prohibited");
 reject(/body\[data-page=/.test(css["foundations.css"] + css["components-v4.css"]), "route selectors belong in pages-v4.css");
 reject(/(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(|color\s*\()/i.test(css["components-v4.css"] + css["pages-v4.css"]), "raw colours belong in foundation token declarations");
-reject(/font(?:-family)?\s*:[^;}]*["']?(?:Besley|Uncut Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
+reject(/font(?:-family)?\s*:[^;}]*["']?(?:Faculty Glyphic|Uncut Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
 reject(/will-change\s*:\s*(?!auto)/i.test(all.replace(/\.client-marquee\.is-running \.client-marquee__track\{will-change:transform/g, "")), "will-change must be measured and active-state scoped");
 reject(/\bV(?:5|6|7|8|9|10|11|12|13)\b|historical\s+(?:override|layer)|override\s+strat/i.test(all), "historical version/override strata are prohibited");
 

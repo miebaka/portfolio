@@ -1,8 +1,8 @@
 /* Rare-page editorial reveals. Motion explains authored process and biography. */
-export function initEditorialReveals({ document: doc = document, IntersectionObserver: Observer = globalThis.IntersectionObserver } = {}) {
-  const roots = [...doc.querySelectorAll("[data-editorial-reveal], .case-page--tedx .case-chapter")];
+export function initEditorialReveals({ document: doc = document, window: win = globalThis.window, IntersectionObserver: Observer = globalThis.IntersectionObserver } = {}) {
+  const roots = [...doc.querySelectorAll("[data-editorial-reveal], .case-page .case-chapter")];
   if (!roots.length) return null;
-  if (!Observer) {
+  if (!Observer || win?.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
     roots.forEach(root => root.classList.add("is-revealed"));
     return { destroy() {} };
   }

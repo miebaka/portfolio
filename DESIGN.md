@@ -16,7 +16,7 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Besley 400/500: display headlines and case-study statements.
+- Faculty Glyphic 400: display headlines and case-study statements.
 - Uncut Sans 400/500: body copy, navigation and interface text.
 - The responsive scale follows Jacobsen's restrained hierarchy: 12px labels,
   14–16px UI and body text, 18–30px section headings, and 36–60px only for
