@@ -135,11 +135,12 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("Experiments ships an art-only spatial shell and the retired route points to it", async () => {
+test("Experiments ships a full-screen tunnel shell and the retired route points to it", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
-  assert.match(experiments, />Drag or Scroll To Explore<\/p>/);
-  assert.doesNotMatch(experiments, /<h1|Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
+  assert.match(experiments, /<h1>Experiments<\/h1>/);
+  assert.match(experiments, />Enter the archive<\/p>/);
+  assert.doesNotMatch(experiments, /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
 
   const playground = await readFile(join(dist, "community.html"), "utf8");
   assert.match(playground, /<h1[^>]*>Experiments have moved\.<\/h1>/);
@@ -184,7 +185,7 @@ test("every production page has essential metadata and one heading", async () =>
     assert.match(html, /viewport-fit=cover/i, file);
     assert.match(html, /interactive-widget=resizes-content/i, file);
     assert.equal((html.match(/<meta name="theme-color"/gi) || []).length, 2, file);
-    assert.equal((html.match(/<h1\b/gi) || []).length, file.endsWith("explorations.html") ? 0 : 1, file);
+    assert.equal((html.match(/<h1\b/gi) || []).length, 1, file);
   }
 });
 
@@ -203,7 +204,6 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Brygada 1918"/);
   assert.match(css, /font-family:\s*"Google Sans Flex"/);
   assert.match(css, /font-family:\s*"Josefin Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
@@ -270,9 +270,7 @@ test("rejected homepage language cannot return unnoticed", async () => {
     "Three decisions. Three systems.",
     "From the first question to the final file."
   ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
-  assert.match(html, /Brand &amp; visual designer · Lagos, Nigeria/);
-  assert.match(html, /Available for select projects/);
-  assert.match(html, /data-lagos-time/);
+  assert.doesNotMatch(html, /Available for select projects|data-lagos-time/);
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
   assert.match(html, /Since 2017/);
 });

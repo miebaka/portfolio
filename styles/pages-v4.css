@@ -611,3 +611,86 @@ body .case-chapter__copy{position:relative}body .case-chapter__copy::before{cont
 @media(max-width:48rem){body[data-page]::after{display:none}body[data-page="home"] .home-landing h1{font-size:clamp(3.2rem,15vw,5.5rem);line-height:.9}.home-page .home-landing__meta{display:grid;color:var(--ref-paper);font-size:var(--type-label-s);letter-spacing:.16em;text-shadow:0 1px 1rem var(--ref-midnight)}.home-landing__status{justify-content:space-between;white-space:normal}.case-chapter h2{font-size:clamp(1.875rem,8vw,3rem)}}
 @media(hover:hover) and (pointer:fine){.editorial-index__row:hover::before{transform:scaleY(1)}body .editorial-index__row:hover{color:var(--project-ink,var(--paper))}body .editorial-index__row:hover :is(.editorial-index__meta,.editorial-index__description,time,.writing-item__meta){color:inherit}.editorial-index__row:hover .home-project-list__visual{transform:rotate(-2deg) scale(1.08);clip-path:inset(0)}.case-shot:hover img{transform:scale(1.025)}}
 @media(max-width:48rem){body.home-page .home-landing h1{font-size:clamp(3.2rem,15vw,5.5rem);line-height:.9;max-width:none}body.home-page .home-landing__inner{padding-bottom:calc(7.5rem + var(--safe-bottom))}}
+
+/* 2026-11 editorial reset — full column edges, Google Sans Flex, spatial thresholds. */
+body[data-page="home"] .home-landing__inner{padding-bottom:clamp(9rem,16vh,12rem)}
+body[data-page="home"] .home-landing h1{overflow:visible;font-size:clamp(3.5rem,7vw,7.9rem);line-height:.9;letter-spacing:-.065em;text-wrap:balance}
+body .editorial-index__row{padding-inline:0}
+
+/* About: a full-viewport particle threshold followed by a direct editorial document. */
+body[data-page="about"]{background:var(--paper);color:var(--ink)}
+.about-particle{position:relative;isolation:isolate;height:calc(100svh - var(--nav-h));min-height:38rem;overflow:hidden;background:var(--ref-midnight);color:var(--ref-paper)}
+.about-particle__canvas{position:absolute;z-index:2;inset:0;width:100%;height:100%;pointer-events:none}
+.about-particle__fallback{position:absolute;z-index:1;inset:0 0 0 48%;overflow:hidden;opacity:.26;filter:grayscale(1) contrast(1.15)}
+.about-particle__fallback::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ref-midnight),transparent 45%)}
+.about-particle__fallback img{width:100%;height:100%;object-fit:cover}
+.about-particle__copy{position:relative;z-index:3;height:100%;display:grid;align-content:end;padding-bottom:clamp(4rem,8vh,7rem)}
+.about-particle__copy .eyebrow{margin-bottom:clamp(2rem,5vh,4rem);font:600 var(--type-label-m)/1 var(--label);letter-spacing:.28em;text-transform:uppercase}
+.about-particle__copy h1{max-width:none;font:500 clamp(3.75rem,7.6vw,8.5rem)/.88 var(--display);letter-spacing:-.07em;text-wrap:balance}
+.about-particle__prompt{position:absolute;right:0;bottom:clamp(2rem,4vh,3rem);font:600 var(--type-label-s)/1 var(--label);letter-spacing:.18em;text-transform:uppercase}
+.has-js .about-particle__fallback{opacity:.12}
+.about-editorial{background:var(--paper)}
+.about-editorial__intro,.about-editorial__section{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap);padding-block:clamp(7rem,11vw,12rem);border-bottom:1px solid var(--line)}
+.about-editorial h2{grid-column:1/4;font:600 var(--type-label-m)/1.2 var(--label);letter-spacing:.25em;text-transform:uppercase}
+.about-editorial__copy{grid-column:4/10;display:grid;gap:1.5rem}
+.about-editorial__copy p{font-size:clamp(1.5rem,2.35vw,2.7rem);line-height:1.12;letter-spacing:-.035em;text-wrap:pretty}
+.about-editorial__copy--large{grid-column:4/-1}
+.about-editorial__copy--large p{font-size:clamp(2rem,3.65vw,4.1rem);line-height:1.04}
+.about-editorial__facts{grid-column:10/-1;display:grid;align-content:start;gap:2rem;margin:0}
+.about-editorial__facts div{padding-top:.75rem;border-top:1px solid var(--line)}
+.about-editorial__facts dt{font:600 var(--type-label-s)/1 var(--label);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.about-editorial__facts dd{margin:.65rem 0 0;line-height:1.5}
+.about-principles{grid-column:4/-1;margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.about-principles li{display:grid;grid-template-columns:1fr 4fr 5fr;gap:var(--grid-gap);padding-block:2.25rem;border-bottom:1px solid var(--line)}
+.about-principles span{font:600 var(--type-label-s)/1 var(--label);letter-spacing:.12em}
+.about-principles h3{font:500 clamp(1.5rem,2.2vw,2.5rem)/1.08 var(--display);letter-spacing:-.035em}
+.about-principles p{max-width:45ch;color:var(--muted);line-height:1.65}
+.about-editorial__section [data-mount="capabilities"]{grid-column:4/-1}
+.about-editorial__closing{padding-block:clamp(7rem,11vw,12rem)}
+.about-editorial__closing p{max-width:18ch;font:500 clamp(2.8rem,5.6vw,6.2rem)/.96 var(--display);letter-spacing:-.055em}
+.about-editorial__closing a{color:var(--accent);text-underline-offset:.12em}
+
+/* Cases: direct project title, compact facts, then image-led chapters. */
+.case-page .case-opening{min-height:auto;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap);padding-block:clamp(8rem,12vw,13rem) clamp(4rem,7vw,7rem)}
+.case-page .case-back{grid-column:1/-1;margin:0 0 clamp(4rem,8vw,8rem)}
+.case-page .case-opening h1{grid-column:1/9;font:500 clamp(4rem,8.5vw,9.5rem)/.86 var(--display);letter-spacing:-.075em}
+.case-page .case-opening__summary{grid-column:1/8;margin-top:clamp(2rem,4vw,4rem);font-size:clamp(1.5rem,2.2vw,2.5rem);line-height:1.2;letter-spacing:-.03em}
+.case-page .case-opening .case-facts{grid-column:9/-1;grid-row:3;align-self:start;margin-top:clamp(2rem,4vw,4rem);grid-template-columns:repeat(2,minmax(0,1fr))}
+.case-page .case-shot--hero,.case-page .case-shot--band,.case-page .case-pair,.case-page .case-gallery{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}
+.case-page .case-lede{display:block;padding-block:clamp(5rem,9vw,9rem)}
+.case-page .case-lede__main{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap)}
+.case-page .case-lede__intro{grid-column:1/9;font-size:clamp(1.8rem,3.25vw,3.7rem);line-height:1.08;letter-spacing:-.04em;text-wrap:pretty}
+.case-page .case-index{grid-column:1/-1;margin-top:clamp(3rem,6vw,6rem);border-top:1px solid var(--line)}
+.case-page .case-chapter{padding-block:clamp(6rem,10vw,11rem);background:transparent!important}
+.case-page .case-chapter__copy{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap)}
+.case-page .case-chapter__label{grid-column:1/3;font:600 var(--type-label-s)/1.2 var(--label);letter-spacing:.18em;text-transform:uppercase}
+.case-page .case-chapter__copy h2{grid-column:3/8;max-width:none;font-size:clamp(2.5rem,4.6vw,5.2rem);line-height:.98;letter-spacing:-.055em}
+.case-page .case-chapter__body{grid-column:9/-1}
+.case-page .case-chapter__media{margin-top:clamp(4rem,7vw,7rem)}
+.case-page .case-shot img{display:block}
+
+/* Experiments: full-screen fold tunnel, with every card present in the DOM. */
+.experiments-spatial{perspective:1200px;background:var(--ref-midnight);color:var(--ref-paper)}
+.experiments-spatial::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--ref-ultramarine) 72%,transparent),transparent 62%)}
+.experiments-spatial__heading{position:fixed;z-index:20;top:calc(var(--nav-h) + 1.5rem);left:var(--grid-edge);right:var(--grid-edge);display:flex;align-items:baseline;justify-content:space-between;pointer-events:none}
+.experiments-spatial__heading h1{font:500 clamp(2rem,3vw,3.5rem)/1 var(--display);letter-spacing:-.05em}
+.experiments-spatial__heading p{font:600 var(--type-label-s)/1 var(--label);letter-spacing:.15em;text-transform:uppercase}
+.experiments-spatial__viewport{touch-action:none}
+.experiments-spatial__stage{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d}
+.experiment-tunnel__card{position:absolute;z-index:calc(20 - var(--distance));left:50%;top:50%;width:min(62vw,62rem);height:min(66vh,46rem);margin:0;padding:0;overflow:hidden;border:0;background:var(--ref-neutral-96);color:var(--ref-paper);box-shadow:0 3rem 8rem color-mix(in srgb,var(--ref-black) 35%,transparent);transform:translate3d(calc(-50% + var(--offset) * 48vw),-50%,calc(var(--distance) * -260px)) rotateY(calc(var(--offset) * -28deg)) scale(calc(1 - var(--distance) * .08));opacity:calc(1 - var(--distance) * .18);transition:filter 180ms ease;transform-style:preserve-3d}
+.experiment-tunnel__card :is(img,video){width:100%;height:100%;object-fit:cover;pointer-events:none}
+.experiment-tunnel__card span{position:absolute;inset:auto 0 0;padding:5rem 1.5rem 1.5rem;background:linear-gradient(transparent,color-mix(in srgb,var(--ref-black) 72%,transparent));font:600 var(--type-label-m)/1 var(--label);letter-spacing:.15em;text-transform:uppercase;text-align:left}
+.experiment-tunnel__card[aria-hidden="true"]{visibility:hidden}
+.experiment-tunnel__card:focus-visible{outline:3px solid var(--ref-paper);outline-offset:6px}
+.experiments-spatial__hint{color:var(--ref-paper);border-color:color-mix(in srgb,var(--ref-paper) 25%,transparent);background:color-mix(in srgb,var(--ref-midnight) 60%,transparent)}
+
+@media(max-width:48rem){
+  body[data-page="home"] .home-landing__inner{padding-bottom:calc(9rem + var(--safe-bottom))}
+  body[data-page="home"] .home-landing h1{font-size:clamp(3rem,14.5vw,5rem);line-height:.9}
+  .about-particle__fallback{inset:0;opacity:.2}.about-particle__copy h1{font-size:clamp(3.2rem,14vw,5rem)}.about-particle__prompt{left:0;right:auto}
+  .about-editorial__intro,.about-editorial__section{grid-template-columns:1fr}.about-editorial h2,.about-editorial__copy,.about-editorial__copy--large,.about-editorial__facts,.about-principles,.about-editorial__section [data-mount="capabilities"]{grid-column:1}.about-editorial__copy p,.about-editorial__copy--large p{font-size:clamp(1.6rem,7.2vw,2.5rem)}.about-principles li{grid-template-columns:auto 1fr}.about-principles p{grid-column:2}
+  .case-page .case-opening{grid-template-columns:1fr}.case-page .case-back,.case-page .case-opening h1,.case-page .case-opening__summary,.case-page .case-opening .case-facts{grid-column:1;grid-row:auto}.case-page .case-opening h1{font-size:clamp(3.5rem,17vw,6rem)}.case-page .case-opening .case-facts{grid-template-columns:1fr 1fr}.case-page .case-lede__main,.case-page .case-chapter__copy{grid-template-columns:1fr}.case-page .case-lede__intro,.case-page .case-index,.case-page .case-chapter__label,.case-page .case-chapter__copy h2,.case-page .case-chapter__body{grid-column:1}.case-page .case-chapter__copy h2{font-size:clamp(2.5rem,11vw,4rem)}
+  .experiments-spatial__heading{align-items:flex-start;gap:1rem}.experiments-spatial__heading p{max-width:12rem;text-align:right}.experiment-tunnel__card{width:78vw;height:58vh;transform:translate3d(calc(-50% + var(--offset) * 62vw),-50%,calc(var(--distance) * -180px)) rotateY(calc(var(--offset) * -22deg)) scale(calc(1 - var(--distance) * .08))}
+}
+
+@media(prefers-reduced-motion:reduce){.about-particle__canvas{display:none}.about-particle__fallback{opacity:.32}.experiment-tunnel__card{transition:none}}

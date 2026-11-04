@@ -18,7 +18,7 @@ for (const [name, path, selector] of [
   ["Work", "/work.html", ".editorial-index--archive"],
   ["Notes", "/playground.html", ".editorial-index--notes"]
 ]) {
-  test(`${name} uses the shared padded AAA editorial-index interaction`, async ({ page }) => {
+  test(`${name} uses the shared full-column AAA editorial-index interaction`, async ({ page }) => {
     await page.goto(path);
     const rows = page.locator(`${selector} .editorial-index__row`);
     await expect(rows.first()).toBeVisible();
@@ -26,7 +26,10 @@ for (const [name, path, selector] of [
       const style = getComputedStyle(element);
       return [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(parseFloat);
     });
-    expect(padding.every(value => value >= 16)).toBe(true);
+    expect(padding[0]).toBeGreaterThanOrEqual(16);
+    expect(padding[2]).toBeGreaterThanOrEqual(16);
+    expect(padding[1]).toBe(0);
+    expect(padding[3]).toBe(0);
 
     await rows.first().focus();
     await expect(rows.first()).toHaveCSS("opacity", "1");

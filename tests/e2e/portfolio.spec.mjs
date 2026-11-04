@@ -34,7 +34,7 @@ for (const route of routes) {
     const response = await page.goto(route);
     await settle(page);
     expect(response?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(route === "/explorations.html" ? 0 : 1);
+    await expect(page.locator("h1")).toHaveCount(1);
     const overflow = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
     expect(overflow.scroll, `horizontal overflow on ${route}`).toBeLessThanOrEqual(overflow.client + 1);
     expect(failedLocalResources).toEqual([]);
@@ -104,7 +104,8 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await page.goto("/index.html");
   await page.getByRole("link", { name: "TEDx RSU" }).click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("global event system");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx RSU");
+  await expect(page.locator(".case-opening__summary")).toContainText("global event system");
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
@@ -272,11 +273,11 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 
-test("Experiments exposes an art-only spatial canvas", async ({ page }) => {
+test("Experiments exposes a full-screen tunnel", async ({ page }) => {
   await page.goto("/explorations.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
-  await expect(page.getByText("Drag or Scroll To Explore", { exact: true })).toBeVisible();
-  await expect(page.locator(".experiment-object")).toHaveCount(7);
+  await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
+  await expect(page.locator(".experiment-tunnel__card")).toHaveCount(7);
   await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Footer" })).toBeAttached();
 });
@@ -284,7 +285,7 @@ test("Experiments exposes an art-only spatial canvas", async ({ page }) => {
 test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
   await expect(page).toHaveURL(/\/explorations\.html$/);
-  await expect(page.getByText("Drag or Scroll To Explore", { exact: true })).toBeVisible();
+  await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
 });
 
 test("stored theme preference persists", async ({ page }) => {

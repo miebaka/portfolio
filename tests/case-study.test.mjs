@@ -65,10 +65,10 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   const html = markup();
   assert.doesNotMatch(html, /case-locked|aria-disabled/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
-  const opening = html.indexOf('class="case-statement"');
+  const opening = html.indexOf('class="case-opening container"');
   const hero = html.indexOf('case-shot--hero');
   const facts = html.indexOf('<dl class="case-facts">');
-  assert.ok(opening >= 0 && opening < hero && hero < facts);
+  assert.ok(opening >= 0 && opening < facts && facts < hero);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
   assert.match(html, /tedx-rsu-campus-banner-1080\.jpg/);
   assert.match(html, /<dt>My role<\/dt><dd>Identity design, creative direction and print<\/dd>/);

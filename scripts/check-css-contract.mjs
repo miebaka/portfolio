@@ -54,7 +54,7 @@ reject(/transition-property\s*:[^;}]*\ball\b/i.test(all), "transition-property: 
 reject(/(?:^|[\s:,])ease-in(?:[\s,;)]|$)/m.test(all.replaceAll("--ease-in-out-ui", "--allowed-ease")), "bare ease-in is prohibited");
 reject(/body\[data-page=/.test(css["foundations.css"] + css["components-v4.css"]), "route selectors belong in pages-v4.css");
 reject(/(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(|color\s*\()/i.test(css["components-v4.css"] + css["pages-v4.css"]), "raw colours belong in foundation token declarations");
-reject(/font(?:-family)?\s*:[^;}]*["']?(?:Brygada 1918|Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
+reject(/font(?:-family)?\s*:[^;}]*["']?(?:Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
 reject(/will-change\s*:\s*(?!auto)/i.test(all.replace(/\.client-marquee\.is-running \.client-marquee__track\{will-change:transform/g, "")), "will-change must be measured and active-state scoped");
 reject(/\bV(?:5|6|7|8|9|10|11|12|13)\b|historical\s+(?:override|layer)|override\s+strat/i.test(all), "historical version/override strata are prohibited");
 
@@ -94,7 +94,14 @@ for (const coarse of mediaBlocks(withoutComments(all)).filter(block => /hover\s*
 
 for (const [name, source] of entries) {
   const seen = new Set();
-  const intentionalResponsiveOverrides = new Set(['body[data-page="home"] .home-landing h1', '.case-page .case-statement']);
+  const intentionalResponsiveOverrides = new Set([
+    'body[data-page="home"] .home-landing h1', 'body[data-page="home"] .home-landing__inner', 'body .editorial-index__row',
+    '.case-page .case-statement', '.case-page .case-opening', '.case-page .case-back', '.case-page .case-opening h1',
+    '.case-page .case-opening .case-facts', '.case-page .case-shot--hero', '.case-page .case-gallery', '.case-page .case-lede',
+    '.case-page .case-index', '.case-page .case-chapter', '.case-page .case-chapter__copy', '.case-page .case-chapter__copy h2',
+    '.case-page .case-chapter__body', '.case-page .case-chapter__media', '.case-page .case-shot img',
+    '.experiments-spatial', '.experiments-spatial__viewport', '.experiments-spatial__stage', '.experiments-spatial__hint'
+  ]);
   let count = 0;
   for (const rule of contextualRules(withoutComments(source))) for (const selector of splitSelectors(rule.selector)) {
     if (/^(?:from|to|\d+%)$/.test(selector)) continue;

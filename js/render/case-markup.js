@@ -37,7 +37,7 @@ function factsBlock(study, project) {
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><p class="case-chapter__label">${esc(label)}</p><h2 id="${token(id)}-title">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -65,7 +65,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1 class="case-statement">${esc(study.tagline)}</h1></header>${heroMarkup}<div class="case-lede container">${factsBlock(study, project)}<div class="case-lede__main">${index}</div></div>${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];

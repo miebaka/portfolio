@@ -16,7 +16,7 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Brygada 1918 400: display headlines and case-study statements.
+- Google Sans Flex 400/500: body copy, display headlines and case-study statements.
 - Google Sans Flex 400/500: body copy, navigation and interface text.
 - Josefin Sans 600: compact labels, navigation and metadata.
 - The responsive scale follows the approved Figma roles: 10.9/12.5/14px
