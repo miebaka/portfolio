@@ -110,11 +110,12 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
   const entries = siteConfig.experience;
   assert.ok(entries.length > 0);
   for (const entry of entries) {
-    assert.deepEqual(Object.keys(entry), ["organisation", "role", "period", "contribution"]);
+    assert.deepEqual(Object.keys(entry), ["organisation", "role", "period", "startYear", "endYear", "contribution"]);
     assert.doesNotMatch(entry.contribution, /\b\d[\d,+.%]*\b/);
   }
   const markup = renderExperienceLedger(entries);
-  assert.equal((markup.match(/class="experience-ledger__item"/g) || []).length, entries.length);
-  assert.doesNotMatch(markup, /<details|timeline|card/i);
+  assert.equal((markup.match(/class="experience-ruler__item"/g) || []).length, entries.length);
+  assert.match(markup, /experience-ruler__scale/);
+  assert.doesNotMatch(markup, /<details|card/i);
 });
 

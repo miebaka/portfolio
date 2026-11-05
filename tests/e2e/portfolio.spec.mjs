@@ -102,9 +102,9 @@ test("desktop display headings use the shared grid without forced three-line mea
 
 test("Home → TEDx → next project preserves the intended journey", async ({ page }) => {
   await page.goto("/index.html");
-  await page.getByRole("link", { name: "TEDx RSU" }).click();
+  await page.getByRole("link", { name: "TEDx Rivers State University" }).click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx RSU");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx Rivers State University");
   await expect(page.locator(".case-opening__summary")).toContainText("global event system");
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
@@ -152,7 +152,7 @@ test("Notes inherits the Selected Work editorial-list interaction", async ({ pag
   if (!canHover) return;
   await rows.first().hover();
   await expect(rows.nth(1)).toHaveCSS("opacity", "1");
-  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "400");
+  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "200");
   await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
 });
 

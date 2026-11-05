@@ -33,7 +33,7 @@ export function initArticleNavigation() {
     const nav = document.createElement("nav");
     nav.className = "article-toc";
     nav.setAttribute("aria-label", "On this page");
-    nav.innerHTML = '<p>On this page</p><ol>' + headings.map((heading, index) => '<li><a href="#' + heading.id + '"><span>' + String(index + 1).padStart(2, "0") + '</span>' + heading.textContent + '</a></li>').join("") + "</ol>";
+    nav.innerHTML = '<p>On this page</p><ol>' + headings.map((heading, index) => '<li><a href="#' + heading.id + '"><span class="article-toc__index" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><strong class="article-toc__title">' + heading.textContent + '</strong></a></li>').join("") + "</ol>";
     wrapper.append(nav, article);
   }
 

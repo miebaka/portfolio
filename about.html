@@ -57,16 +57,14 @@
   </header>
 
   <main id="main" class="about-page">
-    <section class="about-particle" aria-labelledby="about-particle-title" data-about-particle>
-      <canvas class="about-particle__canvas" data-about-particle-canvas aria-hidden="true"></canvas>
-      <picture class="about-particle__fallback">
+    <section class="about-hero container" aria-labelledby="about-title">
+      <div class="about-hero__copy">
+        <p>About Miebaka</p>
+        <h1 id="about-title">I ask until the idea is clear. Then I make it useful.</h1>
+      </div>
+      <picture class="about-hero__media">
         <img src="assets/images/miebaka-joshua.webp" width="1200" height="1500" alt="Miebaka Joshua, brand and visual designer, photographed in Lagos." loading="eager" fetchpriority="high">
       </picture>
-      <div class="about-particle__copy container">
-        <p class="eyebrow">About Miebaka</p>
-        <h1 id="about-particle-title">I ask until the idea is clear. Then I make it useful.</h1>
-        <p class="about-particle__prompt">Move to disturb the field · Scroll to meet me</p>
-      </div>
     </section>
 
     <div class="about-editorial">
@@ -82,6 +80,11 @@
           <div><dt>Working since</dt><dd>2017</dd></div>
           <div><dt>Elsewhere</dt><dd><a href="https://linkedin.com/in/miebakajoshua">LinkedIn</a> · <a href="https://www.instagram.com/sheikmoujabaa">Instagram</a></dd></div>
         </dl>
+      </section>
+
+      <section class="about-experience container" aria-labelledby="about-experience-title">
+        <h2 id="about-experience-title">Work experience</h2>
+        <div data-mount="experience"></div>
       </section>
 
       <section class="about-editorial__section container" aria-labelledby="about-work-title">

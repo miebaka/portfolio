@@ -16,36 +16,48 @@ export const siteConfig = {
       "organisation": "Rise",
       "role": "Marketing Designer",
       "period": "Jul 2025 - Present",
+      "startYear": 2025,
+      "endYear": 2026,
       "contribution": "One brand, six marketing teams: daily campaign work without letting the system lose its shape."
     },
     {
       "organisation": "Anakle",
       "role": "Creative Design Executive",
       "period": "2025",
+      "startYear": 2025,
+      "endYear": 2025,
       "contribution": "Moved between campaign and identity briefs, finding the useful idea before building its visual world."
     },
     {
       "organisation": "Rivo Studios",
       "role": "Visual Designer",
       "period": "2024",
+      "startYear": 2024,
+      "endYear": 2024,
       "contribution": "Built the identity from a softened wordmark into guidelines, print and day-to-day applications."
     },
     {
       "organisation": "Grey Finance",
       "role": "Brand Designer",
       "period": "Oct 2022 - Feb 2023",
+      "startYear": 2022,
+      "endYear": 2023,
       "contribution": "Turned cross-border finance launches, campaigns and editorial information into clear visual stories."
     },
     {
       "organisation": "WellaHealth Technologies",
       "role": "Brand Designer",
       "period": "May - Sep 2022",
+      "startYear": 2022,
+      "endYear": 2022,
       "contribution": "Designed brand, campaign and product-education work where healthcare information had to stay clear."
     },
     {
       "organisation": "Riv-TechCreek",
       "role": "Generalist Designer",
       "period": "2018 - 2021",
+      "startYear": 2018,
+      "endYear": 2021,
       "contribution": "The generalist years: brand, print and digital briefs for a range of clients."
     }
   ],

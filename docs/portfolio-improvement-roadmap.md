@@ -25,7 +25,7 @@ Absence is not failure. A case may publish without all four types, but it must n
 
 | Project | Decision | System | Survival | Adoption | Publication state | Next evidence action |
 | --- | --- | --- | --- | --- | --- | --- |
-| TEDx RSU | Strong: `Pause…` is documented as the organising idea. | Strong: mark, ripple, palette, type and prompts are shown. | Strong: social, programme, merchandise, campus signage and stage applications are documented. | Partial: campus and event-day photographs prove public encounter, not audience impact. | Published | Keep outcome language descriptive. Add a credited event/team source only if one is available. |
+| TEDx Rivers State University | Strong: `Pause…` is documented as the organising idea. | Strong: mark, ripple, palette, type and prompts are shown. | Strong: social, programme, merchandise, campus signage and stage applications are documented. | Partial: campus and event-day photographs prove public encounter, not audience impact. | Published | Keep outcome language descriptive. Add a credited event/team source only if one is available. |
 | Rivo Studio | Strong: access is the stated organising idea. | Strong: wordmark, palette, guidelines and application rules are present. | Moderate: small-scale legibility and multiple applications are shown as visualisations. | Unverified: delivery is documented; continued team use is not. | Published as a delivered identity case | Keep application visualisations labelled and add real-use or handoff evidence if it becomes available. |
 | ChopBox | Strong: appetite and warmth govern the stated decisions. | Strong: lockups, palette, type and packaging language are present. | Moderate: packaging, uniform, campaign and out-of-home visualisations test the system but do not prove production. | Unverified: continued team use is not claimed. | Published as an evidence-bounded identity case | Add production or team-use evidence only if a verified source becomes available. |
 | Poster A Week | Strong: one verse becomes one visual argument. | Moderate: the weekly constraint is clear, but the visible body of work is absent. | Unverified. | Unverified. | Draft | Curate a representative set of finished posters before exposing the route. |
@@ -58,7 +58,7 @@ Exit condition: every project has a publication state and a concrete evidence ac
 
 Status: **implemented with explicit evidence boundaries**
 
-- Keep TEDx RSU as the published standard.
+- Keep TEDx Rivers State University as the published standard.
 - Keep Rivo's presentation applications explicitly labelled and leave adoption unclaimed until real-use or handoff evidence is available.
 - Keep ChopBox's presentation applications explicitly labelled; do not imply production or continued team use.
 - Keep unfinished routes honest rather than dressing drafts as complete cases.

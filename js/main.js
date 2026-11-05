@@ -21,7 +21,6 @@ import { initCopyEmail } from "./core/copy-email.js";
 import { initEditorialReveals } from "./core/editorial-reveals.js";
 import { initSpectacle } from "./core/spectacle.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
-import { initAboutParticle } from "./core/about-particle.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
@@ -54,7 +53,6 @@ run("editorial reveals", initEditorialReveals);
 run("spectacle system", initSpectacle);
 if (page === "writing" && has(".article-body")) run("article navigation", initArticleNavigation);
 if (page === "explorations") run("experiments spatial archive", () => { void initExperimentsSpatial(); });
-if (page === "about") run("about particle field", initAboutParticle);
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);

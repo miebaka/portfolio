@@ -41,7 +41,6 @@ export function renderWriting() {
                 '<h3 class="writing-item__title editorial-index__title">' + esc(a.title) + "</h3>" +
               "</span>" +
               '<span class="writing-item__trailing editorial-index__meta">' +
-                (a.summary ? '<span class="writing-item__summary editorial-index__description">' + esc(a.summary) + "</span>" : "") +
                 '<span class="writing-item__meta">' +
                 (date ? '<span class="writing-item__date">' + esc(date) + "</span>" : "") +
                 (a.readingTime ? '<span class="writing-item__time">' + esc(a.readingTime) + "</span>" : "") +

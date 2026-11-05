@@ -199,7 +199,7 @@ export const caseStudies = {
     "status": "published"
   },
   "tedx-rsu": {
-    "title": "TEDx RSU",
+    "title": "TEDx Rivers State University",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
     "hero": "tedx-rsu-campus-banner",
     "facts": {
@@ -320,7 +320,7 @@ export const caseStudies = {
         "src": "tedx-rsu-merch",
         "w": 2800,
         "h": 4200,
-        "alt": "A person wearing headphones and a white hoodie with the pause theme mark and TEDx RSU lockup.",
+        "alt": "A person wearing headphones and a white hoodie with the pause theme mark and TEDx Rivers State University lockup.",
         "caption": "The hoodie application places the theme mark alongside the TEDx Rivers State University lockup.",
         "loading": "lazy"
       },

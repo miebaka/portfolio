@@ -291,7 +291,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
   for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
-  assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
+  assert.doesNotMatch(projects, /proof\?\.find\(item => item\.type === "decision"\)|home-project-list__decision/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
   assert.match(css, /\.home-page \.client-marquee\{[^}]*width:100%[^}]*margin-inline:0[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
@@ -362,9 +362,10 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
-  const summary = writing.indexOf('writing-item__summary');
   const meta = writing.indexOf('writing-item__meta');
-  assert.ok(title > -1 && title < summary && summary < meta);
+  assert.ok(title > -1 && title < meta);
+  assert.doesNotMatch(writing, /writing-item__summary|editorial-index__description/);
+  assert.doesNotMatch(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /editorial-index__description|home-project-list__decision/);
 });
 
 test("built service fallbacks contain one complete shared record per service", async () => {

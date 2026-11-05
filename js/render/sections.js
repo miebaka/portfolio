@@ -64,9 +64,17 @@ export function renderCapabilities() {
 }
 
 export function renderExperienceLedger(entries = []) {
-  return '<ol class="experience-ledger">' + entries.map(entry =>
-    '<li class="experience-ledger__item"><div class="experience-ledger__heading"><p class="experience-ledger__organisation">' + esc(entry.organisation) + '</p><p class="experience-ledger__period">' + esc(entry.period) + '</p></div><p class="experience-ledger__role">' + esc(entry.role) + '</p><p class="experience-ledger__contribution">' + esc(entry.contribution) + '</p></li>'
-  ).join("") + '</ol>';
+  const firstYear = Math.min(...entries.map(entry => entry.startYear));
+  const lastYear = Math.max(new Date().getFullYear(), ...entries.map(entry => entry.endYear));
+  const scale = Math.max(1, lastYear - firstYear + 1);
+  const years = Array.from({ length: scale }, (_, index) => firstYear + index);
+  const ruler = '<div class="experience-ruler__scale" aria-hidden="true">' + years.map(year => '<span>' + year + '</span>').join('') + '</div>';
+  const jobs = entries.map(entry => {
+    const start = ((entry.startYear - firstYear) / scale) * 100;
+    const span = ((Math.max(entry.endYear, entry.startYear) - entry.startYear + 1) / scale) * 100;
+    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__track"><span></span></div><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div></li>';
+  }).join('');
+  return '<div class="experience-ruler">' + ruler + '<ol class="experience-ruler__jobs">' + jobs + '</ol></div>';
 }
 
 export function renderCvMarkup(cv, base = "") {

@@ -16,13 +16,11 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
   const selected = ["tedx-rsu", "rivo", "chopbox"].map(slug => {
     const project = bySlug.get(slug);
     const published = project?.status === "published" && studies?.[slug]?.status === "published";
-    const decision = studies?.[slug]?.proof?.find(item => item.type === "decision")?.statement;
-    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", decision, cover: project?.cover || "" };
+    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "" };
   });
   return renderEditorialIndex(selected.map(project => {
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
-    const trailing = '<span class="home-project-list__meta editorial-index__meta"><span class="home-project-list__decision editorial-index__description">' + esc(project.decision) + '</span></span>';
-    const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual + trailing;
+    const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual;
     return { href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
   }), { variant: 'work', ordered: true });
 }

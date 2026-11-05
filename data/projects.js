@@ -22,7 +22,7 @@ export const projects = [
   },
   {
     "slug": "tedx-rsu",
-    "title": "TEDx RSU",
+    "title": "TEDx Rivers State University",
     "category": "Event",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
     "tags": [
