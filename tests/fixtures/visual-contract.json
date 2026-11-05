@@ -1,6 +1,6 @@
 {
   "baselineCommit": "54dcc41",
-  "fonts": ["Television Sans", "Google Sans Flex", "Josefin Sans"],
+  "fonts": ["Google Sans Flex", "Josefin Sans"],
   "tokens": { "--ref-ultramarine": "#002080", "--ref-paper": "#f8f9fc" },
   "protectedCopy": ["I design brands, build useful things & ask a lot of questions.", "Hi, I’m Miebaka"],
   "forbiddenCopy": ["Independent practice", "Position 01", "Three decisions. Three systems."],

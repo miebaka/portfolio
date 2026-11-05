@@ -1,13 +1,9 @@
 @font-face{font-family:"Google Sans Flex";src:url("../assets/fonts/GoogleSansFlex-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Google Sans Flex";src:url("../assets/fonts/GoogleSansFlex-Medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:"Television Sans";src:url("../assets/fonts/TelevisionSans-Extralight.otf") format("opentype");font-weight:200;font-style:normal;font-display:swap}
-@font-face{font-family:"Television Sans";src:url("../assets/fonts/TelevisionSans-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Television Sans";src:url("../assets/fonts/TelevisionSans-Medium.otf") format("opentype");font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:"Josefin Sans";src:url("../assets/fonts/JosefinSans-SemiBold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:swap}
-@font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
-  --type-label-s:.68125rem;--type-label-m:.78125rem;--type-label-l:.875rem;--type-nav-mobile:.625rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;
+  --type-label-s:.8125rem;--type-label-m:.875rem;--type-label-l:1rem;--type-nav-mobile:.75rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;
   --font-size-sm:var(--type-label-m);--font-size-base:var(--type-body-m);--font-size-md:clamp(1.125rem,.23vw + 1.07rem,1.25rem);--font-size-lg:var(--type-heading-s);--font-size-xl:clamp(1.5rem,.68vw + 1.33rem,1.875rem);--font-size-2xl:clamp(2.25rem,3.18vw + 1.45rem,var(--type-display-m));
   --ease-out-cubic:cubic-bezier(.215,.61,.355,1);--ease-in-out-cubic:cubic-bezier(.645,.045,.355,1);--transition-fast:150ms var(--ease-out-cubic);--transition-base:300ms var(--ease-out-cubic);
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
@@ -27,7 +23,7 @@
   --bg:var(--sys-color-surface);--surface:var(--sys-color-surface-container-low);--text:var(--sys-color-on-surface);--text-muted:var(--sys-color-on-surface-variant);--link:var(--sys-color-primary);--field:var(--ref-ultramarine);--on-field:var(--ref-paper);
   --action-bg:var(--sys-color-action);--action-fg:var(--sys-color-on-action);--focus:var(--sys-color-focus);--border:var(--sys-color-outline-variant);--border-strong:var(--sys-color-outline);--selection-bg:var(--sys-color-selection);--selection-fg:var(--sys-color-on-selection);
   --success:var(--sys-color-secondary);--info:var(--sys-color-primary);--warning:var(--sys-color-tertiary);--error:var(--sys-color-error);--starlo:var(--text);--paper:var(--bg);--paper-2:var(--surface);--ink:var(--text);--muted:var(--text-muted);--line:var(--border);--accent:var(--primary);--accent-soft:var(--primary-soft);--signal:var(--sys-color-tertiary);--inverse:var(--field);--inverse-ink:var(--on-field);--home-shader-ink:var(--ref-midnight);--home-shader-muted:var(--ref-neutral-30);--home-shader-line:rgb(7 17 43/.28);--hero-text-scrim:color-mix(in srgb,var(--ref-paper) 90%,transparent);
-  --display:"Television Sans","Google Sans Flex",sans-serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif;--signature:"Borges",monospace;--icon:"Material Symbols Outlined";--dur-proof-fade:700ms;--dur-proof-shift:800ms;--dur-proof-weight:260ms;
+  --display:"Google Sans Flex",sans-serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif;--signature:"Google Sans Flex",sans-serif;--icon:"Material Symbols Outlined";--dur-proof-fade:700ms;--dur-proof-shift:800ms;--dur-proof-weight:260ms;
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
   --page:clamp(1.25rem,4.667vw,5.25rem);--content:102rem;--grid-gap:clamp(1rem,1.333vw,1.5rem);--grid-edge:max(var(--page),calc((100vw - var(--content))/2));--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);
   --motion-press:120ms;--motion-hover:160ms;--motion-panel-in:220ms;--motion-panel-out:160ms;--ease-out-ui:cubic-bezier(.25,1,.5,1);--ease-in-out-ui:cubic-bezier(.65,0,.35,1);
@@ -76,6 +72,10 @@ p{max-width:44rem;text-wrap:pretty}
 main{min-height:70vh;text-align:left;position:relative;z-index:1}
 footer{position:relative;z-index:1}
 .js-reveal [data-spectacle-reveal]{transform:translate3d(0,3rem,0);clip-path:inset(0 0 16%);transition:transform 300ms var(--ease-standard),clip-path 300ms var(--ease-standard)}
+.js-reveal [data-motion-role="comparison"]{transform:translate3d(-2rem,0,0);clip-path:inset(0 8% 0 0)}
+.js-reveal [data-motion-role="expansion"]{transform:scale(.985);clip-path:inset(8%)}
+.js-reveal [data-motion-role="reveal"]{transform:none;clip-path:inset(0 0 100%)}
+.js-reveal [data-motion-role="closure"]{transform:translate3d(0,1.5rem,0);clip-path:inset(0)}
 .js-reveal [data-spectacle-reveal].is-visible{transform:none;clip-path:inset(0)}
 header[data-mount="nav"]{min-height:var(--nav-h)}
 .container{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto}
@@ -85,7 +85,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 .stack>h2{margin-top:var(--s8);font-size:clamp(1.8rem,3vw,3rem)}
 .stack>h2:first-child{margin-top:0}
 .measure-hero{max-width:none}
-.meta{font:500 .68rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.meta{font:500 .8125rem/1.3 var(--label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .material-symbols-outlined{font:400 1.15rem/1 var(--icon);font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}
 }

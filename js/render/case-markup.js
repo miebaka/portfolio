@@ -11,7 +11,7 @@ function shot(media, kind, base, plate) {
   const fallback = widths.includes(1080) ? 1080 : widths.at(-1);
   const srcset = ext => widths.map(width => `${stem}-${width}.${ext} ${width}w`).join(", ");
   const sizes = kind === "pair" || kind === "gallery" ? "(max-width: 64rem) calc(100vw - 2.5rem), 43vw" : kind === "upright" ? "(max-width: 52.5rem) calc(100vw - 2.5rem), 50rem" : "(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 100rem) 90vw, 92rem";
-  const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
+  const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="eager"';
   const caption = media.caption ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>` : "";
   return `<figure class="case-shot case-shot--${kind}"><picture><source type="image/avif" srcset="${srcset("avif")}" sizes="${sizes}"><source type="image/webp" srcset="${srcset("webp")}" sizes="${sizes}"><img src="${stem}-${fallback}.jpg" alt="${esc(media.alt || media.label)}" width="${media.w}" height="${media.h}"${loading} decoding="async"></picture>${caption}</figure>`;
 }

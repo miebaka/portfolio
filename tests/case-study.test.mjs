@@ -137,7 +137,7 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
   }
   const hero = images.find(image => image.includes("tedx-rsu-campus-banner-"));
   assert.match(hero, /loading="eager" fetchpriority="high"/);
-  assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="lazy"')));
+  assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="eager"')));
 });
 
 test("the next published project is an active destination", () => {

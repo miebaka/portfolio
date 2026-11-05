@@ -15,11 +15,11 @@ Refine the existing static portfolio without changing its information architectu
 
 ## Typography contract
 
-- Headings: Television Sans only, with ExtraLight at weight 200, Regular at 400, and Medium at 500. No heading may exceed 500.
+- Headings and body: Google Sans Flex at weights 400 and 500. No heading may exceed 500.
 - Labels: Josefin Sans only.
 - Interface and body copy: Google Sans Flex only.
 - The existing signature artwork is an authored graphic treatment and remains outside the text-role contract.
-- Remove the Television Sans Bold face and the monospace Now Playing token from the shipped CSS contract.
+- Keep the shipped typography to Google Sans Flex and Josefin Sans; Material Symbols remains an icon utility.
 
 ## Interaction design
 

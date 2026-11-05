@@ -51,6 +51,10 @@ export function initArticleNavigation() {
   progress.className = "article-progress";
   progress.setAttribute("aria-hidden", "true");
   document.body.append(progress);
+  if (CSS.supports("animation-timeline: scroll()")) {
+    progress.classList.add("article-progress--native");
+    return;
+  }
   let frame = 0;
   const update = () => {
     frame = 0;

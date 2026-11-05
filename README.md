@@ -48,7 +48,7 @@ Portfolio/
 │   └── utilities/dom.js    # escapeHTML · mount · basePath
 └── assets/
     ├── experiments/        # Dedicated image/video source folder + generated manifest
-    ├── fonts/              # Self-hosted woff/woff2 (3 type roles)
+    ├── fonts/              # Self-hosted files (2 authored type families)
     └── images/             # Portrait, logo (SVG), client logos
 ```
 

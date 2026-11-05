@@ -1,6 +1,11 @@
 export function initSpectacle({ doc = document, win = window, Observer = globalThis.IntersectionObserver } = {}) {
   const root = doc.documentElement;
-  const revealTargets = [...doc.querySelectorAll("main section:not(.home-landing), .case-shot, .project-archive__item")];
+  const revealTargets = [...doc.querySelectorAll("main section:not(.home-landing), .project-archive__item")];
+  const roles = new Map([
+    [".swiss-selected", "introduction"], [".home-profile", "comparison"],
+    [".home-capabilities", "expansion"], [".journey", "reveal"], [".home-close", "closure"]
+  ]);
+  roles.forEach((role, selector) => doc.querySelector(selector)?.setAttribute("data-motion-role", role));
   const staticPresentation = win.location?.search.includes("visual-static=1") || win.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   if (staticPresentation) revealTargets.forEach(node => node.classList.add("is-visible"));
 
@@ -19,13 +24,5 @@ export function initSpectacle({ doc = document, win = window, Observer = globalT
     chapter.querySelector(".case-chapter__copy")?.setAttribute("data-chapter", String(index + 1).padStart(2, "0"));
   });
 
-  let frame = 0;
-  const paint = () => {
-    frame = 0;
-    root.style.setProperty("--hero-shift", String(Math.min(1, win.scrollY / Math.max(1, win.innerHeight))));
-  };
-  const onScroll = () => { if (!frame) frame = win.requestAnimationFrame(paint); };
-  win.addEventListener("scroll", onScroll, { passive: true });
-  paint();
-  return { destroy() { observer?.disconnect(); root.classList.remove("js-reveal"); win.removeEventListener("scroll", onScroll); if (frame) win.cancelAnimationFrame(frame); } };
+  return { destroy() { observer?.disconnect(); root.classList.remove("js-reveal"); } };
 }

@@ -8,7 +8,7 @@ The portfolio makes the decision underneath each project visible. Editorial rest
 
 | Layer | Rule |
 | --- | --- |
-| Typography | Television Sans carries every heading; Google Sans Flex carries body copy; Josefin Sans handles compact uppercase labels. |
+| Typography | Google Sans Flex carries display and body copy; Josefin Sans handles compact uppercase labels. |
 | Colour | Ultramarine (`#002080`) is the identity anchor. Air, paper and midnight provide the light/dark field; the blue ramp supports hierarchy, and coral is reserved for focused interaction. Dark mode remaps semantic roles rather than individual components. |
 | Spacing | 8px base rhythm. Fluid section spacing resolves to named steps. |
 | Shape | Square editorial controls and image frames. Shape follows function rather than decoration. |

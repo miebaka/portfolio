@@ -57,6 +57,12 @@ export function createServiceSwatches(root) {
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
+  if (document.body.dataset.page === "home") {
+    el.className = "process-sequence";
+    el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
+    createServiceSwatches(el);
+    return;
+  }
   el.className = "home-services";
   el.innerHTML = '<div class="home-services__list">' + SITE.capabilities.map(service =>
     '<details class="home-service"><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p></div></div></details>'

@@ -44,8 +44,8 @@ export function renderNavigation() {
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button>' +
     '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + '</nav>' +
     '<div class="site-nav__themes"><span class="theme-cord__prompt" aria-hidden="true">Pull</span><button class="theme-cord" type="button" role="switch" aria-checked="false" aria-label="Switch to Screen mode"><svg viewBox="0 0 68 58" width="68" height="58" aria-hidden="true"><path class="theme-cord__line" data-cord-line fill="none"/><path data-cord-hit fill="none" stroke="transparent" stroke-width="18"/><g class="theme-cord__bead" data-cord-bead><circle r="10" fill="transparent"/><rect x="-4" y="-1" width="8" height="13" rx="4"/></g></svg><span class="theme-cord__mode" data-cord-mode>Print</span></button></div></div>';
-  const mobileLinks = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map((route, index) =>
-    '<a class="mobile-tabbar__link" href="' + base + safeURL(route.href) + '" aria-label="' + esc(route.label) + '"' + (route.key === page ? ' aria-current="page"' : '') + '><span class="mobile-tabbar__mark" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><span>' + esc(route.label) + '</span></a>'
+  const mobileLinks = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route =>
+    '<a class="mobile-tabbar__link" href="' + base + safeURL(route.href) + '" aria-label="' + esc(route.label) + '"' + (route.key === page ? ' aria-current="page"' : '') + '><span>' + esc(route.label) + '</span></a>'
   ).join("");
   document.body.insertAdjacentHTML("beforeend", '<nav class="mobile-tabbar" aria-label="Primary mobile navigation">' + mobileLinks + '</nav>');
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
