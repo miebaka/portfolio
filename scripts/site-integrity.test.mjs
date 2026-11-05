@@ -53,9 +53,12 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
-  assert.equal((html.match(/<a\b/g) || []).length, 3);
+  assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
   assert.match(html, /class="project-archive__progress"/);
+  assert.match(html, /class="project-archive__collections"/);
+  assert.match(html, /href="explorations\.html"/);
+  assert.match(html, /href="playground\.html"/);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
 });
 
@@ -205,6 +208,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
   assert.match(css, /font-family:\s*"Google Sans Flex"/);
+  assert.match(css, /font-family:\s*"Television Sans"/);
   assert.match(css, /font-family:\s*"Josefin Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {

@@ -45,14 +45,14 @@ test("approved visual contract remains intact", async () => {
   }
 
   // Borges draws the inherited signature; Material Symbols is an icon font.
-  // Display and body intentionally share Google Sans Flex; labels retain Josefin Sans.
+  // Television Sans carries display type; Google Sans Flex and Josefin Sans keep body and labels distinct.
   const roleFonts = ["display", "body", "label"].map(role => {
     const match = css.match(new RegExp(`--${role}:\\s*"([^"]+)"`));
     assert.ok(match, `missing --${role} typography role`);
     return match[1];
   });
-  assert.deepEqual(roleFonts, ["Google Sans Flex", "Google Sans Flex", "Josefin Sans"]);
-  assert.equal(new Set(roleFonts).size, 2);
+  assert.deepEqual(roleFonts, ["Television Sans", "Google Sans Flex", "Josefin Sans"]);
+  assert.equal(new Set(roleFonts).size, 3);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");
@@ -60,7 +60,7 @@ test("approved visual contract remains intact", async () => {
   });
   const allowedFonts = new Set([...contract.fonts, "Borges", "Material Symbols Outlined"]);
   for (const font of contract.fonts) assert.ok(definedFonts.includes(font), `${font} is not bundled`);
-  for (const font of definedFonts) assert.ok(allowedFonts.has(font), `unapproved fourth typeface: ${font}`);
+  for (const font of definedFonts) assert.ok(allowedFonts.has(font), `unapproved typeface: ${font}`);
 
   const home = await readFile(join(dist, "index.html"), "utf8");
   const homeText = visibleText(home);

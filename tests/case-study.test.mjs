@@ -75,6 +75,10 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
   assert.match(html, /<dt>Deliverables<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
+  assert.match(html, /Evidence trail/);
+  assert.match(html, /From governing decision to work in use/);
+  assert.match(html, /href="#decision"/);
+  assert.match(html, /href="#applications"/);
 });
 
 test("Rivo publishes as a confident identity case with a concrete delivery result", () => {
@@ -86,7 +90,7 @@ test("Rivo publishes as a confident identity case with a concrete delivery resul
   assert.match(markup, /delivered identity included guidelines, stationery and a practical application system/i);
   assert.match(markup, /A focused system built for everyday use/);
   assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
-  assert.doesNotMatch(markup, /What this case can prove|Bounded evidence|do not prove production|later team adoption/i);
+  assert.match(markup, /Application visualisations test the system/);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
 });
 
@@ -98,7 +102,7 @@ test("ChopBox publishes as a focused application system", () => {
   assert.match(html, /does this make you hungry/i);
   assert.match(html, /Packaging, uniform, campaign and out-of-home applications/i);
   assert.match(html, /One appetite-led system across every touchpoint/i);
-  assert.doesNotMatch(html, /What this case can prove|Bounded evidence|do not prove production|does not verify/i);
+  assert.match(html, /Presentation visualisations test the system/);
 });
 
 test("the complete narrative and chapter links follow the approved sequence", () => {

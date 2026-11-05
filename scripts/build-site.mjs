@@ -156,7 +156,7 @@ for (const asset of assets) {
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
-for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf))/gi)) {
+for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf|otf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
 

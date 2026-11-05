@@ -56,7 +56,8 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
-  return publishedMarkup + progressMarkup;
+  const collectionMarkup = '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' + base + 'explorations.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' + base + 'playground.html"><span>Notes</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
+  return publishedMarkup + progressMarkup + collectionMarkup;
 }
 
 function clientItem(client) {

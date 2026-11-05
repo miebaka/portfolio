@@ -34,6 +34,31 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
+const proofLabels = {
+  decision: "Decision",
+  system: "System",
+  survival: "Survival",
+  adoption: "Encounter"
+};
+
+const proofTargets = {
+  decision: "decision",
+  system: "system",
+  survival: "applications",
+  adoption: "reflection"
+};
+
+function proofTrail(study) {
+  if (!study.proof?.length) return "";
+  const items = study.proof.map((item, index) => {
+    const label = proofLabels[item.type] || item.type;
+    const target = proofTargets[item.type] || "context";
+    const state = item.strength === "verified" ? "Documented" : "Bounded";
+    return `<li class="case-proof__item case-proof__item--${token(item.type)}"><a href="#${target}"><span class="case-proof__step" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><span class="case-proof__label">${esc(label)}</span><strong>${esc(item.statement)}</strong><span class="case-proof__state">${state}</span></a></li>`;
+  }).join("");
+  return `<section class="case-proof" aria-labelledby="case-proof-title"><div class="container"><div class="case-proof__head"><p>Evidence trail</p><h2 id="case-proof-title">From governing decision to work in use</h2></div><ol>${items}</ol></div></section>`;
+}
+
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
   const title = heading || label;
@@ -65,7 +90,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}${proofTrail(study)}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];
