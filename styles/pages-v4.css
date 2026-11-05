@@ -464,6 +464,12 @@ body[data-page="home"] .disciplines-heading{margin-bottom:var(--home-inner-gap)}
 .home-capabilities--process .home-service:has(>summary:focus-visible){color:var(--paper)}
 .home-capabilities--process .home-service:has(>summary:focus-visible) :is(.home-service__panel>p,.home-service__facts p){color:inherit}
 @media(hover:hover) and (pointer:fine){.home-capabilities--process .home-service:hover::before{transform:scaleY(1)}.home-capabilities--process .home-service:hover{color:var(--paper)}.home-capabilities--process .home-service:hover :is(.home-service__panel>p,.home-service__facts p){color:inherit}}
+.about-editorial__section .home-service{position:relative;isolation:isolate;overflow:clip}
+.about-editorial__section .home-service::before{content:"";position:absolute;z-index:-1;inset:0;background:var(--primary);transform:scaleY(0);transform-origin:bottom;transition:none}
+.about-editorial__section .home-service:has(>summary:focus-visible)::before{transform:scaleY(1)}
+.about-editorial__section .home-service:has(>summary:focus-visible){color:var(--paper)}
+.about-editorial__section .home-service:has(>summary:focus-visible) :is(.home-service__panel>p,.home-service__facts p){color:inherit}
+@media(hover:hover) and (pointer:fine){.about-editorial__section .home-service:hover::before{transform:scaleY(1)}.about-editorial__section .home-service:hover{color:var(--paper)}.about-editorial__section .home-service:hover :is(.home-service__panel>p,.home-service__facts p){color:inherit}}
 .home-capabilities--process .home-service:last-child{grid-column:1/-1}
 .home-capabilities--process .home-service summary{min-height:10rem;display:flex;justify-content:space-between;gap:2rem;padding:0;font-size:clamp(2rem,2.7vw,3rem);line-height:1.02}
 .home-capabilities--process .home-service__toggle{flex:0 0 2rem}
