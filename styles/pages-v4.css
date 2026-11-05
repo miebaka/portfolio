@@ -458,7 +458,12 @@ body[data-page="home"] .home-capabilities{margin-top:var(--home-section-gap);pad
 body[data-page="home"] .disciplines-heading{margin-bottom:var(--home-inner-gap)}
 .home-capabilities--process .disciplines-heading{margin-bottom:clamp(3rem,6vw,6rem)}
 .home-capabilities--process .home-services__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.25rem,3vw,3rem)}
-.home-capabilities--process .home-service{border:0;background:color-mix(in srgb,var(--paper-2) 82%,transparent);padding:clamp(1.5rem,3vw,3rem)}
+.home-capabilities--process .home-service{position:relative;isolation:isolate;overflow:clip;border:0;background:color-mix(in srgb,var(--paper-2) 82%,transparent);padding:clamp(1.5rem,3vw,3rem)}
+.home-capabilities--process .home-service::before{content:"";position:absolute;z-index:-1;inset:0;background:var(--primary);transform:scaleY(0);transform-origin:bottom;transition:none}
+.home-capabilities--process .home-service:has(>summary:focus-visible)::before{transform:scaleY(1)}
+.home-capabilities--process .home-service:has(>summary:focus-visible){color:var(--paper)}
+.home-capabilities--process .home-service:has(>summary:focus-visible) :is(.home-service__panel>p,.home-service__facts p){color:inherit}
+@media(hover:hover) and (pointer:fine){.home-capabilities--process .home-service:hover::before{transform:scaleY(1)}.home-capabilities--process .home-service:hover{color:var(--paper)}.home-capabilities--process .home-service:hover :is(.home-service__panel>p,.home-service__facts p){color:inherit}}
 .home-capabilities--process .home-service:last-child{grid-column:1/-1}
 .home-capabilities--process .home-service summary{min-height:10rem;display:flex;justify-content:space-between;gap:2rem;padding:0;font-size:clamp(2rem,2.7vw,3rem);line-height:1.02}
 .home-capabilities--process .home-service__toggle{flex:0 0 2rem}
