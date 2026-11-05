@@ -1,0 +1,92 @@
+[
+  {
+    "page": "404",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 0.66
+  },
+  {
+    "page": "about",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "community",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "contact",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "explorations",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "index",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "notes",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "privacy",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "work--chopbox",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "work--christian-poster-a-week",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "work--rivo",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "work--tedx-rsu",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "work",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "writing--designing-for-disability-in-nigeria",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  },
+  {
+    "page": "writing--when-the-swoosh-lost-its-soul",
+    "accessibility": 1,
+    "bestPractices": 1,
+    "seo": 1
+  }
+]

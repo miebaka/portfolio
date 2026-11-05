@@ -1,0 +1,290 @@
+
+> miebaka-joshua-portfolio@1.2.2 test
+> npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run build && npm run test:css && npm run test:intent && npm run test:integrity && npm run test:contract
+
+
+> miebaka-joshua-portfolio@1.2.2 test:content
+> npm run build:shader && node --test tests/content-schema.test.mjs
+
+
+> miebaka-joshua-portfolio@1.2.2 build:shader
+> node scripts/build-shader-gradient.mjs
+
+Built ShaderGradient React island (1323.0 KiB).
+✔ valid content returns the original value without mutation (4.426542ms)
+✔ duplicate project slugs are rejected (0.536ms)
+✔ missing project slugs and required metadata are rejected (0.224583ms)
+✔ invalid and missing publication states are rejected (0.246084ms)
+✔ published projects require a case study (1.337542ms)
+✔ published articles can use their direct writing route (0.222167ms)
+✔ media requires positive dimensions and a meaningful alternative (0.316625ms)
+✔ media source and loading priority are validated (0.14125ms)
+✔ next-project references must resolve to a public project (0.155958ms)
+✔ next cannot route a published writing project to a nonexistent case page (0.178834ms)
+✔ next cannot route an unready project without a case destination (0.105417ms)
+✔ next can link to an existing draft case destination (0.101458ms)
+✔ every public content domain rejects missing or null records (0.201875ms)
+✔ site configuration requires usable identity and contact metadata (0.242875ms)
+✔ services require exactly five complete shared records (0.290333ms)
+✔ writing requires titles summaries and valid dates (0.624625ms)
+✔ writing rejects unsafe or invalid hrefs (0.54625ms)
+✔ writing permits valid local or HTTPS article destinations (0.138208ms)
+✔ client proof requires names and valid logo metadata (0.260541ms)
+✔ client wordmarks can omit logo metadata (0.064583ms)
+✔ duplicate routes in one navigation group are rejected (0.095791ms)
+✔ canonical registry rejects duplicate keys and invalid placement metadata (0.455583ms)
+✔ registry sitemap routes require a build placement and a canonical HTTPS origin (0.219959ms)
+✔ content requires the registry and canonical origin consumed by the builder (0.256666ms)
+✔ the same route can appear in different navigation placements (0.076708ms)
+✔ invalid route traversal and unsafe URLs are rejected (0.704125ms)
+✔ published case studies require a published project (0.192208ms)
+✔ published case proof is explicit, bounded and unique (0.235041ms)
+✔ draft case narratives remain locked despite a published project listing (0.3755ms)
+✔ published case narratives render when their project is published (0.317209ms)
+✔ malformed content returns structured errors instead of throwing (0.063917ms)
+✔ invalid content fails CLI and direct build without touching previous output (134.456ms)
+✔ adding a validated root route generates its build output and sitemap entry (330.902542ms)
+▶ accepted local writing URL variants build their pathname and retain authored hrefs
+  ✔ ./writing/when-the-swoosh-lost-its-soul.html (268.380875ms)
+  ✔ writing/when-the-swoosh-lost-its-soul.html#main (276.809583ms)
+  ✔ writing/when-the-swoosh-lost-its-soul.html?source=index (272.685709ms)
+  ✔ ./writing/when-the-swoosh-lost-its-soul.html?source=index#main (265.377625ms)
+✔ accepted local writing URL variants build their pathname and retain authored hrefs (1129.206083ms)
+✔ missing build registry and origin fail with validation errors before dist changes (199.532583ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1877.214334
+
+> miebaka-joshua-portfolio@1.2.2 test:navigation
+> node --test tests/navigation.test.mjs
+
+✔ Index opens immediately for keyboard, isolates the page and focuses its first control (0.944958ms)
+✔ Tab wraps in both directions; Escape restores focus, inertness and scroll styles (0.277917ms)
+✔ repeated initialization/open/close leaves one listener and destroy removes it (0.776667ms)
+✔ close never focuses a disconnected trigger and can omit restoration (0.174083ms)
+✔ Index has the complete registry, named preferences, contact and only a configured CV (0.502292ms)
+✔ footer social links stay visually clean (0.225542ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.197167
+
+> miebaka-joshua-portfolio@1.2.2 test:case
+> node --test tests/case-study.test.mjs
+
+✔ published narratives cannot lose their proposition, hero or supported facts (5.249792ms)
+✔ published narratives reject missing, reordered, duplicated or empty chapters (1.416083ms)
+✔ published media references cannot silently disappear or duplicate a plate (2.136375ms)
+✔ published narratives need one usable next destination and allow omitted unverified credits and outcomes (0.94325ms)
+✔ active next destinations require a published project and published case (0.6385ms)
+✔ TEDx opens with its proposition, hero and supported project facts (0.950625ms)
+✔ Rivo publishes as a confident identity case with a concrete delivery result (0.257459ms)
+✔ ChopBox publishes as a focused application system (0.228083ms)
+✔ the complete narrative and chapter links follow the approved sequence (0.804875ms)
+✔ all owner media is shown once, with intrinsic dimensions, alternatives and factual captions (8.695666ms)
+✔ the next published project is an active destination (0.264291ms)
+✔ a published usable next case is linked while an unavailable case stays noninteractive (0.4275ms)
+✔ chapter rendering honours authored media references and escapes content (0.170292ms)
+✔ the built page contains the whole case before JavaScript runs (277.747334ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 395.366292
+
+> miebaka-joshua-portfolio@1.2.2 test:professional
+> node --test tests/professional-evidence.test.mjs
+
+✔ CV is either downloadable or truthfully available by request (4.927583ms)
+✔ the service system has exactly five complete shared records (0.28325ms)
+✔ Home and About expose the same progressive service source without an orphan route (3.037541ms)
+✔ service swatches support pointer and complete roving-keyboard selection with cleanup (0.350084ms)
+✔ service selection has a persistent non-colour cue (0.624333ms)
+✔ experience ledger uses one bounded contribution and no numeric outcome claims (0.828584ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.201041
+
+> miebaka-joshua-portfolio@1.2.2 test:contact-api
+> node --test tests/contact-api.test.mjs
+
+✔ validates and normalises contact fields without flattening message lines (2.006375ms)
+✔ rejects blank and oversized fields without echoing submitted values (0.210042ms)
+✔ rejects malformed email, unknown interest, control characters and invalid timing (0.117167ms)
+✔ rejects a non-object body (0.080125ms)
+▶ rejects method, content type, origin and oversized bodies
+  ✔ 405 (0.305417ms)
+  ✔ 415 (0.144625ms)
+  ✔ 403 (0.104333ms)
+  ✔ 413 (0.067084ms)
+✔ rejects method, content type, origin and oversized bodies (1.044167ms)
+✔ rejects malformed JSON and validation errors with 422 (0.259541ms)
+✔ rejects an oversized pre-parsed body without trusting Content-Length (0.12725ms)
+✔ silently accepts a honeypot submission without sending (0.14725ms)
+✔ rejects submissions completed faster than three seconds (0.123125ms)
+✔ returns 429 and Retry-After when the shared limiter rejects (0.112709ms)
+✔ accepts a valid request and never exposes the provider id (0.089375ms)
+▶ maps provider failures and timeouts to a stable 503 envelope
+  ✔ Error (0.123834ms)
+  ✔ TimeoutError (0.061833ms)
+✔ maps provider failures and timeouts to a stable 503 envelope (0.337292ms)
+✔ maps unexpected boundary failures to 500 (0.079292ms)
+✔ safe logs contain operational metadata but no submitted content (0.138959ms)
+✔ the production origin check accepts configured or true same-origin requests only (0.128584ms)
+✔ the abuse guard short-circuits traps and minimum-fill time before rate limiting (0.083084ms)
+✔ the Upstash request uses only a keyed address hash (0.4935ms)
+✔ the Resend adapter escapes HTML and keeps reply-to at the provider boundary (0.312292ms)
+✔ safeEntry drops every field outside the operational allowlist (0.073167ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 71.273584
+
+> miebaka-joshua-portfolio@1.2.2 test:contact-form
+> node --test tests/contact-form.test.mjs
+
+✔ submitContact posts JSON and returns the stable response envelope (1.098875ms)
+✔ HTML keeps a complete native email fallback when JavaScript is disabled (3.236292ms)
+✔ required message, merged descriptions and first-invalid focus (0.893167ms)
+✔ prevents duplicate submits and clears only after a 202 success (0.39175ms)
+✔ server field errors retain inputs and merge stable error descriptions (0.190583ms)
+▶ maps rate limit, provider, server and network failures without clearing values
+  ✔ Too many attempts  (0.17925ms)
+  ✔ The form is tempor (0.679834ms)
+  ✔ That didn’t send.  (0.144792ms)
+  ✔ That didn’t send.  (0.153334ms)
+  ✔ That didn’t send.  (0.155791ms)
+✔ maps rate limit, provider, server and network failures without clearing values (1.777625ms)
+✔ destroy removes handlers and aborts an in-flight request (0.170208ms)
+✔ the client timeout aborts the request and preserves the message (1.654708ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.333458
+
+> miebaka-joshua-portfolio@1.2.2 build
+> npm run validate:content && npm run build:experiments && npm run build:shader && node scripts/build-site.mjs
+
+
+> miebaka-joshua-portfolio@1.2.2 validate:content
+> node scripts/validate-content.mjs
+
+Public content validated.
+
+> miebaka-joshua-portfolio@1.2.2 build:experiments
+> node scripts/build-experiments.mjs
+
+Indexed 7 experiment assets.
+
+> miebaka-joshua-portfolio@1.2.2 build:shader
+> node scripts/build-shader-gradient.mjs
+
+Built ShaderGradient React island (1323.0 KiB).
+Built 15 HTML pages with prerendered case studies, one CSS request and 264 referenced image variants.
+
+> miebaka-joshua-portfolio@1.2.2 test:css
+> node scripts/check-css-contract.mjs
+
+foundations.css: 77 selector-context groups, 0 duplicates.
+components-v4.css: 371 selector-context groups, 0 duplicates.
+pages-v4.css: 928 selector-context groups, 0 duplicates.
+CSS contract passed (27600 gzip bytes).
+
+> miebaka-joshua-portfolio@1.2.2 test:intent
+> node --test scripts/intent-quality.test.mjs
+
+✔ design documentation names the implemented ultramarine identity (2.943875ms)
+✔ project introductions expose specific propositions rather than generic labels (0.29075ms)
+✔ every published case makes question decision system and use visible (0.181083ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.181
+
+> miebaka-joshua-portfolio@1.2.2 test:integrity
+> node --test scripts/site-integrity.test.mjs
+
+✔ homepage proof precedes biography in the source and built document (3.883208ms)
+✔ homepage hero and listening fallback remain useful without JavaScript (0.902666ms)
+✔ homepage keeps the approved section order without the retired practice-standard interstitial (0.687542ms)
+✔ Work archive separates published cases from work in progress (0.6735ms)
+✔ built Home and Work expose truthful project states without JavaScript (0.79475ms)
+✔ project hit areas are full rows (0.670125ms)
+✔ the route registry has unique destinations and supports the approved global masthead (0.574ms)
+✔ every production shell exposes the complete Index as fallback navigation (6.485625ms)
+✔ source and built footer fallbacks match the approved public navigation (121.394375ms)
+✔ registry routes build with canonical URLs and generated sitemap entries (2.028958ms)
+✔ Experiments ships a full-screen tunnel shell and the retired route points to it (0.506416ms)
+✔ project publication states are explicit (2.399667ms)
+✔ every production page has essential metadata and one heading (3.912375ms)
+✔ unfinished case studies explain their state before JavaScript runs (0.468416ms)
+✔ production CSS is bundled and dead runtime modules are absent (1.854834ms)
+✔ ultramarine identity stays within its documented visual language (0.930542ms)
+✔ theme shader backdrop preserves both authored water-plane contracts (0.992333ms)
+✔ rejected homepage language cannot return unnoticed (0.568417ms)
+✔ homepage hierarchy and motion affordances cannot regress (2.148334ms)
+✔ interactive controls include the approved Figma button states (1.339416ms)
+✔ alignment, service parity and article hierarchy stay systemic (1.11075ms)
+✔ built service fallbacks contain one complete shared record per service (0.566625ms)
+✔ production language avoids typographic dash shortcuts (4.134417ms)
+✔ Vercel configuration is valid and serves the static build (0.3585ms)
+✔ portfolio depth features are present without depending on JavaScript for content (0.215125ms)
+✔ requested language and contact details stay canonical (1.75075ms)
+✔ all local HTML assets and links resolve (12.165041ms)
+✔ CSP inventory permits every executable inline script and stages dependency removal (6.245875ms)
+✔ sitemap does not claim dates it cannot maintain (0.292ms)
+✔ public case studies do not expose metric-shaped decoration (0.105708ms)
+✔ production build excludes source and review directories (2.502125ms)
+✔ listening status uses the private server boundary and privacy copy matches network behavior (0.599792ms)
+✔ retired source systems cannot return unnoticed (0.650667ms)
+✔ every published case chapter can reveal and reduced motion stays readable (0.229333ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 246.587792
+
+> miebaka-joshua-portfolio@1.2.2 test:contract
+> node --test scripts/visual-contract.test.mjs
+
+✔ approved visual contract remains intact (13.5765ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.8225

@@ -1,0 +1,44 @@
+HEAD 444e12f9dd3fbcbff690a705787c00535f189e10
+BRANCH HTML source       15
+HTML dist       15
+CSS bytes source   153566 total
+JS bytes source   115883 total
+Raw hex occurrences       51
+Raw px occurrences      180
+Raw ms occurrences       89
+important occurrences       22
+font files
+assets/fonts/Borges-LICENSE.txt
+assets/fonts/Borges-SquarePixelRegular.woff2
+assets/fonts/FacultyGlyphic-OFL.txt
+assets/fonts/FacultyGlyphic-Regular.woff2
+assets/fonts/GoogleSansFlex-Medium.ttf
+assets/fonts/GoogleSansFlex-OFL.txt
+assets/fonts/GoogleSansFlex-Regular.ttf
+assets/fonts/JosefinSans-OFL.txt
+assets/fonts/JosefinSans-SemiBold.ttf
+assets/fonts/MaterialSymbolsOutlined-subset.ttf
+assets/fonts/TelevisionSans-Bold.otf
+assets/fonts/TelevisionSans-Extralight.otf
+assets/fonts/TelevisionSans-Medium.otf
+assets/fonts/TelevisionSans-OFL.txt
+assets/fonts/TelevisionSans-Regular.otf
+assets/fonts/UncutSans-Medium.woff2
+assets/fonts/UncutSans-OFL.txt
+assets/fonts/UncutSans-Regular.woff2
+source pages
+./404.html
+./about.html
+./community.html
+./contact.html
+./explorations.html
+./index.html
+./notes.html
+./privacy.html
+./work.html
+./work/chopbox.html
+./work/christian-poster-a-week.html
+./work/rivo.html
+./work/tedx-rsu.html
+./writing/designing-for-disability-in-nigeria.html
+./writing/when-the-swoosh-lost-its-soul.html
