@@ -7,7 +7,7 @@
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Borges";src:url("../assets/fonts/Borges-SquarePixelRegular.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
-  --type-label-s:.68125rem;--type-label-m:.78125rem;--type-label-l:.875rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;
+  --type-label-s:.68125rem;--type-label-m:.78125rem;--type-label-l:.875rem;--type-nav-mobile:.625rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;
   --font-size-sm:var(--type-label-m);--font-size-base:var(--type-body-m);--font-size-md:clamp(1.125rem,.23vw + 1.07rem,1.25rem);--font-size-lg:var(--type-heading-s);--font-size-xl:clamp(1.5rem,.68vw + 1.33rem,1.875rem);--font-size-2xl:clamp(2.25rem,3.18vw + 1.45rem,var(--type-display-m));
   --ease-out-cubic:cubic-bezier(.215,.61,.355,1);--ease-in-out-cubic:cubic-bezier(.645,.045,.355,1);--transition-fast:150ms var(--ease-out-cubic);--transition-base:300ms var(--ease-out-cubic);
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;
