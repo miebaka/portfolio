@@ -37,6 +37,8 @@ export function createServiceSwatches(root) {
   };
   const cleanups = tabs.map((tab, index) => {
     const click = () => select(index);
+    const hover = () => select(index);
+    const focus = () => select(index, { keyboard: true });
     const keydown = event => {
       let next;
       if (["ArrowRight", "ArrowDown"].includes(event.key)) next = (index + 1) % tabs.length;
@@ -48,8 +50,15 @@ export function createServiceSwatches(root) {
       select(next, { focus: true, keyboard: true });
     };
     tab.addEventListener("click", click);
+    tab.addEventListener("mouseenter", hover);
+    tab.addEventListener("focus", focus);
     tab.addEventListener("keydown", keydown);
-    return () => { tab.removeEventListener("click", click); tab.removeEventListener("keydown", keydown); };
+    return () => {
+      tab.removeEventListener("click", click);
+      tab.removeEventListener("mouseenter", hover);
+      tab.removeEventListener("focus", focus);
+      tab.removeEventListener("keydown", keydown);
+    };
   });
   return () => cleanups.forEach(cleanup => cleanup());
 }
@@ -57,10 +66,9 @@ export function createServiceSwatches(root) {
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  el.className = "home-services";
-  el.innerHTML = '<div class="home-services__list">' + SITE.capabilities.map(service =>
-    '<details class="home-service"><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></div></details>'
-  ).join('') + '</div>';
+  el.className = "home-services home-services--swatches";
+  el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
+  createServiceSwatches(el.querySelector("[data-service-swatches]"));
 }
 
 export function renderExperienceLedger(entries = []) {
@@ -72,9 +80,9 @@ export function renderExperienceLedger(entries = []) {
   const jobs = entries.map(entry => {
     const start = ((entry.startYear - firstYear) / scale) * 100;
     const span = ((Math.max(entry.endYear, entry.startYear) - entry.startYear + 1) / scale) * 100;
-    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__track"><span></span></div><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div></li>';
+    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__track" role="img" aria-label="' + esc(entry.organisation) + ', ' + entry.startYear + ' to ' + entry.endYear + '"><span aria-hidden="true"></span></div><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div></li>';
   }).join('');
-  return '<div class="experience-ruler">' + ruler + '<ol class="experience-ruler__jobs">' + jobs + '</ol></div>';
+  return '<div class="experience-ruler"><div class="experience-ruler__viewport" tabindex="0" aria-label="Work experience timeline from ' + firstYear + ' to ' + lastYear + '"><div class="experience-ruler__canvas" style="--experience-columns:' + scale + '">' + ruler + '<ol class="experience-ruler__jobs">' + jobs + '</ol></div></div></div>';
 }
 
 export function renderCvMarkup(cv, base = "") {
