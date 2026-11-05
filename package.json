@@ -5,6 +5,11 @@
   "description": "Build and image-optimization tooling for Miebaka Joshua's static portfolio.",
   "scripts": {
     "build": "npm run validate:content && npm run build:experiments && npm run build:shader && node scripts/build-site.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:html": "htmlhint \"*.html\" \"work/*.html\" \"writing/*.html\"",
+    "lint:css": "stylelint \"styles/**/*.css\"",
+    "lint": "npm run lint:html && npm run lint:css",
     "build:experiments": "node scripts/build-experiments.mjs",
     "build:shader": "node scripts/build-shader-gradient.mjs",
     "sync:fallbacks": "node scripts/sync-case-shells.mjs",
@@ -37,7 +42,11 @@
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.64.0",
     "esbuild": "^0.28.2",
-    "sharp": "^0.35.5"
+    "htmlhint": "^1.9.2",
+    "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
+    "stylelint": "^18.0.0",
+    "stylelint-config-standard": "^41.0.0"
   },
   "type": "module",
   "dependencies": {
