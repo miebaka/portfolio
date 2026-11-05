@@ -28,7 +28,7 @@ Portfolio/
 ├── work.html               # Full work index
 ├── about.html              # About page
 ├── explorations.html       # Experiments: draggable spatial archive
-├── playground.html         # Notes index
+├── notes.html         # Notes index
 ├── contact.html            # Contact page
 ├── 404.html                # Styled not-found page (noindex)
 ├── robots.txt · sitemap.xml

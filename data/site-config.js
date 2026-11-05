@@ -64,19 +64,19 @@ export const siteConfig = {
   "socials": [
     {
       "label": "Behance",
-      "href": "https://behance.net/miebaka"
+      "href": "https://www.behance.net/miebaka"
     },
     {
       "label": "LinkedIn",
-      "href": "https://linkedin.com/in/miebakajoshua"
+      "href": "https://www.linkedin.com/in/miebakajoshua"
     },
     {
       "label": "Instagram",
-      "href": "https://www.instagram.com/sheikmoujabaa"
+      "href": "https://instagram.com/sheikmoujabaa"
     },
     {
-      "label": "Twitter",
-      "href": "https://www.x.com/sheikmoujabaa"
+      "label": "X",
+      "href": "https://x.com/sheikmoujabaa"
     }
   ]
 };

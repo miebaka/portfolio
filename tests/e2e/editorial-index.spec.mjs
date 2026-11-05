@@ -16,7 +16,7 @@ const contrast = (foreground, background) => {
 for (const [name, path, selector] of [
   ["Home", "/index.html", ".editorial-index--work"],
   ["Work", "/work.html", ".editorial-index--archive"],
-  ["Notes", "/playground.html", ".editorial-index--notes"]
+  ["Notes", "/notes.html", ".editorial-index--notes"]
 ]) {
   test(`${name} uses the shared full-column AAA editorial-index interaction`, async ({ page }) => {
     await page.goto(path);
@@ -26,8 +26,13 @@ for (const [name, path, selector] of [
       const style = getComputedStyle(element);
       return [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(parseFloat);
     });
-    expect(padding[0]).toBeGreaterThanOrEqual(16);
-    expect(padding[2]).toBeGreaterThanOrEqual(16);
+    if (name === "Home") {
+      expect(padding[0]).toBe(0);
+      expect(padding[2]).toBe(0);
+    } else {
+      expect(padding[0]).toBeGreaterThanOrEqual(16);
+      expect(padding[2]).toBeGreaterThanOrEqual(16);
+    }
     expect(padding[1]).toBe(0);
     expect(padding[3]).toBe(0);
 

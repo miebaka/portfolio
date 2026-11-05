@@ -4,9 +4,9 @@ const routes = [
   { key: "work", label: "Work", href: "work.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "about", label: "About", href: "about.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "explorations", label: "Experiments", href: "explorations.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
-  { key: "writing", label: "Notes", href: "playground.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
+  { key: "writing", label: "Notes", href: "notes.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "contact", label: "Contact", href: "contact.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
-  { key: "experiments-legacy", label: "Experiments", href: "community.html", includeIn: ["build"] },
+  { key: "experiments-legacy", label: "Experiments", href: "community.html", canonicalHref: "explorations.html", includeIn: ["build"] },
   { key: "privacy", label: "Privacy", href: "privacy.html", includeIn: ["footer", "build", "sitemap"] },
   { key: "not-found", label: "Page not found", href: "404.html", includeIn: ["build"] }
 ];

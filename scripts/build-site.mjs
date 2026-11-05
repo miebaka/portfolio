@@ -85,7 +85,8 @@ const localPath = href => typeof href === "string" && !/^https:\/\//i.test(href)
   ? new URL(href, content.siteConfig.canonicalUrl).pathname.slice(1) : "";
 const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !localPath(project.href).startsWith("writing/"));
 const articleFiles = [...new Set(content.writing.map(entry => localPath(entry.href)).filter(path => path.startsWith("writing/")))];
-const canonicalUrl = href => new URL(href === "index.html" ? "" : href, content.siteConfig.canonicalUrl).href;
+const canonicalHref = href => routes.find(route => route.href === href)?.canonicalHref || href;
+const canonicalUrl = href => new URL(canonicalHref(href) === "index.html" ? "" : canonicalHref(href), content.siteConfig.canonicalUrl).href;
 const sitemapRoutes = [
   ...routes.filter(route => route.includeIn.includes("sitemap")).map(route => route.href),
   ...caseProjects.filter(project => content.caseStudies[project.slug].status === "published").map(project => `work/${project.slug}.html`),
@@ -98,6 +99,7 @@ function renderShell(source, href) {
   const links = placement => routes.filter(route => route.includeIn.includes(placement))
     .map(route => `        <a href="${base}${esc(route.href)}">${esc(route.label)}</a>`).join("\n");
   let rendered = source
+    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${esc(canonicalUrl(href))}">`)
     .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
     .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');

@@ -14,7 +14,7 @@ export function renderFooter() {
   const explore = footerOrder.map(key => navigation.routes.find(item => item.key === key)).filter(Boolean).map((item) =>
     '<a href="' + basePath() + esc(item.href) + '">' + esc(item.label) + '</a>'
   ).join('');
-  const socials = (SITE.socials || []).filter(item => ["LinkedIn", "Instagram", "Twitter"].includes(item.label)).map((item) =>
+  const socials = (SITE.socials || []).filter(item => ["LinkedIn", "Instagram", "X"].includes(item.label)).map((item) =>
     '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer">' + esc(item.label) + '</a>'
   ).join('');
   const group = (className, label, content) =>

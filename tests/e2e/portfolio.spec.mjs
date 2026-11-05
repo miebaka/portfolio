@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
   "/index.html", "/work.html", "/explorations.html", "/about.html",
-  "/playground.html", "/contact.html", "/privacy.html", "/404.html",
+  "/notes.html", "/contact.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
   "/writing/designing-for-disability-in-nigeria.html", "/writing/when-the-swoosh-lost-its-soul.html"
 ];
@@ -143,7 +143,7 @@ test("chapter rail yields to the authored mobile chapter index", async ({ page }
 });
 
 test("Notes inherits the Selected Work editorial-list interaction", async ({ page }) => {
-  await page.goto("/playground.html");
+  await page.goto("/notes.html");
   await settle(page);
   const rows = page.locator(".editorial-index--notes .editorial-index__row");
   await expect(rows).toHaveCount(2);
@@ -308,13 +308,11 @@ test("theme pull cord exposes and changes the Print/Screen state", async ({ page
   await expect(changedCord).toHaveAccessibleName("Switch to Print mode");
 });
 
-test("client marquee can be paused", async ({ page }) => {
+test("client proof is static and exposes every collaborator once", async ({ page }) => {
   await page.goto("/index.html");
-  const control = page.locator(".client-marquee__control");
-  await expect(control).toBeAttached();
-  await control.evaluate(element => element.click());
-  await expect(control).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "paused");
+  await expect(page.locator(".client-statement .client-proof")).toBeVisible();
+  await expect(page.locator(".client-statement .marquee__item")).toHaveCount(6);
+  await expect(page.locator(".client-marquee__control")).toHaveCount(0);
 });
 
 test("@a11y explicit focus and field descriptions", async ({ page }) => {
