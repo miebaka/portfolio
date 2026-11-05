@@ -16,11 +16,11 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
   const selected = ["tedx-rsu", "rivo", "chopbox"].map(slug => {
     const project = bySlug.get(slug);
     const published = project?.status === "published" && studies?.[slug]?.status === "published";
-    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "", tagline: project?.tagline || "", decision: project?.decision || "" };
+    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "" };
   });
   return renderEditorialIndex(selected.map(project => {
-    const visual = project.cover ? '<span class="home-project-list__visual"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-1080.webp" alt="' + esc(project.title) + ' system in use" width="1080" height="810" loading="lazy" decoding="async"></span>' : '';
-    const content = '<span class="home-project-list__copy"><span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span><span class="home-project-list__decision">' + esc(project.decision) + '</span><span class="home-project-list__tagline">' + esc(project.tagline) + '</span></span>' + visual;
+    const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
+    const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual;
     return { href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
   }), { variant: 'work', ordered: true });
 }
@@ -77,6 +77,43 @@ export function renderClients() {
   const el = mount(MOUNT.CLIENTS);
   if (!el || !SITE.clients || !SITE.clients.length) return;
   const items = SITE.clients.map(clientItem).join("");
-  el.className = 'client-statement';
-  el.innerHTML = '<ul class="client-proof">' + items + '</ul>';
+  el.className = 'client-marquee';
+  el.innerHTML = '<button class="client-marquee__control" type="button" aria-label="Pause client logos" aria-pressed="false"><span data-marquee-label>Pause</span></button><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+  const controller = createMarqueeController(el);
+  addEventListener('pagehide', () => controller.destroy(), { once: true });
+}
+
+export function createMarqueeController(root, deps = {}) {
+  const doc = deps.document || root.ownerDocument || document;
+  const button = deps.button || root.querySelector('.client-marquee__control');
+  const Observer = deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
+  const reducedMotion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
+  let visible = !Observer, userPaused = false, destroyed = false;
+  const sync = () => {
+    const running = !reducedMotion && !destroyed && !userPaused && visible && !doc.hidden;
+    root.classList.toggle('is-running', running);
+    root.dataset.marqueeState = running ? 'playing' : 'paused';
+    button.setAttribute('aria-disabled', 'false');
+    button.setAttribute('aria-pressed', String(userPaused));
+    button.setAttribute('aria-label', userPaused ? 'Play client logos' : 'Pause client logos');
+    const label = button.querySelector?.('[data-marquee-label]');
+    if (label) label.textContent = userPaused ? 'Play' : 'Pause';
+  };
+  const play = () => { userPaused = false; sync(); };
+  const pause = ({ user = true } = {}) => { if (user) userPaused = true; sync(); };
+  const toggle = () => userPaused ? play() : pause();
+  const onVisibility = () => sync();
+  button.addEventListener('click', toggle);
+  doc.addEventListener('visibilitychange', onVisibility);
+  const observer = Observer ? new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: 0.1 }) : null;
+  observer?.observe(root);
+  sync();
+  return {
+    play, pause,
+    destroy() {
+      if (destroyed) return; destroyed = true; observer?.disconnect();
+      button.removeEventListener('click', toggle); doc.removeEventListener('visibilitychange', onVisibility); sync();
+    },
+    isPaused: () => userPaused
+  };
 }

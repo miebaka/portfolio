@@ -7,7 +7,6 @@ export const projects = [
     "title": "Rivo Studio",
     "category": "Software studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
-    "decision": "Lead with access, not technical theatre.",
     "tags": [
       "Brand identity",
       "Brand strategy",
@@ -26,7 +25,6 @@ export const projects = [
     "title": "TEDx Rivers State University",
     "category": "Event",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
-    "decision": "Turn reflection into the system's visual rhythm.",
     "tags": [
       "Brand identity",
       "Creative direction",
@@ -45,7 +43,6 @@ export const projects = [
     "title": "ChopBox",
     "category": "Food brand",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",
-    "decision": "Make abundance feel organised and easy to order.",
     "tags": [
       "Brand identity",
       "Brand strategy",

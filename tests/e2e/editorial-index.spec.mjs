@@ -26,13 +26,8 @@ for (const [name, path, selector] of [
       const style = getComputedStyle(element);
       return [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(parseFloat);
     });
-    if (name === "Home") {
-      expect(padding[0]).toBe(0);
-      expect(padding[2]).toBe(0);
-    } else {
-      expect(padding[0]).toBeGreaterThanOrEqual(16);
-      expect(padding[2]).toBeGreaterThanOrEqual(16);
-    }
+    expect(padding[0]).toBeGreaterThanOrEqual(16);
+    expect(padding[2]).toBeGreaterThanOrEqual(16);
     expect(padding[1]).toBe(0);
     expect(padding[3]).toBe(0);
 

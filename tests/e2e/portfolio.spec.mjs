@@ -308,11 +308,13 @@ test("theme pull cord exposes and changes the Print/Screen state", async ({ page
   await expect(changedCord).toHaveAccessibleName("Switch to Print mode");
 });
 
-test("client proof is static and exposes every collaborator once", async ({ page }) => {
+test("client marquee can be paused", async ({ page }) => {
   await page.goto("/index.html");
-  await expect(page.locator(".client-statement .client-proof")).toBeVisible();
-  await expect(page.locator(".client-statement .marquee__item")).toHaveCount(6);
-  await expect(page.locator(".client-marquee__control")).toHaveCount(0);
+  const control = page.locator(".client-marquee__control");
+  await expect(control).toBeAttached();
+  await control.evaluate(element => element.click());
+  await expect(control).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "paused");
 });
 
 test("@a11y explicit focus and field descriptions", async ({ page }) => {

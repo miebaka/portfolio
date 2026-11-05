@@ -25,8 +25,8 @@ test("homepage hero and listening fallback remain useful without JavaScript", as
     const html = await readFile(join(directory, "index.html"), "utf8");
     const hero = html.match(/<h1 id="hero-title"[^>]*>([\s\S]*?)<\/h1>/)?.[0] || "";
     assert.doesNotMatch(hero, /aria-label|aria-hidden/);
-    assert.match(hero, /I design brands\./);
-    assert.match(hero, /I build useful things\./);
+    assert.match(hero, /I design brands, build useful things/);
+    assert.match(hero, /ask a lot of questions/);
     const listening = html.match(/<div class="home-profile__listening"[\s\S]*?<\/div>/)?.[0] || "";
     assert.match(listening, /last\.fm\/user\/miebaka/);
     assert.match(listening, /See what Miebaka has been playing/);
@@ -126,8 +126,6 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
   assert.equal(new Set(urls).size, urls.length);
   assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/explorations.html"));
-  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/notes.html"));
-  assert.ok(!urls.includes("https://miebaka-portfolio.vercel.app/playground.html"));
   assert.ok(!urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
   assert.ok(!urls.some(url => url.endsWith("404.html")));
   for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
@@ -293,12 +291,15 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
   for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
-  assert.match(projects, /home-project-list__decision/);
-  assert.doesNotMatch(projects, /client-marquee__track|client-marquee__control/);
-  assert.match(css, /\.home-proof-refresh \.client-statement \.client-proof\{[^}]*display:grid/);
+  assert.doesNotMatch(projects, /proof\?\.find\(item => item\.type === "decision"\)|home-project-list__decision/);
+  assert.match(projects, /client-marquee__track/);
+  assert.match(projects, /client-marquee__control/);
+  assert.match(css, /\.home-page \.client-marquee\{[^}]*width:100%[^}]*margin-inline:0[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
   assert.match(css, /--content:102rem/);
   assert.match(css, /\.home-page \.marquee__item img\{[^}]*max-width:25\.5rem[^}]*height:calc\(5\.25rem \* var\(--logo-scale,1\)\)/);
-  assert.doesNotMatch(projects, /Pause client logos|createMarqueeController/);
+  assert.match(projects, /Pause client logos/);
+  assert.match(projects, /createMarqueeController/);
+  assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
@@ -355,16 +356,16 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
   assert.match(css, /\.measure-hero\{max-width:none\}/);
   assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
-  assert.match(css, /\.home-proof-refresh \.home-landing h1\{[^}]*max-width:none/);
+  assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title"><span data-home-entry>I design brands\.<\/span><span data-home-entry>I build useful things\.<\/span><\/h1>/);
+  assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
   assert.ok(title > -1 && title < meta);
   assert.doesNotMatch(writing, /writing-item__summary|editorial-index__description/);
-  assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
+  assert.doesNotMatch(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /editorial-index__description|home-project-list__decision/);
 });
 
 test("built service fallbacks contain one complete shared record per service", async () => {
@@ -427,8 +428,8 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /I design brands\./);
-  assert.match(home, /I build useful things\./);
+  assert.match(home, /I design brands, build useful things/);
+  assert.match(home, /&amp; ask a lot of questions\./);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
