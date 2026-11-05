@@ -37,8 +37,6 @@ export function createServiceSwatches(root) {
   };
   const cleanups = tabs.map((tab, index) => {
     const click = () => select(index);
-    const hover = () => select(index);
-    const focus = () => select(index, { keyboard: true });
     const keydown = event => {
       let next;
       if (["ArrowRight", "ArrowDown"].includes(event.key)) next = (index + 1) % tabs.length;
@@ -50,15 +48,8 @@ export function createServiceSwatches(root) {
       select(next, { focus: true, keyboard: true });
     };
     tab.addEventListener("click", click);
-    tab.addEventListener("mouseenter", hover);
-    tab.addEventListener("focus", focus);
     tab.addEventListener("keydown", keydown);
-    return () => {
-      tab.removeEventListener("click", click);
-      tab.removeEventListener("mouseenter", hover);
-      tab.removeEventListener("focus", focus);
-      tab.removeEventListener("keydown", keydown);
-    };
+    return () => { tab.removeEventListener("click", click); tab.removeEventListener("keydown", keydown); };
   });
   return () => cleanups.forEach(cleanup => cleanup());
 }
@@ -66,9 +57,10 @@ export function createServiceSwatches(root) {
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  el.className = "home-services home-services--swatches";
-  el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
-  createServiceSwatches(el.querySelector("[data-service-swatches]"));
+  el.className = "home-services";
+  el.innerHTML = '<div class="home-services__list">' + SITE.capabilities.map(service =>
+    '<details class="home-service"><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p></div></div></details>'
+  ).join('') + '</div>';
 }
 
 export function renderExperienceLedger(entries = []) {

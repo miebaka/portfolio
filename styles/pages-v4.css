@@ -456,6 +456,16 @@ body[data-page="home"] .home-profile__media{grid-column:8/13;grid-row:1;gap:5.4r
 
 body[data-page="home"] .home-capabilities{margin-top:var(--home-section-gap);padding-block:0}
 body[data-page="home"] .disciplines-heading{margin-bottom:var(--home-inner-gap)}
+.home-capabilities--process .disciplines-heading{margin-bottom:clamp(3rem,6vw,6rem)}
+.home-capabilities--process .home-services__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.25rem,3vw,3rem)}
+.home-capabilities--process .home-service{border:0;background:color-mix(in srgb,var(--paper-2) 82%,transparent);padding:clamp(1.5rem,3vw,3rem)}
+.home-capabilities--process .home-service:last-child{grid-column:1/-1}
+.home-capabilities--process .home-service summary{min-height:10rem;display:flex;justify-content:space-between;gap:2rem;padding:0;font-size:clamp(2rem,2.7vw,3rem);line-height:1.02}
+.home-capabilities--process .home-service__toggle{flex:0 0 2rem}
+.home-capabilities--process .home-service__panel{display:block;padding:2rem 0 0}
+.home-capabilities--process .home-service__panel>p{max-width:34ch;font:400 clamp(1.2rem,1.55vw,1.75rem)/1.28 var(--display)}
+.home-capabilities--process .home-service__facts{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}
+.home-capabilities--process .home-service__facts p{color:var(--home-shader-muted);font-size:.9375rem;line-height:1.55}
 .home-services__list{border-top:0}
 .home-services{interpolate-size:allow-keywords}
 .home-service{border-bottom:1px solid var(--home-shader-line)}
@@ -739,6 +749,7 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
   .about-hero{grid-template-columns:1fr;min-height:0}.about-hero__copy{grid-column:1;grid-row:1;min-height:26rem;padding:2rem 0}.about-hero__media{grid-column:1;grid-row:2;min-height:0;aspect-ratio:4/5}.about-hero__copy h1{font-size:clamp(3rem,12vw,4.5rem)}
   .about-editorial__intro,.about-editorial__section{grid-template-columns:1fr}.about-editorial h2,.about-editorial__copy,.about-editorial__copy--large,.about-editorial__facts,.about-principles,.about-editorial__section [data-mount="capabilities"]{grid-column:1}.about-editorial__copy p,.about-editorial__copy--large p{font-size:clamp(1.6rem,7.2vw,2.5rem)}.about-principles li{grid-template-columns:auto 1fr}.about-principles p{grid-column:2}
   .about-experience{grid-template-columns:1fr}.about-experience h2{grid-column:1}.about-experience>[data-mount="experience"]{grid-column:1;margin-top:3rem}.experience-ruler__scale{font-size:.55rem;letter-spacing:0}.experience-ruler__copy{grid-template-columns:1fr auto}.experience-ruler__contribution{grid-column:1/-1}.experience-ruler__period{text-align:right}
+  .home-capabilities--process .home-services__list{grid-template-columns:1fr}.home-capabilities--process .home-service:last-child{grid-column:auto}.home-capabilities--process .home-service summary{min-height:5rem;font-size:clamp(1.6rem,6.7vw,2.25rem);line-height:1.05}.home-capabilities--process .home-service__panel>p{font-size:1.2rem;line-height:1.35}.home-capabilities--process .home-service__facts{grid-template-columns:1fr;gap:1rem}
   .case-page .case-opening{grid-template-columns:1fr}.case-page .case-back,.case-page .case-opening h1,.case-page .case-opening__summary,.case-page .case-opening .case-facts{grid-column:1;grid-row:auto}.case-page .case-opening h1{font-size:clamp(3.5rem,17vw,6rem)}.case-page .case-opening .case-facts{grid-template-columns:1fr 1fr}.case-page .case-lede__main,.case-page .case-chapter__copy{grid-template-columns:1fr}.case-page .case-lede__intro,.case-page .case-index,.case-page .case-chapter__label,.case-page .case-chapter__copy h2,.case-page .case-chapter__body{grid-column:1}.case-page .case-chapter__copy h2{font-size:clamp(2.5rem,11vw,4rem)}
   .experiments-spatial__heading{align-items:flex-start;gap:1rem}.experiments-spatial__heading p{max-width:12rem;text-align:right}.experiment-tunnel__card{width:78vw;height:58vh;transform:translate3d(calc(-50% + var(--offset) * 62vw),-50%,calc(var(--distance) * -180px)) rotateY(calc(var(--offset) * -22deg)) scale(calc(1 - var(--distance) * .08))}
 }

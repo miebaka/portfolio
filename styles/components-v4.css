@@ -302,15 +302,13 @@ body:not([data-page="explorations"]){padding-bottom:calc(4.5rem + var(--safe-bot
 .service-swatch__number{align-self:center;font:500 .66rem/1 var(--label);letter-spacing:.12em}
 .service-swatch>span:last-child{font:400 clamp(1.45rem,2.6vw,2.5rem)/1 var(--display);letter-spacing:-.035em}
 .service-swatches__panels{align-self:center}
-.service-panel{max-width:42rem;animation:service-panel-in 360ms var(--ease-enter) both}
+.service-panel{max-width:42rem}
 .service-panel[hidden]{display:none}
 .service-panel__description{font:400 clamp(2rem,4vw,4rem)/1.04 var(--display);letter-spacing:-.045em}
 .service-panel dl{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);margin-top:var(--s4)}
 .service-panel dt{font:500 .66rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase;color:var(--secondary)}
 .service-panel dd{margin-top:.7rem;color:var(--muted);line-height:1.65}
 .service-swatches[data-input="keyboard"] .service-swatch{transition:none}
-@keyframes service-panel-in{from{opacity:0;transform:translateY(1rem)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.service-panel{animation:none}.service-swatch{transition:none}}
 .writing-item__date::before{content:none}
 .site-footer__links{display:flex;align-items:center;flex-wrap:wrap;gap:.25rem clamp(.8rem,1.5vw,1.5rem)}
 @media(hover:none),(pointer:coarse){.site-nav__link[aria-current="page"]::after{transform:scaleX(1)}
