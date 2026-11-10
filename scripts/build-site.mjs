@@ -75,7 +75,7 @@ async function outputFiles(directory) {
 
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
-const { renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
+const { renderClientProofMarkup, renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
 const { renderServiceFallbackMarkup } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
@@ -102,6 +102,7 @@ function renderShell(source, href) {
     .replace(/<header(?: class="[^"]*")? data-mount="nav">[\s\S]*?<\/header>/, renderHeader({ base, page }))
     .replace(/<footer(?: class="[^"]*")? data-mount="footer">[\s\S]*?<\/footer>/, renderFooter({ base }));
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
+  if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;

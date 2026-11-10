@@ -83,6 +83,10 @@ export function renderClients() {
   addEventListener('pagehide', () => controller.destroy(), { once: true });
 }
 
+export function renderClientProofMarkup(clients = SITE.clients) {
+  return '<ul class="client-proof">' + (clients || []).map(clientItem).join("") + "</ul>";
+}
+
 export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
   const button = deps.button || root.querySelector('.client-marquee__control');
