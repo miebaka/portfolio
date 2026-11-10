@@ -207,6 +207,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
+  assert.match(css, /font-family:\s*"OGARANYA"/);
   assert.match(css, /font-family:\s*"Google Sans Flex"/);
   assert.match(css, /font-family:\s*"Josefin Sans"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
@@ -234,7 +235,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--display:"Google Sans Flex",sans-serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif/);
+  assert.match(css, /--display:"OGARANYA",serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /repeating-radial-gradient/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);

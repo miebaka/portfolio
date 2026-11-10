@@ -16,7 +16,7 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Google Sans Flex 400/500: semantic headings, display headlines and body copy.
+- Ogaranya 400: semantic headings and display headlines.
 - Josefin Sans 600: compact uppercase labels.
 - Google Sans Flex 400/500: body copy, navigation and interface text.
 - Josefin Sans 600: compact labels, navigation and metadata.
