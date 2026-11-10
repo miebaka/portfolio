@@ -625,6 +625,12 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
 .experiment-object:focus-visible{outline:3px solid var(--ref-near-black);outline-offset:5px}
 .experiments-spatial__hint{position:fixed;z-index:12;left:50%;bottom:max(1.5rem,var(--safe-bottom));margin:0;padding:.72rem 1rem .68rem;border:1px solid color-mix(in srgb,var(--ref-near-black) 20%,transparent);border-radius:99px;background:color-mix(in srgb,var(--ref-paper) 78%,transparent);box-shadow:0 .5rem 2rem color-mix(in srgb,var(--ref-black) 8%,transparent);font:500 .8125rem/1 var(--label);letter-spacing:.1em;white-space:nowrap;pointer-events:none;transform:translateX(-50%);backdrop-filter:blur(12px);transition:opacity 280ms ease}
 .experiments-spatial.has-interacted .experiments-spatial__hint{opacity:.38}
+.no-js .experiments-spatial{min-height:auto;padding:var(--section-padding) var(--page);background:var(--paper);color:var(--ink)}
+.no-js .experiments-spatial__viewport{height:auto;overflow:visible}
+.no-js .experiments-spatial__stage{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-6);width:auto;height:auto;transform:none}
+.no-js .experiment-tunnel__card{position:static;width:auto;transform:none;opacity:1;visibility:visible}
+.no-js .experiments-spatial__hint{display:none}
+.no-js .experiments-spatial__heading{position:static;margin-bottom:var(--space-12);color:var(--ink)}
 @media(hover:hover) and (pointer:fine){
   .experiment-object:hover{z-index:100;transform:translateY(-.35rem) rotate(0);box-shadow:0 2rem 5rem color-mix(in srgb,var(--ref-black) 22%,transparent)}
 }
@@ -656,6 +662,7 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
   .no-js body .site-nav__inner{height:auto;min-height:var(--nav-h)}
   body[data-page="explorations"]{padding-bottom:0}
   .experiments-spatial__hint{bottom:calc(1rem + var(--safe-bottom));font-size:var(--font-size-sm)}
+  .no-js .experiments-spatial__stage{grid-template-columns:1fr}
 }
 
 /* Expressive layer: shared across Print and Screen without changing content semantics. */
