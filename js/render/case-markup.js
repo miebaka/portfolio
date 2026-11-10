@@ -11,7 +11,7 @@ function shot(media, kind, base, plate) {
   const fallback = widths.includes(1080) ? 1080 : widths.at(-1);
   const srcset = ext => widths.map(width => `${stem}-${width}.${ext} ${width}w`).join(", ");
   const sizes = kind === "pair" || kind === "gallery" ? "(max-width: 64rem) calc(100vw - 2.5rem), 43vw" : kind === "upright" ? "(max-width: 52.5rem) calc(100vw - 2.5rem), 50rem" : "(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 100rem) 90vw, 92rem";
-  const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="eager"';
+  const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
   const caption = media.caption ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>` : "";
   return `<figure class="case-shot case-shot--${kind}"><picture><source type="image/avif" srcset="${srcset("avif")}" sizes="${sizes}"><source type="image/webp" srcset="${srcset("webp")}" sizes="${sizes}"><img src="${stem}-${fallback}.jpg" alt="${esc(media.alt || media.label)}" width="${media.w}" height="${media.h}"${loading} decoding="async"></picture>${caption}</figure>`;
 }
@@ -30,7 +30,7 @@ function sequence(media, base, nextPlate) {
 
 function factsBlock(study, project) {
   const facts = study.facts || {};
-  const rows = [["Context", facts.context], ["My role", facts.role], ["Year", project?.year], ["Deliverables", facts.delivered], ["Collaborators", facts.collaborators]].filter(([, value]) => value);
+  const rows = [["Context", facts.context], ["Role", facts.role], ["Year", project?.year], ["Collaborators", facts.collaborators], ["Delivered", facts.delivered]].filter(([, value]) => value);
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
@@ -45,8 +45,14 @@ const proofTargets = {
   decision: "decision",
   system: "system",
   survival: "applications",
-  adoption: "reflection"
+  adoption: "outcome"
 };
+
+const canonicalChapter = item => ({
+  ...item,
+  id: item.id === "context" ? "problem" : item.id === "reflection" ? "outcome" : item.id,
+  label: item.label === "Question" ? "Problem" : item.label === "Governing decision" ? "Decision" : item.label === "System in use" ? "Applications" : item.label === "Result" ? "Outcome" : item.label
+});
 
 function proofTrail(study) {
   if (!study.proof?.length) return "";
@@ -87,8 +93,9 @@ export function renderCaseMarkup(site, slug, base = "../") {
     let plate = 0;
     const nextPlate = () => ++plate;
     const heroMarkup = shot(hero, "hero", base, nextPlate());
-    const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${study.chapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
-    const chapters = study.chapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
+    const canonicalChapters = study.chapters.map(canonicalChapter);
+    const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${canonicalChapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
+    const chapters = canonicalChapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
     const next = nextBlock(site, study, base);
     return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}${proofTrail(study)}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${next}`;
   }
