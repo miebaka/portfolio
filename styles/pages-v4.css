@@ -652,6 +652,8 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
 }
 @media(max-width:40rem){
   body .site-nav__links{display:none}
+  .no-js body .site-nav__links{display:flex;flex-wrap:wrap}
+  .no-js body .site-nav__inner{height:auto;min-height:var(--nav-h)}
   body[data-page="explorations"]{padding-bottom:0}
   .experiments-spatial__hint{bottom:calc(1rem + var(--safe-bottom));font-size:var(--font-size-sm)}
 }
