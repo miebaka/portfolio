@@ -6,7 +6,7 @@ import path from 'node:path';
 const baseURL = process.env.AUDIT_BASE_URL || 'http://127.0.0.1:4000';
 const widths = [360, 390, 768, 1024, 1280, 1440, 1920];
 const htmlRoot = path.resolve('dist');
-const outputRoot = path.resolve('audit/before');
+const outputRoot = path.resolve(process.env.AUDIT_OUTPUT_ROOT || 'audit/before');
 
 async function collectHtmlFiles(directory, prefix = '') {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -30,6 +30,7 @@ function slugFor(file) {
 const browser = await chromium.launch();
 const files = await collectHtmlFiles(htmlRoot);
 const summary = [];
+await mkdir(outputRoot, { recursive: true });
 
 for (const file of files) {
   const route = routeFor(file);
@@ -90,5 +91,4 @@ for (const file of files) {
 }
 
 await browser.close();
-await mkdir(outputRoot, { recursive: true });
 await writeFile(path.join(outputRoot, 'capture-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
