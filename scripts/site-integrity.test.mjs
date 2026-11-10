@@ -84,8 +84,8 @@ test("the route registry has unique destinations and supports the approved globa
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "About", "Experiments", "Notes", "Contact"]);
-  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "About", "Experiments", "Notes", "Contact"]);
+  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Explorations", "About", "Writing", "Contact"]);
+  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Explorations", "About", "Writing", "Contact"]);
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
   assert.ok(navigation.footer.some(route => route.href === "notes.html"));
 });
@@ -95,7 +95,7 @@ test("every production shell exposes the complete Index as fallback navigation",
   for (const file of await walk(dist, ".html")) {
     if (file.endsWith("explorations.html")) continue;
     const html = await readFile(file, "utf8");
-    const header = html.match(/<header data-mount="nav">([\s\S]*?)<\/header>/)?.[1] || "";
+    const header = html.match(/<header\b[^>]*data-mount="nav"[^>]*>([\s\S]*?)<\/header>/)?.[1] || "";
     const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
     for (const href of destinations) assert.ok(links.includes(join(dist, href)), `${file} omits fallback ${href}`);
   }
@@ -118,18 +118,18 @@ test("source and built footer fallbacks match the approved public navigation", a
 });
 
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
-  for (const [href, canonical] of [["index.html", "https://miebaka-portfolio.vercel.app/"], ["explorations.html", "https://miebaka-portfolio.vercel.app/explorations.html"], ["community.html", "https://miebaka-portfolio.vercel.app/explorations.html"]]) {
+  for (const [href, canonical] of [["index.html", "https://miebaka.design/"], ["explorations.html", "https://miebaka.design/explorations.html"], ["community.html", "https://miebaka.design/explorations.html"]]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
   }
   const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
   assert.equal(new Set(urls).size, urls.length);
-  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/explorations.html"));
-  assert.ok(!urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
+  assert.ok(urls.includes("https://miebaka.design/explorations.html"));
+  assert.ok(!urls.includes("https://miebaka.design/community.html"));
   assert.ok(!urls.some(url => url.endsWith("404.html")));
   for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
-    assert.ok(!urls.includes(`https://miebaka-portfolio.vercel.app/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
+    assert.ok(!urls.includes(`https://miebaka.design/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
   }
   for (const url of urls) {
     const pathname = new URL(url).pathname;
@@ -138,10 +138,10 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("Experiments ships a full-screen tunnel shell and the retired route points to it", async () => {
+test("Explorations ships a readable archive and the retired route points to it", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
-  assert.match(experiments, /<h1>Experiments<\/h1>/);
+  assert.match(experiments, /<h1>Explorations<\/h1>/);
   assert.match(experiments, />Enter the archive<\/p>/);
   assert.doesNotMatch(experiments, /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
 
@@ -234,7 +234,10 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--display:"Google Sans Flex",sans-serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif/);
+  assert.match(css, /--font-display:\s*"Google Sans Flex",\s*sans-serif/);
+  assert.match(css, /--font-body:\s*"Google Sans Flex",\s*sans-serif/);
+  assert.match(css, /--font-label:\s*"Josefin Sans",\s*sans-serif/);
+  assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /repeating-radial-gradient/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
@@ -525,7 +528,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 3);
+  assert.equal((styles.match(/@import/g) || []).length, 5);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

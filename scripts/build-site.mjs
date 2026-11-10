@@ -19,12 +19,13 @@ async function bundleCss(file, seen = new Set()) {
   if (seen.has(absolute)) return "";
   seen.add(absolute);
   const css = await readFile(absolute, "utf8");
-  const importPattern = /@import\s+["']([^"']+)["'];/g;
+  const importPattern = /@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?(?:\s+layer\(([^)]+)\))?\s*;/g;
   let result = "";
   let cursor = 0;
   for (const match of css.matchAll(importPattern)) {
     result += css.slice(cursor, match.index);
-    result += await bundleCss(resolve(dirname(absolute), match[1]), seen);
+    const imported = await bundleCss(resolve(dirname(absolute), match[1]), seen);
+    result += match[2] ? `@layer ${match[2]}{${imported}}` : imported;
     cursor = match.index + match[0].length;
   }
   result += css.slice(cursor);
@@ -123,7 +124,7 @@ for (const file of rootFiles) {
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
 }
 await ensureCopy(join(root, "robots.txt"), join(output, "robots.txt"));
-await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest"));
+try { await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest")); } catch {}
 await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));

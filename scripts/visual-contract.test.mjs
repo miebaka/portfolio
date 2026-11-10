@@ -47,9 +47,11 @@ test("approved visual contract remains intact", async () => {
   // Material Symbols is an icon font. The authored typography is deliberately
   // limited to Google Sans Flex for display/body and Josefin Sans for labels.
   const roleFonts = ["display", "body", "label"].map(role => {
-    const match = css.match(new RegExp(`--${role}:\\s*"([^"]+)"`));
-    assert.ok(match, `missing --${role} typography role`);
-    return match[1];
+    const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
+    assert.ok(roleMatch, `missing --${role} typography role`);
+    const familyMatch = css.match(new RegExp(`--font-${role}:\\s*"([^"]+)"`));
+    assert.ok(familyMatch, `missing --font-${role} family token`);
+    return familyMatch[1];
   });
   assert.deepEqual(roleFonts, ["Google Sans Flex", "Google Sans Flex", "Josefin Sans"]);
   assert.equal(new Set(roleFonts).size, 2);
