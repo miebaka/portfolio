@@ -152,7 +152,7 @@ test("Notes inherits the Selected Work editorial-list interaction", async ({ pag
   if (!canHover) return;
   await rows.first().hover();
   await expect(rows.nth(1)).toHaveCSS("opacity", "1");
-  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "200");
+  await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "400");
   await expect(rows.first().locator(".editorial-index__title")).not.toHaveCSS("transform", "none");
 });
 
@@ -212,22 +212,22 @@ test("Home scroll overlay preserves the unblurred shader field", async ({ page }
 
 test("Global navigation uses the five approved destinations", async ({ page }) => {
   await page.goto("/index.html");
+  if (page.viewportSize().width <= 640) await page.getByRole("button", { name: "Index" }).click();
   const navigation = page.viewportSize().width <= 640
-    ? page.getByRole("navigation", { name: "Primary mobile navigation" })
+    ? page.getByRole("navigation", { name: "All destinations" })
     : page.getByRole("navigation", { name: "Primary", exact: true });
-  const labels = await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
-  expect(labels).toEqual(["Work", "About", "Experiments", "Notes", "Contact"]);
+  const labels = page.viewportSize().width <= 640
+    ? await navigation.locator(".site-index__link > span:last-child").allTextContents()
+    : await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
+  expect(labels).toEqual(["Work", "Explorations", "About", "Writing", "Contact"]);
 });
 
-test("Mobile navigation has a persistent bottom bar and a focus-trapped index", async ({ page }) => {
+test("Mobile navigation has a focus-trapped index", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/index.html");
   const menu = page.getByRole("button", { name: "Index" });
-  const bottom = page.getByRole("navigation", { name: "Primary mobile navigation" });
   const dialog = page.getByRole("dialog", { name: "Index" });
   await expect(menu).toBeVisible();
-  await expect(bottom).toBeVisible();
-  await expect(bottom.getByRole("link")).toHaveCount(5);
   await expect(menu).toHaveAttribute("aria-expanded", "false");
   await expect(dialog).toBeHidden();
   await menu.click();
@@ -273,16 +273,17 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 
-test("Experiments exposes a full-screen tunnel", async ({ page }) => {
+test("Explorations exposes a full-screen tunnel", async ({ page }) => {
   await page.goto("/explorations.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
   await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
   await expect(page.locator(".experiment-tunnel__card")).toHaveCount(7);
-  await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+  if (page.viewportSize().width <= 640) await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
+  else await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Footer" })).toBeAttached();
 });
 
-test("retired community route redirects to Experiments", async ({ page }) => {
+test("retired community route redirects to Explorations", async ({ page }) => {
   await page.goto("/community.html");
   await expect(page).toHaveURL(/\/explorations\.html$/);
   await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();

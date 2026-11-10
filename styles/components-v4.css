@@ -155,7 +155,7 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .field__help{min-height:1em;margin:0;font-size:.8125rem;line-height:1.45;color:var(--muted)}
 .field__error:empty{display:none}
 .field [aria-invalid="true"]{border-color:var(--error)}
-.contact__trap{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+.contact__trap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 .form-status{min-height:1.4em;margin:0;opacity:1;transition:opacity 120ms linear;font-size:.8125rem;color:var(--error)}
 .contact__form[data-state="submitting"] .form-status{opacity:.72}
 .contact__form[data-state="success"] .form-status{color:var(--ink)}

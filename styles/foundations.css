@@ -92,8 +92,8 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 }
 @view-transition{navigation:auto}
 ::view-transition-group(project-tedx-rsu),::view-transition-group(project-rivo),::view-transition-group(project-chopbox){animation-duration:420ms;animation-timing-function:var(--ease-in-out-ui)}
-@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}:root:not([data-motion-preference="full"]) *, :root:not([data-motion-preference="full"]) *::before, :root:not([data-motion-preference="full"]) *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}:root:not([data-motion-preference="full"]) body::after,:root:not([data-motion-preference="full"]) .shader-backdrop{display:none!important}}
-html[data-motion="reduced"]{scroll-behavior:auto}html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}html[data-motion="reduced"] body::after,html[data-motion="reduced"] .shader-backdrop{display:none!important}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}}
+html[data-motion="reduced"]{scroll-behavior:auto}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
 @media(hover:none),(pointer:coarse){textarea{font-size:16px}

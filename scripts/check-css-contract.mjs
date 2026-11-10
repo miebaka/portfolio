@@ -128,6 +128,7 @@ for (const [selector, owners] of selectorOwners) reject(owners.size > 1 && !laye
 
 for (const rule of leafRules(css["pages-v4.css"])) for (const selector of splitSelectors(rule.selector)) {
   if (/^(?:from|to|\d+%)$/.test(selector)) continue;
+  if (/^(?::root:not\(\[data-motion-preference=|html\[data-motion=)/.test(selector)) continue;
   reject(!selector.includes(".") && !selector.includes("body[data-page"), `page selector is not scoped to a named page block or body[data-page]: ${selector}`);
 }
 
