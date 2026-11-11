@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-11
+
+- Rebuilt the typography foundation around Ogaranya for display and Atkinson Hyperlegible Next for all supporting text.
+- Added the Tabs design-system typography and button tokens as reusable CSS custom properties.
+- Reworked Work cards into a consistent 48px inset with one aligned title, rule, description, year and fixed-ratio cover.
+- Replaced the ambiguous Pull/Print control with an accessible Print/Screen segmented switch.
+- Added a clear active navigation underline and a restrained 280ms blur-and-fade card reveal with reduced-motion and no-JavaScript fallbacks.
+- Reduced the space above the first project so selected work appears within the opening viewport.
+
 ## [1.2.2] - 2026-10-24
 
 ### Changed
