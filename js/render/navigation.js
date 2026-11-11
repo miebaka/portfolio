@@ -31,32 +31,24 @@ function setupPreferences(index, preferences) {
   return () => { choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); };
 }
 
-export function renderThemeSwitchMarkup() {
-  return '<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Switch to Screen mode"><span class="theme-switch__option theme-switch__option--print" data-theme-label="print">Print</span><span class="theme-switch__option theme-switch__option--screen" data-theme-label="screen">Screen</span></button>';
-}
-
 let activeIndex, cleanupPreferences, themeCord;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
-  activeIndex?.destroy(); cleanupPreferences?.(); themeCord?.destroy(); document.getElementById("site-index")?.remove(); document.querySelector(".mobile-tabbar")?.remove();
+  activeIndex?.destroy(); cleanupPreferences?.(); themeCord?.destroy(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
-  const order = ["work", "about", "explorations", "writing", "contact"];
+  const order = ["work", "explorations", "about", "writing", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
   el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button>' +
     '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + '</nav>' +
-    '<div class="site-nav__themes">' + renderThemeSwitchMarkup() + '</div></div>';
-  const mobileLinks = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route =>
-    '<a class="mobile-tabbar__link" href="' + base + safeURL(route.href) + '" aria-label="' + esc(route.label) + '"' + (route.key === page ? ' aria-current="page"' : '') + '><span>' + esc(route.label) + '</span></a>'
-  ).join("");
-  document.body.insertAdjacentHTML("beforeend", '<nav class="mobile-tabbar" aria-label="Primary mobile navigation">' + mobileLinks + '</nav>');
+    '<div class="site-nav__themes"><span class="theme-cord__prompt" aria-hidden="true">Pull</span><button class="theme-cord" type="button" role="switch" aria-checked="false" aria-label="Switch to Screen mode"><svg viewBox="0 0 68 58" width="68" height="58" aria-hidden="true"><path class="theme-cord__line" data-cord-line fill="none"/><path data-cord-hit fill="none" stroke="transparent" stroke-width="18"/><g class="theme-cord__bead" data-cord-bead><circle r="10" fill="transparent"/><rect x="-4" y="-1" width="8" height="13" rx="4"/></g></svg><span class="theme-cord__mode" data-cord-mode>Print</span></button></div></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");
   const menuButton = el.querySelector(".site-nav__menu-btn");
   activeIndex = createIndexController({ root: index, trigger: menuButton });
-  const cordButton = el.querySelector(".theme-switch");
+  const cordButton = el.querySelector(".theme-cord");
   let preferences;
   const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   preferences = createPreferencesController({
@@ -65,7 +57,7 @@ export function renderNavigation() {
       themeCord?.setChecked(resolvedTheme === "dark");
       index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
       index.querySelectorAll("[data-motion-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
-      document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
+      document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "oklch(35.7% 0.159 264.8)" : "oklch(98% 0.006 264.5)"));
     }
   });
   themeCord = createThemePullCord(cordButton, { onToggle: toggleTheme });

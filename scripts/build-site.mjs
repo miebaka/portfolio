@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { assertValidContent } from "./validate-content.mjs";
+import { normalizeHead, renderFooter, renderHeader } from "./render-partials.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
@@ -96,12 +97,10 @@ const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://w
   [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);
-  const links = placement => routes.filter(route => route.includeIn.includes(placement))
-    .map(route => `        <a href="${base}${esc(route.href)}">${esc(route.label)}</a>`).join("\n");
-  let rendered = source
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${esc(canonicalUrl(href))}">`)
-    .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
-    .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
+  const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("writing/") ? "writing" : "");
+  let rendered = normalizeHead(source, { canonicalUrl: canonicalUrl(href), base })
+    .replace(/<header(?: class="[^"]*")? data-mount="nav">[\s\S]*?<\/header>/, renderHeader({ base, page }))
+    .replace(/<footer(?: class="[^"]*")? data-mount="footer">[\s\S]*?<\/footer>/, renderFooter({ base }));
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
@@ -158,7 +157,7 @@ for (const asset of assets) {
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
-for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2?|ttf|otf))/gi)) {
+for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf|otf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
 
