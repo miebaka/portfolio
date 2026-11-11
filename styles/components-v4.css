@@ -103,6 +103,7 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .site-index__themes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .site-index__themes button span{font-size:.8125rem;opacity:.7}
 .mobile-tabbar{display:none}
+.no-js .site-nav__menu-btn{display:none}
 @media(max-width:36rem){.site-index__aside{grid-template-columns:1fr}
 .site-index__link{grid-template-columns:2.3rem 1fr}
 .site-index__body{padding-block:var(--s3)}
@@ -200,6 +201,7 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .field input:focus{border-color:var(--accent);outline:2px solid var(--focus);outline-offset:2px}
 :root[data-theme="dark"] .marquee__item img{filter:grayscale(1) invert(1);opacity:.88}
 @media(hover:none),(pointer:coarse){}
+.no-js .site-nav__links{display:flex;flex-wrap:wrap}
 .home-work-preview::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1rem color-mix(in srgb,var(--paper) 10%,transparent);pointer-events:none}
 .home-work-preview figcaption{position:absolute;z-index:2;inset:auto 0 0;display:flex;justify-content:space-between;align-items:end;gap:1rem;padding:1.1rem 1.25rem;color:var(--ref-white);background:color-mix(in srgb,var(--ref-midnight) 94%,transparent)}
 .home-work-preview figcaption span{font:500 .8125rem/1 var(--label);letter-spacing:.13em;text-transform:uppercase}
