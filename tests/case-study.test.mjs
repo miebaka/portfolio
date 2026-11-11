@@ -8,7 +8,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 
 const root = new URL("../", import.meta.url);
-const chapterIds = ["context", "decision", "system", "applications", "reflection"];
+const chapterIds = ["problem", "decision", "system", "applications", "outcome"];
 const markup = () => renderCaseMarkup(SITE, "tedx-rsu", "../");
 const reject = (change, code, path) => {
   const content = structuredClone(CONTENT);
@@ -71,9 +71,9 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   assert.ok(opening >= 0 && opening < facts && facts < hero);
   assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
   assert.match(html, /tedx-rsu-campus-banner-1080\.jpg/);
-  assert.match(html, /<dt>My role<\/dt><dd>Identity design, creative direction and print<\/dd>/);
+  assert.match(html, /<dt>Role<\/dt><dd>Identity design, creative direction and print<\/dd>/);
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
-  assert.match(html, /<dt>Deliverables<\/dt><dd>[^<]+<\/dd>/);
+  assert.match(html, /<dt>Delivered<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
   assert.match(html, /Evidence trail/);
   assert.match(html, /From governing decision to work in use/);
@@ -114,8 +114,8 @@ test("the complete narrative and chapter links follow the approved sequence", ()
     assert.match(html, new RegExp(`<h2 id="${labelId}">[^<]+<\\/h2>`));
     assert.match(html, new RegExp(`href="#${id}"`));
   }
-  assert.doesNotMatch(html, /id="outcomes"|id="result"/);
-  assert.ok(html.indexOf('id="reflection"') < html.indexOf('class="case-next'));
+  assert.doesNotMatch(html, /id="reflection"|id="result"/);
+  assert.ok(html.indexOf('id="outcome"') < html.indexOf('class="case-next'));
 });
 
 test("all owner media is shown once, with intrinsic dimensions, alternatives and factual captions", async () => {
@@ -137,7 +137,7 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
   }
   const hero = images.find(image => image.includes("tedx-rsu-campus-banner-"));
   assert.match(hero, /loading="eager" fetchpriority="high"/);
-  assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="eager"')));
+  assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="lazy"')));
 });
 
 test("the next published project is an active destination", () => {
@@ -190,7 +190,7 @@ test("the built page contains the whole case before JavaScript runs", async () =
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
   assert.match(article, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
-  assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
+  assert.match(html, /og:image" content="https:\/\/miebaka\.design\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");
 });

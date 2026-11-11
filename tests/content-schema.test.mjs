@@ -199,7 +199,7 @@ test("invalid content fails CLI and direct build without touching previous outpu
   await mkdir(join(directory, "js", "render"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
-  for (const file of ["build-site.mjs", "content-schema.mjs", "validate-content.mjs"]) {
+  for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) {
     await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
   }
   await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
@@ -232,7 +232,7 @@ test("adding a validated root route generates its build output and sitemap entry
   const result = spawnSync(process.execPath, [join(directory, "scripts", "build-site.mjs")], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
   assert.match(await readFile(join(directory, "dist", "studio.html"), "utf8"), /<h1>Studio<\/h1>/);
-  assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka-portfolio.vercel.app\/studio.html<\/loc>/);
+  assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka.design\/studio.html<\/loc>/);
   assert.match(await readFile(join(directory, "dist", "index.html"), "utf8"), /href="studio.html">Studio<\/a>/);
   assert.match(await readFile(join(directory, "dist", "writing", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
 });
@@ -258,7 +258,7 @@ test("accepted local writing URL variants build their pathname and retain author
       const builtArticle = await readFile(join(directory, "dist", pathname), "utf8");
       assert.ok(builtArticle.includes(authoredSource.match(/<h1[\s\S]*?<\/h1>/)[0]));
       const sitemap = await readFile(join(directory, "dist", "sitemap.xml"), "utf8");
-      assert.ok(sitemap.includes('<loc>https://miebaka-portfolio.vercel.app/writing/when-the-swoosh-lost-its-soul.html</loc>'));
+      assert.ok(sitemap.includes('<loc>https://miebaka.design/writing/when-the-swoosh-lost-its-soul.html</loc>'));
       assert.doesNotMatch(sitemap, /#main|\?source=index/);
       assert.equal(await readFile(join(directory, "dist", "data", "writing.js"), "utf8"), module);
     });
@@ -272,7 +272,7 @@ test("missing build registry and origin fail with validation errors before dist 
   await mkdir(join(directory, "js", "render"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
-  for (const file of ["build-site.mjs", "content-schema.mjs", "validate-content.mjs"]) await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
+  for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
   await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
   await writeFile(join(directory, "package.json"), '{"type":"module"}');
   const previousOutput = "Keep the prior output.";

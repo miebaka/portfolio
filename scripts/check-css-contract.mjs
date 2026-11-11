@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const names = ["foundations.css", "components-v4.css", "pages-v4.css"];
+const names = ["tokens.css", "foundations.css", "layout.css", "components-v4.css", "pages-v4.css"];
 const entries = await Promise.all(names.map(async name => [name, await readFile(join(root, "styles", name), "utf8")]));
 const css = Object.fromEntries(entries);
 const all = entries.map(([name, source]) => `/* ${name} */\n${source}`).join("\n");
@@ -54,7 +54,7 @@ reject(/transition-property\s*:[^;}]*\ball\b/i.test(all), "transition-property: 
 reject(/(?:^|[\s:,])ease-in(?:[\s,;)]|$)/m.test(all.replaceAll("--ease-in-out-ui", "--allowed-ease")), "bare ease-in is prohibited");
 reject(/body\[data-page=/.test(css["foundations.css"] + css["components-v4.css"]), "route selectors belong in pages-v4.css");
 reject(/(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(|color\s*\()/i.test(css["components-v4.css"] + css["pages-v4.css"]), "raw colours belong in foundation token declarations");
-reject(/font(?:-family)?\s*:[^;}]*["']?(?:OGARANYA|Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
+reject(/font(?:-family)?\s*:[^;}]*["']?(?:Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"]), "named font families must be consumed through permitted role tokens");
 reject(/will-change\s*:\s*(?!auto)/i.test(all.replace(/\.client-marquee\.is-running \.client-marquee__track\{will-change:transform/g, "")), "will-change must be measured and active-state scoped");
 reject(/\bV(?:5|6|7|8|9|10|11|12|13)\b|historical\s+(?:override|layer)|override\s+strat/i.test(all), "historical version/override strata are prohibited");
 
@@ -123,14 +123,15 @@ for (const [name, source] of entries) for (const rule of leafRules(source)) for 
   if (!selectorOwners.has(normalized)) selectorOwners.set(normalized, new Set());
   selectorOwners.get(normalized).add(name);
 }
-for (const [selector, owners] of selectorOwners) reject(owners.size > 1, `selector has duplicate ownership across ${[...owners].join(", ")}: ${selector}`);
+const layeredSharedSelectors = new Set([":root", ".container", ".section"]);
+for (const [selector, owners] of selectorOwners) reject(owners.size > 1 && !layeredSharedSelectors.has(selector), `selector has duplicate ownership across ${[...owners].join(", ")}: ${selector}`);
 
 for (const rule of leafRules(css["pages-v4.css"])) for (const selector of splitSelectors(rule.selector)) {
   if (/^(?:from|to|\d+%)$/.test(selector)) continue;
   reject(!selector.includes(".") && !selector.includes("body[data-page"), `page selector is not scoped to a named page block or body[data-page]: ${selector}`);
 }
 
-const imports = [...(await readFile(join(root, "styles/main.css"), "utf8")).matchAll(/@import\s+["']([^"']+)["'];/g)].map(match => match[1]);
+const imports = [...(await readFile(join(root, "styles/main.css"), "utf8")).matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?(?:\s+layer\([^)]*\))?;/g)].map(match => match[1]);
 assert.deepEqual(imports, names, "main.css must own only the current foundation/component/page imports");
 reject(entries.some(([, source]) => /@import\s/.test(source)), "historical/nested CSS imports are prohibited");
 
