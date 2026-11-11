@@ -1,9 +1,28 @@
-@font-face{font-family:"OGARANYA";src:url("../assets/fonts/OGARANYA-Regular.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Google Sans Flex";src:url("../assets/fonts/GoogleSansFlex-Regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Google Sans Flex";src:url("../assets/fonts/GoogleSansFlex-Medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:"Josefin Sans";src:url("../assets/fonts/JosefinSans-SemiBold.ttf") format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"OGARANYA";src:url("../assets/fonts/OGARANYA-Regular.woff") format("woff");font-weight:400 600;font-style:normal;font-display:swap}
+@font-face{font-family:"Atkinson Hyperlegible Next";src:url("https://raw.githubusercontent.com/google/fonts/main/ofl/atkinsonhyperlegiblenext/AtkinsonHyperlegibleNext%5Bwght%5D.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.ttf") format("truetype");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
+  --type-display-1:72px/84px;--type-display-1-tracking:-.04em;--type-display-1-weight:600;
+  --type-display-2:56px/64px;--type-display-2-tracking:-.04em;--type-display-2-weight:600;
+  --type-display-3:40px/48px;--type-display-3-tracking:-.01em;--type-display-3-weight:600;
+  --type-display-4:32px/40px;--type-display-4-tracking:-.01em;--type-display-4-weight:600;
+  --type-heading-1:24px/32px;--type-heading-1-tracking:-.02em;--type-heading-1-weight:600;
+  --type-heading-2:18px/24px;--type-heading-2-tracking:-.02em;--type-heading-2-weight:600;
+  --type-heading-3:16px/24px;--type-heading-3-tracking:-.02em;--type-heading-3-weight:600;
+  --type-heading-4:14px/20px;--type-heading-4-tracking:-.02em;--type-heading-4-weight:600;
+  --type-subheading-1:16px/24px;--type-subheading-1-tracking:-.02em;--type-subheading-1-weight:500;
+  --type-subheading-2:14px/20px;--type-subheading-2-tracking:-.02em;--type-subheading-2-weight:500;
+  --type-body-1:20px/28px;--type-body-1-tracking:0;--type-body-1-weight:400;
+  --type-body-2:18px/24px;--type-body-2-tracking:0;--type-body-2-weight:400;
+  --type-body-3:16px/24px;--type-body-3-tracking:-.02em;--type-body-3-weight:400;
+  --type-body-4:14px/20px;--type-body-4-tracking:-.02em;--type-body-4-weight:400;
+  --type-body-5:12px/16px;--type-body-5-tracking:-.02em;--type-body-5-weight:400;
+  --type-action-xs:12px/24px;--type-action-xs-tracking:-.2px;--type-action-xs-weight:600;
+  --type-action-sm:14px/21px;--type-action-sm-tracking:-.2px;--type-action-sm-weight:500;
+  --type-action-md:15px/24px;--type-action-md-tracking:-.2px;--type-action-md-weight:600;
+  --type-action-lg:16px/21px;--type-action-lg-tracking:-.2px;--type-action-lg-weight:500;
+  --type-action-xl:20px/21px;--type-action-xl-tracking:-.2px;--type-action-xl-weight:500;
+  --button-xs-height:36px;--button-xs-padding:12px;--button-sm-height:40px;--button-sm-padding:15px;--button-md-height:44px;--button-md-padding:20px;--button-lg-height:46px;--button-lg-padding:20px;--button-xl-height:46px;--button-xl-padding:20px;--button-radius:100px;--button-icon-gap:6px;--button-disabled-opacity:.4;--button-transition:150ms var(--ease-out-ui);
   --type-label-s:.8125rem;--type-label-m:.875rem;--type-label-l:1rem;--type-nav-mobile:.75rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;
   --font-size-sm:var(--type-label-m);--font-size-base:var(--type-body-m);--font-size-md:clamp(1.125rem,.23vw + 1.07rem,1.25rem);--font-size-lg:var(--type-heading-s);--font-size-xl:clamp(1.5rem,.68vw + 1.33rem,1.875rem);--font-size-2xl:clamp(2.25rem,3.18vw + 1.45rem,var(--type-display-m));
   --ease-out-cubic:cubic-bezier(.215,.61,.355,1);--ease-in-out-cubic:cubic-bezier(.645,.045,.355,1);--transition-fast:150ms var(--ease-out-cubic);--transition-base:300ms var(--ease-out-cubic);
@@ -24,7 +43,7 @@
   --bg:var(--sys-color-surface);--surface:var(--sys-color-surface-container-low);--text:var(--sys-color-on-surface);--text-muted:var(--sys-color-on-surface-variant);--link:var(--sys-color-primary);--field:var(--ref-ultramarine);--on-field:var(--ref-paper);
   --action-bg:var(--sys-color-action);--action-fg:var(--sys-color-on-action);--focus:var(--sys-color-focus);--border:var(--sys-color-outline-variant);--border-strong:var(--sys-color-outline);--selection-bg:var(--sys-color-selection);--selection-fg:var(--sys-color-on-selection);
   --success:var(--sys-color-secondary);--info:var(--sys-color-primary);--warning:var(--sys-color-tertiary);--error:var(--sys-color-error);--starlo:var(--text);--paper:var(--bg);--paper-2:var(--surface);--ink:var(--text);--muted:var(--text-muted);--line:var(--border);--accent:var(--primary);--accent-soft:var(--primary-soft);--signal:var(--sys-color-tertiary);--inverse:var(--field);--inverse-ink:var(--on-field);--home-shader-ink:var(--ref-midnight);--home-shader-muted:var(--ref-neutral-30);--home-shader-line:rgb(7 17 43/.28);--hero-text-scrim:color-mix(in srgb,var(--ref-paper) 90%,transparent);
-  --display:"OGARANYA",serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif;--signature:"Google Sans Flex",sans-serif;--icon:"Material Symbols Outlined";--dur-proof-fade:700ms;--dur-proof-shift:800ms;--dur-proof-weight:260ms;
+  --display:"OGARANYA",Georgia,serif;--body:"Atkinson Hyperlegible Next","Arial",sans-serif;--label:var(--body);--signature:var(--body);--icon:"Material Symbols Outlined";--dur-proof-fade:700ms;--dur-proof-shift:800ms;--dur-proof-weight:260ms;
   --sys-shape-control:0;--sys-shape-surface:0;--sys-state-hover-opacity:.08;--sys-state-focus-opacity:.1;
   --page:clamp(1.25rem,4.667vw,5.25rem);--content:102rem;--grid-gap:clamp(1rem,1.333vw,1.5rem);--grid-edge:max(var(--page),calc((100vw - var(--content))/2));--nav-h:4.5rem;--list-item-inline:clamp(1rem,2vw,1.5rem);
   --motion-press:120ms;--motion-hover:160ms;--motion-panel-in:220ms;--motion-panel-out:160ms;--ease-out-ui:cubic-bezier(.25,1,.5,1);--ease-in-out-ui:cubic-bezier(.65,0,.35,1);
