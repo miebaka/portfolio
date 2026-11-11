@@ -41,18 +41,17 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
     { slug: 'detour', title: 'Detour', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' },
     { slug: 'out-of-office', title: 'Out Of Office', tagline: 'Case study in progress.', year: '2026', status: 'coming-soon' }
   ].filter(Boolean);
-  const covers = {
-    rivo: { src: "rivo-in-use", position: "58% 46%" },
-    "tedx-rsu": { src: "tedx-rsu-campus-banner", position: "52% 42%" },
-    chopbox: { src: "chopbox-packaging", position: "46% 54%" }
+  const previewFrames = {
+    rivo: ["rivo-wordmark", "rivo-palette", "rivo-in-use"],
+    "tedx-rsu": ["tedx-rsu-typeface", "tedx-rsu-logomark", "tedx-rsu-campus-banner"],
+    chopbox: ["chopbox-logo-lockups", "chopbox-packaging", "chopbox-platter"]
   };
   const published = workIndex.filter(project => project.status === 'published');
   const inProgress = workIndex.filter(project => project.status !== 'published');
   const publishedMarkup = renderEditorialIndex(published.map(project => {
     const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
-    const cover = covers[project.slug];
-    const coverMarkup = cover ? '<div class="project-archive__cover" aria-hidden="true" style="--cover-position:' + cover.position + '"><img src="' + base + 'assets/images/optimized/' + safeToken(cover.src) + '-1080.webp" alt="" width="1080" height="720" loading="lazy" decoding="async"></div>' : '';
-    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__content"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><span class="project-archive__rule" aria-hidden="true"></span><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div>' + coverMarkup + '</div>' };
+    const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
+    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
   const collectionMarkup = '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' + base + 'explorations.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' + base + 'notes.html"><span>Notes</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
@@ -82,6 +81,10 @@ export function renderClients() {
   el.innerHTML = '<button class="client-marquee__control" type="button" aria-label="Pause client logos" aria-pressed="false"><span data-marquee-label>Pause</span></button><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
   const controller = createMarqueeController(el);
   addEventListener('pagehide', () => controller.destroy(), { once: true });
+}
+
+export function renderClientProofMarkup(clients = SITE.clients) {
+  return '<ul class="client-proof">' + (clients || []).map(clientItem).join("") + "</ul>";
 }
 
 export function createMarqueeController(root, deps = {}) {
