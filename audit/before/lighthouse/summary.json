@@ -1,0 +1,107 @@
+[
+  {
+    "page": "404",
+    "performance": 0.91,
+    "LCP": 2745.634,
+    "CLS": 0.00003701898062273075,
+    "TBT": 4.4650000000001455
+  },
+  {
+    "page": "about",
+    "performance": 0.62,
+    "LCP": 11612.082,
+    "CLS": 0,
+    "TBT": 8.449000000000524
+  },
+  {
+    "page": "community",
+    "performance": 0.68,
+    "LCP": 11145.327,
+    "CLS": 0.08262454434993925,
+    "TBT": 0
+  },
+  {
+    "page": "contact",
+    "performance": 0.91,
+    "LCP": 2780.34,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "explorations",
+    "performance": 0.63,
+    "LCP": 11110.851,
+    "CLS": 0.08262454434993925,
+    "TBT": 0
+  },
+  {
+    "page": "index",
+    "performance": 0.82,
+    "LCP": 2818.036,
+    "CLS": 0,
+    "TBT": 371.0730000000003
+  },
+  {
+    "page": "notes",
+    "performance": 0.91,
+    "LCP": 2767.529,
+    "CLS": 0,
+    "TBT": 18.084999984741444
+  },
+  {
+    "page": "privacy",
+    "performance": 0.91,
+    "LCP": 2774.342,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "work--chopbox",
+    "performance": 0.82,
+    "LCP": 3633.436,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "work--christian-poster-a-week",
+    "performance": 0.91,
+    "LCP": 2763.883,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "work--rivo",
+    "performance": 0.84,
+    "LCP": 3372.362,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "work--tedx-rsu",
+    "performance": 0.79,
+    "LCP": 3832.407,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "work",
+    "performance": 0.91,
+    "LCP": 2794.758,
+    "CLS": 0,
+    "TBT": 0
+  },
+  {
+    "page": "writing--designing-for-disability-in-nigeria",
+    "performance": 0.91,
+    "LCP": 2746.091,
+    "CLS": 0,
+    "TBT": 3.3170000000000073
+  },
+  {
+    "page": "writing--when-the-swoosh-lost-its-soul",
+    "performance": 0.91,
+    "LCP": 2734.335,
+    "CLS": 0.0007673412638438016,
+    "TBT": 14.606999999999971
+  }
+]
