@@ -54,7 +54,7 @@ test("Work archive separates published cases from work in progress", () => {
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
-  assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-archive__cover"/g) || []).length, 3);
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
   assert.match(html, /href="explorations\.html"/);
@@ -207,9 +207,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"OGARANYA"/);
-  assert.match(css, /font-family:\s*"Google Sans Flex"/);
-  assert.match(css, /font-family:\s*"Josefin Sans"/);
+  assert.match(css, /font-family:\s*"Atkinson Hyperlegible Next"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -228,6 +226,22 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   await assert.rejects(access(join(dist, "node_modules")));
 });
 
+test("work cards render one aligned content block and one cover", async () => {
+  const html = await readFile(join(dist, "work.html"), "utf8");
+  assert.equal((html.match(/class="project-archive__content"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-archive__cover"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-archive__cover"[^>]*>[\s\S]*?<img/g) || []).length, 3);
+});
+
+test("work cards have a blur fade reveal with a readable static fallback", async () => {
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  assert.match(css, /\.js-reveal body\[data-page="work"\] \.project-archive__item\[data-spectacle-reveal\]/);
+  assert.match(css, /filter:blur\(6px\)/);
+  assert.match(css, /opacity:0/);
+  assert.match(css, /\.project-archive__item\[data-spectacle-reveal\]\.is-visible/);
+  assert.match(css, /filter:none/);
+});
+
 test("ultramarine identity stays within its documented visual language", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(css, /--ref-ultramarine:#002080/);
@@ -235,7 +249,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--display:"OGARANYA",serif;--body:"Google Sans Flex",sans-serif;--label:"Josefin Sans",sans-serif/);
+  assert.match(css, /--display:"OGARANYA",Georgia,serif;--body:"Atkinson Hyperlegible Next","Arial",sans-serif;--label:var\(--body\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /repeating-radial-gradient/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
@@ -320,8 +334,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(listening, /now-playing__label/);
   assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
-  assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
-  assert.match(navigation, /data-cord-mode>Print/);
+  assert.match(navigation, /class="theme-switch"[^>]*role="switch"[^>]*aria-checked="false"/);
+  assert.match(navigation, /data-theme-label="print">Print/);
+  assert.match(navigation, /data-theme-label="screen">Screen/);
   assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
   assert.match(css, /--home-section-gap:clamp\(6\.5rem,8\.5vw,9\.5rem\)/);
   assert.match(css, /--home-inner-gap:clamp\(4rem,6vw,6\.5rem\)/);
