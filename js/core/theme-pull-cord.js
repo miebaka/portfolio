@@ -44,7 +44,19 @@ export function createThemePullCord(button, { onToggle } = {}) {
   const line = button.querySelector("[data-cord-line]");
   const hit = button.querySelector("[data-cord-hit]");
   const bead = button.querySelector("[data-cord-bead]");
-  if (!svg || !line || !hit || !bead) return { setChecked() {}, destroy() {} };
+  if (!svg || !line || !hit || !bead) {
+    const click = () => onToggle?.();
+    button.addEventListener("click", click);
+    return {
+      setChecked(checked) {
+        button.setAttribute("aria-checked", String(checked));
+        button.setAttribute("aria-label", checked ? "Switch to Print mode" : "Switch to Screen mode");
+        button.dataset.mode = checked ? "screen" : "print";
+        button.classList.toggle("is-screen", checked);
+      },
+      destroy() { button.removeEventListener("click", click); }
+    };
+  }
 
   const anchor = { x: 34, y: 0 };
   const xs = new Float64Array(LINKS + 1);
@@ -143,6 +155,7 @@ export function createThemePullCord(button, { onToggle } = {}) {
       button.setAttribute("aria-checked", String(checked));
       button.setAttribute("aria-label", checked ? "Switch to Print mode" : "Switch to Screen mode");
       button.dataset.mode = checked ? "screen" : "print";
+      button.classList.toggle("is-screen", checked);
       button.querySelector("[data-cord-mode]").textContent = checked ? "Screen" : "Print";
     },
     destroy() {

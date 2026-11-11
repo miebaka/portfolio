@@ -258,6 +258,35 @@ test("Work index separates complete cases from studies in progress", async ({ pa
   await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);
 });
 
+test("Work cards share one inset and one composed cover", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/work.html");
+  const cards = page.locator(".project-archive__item");
+  await expect(cards).toHaveCount(3);
+  await expect(cards.locator(".project-archive__content")).toHaveCount(3);
+  await expect(cards.locator(".project-archive__cover")).toHaveCount(3);
+  await expect(cards.locator(".project-archive__cover img")).toHaveCount(3);
+  const geometry = await cards.first().evaluate(card => {
+    const content = card.querySelector(".project-archive__content");
+    const cover = card.querySelector(".project-archive__cover");
+    const heading = content.querySelector("h2");
+    const description = content.querySelector("p");
+    const year = content.querySelector("time");
+    const lefts = [heading, description, year].map(node => node.getBoundingClientRect().left);
+    return {
+      padding: getComputedStyle(content).paddingLeft,
+      aligned: Math.max(...lefts) - Math.min(...lefts),
+      ratio: cover.getBoundingClientRect().width / cover.getBoundingClientRect().height,
+      objectPosition: getComputedStyle(cover.querySelector("img")).objectPosition,
+    };
+  });
+  expect(geometry.padding).toBe("48px");
+  expect(geometry.aligned).toBeLessThanOrEqual(1);
+  expect(geometry.ratio).toBeGreaterThan(1.45);
+  expect(geometry.ratio).toBeLessThan(1.55);
+  expect(geometry.objectPosition).not.toBe("50% 50%");
+});
+
 test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
   test.skip(isMobile, "The reciprocal hover treatment is reserved for fine pointers");
   await page.goto("/work.html");
