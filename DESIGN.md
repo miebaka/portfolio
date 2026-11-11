@@ -16,10 +16,8 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Ogaranya 400: semantic headings and display headlines.
-- Josefin Sans 600: compact uppercase labels.
-- Google Sans Flex 400/500: body copy, navigation and interface text.
-- Josefin Sans 600: compact labels, navigation and metadata.
+- Ogaranya 400: display headlines and primary page titles.
+- Atkinson Hyperlegible Next 400/500/600: headings, body copy, navigation, labels and interface text.
 - The responsive scale follows the approved Figma roles: 10.9/12.5/14px
   labels, 14/19.2px body copy, 24/48px headings, and 48/64/88/136px display.
 - The shared 1800px reference grid has 84px outer margins, 12 columns and
