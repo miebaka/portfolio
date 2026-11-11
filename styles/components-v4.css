@@ -9,7 +9,7 @@
 :root[data-theme="dark"] .nav-logo{filter:invert(1)}
 .site-nav__links{display:flex;align-items:center;justify-self:end;border:0}
 .site-nav__link{position:relative;display:inline-flex;align-items:center;padding-inline:.85rem;font:500 var(--font-size-sm)/1 var(--label);letter-spacing:.13em;text-transform:uppercase;color:var(--muted);min-width:3rem;min-height:3rem}
-.site-nav__link::after{content:"";position:absolute;inset:auto .85rem .25rem;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-ui) var(--ease-standard);display:none}
+.site-nav__link::after{content:"";position:absolute;inset:auto .85rem .25rem;height:2px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform var(--dur-ui) var(--ease-standard);display:block}
 .site-nav__link[aria-current="page"]{color:var(--accent-interactive)}
 .site-nav__link:hover{color:var(--ink)}
 .site-nav__link[aria-current="page"]::after{transform:scaleX(1);transform-origin:left}
