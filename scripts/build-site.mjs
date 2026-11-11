@@ -95,6 +95,14 @@ const sitemapRoutes = [
 ];
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
+const experimentEntries = JSON.parse(await readFile(join(root, "assets", "experiments", "manifest.json"), "utf8"));
+const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
+  const source = `assets/experiments/${encodeURIComponent(entry.file)}`;
+  const media = entry.type === "video"
+    ? `<video src="${source}" muted playsinline preload="metadata" aria-label="${esc(entry.title)}"></video>`
+    : `<img src="${source}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
+  return `<figure class="experiment-tunnel__card" style="--i:${index}" data-experiment-card>${media}<figcaption>${String(index + 1).padStart(2, "0")} · ${esc(entry.title)}</figcaption></figure>`;
+}).join("");
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);
   const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("writing/") ? "writing" : "");
@@ -104,6 +112,7 @@ function renderShell(source, href) {
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
+  if (href === "explorations.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
 }
