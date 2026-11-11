@@ -1,0 +1,15 @@
+{
+  "name": "Miebaka Joshua — Brand & Visual Designer",
+  "short_name": "Miebaka Joshua",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fc",
+  "theme_color": "#002080",
+  "icons": [
+    {
+      "src": "/assets/images/miebaka-joshua-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
