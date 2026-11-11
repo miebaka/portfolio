@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createIndexController } from "../js/core/navigation.js";
-import { renderIndexMarkup } from "../js/render/navigation.js";
+import { renderIndexMarkup, renderThemeSwitchMarkup } from "../js/render/navigation.js";
 import { navigation } from "../data/navigation.js";
 import { renderFooter } from "../js/render/footer.js";
 
@@ -104,4 +104,15 @@ test("footer social links stay visually clean", () => {
   } finally {
     globalThis.document = previousDocument;
   }
+});
+
+test("Print and Screen render as a clear accessible two-state switch", () => {
+  const html = renderThemeSwitchMarkup();
+  assert.match(html, /role="switch"/);
+  assert.match(html, /aria-checked="false"/);
+  assert.match(html, />Print</);
+  assert.match(html, />Screen</);
+  assert.match(html, /theme-switch__option--print/);
+  assert.match(html, /theme-switch__option--screen/);
+  assert.doesNotMatch(html, />Pull</);
 });
