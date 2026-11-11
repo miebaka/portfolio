@@ -207,8 +207,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Google Sans Flex"/);
-  assert.match(css, /font-family:\s*"Josefin Sans"/);
+  assert.match(css, /font-family:\s*"OGARANYA"/);
+  assert.match(css, /font-family:\s*"Atkinson Hyperlegible Next"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -234,9 +234,9 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"Google Sans Flex",\s*sans-serif/);
-  assert.match(css, /--font-body:\s*"Google Sans Flex",\s*sans-serif/);
-  assert.match(css, /--font-label:\s*"Josefin Sans",\s*sans-serif/);
+  assert.match(css, /--font-display:\s*"OGARANYA"/);
+  assert.match(css, /--font-body:\s*"Atkinson Hyperlegible Next"/);
+  assert.match(css, /--font-label:\s*"Atkinson Hyperlegible Next"/);
   assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /repeating-radial-gradient/);
@@ -295,7 +295,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
   for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
-  assert.doesNotMatch(projects, /proof\?\.find\(item => item\.type === "decision"\)|home-project-list__decision/);
+  assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
+  assert.match(projects, /home-project-list__decision/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
   assert.match(css, /\.home-page \.client-marquee\{[^}]*width:100%[^}]*margin-inline:0[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
@@ -369,7 +370,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const meta = writing.indexOf('writing-item__meta');
   assert.ok(title > -1 && title < meta);
   assert.doesNotMatch(writing, /writing-item__summary|editorial-index__description/);
-  assert.doesNotMatch(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /editorial-index__description|home-project-list__decision/);
+  assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
 });
 
 test("built service fallbacks contain one complete shared record per service", async () => {

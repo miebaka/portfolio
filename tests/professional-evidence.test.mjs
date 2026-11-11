@@ -13,6 +13,7 @@ import {
   renderCvMarkup
 } from "../js/render/sections.js";
 import { renderIndexMarkup } from "../js/render/navigation.js";
+import { renderHomeProjectList } from "../js/render/projects.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 import { assertValidContent } from "../scripts/validate-content.mjs";
 
@@ -117,5 +118,15 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
   assert.equal((markup.match(/class="experience-ruler__item"/g) || []).length, entries.length);
   assert.match(markup, /experience-ruler__scale/);
   assert.doesNotMatch(markup, /<details|card/i);
+});
+
+test("the homepage exposes each flagship governing decision before biography", () => {
+  const markup = renderHomeProjectList(CONTENT.projects, CONTENT.caseStudies);
+  for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
+    const decision = CONTENT.caseStudies[slug].proof.find(item => item.type === "decision");
+    assert.ok(decision, `${slug} has a governing decision`);
+    assert.ok(markup.includes(decision.statement.replaceAll("&", "&amp;").replaceAll("“", "“").replaceAll("”", "”")), `${slug} decision appears on Home`);
+  }
+  assert.equal((markup.match(/Governing decision/g) || []).length, 3);
 });
 

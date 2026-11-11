@@ -44,8 +44,8 @@ test("approved visual contract remains intact", async () => {
     assert.ok(!compactCss.includes(pattern), `forbidden CSS: ${pattern}`);
   }
 
-  // Material Symbols is an icon font. The authored typography is deliberately
-  // limited to Google Sans Flex for display/body and Josefin Sans for labels.
+  // Material Symbols is an icon font. The authored typography uses Ogaranya
+  // for display and Atkinson Hyperlegible Next for body and interface roles.
   const roleFonts = ["display", "body", "label"].map(role => {
     const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
     assert.ok(roleMatch, `missing --${role} typography role`);
@@ -53,7 +53,7 @@ test("approved visual contract remains intact", async () => {
     assert.ok(familyMatch, `missing --font-${role} family token`);
     return familyMatch[1];
   });
-  assert.deepEqual(roleFonts, ["Google Sans Flex", "Google Sans Flex", "Josefin Sans"]);
+  assert.deepEqual(roleFonts, ["OGARANYA", "Atkinson Hyperlegible Next", "Atkinson Hyperlegible Next"]);
   assert.equal(new Set(roleFonts).size, 2);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);

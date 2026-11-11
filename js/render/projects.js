@@ -15,12 +15,14 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
   const bySlug = new Map(projects.map(project => [project.slug, project]));
   const selected = ["tedx-rsu", "rivo", "chopbox"].map(slug => {
     const project = bySlug.get(slug);
-    const published = project?.status === "published" && studies?.[slug]?.status === "published";
-    return { slug, title: project?.title || slug, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "" };
+    const study = studies?.[slug];
+    const published = project?.status === "published" && study?.status === "published";
+    const decision = study?.proof?.find(item => item.type === "decision")?.statement || project?.tagline || "";
+    return { slug, title: project?.title || slug, category: project?.category || "Project", year: project?.year || "", decision, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "" };
   });
   return renderEditorialIndex(selected.map(project => {
     const visual = project.cover ? '<span class="home-project-list__visual" aria-hidden="true"><img src="' + base + 'assets/images/optimized/' + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></span>' : '';
-    const content = '<span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span>' + visual;
+    const content = '<span class="home-project-list__identity"><span class="home-project-list__title editorial-index__title">' + esc(project.title) + '</span><span class="home-project-list__meta">' + esc(project.category) + ' · ' + esc(project.year) + '</span></span><span class="home-project-list__decision"><small>Governing decision</small>' + esc(project.decision) + '</span><span class="home-project-list__arrow" aria-hidden="true">↗</span>' + visual;
     return { href: project.href, tone: project.slug, className: project.href ? '' : 'home-project-list__pending', content };
   }), { variant: 'work', ordered: true });
 }

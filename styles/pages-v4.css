@@ -783,6 +783,38 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 
 @media(hover:hover) and (pointer:fine){.article-toc a:hover{color:var(--paper)}.article-toc a:hover::before{transform:scaleY(1)}.article-toc a:hover .article-toc__index{color:inherit}}
 
+/* Homepage proof pass: get the hiring signal and project decisions into the first scan. */
+body.home-page[data-page="home"] .home-landing{height:min(82svh,56rem);min-height:42rem;position:relative;top:auto}
+body.home-page[data-page="home"] .home-landing__inner{padding-bottom:clamp(3rem,6vh,5.5rem)}
+.home-landing__proof{grid-column:1/-1;display:grid;grid-template-columns:minmax(18rem,5fr) minmax(18rem,4fr);gap:var(--grid-gap);align-items:end;margin-top:clamp(2rem,4vh,3.5rem);padding-top:1.25rem;border-top:1px solid var(--home-shader-line)}
+.home-landing__proof>p{max-width:40rem;color:var(--home-shader-muted);font-size:clamp(1rem,1.15vw,1.2rem);line-height:1.55}
+.home-landing__proof nav{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--home-shader-line)}
+.home-landing__proof a{display:flex;justify-content:space-between;gap:1rem;padding:1rem 0;text-decoration:none;font:600 var(--type-label-s)/1.2 var(--label);letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--home-shader-line)}
+.home-landing__proof a+a{padding-left:1rem;border-left:1px solid var(--home-shader-line)}
+.home-landing__proof a span{color:var(--primary)}
+body.home-page[data-page="home"] .swiss-selected{padding-top:clamp(5rem,8vw,8rem)}
+.home-project-list__identity{display:grid;gap:.8rem;min-width:0}
+.home-project-list__meta{color:var(--home-shader-muted);font:500 var(--type-label-s)/1.25 var(--label);letter-spacing:.12em;text-transform:uppercase}
+.home-project-list__decision{max-width:32rem;color:var(--home-shader-muted);font-size:.92rem;line-height:1.55}
+.home-project-list__decision small{display:block;margin-bottom:.55rem;color:var(--primary);font:600 var(--type-label-s)/1.2 var(--label);letter-spacing:.12em;text-transform:uppercase}
+.home-project-list__arrow{font-size:1.5rem;line-height:1;color:var(--primary);transition:transform var(--dur-ui) var(--ease-standard)}
+body[data-page="home"] .editorial-index__row{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(16rem,.7fr) 1.5rem;min-height:clamp(13rem,15vw,16rem)}
+body[data-page="home"] .editorial-index__row:focus-visible .home-project-list__arrow{transform:translate(.25rem,-.25rem)}
+@media(hover:hover) and (pointer:fine){body[data-page="home"] .editorial-index__row:hover .home-project-list__arrow{transform:translate(.25rem,-.25rem)}}
+
+@media(max-width:48rem){
+  body.home-page[data-page="home"] .home-landing{height:auto;min-height:calc(100svh - var(--nav-h))}
+  body.home-page[data-page="home"] .home-landing__inner{padding-bottom:calc(5.5rem + var(--safe-bottom))}
+  .home-landing__proof{grid-template-columns:1fr;margin-top:2rem}
+  .home-landing__proof nav{grid-template-columns:1fr}
+  .home-landing__proof a+a{padding-left:0;border-left:0}
+  body[data-page="home"] .editorial-index__row{grid-template-columns:minmax(0,1fr) 1.25rem;min-height:12rem;padding-block:1.75rem}
+  body.home-page .home-project-list__decision{grid-column:1/-1;max-width:34rem}
+  body.home-page .home-project-list__decision small{margin-bottom:.4rem}
+  body.home-page .home-project-list__visual{display:none}
+  body.home-page .home-project-list__arrow{grid-column:2;grid-row:1}
+}
+
 /* Home process: one visible decision, with the full sequence acting as its index. */
 .home-capabilities--process .process-sequence .service-swatches{grid-template-columns:minmax(16rem,.72fr) minmax(0,1.28fr);gap:clamp(3rem,7vw,8rem);align-items:start;min-height:0}
 .home-capabilities--process .process-sequence .service-swatches__tabs{display:grid;padding:0;border-top:1px solid var(--home-shader-line)}

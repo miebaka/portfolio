@@ -96,7 +96,20 @@ const sitemapRoutes = [
 ];
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
-const experimentEntries = JSON.parse(await readFile(join(root, "assets", "experiments", "manifest.json"), "utf8"));
+async function readExperimentEntries() {
+  try {
+    return JSON.parse(await readFile(join(root, "assets", "experiments", "manifest.json"), "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+    const directory = join(root, "assets", "experiments");
+    const files = (await readdir(directory, { withFileTypes: true }))
+      .filter(entry => entry.isFile() && /\.(?:avif|gif|jpe?g|png|webp|mp4|webm)$/i.test(entry.name))
+      .map(entry => entry.name)
+      .sort((a, b) => a.localeCompare(b));
+    return files.map(file => ({ file, title: file.replace(/\.[^.]+$/, ""), alt: file.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "), type: /\.(?:mp4|webm)$/i.test(file) ? "video" : "image" }));
+  }
+}
+const experimentEntries = await readExperimentEntries();
 const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
   const source = `assets/experiments/${encodeURIComponent(entry.file)}`;
   const media = entry.type === "video"
@@ -169,7 +182,7 @@ for (const asset of assets) {
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
-for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf|otf))/gi)) {
+for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2?|ttf|otf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
 
