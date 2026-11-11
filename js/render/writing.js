@@ -39,6 +39,7 @@ export function renderWriting() {
           content: (
               '<span class="writing-item__identity">' +
                 '<h3 class="writing-item__title editorial-index__title">' + esc(a.title) + "</h3>" +
+                (a.summary ? '<span class="writing-item__summary">' + esc(a.summary) + '</span>' : '') +
               "</span>" +
               '<span class="writing-item__trailing editorial-index__meta">' +
                 '<span class="writing-item__meta">' +

@@ -31,10 +31,10 @@ export function renderProjectArchive() {
   const el = document.querySelector('[data-project-archive]');
   if (!el) return;
   el.className = 'project-archive__list';
-  if (el.dataset.prerendered !== 'true') el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath());
+  if (el.dataset.prerendered !== 'true') el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath(), SITE.caseStudies);
 }
 
-export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") {
+export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {
   const bySlug = new Map(projects.map(project => [project.slug, project]));
   const workIndex = [
     { ...bySlug.get('tedx-rsu'), title: 'TEDx Rivers State University' },
@@ -52,8 +52,11 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "") 
   const inProgress = workIndex.filter(project => project.status !== 'published');
   const publishedMarkup = renderEditorialIndex(published.map(project => {
     const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
+    const study = studies?.[project.slug];
+    const decision = study?.proof?.find(item => item.type === 'decision')?.statement || project.tagline;
+    const role = study?.facts?.role || (project.tags || []).join(', ');
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
-    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><h2 class="editorial-index__title">' + esc(project.title) + '</h2><p class="editorial-index__description">' + esc(project.tagline) + '</p><time>' + esc(project.year) + '</time></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
+    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><p class="project-archive__meta"><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time></p><h2 class="editorial-index__title">' + esc(project.title) + '</h2><div class="project-archive__evidence"><small>Governing decision</small><p class="editorial-index__description">' + esc(decision) + '</p><span>' + esc(role) + '</span></div></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
   const collectionMarkup = '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' + base + 'explorations.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' + base + 'notes.html"><span>Notes</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';

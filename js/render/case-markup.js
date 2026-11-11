@@ -30,7 +30,7 @@ function sequence(media, base, nextPlate) {
 
 function factsBlock(study, project) {
   const facts = study.facts || {};
-  const rows = [["Context", facts.context], ["Role", facts.role], ["Year", project?.year], ["Collaborators", facts.collaborators], ["Delivered", facts.delivered]].filter(([, value]) => value);
+  const rows = [["Context", facts.context], ["Role", facts.role], ["Constraint", facts.constraint], ["Year", project?.year], ["Collaborators", facts.collaborators], ["Delivered", facts.delivered]].filter(([, value]) => value);
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 

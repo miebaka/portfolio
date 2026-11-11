@@ -59,7 +59,7 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /class="project-archive__collections"/);
   assert.match(html, /href="explorations\.html"/);
   assert.match(html, /href="notes\.html"/);
-  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
+  assert.match(html, /“Pause…” became the organising idea inside TEDx’s fixed global identity\./);
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
@@ -369,7 +369,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
   assert.ok(title > -1 && title < meta);
-  assert.doesNotMatch(writing, /writing-item__summary|editorial-index__description/);
+  assert.match(writing, /writing-item__summary/);
   assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
 });
 

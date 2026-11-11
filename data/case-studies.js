@@ -51,6 +51,7 @@ export const caseStudies = {
     "facts": {
       "context": "In-house identity work at Rivo Studios",
       "role": "Brand strategy, identity design and guidelines",
+      "constraint": "Make a software studio feel capable without relying on cold, technical category codes",
       "delivered": "Identity system and rollout"
     },
     "proof": [
@@ -205,6 +206,7 @@ export const caseStudies = {
     "facts": {
       "context": "Identity commission for TEDx Rivers State University",
       "role": "Identity design, creative direction and print",
+      "constraint": "Create a distinct local event language inside TEDx’s fixed global identity",
       "delivered": "Event identity, social creative, programmes, merchandise, campus signage and stage applications"
     },
     "proof": [
@@ -365,6 +367,7 @@ export const caseStudies = {
     "facts": {
       "context": "Independent brand identity commission",
       "role": "Brand strategy, identity design and packaging",
+      "constraint": "Build appetite and recognition without defaulting to the category’s loud delivery-app shorthand",
       "delivered": "Identity, packaging and rollout"
     },
     "proof": [
