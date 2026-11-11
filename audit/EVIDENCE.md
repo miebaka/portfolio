@@ -8,13 +8,13 @@ motion both enabled and disabled.
 | --- | --- | --- | --- |
 | Screenshot coverage | 210 captures | 210 captures | `audit/before/`, `audit/after/` |
 | Computed-style coverage | 105 dumps | 105 dumps | `audit/before/*computed-styles.json`, `audit/after/*computed-styles.json` |
-| axe serious / critical | 0 | 0 | 15 JSON reports in each evidence directory |
+| axe serious / critical | 0 | 0 | 15 after-state reports in `audit/evidence/` |
 | Home initial CSS (gzip) | Unverified | 27.7 KiB | `npm run test:budgets` |
 | Home initial JS (gzip) | Unverified | 1.2 KiB | `npm run test:budgets` |
 | Home initial media | Portrait master was 1.3 MiB | 39.2 KiB initial page media | `audit/REPORT.md`, `npm run test:budgets` |
 | Font payload (gzip) | TTF sources | 67.9 KiB, WOFF2 only | `npm run test:budgets` |
 | Production CSS requests | 3 authored stylesheets | 1 bundled stylesheet | `scripts/site-integrity.test.mjs` |
-| Lighthouse accessibility | 100 on measured pages | 100 on all 15 pages | `audit/before/lighthouse-categories/`, `audit/after/lighthouse/` |
+| Lighthouse accessibility | 100 on measured pages | 100 on all 15 pages | `audit/evidence/lighthouse/` |
 | Lighthouse best practices | 100 on measured pages | 100 on all 15 pages | same as above |
 | Lighthouse performance | 62–91 | 56–90 | Local mobile runs; target not met |
 | Lighthouse SEO | 66–100 | 66–69 | Intentionally reduced by staging `noindex`; target is launch-gated |
@@ -24,9 +24,9 @@ Selected visual pairs:
 
 | Page | Before | After |
 | --- | --- | --- |
-| Home, 390 | `audit/before/index--390--motion-reduce.png` | `audit/after/index--390--motion-reduce.png` |
-| Home, 1440 | `audit/before/index--1440--motion-reduce.png` | `audit/after/index--1440--motion-reduce.png` |
-| Rivo, 390 | `audit/before/work--rivo--390--motion-reduce.png` | `audit/after/work--rivo--390--motion-reduce.png` |
+| Home, 390 | `audit/evidence/before/index--390--motion-reduce.png` | `audit/evidence/after/index--390--motion-reduce.png` |
+| Home, 1440 | `audit/evidence/before/index--1440--motion-reduce.png` | `audit/evidence/after/index--1440--motion-reduce.png` |
+| Rivo, 390 | `audit/evidence/before/work--rivo--390--motion-reduce.png` | `audit/evidence/after/work--rivo--390--motion-reduce.png` |
 
 ## Acceptance status
 
