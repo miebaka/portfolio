@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { assertValidContent } from "./validate-content.mjs";
+import { normalizeHead, renderFooter, renderHeader } from "./render-partials.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = join(root, "dist");
@@ -18,12 +19,13 @@ async function bundleCss(file, seen = new Set()) {
   if (seen.has(absolute)) return "";
   seen.add(absolute);
   const css = await readFile(absolute, "utf8");
-  const importPattern = /@import\s+["']([^"']+)["'];/g;
+  const importPattern = /@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?(?:\s+layer\(([^)]+)\))?\s*;/g;
   let result = "";
   let cursor = 0;
   for (const match of css.matchAll(importPattern)) {
     result += css.slice(cursor, match.index);
-    result += await bundleCss(resolve(dirname(absolute), match[1]), seen);
+    const imported = await bundleCss(resolve(dirname(absolute), match[1]), seen);
+    result += match[2] ? `@layer ${match[2]}{${imported}}` : imported;
     cursor = match.index + match[0].length;
   }
   result += css.slice(cursor);
@@ -74,7 +76,7 @@ async function outputFiles(directory) {
 
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
-const { renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
+const { renderClientProofMarkup, renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
 const { renderServiceFallbackMarkup } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
@@ -94,16 +96,24 @@ const sitemapRoutes = [
 ];
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
+const experimentEntries = JSON.parse(await readFile(join(root, "assets", "experiments", "manifest.json"), "utf8"));
+const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
+  const source = `assets/experiments/${encodeURIComponent(entry.file)}`;
+  const media = entry.type === "video"
+    ? `<video src="${source}" muted playsinline preload="metadata" aria-label="${esc(entry.title)}"></video>`
+    : `<img src="${source}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
+  return `<figure class="experiment-tunnel__card" style="--i:${index}" data-experiment-card>${media}<figcaption>${String(index + 1).padStart(2, "0")} · ${esc(entry.title)}</figcaption></figure>`;
+}).join("");
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);
-  const links = placement => routes.filter(route => route.includeIn.includes(placement))
-    .map(route => `        <a href="${base}${esc(route.href)}">${esc(route.label)}</a>`).join("\n");
-  let rendered = source
-    .replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${esc(canonicalUrl(href))}">`)
-    .replace(/<nav class="nav-fallback" aria-label="Primary">[\s\S]*?<\/nav>/, `<nav class="nav-fallback" aria-label="Primary">\n${links("index")}\n    </nav>`)
-    .replace(/(<div class="nav-fallback">)[\s\S]*?(?=\s*<a href="https:)/, `$1\n${links("footer")}\n`);
+  const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("writing/") ? "writing" : "");
+  let rendered = normalizeHead(source, { canonicalUrl: canonicalUrl(href), base })
+    .replace(/<header(?: class="[^"]*")? data-mount="nav">[\s\S]*?<\/header>/, renderHeader({ base, page }))
+    .replace(/<footer(?: class="[^"]*")? data-mount="footer">[\s\S]*?<\/footer>/, renderFooter({ base }));
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
+  if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base) + '</div>');
+  if (href === "explorations.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
 }
@@ -114,6 +124,7 @@ for (const file of rootFiles) {
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
 }
 await ensureCopy(join(root, "robots.txt"), join(output, "robots.txt"));
+try { await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest")); } catch {}
 await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
@@ -158,7 +169,7 @@ for (const asset of assets) {
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
-for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2?|ttf|otf))/gi)) {
+for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2|ttf|otf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
 

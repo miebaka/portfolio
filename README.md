@@ -153,7 +153,8 @@ All opt-in and degrade gracefully — the editorial base never depends on them:
 
 ## Customise
 
-- **Colours / type / spacing / motion:** `styles/foundations.css` first.
+- **Semantic colours, type-family switches, spacing and motion:** `styles/tokens.css`.
+- **Legacy component aliases and the fluid type scale:** `styles/foundations.css`.
 - **Name, email, socials, availability, projects, case studies:** `data/site.js`.
 - **Reading measures / touch targets:** `--measure-*`, `--tap-min` tokens; helpers
   `.measure-hero` / `.measure-lead` / `.measure-reading` cap line length.
@@ -170,10 +171,24 @@ a `mailto:` action and direct email link as the no-JavaScript fallback.
 - Every page has a unique title/description, canonical, Open Graph, Twitter Card,
   and JSON-LD (`Person` + `WebSite` on home, `BreadcrumbList` everywhere,
   `CreativeWork` on case studies). Plus `robots.txt`, `sitemap.xml`, SVG favicon.
-- **Canonical host:** `https://miebaka-portfolio.vercel.app` is the current public
-  production URL. `miebaka.design` is not owned or active and must not be used in
-  metadata, documentation, release notes, or deployment reporting unless that
-  changes and the owner explicitly confirms it.
+- **Canonical host:** `https://miebaka.design`. Preview deployments remain
+  `noindex,nofollow`; remove the staging robots response header and disallow rule
+  only when the canonical domain is ready to launch.
+
+## Shared shell and components
+
+`scripts/render-partials.mjs` is the single source for the document head, header
+and footer. The build renders those partials into every static page, so the
+shipped site remains readable and navigable with JavaScript disabled. Component
+styles live in `styles/components-v4.css`; page-specific composition lives in
+`styles/pages-v4.css`. Classes follow a BEM-style block, element and modifier
+convention.
+
+To add a case study, create the project and narrative records in `data/site.js`,
+reuse the required Problem, Decision, System, Applications and Outcome chapter
+sequence, add the shell under `work/`, then run `npm run sync:fallbacks`. Keep
+collaborator credits as separate authored records and do not publish outcomes
+that are not supported by an artefact, quote or verified measure.
 
 ## Accessibility & performance
 

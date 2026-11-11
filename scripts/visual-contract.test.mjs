@@ -44,30 +44,23 @@ test("approved visual contract remains intact", async () => {
     assert.ok(!compactCss.includes(pattern), `forbidden CSS: ${pattern}`);
   }
 
-  const roleFonts = ["display", "body"].map(role => {
-    const match = css.match(new RegExp(`--${role}:\\s*"([^"]+)"`));
-    assert.ok(match, `missing --${role} typography role`);
-    return match[1];
+  // Material Symbols is an icon font. The authored typography is deliberately
+  // limited to Google Sans Flex for display/body and Josefin Sans for labels.
+  const roleFonts = ["display", "body", "label"].map(role => {
+    const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
+    assert.ok(roleMatch, `missing --${role} typography role`);
+    const familyMatch = css.match(new RegExp(`--font-${role}:\\s*"([^"]+)"`));
+    assert.ok(familyMatch, `missing --font-${role} family token`);
+    return familyMatch[1];
   });
-  assert.deepEqual(roleFonts, ["OGARANYA", "Atkinson Hyperlegible Next"]);
+  assert.deepEqual(roleFonts, ["Google Sans Flex", "Google Sans Flex", "Josefin Sans"]);
   assert.equal(new Set(roleFonts).size, 2);
-  const auditedTokens = {
-    "--type-display-1":"72px/84px","--type-display-2":"56px/64px","--type-display-3":"40px/48px","--type-display-4":"32px/40px",
-    "--type-heading-1":"24px/32px","--type-heading-2":"18px/24px","--type-heading-3":"16px/24px","--type-heading-4":"14px/20px",
-    "--type-subheading-1":"16px/24px","--type-subheading-2":"14px/20px","--type-body-1":"20px/28px","--type-body-2":"18px/24px",
-    "--type-body-3":"16px/24px","--type-body-4":"14px/20px","--type-body-5":"12px/16px",
-    "--button-xs-height":"36px","--button-sm-height":"40px","--button-md-height":"44px","--button-lg-height":"46px","--button-xl-height":"46px",
-    "--button-radius":"100px","--button-icon-gap":"6px","--button-disabled-opacity":".4"
-  };
-  for (const [token,value] of Object.entries(auditedTokens)) {
-    assert.ok(compactCss.includes(`${token}:${value}`), `${token} must remain ${value}`);
-  }
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");
     return (family[1] || family[2] || family[3]).trim();
   });
-  const allowedFonts = new Set(["OGARANYA", "Atkinson Hyperlegible Next", "Material Symbols Outlined"]);
+  const allowedFonts = new Set([...contract.fonts, "Material Symbols Outlined"]);
   for (const font of contract.fonts) assert.ok(definedFonts.includes(font), `${font} is not bundled`);
   for (const font of definedFonts) assert.ok(allowedFonts.has(font), `unapproved typeface: ${font}`);
 

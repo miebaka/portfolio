@@ -1,0 +1,186 @@
+
+fontFamily unique=2
+"Google Sans Flex", sans-serif	14510
+"Josefin Sans", sans-serif	4712
+
+fontSize unique=121
+16px	11957
+13px	4242
+14px	587
+15px	336
+12px	300
+36px	92
+53.248px	75
+66.56px	75
+74.88px	75
+86.4px	75
+54px	75
+58.5px	75
+39.936px	75
+24px	74
+28.8px	67
+14.08px	63
+48px	44
+40px	39
+64px	35
+20px	33
+
+fontWeight unique=5
+400	14188
+500	4103
+600	812
+200	98
+700	21
+
+lineHeight unique=184
+24px	11453
+13px	1930
+16.9px	1030
+26.4px	560
+18.2px	489
+14px	462
+19.5px	459
+15.6px	305
+12px	300
+21.6px	77
+48.9882px	75
+61.2352px	75
+68.8896px	75
+79.488px	75
+45.36px	75
+49.14px	75
+36.7411px	75
+36.72px	75
+23.2px	70
+16.8px	68
+
+letterSpacing unique=163
+normal	13063
+2.6px	957
+1.69px	689
+1.56px	543
+1.04px	376
+2.08px	370
+0.42px	300
+1.95px	231
+0.52px	210
+1.3px	166
+1.82px	162
+1.68px	157
+2.34px	112
+2.1px	98
+-1.26px	80
+-2.39616px	75
+-2.9952px	75
+-3.3696px	75
+-3.888px	75
+-3.78px	75
+
+color unique=16
+rgb(7, 17, 43)	12017
+rgb(60, 70, 97)	3995
+rgb(248, 249, 252)	2164
+color(srgb 0.972549 0.976471 0.988235 / 0.68)	252
+rgb(0, 32, 128)	215
+color(srgb 0.972549 0.976471 0.988235 / 0.48)	150
+rgb(131, 37, 29)	120
+rgb(28, 61, 164)	105
+rgb(17, 17, 17)	56
+rgb(255, 160, 143)	48
+rgb(143, 11, 40)	35
+color(srgb 0.972549 0.976471 0.988235 / 0.72)	30
+rgb(3, 36, 133)	14
+rgb(184, 67, 20)	7
+rgb(0, 0, 168)	7
+rgb(112, 41, 99)	7
+
+backgroundColor unique=17
+rgba(0, 0, 0, 0)	17923
+rgb(248, 249, 252)	478
+rgb(7, 17, 43)	209
+rgb(0, 32, 128)	200
+rgb(236, 238, 243)	140
+rgb(242, 243, 248)	98
+rgb(239, 241, 246)	49
+color(srgb 0.937255 0.945098 0.964706 / 0.82)	42
+color(srgb 0.027451 0.0666667 0.168627 / 0.6)	14
+rgb(177, 197, 255)	14
+rgb(131, 37, 29)	14
+rgb(255, 255, 255)	7
+rgb(232, 238, 255)	7
+color(srgb 0.976118 0.955059 0.883726)	7
+color(srgb 0.944706 0.956078 0.989412)	7
+color(srgb 0.924549 0.903059 0.934235)	7
+color(srgb 0.972549 0.976471 0.988235 / 0.22)	6
+
+padding unique=132
+0px	15668
+1px 6px	375
+8.8px	210
+11.2px	210
+16px 0px 0px	175
+33.6px 0px 0px	159
+6.4px 1.6px	150
+11.2px 16px	105
+0px 0px 25.2px	105
+0px 2px	105
+25.2px 0px 0px	105
+6.4px 0px	105
+80px 24px 24px	98
+0px 0px 80px	80
+16px	78
+24px 0px	70
+20px	70
+64px 0px	61
+0px 0px 48px	60
+0px 0px 0px 8px	56
+
+margin unique=102
+0px	16326
+25.2px 0px 0px	707
+0px 20px	246
+16.8px 0px 0px	210
+4px 0px 0px	126
+-3.2px 0px	105
+0px auto	105
+0px 0px 12.8px	105
+67.2px 0px 0px	91
+33.6px 0px 0px	84
+0px 47.7969px	82
+0px 59.75px 0px 59.7344px	81
+0px 67.2188px 0px 67.2031px	81
+11.2px 0px 0px	70
+0px 144px	65
+48px 0px 0px	63
+32px 0px 0px	54
+-22px 0px 0px	45
+0px 0px 16px	42
+12px 0px 0px	37
+
+gap unique=64
+normal	16181
+9.6px	315
+12.8px	285
+16px	258
+16.8px	255
+8px	197
+25.2px	168
+32px	131
+5.6px	126
+1px	111
+2.4px	105
+4px 19.2px	90
+33.6px	71
+64px	65
+11.2px	63
+24px	53
+0px	43
+16px 25.2px	42
+17.0624px	36
+19.1952px	36
+
+borderRadius unique=4
+0px	19178
+50%	23
+99px	14
+999px	7

@@ -1,3 +1,7 @@
-@import "foundations.css";
-@import "components-v4.css";
-@import "pages-v4.css";
+@layer reset, tokens, base, layout, components, utilities, pages;
+
+@import url("tokens.css") layer(tokens);
+@import url("foundations.css") layer(base);
+@import url("layout.css") layer(layout);
+@import url("components-v4.css") layer(components);
+@import url("pages-v4.css") layer(pages);
