@@ -1,5 +1,5 @@
-@font-face{font-family:"OGARANYA";src:url("../assets/fonts/OGARANYA-Regular.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Atkinson Hyperlegible Next";src:url("../assets/fonts/AtkinsonHyperlegibleNext-Variable.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap}
+@font-face{font-family:"Hedvig Letters Serif";src:url("../assets/fonts/HedvigLettersSerif-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Finlandica Text";src:url("../assets/fonts/FinlandicaText-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
   --type-label-s:.8125rem;--type-label-m:.875rem;--type-label-l:1rem;--type-nav-mobile:.75rem;--type-body-s:.875rem;--type-body-m:1rem;--type-body-l:1.2rem;--type-heading-s:1.5rem;--type-heading-l:3rem;--type-display-s:3rem;--type-display-m:4rem;--type-display-l:5.5rem;--type-display-xxl:8.5rem;

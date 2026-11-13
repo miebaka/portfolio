@@ -1,7 +1,7 @@
 :root {
-  --font-display: "OGARANYA", "Arial Narrow", sans-serif;
-  --font-body: "Atkinson Hyperlegible Next", system-ui, sans-serif;
-  --font-label: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --font-display: "Hedvig Letters Serif", Georgia, serif;
+  --font-body: "Finlandica Text", system-ui, sans-serif;
+  --font-label: "Finlandica Text", system-ui, sans-serif;
   --color-ink: oklch(19.6% 0.044 264.5);
   --color-paper: oklch(98% 0.006 264.5);
   --color-accent: oklch(35.7% 0.159 264.8);

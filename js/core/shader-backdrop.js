@@ -52,6 +52,8 @@ export async function initShaderBackdrop({
       (navigatorObject?.webdriver === true && !automationOptIn) ||
       doc.querySelector("[data-shader-backdrop]")) return null;
 
+  if (testOptIn) doc.documentElement.classList.add("shader-test-mode");
+
   const finePointerQuery = win.matchMedia?.(FINE_POINTER);
   await waitForActivation(win, testOptIn, finePointerQuery?.matches === true);
 
@@ -172,6 +174,7 @@ export async function initShaderBackdrop({
     host.remove();
     control.remove();
     root.classList.remove("has-shader-backdrop");
+    root.classList.remove("shader-test-mode");
   };
   win.addEventListener("pagehide", destroy, { once: true });
   sync();

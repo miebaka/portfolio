@@ -32,5 +32,5 @@ export function normalizeHead(source, { canonicalUrl, base = "" } = {}) {
     .replaceAll("https://miebaka-portfolio.vercel.app/", siteConfig.canonicalUrl)
     .replace(/<meta name="theme-color" media="\(prefers-color-scheme: dark\)" content="[^"]*">/, '<meta name="theme-color" media="(prefers-color-scheme: dark)" content="oklch(35.7% 0.159 264.8)">')
     .replace(/(<link rel="icon"[^>]*>)/, `$1\n  <link rel="manifest" href="${base}manifest.webmanifest">`)
-    .replace(/<link rel="preload" as="font"[^>]*>/, `<link rel="preload" as="font" type="font/ttf" href="${base}assets/fonts/AtkinsonHyperlegibleNext-Variable.ttf" crossorigin>`);
+    .replace(/<link rel="preload" as="font"[^>]*>/, `<link rel="preload" as="font" type="font/woff2" href="${base}assets/fonts/FinlandicaText-Variable.woff2" crossorigin>`);
 }

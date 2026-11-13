@@ -22,7 +22,7 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F9FC">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
-  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/AtkinsonHyperlegibleNext-Variable.ttf" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/FinlandicaText-Variable.woff2" crossorigin>
   <script type="application/ld+json">
   [
     {"@context":"https://schema.org","@type":"Person","name":"Miebaka Williams Atubokiki Joshua","alternateName":"Miebaka Joshua","jobTitle":"Brand & Visual Designer","url":"https://miebaka-portfolio.vercel.app/","image":"https://miebaka-portfolio.vercel.app/assets/images/optimized/miebaka-joshua-portrait-1080.jpg","email":"mailto:miebakakiki@gmail.com","address": {"@type":"PostalAddress","addressLocality":"Lagos","addressCountry":"NG" },"sameAs": ["https://www.behance.net/miebaka","https://www.linkedin.com/in/miebakajoshua"]
@@ -41,7 +41,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
-<body class="home-page" data-page="home" data-nav-theme="dark">
+<body class="home-page home-spectacle home-spectacle--current home-editorial-v2" data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav">
     <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
@@ -59,8 +59,16 @@
 
   <main id="main">
     <section class="home-landing" aria-labelledby="hero-title">
+      <div class="home-landing__object" aria-hidden="true">
+        <picture>
+          <source type="image/avif" srcset="assets/images/optimized/miebaka-glass-logo-540.avif 540w, assets/images/optimized/miebaka-glass-logo-810.avif 810w, assets/images/optimized/miebaka-glass-logo-1080.avif 1080w" sizes="(max-width: 48rem) 70vw, 42vw">
+          <source type="image/webp" srcset="assets/images/optimized/miebaka-glass-logo-540.webp 540w, assets/images/optimized/miebaka-glass-logo-810.webp 810w, assets/images/optimized/miebaka-glass-logo-1080.webp 1080w" sizes="(max-width: 48rem) 70vw, 42vw">
+          <img src="assets/images/optimized/miebaka-glass-logo-810.webp" alt="" width="810" height="810" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
+      <p class="home-landing__mark" aria-hidden="true">MJ</p>
       <div class="home-landing__inner container">
-        <div class="home-landing__meta"><p>Marketing designer at Rise · Lagos</p><p>Strategy · Art direction · Production</p></div>
+        <div class="home-landing__meta"><p>Brand &amp; visual designer</p><p>Strategy / art direction / production</p></div>
         <h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions.</h1>
         <div class="home-landing__proof">
           <p>I turn unclear briefs into identities, campaigns and practical systems teams can keep using.</p>
@@ -73,7 +81,7 @@
     </section>
     <div class="home-content">
     <section class="swiss-selected container" id="selected-work" aria-labelledby="selected-title">
-      <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2></div>
+      <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2><p>Three projects. Three different problems. Each one begins with the decision that made the rest of the system possible.</p></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/tedx-rsu.html">TEDx Rivers State University</a></li><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
     </section>
     <section class="home-profile container" id="profile" aria-labelledby="about-title">

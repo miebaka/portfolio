@@ -33,6 +33,7 @@ const work = (slug, names) =>
 /* Raster sources to optimize. Add project covers here as you create them. */
 const SOURCES = [
   { src: "assets/images/miebaka-joshua-portrait.jpg", base: "miebaka-joshua-portrait" },
+  { src: "assets/images/miebaka-glass-logo.png", base: "miebaka-glass-logo" },
   /* Article imagery. Originals live in assets/images/writing/ and are not
      served directly; the pages reference the optimized variants only. */
   { src: "assets/images/writing/swoosh-dream-crazy.jpg",  base: "swoosh-dream-crazy" },

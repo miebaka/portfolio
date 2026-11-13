@@ -207,8 +207,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"OGARANYA"/);
-  assert.match(css, /font-family:\s*"Atkinson Hyperlegible Next"/);
+  assert.match(css, /font-family:\s*"Hedvig Letters Serif"/);
+  assert.match(css, /font-family:\s*"Finlandica Text"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -234,9 +234,9 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"OGARANYA"/);
-  assert.match(css, /--font-body:\s*"Atkinson Hyperlegible Next"/);
-  assert.match(css, /--font-label:\s*"Atkinson Hyperlegible Next"/);
+  assert.match(css, /--font-display:\s*"Hedvig Letters Serif"/);
+  assert.match(css, /--font-body:\s*"Finlandica Text"/);
+  assert.match(css, /--font-label:\s*"Finlandica Text"/);
   assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /repeating-radial-gradient/);
