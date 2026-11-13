@@ -11,8 +11,9 @@ permissions:
 
 jobs:
   quality:
-    # Visual baselines are authored on macOS; match its font and canvas renderer.
-    runs-on: macos-14
+    # Use GitHub's broadly available hosted Linux runner. The suite has no
+    # committed pixel snapshots and already installs its Chromium dependency.
+    runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +24,7 @@ jobs:
       - name: Restore Playwright browser cache
         uses: actions/cache@v4
         with:
-          path: ~/Library/Caches/ms-playwright
+          path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
