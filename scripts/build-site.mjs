@@ -164,8 +164,6 @@ await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
 await copyJsGraph("js/main.js");
 await ensureCopy(join(root, "assets/runtime/shader-gradient.js"), join(output, "assets/runtime/shader-gradient.js"));
-await ensureCopy(join(root, "node_modules/three/build/three.module.js"), join(output, "assets/vendor/three.module.js"));
-await ensureCopy(join(root, "node_modules/three/build/three.core.js"), join(output, "assets/vendor/three.core.js"));
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();

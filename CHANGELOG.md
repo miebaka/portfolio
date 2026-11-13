@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-13
+
+- Shipped Hedvig Letters Serif for editorial display type and Finlandica Text for body, navigation and interface copy.
+- Unified the public destination names as Work, About, Experiments, Notes and Contact from the shared route registry.
+- Replaced the Work index's narrow thumbnail triptychs with one deliberately cropped project image per case.
+- Removed the 404 page's decorative Three.js field and retained its static identity mark.
+- Restored Behance to the rendered footer and aligned ChopBox naming across every project view.
+
 ## 2026-11-11
 
 - Rebuilt the typography foundation around Ogaranya for display and Atkinson Hyperlegible Next for all supporting text.

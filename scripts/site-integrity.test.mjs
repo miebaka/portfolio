@@ -51,7 +51,7 @@ test("Work archive separates published cases from work in progress", () => {
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
-  for (const title of ["TEDx Rivers State University", "Rivo Studio", "Chop Box", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
+  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
@@ -84,8 +84,8 @@ test("the route registry has unique destinations and supports the approved globa
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Explorations", "About", "Writing", "Contact"]);
-  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Explorations", "About", "Writing", "Contact"]);
+  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Experiments", "About", "Notes", "Contact"]);
+  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Experiments", "About", "Notes", "Contact"]);
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
   assert.ok(navigation.footer.some(route => route.href === "notes.html"));
 });
@@ -138,10 +138,12 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   }
 });
 
-test("Explorations ships a readable archive and the retired route points to it", async () => {
+test("Experiments ships a readable archive and the retired route points to it", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
-  assert.match(experiments, /<h1>Explorations<\/h1>/);
+  assert.match(experiments, /<h1>Experiments<\/h1>/);
+  assert.match(experiments, /Wada Sanzō, Study 264/);
+  assert.doesNotMatch(experiments, /U014|WADA SANZ/);
   assert.match(experiments, />Enter the archive<\/p>/);
   assert.doesNotMatch(experiments, /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
 
@@ -219,11 +221,11 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   for (const file of ["scroll.js", "split-text.js", "hero-parallax.js", "work-preview.js"]) {
     await assert.rejects(access(join(dist, "js", "core", file)));
   }
-  await access(join(dist, "js", "core", "decision-field.js"));
+  await assert.rejects(access(join(dist, "js", "core", "decision-field.js")));
   await access(join(dist, "js", "core", "shader-backdrop.js"));
   await access(join(dist, "assets", "runtime", "shader-gradient.js"));
-  await access(join(dist, "assets", "vendor", "three.module.js"));
-  await access(join(dist, "assets", "vendor", "three.core.js"));
+  await assert.rejects(access(join(dist, "assets", "vendor", "three.module.js")));
+  await assert.rejects(access(join(dist, "assets", "vendor", "three.core.js")));
   await assert.rejects(access(join(dist, "node_modules")));
 });
 
@@ -336,11 +338,11 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 test("interactive controls include the approved Figma button states", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
+  assert.match(css, /body\[data-page="contact"\] \.contact__submit \.btn\{[^}]*width:100%[^}]*min-height:4rem/);
   assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
   assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
   assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);
   assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);
-  assert.doesNotMatch(css, /\.contact__submit \.btn/);
   assert.doesNotMatch(css, /\.btn--primary/);
   assert.doesNotMatch(css, /transition:\s*all/);
   assert.doesNotMatch(css, /animation-duration:1ms|transition-duration:1ms/);

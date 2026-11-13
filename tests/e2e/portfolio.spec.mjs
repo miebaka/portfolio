@@ -219,7 +219,7 @@ test("Global navigation uses the five approved destinations", async ({ page }) =
   const labels = page.viewportSize().width <= 640
     ? await navigation.locator(".site-index__link > span:last-child").allTextContents()
     : await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
-  expect(labels).toEqual(["Work", "Explorations", "About", "Writing", "Contact"]);
+  expect(labels).toEqual(["Work", "Experiments", "About", "Notes", "Contact"]);
 });
 
 test("Mobile navigation has a focus-trapped index", async ({ page }) => {
@@ -251,8 +251,9 @@ test("Work index separates complete cases from studies in progress", async ({ pa
   await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
   await expect(page.getByRole("link", { name: /Rivo Studio/ })).toHaveAttribute("href", "work/rivo.html");
   await expect(page.locator(".project-archive__item")).toHaveCount(3);
+  await expect(page.locator(".project-archive__media img")).toHaveCount(3);
   await expect(page.locator(".project-archive__identity h2")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "Chop Box"
+    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
   await expect(page.locator(".project-archive__media")).toHaveCount(3);
   await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);
@@ -273,7 +274,7 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 
-test("Explorations exposes a full-screen tunnel", async ({ page }) => {
+test("Experiments exposes a full-screen tunnel", async ({ page }) => {
   await page.goto("/explorations.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
   await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
@@ -283,7 +284,7 @@ test("Explorations exposes a full-screen tunnel", async ({ page }) => {
   await expect(page.getByRole("navigation", { name: "Footer" })).toBeAttached();
 });
 
-test("retired community route redirects to Explorations", async ({ page }) => {
+test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
   await expect(page).toHaveURL(/\/explorations\.html$/);
   await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
@@ -306,7 +307,7 @@ test("theme pull cord exposes and changes the Print/Screen state", async ({ page
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   const changedCord = page.locator(".theme-cord");
   await expect(changedCord).toHaveAttribute("aria-checked", "true");
-  await expect(changedCord).toHaveAccessibleName("Switch to Print mode");
+  await expect(changedCord).toHaveAccessibleName("Theme: switch to Print mode");
 });
 
 test("client marquee can be paused", async ({ page }) => {

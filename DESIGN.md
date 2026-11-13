@@ -16,8 +16,7 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Type and language
 
-- Ogaranya 400: display headlines and primary page titles.
-- Hedvig Letters Serif: large editorial headlines with optical sizing tuned for display use.
+- Hedvig Letters Serif 400: display headlines and primary page titles.
 - Finlandica Text 400/500/600: body copy, navigation, labels and interface text.
 - The responsive scale follows the approved Figma roles: 10.9/12.5/14px
   labels, 14/19.2px body copy, 24/48px headings, and 48/64/88/136px display.
@@ -45,10 +44,9 @@ masthead labels, cord, bead and focus state use portfolio semantic tokens only.
 ## Navigation and spatial work
 
 The global destination set is Work, About, Experiments, Notes and Contact.
-Desktop keeps the restrained masthead. Mobile adds two complementary controls:
-a persistent five-item bottom bar for direct wayfinding and a full-screen,
-numbered Index for orientation. The Index is modal, traps focus, closes on
-Escape and restores focus to its trigger.
+Desktop keeps the restrained masthead. Mobile keeps the same destination
+registry and adds a full-screen, numbered Index for orientation. The Index is
+modal, traps focus, closes on Escape and restores focus to its trigger.
 
 Experiments is a deliberately different browsing mode: a full-viewport spatial
 field with no visible interface copy except “Drag or Scroll To Explore.” The

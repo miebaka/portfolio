@@ -1059,6 +1059,43 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 
 @media(prefers-reduced-motion:reduce){.article-toc a::before{transition:none}.experiment-tunnel__card{transition:none}}
 
+/* 2026-11 quality pass: resolve audit defects without changing the authored
+   structure or introducing another layout system. */
+body.home-editorial-v2 .swiss-selected .editorial-index__row{padding-inline:0}
+body.home-editorial-v2 .home-project-list__identity{gap:1rem}
+body.home-editorial-v2.home-spectacle .home-project-list__title{line-height:.9}
+body.home-editorial-v2.home-spectacle .home-project-list__meta{font-size:max(.75rem,var(--type-label-s));line-height:1.45}
+
+body:not(.case-page)[data-page="work"] .project-archive__media:has(.project-archive__preview-frame){grid-template-columns:1fr}
+body:not(.case-page)[data-page="work"] .project-archive__preview-frame{opacity:1;transform:none}
+body:not(.case-page)[data-page="work"] .project-archive__evidence{grid-template-columns:1fr;align-items:start}
+body:not(.case-page)[data-page="work"] .project-archive__evidence :is(small,p,span){grid-column:1;text-align:left}
+body:not(.case-page)[data-page="work"] .project-archive__evidence small{font-size:.75rem}
+body:not(.case-page)[data-page="work"] .project-archive__evidence>span{font-size:.875rem}
+
+body[data-page="contact"] .contact__submit .btn{width:100%;min-height:4rem;height:auto;background:var(--ref-ultramarine);color:var(--ref-paper);font-size:1rem}
+body[data-page="contact"] .contact__submit .btn:disabled{background:color-mix(in srgb,var(--sys-color-on-surface) 12%,transparent);color:color-mix(in srgb,var(--sys-color-on-surface) 38%,transparent)}
+
+body.case-page .case-chapter__copy::before{content:none}
+
+body[data-page="about"] .experience-ruler__item{padding-block:1.75rem}
+body[data-page="about"] .experience-ruler__track{height:.875rem;margin:1rem 0 0}
+body[data-page="about"] .experience-ruler__scale{font-size:.75rem}
+body[data-page="about"] .experience-ruler__period{font-size:.75rem}
+body[data-page="about"] .about-editorial__facts a{display:inline-flex;align-items:center;min-width:2.75rem;min-height:2.75rem}
+
+body .site-footer .site-footer__links a{display:inline-flex;align-items:center;justify-content:center;min-width:2.75rem;min-height:2.75rem}
+body.home-page .client-marquee__control{top:-3.25rem;right:0;width:auto;min-width:4.75rem;height:2.75rem;padding-inline:1rem;clip-path:none;overflow:visible;border:1px solid var(--home-shader-line);font:600 .75rem/1 var(--label);letter-spacing:.12em;text-transform:uppercase}
+
+:root[data-theme="dark"] body.home-spectacle .home-content{--ink:var(--ref-neutral-80);--paper:var(--ref-midnight);--primary:var(--ref-blue-80);--muted:color-mix(in srgb,var(--ref-neutral-80) 78%,transparent);--line:var(--ref-navy-13);--home-shader-ink:var(--ref-neutral-80);--home-shader-muted:color-mix(in srgb,var(--ref-neutral-80) 78%,transparent);--home-shader-line:color-mix(in srgb,var(--ref-blue-80) 24%,transparent);background:var(--ref-midnight);color:var(--ref-neutral-80)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) body.home-spectacle .home-content{--ink:var(--ref-neutral-80);--paper:var(--ref-midnight);--primary:var(--ref-blue-80);--muted:color-mix(in srgb,var(--ref-neutral-80) 78%,transparent);--line:var(--ref-navy-13);--home-shader-ink:var(--ref-neutral-80);--home-shader-muted:color-mix(in srgb,var(--ref-neutral-80) 78%,transparent);--home-shader-line:color-mix(in srgb,var(--ref-blue-80) 24%,transparent);background:var(--ref-midnight);color:var(--ref-neutral-80)}}
+
+@media(max-width:48rem){
+  body.home-editorial-v2.home-spectacle:is(.home-page) .home-close h2{max-width:100%;font-size:clamp(3rem,15vw,5.4rem);line-height:.86;overflow-wrap:normal}
+  body[data-page="about"] .experience-ruler__scale{font-size:.75rem;letter-spacing:.02em}
+  body.home-editorial-v2.home-spectacle .home-project-list__title{font-size:clamp(2.8rem,12vw,4rem);line-height:.92}
+}
+
 @media(hover:hover) and (pointer:fine){.article-toc a:hover{color:var(--paper)}.article-toc a:hover::before{transform:scaleY(1)}.article-toc a:hover .article-toc__index{color:inherit}}
 
 /* Homepage proof pass: get the hiring signal and project decisions into the first scan. */

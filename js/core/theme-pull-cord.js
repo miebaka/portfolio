@@ -50,7 +50,7 @@ export function createThemePullCord(button, { onToggle } = {}) {
     return {
       setChecked(checked) {
         button.setAttribute("aria-checked", String(checked));
-        button.setAttribute("aria-label", checked ? "Switch to Print mode" : "Switch to Screen mode");
+        button.setAttribute("aria-label", checked ? "Theme: switch to Print mode" : "Theme: switch to Screen mode");
         button.dataset.mode = checked ? "screen" : "print";
         button.classList.toggle("is-screen", checked);
       },
@@ -153,7 +153,7 @@ export function createThemePullCord(button, { onToggle } = {}) {
   return {
     setChecked(checked) {
       button.setAttribute("aria-checked", String(checked));
-      button.setAttribute("aria-label", checked ? "Switch to Print mode" : "Switch to Screen mode");
+      button.setAttribute("aria-label", checked ? "Theme: switch to Print mode" : "Theme: switch to Screen mode");
       button.dataset.mode = checked ? "screen" : "print";
       button.classList.toggle("is-screen", checked);
       button.querySelector("[data-cord-mode]").textContent = checked ? "Screen" : "Print";
