@@ -65,7 +65,8 @@ export function validateContent(content) {
     content.services.forEach((service, index) => {
     const path = `services[${index}]`;
     if (!isRecord(service)) { add(path, "SERVICE_INVALID", "A service must be an object."); return; }
-    for (const field of ["id", "title", "description", "outputs", "fit"]) if (!hasText(service[field])) add(`${path}.${field}`, "SERVICE_FIELD_REQUIRED", `Service ${field} is required.`);
+    for (const field of ["id", "title", "description", "outputs", "fit", "evidenceLabel", "evidenceHref"]) if (!hasText(service[field])) add(`${path}.${field}`, "SERVICE_FIELD_REQUIRED", `Service ${field} is required.`);
+    if (hasText(service.evidenceHref) && !validRoute(service.evidenceHref)) add(`${path}.evidenceHref`, "SERVICE_EVIDENCE_ROUTE_INVALID", "Service evidence must use a local HTML route.");
     if (hasText(service.id) && !isSlug(service.id)) add(`${path}.id`, "SERVICE_ID_INVALID", "Service id must be lowercase and hyphenated.");
     else if (serviceIds.has(service.id)) add(`${path}.id`, "SERVICE_ID_DUPLICATE", `Duplicate service id: ${service.id}.`);
     serviceIds.add(service.id);
