@@ -118,3 +118,28 @@ test("about page shows the person away from the file", async () => {
   }
   assert.doesNotMatch(about, /Cynthia|Nwanyi Oma|Ikorodu/i, "keep private personal details off the public portfolio");
 });
+
+
+test("notes page offers four thematic routes without inventing articles", async () => {
+  const notes = await read("notes.html");
+  for (const path of ["Design decisions", "Creative leadership", "Systems and tools", "Looking closely"]) {
+    assert.match(notes, new RegExp(path, "i"));
+  }
+  assert.equal((notes.match(/writing\/[a-z0-9-]+\.html/g) || []).length, 2);
+});
+
+test("experiments page explains the role of unfinished work and keeps fallbacks", async () => {
+  const experiments = await read("explorations.html");
+  assert.match(experiments, /follow a question before I know whether it belongs in a case study/i);
+  assert.match(experiments, /rough edges intact/i);
+  assert.match(experiments, /class="nav-fallback"/);
+  assert.match(experiments, /Take another route/i);
+});
+
+test("contact page makes fit, thought and follow-through explicit", async () => {
+  const contact = await read("contact.html");
+  for (const signal of ["Good fit", "Useful context", "Follow-through"]) assert.match(contact, new RegExp(signal, "i"));
+  const submit = contact.indexOf(">Work with me</button>");
+  const directEmail = contact.indexOf("Email me directly");
+  assert.ok(submit > -1 && directEmail > submit, "primary project action must precede the direct-email alternative");
+});
