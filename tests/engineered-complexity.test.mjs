@@ -54,3 +54,36 @@ test("engineered complexity source contains no raw colours outside foundations",
   const css = await read("styles/engineered-complexity.css");
   assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(/i);
 });
+
+test("homepage states the engineered complexity proposition", async () => {
+  const home = await read("index.html");
+  assert.match(home, /I turn complicated problems into clear creative systems\./);
+  assert.match(home, /There is a system behind the complexity\./);
+  assert.match(home, /Bring me the complicated part\./);
+});
+
+test("homepage thesis introduces the work without becoming the theme", async () => {
+  const home = await read("index.html");
+  const thesis = home.indexOf('class="ec-thesis');
+  const selectedWork = home.indexOf('id="selected-work"');
+  assert.ok(thesis > -1, "homepage thesis is missing");
+  assert.ok(selectedWork > thesis, "the thesis must lead into selected work");
+  assert.match(home, /<svg[^>]*aria-hidden="true"/);
+  assert.doesNotMatch(home, /Takaosan[^<]*<img/i, "do not ship an unlicensed interchange image");
+});
+
+test("homepage practice route is a complete ordered-list fallback", async () => {
+  const home = await read("index.html");
+  const stages = ["Question", "Decide", "Design", "Test", "Equip"];
+  assert.match(home, /<ol class="ec-practice-route"/);
+  for (const stage of stages) assert.match(home, new RegExp(`<h3>${stage}<\\/h3>`));
+  assert.doesNotMatch(home, /hidden[^>]*ec-practice-route|ec-practice-route[^>]*hidden/);
+});
+
+test("homepage includes the interdisciplinary practice thread", async () => {
+  const home = await read("index.html");
+  assert.match(home, /environmental systems/i);
+  assert.match(home, /faith/i);
+  assert.match(home, /storytelling/i);
+  assert.match(home, /one useful whole/i);
+});
