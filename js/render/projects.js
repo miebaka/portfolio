@@ -54,8 +54,12 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
   const publishedMarkup = renderEditorialIndex(published.map(project => {
     const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
     const study = studies?.[project.slug];
-    const decision = study?.proof?.find(item => item.type === 'decision')?.statement || project.tagline;
-    const role = study?.facts?.role || (project.tags || []).join(', ');
+    const decision = project.governingDecision || study?.proof?.find(item => item.type === 'decision')?.statement || project.tagline;
+    const role = project.contribution || study?.facts?.role || (project.tags || []).join(', ');
+    const problem = project.problem ? '<div class="project-archive__problem"><small>Problem</small><p>' + esc(project.problem) + '</p></div>' : '';
+    const evidence = project.evidenceStatus ? '<span class="project-archive__status">' + esc(project.evidenceStatus) + ' evidence</span>' : '';
+    const supportedPaths = (project.paths || []).filter(path => pathCounts.get(path) >= 2);
+    const paths = supportedPaths.length ? '<ul class="project-archive__paths" aria-label="Practice paths">' + supportedPaths.map(path => '<li>' + esc(path.replace(/-/g, ' ')) + '</li>').join('') + '</ul>' : '';
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
     return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><p class="project-archive__meta"><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time></p><h2 class="editorial-index__title">' + esc(project.title) + '</h2>' + problem + '<div class="project-archive__evidence"><small>Governing decision</small><p class="editorial-index__description">' + esc(decision) + '</p><span>' + esc(role) + '</span>' + evidence + paths + '</div></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
