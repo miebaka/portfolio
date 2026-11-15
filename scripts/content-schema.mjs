@@ -139,6 +139,14 @@ export function validateContent(content) {
     if (!Array.isArray(project.tags) || !project.tags.length || project.tags.some(tag => !hasText(tag))) add(`${path}.tags`, "PROJECT_TAGS_INVALID", "Project tags must contain text.");
     if (typeof project.featured !== "boolean") add(`${path}.featured`, "PROJECT_FEATURED_INVALID", "Featured must be a boolean.");
     if (typeof project.cover !== "string") add(`${path}.cover`, "PROJECT_FIELD_REQUIRED", "Cover must be a media stem or an empty string.");
+    for (const field of ["problem", "governingDecision", "contribution"]) {
+      if (project[field] !== undefined && !hasText(project[field])) add(`${path}.${field}`, "PROJECT_EVIDENCE_EMPTY", `Optional project ${field} must contain supported text when supplied.`);
+    }
+    if (project.evidenceStatus !== undefined && !["documented", "bounded", "developing"].includes(project.evidenceStatus)) add(`${path}.evidenceStatus`, "PROJECT_EVIDENCE_STATUS_INVALID", "Use documented, bounded or developing.");
+    if (project.paths !== undefined) {
+      if (!Array.isArray(project.paths) || !project.paths.length || project.paths.some(value => !isSlug(value))) add(`${path}.paths`, "PROJECT_PATH_INVALID", "Project paths must be a nonempty array of lowercase hyphenated labels.");
+      else if (new Set(project.paths).size !== project.paths.length) add(`${path}.paths`, "PROJECT_PATH_DUPLICATE", "Project paths must be unique.");
+    }
     if (project.href !== undefined && !validRoute(project.href)) add(`${path}.href`, "ROUTE_INVALID", "Project links must use local HTML routes.");
     const isArticle = validRoute(project.href) && routePath(project.href).startsWith("writing/");
     if (project.status === PROJECT_STATUS.PUBLISHED && !isArticle && !isRecord(studies[project.slug])) add(`${path}.slug`, "PUBLISHED_CASE_MISSING", "A published project must have a case study or a direct writing route.");
