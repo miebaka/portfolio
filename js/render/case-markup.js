@@ -62,8 +62,16 @@ function proofTrail(study) {
     const state = item.strength === "verified" ? "Documented" : "Bounded";
     return `<li class="case-proof__item case-proof__item--${token(item.type)}"><a href="#${target}"><span class="case-proof__step" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><span class="case-proof__label">${esc(label)}</span><strong>${esc(item.statement)}</strong><span class="case-proof__state">${state}</span></a></li>`;
   }).join("");
-  return `<section class="case-proof" aria-labelledby="case-proof-title"><div class="container"><div class="case-proof__head"><p>Evidence trail</p><h2 id="case-proof-title">From governing decision to work in use</h2></div><ol>${items}</ol></div></section>`;
+  return `<section class="case-proof ec-decision-map" aria-labelledby="case-proof-title"><div class="container"><div class="case-proof__head"><p>Evidence trail</p><h2 id="case-proof-title">From governing decision to work in use</h2></div><ol>${items}</ol></div></section>`;
 }
+
+function reflectionPair(study) {
+  const reflection = study.reflection;
+  if (!reflection || !hasAuthoredReflection(reflection)) return "";
+  return `<section class="ec-reflection-pair container" aria-label="Project reflection"><div><p class="ec-annotation">What I would protect</p><p>${esc(reflection.protect)}</p></div><div><p class="ec-annotation">What I would improve</p><p>${esc(reflection.improve)}</p></div></section>`;
+}
+
+const hasAuthoredReflection = reflection => typeof reflection.protect === "string" && reflection.protect.trim() && typeof reflection.improve === "string" && reflection.improve.trim();
 
 function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>` : "";
@@ -79,7 +87,7 @@ function nextBlock(site, study, base) {
   const title = published && next.interactive !== false
     ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">${esc(next.title)}</a>`
     : `<p class="case-next__title">${esc(next.title)}</p>`;
-  return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
+  return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}<a class="case-next__alternate" href="${base}notes.html">Take another route: Notes</a></section>`;
 }
 
 export function renderCaseMarkup(site, slug, base = "../") {
@@ -94,10 +102,11 @@ export function renderCaseMarkup(site, slug, base = "../") {
     const nextPlate = () => ++plate;
     const heroMarkup = shot(hero, "hero", base, nextPlate());
     const canonicalChapters = study.chapters.map(canonicalChapter);
-    const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${canonicalChapters.map((item, number) => `<li><a href="#${token(item.id)}"><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
+    const index = `<nav class="case-index" aria-label="Case study chapters"><ol>${canonicalChapters.map((item, number) => `<li><a href="#${token(item.id)}"${number === 0 ? ' aria-current="step"' : ""}><span aria-hidden="true">${String(number + 1).padStart(2, "0")}</span>${esc(item.label)}</a></li>`).join("")}</ol></nav>`;
     const chapters = canonicalChapters.map((item, number) => chapter(item.id, `${String(number + 1).padStart(2, "0")} / ${item.label}`, item.title, item.body, (item.media || []).map(src => lookup.get(src)).filter(Boolean), false, base, nextPlate)).join("");
+    const reflection = reflectionPair(study);
     const next = nextBlock(site, study, base);
-    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}${proofTrail(study)}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${next}`;
+    return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__summary">${esc(study.tagline)}</p>${factsBlock(study, project)}</header>${heroMarkup}${proofTrail(study)}<div class="case-lede container"><div class="case-lede__main"><p class="case-lede__intro">${esc(study.overview?.body?.[0] || study.challenge?.[0] || study.tagline)}</p>${index}</div></div>${chapters}${reflection}${next}`;
   }
   const [hero, ...rest] = study.media || [];
   const groups = [[], [], [], [], []];
