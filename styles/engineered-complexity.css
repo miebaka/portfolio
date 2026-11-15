@@ -1,0 +1,58 @@
+.ec-surface {
+  background: var(--ec-surface);
+  color: var(--ec-text);
+}
+
+.ec-surface--deep {
+  background: var(--ec-surface-deep);
+}
+
+.ec-route {
+  position: relative;
+}
+
+.ec-route-line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--ec-route);
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: background-color var(--motion-hover) var(--ease-out-ui), transform var(--motion-panel-in) var(--ease-out-ui);
+}
+
+.ec-route-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  min-height: 1.75rem;
+  border: 1px solid var(--ec-route);
+  border-radius: 50%;
+  background: var(--ec-surface);
+  color: var(--ec-text);
+  font: 600 var(--type-label-s)/1 var(--label);
+}
+
+.ec-route-node[aria-current="step"] {
+  border-color: var(--ec-route-active);
+  background: var(--ec-signature);
+  color: var(--ec-paper);
+}
+
+.ec-annotation {
+  color: var(--ec-text-muted);
+  font: 500 var(--type-label-s)/1.4 var(--label);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion-preference="full"]) .ec-route-line {
+    transition: none;
+  }
+}
+
+html[data-motion="reduced"] .ec-route-line {
+  transition: none;
+}
