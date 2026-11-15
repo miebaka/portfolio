@@ -426,8 +426,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /I design brands, build useful things/);
-  assert.match(home, /&amp; ask a lot of questions\./);
+  assert.match(home, /I turn complicated problems into clear creative systems\\./);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
