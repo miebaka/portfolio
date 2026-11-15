@@ -57,30 +57,33 @@ test("the service system has exactly five complete shared records", () => {
 
 test("the homepage makes the hiring proposition and proof available before biography", async () => {
   const html = await page("index.html");
-  assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale\./);
+  assert.match(html, /I turn complicated problems into clear creative systems\./);
   assert.match(html, /8\+ years/);
-  assert.match(html, /Rise marketing design/);
+  assert.match(html, /Marketing design at Rise/);
   assert.match(html, /Six partner teams/);
-  assert.match(html, /Lagos \/ remote/);
-  assert.match(html, /Request CV/);
+  assert.match(html, /Brand, campaign and production systems/);
+  assert.match(html, /Start a conversation/);
   assert.ok(html.indexOf('id="capabilities"') < html.indexOf('id="profile"'));
 });
 
 test("the closing invitation clearly supports employment and collaboration", async () => {
   const html = await page("index.html");
-  assert.match(html, /Available for senior brand and marketing design roles, selected collaborations and design-led teams\./);
-  assert.match(html, />Contact me</);
-  assert.match(html, />Request CV</);
+  assert.match(html, /senior brand and marketing design roles, creative systems work and selected collaborations/);
+  assert.match(html, />Start a conversation</);
+  assert.match(html, />See how I work</);
 });
 
-test("Home and About expose the same progressive service source without an orphan route", async () => {
-  for (const file of ["index.html", "about.html"]) {
-    const html = await page(file);
-    assert.match(html, /data-mount="capabilities"/, file);
-    for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
-      assert.ok(html.includes(service[field].replaceAll("&", "&amp;")), `${file}: ${service.id}.${field}`);
-    }
+test("Home owns the method route while About exposes the complete service source", async () => {
+  const home = await page("index.html");
+  assert.match(home, /<ol class="ec-practice-route"/);
+  assert.doesNotMatch(home, /data-mount="capabilities"/);
+
+  const about = await page("about.html");
+  assert.match(about, /data-mount="capabilities"/);
+  for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
+    assert.ok(about.includes(service[field].replaceAll("&", "&amp;")), `about.html: ${service.id}.${field}`);
   }
+
   await assert.rejects(page("services.html"));
   assert.match(await page("scripts/build-site.mjs"), /renderServiceFallbackMarkup\(content\.services\)/);
 });
