@@ -42,18 +42,37 @@
 </head>
 <body data-page="explorations">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header data-mount="nav"></header>
+  <header data-mount="nav">
+    <nav class="nav-fallback" aria-label="Primary">
+      <a href="work.html">Work</a><a href="about.html">About</a><a href="explorations.html">Experiments</a><a href="notes.html">Notes</a><a href="contact.html">Contact</a>
+    </nav>
+  </header>
   <main id="main" class="experiments-page">
     <section class="experiments-spatial" data-experiments-spatial aria-label="Experiments">
-      <div class="experiments-spatial__heading"><h1>Experiments</h1><p>Browse the archive. Drag, scroll or use arrow keys.</p></div>
+      <div class="experiments-spatial__heading">
+        <p class="ec-annotation">The unfinished route</p>
+        <h1>Experiments</h1>
+        <p>This is where I follow a question before I know whether it belongs in a case study. Posters, visual tests and small systems live here with the rough edges intact.</p>
+        <p>Browse the archive. Drag, scroll or use arrow keys.</p>
+      </div>
       <p class="experiments-spatial__hint">Enter the archive</p>
       <div class="experiments-spatial__viewport" data-experiments-viewport tabindex="0" role="region" aria-label="Experiments. Drag, scroll, use arrow keys or tab through the work.">
-        <div class="experiments-spatial__stage" data-experiments-stage></div>
+        <div class="experiments-spatial__stage" data-experiments-stage>
+          <nav class="ec-experiment-fallback" aria-label="Take another route">
+            <p>Take another route</p>
+            <a href="work.html">View selected work</a>
+            <a href="notes.html">Read the notes</a>
+          </nav>
+        </div>
       </div>
       <p class="sr-only" data-experiments-status aria-live="polite"></p>
     </section>
   </main>
-  <footer data-mount="footer"></footer>
+  <footer data-mount="footer">
+    <div class="nav-fallback">
+      <a href="work.html">Work</a><a href="about.html">About</a><a href="notes.html">Notes</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a>
+    </div>
+  </footer>
 
   <script type="module" src="js/main.js"></script>
 </body>
