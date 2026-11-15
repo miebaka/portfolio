@@ -457,3 +457,66 @@ html[data-motion="reduced"] .ec-thesis__path {
   font: 500 var(--type-label-s)/1 var(--label);
   text-transform: capitalize;
 }
+
+.ec-decision-map {
+  border-block: 1px solid var(--ec-route);
+  background: var(--ec-paper-deep);
+}
+
+.ec-decision-map .case-proof__item a {
+  transition: color var(--motion-hover) var(--ease-out-ui), background-color var(--motion-hover) var(--ease-out-ui);
+}
+
+.ec-decision-map .case-proof__item a:hover,
+.ec-decision-map .case-proof__item a:focus-visible {
+  background: var(--ec-paper);
+  color: var(--ec-burgundy-900);
+}
+
+.case-index [aria-current="step"] {
+  color: var(--ec-burgundy-800);
+}
+
+.ec-reflection-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-block: clamp(5rem, 9vw, 9rem);
+  padding: 1px;
+  background: var(--ec-route);
+}
+
+.ec-reflection-pair > div {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(2rem, 5vw, 5rem);
+  background: var(--ec-paper);
+}
+
+.ec-reflection-pair > div > p:last-child {
+  max-width: 34rem;
+  font-size: var(--type-body-l);
+}
+
+.case-next__alternate {
+  display: inline-flex;
+  margin-top: 1.5rem;
+  color: var(--ec-burgundy-800);
+  font: 600 var(--type-label-m)/1.3 var(--label);
+}
+
+@media (max-width: 48rem) {
+  .ec-reflection-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion-preference="full"]) .ec-decision-map .case-proof__item a {
+    transition: none;
+  }
+}
+
+html[data-motion="reduced"] .ec-decision-map .case-proof__item a {
+  transition: none;
+}
