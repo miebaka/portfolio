@@ -8,14 +8,16 @@ import { SITE } from "../data/site.js";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = file => readFile(join(root, file), "utf8");
 
-test("design documentation names the implemented ultramarine identity", async () => {
+test("design documentation names the implemented engineered complexity identity", async () => {
   const [brief, system, tokens] = await Promise.all([
     read("DESIGN.md"),
     read("docs/design-system-v3.md"),
     read("styles/foundations.css")
   ]);
   for (const source of [brief, system]) {
-    assert.match(source, /ultramarine/i);
+    assert.match(source, /engineered complexity/i);
+    assert.match(source, /burgundy/i);
+    assert.match(source, /interchange/i);
     assert.doesNotMatch(source, /forest[- ]green|deep green ink|green accents|pale sage/i);
   }
   for (const contract of [
@@ -26,7 +28,10 @@ test("design documentation names the implemented ultramarine identity", async ()
     /--ref-blue-30:#1c3da4/,
     /--ref-blue-80:#b1c5ff/,
     /--ref-coral-30:#83251d/,
-    /--ref-coral-75:#ffa08f/
+    /--ref-coral-75:#ffa08f/,
+    /--ec-burgundy-900:#3a0d1c/,
+    /--ec-paper:#f4f0e8/,
+    /--ec-ink:#171311/
   ]) assert.match(tokens, contract);
 });
 
