@@ -295,3 +295,25 @@ test("missing build registry and origin fail with validation errors before dist 
     }
   }
 });
+
+
+test("decision-led project fields are optional and validated when supplied", () => {
+  const decisionFields = {
+    problem: "A supported problem statement.",
+    governingDecision: "A supported governing decision.",
+    contribution: "A supported contribution.",
+    evidenceStatus: "documented",
+    paths: ["brand-systems", "creative-direction"]
+  };
+  assert.equal(validateContent(fixture({ projects: [project(decisionFields)] })).ok, true);
+  assert.equal(validateContent(fixture()).ok, true, "legacy records may omit optional decision fields");
+});
+
+test("decision-led project fields reject empty or unsupported published evidence", () => {
+  for (const field of ["problem", "governingDecision", "contribution"]) {
+    expectError(fixture({ projects: [project({ [field]: " " })] }), "PROJECT_EVIDENCE_EMPTY", `projects[0].${field}`);
+  }
+  expectError(fixture({ projects: [project({ evidenceStatus: "proven" })] }), "PROJECT_EVIDENCE_STATUS_INVALID", "projects[0].evidenceStatus");
+  expectError(fixture({ projects: [project({ paths: ["Brand Systems"] })] }), "PROJECT_PATH_INVALID", "projects[0].paths");
+  expectError(fixture({ projects: [project({ paths: ["brand-systems", "brand-systems"] })] }), "PROJECT_PATH_DUPLICATE", "projects[0].paths");
+});
