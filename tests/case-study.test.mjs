@@ -194,3 +194,33 @@ test("the built page contains the whole case before JavaScript runs", async () =
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");
 });
+
+
+test("decision maps render only from documented proof records", () => {
+  const html = markup();
+  assert.match(html, /class="case-proof ec-decision-map"/);
+  const site = structuredClone(SITE);
+  delete site.caseStudies["tedx-rsu"].proof;
+  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /ec-decision-map/);
+});
+
+test("reflection pairs require both source-backed statements", () => {
+  const site = structuredClone(SITE);
+  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /ec-reflection-pair/);
+  site.caseStudies["tedx-rsu"].reflection = {
+    protect: "Protect the single organising invitation.",
+    improve: "Improve the documentation for future teams."
+  };
+  const html = renderCaseMarkup(site, "tedx-rsu");
+  assert.match(html, /class="ec-reflection-pair"/);
+  assert.match(html, /What I would protect/);
+  assert.match(html, /What I would improve/);
+  delete site.caseStudies["tedx-rsu"].reflection.improve;
+  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /ec-reflection-pair/);
+});
+
+test("case chapter navigation exposes a current starting state and alternate route", () => {
+  const html = markup();
+  assert.match(html, /href="#problem" aria-current="step"/);
+  assert.match(html, /class="case-next__alternate"[^>]*href="\.\.\/notes\.html"/);
+});
