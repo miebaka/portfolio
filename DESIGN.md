@@ -1,18 +1,22 @@
-# Miebaka Joshua — Refined Editorial system
+# Miebaka Joshua — Engineered Complexity
 
-Updated 23 October 2026. The detailed source of truth is
+Updated 15 November 2026. The detailed source of truth is
 [`docs/design-system-v3.md`](docs/design-system-v3.md).
 
 ## Direction
 
-An ultramarine editorial portfolio for hiring teams and selected clients.
-Ultramarine, air, paper and midnight define the identity; coral is reserved for
-focused interaction and project imagery keeps its own colour. Generous
-whitespace and hairline rules form the interface.
+A warm editorial portfolio built around engineered complexity: absorb the tangled
+problem, find the governing decision, and leave a clear system other people can
+use. Burgundy, sandalwood, paper and ink form the portfolio-owned field. Project
+imagery and case-study colour keep their own identity.
+
+The Takaosan interchange is a structural metaphor for one homepage route study,
+not a decorative theme. It may inform junctions, sequences and connected paths,
+but must not become repeated highway imagery, a visual gimmick or an unlicensed
+photograph.
 
 The object of the design is not an isolated page. It is an authored system that
-makes Miebaka's judgement visible: find the decision beneath the brief, build a
-usable system around it, and edit until every surviving detail earns its place.
+makes Miebaka's judgement visible: question, decide, design, test and equip.
 
 ## Type and language
 
@@ -49,8 +53,9 @@ registry and adds a full-screen, numbered Index for orientation. The Index is
 modal, traps focus, closes on Escape and restores focus to its trigger.
 
 Experiments is a deliberately different browsing mode: a full-viewport spatial
-field with no visible interface copy except “Drag or Scroll To Explore.” The
-artwork is the navigation. Dragging has restrained momentum, wheel input pans in
+field introduced as unfinished practice. The artwork remains the primary
+navigation, while a concise purpose statement and ordinary-link fallback keep
+the route understandable before JavaScript loads. Dragging has restrained momentum, wheel input pans in
 two dimensions, and arrow keys plus tab preserve a usable keyboard path. Names
 remain available as accessible labels without adding visual captions.
 
@@ -115,8 +120,8 @@ framework or animation dependency.
 ## Implementation
 
 The live cascade is deliberately small: `styles/foundations.css`,
-`styles/components-v4.css` and `styles/pages-v4.css`, imported by
-`styles/main.css`. Older unimported CSS folders are historical and are not a
+`styles/components-v4.css`, `styles/pages-v4.css` and the final isolated
+`styles/engineered-complexity.css` layer, imported by `styles/main.css`. Older unimported CSS folders are historical and are not a
 source of truth.
 
 ## Quality bar
