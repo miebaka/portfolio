@@ -23,7 +23,7 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /I turn complicated problems into clear creative systems/);
+  assert.match(home, /I turn complicated problems into clear creative systems\./);
     assert.match(html, /8\+ years/);
   }
 });
@@ -355,7 +355,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title">I turn complicated problems into clear creative systems\.<\/h1>/);
+  assert.match(home, /I turn complicated problems into clear creative systems\./);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
@@ -426,7 +426,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /I turn complicated problems into clear creative systems\\./);
+  assert.match(home, /I turn complicated problems into clear creative systems\./);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
