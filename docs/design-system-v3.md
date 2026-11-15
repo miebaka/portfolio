@@ -1,19 +1,19 @@
-# Miebaka Portfolio Refined Editorial System
+# Miebaka Portfolio Engineered Complexity System
 
 ## Governing idea
 
-The portfolio makes the decision underneath each project visible. Editorial restraint provides the visual grammar; project imagery provides the variation.
+The portfolio turns complicated problems into clear creative systems. Warm editorial restraint provides the visual grammar; connected routes reveal how questions become decisions, systems and useful work. Project imagery provides the variation.
 
 ## Foundation
 
 | Layer | Rule |
 | --- | --- |
-| Typography | Ogaranya carries display headings, Google Sans Flex carries body copy, and Josefin Sans handles compact uppercase labels. |
-| Colour | Ultramarine (`#002080`) is the identity anchor. Air, paper and midnight provide the light/dark field; the blue ramp supports hierarchy, and coral is reserved for focused interaction. Dark mode remaps semantic roles rather than individual components. |
+| Typography | Hedvig Letters Serif carries display headings. Finlandica Text carries body copy, navigation, labels and interface text. |
+| Colour | Burgundy (`#3a0d1c`, `#561226`, `#6e1932`) is the identity anchor. Sandalwood (`#765642`, `#c6a98f`), paper (`#f4f0e8`, `#e7ded1`) and ink (`#171311`) create the warm field. Forest, storm and electric are bounded supporting accents. Dark mode remaps semantic roles rather than individual components. |
 | Spacing | 8px base rhythm. Fluid section spacing resolves to named steps. |
 | Shape | Square editorial controls and image frames. Shape follows function rather than decoration. |
 | Elevation | Hairline rules and tonal contrast replace ornamental shadows. |
-| Motion | 120–160ms feedback and 180–240ms state changes. The homepage decision field is the one signature motion moment. Reduced motion removes non-essential movement. |
+| Motion | 120–160ms feedback and 180–240ms state changes. Route lines and junctions are restrained orientation devices. Reduced motion removes their transitions without hiding content. |
 
 Primary page headings span the shared 12-column container. Their measure is
 set by grid columns, not `ch` values, so wide viewports use the available space
@@ -27,6 +27,14 @@ hard maximum; full-bleed fields may carry colour, but content and media do not
 cross the grid edges. Type follows the Figma roles: 10.9/12.5/14px labels,
 14/19.2px body, 24/48px headings, and 48/64/88/136px display.
 
+## Metaphor limits
+
+The interchange idea describes connected thinking, not roads. It appears once as
+an original abstract route study on the homepage and may reappear only as
+functional route lines, junctions or ordered sequences. Do not add highway
+photography, traffic motifs, pseudo-maps or decorative complexity. Essential
+content always remains ordinary semantic HTML beneath any visual route.
+
 ## Components
 
 - Navigation uses a tonal container, selected destination state and adaptive mobile menu.
@@ -38,6 +46,8 @@ cross the grid edges. Type follows the Figma roles: 10.9/12.5/14px labels,
 - Homepage work rows expose one persistent project image; imagery is never hover-only proof.
 - Published work and studies in progress use separate hierarchy and scale.
 - Case-study accent colour is project-specific, but grid, typography, evidence labels and navigation remain shared.
+- Decision maps render only documented proof records; reflection pairs render only when both authored statements exist.
+- About uses a semantic practice timeline; Notes exposes four thematic routes; Contact makes fit, context and follow-through explicit.
 - Long articles receive progressive contents, reading-progress and next-note navigation.
 
 ## Content rules
