@@ -212,7 +212,7 @@ test("reflection pairs require both source-backed statements", () => {
     improve: "Improve the documentation for future teams."
   };
   const html = renderCaseMarkup(site, "tedx-rsu");
-  assert.match(html, /class="ec-reflection-pair(?:\\s[^"]*)?"/);
+  assert.match(html, /class="ec-reflection-pair[^"]*"/);
   assert.match(html, /What I would protect/);
   assert.match(html, /What I would improve/);
   delete site.caseStudies["tedx-rsu"].reflection.improve;
