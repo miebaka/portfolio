@@ -20,11 +20,12 @@ test("homepage proof precedes biography in the source and built document", async
   }
 });
 
-test("homepage hero and professional proof remain useful without JavaScript", () => {
-  const html = read("index.html");
-
-  assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale/);
-  assert.match(html, /8\+ years/);
+test("homepage hero and professional proof remain useful without JavaScript", async () => {
+  for (const directory of [root, dist]) {
+    const html = await readFile(join(directory, "index.html"), "utf8");
+    assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale/);
+    assert.match(html, /8\+ years/);
+  }
 });
 
 test("homepage keeps the approved section order without the retired practice-standard interstitial", async () => {
@@ -35,7 +36,7 @@ test("homepage keeps the approved section order without the retired practice-sta
     const capabilities = html.indexOf('id="capabilities"');
     const journey = html.indexOf('class="journey"');
     const close = html.indexOf('class="home-close');
-    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < close, directory);
+    assert.ok(proof < capabilities && capabilities < biography && biography < journey && journey < close, directory);
     assert.doesNotMatch(html, /practice-standard|Find the decision|Build the system|Edit until it holds/);
   }
 });
