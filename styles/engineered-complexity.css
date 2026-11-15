@@ -269,3 +269,151 @@ html[data-motion="reduced"] .ec-route-line {
 html[data-motion="reduced"] .ec-thesis__path {
   transition: none;
 }
+
+.about-page {
+  --paper: var(--ec-paper);
+  --ink: var(--ec-ink);
+  --muted: var(--ec-sandalwood-700);
+  --line: var(--ec-mist);
+  --focus: var(--ec-burgundy-700);
+}
+
+.about-page .about-hero {
+  padding-block: clamp(5rem, 10vw, 10rem);
+}
+
+.about-page .about-hero__copy h1 {
+  max-width: 14ch;
+  color: var(--ec-burgundy-900);
+  font-size: clamp(3rem, 6.7vw, 7.5rem);
+  line-height: .93;
+}
+
+.about-page .about-editorial {
+  background: var(--ec-paper);
+}
+
+.ec-about-journey {
+  display: grid;
+  grid-template-columns: minmax(16rem, 4fr) minmax(0, 8fr);
+  gap: clamp(3rem, 7vw, 8rem);
+  padding-block: clamp(5rem, 9vw, 9rem);
+  border-top: 1px solid var(--ec-route);
+}
+
+.ec-about-journey__intro {
+  position: sticky;
+  top: 7rem;
+  display: grid;
+  gap: 1.25rem;
+  align-self: start;
+}
+
+.ec-about-journey__intro h2 {
+  max-width: 11ch;
+  color: var(--ec-burgundy-900);
+  font-size: clamp(2.5rem, 4.5vw, 5rem);
+  line-height: .98;
+}
+
+.ec-about-journey__intro > p:last-child {
+  max-width: 32rem;
+  color: var(--ec-text-muted);
+}
+
+.ec-practice-timeline {
+  border-top: 1px solid var(--ec-route);
+  list-style: none;
+}
+
+.ec-practice-timeline > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-block: 2.25rem;
+  border-bottom: 1px solid var(--ec-route);
+}
+
+.ec-practice-timeline > li::before {
+  content: "";
+  position: absolute;
+  top: 4rem;
+  bottom: -2.25rem;
+  left: .875rem;
+  width: 1px;
+  background: var(--ec-route);
+}
+
+.ec-practice-timeline > li:last-child::before {
+  display: none;
+}
+
+.ec-practice-timeline h3 {
+  margin-block: .35rem .65rem;
+  color: var(--ec-burgundy-900);
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.ec-practice-timeline li:last-child .ec-route-node {
+  border-color: var(--ec-route-active);
+  background: var(--ec-signature);
+  color: var(--ec-paper);
+}
+
+.about-page .about-principles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ec-away {
+  padding-block: clamp(5rem, 9vw, 9rem);
+  border-top: 1px solid var(--ec-route);
+  border-bottom: 1px solid var(--ec-route);
+}
+
+.ec-away__grid {
+  display: grid;
+  grid-template-columns: minmax(16rem, 5fr) minmax(0, 7fr);
+  gap: clamp(3rem, 7vw, 8rem);
+  margin-top: 2rem;
+}
+
+.ec-away h2 {
+  max-width: 11ch;
+  color: var(--ec-burgundy-900);
+  font-size: clamp(2.5rem, 4.5vw, 5rem);
+  line-height: .98;
+}
+
+.ec-away__copy {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 44rem;
+  font-size: var(--type-body-l);
+}
+
+@media (max-width: 60rem) {
+  .ec-about-journey,
+  .ec-away__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ec-about-journey__intro {
+    position: static;
+  }
+}
+
+@media (max-width: 48rem) {
+  .about-page .about-hero__copy h1 {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .about-page .about-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .ec-practice-timeline > li {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
