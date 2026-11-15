@@ -17,7 +17,7 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     const project = bySlug.get(slug);
     const study = studies?.[slug];
     const published = project?.status === "published" && study?.status === "published";
-    const decision = study?.proof?.find(item => item.type === "decision")?.statement || project?.tagline || "";
+    const decision = project?.governingDecision || study?.proof?.find(item => item.type === "decision")?.statement || project?.tagline || "";
     return { slug, title: project?.title || slug, category: project?.category || "Project", year: project?.year || "", decision, href: published ? base + `work/${slug}.html` : "", cover: project?.cover || "" };
   });
   return renderEditorialIndex(selected.map(project => {
@@ -50,13 +50,14 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
   };
   const published = workIndex.filter(project => project.status === 'published');
   const inProgress = workIndex.filter(project => project.status !== 'published');
+  const pathCounts = published.flatMap(project => project.paths || []).reduce((counts, path) => counts.set(path, (counts.get(path) || 0) + 1), new Map());
   const publishedMarkup = renderEditorialIndex(published.map(project => {
     const href = base + (project.href || 'work/' + safeToken(project.slug) + '.html');
     const study = studies?.[project.slug];
     const decision = study?.proof?.find(item => item.type === 'decision')?.statement || project.tagline;
     const role = study?.facts?.role || (project.tags || []).join(', ');
     const frames = (previewFrames[project.slug] || []).map((src, index) => '<span class="project-archive__preview-frame" style="--preview-order:' + index + '"><img src="' + base + 'assets/images/optimized/' + safeToken(src) + '-540.webp" alt="" loading="lazy" decoding="async"></span>').join('');
-    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><p class="project-archive__meta"><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time></p><h2 class="editorial-index__title">' + esc(project.title) + '</h2><div class="project-archive__evidence"><small>Governing decision</small><p class="editorial-index__description">' + esc(decision) + '</p><span>' + esc(role) + '</span></div></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
+    return { href, label: project.title + ', view project', tone: project.slug, className: 'project-archive__item project-archive__item--' + project.slug, content: '<div class="project-archive__row"><div class="project-archive__identity"><p class="project-archive__meta"><span>' + esc(project.category) + '</span><time>' + esc(project.year) + '</time></p><h2 class="editorial-index__title">' + esc(project.title) + '</h2>' + problem + '<div class="project-archive__evidence"><small>Governing decision</small><p class="editorial-index__description">' + esc(decision) + '</p><span>' + esc(role) + '</span>' + evidence + paths + '</div></div><div class="project-archive__media" aria-hidden="true">' + frames + '</div></div>' };
   }), { variant: 'archive', className: 'project-archive__published' });
   const progressMarkup = inProgress.length ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' + inProgress.map(project => '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join('') + '</ul></div>' : '';
   const collectionMarkup = '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' + base + 'explorations.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' + base + 'notes.html"><span>Notes</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
