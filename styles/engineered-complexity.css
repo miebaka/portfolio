@@ -426,8 +426,7 @@ html[data-motion="reduced"] .ec-thesis__path {
   color: var(--ec-text-muted);
 }
 
-.project-archive__problem small,
-.project-archive__status {
+.project-archive__problem small {
   font: 600 var(--type-label-s)/1.3 var(--label);
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -438,6 +437,9 @@ html[data-motion="reduced"] .ec-thesis__path {
   width: fit-content;
   margin-top: 1rem;
   color: var(--ec-burgundy-800);
+  font: 600 var(--type-label-s)/1.3 var(--label);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .project-archive__paths {
