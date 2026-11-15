@@ -8,6 +8,7 @@ import { services } from "../data/services.js";
 import {
   createServiceSwatches,
   renderExperienceLedger,
+  renderServiceAccordionMarkup,
   renderServiceFallbackMarkup,
   renderServiceSwatchesMarkup,
   renderCvMarkup
@@ -42,7 +43,7 @@ test("the service system has exactly five complete shared records", () => {
   assert.equal(services.length, 5);
   for (const service of services) {
     assert.match(service.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-    for (const field of ["title", "description", "outputs", "fit"]) assert.ok(service[field]?.trim(), `${service.id}.${field}`);
+    for (const field of ["title", "description", "outputs", "fit", "evidenceLabel", "evidenceHref"]) assert.ok(service[field]?.trim(), `${service.id}.${field}`);
   }
   const markup = renderServiceSwatchesMarkup(services);
   assert.equal((markup.match(/role="tab"/g) || []).length, 5);
@@ -52,6 +53,24 @@ test("the service system has exactly five complete shared records", () => {
   for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
     assert.ok(fallback.includes(service[field].replaceAll("&", "&amp;")), `${service.id}.${field} is available without JavaScript`);
   }
+});
+
+test("the homepage makes the hiring proposition and proof available before biography", async () => {
+  const html = await page("index.html");
+  assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale\./);
+  assert.match(html, /8\+ years/);
+  assert.match(html, /Rise marketing design/);
+  assert.match(html, /Six partner teams/);
+  assert.match(html, /Lagos \/ remote/);
+  assert.match(html, /Request CV/);
+  assert.ok(html.indexOf('id="capabilities"') < html.indexOf('id="profile"'));
+});
+
+test("the closing invitation clearly supports employment and collaboration", async () => {
+  const html = await page("index.html");
+  assert.match(html, /Available for senior brand and marketing design roles, selected collaborations and design-led teams\./);
+  assert.match(html, />Contact me</);
+  assert.match(html, />Request CV</);
 });
 
 test("Home and About expose the same progressive service source without an orphan route", async () => {
@@ -97,6 +116,17 @@ test("service swatches support pointer and complete roving-keyboard selection wi
 
   cleanup();
   assert.ok(tabs.every(tab => tab.listeners.size === 0));
+});
+
+test("mobile service markup is a vertical, fully readable accordion", () => {
+  const markup = renderServiceAccordionMarkup(services);
+  assert.equal((markup.match(/<details/g) || []).length, 5);
+  for (const service of services) {
+    assert.ok(markup.includes(service.title));
+    assert.ok(markup.includes(service.description));
+    assert.ok(markup.includes(service.evidenceLabel));
+  }
+  assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });
 
 test("service selection has a persistent non-colour cue", async () => {

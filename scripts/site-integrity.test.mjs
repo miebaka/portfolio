@@ -20,16 +20,11 @@ test("homepage proof precedes biography in the source and built document", async
   }
 });
 
-test("homepage hero and listening fallback remain useful without JavaScript", async () => {
+test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    const hero = html.match(/<h1 id="hero-title"[^>]*>([\s\S]*?)<\/h1>/)?.[0] || "";
-    assert.doesNotMatch(hero, /aria-label|aria-hidden/);
-    assert.match(hero, /I design brands, build useful things/);
-    assert.match(hero, /ask a lot of questions/);
-    const listening = html.match(/<div class="home-profile__listening"[\s\S]*?<\/div>/)?.[0] || "";
-    assert.match(listening, /last\.fm\/user\/miebaka/);
-    assert.match(listening, /See what Miebaka has been playing/);
+    assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale/);
+    assert.match(html, /8\+ years/);
   }
 });
 
@@ -41,7 +36,7 @@ test("homepage keeps the approved section order without the retired practice-sta
     const capabilities = html.indexOf('id="capabilities"');
     const journey = html.indexOf('class="journey"');
     const close = html.indexOf('class="home-close');
-    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < close, directory);
+    assert.ok(proof < capabilities && capabilities < biography && biography < journey && journey < close, directory);
     assert.doesNotMatch(html, /practice-standard|Find the decision|Build the system|Edit until it holds/);
   }
 });
@@ -282,7 +277,7 @@ test("rejected homepage language cannot return unnoticed", async () => {
   ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   assert.doesNotMatch(html, /Available for select projects|data-lagos-time/);
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
-  assert.match(html, /Since 2017/);
+  assert.match(html, /more than eight years/);
 });
 
 test("homepage hierarchy and motion affordances cannot regress", async () => {
@@ -317,13 +312,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   }
   assert.match(css, /\.case-next__link\{[^}]*text-decoration:none/);
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(html, /data-mount="now-playing"/);
   assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
-  assert.match(css, /\.now-playing__track\{[^}]*text-overflow:ellipsis/);
-  assert.match(listening, /Currently listening to/);
-  assert.match(listening, /Recently listened to/);
-  assert.match(listening, /now-playing__label/);
-  assert.match(listening, /Que Linda/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-cord-mode>Print/);
