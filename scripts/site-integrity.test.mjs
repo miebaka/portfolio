@@ -23,7 +23,7 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-  assert.match(home, /I turn complicated problems into clear creative systems\./);
+    assert.match(html, /I turn complicated problems into clear creative systems\./);
     assert.match(html, /8\+ years/);
   }
 });
