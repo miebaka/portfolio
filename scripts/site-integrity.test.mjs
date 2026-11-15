@@ -23,7 +23,7 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale/);
+    assert.match(html, /I turn complicated problems into clear creative systems/);
     assert.match(html, /8\+ years/);
   }
 });
@@ -355,7 +355,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title">I turn complicated problems into clear creative systems\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
@@ -364,18 +364,20 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
 });
 
-test("built service fallbacks contain one complete shared record per service", async () => {
-  for (const file of ["index.html", "about.html"]) {
-    const html = await readFile(join(dist, file), "utf8");
-    assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
-    const start = html.indexOf('<div data-mount="capabilities"');
-    const capability = html.slice(start, html.indexOf("</section>", start));
-    for (const service of SITE.capabilities) for (const field of ["title", "description", "outputs", "fit"]) {
-      const value = service[field].replaceAll("&", "&amp;");
-      assert.equal(capability.split(value).length - 1, 1, `${file}: ${service.id}.${field}`);
-    }
-    assert.doesNotMatch(capability, /<\/ol><\/div><div><dt>Good fit/, file);
+test("About contains one complete shared service record while Home owns its method route", async () => {
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  assert.equal((home.match(/data-mount="capabilities"/g) || []).length, 0);
+  assert.match(home, /<ol class="ec-practice-route"/);
+
+  const about = await readFile(join(dist, "about.html"), "utf8");
+  assert.equal((about.match(/data-mount="capabilities"/g) || []).length, 1);
+  const start = about.indexOf('<div data-mount="capabilities"');
+  const capability = about.slice(start, about.indexOf("</section>", start));
+  for (const service of SITE.capabilities) for (const field of ["title", "description", "outputs", "fit"]) {
+    const value = service[field].replaceAll("&", "&amp;");
+    assert.equal(capability.split(value).length - 1, 1, `about.html: ${service.id}.${field}`);
   }
+  assert.doesNotMatch(capability, /<\/ol><\/div><div><dt>Good fit/);
   await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
 });
 
