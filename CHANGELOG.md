@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-15
+
+- Reframed the portfolio around “Engineered Complexity”: warm burgundy and paper surfaces, connected route primitives and the proposition “I turn complicated problems into clear creative systems.”
+- Added the homepage thesis route study, five-stage practice sequence and interdisciplinary profile thread.
+- Rebuilt About as an interconnected practice spanning environmental systems, design, marketing and creative leadership.
+- Added bounded project problems, governing decisions, contributions, evidence states and supported practice paths.
+- Added decision-led case routes, source-gated reflection components and alternate content paths.
+- Connected Notes, Experiments and Contact through thematic routes, resilient fallbacks and a clearer action hierarchy.
+- Preserved project-owned case colours, reduced-motion behavior, non-JavaScript content and privacy-safe personal detail.
+
 ## 2026-11-13
 
 - Shipped Hedvig Letters Serif for editorial display type and Finlandica Text for body, navigation and interface copy.
