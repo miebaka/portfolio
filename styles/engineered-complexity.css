@@ -590,7 +590,7 @@ html[data-motion="reduced"] .ec-decision-map .case-proof__item a {
   display: grid;
   gap: 1rem;
   width: min(28rem, calc(100vw - 3rem));
-  margin: 20vh auto;
+  margin: 2rem auto 4rem;
   padding: 2rem;
   border: 1px solid var(--ec-route);
   background: var(--ec-paper);
