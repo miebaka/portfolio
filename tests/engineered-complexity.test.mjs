@@ -87,3 +87,34 @@ test("homepage includes the interdisciplinary practice thread", async () => {
   assert.match(home, /storytelling/i);
   assert.match(home, /one useful whole/i);
 });
+
+
+test("about page leads with the approved personal proposition", async () => {
+  const about = await read("about.html");
+  assert.match(about, /My mind takes the long route\. My work should not make you do the same\./);
+});
+
+test("about page presents a shaped-practice timeline", async () => {
+  const about = await read("about.html");
+  assert.match(about, /<ol class="ec-practice-timeline"/);
+  for (const milestone of ["Environmental systems", "Design practice", "Marketing systems", "Creative leadership"]) {
+    assert.match(about, new RegExp(milestone, "i"));
+  }
+});
+
+test("about page states four working principles", async () => {
+  const about = await read("about.html");
+  const section = about.match(/<ol class="about-principles">([\s\S]*?)<\/ol>/);
+  assert.ok(section, "working principles list is missing");
+  assert.equal((section[1].match(/<li>/g) || []).length, 4);
+  assert.match(section[1], /Let the system handle repetition/i);
+});
+
+test("about page shows the person away from the file", async () => {
+  const about = await read("about.html");
+  assert.match(about, /Away from the file/i);
+  for (const interest of ["comics", "movies", "Warhammer 40K", "photography", "faith"]) {
+    assert.match(about, new RegExp(interest, "i"));
+  }
+  assert.doesNotMatch(about, /Cynthia|Nwanyi Oma|Ikorodu/i, "keep private personal details off the public portfolio");
+});
