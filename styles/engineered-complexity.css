@@ -279,13 +279,18 @@ html[data-motion="reduced"] .ec-thesis__path {
 }
 
 .about-page .about-hero {
+  grid-template-columns: minmax(0, 1fr);
   padding-block: clamp(5rem, 10vw, 10rem);
 }
 
+.about-page .about-hero__copy {
+  width: 100%;
+}
+
 .about-page .about-hero__copy h1 {
-  max-width: 14ch;
+  max-width: none;
   color: var(--ec-burgundy-900);
-  font-size: clamp(3rem, 6.7vw, 7.5rem);
+  font-size: clamp(3rem, 3.4vw, 4rem);
   line-height: .93;
 }
 
