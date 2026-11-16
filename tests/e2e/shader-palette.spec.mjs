@@ -13,7 +13,17 @@ test('Light water pixels remain inside the delegated palette, including after a 
   }
   // Capture the final light state once. A static frame keeps WebGL screenshots
   // deterministic on shared CI runners while still proving theme round-tripping.
-  const { data, info } = await sharp(await page.screenshot({ scale: 'css', clip: { x: 10, y: 120, width: page.viewportSize().width - 20, height: 180 } })).raw().toBuffer({ resolveWithObject: true });
+  // Sample an unobstructed strip between the masthead and the hero copy.
+  // A fixed page crop can include foreground typography as the editorial
+  // layout evolves, producing false palette failures.
+  const sampleBounds = await page.evaluate(() => {
+    const navBottom = document.querySelector('.site-nav')?.getBoundingClientRect().bottom ?? 0;
+    const heroTop = document.querySelector('.home-landing h1')?.getBoundingClientRect().top ?? innerHeight;
+    const y = Math.ceil(navBottom + 16);
+    return { x: 10, y, width: innerWidth - 20, height: Math.max(40, Math.floor(heroTop - y - 16)) };
+  });
+  const shaderFrame = await page.screenshot({ scale: 'css', clip: sampleBounds });
+  const { data, info } = await sharp(shaderFrame).raw().toBuffer({ resolveWithObject: true });
   // Paper #f8f9fc / neutral-96 #f2f3f8 / neutral-94 #eceef3.
   // One quantisation step allowed. Physical shading previously fell below this range.
   const low = [255, 255, 255], high = [0, 0, 0];

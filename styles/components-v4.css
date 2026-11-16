@@ -319,7 +319,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(3.5rem + var(--safe-bot
 /* Chapter rail: a quiet reading instrument adapted from Kokonut UI's Scroll Index. */
 .case-scroll-index{display:none}
 @media(min-width:64.01rem){
-.case-scroll-index{position:fixed;z-index:7;top:50%;right:max(1rem,env(safe-area-inset-right));display:block;width:3rem;height:17.5rem;color:var(--muted);transform:translateY(-50%)}
+.case-scroll-index{position:fixed;z-index:7;top:50%;right:max(1.5rem,env(safe-area-inset-right));display:block;width:3rem;height:17.5rem;color:var(--muted);transform:translateY(-50%)}
 .case-scroll-index__rail{position:absolute;inset:0;cursor:ns-resize;touch-action:none}
 .case-scroll-index__rail::before{content:"";position:absolute;right:.15rem;top:0;width:1px;height:100%;background:var(--line)}
 .case-scroll-index__head{position:absolute;right:-.0625rem;top:0;width:.4375rem;height:.4375rem;border:1px solid var(--paper);border-radius:50%;background:var(--ink);box-shadow:0 0 0 1px var(--ink);transform:translateY(-50%);animation:case-index-progress linear both;animation-timeline:scroll(root block)}
@@ -328,7 +328,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(3.5rem + var(--safe-bot
 .case-scroll-index__tick::before{content:"";position:absolute;right:0;top:50%;width:100%;height:1px;background:currentColor}
 .case-scroll-index__tick[aria-current="step"]{width:1.65rem;color:var(--ink)}
 .case-scroll-index__tick:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.case-scroll-index__label{position:absolute;right:2.5rem;top:calc(var(--position,0)*100%);max-width:11rem;padding:.45rem .6rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:500 .8125rem/1.2 var(--label);letter-spacing:.1em;text-align:right;text-transform:uppercase;white-space:nowrap;opacity:0;pointer-events:none;transform:translate(.35rem,-50%);transition:opacity 120ms var(--ease-standard),transform 160ms var(--ease-enter)}
+.case-scroll-index__label{position:absolute;right:3.25rem;top:calc(var(--position,0)*100%);width:max-content;max-width:min(18rem,calc(100vw - 8rem));padding:.45rem .6rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:500 .8125rem/1.25 var(--label);letter-spacing:.04em;text-align:right;text-transform:none;white-space:normal;opacity:0;pointer-events:none;transform:translate(.35rem,-50%);transition:opacity 120ms var(--ease-standard),transform 160ms var(--ease-enter)}
 .case-scroll-index.is-label-visible .case-scroll-index__label{opacity:1;transform:translate(0,-50%)}
 .case-scroll-index.is-dragging .case-scroll-index__head{transition:none}
 }

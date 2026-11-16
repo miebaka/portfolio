@@ -254,8 +254,8 @@
 .home-profile__media{grid-column:7/13}
 }
 
-@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]) *, :root:not([data-motion-preference="full"]) *::before, :root:not([data-motion-preference="full"]) *::after{animation-duration:.01ms;animation-iteration-count:1;transition-duration:.01ms;scroll-behavior:auto}:root:not([data-motion-preference="full"]) body::after,:root:not([data-motion-preference="full"]) .shader-backdrop{display:none}}
-html[data-motion="reduced"] *,html[data-motion="reduced"] *::before,html[data-motion="reduced"] *::after{animation-duration:.01ms;animation-iteration-count:1;transition-duration:.01ms;scroll-behavior:auto}html[data-motion="reduced"] body::after,html[data-motion="reduced"] .shader-backdrop{display:none}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]):not(.impeccable-motion){scroll-behavior:auto}:root:not([data-motion-preference="full"]) :is(.home-landing__object,.client-marquee__track,.now-playing__vinyl,.case-scroll-index__head,.reading-progress){animation:none;transition:none}:root:not([data-motion-preference="full"]) body::after,:root:not([data-motion-preference="full"]) .shader-backdrop{display:none}}
+html[data-motion="reduced"]:not(.impeccable-motion){scroll-behavior:auto}html[data-motion="reduced"] :is(.home-landing__object,.client-marquee__track,.now-playing__vinyl,.case-scroll-index__head,.reading-progress){animation:none;transition:none}html[data-motion="reduced"] body::after,html[data-motion="reduced"] .shader-backdrop{display:none}
 .collection-shell .hero__title{font-size:clamp(2.5rem,8vw,5.5rem)}
 :is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-lede,.case-chapter__copy,.case-next,.section,.section--tight)>*{text-align:left}
 .article-body :is(p,h2,h3,ul,ol,blockquote){margin-inline:0;text-align:left}
@@ -1291,6 +1291,8 @@ body[data-page]:not(.hallmark-disabled) :is(
 }
 
 body[data-page]:not(.hallmark-disabled) .btn{
+  height: 2.75rem;
+  min-height: 2.75rem;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -2244,5 +2246,148 @@ body[data-page="contact"]:not(.hallmark-disabled) :is(.field label, .contact-inf
 
   body[data-page="home"]:not(.hallmark-disabled):not([data-hallmark-duplicate-2]) .home-project-list__arrow{
     transition: none;
+  }
+}
+
+/* Impeccable production review: keep proof, wayfinding and action in reach. */
+body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing {
+  height: auto;
+  min-height: calc(100svh - var(--nav-h));
+  align-items: stretch;
+}
+
+body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing__inner {
+  min-height: calc(100svh - var(--nav-h));
+  padding-block: clamp(3rem, 7svh, 5.5rem);
+  align-content: end;
+}
+
+body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing h1 {
+  grid-column: 1 / -1;
+  max-width: none;
+  font-size: clamp(3.5rem, 4.6vw, 4.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: wrap;
+}
+
+body.home-spectacle.home-spectacle--current.home-editorial-v2[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing h1 {
+  grid-column: 1 / -1;
+  max-width: none;
+  font-size: clamp(3.5rem, 4.6vw, 4.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: wrap;
+}
+
+body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .editorial-index__row:is(:hover, :focus-visible) {
+  color: var(--project-ink, var(--paper)) !important;
+}
+
+body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .editorial-index__row:is(:hover, :focus-visible) :is(
+  .editorial-index__meta,
+  .editorial-index__description,
+  .home-project-list__meta,
+  .home-project-list__decision,
+  time
+) {
+  color: inherit !important;
+}
+
+body[data-page="contact"]:not(.hallmark-disabled):not(.impeccable-disabled) .hero {
+  min-height: 22rem;
+  padding-block: clamp(4rem, 8svh, 6rem) var(--s8);
+}
+
+body[data-page="contact"]:not(.hallmark-disabled):not(.impeccable-disabled) .hero__title {
+  max-width: 15ch;
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  letter-spacing: -0.04em;
+}
+
+body[data-page="contact"]:not(.hallmark-disabled):not(.impeccable-disabled) .section--tight {
+  padding-block-start: var(--s4);
+}
+
+.case-page:not(.impeccable-disabled) .case-opening {
+  padding-block-start: clamp(6rem, 9vw, 9rem);
+}
+
+.case-page:not(.impeccable-disabled) .case-opening h1 {
+  font-size: clamp(3.75rem, 7vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+body[data-page="about"]:not(.hallmark-disabled):not(.impeccable-disabled) .about-hero__copy {
+  grid-column: 1 / 8;
+}
+
+body[data-page="about"]:not(.hallmark-disabled):not(.impeccable-disabled) .about-hero__copy h1 {
+  max-width: none;
+  font-size: clamp(2.5rem, 3.1vw, 2.75rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  text-wrap: wrap;
+}
+
+body[data-page="about"]:not(.hallmark-disabled):not(.impeccable-disabled) .about-hero__media {
+  grid-column: 8 / -1;
+}
+
+@media (max-width: 60rem) {
+  html.no-js .site-nav {
+    height: auto;
+  }
+
+  html.no-js .site-nav__inner {
+    min-height: 4.5rem;
+    flex-wrap: wrap;
+    padding-block-end: var(--s2);
+  }
+
+  html.no-js .site-nav__links {
+    position: static;
+    order: 3;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .case-page:not(.impeccable-disabled) .site-nav {
+    position: sticky;
+    inset-block-start: 0;
+    display: block;
+    z-index: 300;
+  }
+
+  .case-page:not(.impeccable-disabled) .site-nav__menu-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 40rem) {
+  body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing__inner {
+    padding-block: var(--s8);
+  }
+
+  body[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing h1,
+  body.home-spectacle.home-spectacle--current.home-editorial-v2[data-page="home"]:not(.hallmark-disabled):not(.impeccable-disabled) .home-landing h1,
+  .case-page:not(.impeccable-disabled) .case-opening h1 {
+    font-size: clamp(3rem, 12vw, 3.75rem);
+    line-height: 0.96;
+  }
+
+  body[data-page="contact"]:not(.hallmark-disabled):not(.impeccable-disabled) .hero {
+    min-height: 18rem;
+    padding-block: var(--s8) var(--s4);
+  }
+
+  body[data-page="contact"]:not(.hallmark-disabled):not(.impeccable-disabled) .hero__title {
+    font-size: clamp(3rem, 13vw, 4.5rem);
   }
 }
