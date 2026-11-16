@@ -14,6 +14,12 @@ The object of the design is not an isolated page. It is an authored system that
 makes Miebaka's judgement visible: find the decision beneath the brief, build a
 usable system around it, and edit until every surviving detail earns its place.
 
+The homepage leads with a direct proposition: complicated briefs become clear,
+usable brands and campaigns. Question-asking remains part of the voice, not the
+positioning headline. After the flagship work, a compact current-practice section
+grounds the method in the confirmed Rise role and six-team context; the detailed
+service explanation belongs on About.
+
 ## Type and language
 
 - Hedvig Letters Serif 400: display headlines and primary page titles.
