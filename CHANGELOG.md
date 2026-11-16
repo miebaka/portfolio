@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-16
+
+- Replaced the tentative “Senior-leaning” label with a direct brand and marketing design position.
+- Reframed the homepage around turning complicated briefs into clear, usable brands and campaigns.
+- Replaced the five-card process pitch with a concise current-practice proof section grounded in the confirmed Rise role and six-team context.
+
 ## 2026-11-13
 
 - Shipped Hedvig Letters Serif for editorial display type and Finlandica Text for body, navigation and interface copy.

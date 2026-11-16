@@ -79,7 +79,7 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   await page.goto("/index.html");
-  for (const text of ["Brand and marketing designer", "Selected work", "Find the governing decision", "Hand over a usable system", "Hi, I’m Miebaka."]) {
+  for (const text of ["Brand & marketing designer", "Selected work", "Find the decision", "Build the campaign", "Make it usable", "Hi, I’m Miebaka."]) {
     const locator = page.getByText(text, { exact: false }).first();
     await expect(locator).toBeVisible();
     const box = await locator.boundingBox();

@@ -23,21 +23,22 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /Brand and marketing designer turning unclear briefs into campaign systems teams can use at scale/);
+    assert.match(html, /I turn complex briefs into clear brands &amp; campaigns/);
+    assert.match(html, /Marketing designer at Rise/);
     assert.match(html, /8\+ years/);
   }
 });
 
-test("homepage keeps the approved section order without the retired practice-standard interstitial", async () => {
+test("homepage keeps the approved proof, current practice and biography order", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
     const proof = html.indexOf('id="selected-work"');
     const biography = html.indexOf('id="profile"');
-    const capabilities = html.indexOf('id="capabilities"');
+    const practice = html.indexOf('id="current-practice"');
     const journey = html.indexOf('class="journey"');
     const close = html.indexOf('class="home-close');
-    assert.ok(proof < capabilities && capabilities < biography && biography < journey && journey < close, directory);
-    assert.doesNotMatch(html, /practice-standard|Find the decision|Build the system|Edit until it holds/);
+    assert.ok(proof < practice && practice < biography && biography < journey && journey < close, directory);
+    assert.doesNotMatch(html, /practice-standard|Build the system|Edit until it holds/);
   }
 });
 
@@ -355,7 +356,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title">I design brands, build useful things &amp; ask a lot of questions\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title">I turn complex briefs into clear brands &amp; campaigns\.<\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
@@ -364,8 +365,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
 });
 
-test("built service fallbacks contain one complete shared record per service", async () => {
-  for (const file of ["index.html", "about.html"]) {
+test("built service fallback remains complete on the detailed About page", async () => {
+  for (const file of ["about.html"]) {
     const html = await readFile(join(dist, file), "utf8");
     assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
     const start = html.indexOf('<div data-mount="capabilities"');
@@ -424,8 +425,8 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /I design brands, build useful things/);
-  assert.match(home, /&amp; ask a lot of questions\./);
+  assert.match(home, /I turn complex briefs into clear brands/);
+  assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const workIndex = \[/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
