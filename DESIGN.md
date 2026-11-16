@@ -31,15 +31,14 @@ usable system around it, and edit until every surviving detail earns its place.
 
 ## Motion
 
-The homepage decision field is the signature moment. Repeated navigation,
+The homepage flagship project index is the signature moment. Repeated navigation,
 reading and case-study interactions respond in 120–240ms. Motion uses transform
 and opacity and is interruptible where needed. Keyboard-triggered navigation
 opens immediately.
 
-The masthead theme control is a compact pull cord: a physical Print/Screen
-metaphor adapted from Kokonut UI's MIT-licensed rope simulation. Dragging the
-bead past its threshold or activating its switch toggles the theme. The
-masthead labels, cord, bead and focus state use portfolio semantic tokens only.
+The masthead theme control is a compact Print/Screen switch. Activating the
+switch toggles the theme. Its labels and focus state use portfolio semantic
+tokens only.
 
 ## Navigation and spatial work
 
