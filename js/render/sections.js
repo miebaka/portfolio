@@ -10,15 +10,21 @@ export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
   ).join("");
   const panels = items.map((service, index) =>
     '<article class="service-panel" role="tabpanel" id="service-panel-' + esc(service.id) + '" aria-labelledby="service-tab-' + esc(service.id) + '"' + (index ? " hidden" : "") + '>' +
-      '<p class="service-panel__description">' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></article>'
+      '<p class="service-panel__description">' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl><a class="service-panel__evidence" href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></article>'
   ).join("");
   return '<div class="service-swatches" data-service-swatches><div class="service-swatches__tabs" role="tablist" aria-label="Services">' + tabs + '</div><div class="service-swatches__panels">' + panels + '</div></div>';
 }
 
 export function renderServiceFallbackMarkup(items = SITE.capabilities) {
   return '<ol class="service-fallback">' + items.map(service =>
-    '<li><h2>' + esc(service.title) + '</h2><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl></li>'
+    '<li><h2>' + esc(service.title) + '</h2><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl><a href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></li>'
   ).join("") + '</ol>';
+}
+
+export function renderServiceAccordionMarkup(items = SITE.capabilities) {
+  return '<div class="home-services__list">' + items.map((service, index) =>
+    '<details class="home-service"' + (index === 0 ? ' open' : '') + '><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p><a href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></div></div></details>'
+  ).join('') + '</div>';
 }
 
 export function createServiceSwatches(root) {
@@ -58,15 +64,14 @@ export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
   if (document.body.dataset.page === "home") {
-    el.className = "process-sequence";
-    el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
-    createServiceSwatches(el);
+    const narrow = globalThis.matchMedia?.('(max-width: 48rem)').matches;
+    el.className = narrow ? "home-services" : "process-sequence";
+    el.innerHTML = narrow ? renderServiceAccordionMarkup(SITE.capabilities) : renderServiceSwatchesMarkup(SITE.capabilities);
+    if (!narrow) createServiceSwatches(el);
     return;
   }
   el.className = "home-services";
-  el.innerHTML = '<div class="home-services__list">' + SITE.capabilities.map(service =>
-    '<details class="home-service"><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p></div></div></details>'
-  ).join('') + '</div>';
+  el.innerHTML = renderServiceAccordionMarkup(SITE.capabilities);
 }
 
 export function renderExperienceLedger(entries = []) {
@@ -78,7 +83,7 @@ export function renderExperienceLedger(entries = []) {
   const jobs = entries.map(entry => {
     const start = ((entry.startYear - firstYear) / scale) * 100;
     const span = ((Math.max(entry.endYear, entry.startYear) - entry.startYear + 1) / scale) * 100;
-    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div><div class="experience-ruler__track" role="img" aria-label="' + esc(entry.organisation) + ', ' + entry.startYear + ' to ' + entry.endYear + '"><span aria-hidden="true"></span></div></li>';
+    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__track" role="img" aria-label="' + esc(entry.organisation) + ', ' + entry.startYear + ' to ' + entry.endYear + '"><span aria-hidden="true"></span></div><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div></li>';
   }).join('');
   return '<div class="experience-ruler"><div class="experience-ruler__viewport" tabindex="0" aria-label="Work experience timeline from ' + firstYear + ' to ' + lastYear + '"><div class="experience-ruler__canvas" style="--experience-columns:' + scale + '">' + ruler + '<ol class="experience-ruler__jobs">' + jobs + '</ol></div></div></div>';
 }

@@ -53,7 +53,7 @@ for (const route of routes) {
 }
 
 test("every route fits narrow and large phone viewports", async ({ page }) => {
-  for (const width of [320, 360, 430]) {
+  for (const width of [320, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
     for (const route of routes) {
       await page.goto(route);
@@ -73,6 +73,20 @@ test("every route fits narrow and large phone viewports", async ({ page }) => {
       expect(geometry.navigationRight, `${route} mobile navigation right edge at ${width}px`).toBeLessThanOrEqual(geometry.viewportWidth);
     }
   }
+});
+
+test("critical mobile proof remains readable without JavaScript or motion", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  await page.goto("/index.html");
+  for (const text of ["Brand and marketing designer", "Selected work", "Find the governing decision", "Hand over a usable system", "Hi, I’m Miebaka."]) {
+    const locator = page.getByText(text, { exact: false }).first();
+    await expect(locator).toBeVisible();
+    const box = await locator.boundingBox();
+    expect(box?.x ?? -1, text).toBeGreaterThanOrEqual(0);
+    expect((box?.x ?? 0) + (box?.width ?? 999), text).toBeLessThanOrEqual(391);
+  }
+  await context.close();
 });
 
 test("desktop display headings use the shared grid without forced three-line measures", async ({ page }) => {

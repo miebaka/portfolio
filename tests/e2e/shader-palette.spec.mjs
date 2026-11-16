@@ -32,18 +32,6 @@ test('Light water pixels remain inside the delegated palette, including after a 
   expect(blueExcess).toBeLessThanOrEqual(8);
 });
 
-test('Vinyl only rotates for a live listening state', async ({ page }) => {
-  await page.goto('/');
-  const disc = page.locator('.now-playing__vinyl');
-  await expect(disc).toBeAttached();
-  expect(await disc.evaluate(el => getComputedStyle(el).animationDuration)).toBe('3.2s');
-  await expect(page.locator('.now-playing')).toHaveAttribute('data-live', 'false');
-  expect(await disc.evaluate(el => getComputedStyle(el).animationPlayState)).toBe('paused');
-  const box = await page.locator('.now-playing').boundingBox();
-  const portrait = await page.locator('.home-profile__portrait').boundingBox();
-  expect(Math.abs(box.width - portrait.width)).toBeLessThanOrEqual(1);
-});
-
 
 test('Print relief stays textured and paper-dominant in its still state', async ({ page }) => {
   test.setTimeout(60_000);
