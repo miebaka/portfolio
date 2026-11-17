@@ -80,7 +80,7 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   const page = await context.newPage();
   await page.goto("/index.html");
   const criticalProof = [
-    ["Brand & marketing designer", ".home-landing__meta > p:first-child"],
+    ["Brand & visual designer", ".home-landing__meta > p:nth-child(2)"],
     ["Selected work", "#selected-title"],
     ["Find the governing decision", "#what-i-do .service-fallback li:nth-child(1) :is(h2,h3)"],
     ["Build the identity system", "#what-i-do .service-fallback li:nth-child(2) :is(h2,h3)"],

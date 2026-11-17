@@ -47,7 +47,8 @@ test("Work archive separates published cases from work in progress", () => {
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
-  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Detour", "Out Of Office"]) assert.match(html, new RegExp(title));
+  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Detour", "Out Of Office"])
+    assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
@@ -78,27 +79,33 @@ test("project hit areas are full rows", async () => {
 
 test("the route registry has unique destinations and supports the approved global masthead", () => {
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
-  assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
-  assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Experiments", "About", "Essays", "Contact"]);
-  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Experiments", "About", "Essays", "Contact"]);
-  assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
-  assert.ok(navigation.footer.some(route => route.href === "essays.html"));
+  assert.equal(new Set(navigation.routes.map((route) => route.href)).size, navigation.routes.length);
+  assert.equal(new Set(navigation.routes.map((route) => route.key)).size, navigation.routes.length);
+  assert.deepEqual(
+    navigation.index.map((route) => route.label),
+    ["Work", "Experiments", "About", "Essays", "Contact"],
+  );
+  assert.deepEqual(
+    navigation.primary.map((route) => route.label),
+    ["Work", "Experiments", "About", "Essays", "Contact"],
+  );
+  assert.ok(navigation.footer.some((route) => route.href === "explorations.html"));
+  assert.ok(navigation.footer.some((route) => route.href === "essays.html"));
 });
 
 test("every production shell exposes the complete Index as fallback navigation", async () => {
-  const destinations = navigation.index.map(route => route.href);
+  const destinations = navigation.index.map((route) => route.href);
   for (const file of await walk(dist, ".html")) {
     if (file.endsWith("explorations.html")) continue;
     const html = await readFile(file, "utf8");
     const header = html.match(/<header\b[^>]*data-mount="nav"[^>]*>([\s\S]*?)<\/header>/)?.[1] || "";
-    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
+    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
     for (const href of destinations) assert.ok(links.includes(join(dist, href)), `${file} omits fallback ${href}`);
   }
 });
 
 test("source and built footer fallbacks match the approved public navigation", async () => {
-  const destinations = navigation.footer.map(route => route.href);
+  const destinations = navigation.footer.map((route) => route.href);
   for (const directory of [root, dist]) {
     for (const file of await walk(directory, ".html")) {
       if (file.includes(`${directory}/prototype/`)) continue;
@@ -106,26 +113,34 @@ test("source and built footer fallbacks match the approved public navigation", a
       const html = await readFile(file, "utf8");
       const footer = html.match(/<footer\b[\s\S]*?<div class="nav-fallback">([\s\S]*?)<a href="https:/)?.[1];
       if (!footer) continue;
-      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => resolve(dirname(file), match[1]));
-      for (const href of destinations) assert.ok(links.includes(join(directory, href)), `${file} omits footer fallback ${href}`);
+      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
+      for (const href of destinations)
+        assert.ok(links.includes(join(directory, href)), `${file} omits footer fallback ${href}`);
       assert.ok(!links.includes(join(directory, "community.html")), `${file} exposes retired Playground navigation`);
     }
   }
 });
 
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
-  for (const [href, canonical] of [["index.html", "https://miebaka.design/"], ["explorations.html", "https://miebaka.design/explorations.html"], ["community.html", "https://miebaka.design/explorations.html"]]) {
+  for (const [href, canonical] of [
+    ["index.html", "https://miebaka.design/"],
+    ["explorations.html", "https://miebaka.design/explorations.html"],
+    ["community.html", "https://miebaka.design/explorations.html"],
+  ]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
   }
   const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
-  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   assert.equal(new Set(urls).size, urls.length);
   assert.ok(urls.includes("https://miebaka.design/explorations.html"));
   assert.ok(!urls.includes("https://miebaka.design/community.html"));
-  assert.ok(!urls.some(url => url.endsWith("404.html")));
-  for (const project of SITE.projects.filter(project => SITE.caseStudies[project.slug]?.status !== "published")) {
-    assert.ok(!urls.includes(`https://miebaka.design/work/${project.slug}.html`), `${project.slug} is not a published narrative`);
+  assert.ok(!urls.some((url) => url.endsWith("404.html")));
+  for (const project of SITE.projects.filter((project) => SITE.caseStudies[project.slug]?.status !== "published")) {
+    assert.ok(
+      !urls.includes(`https://miebaka.design/work/${project.slug}.html`),
+      `${project.slug} is not a published narrative`,
+    );
   }
   for (const url of urls) {
     const pathname = new URL(url).pathname;
@@ -141,7 +156,10 @@ test("Experiments ships a readable archive and the retired route points to it", 
   assert.match(experiments, /Wada Sanzō, Study 264/);
   assert.doesNotMatch(experiments, /U014|WADA SANZ/);
   assert.match(experiments, />Enter the archive<\/p>/);
-  assert.doesNotMatch(experiments, /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/);
+  assert.doesNotMatch(
+    experiments,
+    /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/,
+  );
 
   const playground = await readFile(join(dist, "community.html"), "utf8");
   assert.match(playground, /<h1[^>]*>Experiments have moved\.<\/h1>/);
@@ -153,7 +171,7 @@ async function walk(dir, suffix = "") {
   const files = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
-    if (entry.isDirectory()) files.push(...await walk(path, suffix));
+    if (entry.isDirectory()) files.push(...(await walk(path, suffix)));
     else if (!suffix || path.endsWith(suffix)) files.push(path);
   }
   return files;
@@ -164,13 +182,13 @@ test("project publication states are explicit", async () => {
   for (const project of SITE.projects) {
     assert.ok(statuses.has(project.status), `${project.slug} needs a publication status`);
   }
-  assert.equal(SITE.projects.filter(project => project.featured && project.status === "published").length, 3);
-  assert.ok(SITE.projects.some(project => project.status === "coming-soon"));
+  assert.equal(SITE.projects.filter((project) => project.featured && project.status === "published").length, 3);
+  assert.ok(SITE.projects.some((project) => project.status === "coming-soon"));
 
   const pages = await walk(dist, ".html");
-  const publicMarkup = (await Promise.all(pages.map(file => readFile(file, "utf8")))).join("\n");
+  const publicMarkup = (await Promise.all(pages.map((file) => readFile(file, "utf8")))).join("\n");
   const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
-  for (const project of SITE.projects.filter(project => project.status === "private")) {
+  for (const project of SITE.projects.filter((project) => project.status === "private")) {
     assert.ok(!publicMarkup.includes(project.title), `${project.slug} appears in public HTML`);
     assert.ok(!sitemap.includes(`/work/${project.slug}.html`), `${project.slug} appears in the sitemap`);
   }
@@ -191,7 +209,9 @@ test("every production page has essential metadata and one heading", async () =>
 });
 
 test("unfinished case studies explain their state before JavaScript runs", async () => {
-  for (const project of SITE.projects.filter(project => project.status === "coming-soon" && SITE.caseStudies[project.slug])) {
+  for (const project of SITE.projects.filter(
+    (project) => project.status === "coming-soon" && SITE.caseStudies[project.slug],
+  )) {
     const html = await readFile(join(dist, "work", `${project.slug}.html`), "utf8");
     assert.match(html, /data-prerendered="true"/, project.slug);
     assert.match(html, /Coming soon/, project.slug);
@@ -247,13 +267,27 @@ test("hero wave keeps a bounded, direct Three.js rendering contract", async () =
   const source = await readFile(join(dist, "js", "core", "hero-wave.js"), "utf8");
   const island = await readFile(join(root, "js", "hero-wave-island.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
-  for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"]) assert.match(source, new RegExp(token));
+  for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"])
+    assert.match(source, new RegExp(token));
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(source, /pointermove/);
   assert.match(source, /setPointer/);
   assert.match(source, /shader-static/);
-  for (const contract of [/PlaneGeometry/, /ShaderMaterial/, /OrthographicCamera/, /MAX_AUTOPLAY_MS = 4800/, /IntersectionObserver/, /ResizeObserver/, /forceContextLoss/, /SRGBColorSpace/]) assert.match(island, contract);
-  assert.match(foundations, /--hero-wave-color-1:var\(--ref-midnight\);--hero-wave-color-2:var\(--ref-ultramarine\);--hero-wave-color-3:var\(--ref-blue-80\)/);
+  for (const contract of [
+    /PlaneGeometry/,
+    /ShaderMaterial/,
+    /OrthographicCamera/,
+    /MAX_AUTOPLAY_MS = 4800/,
+    /IntersectionObserver/,
+    /ResizeObserver/,
+    /forceContextLoss/,
+    /SRGBColorSpace/,
+  ])
+    assert.match(island, contract);
+  assert.match(
+    foundations,
+    /--hero-wave-color-1:var\(--ref-midnight\);--hero-wave-color-2:var\(--ref-ultramarine\);--hero-wave-color-3:var\(--ref-blue-80\)/,
+  );
   assert.doesNotMatch(source + island + foundations, /ShaderGradient|shader-background|ref-shader/);
 });
 
@@ -265,8 +299,9 @@ test("rejected homepage language cannot return unnoticed", async () => {
     "Brand thinking should survive",
     "Open to remote roles",
     "Three decisions. Three systems.",
-    "From the first question to the final file."
-  ]) assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+    "From the first question to the final file.",
+  ])
+    assert.doesNotMatch(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
   assert.doesNotMatch(html, /Available for select projects|data-lagos-time/);
   assert.match(html, /Hi, I&rsquo;m Miebaka/);
   assert.match(html, /more than eight years/);
@@ -283,11 +318,15 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
-  for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"]) assert.match(projects, new RegExp(identifier));
-  assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
-  assert.match(projects, /home-project-list__decision/);
+  for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"])
+    assert.match(projects, new RegExp(identifier));
+  const homeProjects = projects.match(/export function renderHomeProjectList[\s\S]*?\n}\n\nexport function renderProjectArchive/)?.[0] || "";
+  assert.doesNotMatch(homeProjects, /proof\?\.find|home-project-list__decision|Governing decision/);
   assert.match(projects, /client-marquee__track/);
-  assert.match(css, /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/);
+  assert.match(
+    css,
+    /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/,
+  );
   assert.match(css, /--content:102rem/);
   assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2rem,\s*3vw,\s*3\.25rem\)/);
   assert.doesNotMatch(projects, /Pause client logos/);
@@ -303,6 +342,11 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   }
   assert.match(css, /\.case-next__link\{[^}]*text-decoration:none/);
   assert.match(css, /\.site-footer__signature-canvas/);
+  assert.match(
+    css,
+    /body\[data-page="home"\]:not\(\.site-system-disabled\) \.site-footer__signature\s*\{[^}]*display:\s*block/,
+  );
+  assert.doesNotMatch(html, /\b0[1-9] \/ (?:Work|About me|Practice|Selected clients|Let(?:&rsquo;|')s work)\b/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
@@ -330,7 +374,10 @@ test("interactive controls include the approved Figma button states", async () =
   assert.match(css, /-webkit-text-size-adjust:100%/);
   assert.match(css, /safe-area-inset-left/);
   assert.match(css, /@media\s*\(hover:hover\) and \(pointer:fine\)/);
-  assert.match(css, /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:16px\}\s*select\{font-size:16px\}\s*input\{font-size:16px\}\s*\}/);
+  assert.match(
+    css,
+    /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:16px\}\s*select\{font-size:16px\}\s*input\{font-size:16px\}\s*\}/,
+  );
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
@@ -342,16 +389,22 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
   assert.match(css, /\.measure-hero\{max-width:none\}/);
   assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
-  assert.match(css, /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/);
+  assert.match(
+    css,
+    /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/,
+  );
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title"><span>Miebaka<\/span> <span>Joshua<\/span><\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
-  const title = writing.indexOf('writing-item__title');
-  const meta = writing.indexOf('writing-item__meta');
+  const title = writing.indexOf("writing-item__title");
+  const meta = writing.indexOf("writing-item__meta");
   assert.ok(title > -1 && title < meta);
   assert.match(writing, /writing-item__summary/);
-  assert.match(projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "", /home-project-list__decision/);
+  assert.doesNotMatch(
+    projects.match(/export function renderHomeProjectList[\s\S]*?\n}/)?.[0] || "",
+    /home-project-list__decision|Governing decision/,
+  );
 });
 
 test("built service fallback remains complete on the detailed About page", async () => {
@@ -360,10 +413,11 @@ test("built service fallback remains complete on the detailed About page", async
     assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
     const start = html.indexOf('<div data-mount="capabilities"');
     const capability = html.slice(start, html.indexOf("</section>", start));
-    for (const service of SITE.capabilities) for (const field of ["title", "description", "outputs", "fit"]) {
-      const value = service[field].replaceAll("&", "&amp;");
-      assert.equal(capability.split(value).length - 1, 1, `${file}: ${service.id}.${field}`);
-    }
+    for (const service of SITE.capabilities)
+      for (const field of ["title", "description", "outputs", "fit"]) {
+        const value = service[field].replaceAll("&", "&amp;");
+        assert.equal(capability.split(value).length - 1, 1, `${file}: ${service.id}.${field}`);
+      }
     assert.doesNotMatch(capability, /<\/ol><\/div><div><dt>Good fit/, file);
   }
   await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
@@ -384,13 +438,15 @@ test("Vercel configuration is valid and serves the static build", async () => {
   const config = JSON.parse(await readFile(join(root, "vercel.json"), "utf8"));
   assert.equal(config.outputDirectory, "dist");
   assert.ok(config.headers?.length);
-  const header = (source, key) => config.headers.find(rule => rule.source === source)?.headers.find(item => item.key === key)?.value;
+  const header = (source, key) =>
+    config.headers.find((rule) => rule.source === source)?.headers.find((item) => item.key === key)?.value;
   assert.equal(header("/api/(.*)", "Cache-Control"), "no-store");
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
   for (const rule of config.headers) {
     for (const item of rule.headers || []) {
-      if (/immutable/i.test(item.value)) assert.match(rule.source, /\[[^\]]*[a-f0-9][^\]]*\]|hash/i, `immutable cache on stable path ${rule.source}`);
+      if (/immutable/i.test(item.value))
+        assert.match(rule.source, /\[[^\]]*[a-f0-9][^\]]*\]|hash/i, `immutable cache on stable path ${rule.source}`);
     }
   }
 });
@@ -404,13 +460,19 @@ test("portfolio depth features are present without depending on JavaScript for c
 
 test("requested language and contact details stay canonical", async () => {
   const sourceFiles = [
-    join(dist, "index.html"), join(dist, "about.html"),
-    join(dist, "contact.html"), join(dist, "essays.html"), join(dist, "privacy.html"),
+    join(dist, "index.html"),
+    join(dist, "about.html"),
+    join(dist, "contact.html"),
+    join(dist, "essays.html"),
+    join(dist, "privacy.html"),
     join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
-    join(dist, "writing", "designing-for-disability-in-nigeria.html")
+    join(dist, "writing", "designing-for-disability-in-nigeria.html"),
   ];
-  const source = (await Promise.all(sourceFiles.map(file => readFile(file, "utf8")))).join("\n");
-  assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Essays|Contact \/ Start here|Services \/ What I do/);
+  const source = (await Promise.all(sourceFiles.map((file) => readFile(file, "utf8")))).join("\n");
+  assert.doesNotMatch(
+    source,
+    /hello@portfolio\.invalid|About \/ Practice|Writing \/ Essays|Contact \/ Start here|Services \/ What I do/,
+  );
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
@@ -441,7 +503,7 @@ test("all local HTML assets and links resolve", async () => {
     const html = await readFile(file, "utf8");
     for (const match of html.matchAll(/(?:\shref|\ssrc)="([^"]+)"|\ssrcset="([^"]+)"/g)) {
       const raw = match[1] || match[2];
-      const values = match[2] ? raw.split(",").map(item => item.trim().split(/\s+/)[0]) : [raw];
+      const values = match[2] ? raw.split(",").map((item) => item.trim().split(/\s+/)[0]) : [raw];
       for (const value of values) {
         if (/^(?:https?:|mailto:|#|data:)/.test(value)) continue;
         const clean = decodeURIComponent(value.split(/[?#]/)[0]);
@@ -456,14 +518,18 @@ test("CSP inventory permits every executable inline script and stages dependency
   const vercel = await readFile(join(root, "vercel.json"), "utf8");
   for (const file of await walk(dist, ".html")) {
     const html = await readFile(file, "utf8");
-    for (const [, script] of html.matchAll(/<script(?![^>]*src)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)) {
+    for (const [, script] of html.matchAll(
+      /<script(?![^>]*src)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g,
+    )) {
       const hash = createHash("sha256").update(script).digest("base64");
       const pattern = new RegExp(hash.replace(/[+/]/g, "\\$&"));
       assert.match(vercel, pattern, file);
     }
   }
   assert.match(vercel, /Content-Security-Policy-Report-Only/);
-  const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(item => item.key === "Content-Security-Policy-Report-Only").value;
+  const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(
+    (item) => item.key === "Content-Security-Policy-Report-Only",
+  ).value;
   assert.doesNotMatch(vercelCandidate, /audioscrobbler|report-uri|report-to/i);
   assert.doesNotMatch(vercelCandidate, /upgrade-insecure-requests/i);
 });
@@ -486,7 +552,10 @@ test("production build excludes source and review directories", async () => {
   await assert.rejects(access(new URL("../dist/js/core/footer-scene.js", import.meta.url)));
   for (const file of await walk(dist)) {
     const shippedPath = file.slice(dist.length + 1).replaceAll("\\", "/");
-    assert.doesNotMatch(shippedPath, /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i);
+    assert.doesNotMatch(
+      shippedPath,
+      /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i,
+    );
   }
 });
 
@@ -504,9 +573,14 @@ test("listening status uses the private server boundary and privacy copy matches
 
 test("retired source systems cannot return unnoticed", async () => {
   for (const path of [
-    "styles/cohesion.css", "styles/editorial-system.css", "styles/swiss.css",
-    "js/core/case-rail.js", "js/core/motion-director.js", "js/core/kinetic.js"
-  ]) await assert.rejects(access(join(root, path)), path);
+    "styles/cohesion.css",
+    "styles/editorial-system.css",
+    "styles/swiss.css",
+    "js/core/case-rail.js",
+    "js/core/motion-director.js",
+    "js/core/kinetic.js",
+  ])
+    await assert.rejects(access(join(root, path)), path);
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
