@@ -354,7 +354,7 @@ body .site-nav__themes{justify-self:end;display:flex;align-items:center;gap:.15r
 
 /* Essays carries the same editorial index behavior as Selected Work. */
 body[data-page="writing"] .hero{min-height:0;padding-block:clamp(8rem,12vw,12rem) clamp(5rem,8vw,8rem);display:block}
-body[data-page="writing"] .hero__title{max-width:none;font-size:clamp(2.25rem,3.41vw,3.8rem);line-height:1.08;letter-spacing:-.025em}
+body[data-page="writing"] .hero__title{max-width:18ch;font-size:clamp(3.75rem,5.8vw,6.5rem);line-height:.98;letter-spacing:-.045em}
 body[data-page="writing"] .section{padding-block:0 clamp(9rem,15vw,15rem)}
 body[data-page="writing"] .section-head{margin-bottom:clamp(4rem,6vw,6.875rem)}
 .editorial-index--notes .editorial-index__item{border-color:var(--line)}
