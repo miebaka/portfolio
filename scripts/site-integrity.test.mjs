@@ -155,7 +155,8 @@ test("Experiments ships a readable archive and the retired route points to it", 
   assert.match(experiments, /<h1[^>]*>Experiments<\/h1>/);
   assert.match(experiments, /Wada Sanzō, Study 264/);
   assert.doesNotMatch(experiments, /U014|WADA SANZ/);
-  assert.match(experiments, /class="experiment-disc"/);
+  assert.match(experiments, /class="experiment-poster"/);
+  assert.doesNotMatch(experiments, /experiment-disc|experiment-poster__hub/);
   assert.match(experiments, /aria-label="Experiments navigation"/);
   assert.doesNotMatch(
     experiments,

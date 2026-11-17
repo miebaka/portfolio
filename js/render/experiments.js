@@ -28,7 +28,7 @@ export async function initExperimentsSpatial() {
   stage.innerHTML = entries.map((entry, index) => {
     const tag = entry.href ? "a" : entry.type === "video" ? "button" : "figure";
     const attrs = entry.href ? ` href="${safeURL(entry.href)}"` : entry.type === "video" ? ` type="button"` : ` tabindex="0"`;
-    return `<${tag} class="experiment-disc"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-disc__face">${mediaMarkup(entry, base)}<span class="experiment-disc__hub" aria-hidden="true"></span></span><span class="experiment-disc__label">${esc(entry.title)}</span></${tag}>`;
+    return `<${tag} class="experiment-poster"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${mediaMarkup(entry, base)}</span><span class="experiment-poster__label">${esc(entry.title)}</span></${tag}>`;
   }).join("");
 
   const cards = [...stage.querySelectorAll("[data-experiment-card]")];
