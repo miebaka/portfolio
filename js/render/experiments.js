@@ -9,6 +9,10 @@ export async function initExperimentsSpatial() {
   const viewport = root?.querySelector("[data-experiments-viewport]");
   const stage = root?.querySelector("[data-experiments-stage]");
   const status = root?.querySelector("[data-experiments-status]");
+  const title = root?.querySelector("[data-experiment-title]");
+  const counter = root?.querySelector("[data-experiments-counter]");
+  const indexButton = root?.querySelector("[data-experiments-index]");
+  const indexPanel = root?.querySelector("[data-experiments-list]");
   if (!root || !viewport || !stage || !status) return;
   const base = basePath();
   let entries = [];
@@ -24,7 +28,7 @@ export async function initExperimentsSpatial() {
   stage.innerHTML = entries.map((entry, index) => {
     const tag = entry.href ? "a" : entry.type === "video" ? "button" : "figure";
     const attrs = entry.href ? ` href="${safeURL(entry.href)}"` : entry.type === "video" ? ` type="button"` : ` tabindex="0"`;
-    return `<${tag} class="experiment-tunnel__card"${attrs} style="--i:${index}" data-experiment-card>${mediaMarkup(entry, base)}<span>${String(index + 1).padStart(2, "0")} · ${esc(entry.title)}</span></${tag}>`;
+    return `<${tag} class="experiment-disc"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-disc__face">${mediaMarkup(entry, base)}<span class="experiment-disc__hub" aria-hidden="true"></span></span><span class="experiment-disc__label">${esc(entry.title)}</span></${tag}>`;
   }).join("");
 
   const cards = [...stage.querySelectorAll("[data-experiment-card]")];
@@ -33,6 +37,8 @@ export async function initExperimentsSpatial() {
   let target = 0;
   let frame = 0;
   let dragging = null;
+  let wheelLocked = false;
+  let activeIndex = -1;
   const wrap = value => (value % cards.length + cards.length) % cards.length;
   const paint = () => {
     cards.forEach((card, index) => {
@@ -42,10 +48,16 @@ export async function initExperimentsSpatial() {
       const distance = Math.abs(offset);
       card.style.setProperty("--offset", offset.toFixed(3));
       card.style.setProperty("--distance", Math.min(distance, 5).toFixed(3));
-      card.toggleAttribute("data-active", distance < .5);
+      const active = distance < .5;
+      card.toggleAttribute("data-active", active);
       card.setAttribute("aria-hidden", distance > 3 ? "true" : "false");
+      if (active && activeIndex !== index) {
+        activeIndex = index;
+        if (title) title.textContent = card.dataset.title;
+        if (counter) counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+      }
     });
-    status.textContent = `${Math.round(wrap(position)) + 1} of ${cards.length}`;
+    status.textContent = `${cards[activeIndex]?.dataset.title || "Experiment"}, ${activeIndex + 1} of ${cards.length}`;
   };
   const animate = () => {
     position += (target - position) * (reduced ? 1 : .09);
@@ -58,7 +70,15 @@ export async function initExperimentsSpatial() {
     frame = requestAnimationFrame(animate);
     root.classList.add("has-interacted");
   };
-  viewport.addEventListener("wheel", event => { event.preventDefault(); go((event.deltaY || event.deltaX) * .0025); }, { passive: false });
+  viewport.addEventListener("wheel", event => {
+    event.preventDefault();
+    if (wheelLocked) return;
+    const delta = event.deltaY || event.deltaX;
+    if (Math.abs(delta) < 2) return;
+    wheelLocked = true;
+    go(Math.sign(delta));
+    setTimeout(() => { wheelLocked = false; }, 320);
+  }, { passive: false });
   viewport.addEventListener("keydown", event => {
     const delta = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key];
     if (!delta) return;
@@ -76,6 +96,25 @@ export async function initExperimentsSpatial() {
       if (card.tagName === "BUTTON") { event.preventDefault(); video?.paused ? video.play().catch(() => {}) : video?.pause(); }
     });
   });
+  if (indexPanel && indexButton) {
+    const list = indexPanel.querySelector("ol");
+    list.innerHTML = entries.map((entry, index) => `<li><button type="button" data-experiment-jump="${index}"><span>${String(index + 1).padStart(2, "0")}</span>${esc(entry.title)}</button></li>`).join("");
+    indexButton.addEventListener("click", () => {
+      const open = indexPanel.hidden;
+      indexPanel.hidden = !open;
+      indexButton.setAttribute("aria-expanded", String(open));
+    });
+    list.addEventListener("click", event => {
+      const button = event.target.closest("[data-experiment-jump]");
+      if (!button) return;
+      target = Number(button.dataset.experimentJump);
+      indexPanel.hidden = true;
+      indexButton.setAttribute("aria-expanded", "false");
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(animate);
+      viewport.focus();
+    });
+  }
   paint();
-  requestAnimationFrame(() => root.classList.add("is-ready"));
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-ready")));
 }

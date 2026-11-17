@@ -458,7 +458,7 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
 .case-proof__item a:focus-visible :is(.case-proof__step,.case-proof__state){color:inherit}
 
 /* Experiments — a spatial, pannable archive. Assets are indexed at build time. */
-body[data-page="explorations"]{overflow-x:hidden;background:var(--ref-neutral-94);color:var(--ref-midnight)}
+body[data-page="explorations"]{overflow:hidden;background:var(--ref-paper);color:var(--ref-near-black)}
 body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
 .experiments-page{height:100dvh;overflow:hidden;background:var(--ref-neutral-94);color:var(--ref-near-black)}
 .experiments-spatial{position:relative;height:100dvh;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 44%,var(--ref-paper) 0,var(--ref-neutral-94) 58%,var(--ref-neutral-80) 140%)}
@@ -625,6 +625,52 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 }
 
 @media(prefers-reduced-motion:reduce){.article-toc a::before{transition:none}.experiment-tunnel__card{transition:none}}
+
+/* Experiments — reference-led circular archive. */
+body[data-page="explorations"]>header,body[data-page="explorations"]>footer{display:none}
+body[data-page="explorations"] .experiments-page{height:100dvh;background:var(--ref-paper);color:var(--ref-near-black)}
+body[data-page="explorations"] .experiments-spatial{height:100dvh;background:var(--ref-paper);color:var(--ref-near-black);perspective:none}
+body[data-page="explorations"] .experiments-spatial::before{content:"";position:absolute;z-index:30;inset:0;pointer-events:none;opacity:.2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");mix-blend-mode:multiply}
+body[data-page="explorations"] .experiments-spatial::after{box-shadow:inset 0 0 7rem color-mix(in srgb,var(--ref-black) 5%,transparent)}
+.experiments-loader{position:fixed;z-index:100;inset:0;display:grid;place-content:end center;padding-bottom:1.5rem;background:var(--ref-paper);text-align:center}
+.experiments-loader span{font:650 clamp(3rem,7vw,6rem)/.8 var(--display);letter-spacing:-.1em}
+.experiments-loader p{margin-top:.8rem;font:600 .7rem/1 var(--label);letter-spacing:.18em;text-transform:uppercase}
+.experiments-spatial.is-ready .experiments-loader{animation:experiments-loader-away 280ms ease 280ms both}
+body[data-page="explorations"] .experiments-spatial__heading{position:fixed;z-index:18;top:clamp(.75rem,1.4vw,1.4rem);left:clamp(.75rem,1.5vw,1.5rem);right:auto;display:block;width:min(50vw,39rem);pointer-events:none;color:var(--ref-near-black)}
+body[data-page="explorations"] .experiments-spatial__heading h1{padding-bottom:.55rem;border-bottom:1px solid var(--ref-near-black);font:520 clamp(2.4rem,4.6vw,5rem)/.86 var(--display);font-stretch:78%;letter-spacing:-.065em;text-transform:uppercase}
+.experiments-spatial__heading dl{margin:0}
+.experiments-spatial__heading dl>div{display:grid;grid-template-columns:8.5rem 1fr;gap:1rem;padding:.45rem 0;border-bottom:1px solid color-mix(in srgb,var(--ref-black) 35%,transparent)}
+.experiments-spatial__heading dt{font:600 .7rem/1.1 var(--label);letter-spacing:.2em;text-transform:uppercase}
+.experiments-spatial__heading dd{justify-self:end;margin:0;font:500 clamp(.95rem,1.45vw,1.35rem)/1 var(--body);text-align:right}
+body[data-page="explorations"] .experiments-spatial__viewport{z-index:4;cursor:grab;touch-action:none}
+body[data-page="explorations"] .experiments-spatial__stage{position:absolute;inset:0;width:100%;height:100%;transform:none}
+.experiment-disc{position:absolute;z-index:calc(20 - var(--distance));left:67%;top:54%;display:grid;width:min(56vw,52rem);margin:0;padding:0;border:0;background:transparent;color:var(--ref-near-black);text-align:center;transform:translate3d(calc(-50% + var(--offset) * 54vw),-50%,0) scale(calc(1 - var(--distance) * .38));opacity:calc(1 - var(--distance) * .22)}
+.experiment-disc[aria-hidden="true"]{visibility:hidden}
+.experiment-disc__face{position:relative;display:block;width:100%;aspect-ratio:1;border:clamp(.25rem,.7vw,.65rem) solid var(--ref-neutral-60);border-radius:50%;overflow:hidden;background:var(--ref-neutral-80);box-shadow:0 1.25rem 3rem color-mix(in srgb,var(--ref-black) 22%,transparent),inset 0 0 0 2px color-mix(in srgb,var(--ref-white) 75%,transparent);transform:rotate(calc(var(--offset) * 16deg));transition:transform 240ms cubic-bezier(.2,.8,.2,1)}
+.experiment-disc__face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 35% 22%,color-mix(in srgb,var(--ref-white) 25%,transparent),transparent 28%,color-mix(in srgb,var(--ref-black) 8%,transparent) 76%,color-mix(in srgb,var(--ref-black) 24%,transparent));pointer-events:none;mix-blend-mode:soft-light}
+.experiment-disc :is(img,video){width:100%;height:100%;object-fit:cover;pointer-events:none}
+.experiment-disc__hub{position:absolute;z-index:2;left:50%;top:50%;width:17%;aspect-ratio:1;border:clamp(.3rem,.8vw,.75rem) solid var(--ref-neutral-60);border-radius:50%;background:var(--ref-paper);box-shadow:0 0 0 2px color-mix(in srgb,var(--ref-white) 80%,transparent),inset 0 .2rem .7rem color-mix(in srgb,var(--ref-black) 24%,transparent);transform:translate(-50%,-50%)}
+.experiment-disc__label{display:block;max-width:22rem;margin:.85rem auto 0;font:600 .7rem/1.1 var(--label);letter-spacing:.18em;text-transform:uppercase}
+.experiment-disc:focus-visible{outline:0}.experiment-disc:focus-visible .experiment-disc__face{box-shadow:0 0 0 3px var(--ref-near-black),0 1.25rem 3rem color-mix(in srgb,var(--ref-black) 22%,transparent)}
+.experiments-spatial__counter{position:fixed;z-index:18;right:1.5rem;top:1.5rem;margin:0;font:600 .72rem/1 var(--label);letter-spacing:.15em}
+.experiments-spatial [data-experiments-status]{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.experiments-dock{position:fixed;z-index:50;left:50%;bottom:max(.75rem,var(--safe-bottom));display:flex;align-items:center;gap:1.5rem;padding:.9rem 1.25rem;background:var(--ref-white);color:var(--ref-near-black);box-shadow:0 .35rem 1.3rem color-mix(in srgb,var(--ref-black) 8%,transparent);transform:translateX(-50%)}
+.experiments-dock :is(a,button){min-height:0;padding:0;border:0;background:none;color:inherit;font:500 .9rem/1 var(--body);text-decoration:none;white-space:nowrap}
+.experiments-dock a[aria-current="page"]{font-weight:700}
+.experiments-dock__brand{font:700 1.2rem/.8 var(--display)!important;letter-spacing:-.08em}
+.experiments-dock button span{display:inline-block;margin-left:.25rem;transition:transform 180ms ease}
+.experiments-dock button[aria-expanded="true"] span{transform:rotate(180deg)}
+.experiments-index{position:fixed;z-index:45;inset:0;padding:clamp(5rem,10vw,9rem) var(--page) 7rem;background:color-mix(in srgb,var(--ref-paper) 96%,transparent);overflow:auto;backdrop-filter:blur(12px)}
+.experiments-index[hidden]{display:none}
+.experiments-index ol{width:min(100%,68rem);margin:auto;padding:0;border-top:1px solid var(--ref-near-black);list-style:none}
+.experiments-index li{border-bottom:1px solid var(--ref-near-black)}
+.experiments-index button{display:grid;grid-template-columns:3rem 1fr;width:100%;padding:1rem 0;border:0;background:none;color:var(--ref-near-black);text-align:left;font:500 clamp(1.35rem,3vw,3rem)/1 var(--display)}
+.experiments-index button span{font:600 .7rem/1 var(--label)}
+.no-js .experiments-loader,.no-js .experiments-dock button,.no-js .experiments-index,.no-js .experiments-spatial__counter{display:none}
+.no-js body[data-page="explorations"]{overflow:auto}.no-js body[data-page="explorations"] .experiments-page,.no-js body[data-page="explorations"] .experiments-spatial{height:auto;min-height:100vh}.no-js body[data-page="explorations"] .experiments-spatial__heading{position:static;width:auto;padding:2rem var(--page)}.no-js body[data-page="explorations"] .experiments-spatial__viewport{position:static;height:auto;overflow:visible}.no-js body[data-page="explorations"] .experiments-spatial__stage{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3rem;padding:2rem var(--page) 8rem}.no-js .experiment-disc{position:static;width:auto;transform:none;opacity:1;visibility:visible}
+@media(max-width:48rem){body[data-page="explorations"] .experiments-spatial__heading{width:calc(100% - 1.5rem);top:.75rem;left:.75rem}.experiments-spatial__heading dl>div{grid-template-columns:5.5rem 1fr}.experiments-spatial__heading dd{font-size:.9rem}.experiment-disc{left:55%;top:58%;width:82vw;transform:translate3d(calc(-50% + var(--offset) * 78vw),-50%,0) scale(calc(1 - var(--distance) * .34))}.experiment-disc__label{margin-top:.6rem}.experiments-spatial__counter{display:none}.experiments-dock{gap:1rem;width:max-content;max-width:calc(100% - 1rem);padding:.8rem 1rem}.experiments-dock :is(a,button){font-size:.78rem}.experiments-dock a[href="work.html"]{display:none}.no-js body[data-page="explorations"] .experiments-spatial__stage{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.experiments-loader{display:none}.experiment-disc,.experiment-disc__face{transition:none}}
+@keyframes experiments-loader-away{to{opacity:0;visibility:hidden}}
 
 /* 2026-11 quality pass: resolve audit defects without changing the authored
    structure or introducing another layout system. */

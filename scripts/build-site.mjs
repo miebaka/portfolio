@@ -115,7 +115,7 @@ const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
   const media = entry.type === "video"
     ? `<video src="${source}" muted playsinline preload="metadata" aria-label="${esc(entry.title)}"></video>`
     : `<img src="${source}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
-  return `<figure class="experiment-tunnel__card" style="--i:${index}" data-experiment-card>${media}<figcaption>${String(index + 1).padStart(2, "0")} · ${esc(entry.title)}</figcaption></figure>`;
+  return `<figure class="experiment-disc" style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-disc__face">${media}<span class="experiment-disc__hub" aria-hidden="true"></span></span><figcaption class="experiment-disc__label">${esc(entry.title)}</figcaption></figure>`;
 }).join("");
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);

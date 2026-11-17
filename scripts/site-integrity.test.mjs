@@ -152,10 +152,11 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
 test("Experiments ships a readable archive and the retired route points to it", async () => {
   const experiments = await readFile(join(dist, "explorations.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
-  assert.match(experiments, /<h1>Experiments<\/h1>/);
+  assert.match(experiments, /<h1[^>]*>Experiments<\/h1>/);
   assert.match(experiments, /Wada Sanzō, Study 264/);
   assert.doesNotMatch(experiments, /U014|WADA SANZ/);
-  assert.match(experiments, />Enter the archive<\/p>/);
+  assert.match(experiments, /class="experiment-disc"/);
+  assert.match(experiments, /aria-label="Experiments navigation"/);
   assert.doesNotMatch(
     experiments,
     /Spatial archive|Self-initiated work|works<\/p>|aria-disabled|<time\b|collection-entry/,

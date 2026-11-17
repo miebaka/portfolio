@@ -44,12 +44,18 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav"></header>
   <main id="main" class="experiments-page">
-    <section class="experiments-spatial" data-experiments-spatial aria-label="Experiments">
-      <div class="experiments-spatial__heading"><h1>Experiments</h1><p>Browse the archive. Drag, scroll or use arrow keys.</p></div>
-      <p class="experiments-spatial__hint">Enter the archive</p>
-      <div class="experiments-spatial__viewport" data-experiments-viewport tabindex="0" role="region" aria-label="Experiments. Drag, scroll, use arrow keys or tab through the work.">
+    <section class="experiments-spatial" data-experiments-spatial aria-labelledby="experiments-title">
+      <div class="experiments-loader" aria-hidden="true"><span>M/J</span><p>Loading experiments</p></div>
+      <div class="experiments-spatial__heading" data-experiments-copy>
+        <h1 id="experiments-title">Experiments</h1>
+        <dl><div><dt>Study</dt><dd data-experiment-title>Wada Sanzō, Study 264</dd></div><div><dt>Format</dt><dd>Poster study</dd></div><div><dt>Collection</dt><dd>Self-initiated</dd></div></dl>
+      </div>
+      <div class="experiments-spatial__viewport" data-experiments-viewport tabindex="0" role="region" aria-label="Experiment disc gallery. Scroll, drag or use the left and right arrow keys.">
         <div class="experiments-spatial__stage" data-experiments-stage></div>
       </div>
+      <p class="experiments-spatial__counter" data-experiments-counter aria-hidden="true">01 / 07</p>
+      <nav class="experiments-dock" aria-label="Experiments navigation"><a class="experiments-dock__brand" href="index.html" aria-label="Miebaka Joshua, home">M/J</a><a href="work.html">Work</a><a href="explorations.html" aria-current="page">Experiments</a><button type="button" data-experiments-index>Index <span aria-hidden="true">⌃</span></button></nav>
+      <div class="experiments-index" data-experiments-list hidden><ol></ol></div>
       <p class="sr-only" data-experiments-status aria-live="polite"></p>
     </section>
   </main>

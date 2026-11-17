@@ -296,20 +296,19 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
   await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
 });
 
-test("Experiments exposes a full-screen tunnel", async ({ page }) => {
+test("Experiments exposes a full-screen circular archive", async ({ page }) => {
   await page.goto("/explorations.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
-  await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
-  await expect(page.locator(".experiment-tunnel__card")).toHaveCount(7);
-  if (page.viewportSize().width <= 640) await expect(page.getByRole("button", { name: "Index" })).toBeVisible();
-  else await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Footer" })).toBeAttached();
+  await expect(page.locator(".experiment-disc")).toHaveCount(7);
+  await expect(page.getByRole("navigation", { name: "Experiments navigation" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Index/ })).toBeVisible();
+  await expect(page.locator("[data-experiment-title]")).toContainText("Wada Sanzō");
 });
 
 test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
   await expect(page).toHaveURL(/\/explorations\.html$/);
-  await expect(page.getByText("Enter the archive", { exact: true })).toBeVisible();
+  await expect(page.locator(".experiment-disc")).toHaveCount(7);
 });
 
 test("stored theme preference persists", async ({ page }) => {
