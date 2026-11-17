@@ -88,7 +88,7 @@ Exit condition: a first-time visitor can identify the practice, inspect proof an
 
 ### Phase 5 — organise breadth
 
-Status: **implemented through the existing Work, Experiments and Notes routes**
+Status: **implemented through the existing Work, Experiments and Essays routes**
 
 - Separate flagship client work, useful experiments and writing without making them feel like unrelated careers.
 - Use the shared loop — question, reduce, make, test, encode — as the connective tissue.

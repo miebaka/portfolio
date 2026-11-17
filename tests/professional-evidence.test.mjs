@@ -63,7 +63,7 @@ test("the homepage makes the hiring proposition and proof available before biogr
   assert.match(html, /Six partner teams/);
   assert.match(html, /Lagos \/ remote/);
   assert.match(html, /Request CV/);
-  assert.ok(html.indexOf('id="current-practice"') < html.indexOf('id="profile"'));
+  assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });
 
 test("the closing invitation clearly supports employment and collaboration", async () => {
@@ -73,15 +73,16 @@ test("the closing invitation clearly supports employment and collaboration", asy
   assert.match(html, />Request CV</);
 });
 
-test("About owns the detailed service source while Home keeps the practice concise", async () => {
+test("Home and About share the complete capability source", async () => {
   const home = await page("index.html");
-  assert.doesNotMatch(home, /data-mount="capabilities"/);
-  assert.match(home, /One brand\. Six teams\./);
-  assert.equal((home.match(/class="home-practice__proof"/g) || []).length, 1);
+  assert.match(home, /data-mount="capabilities"/);
+  assert.match(home, /id="what-i-do"/);
   const about = await page("about.html");
   assert.match(about, /data-mount="capabilities"/);
-  for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
-    assert.ok(about.includes(service[field].replaceAll("&", "&amp;")), `about.html: ${service.id}.${field}`);
+  for (const [pageName, html] of [["index.html", home], ["about.html", about]]) {
+    for (const service of services) for (const field of ["title", "description"]) {
+      assert.ok(html.includes(service[field].replaceAll("&", "&amp;")), `${pageName}: ${service.id}.${field}`);
+    }
   }
   await assert.rejects(page("services.html"));
   assert.match(await page("scripts/build-site.mjs"), /renderServiceFallbackMarkup\(content\.services\)/);

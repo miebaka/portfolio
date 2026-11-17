@@ -29,15 +29,15 @@ test("homepage hero and professional proof remain useful without JavaScript", as
   }
 });
 
-test("homepage keeps the approved proof, current practice and biography order", async () => {
+test("homepage keeps the approved chapter order", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
     const proof = html.indexOf('id="selected-work"');
     const biography = html.indexOf('id="profile"');
-    const practice = html.indexOf('id="current-practice"');
+    const capabilities = html.indexOf('id="what-i-do"');
     const journey = html.indexOf('class="journey"');
     const close = html.indexOf('class="home-close');
-    assert.ok(proof < practice && practice < biography && biography < journey && journey < close, directory);
+    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < close, directory);
     assert.doesNotMatch(html, /practice-standard|Build the system|Edit until it holds/);
   }
 });
@@ -54,7 +54,7 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
   assert.match(html, /href="explorations\.html"/);
-  assert.match(html, /href="notes\.html"/);
+  assert.match(html, /href="essays\.html"/);
   assert.match(html, /“Pause…” became the organising idea inside TEDx’s fixed global identity\./);
 });
 
@@ -80,10 +80,10 @@ test("the route registry has unique destinations and supports the approved globa
   assert.ok(Array.isArray(navigation.routes), "A canonical route registry is required");
   assert.equal(new Set(navigation.routes.map(route => route.href)).size, navigation.routes.length);
   assert.equal(new Set(navigation.routes.map(route => route.key)).size, navigation.routes.length);
-  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Experiments", "About", "Notes", "Contact"]);
-  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Experiments", "About", "Notes", "Contact"]);
+  assert.deepEqual(navigation.index.map(route => route.label), ["Work", "Experiments", "About", "Essays", "Contact"]);
+  assert.deepEqual(navigation.primary.map(route => route.label), ["Work", "Experiments", "About", "Essays", "Contact"]);
   assert.ok(navigation.footer.some(route => route.href === "explorations.html"));
-  assert.ok(navigation.footer.some(route => route.href === "notes.html"));
+  assert.ok(navigation.footer.some(route => route.href === "essays.html"));
 });
 
 test("every production shell exposes the complete Index as fallback navigation", async () => {
@@ -205,8 +205,9 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Hedvig Letters Serif"/);
+  assert.match(css, /font-family:\s*"Archivo"/);
   assert.match(css, /font-family:\s*"Finlandica Text"/);
+  assert.match(css, /font-family:\s*"Host Grotesk"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -218,8 +219,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     await assert.rejects(access(join(dist, "js", "core", file)));
   }
   await assert.rejects(access(join(dist, "js", "core", "decision-field.js")));
-  await access(join(dist, "js", "core", "shader-backdrop.js"));
-  await access(join(dist, "assets", "runtime", "shader-gradient.js"));
+  await access(join(dist, "js", "core", "hero-wave.js"));
+  await access(join(dist, "assets", "runtime", "hero-wave.js"));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.module.js")));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.core.js")));
   await assert.rejects(access(join(dist, "node_modules")));
@@ -232,38 +233,28 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"Hedvig Letters Serif"/);
+  assert.match(css, /--font-display:\s*"Archivo"/);
   assert.match(css, /--font-body:\s*"Finlandica Text"/);
-  assert.match(css, /--font-label:\s*"Finlandica Text"/);
+  assert.match(css, /--font-label:\s*"Host Grotesk"/);
   assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
-  assert.match(css, /repeating-radial-gradient/);
+  assert.match(css, /\.site-footer__signature-canvas/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
   assert.doesNotMatch(css, /filter:saturate/i);
 });
 
-test("theme shader backdrop preserves both authored water-plane contracts", async () => {
-  const source = await readFile(join(dist, "js", "core", "shader-backdrop.js"), "utf8");
-  const island = await readFile(join(root, "js", "shader-gradient-island.js"), "utf8");
+test("hero wave keeps a bounded, direct Three.js rendering contract", async () => {
+  const source = await readFile(join(dist, "js", "core", "hero-wave.js"), "utf8");
+  const island = await readFile(join(root, "js", "hero-wave-island.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
-  assert.match(source, /Light water plane/);
-  assert.match(source, /Dark water plane/);
-  for (const token of ["--shader-color-1", "--shader-color-2", "--shader-color-3", "--shader-background-1", "--shader-background-2"]) assert.match(source, new RegExp(token));
+  for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"]) assert.match(source, new RegExp(token));
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
   assert.match(source, /pointermove/);
   assert.match(source, /setPointer/);
   assert.match(source, /shader-static/);
-  assert.match(island, /separate\s+compositions/);
-  for (const contract of [/colors\[0\]/, /colors\[1\]/, /colors\[2\]/, /backgrounds\[0\]/, /backgrounds\[1\]/]) assert.match(island, contract);
-  for (const value of ["cameraZoom: 1", "cPolarAngle: 120", "uFrequency: 5.5", "uStrength: 3", "cameraZoom: 9.1", "cPolarAngle: 80", "uDensity: 1.5"]) assert.match(island, new RegExp(value));
-  assert.match(foundations, /--ref-shader-light-1:var\(--ref-paper\);--ref-shader-light-2:var\(--ref-neutral-96\);--ref-shader-light-3:var\(--ref-neutral-94\)/);
-  assert.match(foundations, /--shader-background-1:var\(--ref-paper\);--shader-background-2:var\(--ref-neutral-95\)/);
-  assert.doesNotMatch(foundations, /--ref-shader-light-[123]:var\(--ref-(?:air|black|blue|coral|midnight|navy|ultramarine)/);
-  for (const contract of [/type: "waterPlane"/, /cDistance: 2\.8/, /cPolarAngle: 80/, /rotationX: 50/, /rotationZ: -60/, /uDensity: 1\.5/, /uStrength: 1\.5/, /grain: "on"/]) assert.match(island, contract);
-  assert.match(island, /ShaderGradientCanvas/);
-  assert.match(island, /function CursorCamera/);
-  assert.match(island, /MathUtils\.damp/);
-  assert.match(island, /animate: animate \? "on" : "off"/);
+  for (const contract of [/PlaneGeometry/, /ShaderMaterial/, /OrthographicCamera/, /MAX_AUTOPLAY_MS = 4800/, /IntersectionObserver/, /ResizeObserver/, /forceContextLoss/, /SRGBColorSpace/]) assert.match(island, contract);
+  assert.match(foundations, /--hero-wave-color-1:var\(--ref-midnight\);--hero-wave-color-2:var\(--ref-ultramarine\);--hero-wave-color-3:var\(--ref-blue-80\)/);
+  assert.doesNotMatch(source + island + foundations, /ShaderGradient|shader-background|ref-shader/);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {
@@ -297,9 +288,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /home-project-list__decision/);
   assert.match(projects, /client-marquee__track/);
   assert.match(projects, /client-marquee__control/);
-  assert.match(css, /\.home-page \.client-marquee\{[^}]*width:100%[^}]*margin-inline:0[^}]*mask-image:linear-gradient\(90deg,transparent 0/);
+  assert.match(css, /body\[data-page="home"\] \.client-marquee\{[^}]*width:100%[^}]*mask-image:linear-gradient\(90deg,transparent/);
   assert.match(css, /--content:102rem/);
-  assert.match(css, /\.home-page \.marquee__item img\{[^}]*max-width:25\.5rem[^}]*height:calc\(5\.25rem \* var\(--logo-scale,1\)\)/);
+  assert.match(css, /body\[data-page="home"\] \.marquee__item img\{[^}]*max-width:100%[^}]*height:clamp\(1\.75rem,3vw,3rem\)/);
   assert.match(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
   assert.match(projects, /aria-hidden="true"/);
@@ -313,16 +304,15 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   }
   assert.match(css, /\.case-next__link\{[^}]*text-decoration:none/);
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(css, /\.home-profile__media\{grid-column:8\/13/);
+  assert.match(css, /body\[data-page="home"\] \.home-profile>\.home-profile__media\{grid-column:8\/-1/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-cord-mode>Print/);
   assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
-  assert.match(css, /--home-section-gap:clamp\(6\.5rem,8\.5vw,9\.5rem\)/);
-  assert.match(css, /--home-inner-gap:clamp\(4rem,6vw,6\.5rem\)/);
+  assert.match(css, /--home-radius:clamp\(1\.25rem,2\.6vw,2\.5rem\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);
-  assert.match(css, /\.home-profile\{[^}]*margin-top:var\(--home-section-gap\)/);
+  assert.match(css, /body\[data-page="home"\] \.home-profile\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
 });
 
 test("interactive controls include the approved Figma button states", async () => {
@@ -353,7 +343,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
   assert.match(css, /\.measure-hero\{max-width:none\}/);
   assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
-  assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/-1[^}]*max-width:none/);
+  assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/11[^}]*max-width:18ch/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title">I turn complex briefs into clear brands &amp; campaigns\.<\/h1>/);
@@ -416,12 +406,12 @@ test("portfolio depth features are present without depending on JavaScript for c
 test("requested language and contact details stay canonical", async () => {
   const sourceFiles = [
     join(dist, "index.html"), join(dist, "about.html"),
-    join(dist, "contact.html"), join(dist, "notes.html"), join(dist, "privacy.html"),
+    join(dist, "contact.html"), join(dist, "essays.html"), join(dist, "privacy.html"),
     join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
     join(dist, "writing", "designing-for-disability-in-nigeria.html")
   ];
   const source = (await Promise.all(sourceFiles.map(file => readFile(file, "utf8")))).join("\n");
-  assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Notes|Contact \/ Start here|Services \/ What I do/);
+  assert.doesNotMatch(source, /hello@portfolio\.invalid|About \/ Practice|Writing \/ Essays|Contact \/ Start here|Services \/ What I do/);
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
@@ -521,7 +511,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 5);
+  assert.equal((styles.match(/@import/g) || []).length, 6);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

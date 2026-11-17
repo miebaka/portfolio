@@ -22,7 +22,7 @@ export const services = [
     "id": "visual-graphic-design",
     "title": "Make it survive production",
     "description": "Test the system in the formats, constraints and handoffs it must endure.",
-    "outputs": "Campaign assets, editorial layouts, packaging and production-ready artwork.",
+    "outputs": "Campaign systems, editorial layouts, packaging and production files.",
     "fit": "Teams taking designed work from presentation to reliable production.",
     "evidenceLabel": "TEDx event production",
     "evidenceHref": "work/tedx-rsu.html#production"

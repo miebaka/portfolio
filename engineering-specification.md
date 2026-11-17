@@ -14,7 +14,7 @@ The portfolio presents Miebaka Joshua’s brand and visual-design practice to
 hiring teams and selected clients. It must make the work, the decisions behind
 it and a clear contact path available without depending on JavaScript.
 
-Public navigation is Work, About, Experiments, Notes and Contact. The identity
+Public navigation is Work, About, Experiments, Essays and Contact. The identity
 mark returns Home; Privacy is a footer destination. Experiments uses
 `explorations.html` and media from `assets/experiments/`.
 
@@ -57,7 +57,7 @@ Git. Keep them in ignored local folders or an external archive.
 
 1. validate public content and local references;
 2. generate the Experiments manifest;
-3. bundle the ShaderGradient island;
+3. bundle the Three.js hero-wave island;
 4. recreate `dist/` from a strict allow-list;
 5. fail if review, source or map files leak into production.
 

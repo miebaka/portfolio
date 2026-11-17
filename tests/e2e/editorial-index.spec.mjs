@@ -16,7 +16,7 @@ const contrast = (foreground, background) => {
 for (const [name, path, selector] of [
   ["Home", "/index.html", ".editorial-index--work"],
   ["Work", "/work.html", ".editorial-index--archive"],
-  ["Notes", "/notes.html", ".editorial-index--notes"]
+  ["Essays", "/essays.html", ".editorial-index--notes"]
 ]) {
   test(`${name} uses the shared full-column AAA editorial-index interaction`, async ({ page }) => {
     await page.goto(path);

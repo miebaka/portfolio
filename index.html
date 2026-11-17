@@ -22,7 +22,7 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F9FC">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/FinlandicaText-Variable.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Archivo-Variable.woff2" crossorigin>
   <script type="application/ld+json">
   [
     {"@context":"https://schema.org","@type":"Person","name":"Miebaka Williams Atubokiki Joshua","alternateName":"Miebaka Joshua","jobTitle":"Brand & Visual Designer","url":"https://miebaka-portfolio.vercel.app/","image":"https://miebaka-portfolio.vercel.app/assets/images/optimized/miebaka-joshua-portrait-1080.jpg","email":"mailto:miebakakiki@gmail.com","address": {"@type":"PostalAddress","addressLocality":"Lagos","addressCountry":"NG" },"sameAs": ["https://www.behance.net/miebaka","https://www.linkedin.com/in/miebakajoshua"]
@@ -41,7 +41,7 @@
 
   <link rel="stylesheet" href="styles/main.css">
 </head>
-<body class="home-page home-spectacle home-spectacle--current home-editorial-v2" data-page="home" data-nav-theme="dark">
+<body data-page="home" data-nav-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
   <header data-mount="nav">
     <!-- Static fallback. renderNavigation() replaces this wholesale, so it is
@@ -52,23 +52,14 @@
         <a href="work.html">Work</a>
         <a href="about.html">About</a>
         <a href="explorations.html">Experiments</a>
-        <a href="notes.html">Notes</a>
+        <a href="essays.html">Essays</a>
         <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <main id="main">
     <section class="home-landing" aria-labelledby="hero-title">
-      <div class="home-landing__object" aria-hidden="true">
-        <picture>
-          <source type="image/avif" srcset="assets/images/optimized/miebaka-glass-logo-540.avif 540w, assets/images/optimized/miebaka-glass-logo-810.avif 810w, assets/images/optimized/miebaka-glass-logo-1080.avif 1080w" sizes="(max-width: 48rem) 70vw, 42vw">
-          <source type="image/webp" srcset="assets/images/optimized/miebaka-glass-logo-540.webp 540w, assets/images/optimized/miebaka-glass-logo-810.webp 810w, assets/images/optimized/miebaka-glass-logo-1080.webp 1080w" sizes="(max-width: 48rem) 70vw, 42vw">
-          <img src="assets/images/optimized/miebaka-glass-logo-810.webp" alt="" width="810" height="810" fetchpriority="high" decoding="async">
-        </picture>
-      </div>
-      <p class="home-landing__mark" aria-hidden="true">MJ</p>
       <div class="home-landing__inner container">
-        <div class="home-landing__meta"><p>Brand &amp; marketing designer</p><p>Lagos / remote</p></div>
         <h1 id="hero-title">I turn complex briefs into clear brands &amp; campaigns.</h1>
         <div class="home-landing__proof">
           <div><p>I find the useful decision, give it a visual life and make the work hold together across teams, channels and production.</p><p class="home-landing__facts">8+ years <span aria-hidden="true">&middot;</span> Marketing designer at Rise <span aria-hidden="true">&middot;</span> Six partner teams <span aria-hidden="true">&middot;</span> Lagos / remote</p></div>
@@ -84,18 +75,6 @@
       <div class="swiss-section-head"><h2 id="selected-title">Selected work</h2><p>Three projects. Three different problems. Each one begins with the decision that made the rest of the system possible.</p></div>
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/tedx-rsu.html">TEDx Rivers State University</a></li><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/chopbox.html">ChopBox</a></li></ul></div>
     </section>
-    <section class="home-practice container" id="current-practice" aria-labelledby="current-practice-title">
-      <div class="home-practice__intro">
-        <p>Current practice</p>
-        <h2 id="current-practice-title">One brand. Six teams. Work that has to hold together every day.</h2>
-        <a class="swiss-link" href="about.html#experience">See my experience</a>
-      </div>
-      <ol class="home-practice__proof">
-        <li><span>01</span><div><h3>Find the decision</h3><p>Get the brief clear enough that the visual work has a reason to exist.</p></div></li>
-        <li><span>02</span><div><h3>Build the campaign</h3><p>Turn that decision into useful work across channels, formats and partner teams.</p></div></li>
-        <li><span>03</span><div><h3>Make it usable</h3><p>Stay through production and handoff so the idea survives beyond the presentation.</p></div></li>
-      </ol>
-    </section>
     <section class="home-profile container" id="profile" aria-labelledby="about-title">
       <div class="home-profile__introduction">
         <h2 id="about-title">Hi, I&rsquo;m Miebaka.</h2>
@@ -108,6 +87,10 @@
         <figure class="home-profile__portrait"><picture><source type="image/avif" srcset="assets/images/optimized/miebaka-joshua-profile-600.avif 600w, assets/images/optimized/miebaka-joshua-profile-1200.avif 1200w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), 40vw"><source type="image/webp" srcset="assets/images/optimized/miebaka-joshua-profile-600.webp 600w, assets/images/optimized/miebaka-joshua-profile-1200.webp 1200w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), 40vw"><img src="assets/images/optimized/miebaka-joshua-profile-600.webp" alt="Miebaka Joshua" width="1200" height="1500" loading="lazy" decoding="async"></picture></figure>
       </div>
     </section>
+    <section class="home-capabilities home-capabilities--reference container" id="what-i-do" aria-labelledby="what-i-do-title">
+      <div class="disciplines-heading"><h2 id="what-i-do-title">What I do</h2><p>From the first useful decision to the files and rules a team can keep using.</p></div>
+      <div data-mount="capabilities"><ol class="service-fallback"><li><h3>Find the governing decision</h3><p>Turn an unclear brief into one decision that can guide the work.</p></li><li><h3>Build the identity system</h3><p>Translate that decision into a recognisable, usable visual language.</p></li><li><h3>Make it survive production</h3><p>Test the system in the formats, constraints and handoffs it must endure.</p></li><li><h3>Direct the rollout</h3><p>Keep many assets, makers and channels inside one coherent world.</p></li><li><h3>Hand over a usable system</h3><p>Leave the team with clear tools, files and rules they can keep using.</p></li></ol></div>
+    </section>
     <section class="journey" aria-labelledby="journey-title"><h2 class="container" id="journey-title">Selected brands I&rsquo;ve worked with</h2><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"></div></div></section>
     <section class="home-close container" aria-labelledby="home-close-title"><h2 id="home-close-title">Have something worth making unmistakable?</h2><p>Available for senior brand and marketing design roles, selected collaborations and design-led teams.</p><div class="home-close__actions"><a class="btn" href="contact.html">Contact me</a><a class="btn btn--secondary" href="mailto:miebakakiki@gmail.com?subject=CV%20request">Request CV</a></div></section>
     </div>
@@ -119,7 +102,7 @@
         <a href="work.html">Work</a>
         <a href="about.html">About</a>
         <a href="explorations.html">Experiments</a>
-        <a href="notes.html">Notes</a>
+        <a href="essays.html">Essays</a>
         <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="https://www.behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>

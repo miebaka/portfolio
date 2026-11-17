@@ -47,7 +47,7 @@ cross the grid edges. Type follows the Figma roles: 10.9/12.5/14px labels,
 - No decorative status, repeated availability or non-essential metadata.
 - Case-study claims stay bounded by documented work and supplied facts.
 - Every proof statement is labelled as documented or bounded evidence.
-- Experiments is the public name for spatial and self-initiated work; Notes is reserved for writing.
+- Experiments is the public name for spatial and self-initiated work; Essays is reserved for writing.
 - Voice is direct, observant and evidence-minded.
 - “Work with me” is the canonical contact CTA; “See the work” is reserved for portfolio navigation.
 

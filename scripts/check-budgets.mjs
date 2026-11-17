@@ -20,10 +20,10 @@ const initialImages = [...html.matchAll(/<img\b([^>]*)>/giu)]
   .map(([, attrs]) => attrs.match(/\bsrc=["']([^"']+)["']/iu)?.[1])
   .filter(Boolean).filter(local);
 const homepageMedia = unique(initialImages).reduce((sum, file) => sum + statSync(resolve(dist, file)).size, 0);
-const shaderIsland = gzipSync(readFileSync(resolve(dist, "assets/runtime/shader-gradient.js"))).byteLength;
+const heroWave = gzipSync(readFileSync(resolve(dist, "assets/runtime/hero-wave.js"))).byteLength;
 const fontFiles = unique([...readFileSync(resolve(dist, "styles/main.css"), "utf8").matchAll(/url\(["']?\.\.\/assets\/fonts\/([^"')]+)["']?\)/giu)].map(match => `assets/fonts/${match[1]}`));
 const fontBytes = gzipBytes(fontFiles);
-const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/HedvigLettersSerif-Regular.woff2"))).byteLength;
+const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/Archivo-Variable.woff2"))).byteLength;
 
 function assertBudget(label, actual, budget) {
   const display = bytes => `${(bytes / 1024).toFixed(1)} KiB`;
@@ -33,7 +33,7 @@ function assertBudget(label, actual, budget) {
 
 assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
-assertBudget("lazy shader JavaScript", shaderIsland, 375 * 1024);
+assertBudget("lazy hero-wave JavaScript", heroWave, 128 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
-assertBudget("display font", displayFont, 45 * 1024);
+assertBudget("display font", displayFont, 100 * 1024);
 assertBudget("all site fonts", fontBytes, 420 * 1024);

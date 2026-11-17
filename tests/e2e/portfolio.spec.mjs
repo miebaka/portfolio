@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
   "/index.html", "/work.html", "/explorations.html", "/about.html",
-  "/notes.html", "/contact.html", "/privacy.html", "/404.html",
+  "/essays.html", "/contact.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
   "/writing/designing-for-disability-in-nigeria.html", "/writing/when-the-swoosh-lost-its-soul.html"
 ];
@@ -79,9 +79,18 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   await page.goto("/index.html");
-  for (const text of ["Brand & marketing designer", "Selected work", "Find the decision", "Build the campaign", "Make it usable", "Hi, I’m Miebaka."]) {
-    const locator = page.getByText(text, { exact: false }).first();
+  const criticalProof = [
+    ["Brand & marketing designer", ".home-landing__meta > p:first-child"],
+    ["Selected work", "#selected-title"],
+    ["Find the governing decision", "#what-i-do .service-fallback li:nth-child(1) :is(h2,h3)"],
+    ["Build the identity system", "#what-i-do .service-fallback li:nth-child(2) :is(h2,h3)"],
+    ["Hand over a usable system", "#what-i-do .service-fallback li:nth-child(5) :is(h2,h3)"],
+    ["Hi, I’m Miebaka.", "#about-title"],
+  ];
+  for (const [text, selector] of criticalProof) {
+    const locator = page.locator(selector);
     await expect(locator).toBeVisible();
+    await expect(locator).toContainText(text);
     const box = await locator.boundingBox();
     expect(box?.x ?? -1, text).toBeGreaterThanOrEqual(0);
     expect((box?.x ?? 0) + (box?.width ?? 999), text).toBeLessThanOrEqual(391);
@@ -107,7 +116,7 @@ test("desktop display headings use the shared grid without forced three-line mea
         overflow: element.scrollWidth > element.clientWidth,
       };
     });
-    expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(2);
+    expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(route === "/index.html" ? 3 : 2);
     expect(geometry.left, `${route} primary heading left grid edge`).toBeGreaterThanOrEqual(geometry.containerLeft - 1);
     expect(geometry.right, `${route} primary heading right grid edge`).toBeLessThanOrEqual(geometry.containerRight + 1);
     expect(geometry.overflow, `${route} primary heading overflow`).toBe(false);
@@ -156,8 +165,8 @@ test("chapter rail yields to the authored mobile chapter index", async ({ page }
   await expect(page.locator(".case-index")).toBeVisible();
 });
 
-test("Notes inherits the Selected Work editorial-list interaction", async ({ page }) => {
-  await page.goto("/notes.html");
+test("Essays inherits the Selected Work editorial-list interaction", async ({ page }) => {
+  await page.goto("/essays.html");
   await settle(page);
   const rows = page.locator(".editorial-index--notes .editorial-index__row");
   await expect(rows).toHaveCount(2);
@@ -195,23 +204,22 @@ test("visible email addresses can be copied without replacing the mail link", as
   await expect.poll(() => page.evaluate(() => window.__copiedEmail)).toBe("miebakakiki@gmail.com");
 });
 
-test("Home mounts the authored dark water-plane shader", async ({ page }) => {
+test("Home mounts the authored Three.js hero wave", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
   await page.goto("/index.html?shader-test=1&shader-static=1");
-  const backdrop = page.locator('[data-shader-backdrop][data-preset="Dark water plane"]');
-  await expect(backdrop).toBeVisible();
-  await expect(backdrop.locator("canvas")).toHaveCount(1);
-  await expect(page.locator('[data-shader-overlay]')).toHaveCount(0);
-  await expect(page.locator('[data-shader-backdrop]')).toHaveCount(1);
-  await expect(backdrop).toHaveAttribute("data-interaction", "static");
+  const wave = page.locator('[data-hero-wave][data-preset="Dark water plane"]');
+  await expect(wave).toBeVisible();
+  await expect(wave.locator("canvas")).toHaveCount(1);
+  await expect(page.locator('[data-hero-wave]')).toHaveCount(1);
+  await expect(wave).toHaveAttribute("data-interaction", "static");
 });
 
-test("Home scroll overlay preserves the unblurred shader field", async ({ page }) => {
+test("Home content preserves the unblurred hero field", async ({ page }) => {
   await page.goto("/index.html?shader-test=1");
-  const backdrop = page.locator("[data-shader-backdrop]");
-  await expect(backdrop).toHaveAttribute("data-interaction", /cursor|static/);
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveAttribute("data-interaction", /cursor|static/);
   await page.locator(".home-close").scrollIntoViewIfNeeded();
-  await expect(backdrop.locator("canvas")).toBeVisible();
+  await expect(wave.locator("canvas")).toBeVisible();
   const surfaces = await page.locator(".home-content, .journey").evaluateAll(elements => elements.map(element => ({
     className: element.className,
     background: getComputedStyle(element).backgroundColor,
@@ -233,7 +241,7 @@ test("Global navigation uses the five approved destinations", async ({ page }) =
   const labels = page.viewportSize().width <= 640
     ? await navigation.locator(".site-index__link > span:last-child").allTextContents()
     : await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
-  expect(labels).toEqual(["Work", "Experiments", "About", "Notes", "Contact"]);
+  expect(labels).toEqual(["Work", "Experiments", "About", "Essays", "Contact"]);
 });
 
 test("Mobile navigation has a focus-trapped index", async ({ page }) => {

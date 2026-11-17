@@ -44,8 +44,8 @@ test("approved visual contract remains intact", async () => {
     assert.ok(!compactCss.includes(pattern), `forbidden CSS: ${pattern}`);
   }
 
-  // Material Symbols is an icon font. The authored typography uses Hedvig
-  // Letters Serif for display and Finlandica Text for body and interface roles.
+  // Material Symbols is an icon font. The authored typography assigns one
+  // family to each semantic role: Archivo, Finlandica Text and Host Grotesk.
   const roleFonts = ["display", "body", "label"].map(role => {
     const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
     assert.ok(roleMatch, `missing --${role} typography role`);
@@ -53,8 +53,8 @@ test("approved visual contract remains intact", async () => {
     assert.ok(familyMatch, `missing --font-${role} family token`);
     return familyMatch[1];
   });
-  assert.deepEqual(roleFonts, ["Hedvig Letters Serif", "Finlandica Text", "Finlandica Text"]);
-  assert.equal(new Set(roleFonts).size, 2);
+  assert.deepEqual(roleFonts, ["Archivo", "Finlandica Text", "Host Grotesk"]);
+  assert.equal(new Set(roleFonts).size, 3);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");

@@ -28,7 +28,7 @@ Portfolio/
 ├── work.html               # Full work index
 ├── about.html              # About page
 ├── explorations.html       # Experiments: draggable spatial archive
-├── notes.html         # Notes index
+├── essays.html         # Essays index
 ├── contact.html            # Contact page
 ├── 404.html                # Styled not-found page (noindex)
 ├── robots.txt · sitemap.xml
@@ -65,7 +65,7 @@ Portfolio/
 - **Motion.** Shared timing comes from the duration and easing roles in
   `styles/foundations.css`; interface motion is part of the authored presentation.
 - **Navigation.** The shared route registry exposes Work, About, Experiments,
-  Notes and Contact. Mobile adds a persistent five-destination bottom bar and a
+  Essays and Contact. Mobile adds a persistent five-destination bottom bar and a
   focus-trapped full-screen Index.
 - **Experiments.** `scripts/build-experiments.mjs` turns media placed in
   `assets/experiments/` into a deterministic spatial archive. Drag, wheel,

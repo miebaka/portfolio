@@ -1,7 +1,6 @@
-import { currentTempo } from './listening-tempo.js';
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
-export const SHADER_BACKDROP_PRESETS = Object.freeze({
+export const HERO_WAVE_PRESETS = Object.freeze({
   light: Object.freeze({
     name: "Light water plane",
   }),
@@ -14,8 +13,7 @@ function resolvedColors(win, root) {
   const styles = win.getComputedStyle?.(root);
   const token = name => styles?.getPropertyValue(name).trim();
   return {
-    colors: [token("--shader-color-1"), token("--shader-color-2"), token("--shader-color-3")],
-    backgrounds: [token("--shader-background-1"), token("--shader-background-2")],
+    colors: [token("--hero-wave-color-1"), token("--hero-wave-color-2"), token("--hero-wave-color-3")],
   };
 }
 
@@ -24,25 +22,11 @@ function resolvedState(root) {
   return { theme, animate: root.dataset.motion !== "reduced" };
 }
 
-function waitForActivation(win, immediate, cursorCapable) {
-  if (immediate) return Promise.resolve();
-  return new Promise(resolve => {
-    const events = cursorCapable ? ["pointermove", "pointerdown", "keydown", "scroll"] : ["pointerdown", "keydown", "scroll"];
-    const activate = () => {
-      win.clearTimeout(timer);
-      events.forEach(type => win.removeEventListener(type, activate));
-      resolve();
-    };
-    events.forEach(type => win.addEventListener(type, activate, { once: true, passive: true }));
-    const timer = win.setTimeout(activate, 6000);
-  });
-}
-
-export async function initShaderBackdrop({
+export async function initHeroWave({
   document: doc = globalThis.document,
   window: win = globalThis.window,
   navigator: navigatorObject = globalThis.navigator,
-  loadRenderer = () => import("../../assets/runtime/shader-gradient.js"),
+  loadRenderer = () => import("../../assets/runtime/hero-wave.js"),
 } = {}) {
   const parameters = new URLSearchParams(win?.location?.search || "");
   const testOptIn = parameters.has("shader-test");
@@ -50,54 +34,40 @@ export async function initShaderBackdrop({
   const automationOptIn = testOptIn || parameters.has("shader-perf");
   if (!doc?.body || !win || doc.body.dataset.page !== "home" ||
       (navigatorObject?.webdriver === true && !automationOptIn) ||
-      doc.querySelector("[data-shader-backdrop]")) return null;
+      doc.querySelector("[data-hero-wave]")) return null;
 
   if (testOptIn) doc.documentElement.classList.add("shader-test-mode");
 
   const finePointerQuery = win.matchMedia?.(FINE_POINTER);
-  await waitForActivation(win, testOptIn, finePointerQuery?.matches === true);
-
   const root = doc.documentElement;
-  if (root.dataset.motion === "reduced" && !testOptIn) return null;
-  let userPaused = false;
   const getState = () => {
     const state = resolvedState(root);
     const colors = resolvedColors(win, root);
-    return forceStatic || userPaused ? { ...state, ...colors, animate: false } : { ...state, ...colors };
+    return forceStatic ? { ...state, ...colors, animate: false } : { ...state, ...colors };
   };
+  const landing = doc.querySelector(".home-landing");
+  if (!landing) return null;
   const host = doc.createElement("div");
-  host.className = "shader-backdrop";
-  host.dataset.shaderBackdrop = "";
+  host.className = "hero-wave";
+  host.dataset.heroWave = "";
   host.setAttribute("aria-hidden", "true");
-  doc.body.prepend(host);
-  const control = doc.createElement("button");
-  control.className = "shader-motion-control";
-  control.type = "button";
-  control.textContent = "Pause background motion";
-  control.setAttribute("aria-pressed", "false");
-  host.after(control);
+  landing.prepend(host);
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { host.remove(); control.remove(); console.warn("Shader backdrop unavailable", error); return null; }
+  catch (error) { host.remove(); console.warn("Hero wave unavailable", error); return null; }
 
   let island;
   try {
-    island = rendererModule.mountShaderGradient(host, getState());
+    island = rendererModule.mountHeroWave(host, getState());
   }
   catch (error) {
     island?.destroy();
     host.remove();
-    control.remove();
-    console.warn("Shader backdrop unavailable", error);
+    console.warn("Hero wave unavailable", error);
     return null;
   }
 
   let destroyed = false;
-  const syncTempo = () => {
-    island?.setTempo?.(currentTempo());
-  };
-  win.addEventListener('listening-tempo', syncTempo);
-  syncTempo();
   let pointerFrame = 0;
   let pendingPointer = { x: 0, y: 0 };
   const applyPointer = () => {
@@ -110,10 +80,7 @@ export async function initShaderBackdrop({
       host.dataset.cursorX = pointer.x.toFixed(3);
       host.dataset.cursorY = pointer.y.toFixed(3);
     }
-    // Older cached renderer modules did not expose pointer control. Keep the
-    // backdrop healthy while Vercel's stale-while-revalidate window rolls
-    // clients onto the interactive renderer.
-    if (typeof island?.setPointer === "function") island.setPointer(pointer.x, pointer.y);
+    island.setPointer(pointer.x, pointer.y);
   };
   const onPointerMove = event => {
     pendingPointer = {
@@ -130,7 +97,7 @@ export async function initShaderBackdrop({
   const sync = () => {
     if (destroyed) return;
     const state = getState();
-    const preset = SHADER_BACKDROP_PRESETS[state.theme];
+    const preset = HERO_WAVE_PRESETS[state.theme];
     host.dataset.preset = preset.name;
     island.update(state);
     applyPointer();
@@ -141,19 +108,11 @@ export async function initShaderBackdrop({
   win.addEventListener("pointermove", onPointerMove, { passive: true });
   win.addEventListener("pointerout", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
-  const toggleMotion = () => {
-    userPaused = !userPaused;
-    control.setAttribute("aria-pressed", String(userPaused));
-    control.textContent = userPaused ? "Play background motion" : "Pause background motion";
-    sync();
-  };
-  control.addEventListener("click", toggleMotion);
-
   const markReady = async () => {
     await island?.ready;
     if (destroyed) return;
     if (!host.querySelector("canvas")) return;
-    root.classList.add("has-shader-backdrop");
+    root.classList.add("has-hero-wave");
     host.classList.add("is-ready");
   };
   void markReady();
@@ -161,19 +120,16 @@ export async function initShaderBackdrop({
   const destroy = () => {
     if (destroyed) return;
     destroyed = true;
-    win.removeEventListener('listening-tempo', syncTempo);
     observer.disconnect();
     finePointerQuery?.removeEventListener?.("change", sync);
     win.removeEventListener("pointermove", onPointerMove);
     win.removeEventListener("pointerout", resetPointer);
     win.removeEventListener("blur", resetPointer);
-    control.removeEventListener("click", toggleMotion);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     host.remove();
-    control.remove();
-    root.classList.remove("has-shader-backdrop");
+    root.classList.remove("has-hero-wave");
     root.classList.remove("shader-test-mode");
   };
   win.addEventListener("pagehide", destroy, { once: true });

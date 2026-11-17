@@ -16,16 +16,17 @@ usable system around it, and edit until every surviving detail earns its place.
 
 The homepage leads with a direct proposition: complicated briefs become clear,
 usable brands and campaigns. Question-asking remains part of the voice, not the
-positioning headline. After the flagship work, a compact current-practice section
-grounds the method in the confirmed Rise role and six-team context; the detailed
-service explanation belongs on About.
+positioning headline. After the flagship work, a direct biography leads into an
+image-led capability index. Home and About share the same evidence-bounded
+service source, with different editorial pacing.
 
 ## Type and language
 
-- Hedvig Letters Serif 400: display headlines and primary page titles.
-- Finlandica Text 400/500/600: body copy, navigation, labels and interface text.
-- The responsive scale follows the approved Figma roles: 10.9/12.5/14px
-  labels, 14/19.2px body copy, 24/48px headings, and 48/64/88/136px display.
+- Archivo variable: display headlines and primary page titles.
+- Finlandica Text variable: body copy and long-form reading.
+- Host Grotesk variable: navigation, labels, metadata and interface text.
+- The responsive scale uses 12/13/15px labels, 15/17/21px body copy,
+  24–32/40–72px headings, and a 48–96px display range.
 - The shared 1800px reference grid has 84px outer margins, 12 columns and
   24px gutters. Its 1632px content width is the maximum at wider viewports.
 - Primary display headings use the shared 12-column container rather than a
@@ -48,7 +49,7 @@ tokens only.
 
 ## Navigation and spatial work
 
-The global destination set is Work, About, Experiments, Notes and Contact.
+The global destination set is Work, About, Experiments, Essays and Contact.
 Desktop keeps the restrained masthead. Mobile keeps the same destination
 registry and adds a full-screen, numbered Index for orientation. The Index is
 modal, traps focus, closes on Escape and restores focus to its trigger.
@@ -60,7 +61,7 @@ two dimensions, and arrow keys plus tab preserve a usable keyboard path. Names
 remain available as accessible labels without adding visual captions.
 
 “Experiments” is the only public name for this area. The retired Community and
-Playground experiment route redirects to the spatial archive; “Notes” remains
+Playground experiment route redirects to the spatial archive; “Essays” remains
 the separate writing destination.
 
 ## Work hierarchy and project expression

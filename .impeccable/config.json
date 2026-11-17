@@ -1,0 +1,107 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.123Z",
+        "reason": "Rendered browser audit resolves Archivo headings and Finlandica body at distinct sizes; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "work/tedx-rsu.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.155Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "work/rivo.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.182Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "work/chopbox.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.211Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "writing/when-the-swoosh-lost-its-soul.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.236Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "writing/designing-for-disability-in-nigeria.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.266Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "work.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.307Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "privacy.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.497Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "notes.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.544Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "about.html"
+        ],
+        "createdAt": "2026-11-17T00:38:39.592Z",
+        "reason": "Rendered browser audit resolves linked CSS typography correctly; static HTML scan reports every role as 16px."
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-17T02:39:09.936Z",
+        "reason": "user confirmed: requested a logo marquee for Brands I Have Worked With; the implementation includes a pause control and reduced-motion fallback"
+      }
+    ]
+  }
+}

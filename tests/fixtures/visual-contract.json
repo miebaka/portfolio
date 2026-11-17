@@ -1,6 +1,6 @@
 {
   "baselineCommit": "54dcc41",
-  "fonts": ["Hedvig Letters Serif", "Finlandica Text"],
+  "fonts": ["Archivo", "Finlandica Text", "Host Grotesk"],
   "tokens": { "--ref-ultramarine": "#002080", "--ref-paper": "#f8f9fc" },
   "protectedCopy": ["I turn complex briefs into clear brands & campaigns.", "Hi, I’m Miebaka"],
   "forbiddenCopy": ["Independent practice", "Position 01", "Three decisions. Three systems."],

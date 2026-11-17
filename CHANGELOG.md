@@ -9,7 +9,7 @@
 ## 2026-11-13
 
 - Shipped Hedvig Letters Serif for editorial display type and Finlandica Text for body, navigation and interface copy.
-- Unified the public destination names as Work, About, Experiments, Notes and Contact from the shared route registry.
+- Unified the public destination names as Work, About, Experiments, Essays and Contact from the shared route registry.
 - Replaced the Work index's narrow thumbnail triptychs with one deliberately cropped project image per case.
 - Removed the 404 page's decorative Three.js field and retained its static identity mark.
 - Restored Behance to the rendered footer and aligned ChopBox naming across every project view.
@@ -52,8 +52,8 @@
 - Added a dedicated `assets/experiments/` source folder and build-time manifest generator with optional metadata overrides.
 
 ### Changed
-- Standardized global navigation as Work, About, Experiments, Notes and Contact across mastheads, footers and no-JavaScript fallbacks.
-- Renamed the public Explorations destination to Experiments and Writing to Notes while retaining stable file URLs.
+- Standardized global navigation as Work, About, Experiments, Essays and Contact across mastheads, footers and no-JavaScript fallbacks.
+- Renamed the public Explorations destination to Experiments and Writing to Essays while retaining stable file URLs.
 - Updated the build and development commands to generate the Experiments manifest before serving or publishing.
 
 ### Fixed

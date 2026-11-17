@@ -8,7 +8,7 @@ Refine the existing static portfolio without changing its information architectu
 
 - Keep the existing data-render-module split.
 - Treat `data/projects.js`, `data/case-studies.js`, and static fallbacks as the single naming surface for TEDx Rivers State University while retaining the stable `tedx-rsu` slug.
-- Keep the editorial-index renderer shared. Home and Notes callers will pass only the content each index needs rather than hiding unwanted descriptions in CSS.
+- Keep the editorial-index renderer shared. Home and Essays callers will pass only the content each index needs rather than hiding unwanted descriptions in CSS.
 - Extend `article-navigation.js` with evidence-trail-compatible semantic markup. The navigation remains a real `nav` with anchor links, and every generated ID is derived from authored headings.
 - Replace the About particle markup and runtime initialization with a static responsive image-and-copy hero. This removes a page-specific canvas and preserves a useful no-JavaScript result.
 - Render experience from `siteConfig.experience` as a chronological ruler. Store explicit start and end years beside the human-readable period so visual positions are deterministic and do not depend on parsing display copy.
@@ -30,7 +30,7 @@ Refine the existing static portfolio without changing its information architectu
 
 ## Responsive behavior
 
-- Home and Notes indexes occupy the full width of their existing 12-column container.
+- Home and Essays indexes occupy the full width of their existing 12-column container.
 - Article contents switches from a sticky rail to a two-column mobile list, then one column at narrow widths.
 - About uses a 5/7 image-copy split on wide screens. The text begins to the right of the image and never overlays it. Mobile stacks image above copy.
 - The ruler scrolls vertically at every size, with years and tick marks held in a narrow leading column.
