@@ -10,9 +10,13 @@ export async function initExperimentsSpatial() {
   const stage = root?.querySelector("[data-experiments-stage]");
   const status = root?.querySelector("[data-experiments-status]");
   const title = root?.querySelector("[data-experiment-title]");
+  const caption = root?.querySelector("[data-experiment-caption]");
   const counter = root?.querySelector("[data-experiments-counter]");
   const indexButton = root?.querySelector("[data-experiments-index]");
   const indexPanel = root?.querySelector("[data-experiments-list]");
+  const closeButton = root?.querySelector("[data-experiments-close]");
+  const previousButton = root?.querySelector("[data-experiments-previous]");
+  const nextButton = root?.querySelector("[data-experiments-next]");
   if (!root || !viewport || !stage || !status) return;
   const base = basePath();
   let entries = [];
@@ -28,7 +32,7 @@ export async function initExperimentsSpatial() {
   stage.innerHTML = entries.map((entry, index) => {
     const tag = entry.href ? "a" : entry.type === "video" ? "button" : "figure";
     const attrs = entry.href ? ` href="${safeURL(entry.href)}"` : entry.type === "video" ? ` type="button"` : ` tabindex="0"`;
-    return `<${tag} class="experiment-poster"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${mediaMarkup(entry, base)}</span><span class="experiment-poster__label">${esc(entry.title)}</span></${tag}>`;
+    return `<${tag} class="experiment-poster"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${mediaMarkup(entry, base)}</span><span class="experiment-poster__label"><b>${esc(entry.title)}</b><i>${String(index + 1).padStart(2, "0")}</i></span></${tag}>`;
   }).join("");
 
   const cards = [...stage.querySelectorAll("[data-experiment-card]")];
@@ -37,7 +41,8 @@ export async function initExperimentsSpatial() {
   let target = 0;
   let frame = 0;
   let dragging = null;
-  let wheelLocked = false;
+  let wheelTotal = 0;
+  let wheelTimer = 0;
   let activeIndex = -1;
   const wrap = value => (value % cards.length + cards.length) % cards.length;
   const paint = () => {
@@ -51,9 +56,11 @@ export async function initExperimentsSpatial() {
       const active = distance < .5;
       card.toggleAttribute("data-active", active);
       card.setAttribute("aria-hidden", distance > 3 ? "true" : "false");
+      card.tabIndex = active ? 0 : -1;
       if (active && activeIndex !== index) {
         activeIndex = index;
         if (title) title.textContent = card.dataset.title;
+        if (caption) caption.textContent = card.dataset.title;
         if (counter) counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
       }
     });
@@ -65,51 +72,62 @@ export async function initExperimentsSpatial() {
     if (Math.abs(target - position) > .001) frame = requestAnimationFrame(animate);
   };
   const go = delta => {
-    target += delta;
+    target = Math.round(target) + delta;
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(animate);
     root.classList.add("has-interacted");
   };
   viewport.addEventListener("wheel", event => {
     event.preventDefault();
-    if (wheelLocked) return;
     const delta = event.deltaY || event.deltaX;
-    if (Math.abs(delta) < 2) return;
-    wheelLocked = true;
-    go(Math.sign(delta));
-    setTimeout(() => { wheelLocked = false; }, 320);
+    wheelTotal += delta;
+    clearTimeout(wheelTimer);
+    if (Math.abs(wheelTotal) >= 36) {
+      go(Math.sign(wheelTotal));
+      wheelTotal = 0;
+    }
+    wheelTimer = setTimeout(() => { wheelTotal = 0; }, 140);
   }, { passive: false });
   viewport.addEventListener("keydown", event => {
     const delta = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key];
     if (!delta) return;
     event.preventDefault(); go(delta);
   });
-  viewport.addEventListener("pointerdown", event => { dragging = { x: event.clientX, target }; viewport.setPointerCapture(event.pointerId); });
-  viewport.addEventListener("pointermove", event => { if (dragging) { target = dragging.target + (dragging.x - event.clientX) / Math.max(180, innerWidth * .22); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); } });
-  const release = () => { if (!dragging) return; dragging = null; target = Math.round(target); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); };
+  viewport.addEventListener("pointerdown", event => { dragging = { x: event.clientX, target, time: performance.now(), lastX: event.clientX, velocity: 0 }; viewport.classList.add("is-dragging"); viewport.setPointerCapture(event.pointerId); });
+  viewport.addEventListener("pointermove", event => { if (dragging) { const now = performance.now(); const elapsed = Math.max(1, now - dragging.time); dragging.velocity = (dragging.lastX - event.clientX) / elapsed; dragging.lastX = event.clientX; dragging.time = now; target = dragging.target + (dragging.x - event.clientX) / Math.max(180, innerWidth * .3); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); } });
+  const release = () => { if (!dragging) return; target = Math.round(target + dragging.velocity * 1.8); dragging = null; viewport.classList.remove("is-dragging"); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); };
   viewport.addEventListener("pointerup", release);
   viewport.addEventListener("pointercancel", release);
   cards.forEach((card, index) => {
     const video = card.querySelector("video");
     card.addEventListener("focus", () => { target = index; cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); });
     card.addEventListener("click", event => {
+      if (index !== activeIndex) { event.preventDefault(); target = index; cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); return; }
       if (card.tagName === "BUTTON") { event.preventDefault(); video?.paused ? video.play().catch(() => {}) : video?.pause(); }
     });
   });
+  previousButton?.addEventListener("click", () => go(-1));
+  nextButton?.addEventListener("click", () => go(1));
   if (indexPanel && indexButton) {
     const list = indexPanel.querySelector("ol");
-    list.innerHTML = entries.map((entry, index) => `<li><button type="button" data-experiment-jump="${index}"><span>${String(index + 1).padStart(2, "0")}</span>${esc(entry.title)}</button></li>`).join("");
-    indexButton.addEventListener("click", () => {
-      const open = indexPanel.hidden;
-      indexPanel.hidden = !open;
-      indexButton.setAttribute("aria-expanded", String(open));
+    list.innerHTML = entries.map((entry, index) => `<li><button type="button" data-experiment-jump="${index}"><span>${String(index + 1).padStart(2, "0")}</span><b>${esc(entry.title)}</b><i>${esc(entry.category || "Experiment")}</i></button></li>`).join("");
+    const closeIndex = (restore = true) => { indexPanel.hidden = true; root.removeAttribute("data-index-open"); indexButton.setAttribute("aria-expanded", "false"); if (restore) indexButton.focus(); };
+    const openIndex = () => { indexPanel.hidden = false; root.setAttribute("data-index-open", ""); indexButton.setAttribute("aria-expanded", "true"); closeButton?.focus(); };
+    indexButton.addEventListener("click", () => indexPanel.hidden ? openIndex() : closeIndex());
+    closeButton?.addEventListener("click", () => closeIndex());
+    indexPanel.addEventListener("keydown", event => {
+      if (event.key === "Escape") { event.preventDefault(); closeIndex(); return; }
+      if (event.key !== "Tab") return;
+      const focusable = [...indexPanel.querySelectorAll("button")];
+      const first = focusable[0]; const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     });
     list.addEventListener("click", event => {
       const button = event.target.closest("[data-experiment-jump]");
       if (!button) return;
       target = Number(button.dataset.experimentJump);
-      indexPanel.hidden = true;
-      indexButton.setAttribute("aria-expanded", "false");
+      closeIndex(false);
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(animate);
       viewport.focus();
