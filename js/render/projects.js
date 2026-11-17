@@ -83,7 +83,7 @@ export function renderClients() {
   if (!el || !SITE.clients || !SITE.clients.length) return;
   const items = SITE.clients.map(clientItem).join("");
   el.className = 'client-marquee';
-  el.innerHTML = '<button class="client-marquee__control" type="button" aria-label="Pause client logos" aria-pressed="false"><span data-marquee-label>Pause</span></button><div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
+  el.innerHTML = '<div class="client-marquee__track"><ul class="client-proof">' + items + '</ul><ul class="client-proof" aria-hidden="true">' + items + '</ul></div>';
   const controller = createMarqueeController(el);
   addEventListener('pagehide', () => controller.destroy(), { once: true });
 }
@@ -94,35 +94,23 @@ export function renderClientProofMarkup(clients = SITE.clients) {
 
 export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
-  const button = deps.button || root.querySelector('.client-marquee__control');
   const Observer = deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
   const reducedMotion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
-  let visible = !Observer, userPaused = false, destroyed = false;
+  let visible = !Observer, destroyed = false;
   const sync = () => {
-    const running = !reducedMotion && !destroyed && !userPaused && visible && !doc.hidden;
+    const running = !reducedMotion && !destroyed && visible && !doc.hidden;
     root.classList.toggle('is-running', running);
     root.dataset.marqueeState = running ? 'playing' : 'paused';
-    button.setAttribute('aria-disabled', 'false');
-    button.setAttribute('aria-pressed', String(userPaused));
-    button.setAttribute('aria-label', userPaused ? 'Play client logos' : 'Pause client logos');
-    const label = button.querySelector?.('[data-marquee-label]');
-    if (label) label.textContent = userPaused ? 'Play' : 'Pause';
   };
-  const play = () => { userPaused = false; sync(); };
-  const pause = ({ user = true } = {}) => { if (user) userPaused = true; sync(); };
-  const toggle = () => userPaused ? play() : pause();
   const onVisibility = () => sync();
-  button.addEventListener('click', toggle);
   doc.addEventListener('visibilitychange', onVisibility);
   const observer = Observer ? new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: 0.1 }) : null;
   observer?.observe(root);
   sync();
   return {
-    play, pause,
     destroy() {
       if (destroyed) return; destroyed = true; observer?.disconnect();
-      button.removeEventListener('click', toggle); doc.removeEventListener('visibilitychange', onVisibility); sync();
-    },
-    isPaused: () => userPaused
+      doc.removeEventListener('visibilitychange', onVisibility); sync();
+    }
   };
 }

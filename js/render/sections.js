@@ -4,15 +4,9 @@ import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js
 import { MOUNT } from "../core/contract.js";
 
 export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
-  const tabs = items.map((service, index) =>
-    '<button class="service-swatch" type="button" role="tab" id="service-tab-' + esc(service.id) + '" aria-controls="service-panel-' + esc(service.id) + '" aria-selected="' + String(index === 0) + '" tabindex="' + (index === 0 ? "0" : "-1") + '" data-service-index="' + index + '">' +
-      '<span class="service-swatch__number" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><span>' + esc(service.title) + '</span></button>'
-  ).join("");
-  const panels = items.map((service, index) =>
-    '<article class="service-panel" role="tabpanel" id="service-panel-' + esc(service.id) + '" aria-labelledby="service-tab-' + esc(service.id) + '"' + (index ? " hidden" : "") + '>' +
-      '<p class="service-panel__description">' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl><a class="service-panel__evidence" href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></article>'
-  ).join("");
-  return '<div class="service-swatches" data-service-swatches><div class="service-swatches__tabs" role="tablist" aria-label="Services">' + tabs + '</div><div class="service-swatches__panels">' + panels + '</div></div>';
+  return '<ol class="service-journeys">' + items.map((service, index) =>
+    '<li class="service-journey service-journey--' + esc(service.id) + '"><a href="' + esc(service.evidenceHref) + '"><span class="service-journey__number">' + String(index + 1).padStart(2, "0") + '</span><div><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p></div><span class="service-journey__arrow" aria-hidden="true">&#8599;</span></a></li>'
+  ).join('') + '</ol>';
 }
 
 export function renderServiceFallbackMarkup(items = SITE.capabilities) {
@@ -64,10 +58,8 @@ export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
   if (document.body.dataset.page === "home") {
-    const narrow = globalThis.matchMedia?.('(max-width: 48rem)').matches;
-    el.className = narrow ? "home-services" : "process-sequence";
-    el.innerHTML = narrow ? renderServiceAccordionMarkup(SITE.capabilities) : renderServiceSwatchesMarkup(SITE.capabilities);
-    if (!narrow) createServiceSwatches(el);
+    el.className = "process-sequence";
+    el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
     return;
   }
   el.className = "home-services";

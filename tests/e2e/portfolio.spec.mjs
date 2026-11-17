@@ -332,13 +332,11 @@ test("theme pull cord exposes and changes the Print/Screen state", async ({ page
   await expect(changedCord).toHaveAccessibleName("Theme: switch to Print mode");
 });
 
-test("client marquee can be paused", async ({ page }) => {
+test("client marquee runs without an unnecessary pause control", async ({ page }) => {
   await page.goto("/index.html");
-  const control = page.locator(".client-marquee__control");
-  await expect(control).toBeAttached();
-  await control.evaluate(element => element.click());
-  await expect(control).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "paused");
+  await expect(page.locator(".client-marquee__control")).toHaveCount(0);
+  await page.locator(".client-marquee").scrollIntoViewIfNeeded();
+  await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "playing");
 });
 
 test("@a11y explicit focus and field descriptions", async ({ page }) => {

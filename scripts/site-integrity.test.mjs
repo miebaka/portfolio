@@ -23,9 +23,9 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /I turn complex briefs into clear brands &amp; campaigns/);
+    assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands/);
     assert.match(html, /Marketing designer at Rise/);
-    assert.match(html, /8\+ years/);
+    assert.match(html, /more than eight years/);
   }
 });
 
@@ -287,11 +287,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(projects, /proof\?\.find\(item => item\.type === "decision"\)/);
   assert.match(projects, /home-project-list__decision/);
   assert.match(projects, /client-marquee__track/);
-  assert.match(projects, /client-marquee__control/);
-  assert.match(css, /body\[data-page="home"\] \.client-marquee\{[^}]*width:100%[^}]*mask-image:linear-gradient\(90deg,transparent/);
+  assert.match(css, /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/);
   assert.match(css, /--content:102rem/);
-  assert.match(css, /body\[data-page="home"\] \.marquee__item img\{[^}]*max-width:100%[^}]*height:clamp\(1\.75rem,3vw,3rem\)/);
-  assert.match(projects, /Pause client logos/);
+  assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2rem,\s*3vw,\s*3\.25rem\)/);
+  assert.doesNotMatch(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
   assert.match(projects, /aria-hidden="true"/);
   assert.doesNotMatch(sections, /Evidence:/);
@@ -304,15 +303,15 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   }
   assert.match(css, /\.case-next__link\{[^}]*text-decoration:none/);
   assert.match(css, /\.site-footer__signature-canvas/);
-  assert.match(css, /body\[data-page="home"\] \.home-profile>\.home-profile__media\{grid-column:8\/-1/);
+  assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-cord-mode>Print/);
   assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
-  assert.match(css, /--home-radius:clamp\(1\.25rem,2\.6vw,2\.5rem\)/);
+  assert.match(css, /--hr:\s*clamp\(1\.25rem,\s*2\.5vw,\s*2\.75rem\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);
-  assert.match(css, /body\[data-page="home"\] \.home-profile\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
+  assert.match(css, /body\[data-page="home"\] \.home-profile\s*\{[^}]*grid-template-columns:\s*repeat\(12,\s*1fr\)/);
 });
 
 test("interactive controls include the approved Figma button states", async () => {
@@ -343,10 +342,10 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.site-footer\{[^}]*text-align:left/);
   assert.match(css, /\.measure-hero\{max-width:none\}/);
   assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
-  assert.match(css, /body\[data-page="home"\] \.home-landing h1\{[^}]*grid-column:1\/11[^}]*max-width:18ch/);
+  assert.match(css, /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/);
   assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
-  assert.match(home, /<h1 id="hero-title">I turn complex briefs into clear brands &amp; campaigns\.<\/h1>/);
+  assert.match(home, /<h1 id="hero-title"><span>Miebaka<\/span> <span>Joshua<\/span><\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
   const title = writing.indexOf('writing-item__title');
   const meta = writing.indexOf('writing-item__meta');
@@ -415,7 +414,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /I turn complex briefs into clear brands/);
+  assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const workIndex = \[/);

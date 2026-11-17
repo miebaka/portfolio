@@ -46,9 +46,8 @@ test("the service system has exactly five complete shared records", () => {
     for (const field of ["title", "description", "outputs", "fit", "evidenceLabel", "evidenceHref"]) assert.ok(service[field]?.trim(), `${service.id}.${field}`);
   }
   const markup = renderServiceSwatchesMarkup(services);
-  assert.equal((markup.match(/role="tab"/g) || []).length, 5);
-  assert.equal((markup.match(/role="tabpanel"/g) || []).length, 5);
-  assert.match(markup, /aria-selected="true"/);
+  assert.equal((markup.match(/class="service-journey /g) || []).length, 5);
+  assert.equal((markup.match(/class="service-journey__number"/g) || []).length, 5);
   const fallback = renderServiceFallbackMarkup(services);
   for (const service of services) for (const field of ["title", "description", "outputs", "fit"]) {
     assert.ok(fallback.includes(service[field].replaceAll("&", "&amp;")), `${service.id}.${field} is available without JavaScript`);
@@ -57,20 +56,18 @@ test("the service system has exactly five complete shared records", () => {
 
 test("the homepage makes the hiring proposition and proof available before biography", async () => {
   const html = await page("index.html");
-  assert.match(html, /I turn complex briefs into clear brands &amp; campaigns\./);
-  assert.match(html, /8\+ years/);
+  assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands\./);
+  assert.match(html, /Miebaka/);
   assert.match(html, /Marketing designer at Rise/);
-  assert.match(html, /Six partner teams/);
-  assert.match(html, /Lagos \/ remote/);
-  assert.match(html, /Request CV/);
+  assert.match(html, /Lagos, Nigeria/);
+  assert.match(html, /Selected work/);
   assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });
 
 test("the closing invitation clearly supports employment and collaboration", async () => {
   const html = await page("index.html");
   assert.match(html, /Available for senior brand and marketing design roles, selected collaborations and design-led teams\./);
-  assert.match(html, />Contact me</);
-  assert.match(html, />Request CV</);
+  assert.match(html, /miebakakiki@gmail\.com/);
 });
 
 test("Home and About share the complete capability source", async () => {
@@ -132,12 +129,11 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
   assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });
 
-test("service selection has a persistent non-colour cue", async () => {
+test("service journeys expose persistent number, title and evidence link cues", async () => {
   const markup = renderServiceSwatchesMarkup(services);
-  const css = await page("styles/components-v4.css");
-  assert.match(markup, /aria-selected="true"/);
-  assert.match(css, /service-swatch\[aria-selected="true"\][^{]*\{[^}]*outline:/s);
-  assert.match(css, /service-swatch\[aria-selected="true"\]::after\{content:"Selected"/);
+  assert.equal((markup.match(/class="service-journey__number"/g) || []).length, 5);
+  assert.equal((markup.match(/class="service-journey__arrow"/g) || []).length, 5);
+  for (const service of services) assert.ok(markup.includes(service.evidenceHref));
 });
 
 test("experience ledger uses one bounded contribution and no numeric outcome claims", () => {
