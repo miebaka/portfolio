@@ -200,7 +200,7 @@
 .hero-noir__note{width:32vw}
 }
 
-@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]):not(.impeccable-motion){scroll-behavior:auto}:root:not([data-motion-preference="full"]) body::after{display:none}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"], .impeccable-motion){scroll-behavior:auto}:root:not([data-motion-preference="full"]) body::after{display:none}}
 html[data-motion="reduced"]:not(.impeccable-motion){scroll-behavior:auto}html[data-motion="reduced"] body::after{display:none}
 .collection-shell .hero__title{font-size:clamp(2.5rem,8vw,5.5rem)}
 :is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-lede,.case-chapter__copy,.case-next,.section,.section--tight)>*{text-align:left}
@@ -720,7 +720,7 @@ body[data-page]:not(.site-system-disabled){
 
 
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]){
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]){
   background: var(--paper);
   color: var(--ink);
   caret-color: var(--accent-interactive);
@@ -756,7 +756,7 @@ body[data-page]:not(.site-system-disabled) .site-nav{
   box-shadow: none;
 }
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-nav__inner{
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__inner{
   height: 100%;
   padding-inline: 0;
   display: grid;
@@ -790,7 +790,7 @@ body[data-page]:not(.site-system-disabled) .site-nav__link,body[data-page]:not(.
   text-transform: none;
 }
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-nav__link{
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__link{
   min-width: 0;
   min-height: 2.75rem;
   padding: 0;
@@ -809,11 +809,11 @@ body[data-page]:not(.site-system-disabled) .site-nav__themes{
   gap: var(--s2);
 }
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .theme-cord__prompt,body[data-page]:not(.site-system-disabled) .theme-cord svg{
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .theme-cord__prompt,body[data-page]:not(.site-system-disabled) .theme-cord svg{
   display: none;
 }
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .theme-cord{
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .theme-cord{
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
@@ -847,7 +847,7 @@ body[data-page]:not(.site-system-disabled) .site-footer{
   color: var(--ink);
 }
 
-body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-footer__panel{
+body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-footer__panel{
   position: relative;
   padding-block: var(--s6);
   pointer-events: auto;
@@ -981,54 +981,54 @@ body[data-page="contact"]:not(.site-system-disabled) :is(.field label, .contact-
 }
 
 @media (max-width: 60rem) {
-  body[data-page]:not(.site-system-disabled):not([data-site-cascade-2]) .site-nav__inner{
+  body[data-page]:not(.site-system-disabled, [data-site-cascade-2]) .site-nav__inner{
     display: flex;
     gap: var(--s2);
   }
 
-  body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-nav__menu-btn{
+  body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__menu-btn{
     display: inline-flex;
     margin-inline-start: auto;
   }
 
-  body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-nav__themes{
+  body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__themes{
     margin-inline-start: 0;
   }
 
-  body[data-page="work"]:not(.site-system-disabled):not([data-site-cascade-1]) .project-archive__row,body[data-page="contact"]:not(.site-system-disabled):not([data-site-cascade-1]) .contact-page{
+  body[data-page="work"]:not(.site-system-disabled, [data-site-cascade-1]) .project-archive__row,body[data-page="contact"]:not(.site-system-disabled, [data-site-cascade-1]) .contact-page{
     grid-template-columns: minmax(0, 1fr);
   }
 
-  body[data-page="work"]:not(.site-system-disabled):not([data-site-cascade-2]) .project-archive__row{
+  body[data-page="work"]:not(.site-system-disabled, [data-site-cascade-2]) .project-archive__row{
     min-height: 0;
   }
 
-  body[data-page="about"]:not(.site-system-disabled):not([data-site-cascade-1]) .about-hero{
+  body[data-page="about"]:not(.site-system-disabled, [data-site-cascade-1]) .about-hero{
     min-height: 0;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  body[data-page="about"]:not(.site-system-disabled):not([data-site-cascade-1]) .about-hero__copy,body[data-page="about"]:not(.site-system-disabled):not([data-site-cascade-1]) .about-hero__media{
+  body[data-page="about"]:not(.site-system-disabled, [data-site-cascade-1]) .about-hero__copy,body[data-page="about"]:not(.site-system-disabled, [data-site-cascade-1]) .about-hero__media{
     grid-column: 1;
   }
 
-  body[data-page="about"]:not(.site-system-disabled):not([data-site-cascade-2]) .about-hero__copy{
+  body[data-page="about"]:not(.site-system-disabled, [data-site-cascade-2]) .about-hero__copy{
     min-height: 28rem;
   }
 
-  body[data-page="contact"]:not(.site-system-disabled):not([data-site-cascade-1]) .hero{
+  body[data-page="contact"]:not(.site-system-disabled, [data-site-cascade-1]) .hero{
     min-height: calc(76svh - 4.5rem);
   }
 }
 
 @media (max-width: 40rem) {
-  body[data-page]:not(.site-system-disabled):not([data-site-cascade-2]){
+  body[data-page]:not(.site-system-disabled, [data-site-cascade-2]){
     --tailor-gutter: 1rem;
     --tailor-section: 5rem;
     --tailor-section-tight: 4rem;
   }
 
-  body[data-page]:not(.site-system-disabled):not([data-site-cascade-1]) .site-footer__groups{
+  body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-footer__groups{
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -1041,18 +1041,18 @@ body[data-page="contact"]:not(.site-system-disabled) :is(.field label, .contact-
 
 /* Impeccable production review: keep proof, wayfinding and action in reach. */
 
-body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled) .hero {
+body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero {
   min-height: 22rem;
   padding-block: clamp(4rem, 8svh, 6rem) var(--s8);
 }
 
-body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled) .hero__title {
+body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
   max-width: 15ch;
   font-size: clamp(3.5rem, 7vw, 6rem);
   letter-spacing: -0.04em;
 }
 
-body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled) .section--tight {
+body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .section--tight {
   padding-block-start: var(--s4);
 }
 
@@ -1066,11 +1066,11 @@ body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled)
   letter-spacing: -0.04em;
 }
 
-body[data-page="about"]:not(.site-system-disabled):not(.design-audit-disabled) .about-hero__copy {
+body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy {
   grid-column: 1 / 8;
 }
 
-body[data-page="about"]:not(.site-system-disabled):not(.design-audit-disabled) .about-hero__copy h1 {
+body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
   max-width: none;
   font-size: clamp(2.5rem, 3.1vw, 2.75rem);
   line-height: 0.96;
@@ -1078,7 +1078,7 @@ body[data-page="about"]:not(.site-system-disabled):not(.design-audit-disabled) .
   text-wrap: wrap;
 }
 
-body[data-page="about"]:not(.site-system-disabled):not(.design-audit-disabled) .about-hero__media {
+body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
   grid-column: 8 / -1;
 }
 
@@ -1124,12 +1124,12 @@ body[data-page="about"]:not(.site-system-disabled):not(.design-audit-disabled) .
     line-height: 0.96;
   }
 
-  body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled) .hero {
+  body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero {
     min-height: 18rem;
     padding-block: var(--s8) var(--s4);
   }
 
-  body[data-page="contact"]:not(.site-system-disabled):not(.design-audit-disabled) .hero__title {
+  body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
     font-size: clamp(3rem, 13vw, 4.5rem);
   }
 }
