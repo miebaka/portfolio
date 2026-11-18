@@ -1,7 +1,7 @@
 # Miebaka Joshua — Refined Editorial system
 
-Updated 23 October 2026. The detailed source of truth is
-[`docs/design-system-v3.md`](docs/design-system-v3.md).
+Updated 23 October 2026. The token source of truth is the `:root` block of
+[`styles/foundations.css`](styles/foundations.css).
 
 ## Direction
 

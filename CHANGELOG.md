@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-18
+
+- Consolidated design tokens into `styles/foundations.css` and retired `styles/tokens.css`; 22 of its 30 tokens had no consumers.
+- Removed 43 further dead tokens and merged ten synonym aliases (`--bg`, `--text`, `--primary`, …) onto the names the CSS actually uses. Root tokens 208 → 130; every surviving value is unchanged in light, dark-media and dark-attribute modes.
+- Defined the missing `--s5` spacing step used by the menu overlay, and pointed the Work/Essays archive rows at `--line`, `--ink` and `--muted` instead of three undefined `--home-shader-*` properties.
+- Removed dead `.about-annotations` and `.experiment-object` rules.
+- Added `scripts/token-integrity.test.mjs` so an undefined or dead token, or drift between the two dark blocks, fails the build.
+- Removed `audit/`, `docs/`, `specs/`, `.claude/` and `.impeccable/` and the documentation-registry workflow that depended on them.
+
 ## 2026-11-16
 
 - Replaced the tentative “Senior-leaning” label with a direct brand and marketing design position.

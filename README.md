@@ -56,8 +56,13 @@ Portfolio/
 
 - **CSS cascade layers** are imported by `styles/main.css`: foundations →
   components → pages. Rules: semantic tokens, shallow selectors, no inline styles.
-- **Design tokens** live at the top of `styles/foundations.css`. Change colour,
-  type, spacing, motion, and layout roles there before changing component rules.
+- **Design tokens** live in one place: the `:root` block at the top of
+  `styles/foundations.css`. It is layered: `--ref-*` raw palette → `--sys-color-*`
+  roles (remapped for dark) → short aliases such as `--paper`, `--ink`, `--muted`,
+  `--line`, `--accent` → `--comp-*` component tokens. Spacing is the `--s1…--s12`
+  scale only. Components consume aliases; hex values exist only in `--ref-*`.
+  `scripts/token-integrity.test.mjs` fails on an undefined `var()`, a dead token,
+  a repeated token, a second token file, or the two dark-theme blocks drifting apart.
 - **Data-driven rendering.** `data/site.js` exports `SITE`. On load, `js/main.js`
   renders markup into `[data-mount="…"]` points, then attaches behaviour. The nav,
   menu, work grid, capabilities, testimonial, footer, and case-study bodies are all
@@ -70,33 +75,6 @@ Portfolio/
 - **Experiments.** `scripts/build-experiments.mjs` turns media placed in
   `assets/experiments/` into a deterministic spatial archive. Drag, wheel,
   arrow-key and tab navigation all reach the same work.
-
-## Documentation workflow
-
-Critical documents are registered in
-[`docs/critical-documents.json`](docs/critical-documents.json). When the product,
-design system, architecture or release process changes, edit the owning document
-in the same commit and run:
-
-```bash
-npm run docs:update
-npm run docs:check
-```
-
-`docs:update` refreshes the index below. `docs:check` verifies required sections,
-local Markdown links and release-version alignment; CI runs it as part of
-`npm run quality`.
-
-<!-- critical-docs:start -->
-| Document | Owns |
-| --- | --- |
-| [`README.md`](README.md) | Setup, repository map and contributor entry point |
-| [`engineering-specification.md`](engineering-specification.md) | Current implementation, quality and release contract |
-| [`DESIGN.md`](DESIGN.md) | Concise creative direction and interaction rules |
-| [`docs/design-system-v3.md`](docs/design-system-v3.md) | Detailed foundations, components and state contract |
-| [`CHANGELOG.md`](CHANGELOG.md) | Release history |
-| [`assets/experiments/README.md`](assets/experiments/README.md) | Experiment asset and metadata authoring guide |
-<!-- critical-docs:end -->
 
 ## Add an experiment
 
@@ -153,11 +131,8 @@ All opt-in and degrade gracefully — the editorial base never depends on them:
 
 ## Customise
 
-- **Semantic colours, type-family switches, spacing and motion:** `styles/tokens.css`.
-- **Legacy component aliases and the fluid type scale:** `styles/foundations.css`.
+- **Colour, type families, the fluid type scale, spacing, motion and layout tokens:** `styles/foundations.css`.
 - **Name, email, socials, availability, projects, case studies:** `data/site.js`.
-- **Reading measures / touch targets:** `--measure-*`, `--tap-min` tokens; helpers
-  `.measure-hero` / `.measure-lead` / `.measure-reading` cap line length.
 
 ## Contact form
 

@@ -1,8 +1,9 @@
 # Engineering Specification — Miebaka Joshua Portfolio
 
 Updated 24 October 2026. This is the governing implementation contract. Visual
-decisions live in [`DESIGN.md`](DESIGN.md) and the detailed token/component
-contract lives in [`docs/design-system-v3.md`](docs/design-system-v3.md).
+decisions live in [`DESIGN.md`](DESIGN.md). The token contract is the `:root`
+block of `styles/foundations.css`, enforced by `scripts/token-integrity.test.mjs`
+and `scripts/check-css-contract.mjs`.
 
 ## Product contract
 
@@ -45,7 +46,6 @@ mark returns Home; Privacy is a footer destination. Experiments uses
 | Page composition | `styles/pages-v4.css` |
 | Experiments media metadata | `assets/experiments/metadata.json` when needed |
 | Hosting and security headers | `vercel.json` |
-| Critical documentation registry | `docs/critical-documents.json` |
 
 Do not add a second source for any concern above. Historical reports, exported
 mockups, generated review files and application working files do not belong in
@@ -111,7 +111,4 @@ and the live Home, Experiments and Contact routes pass a smoke check.
 ## Change discipline
 
 When behaviour, architecture, public routes, design tokens or deployment rules
-change, update the owning critical document in the same commit. Run
-`npm run docs:update` to refresh the generated documentation index, then
-`npm run docs:check` to catch stale versions, missing sections and broken local
-links.
+change, update the owning critical document in the same commit.

@@ -1,6 +1,5 @@
-@layer reset, tokens, base, layout, components, utilities, pages;
+@layer reset, base, layout, components, utilities, pages;
 
-@import url("tokens.css") layer(tokens);
 @import url("foundations.css") layer(base);
 @import url("layout.css") layer(layout);
 @import url("components-v4.css") layer(components);
