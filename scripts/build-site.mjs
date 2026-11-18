@@ -142,7 +142,6 @@ await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
-await ensureCopy(join(root, "assets/images/miebaka-joshua.webp"), join(output, "assets/images/miebaka-joshua.webp"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
 await ensureCopy(join(root, "assets/experiments"), join(output, "assets/experiments"));
 for (const file of articleFiles) {
@@ -176,7 +175,8 @@ for (const project of SITE.projects.filter(project => project.caseReady !== fals
 }
 for (const asset of assets) {
   const source = join(root, "assets/images/optimized", asset);
-  try { if ((await stat(source)).isFile()) await ensureCopy(source, join(output, "assets/images/optimized", asset)); } catch {}
+  if (!(await stat(source).catch(() => null))?.isFile()) throw new Error(`Referenced image is missing from assets/images/optimized: ${asset}`);
+  await ensureCopy(source, join(output, "assets/images/optimized", asset));
 }
 
 const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");

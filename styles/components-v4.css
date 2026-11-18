@@ -111,7 +111,7 @@ a[href]:hover{color:var(--accent-interactive);text-decoration-color:currentColor
 .case-view{padding:.25rem;background:var(--sys-color-surface-container-low);border:0;gap:.25rem;display:none}
 .case-view button{transition:transform var(--dur-fast) var(--ease-enter),background-color var(--dur-ui) var(--ease-standard),color var(--dur-ui) var(--ease-standard);min-height:2.75rem;padding:.65rem 1rem;color:var(--muted);font:500 .8125rem/1 var(--label);letter-spacing:.1em;text-transform:uppercase;background:var(--surface)}
 .case-view button:hover{background:var(--sys-color-surface-container-high);color:var(--sys-color-on-surface)}
-.case-view button[aria-pressed="true"]{background:var(--field);color:var(--on-field)}
+.case-view button[aria-pressed="true"]{background:var(--inverse);color:var(--inverse-ink)}
 .case-view button:active{transform:scale(.97)}
 .now-playing{min-width:0;min-height:2.75rem;display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:.65rem;padding:.65rem .85rem;background:var(--sys-color-surface-container);color:var(--sys-color-on-surface);border:1px solid var(--sys-color-outline);text-decoration:none;transition:transform var(--dur-fast) var(--ease-enter),background-color var(--dur-ui) var(--ease-standard),color var(--dur-ui) var(--ease-standard)}
 .now-playing:hover{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
@@ -304,7 +304,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(3.5rem + var(--safe-bot
 .copy-email svg{width:1rem;height:1rem;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
 .copy-email__copy{opacity:1;transform-origin:center;transition:opacity 120ms var(--ease-standard),transform 160ms var(--ease-enter)}
 .copy-email__check{stroke-dasharray:14;stroke-dashoffset:14;transition:stroke-dashoffset 200ms var(--ease-enter)}
-.copy-email:is(:hover,:focus-visible){border-color:var(--ink);background:var(--paper-2);color:var(--ink)}
+.copy-email:is(:hover,:focus-visible){border-color:var(--ink);background:var(--surface);color:var(--ink)}
 .copy-email:active{transform:scale(.97)}
 .copy-email[data-state="copied"]{border-color:var(--ink);color:var(--ink)}
 .copy-email[data-state="copied"] .copy-email__copy{opacity:0;transform:scale(.8)}

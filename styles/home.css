@@ -2,6 +2,7 @@
 body[data-page="home"] {
   --hf: clamp(0.75rem, 1.25vw, 1.35rem);
   --hr: clamp(1.25rem, 2.5vw, 2.75rem);
+
   background: var(--paper);
 }
 body[data-page="home"] .home-landing {

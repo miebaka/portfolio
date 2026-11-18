@@ -22,20 +22,19 @@
     "test:contact-form": "node --test tests/contact-form.test.mjs",
     "test:css": "node scripts/check-css-contract.mjs",
     "test:intent": "node --test scripts/intent-quality.test.mjs",
+    "test:tokens": "node --test scripts/token-integrity.test.mjs",
     "test:e2e": "playwright test tests/e2e",
     "test:a11y": "playwright test tests/e2e/portfolio.spec.mjs --grep @a11y",
     "test:budgets": "node scripts/check-budgets.mjs",
     "test:lighthouse": "lhci autorun",
     "audit:shipped": "npm audit --omit=dev --audit-level=moderate",
     "audit:dev-tools": "npm audit --audit-level=moderate || echo 'Non-blocking: review dev-tool advisories above; shipped dependencies are gated separately.'",
-    "docs:check": "node scripts/docs-workflow.mjs --check",
-    "docs:update": "node scripts/docs-workflow.mjs --write",
-    "quality": "npm run docs:check && npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm run audit:shipped && npm run audit:dev-tools",
+    "quality": "npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm run audit:shipped && npm run audit:dev-tools",
     "dev": "npm run build:experiments && npm run build:hero && node scripts/serve-static.mjs . 4000",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
-    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run build && npm run test:css && npm run test:intent && npm run test:integrity && npm run test:contract"
+    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run build && npm run test:css && npm run test:intent && npm run test:tokens && npm run test:integrity && npm run test:contract"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

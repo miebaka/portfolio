@@ -1,6 +1,6 @@
 export default {
   extends: ["stylelint-config-standard"],
-  ignoreFiles: ["dist/**", "audit/**", "assets/runtime/**"],
+  ignoreFiles: ["dist/**", "assets/runtime/**"],
   rules: {
     "alpha-value-notation": null,
     "at-rule-empty-line-before": null,

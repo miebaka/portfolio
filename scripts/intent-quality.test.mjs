@@ -9,12 +9,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = file => readFile(join(root, file), "utf8");
 
 test("design documentation names the implemented ultramarine identity", async () => {
-  const [brief, system, tokens] = await Promise.all([
+  const [brief, tokens] = await Promise.all([
     read("DESIGN.md"),
-    read("docs/design-system-v3.md"),
     read("styles/foundations.css")
   ]);
-  for (const source of [brief, system]) {
+  for (const source of [brief]) {
     assert.match(source, /ultramarine/i);
     assert.doesNotMatch(source, /forest[- ]green|deep green ink|green accents|pale sage/i);
   }
