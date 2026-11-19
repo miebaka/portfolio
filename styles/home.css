@@ -962,3 +962,131 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
   text-decoration:underline;
   text-underline-offset:.2em;
 }
+
+
+/* Seven-chapter refinement: shared typography tokens replace one-off sizes. */
+body[data-page="home"] .home-landing h1 {
+  font-size: var(--type-hero);
+  line-height: .86;
+  letter-spacing: -.075em;
+}
+body[data-page="home"] .home-landing__statement {
+  font-family: var(--body);
+  font-size: var(--type-lead);
+  font-weight: 450;
+  line-height: 1.22;
+  letter-spacing: -.025em;
+}
+body[data-page="home"] :is(.swiss-section-head, .disciplines-heading) h2 {
+  font-size: var(--type-section-title);
+  line-height: .95;
+}
+body[data-page="home"] .home-project-list .editorial-index {
+  counter-reset: selected-work;
+}
+body[data-page="home"] .home-project-list .editorial-index__item {
+  counter-increment: selected-work;
+}
+body[data-page="home"] .home-project-list .editorial-index__row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: clamp(1.5rem, 4vw, 5rem);
+  padding-block: clamp(2.25rem, 4vw, 4.5rem);
+}
+body[data-page="home"] .home-project-list__identity::before {
+  content: counter(selected-work, decimal-leading-zero) " / SELECTED PROJECT";
+  display: block;
+  font: 600 var(--type-eyebrow)/1.4 var(--label);
+  letter-spacing: .14em;
+  color: var(--muted);
+}
+body[data-page="home"] .home-project-list__title {
+  font-size: var(--type-project-title);
+  line-height: .94;
+  max-width: 14ch;
+}
+body[data-page="home"] .home-project-list__summary {
+  display: block;
+  max-width: 46ch;
+  margin-top: .5rem;
+  font: 400 var(--type-reading)/1.5 var(--body);
+  letter-spacing: 0;
+  color: var(--muted);
+}
+body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible) .home-project-list__summary,
+body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible) .home-project-list__identity::before {
+  color: inherit;
+}
+body[data-page="home"] .home-profile__introduction h2 {
+  font-size: var(--type-section-title);
+  line-height: .92;
+}
+body[data-page="home"] .home-profile__lead {
+  font-size: var(--type-lead);
+  line-height: 1.25;
+}
+body[data-page="home"] .home-profile__introduction p:not(.home-profile__lead) {
+  font-size: var(--type-reading);
+}
+body[data-page="home"] .service-journey__discipline,
+body[data-page="home"] .service-journey__number,
+body[data-page="home"] .home-landing__meta {
+  font-family: var(--label);
+  font-size: var(--type-eyebrow);
+  text-transform: uppercase;
+}
+body[data-page="home"] .home-close h2 {
+  font-size: var(--type-editorial-display);
+  line-height: .94;
+}
+body[data-page="home"] .client-marquee:is(:hover, :focus-within) .client-marquee__track {
+  animation-play-state: paused;
+}
+body[data-page="home"] .client-marquee__track {
+  will-change: transform;
+}
+body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
+  will-change: auto;
+}
+@media (max-width: 64rem) {
+  body[data-page="home"] .home-landing h1 {
+    font-size: clamp(3.8rem, 11.5vw, 8rem);
+  }
+}
+@media (max-width: 48rem) {
+  body[data-page="home"] .home-landing h1 {
+    font-size: clamp(3.3rem, 15vw, 6.5rem);
+    line-height: .88;
+  }
+  body[data-page="home"] .home-landing__statement {
+    font-size: clamp(1.25rem, 5vw, 1.8rem);
+    max-width: 19ch;
+  }
+  body[data-page="home"] .home-project-list__identity::before {
+    font-size: var(--type-label-s);
+  }
+  body[data-page="home"] .home-project-list__summary {
+    font-size: var(--type-body-s);
+    max-width: 35ch;
+  }
+  body[data-page="home"] .home-project-list__visual {
+    min-height: 0;
+  }
+  body[data-page="home"] .home-close h2 {
+    font-size: clamp(3rem, 11vw, 5rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .client-marquee__track {
+    animation: none;
+    transform: none;
+  }
+  body[data-page="home"] .home-project-list__visual,
+  body[data-page="home"] .home-project-list__title,
+  body[data-page="home"] .service-journey__image img {
+    transition: none;
+  }
+}
+html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
+  animation: none;
+  transform: none;
+}
