@@ -52,3 +52,22 @@ test("Experiments has a functioning, art-rich and navigable no-script fallback",
     await context.close();
   }
 });
+
+test("Essay table of contents links to real headings and exposes the current section", async ({ page }) => {
+  await page.goto("/essays/when-the-swoosh-lost-its-soul.html");
+  const toc = page.locator(".article-toc");
+  await expect(toc).toBeVisible();
+  const links = toc.locator("a[href^='#']");
+  expect(await links.count()).toBeGreaterThan(1);
+  const chapters = await links.evaluateAll(items => items.map(item => ({
+    href: item.getAttribute("href"), text: item.textContent.trim(),
+    present: Boolean(document.getElementById(item.getAttribute("href").slice(1)))
+  })));
+  for (const chapter of chapters) {
+    expect(chapter.text.length).toBeGreaterThan(0);
+    expect(chapter.present).toBe(true);
+  }
+  await expect(toc.locator('a[aria-current="location"]')).toHaveCount(1);
+  await links.nth(1).click();
+  await expect.poll(() => links.nth(1).getAttribute("aria-current")).toBe("location");
+});
