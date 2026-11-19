@@ -1390,3 +1390,12 @@ html[data-motion="reduced"] body[data-page="work"] .project-archive__preview-fra
 .experiments-static__meta strong {font:500 clamp(1.15rem,2vw,1.7rem)/1.16 var(--display);overflow-wrap:anywhere}
 .experiments-static__grid a:focus-visible {outline:3px solid var(--ref-ultramarine);outline-offset:4px}
 @media(max-width:48rem) {.experiments-static__grid{grid-template-columns:1fr}.experiments-static__meta{gap:.75rem}}
+
+/* About: a complete accessible chronology without JavaScript. */
+.experience-fallback{display:grid;gap:0;list-style:none;margin:var(--s4) 0;padding:0;border-top:1px solid var(--line)}
+.experience-fallback li{display:grid;grid-template-columns:minmax(9rem,.35fr) minmax(0,1fr);gap:clamp(1rem,3vw,3rem);padding-block:clamp(1.75rem,4vw,3.5rem);border-bottom:1px solid var(--line)}
+.experience-fallback__period{font:500 var(--type-label-m)/1.5 var(--label);color:var(--muted)}
+.experience-fallback h3{font:540 clamp(1.6rem,3vw,3rem)/1.05 var(--display);letter-spacing:-.04em}
+.experience-fallback__organisation{margin-block:.6rem;font-weight:600}
+.experience-fallback li>div>p:last-child{max-width:62ch;margin-top:var(--s2);line-height:1.65}
+@media(max-width:48rem){.experience-fallback li{grid-template-columns:1fr;gap:var(--s2)}}

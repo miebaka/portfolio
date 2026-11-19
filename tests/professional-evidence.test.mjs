@@ -228,3 +228,17 @@ test("About portrait and 404 recovery follow semantic design contracts", async (
   for (const href of ["index.html", "work.html", "contact.html"])
     assert.match(missing, new RegExp(`href="${href}"`));
 });
+
+test("Home and About preserve authentic public proof without JavaScript", async () => {
+  const home = await page("index.html");
+  const about = await page("about.html");
+  for (const client of (await import("../data/clients.js")).clients) {
+    assert.match(home, new RegExp('alt="' + client.name.replace(/[.*+?^$\{\}()|[\]\\]/g,"\\$&") + '"'));
+  }
+  for (const job of siteConfig.experience) {
+    assert.ok(about.includes(job.organisation));
+    assert.ok(about.includes(job.period));
+  }
+  assert.match(home,/client-strip__fallback/);
+  assert.match(about,/experience-fallback/);
+});
