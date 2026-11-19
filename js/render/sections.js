@@ -13,9 +13,9 @@ export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
     return '<li class="service-journey service-stack__item service-journey--' + safeToken(service.id) + '" style="--stack-index:' + index + '">' +
       '<article class="service-stack__card">' +
       '<div class="service-stack__heading"><span class="service-stack__symbol" aria-hidden="true">' + marks[index % marks.length] + '</span>' +
-      '<h3>' + esc(service.title) + '</h3><span class="service-stack__count" aria-hidden="true">' + String(index + 1).padStart(2, "0") + ' / ' + String(items.length).padStart(2, "0") + '</span></div>' +
+      '<h3>' + esc(service.title) + '</h3><span class="service-journey__number" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><span class="service-stack__count" aria-hidden="true">/ ' + String(items.length).padStart(2, "0") + '</span></div>' +
       '<div class="service-stack__bottom"><div class="service-stack__description"><p>' + esc(service.description) + '</p>' +
-      '<a class="service-stack__evidence" href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + ' <span aria-hidden="true">↗</span></a></div>' +
+      '<a class="service-stack__evidence service-journey__evidence" href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + ' <span class="service-journey__arrow" aria-hidden="true">↗</span></a></div>' +
       '<div class="service-stack__tags" aria-label="Typical deliverables">' + tags + '</div></div>' +
       '</article></li>';
   }).join("") + '</ol>';
