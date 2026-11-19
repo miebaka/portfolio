@@ -145,13 +145,23 @@ function clientItem(client) {
   const inner = client.logo
     ? '<img src="' + esc(client.logo) + '" alt="' + esc(client.name) + '"' + dims + ' decoding="async">'
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
-  /* Equal perceived area starts with geometry: if height is h and width is
-     aspect × h, equal area means h is proportional to 1/sqrt(aspect). The
-     optical factor only corrects for unusually light or dense artwork. */
-  const aspect = client.logoW && client.logoH ? client.logoW / client.logoH : 1;
+
+  // Area-matched optical fitting: preserve the source aspect ratio while
+  // keeping a common occupied area, constrained by a consistent viewport.
+  // W = sqrt(A * aspect), H = sqrt(A / aspect). Cap both dimensions and
+  // preserve the smallest fit scale (no distortion or cropping).
+  const aspect = client.logoW > 0 && client.logoH > 0 ? client.logoW / client.logoH : 1;
   const optical = typeof client.optical === "number" ? client.optical : 1;
-  const scale = Math.min(1.25, Math.max(0.45, (1.15 / Math.sqrt(aspect)) * optical));
-  const style = ' style="--logo-scale:' + scale.toFixed(3) + ";--logo-aspect:" + aspect.toFixed(3) + '"';
+  const area = 19000 * optical;
+  const rawWidth = Math.sqrt(area * aspect);
+  const rawHeight = Math.sqrt(area / aspect);
+  const fit = Math.min(1, 320 / rawWidth, 112 / rawHeight);
+  const renderWidth = rawWidth * fit;
+  const renderHeight = rawHeight * fit;
+  const scale = Math.min(1.25, Math.max(.45, (1.15 / Math.sqrt(aspect)) * optical));
+  const style = ' style="--logo-render-width:' + renderWidth.toFixed(2) +
+    'px;--logo-render-height:' + renderHeight.toFixed(2) +
+    'px;--logo-scale:' + scale.toFixed(3) + ';--logo-aspect:' + aspect.toFixed(3) + '"';
   return '<li class="marquee__item"' + style + ">" + inner + "</li>";
 }
 
