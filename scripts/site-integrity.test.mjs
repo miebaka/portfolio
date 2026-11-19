@@ -23,7 +23,7 @@ test("homepage proof precedes biography in the source and built document", async
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands/);
+    assert.match(html, /I turn complicated ideas into brands people understand and systems teams can actually use/);
     assert.match(html, /Marketing designer at Rise/);
     assert.match(html, /more than eight years/);
   }
@@ -478,7 +478,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
+  assert.match(home, /I turn complicated ideas into brands people understand and systems teams can actually use/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const published = projects/);
