@@ -49,7 +49,7 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Poster A Week", "Kiki-Joshua", "Kigoma Hotels"])
     assert.match(html, new RegExp(title));
-  assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
+  assert.doesNotMatch(html, /Designing for Disability|When the Swoosh Lost Its Soul|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
   assert.match(html, /class="project-archive__progress"/);
@@ -318,8 +318,10 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
-  for (const identifier of ["tedx-rsu", "rivo", "chopbox", "Detour", "Out Of Office"])
-    assert.match(projects, new RegExp(identifier));
+  assert.match(projects, /project\.status === "published"/);
+  assert.match(projects, /studies\?\.\[project\.slug\]\?\.status === "published"/);
+  assert.match(projects, /project\.status === "coming-soon"/);
+  assert.doesNotMatch(projects, /Detour|Out Of Office/);
   const homeProjects = projects.match(/export function renderHomeProjectList[\s\S]*?\n}\n\nexport function renderProjectArchive/)?.[0] || "";
   assert.doesNotMatch(homeProjects, /proof\?\.find|home-project-list__decision|Governing decision/);
   assert.match(projects, /client-marquee__track/);
@@ -479,7 +481,8 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /const workIndex = \[/);
+  assert.match(projects, /const published = projects/);
+  assert.match(projects, /const inProgress = projects/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
   assert.match(footer, /Explore/);
