@@ -1,8 +1,25 @@
 {
   "baselineCommit": "54dcc41",
-  "fonts": ["Archivo", "Finlandica Text", "Host Grotesk"],
-  "tokens": { "--ref-ultramarine": "#002080", "--ref-paper": "#f8f9fc" },
-  "protectedCopy": ["A creative partner for teams turning difficult briefs into unmistakable brands.", "Hi, I’m Miebaka"],
-  "forbiddenCopy": ["Independent practice", "Position 01", "Three decisions. Three systems."],
-  "forbiddenCss": ["transition:all", "filter:saturate"]
+  "fonts": [
+    "Archivo",
+    "Finlandica Text",
+    "Host Grotesk"
+  ],
+  "tokens": {
+    "--ref-ultramarine": "#002080",
+    "--ref-paper": "#f8f9fc"
+  },
+  "protectedCopy": [
+    "I turn complicated ideas into brands people understand and systems teams can actually use.",
+    "Hi, I’m Miebaka"
+  ],
+  "forbiddenCopy": [
+    "Independent practice",
+    "Position 01",
+    "Three decisions. Three systems."
+  ],
+  "forbiddenCss": [
+    "transition:all",
+    "filter:saturate"
+  ]
 }
