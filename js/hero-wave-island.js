@@ -1,6 +1,9 @@
 /* Single-pass procedural caustics. Native WebGL avoids a scene-graph bundle;
    the semantic HTML hero and CSS stage remain the fallback. */
 const FRAME_MS=1000/24;
+// Low-cost static caustic relief for devices without hardware-accelerated WebGL.
+const FRAGMENT_SOFTWARE="precision mediump float;\nuniform float uTime;\nuniform float uMotion;\nuniform vec2 uPointer;\nuniform vec2 uAspect;\nuniform vec3 uColorA;\nuniform vec3 uColorB;\nuniform vec3 uColorC;\nvarying vec2 vUv;\nvoid main(){\n  vec2 p=(vUv-.5)*uAspect;\n  float interference=sin(p.x*12.0+p.y*6.0+uTime*.035)*sin(p.y*15.0-p.x*5.0);\n  float seams=1.0-smoothstep(.17,.9,abs(interference));\n  float pointerLight=exp(-8.0*distance(vUv,.5+uPointer*.15));\n  float vignette=1.0-smoothstep(.45,.9,distance(vUv,vec2(.5,.5)));\n  float intensity=clamp((.04+seams*.48+pointerLight*.08)*(.55+.45*vignette)*uMotion,0.0,.65);\n  vec3 base=mix(uColorA,uColorB,.18+.1*vUv.y);\n  gl_FragColor=vec4(mix(base,uColorC,intensity),1.0);\n}";
+
 
 // Software rasterizers cannot sustain the nine-neighbourhood caustic pass.
 // Keep a genuine authored shader frame instead of exhausting the main thread.
@@ -38,10 +41,10 @@ export function mountHeroWave(host,initialState){
  if(!gl) throw new Error("WebGL is unavailable");
  const driverInfo=gl.getExtension("WEBGL_debug_renderer_info");
  const rendererName=driverInfo ? gl.getParameter(driverInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
- const softwareRenderer=isSoftwareRenderer(rendererName) || (navigator.webdriver===true && !driverInfo);
+ const softwareRenderer=isSoftwareRenderer(rendererName) || !driverInfo;
  host.dataset.rendererQuality=softwareRenderer ? "software-static" : "accelerated";
  const vertex=compile(gl,gl.VERTEX_SHADER,VERTEX);
- const fragment=compile(gl,gl.FRAGMENT_SHADER,FRAGMENT);
+ const fragment=compile(gl,gl.FRAGMENT_SHADER,softwareRenderer ? FRAGMENT_SOFTWARE : FRAGMENT);
  const program=gl.createProgram();
  gl.attachShader(program,vertex);
  gl.attachShader(program,fragment);
