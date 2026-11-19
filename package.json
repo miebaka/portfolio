@@ -7,7 +7,7 @@
     "build": "npm run validate:content && npm run build:experiments && npm run build:hero && node scripts/build-site.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:html": "htmlhint \"*.html\" \"work/*.html\" \"writing/*.html\"",
+    "lint:html": "htmlhint \"*.html\" \"work/*.html\" \"essays/*.html\"",
     "lint:css": "stylelint \"styles/**/*.css\"",
     "lint": "npm run lint:html && npm run lint:css",
     "build:experiments": "node scripts/build-experiments.mjs",

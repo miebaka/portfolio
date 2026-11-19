@@ -1,23 +1,31 @@
 /* Render — home sections: capabilities list and text slots. */
 import { SITE } from "../../data/site.js";
-import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js";
+import { escapeHTML as esc, safeURL, safeToken, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
 
 export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
-  return '<ol class="service-journeys">' + items.map((service, index) =>
-    '<li class="service-journey service-journey--' + esc(service.id) + '"><a href="' + esc(service.evidenceHref) + '"><span class="service-journey__number">' + String(index + 1).padStart(2, "0") + '</span><div><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p></div><span class="service-journey__arrow" aria-hidden="true">&#8599;</span></a></li>'
-  ).join('') + '</ol>';
+  return '<ol class="service-journeys">' + items.map((service, index) => {
+    const cover = safeToken(service.cover);
+    const visual = cover ? '<span class="service-journey__image" aria-hidden="true"><picture>' +
+      '<source type="image/avif" srcset="assets/images/optimized/' + cover + '-540.avif 540w, assets/images/optimized/' + cover + '-1080.avif 1080w" sizes="(max-width: 64rem) 100vw, 50vw">' +
+      '<source type="image/webp" srcset="assets/images/optimized/' + cover + '-540.webp 540w, assets/images/optimized/' + cover + '-1080.webp 1080w" sizes="(max-width: 64rem) 100vw, 50vw">' +
+      '<img src="assets/images/optimized/' + cover + '-1080.webp" alt="" width="1080" height="810" loading="lazy" decoding="async"></picture></span>' : '';
+    return '<li class="service-journey service-journey--' + safeToken(service.id) + '"><a href="' + safeURL(service.evidenceHref) + '">' +
+      visual + '<span class="service-journey__number">' + String(index + 1).padStart(2, "0") + '</span>' +
+      '<div class="service-journey__copy"><span class="service-journey__discipline">' + esc(service.discipline || "") + '</span><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p></div>' +
+      '<span class="service-journey__arrow" aria-hidden="true">&#8599;</span></a></li>';
+  }).join('') + '</ol>';
 }
 
 export function renderServiceFallbackMarkup(items = SITE.capabilities) {
   return '<ol class="service-fallback">' + items.map(service =>
-    '<li><h2>' + esc(service.title) + '</h2><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl><a href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></li>'
+    '<li><h2>' + esc(service.title) + '</h2><p>' + esc(service.description) + '</p><dl><div><dt>Typical outputs</dt><dd>' + esc(service.outputs) + '</dd></div><div><dt>Good fit</dt><dd>' + esc(service.fit) + '</dd></div></dl><a href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></li>'
   ).join("") + '</ol>';
 }
 
 export function renderServiceAccordionMarkup(items = SITE.capabilities) {
   return '<div class="home-services__list">' + items.map((service, index) =>
-    '<details class="home-service"' + (index === 0 ? ' open' : '') + '><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p><a href="' + esc(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></div></div></details>'
+    '<details class="home-service"' + (index === 0 ? ' open' : '') + '><summary><span>' + esc(service.title) + '</span><span class="home-service__toggle" aria-hidden="true"></span></summary><div class="home-service__panel"><p>' + esc(service.description) + '</p><div class="home-service__facts"><p>' + esc(service.outputs) + '</p><p>' + esc(service.fit) + '</p><a href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + '</a></div></div></details>'
   ).join('') + '</div>';
 }
 

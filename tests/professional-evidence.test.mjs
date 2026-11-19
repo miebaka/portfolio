@@ -64,6 +64,14 @@ test("the service system has exactly five complete shared records", () => {
     }
 });
 
+test("service cards sanitize unsafe destinations, filenames and injected markup", () => {
+  const hostile = [{ ...services[0], title: '<img src=x onerror=alert(1)>', evidenceHref: 'javascript:alert(1)', cover: '../bad" onerror=alert(1)' }];
+  const markup = renderServiceSwatchesMarkup(hostile);
+  assert.match(markup, /href="#"/);
+  assert.doesNotMatch(markup, /href="javascript:|<img src=x onerror=|<img[^>]+\\sonerror=/);
+  assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
+});
+
 test("the homepage makes the hiring proposition and proof available before biography", async () => {
   const html = await page("index.html");
   assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands\./);
