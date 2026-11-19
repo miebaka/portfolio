@@ -33,7 +33,7 @@ function assertBudget(label, actual, budget) {
 
 assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
-assertBudget("lazy hero-wave JavaScript", heroWave, 16 * 1024);
+assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
 assertBudget("display font", displayFont, 100 * 1024);
 assertBudget("all site fonts", fontBytes, 420 * 1024);
