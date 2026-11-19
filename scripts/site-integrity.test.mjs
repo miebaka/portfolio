@@ -592,3 +592,16 @@ test("every published case chapter can reveal and reduced motion stays readable"
   assert.match(reveals, /prefers-reduced-motion: reduce/);
   assert.doesNotMatch(reveals, /\.case-page--tedx \.case-chapter/);
 });
+
+test("Experiments has a complete, navigable and image-rich no-JS gallery", async () => {
+  const manifest = JSON.parse(await readFile(join(root,"assets","experiments","metadata.json"),"utf8"));
+  for (const directory of [root,dist]) {
+    const page = await readFile(join(directory,"experiments.html"),"utf8");
+    assert.match(page, /<noscript><section class="experiments-static"/);
+    for (const destination of ["work.html","about.html","essays.html","contact.html"])
+      assert.match(page, new RegExp('href="' + destination + '"'));
+    for (const file of Object.keys(manifest))
+      assert.ok(page.includes(encodeURIComponent(file)), "Missing static experiment: " + file);
+    assert.equal((page.match(/class="experiments-static__meta"/g)||[]).length, Object.keys(manifest).length);
+  }
+});
