@@ -20,8 +20,8 @@ body[data-page="home"] .service-stack {
   list-style:none;margin:0;padding:0;display:block;
 }
 body[data-page="home"] .service-stack__item {
-  position:sticky;top:calc(var(--nav-h) + 1rem + var(--stack-index)*.85rem);
-  z-index:calc(10 + var(--stack-index));display:block;min-height:0;margin:0 0 clamp(3rem,9vh,7rem);
+  position:sticky;top:calc(var(--nav-h) + 1rem + var(--stack-index, 0)*.85rem);
+  z-index:calc(10 + var(--stack-index, 0));display:block;min-height:0;margin:0 0 clamp(3rem,9vh,7rem);
   padding:0;background:transparent;border:0;box-shadow:none;
 }
 body[data-page="home"] .service-stack__card {
@@ -88,7 +88,7 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
 @media(max-width:48rem){
   body[data-page="home"] .home-capabilities--reference {padding-inline:var(--page);padding-bottom:5rem}
   body[data-page="home"] .service-stack__item {
-    top:calc(var(--nav-h) + .3rem + var(--stack-index)*.35rem);
+    top:calc(var(--nav-h) + .3rem + var(--stack-index, 0)*.35rem);
     margin-bottom:clamp(2rem,6vh,4rem);
   }
   body[data-page="home"] .service-stack__card {
