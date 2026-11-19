@@ -54,7 +54,7 @@ test("Work archive separates published cases from work in progress", () => {
   assert.equal((html.match(/class="project-archive__media"/g) || []).length, 3);
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
-  assert.match(html, /href="explorations\.html"/);
+  assert.match(html, /href="experiments\.html"/);
   assert.match(html, /href="essays\.html"/);
   assert.match(html, /“Pause…” became the organising idea inside TEDx’s fixed global identity\./);
 });
@@ -165,7 +165,7 @@ test("Experiments ships a readable archive and the retired route points to it", 
 
   const playground = await readFile(join(dist, "community.html"), "utf8");
   assert.match(playground, /<h1[^>]*>Experiments have moved\.<\/h1>/);
-  assert.match(playground, /href="explorations\.html"/);
+  assert.match(playground, /href="experiments\.html"/);
   assert.match(playground, /name="robots" content="noindex,follow"/);
 });
 
