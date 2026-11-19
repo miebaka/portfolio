@@ -133,10 +133,12 @@ export function mountHeroWave(host, initialState) {
     state={...state,...next};
     const colors=state.colors||FALLBACK_COLORS;
     const dark=state.theme==="dark";
-    uniforms.uFloor.value.copy(colorToVec3(colors[0],FALLBACK_COLORS[0]));
-    uniforms.uDepth.value.copy(colorToVec3(colors[1],FALLBACK_COLORS[1]));
-    uniforms.uLight.value.copy(colorToVec3(colors[2],FALLBACK_COLORS[2]));
-    uniforms.uTransmission.value=dark?.20:1.25;
+    // Light changes the water optics, not merely a CSS filter: shallow water
+    // transmits considerably more of the refracted sun than deep-night water.
+    uniforms.uFloor.value.copy(dark ? colorToVec3(colors[0],FALLBACK_COLORS[0]) : new Vector3(.018,.12,.27));
+    uniforms.uDepth.value.copy(dark ? colorToVec3(colors[1],FALLBACK_COLORS[1]) : new Vector3(.009,.06,.16));
+    uniforms.uLight.value.copy(dark ? colorToVec3(colors[2],FALLBACK_COLORS[2]) : new Vector3(.64,.88,1.));
+    uniforms.uTransmission.value=dark?.18:1.35;
     uniforms.uMotion.value=state.animate?1:0;
     host.dataset.waterTheme=dark?"dark":"light";
     render();
