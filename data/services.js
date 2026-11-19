@@ -2,6 +2,8 @@
 export const services = [
   {
     "id": "brand-identity",
+    "discipline": "Creative strategy",
+    "cover": "tedx-rsu-campus-banner",
     "title": "Find the governing decision",
     "description": "Turn an unclear brief into one decision that can guide the work.",
     "outputs": "Positioning, messaging principles and a focused creative brief.",
@@ -11,6 +13,8 @@ export const services = [
   },
   {
     "id": "brand-strategy",
+    "discipline": "Identity design",
+    "cover": "rivo-in-use",
     "title": "Build the identity system",
     "description": "Translate that decision into a recognisable, usable visual language.",
     "outputs": "Identity direction, visual systems and practical guidelines.",
@@ -20,6 +24,8 @@ export const services = [
   },
   {
     "id": "visual-graphic-design",
+    "discipline": "Visual & graphic design",
+    "cover": "chopbox-packaging",
     "title": "Make it survive production",
     "description": "Test the system in the formats, constraints and handoffs it must endure.",
     "outputs": "Campaign systems, editorial layouts, packaging and production files.",
@@ -29,6 +35,8 @@ export const services = [
   },
   {
     "id": "art-direction",
+    "discipline": "Art direction",
+    "cover": "tedx-rsu-logomark",
     "title": "Direct the rollout",
     "description": "Keep many assets, makers and channels inside one coherent world.",
     "outputs": "Creative direction, image language and production guidance.",
@@ -38,6 +46,8 @@ export const services = [
   },
   {
     "id": "print-production-design",
+    "discipline": "Production systems",
+    "cover": "rivo-wordmark",
     "title": "Hand over a usable system",
     "description": "Leave the team with clear tools, files and rules they can keep using.",
     "outputs": "Practical guidelines, production files and implementation support.",
