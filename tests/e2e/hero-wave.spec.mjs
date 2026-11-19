@@ -36,3 +36,23 @@ test("hero proof and client proof remain visible", async ({ page }) => {
   await page.locator(".journey").scrollIntoViewIfNeeded();
   await expect(page.locator(".marquee__item").first()).toBeVisible();
 });
+
+test("caustic animation can be paused and resumed without removing the canvas", async ({ page }) => {
+  await page.goto("/?shader-test=1");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveClass(/is-ready/);
+  const control = page.getByRole("button", { name: "Pause background motion" });
+  await expect(control).toBeVisible();
+  await control.click();
+  await expect(page.getByRole("button", { name: "Resume background motion" })).toHaveAttribute("aria-pressed", "true");
+  await expect(wave.locator("canvas")).toHaveCount(1);
+  await page.getByRole("button", { name: "Resume background motion" }).click();
+  await expect(page.getByRole("button", { name: "Pause background motion" })).toHaveAttribute("aria-pressed", "false");
+});
+
+test("system reduced-motion preference suppresses the motion toggle", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/?shader-test=1");
+  await expect(page.locator("[data-hero-wave]")).toHaveClass(/is-ready/);
+  await expect(page.locator(".hero-wave__control")).toBeHidden();
+});
