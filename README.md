@@ -9,6 +9,8 @@ as well as the engineering contract.
 
 ## Run it
 
+**Runtime:** Node.js **24 LTS** (`.nvmrc`, `package.json` engines and GitHub Actions share the same major). Run `nvm use` before `npm ci`. Vercel currently uses Node.js 24.x for builds and functions. A runtime upgrade does not replace accessibility, security or performance checks.
+
 Install dependencies once, then use the project development command:
 
 ```bash
