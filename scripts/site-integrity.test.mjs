@@ -275,7 +275,7 @@ test("hero wave keeps a bounded, native WebGL contract", async () => {
   for (const contract of [
     /getContext\("webgl"/, /gl\.createShader/, /gl\.drawArrays/,
     /uniform2fv/, /uniform3fv/, /const shouldAnimate=\(\)=>state\.animate&&!softwareRenderer&&visible&&!document\.hidden/,
-    /FRAME_MS=1000\/24/, /IntersectionObserver/, /ResizeObserver/,
+    /FRAME_MS=1000\/24/, /FRAGMENT_SOFTWARE/, /softwareRenderer \? FRAGMENT_SOFTWARE : FRAGMENT/, /IntersectionObserver/, /ResizeObserver/,
     /deleteBuffer/, /deleteProgram/, /WEBGL_lose_context/,
   ]) assert.match(island, contract);
   assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
