@@ -1,8 +1,16 @@
 import { basePath, escapeHTML as esc, safeURL } from "../utilities/dom.js";
 
-const mediaMarkup = (entry, base) => entry.type === "video"
-  ? `<video src="${base}assets/experiments/${encodeURIComponent(entry.file)}" muted playsinline loop preload="metadata" aria-label="${esc(entry.title)}"></video>`
-  : `<img src="${base}assets/experiments/${encodeURIComponent(entry.file)}" alt="${esc(entry.alt || entry.title)}" loading="eager" decoding="async">`;
+// Only authored media filenames may enter an asset URL; never allow path segments.
+const validMediaFile = file => typeof file === "string" &&
+  /^[^/\\\\\\x00-\\x1f]+\\.(?:avif|webp|jpe?g|png|gif|mp4|webm)$/i.test(file);
+
+export const renderExperimentMediaMarkup = (entry, base = "", index = 0) => {
+  if (!validMediaFile(entry?.file)) return "";
+  const source = base + "assets/experiments/" + encodeURIComponent(entry.file);
+  return entry.type === "video"
+    ? `<video src="${source}" muted playsinline loop preload="metadata" aria-label="${esc(entry.title)}"></video>`
+    : `<img src="${source}" alt="${esc(entry.alt || entry.title)}" loading="${index < 2 ? "eager" : "lazy"}" decoding="async">`;
+};
 
 export async function initExperimentsSpatial() {
   const root = document.querySelector("[data-experiments-spatial]");
@@ -24,6 +32,9 @@ export async function initExperimentsSpatial() {
     const response = await fetch(`${base}assets/experiments/manifest.json`);
     if (response.ok) entries = await response.json();
   } catch {}
+  if (Array.isArray(entries)) entries = entries.filter(entry =>
+    entry && validMediaFile(entry.file) && typeof entry.title === "string" &&
+    (entry.type === "image" || entry.type === "video"));
   if (!Array.isArray(entries) || !entries.length) {
     status.textContent = "Experiments could not be loaded.";
     return;
@@ -32,11 +43,12 @@ export async function initExperimentsSpatial() {
   stage.innerHTML = entries.map((entry, index) => {
     const tag = entry.href ? "a" : entry.type === "video" ? "button" : "figure";
     const attrs = entry.href ? ` href="${safeURL(entry.href)}"` : entry.type === "video" ? ` type="button"` : ` tabindex="0"`;
-    return `<${tag} class="experiment-poster"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${mediaMarkup(entry, base)}</span><span class="experiment-poster__label"><b>${esc(entry.title)}</b><i>${String(index + 1).padStart(2, "0")}</i></span></${tag}>`;
+    return `<${tag} class="experiment-poster"${attrs} style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${renderExperimentMediaMarkup(entry, base, index)}</span><span class="experiment-poster__label"><b>${esc(entry.title)}</b><i>${String(index + 1).padStart(2, "0")}</i></span></${tag}>`;
   }).join("");
 
   const cards = [...stage.querySelectorAll("[data-experiment-card]")];
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reducedMotion = () => document.documentElement.dataset.motion === "reduced" ||
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
   let position = 0;
   let target = 0;
   let frame = 0;
@@ -54,6 +66,11 @@ export async function initExperimentsSpatial() {
       card.style.setProperty("--offset", offset.toFixed(3));
       card.style.setProperty("--distance", Math.min(distance, 5).toFixed(3));
       const active = distance < .5;
+      // Wake just the selected poster and its neighbors; the rest remain lazy.
+      if (distance < 1.6) {
+        const image = card.querySelector("img");
+        if (image) image.loading = "eager";
+      }
       card.toggleAttribute("data-active", active);
       card.setAttribute("aria-hidden", distance > 3 ? "true" : "false");
       card.tabIndex = active ? 0 : -1;
@@ -62,12 +79,12 @@ export async function initExperimentsSpatial() {
         if (title) title.textContent = card.dataset.title;
         if (caption) caption.textContent = card.dataset.title;
         if (counter) counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+        status.textContent = `${card.dataset.title}, ${index + 1} of ${cards.length}`;
       }
     });
-    status.textContent = `${cards[activeIndex]?.dataset.title || "Experiment"}, ${activeIndex + 1} of ${cards.length}`;
   };
   const animate = () => {
-    position += (target - position) * (reduced ? 1 : .09);
+    position += (target - position) * (reducedMotion() ? 1 : .09);
     paint();
     if (Math.abs(target - position) > .001) frame = requestAnimationFrame(animate);
   };
@@ -95,7 +112,7 @@ export async function initExperimentsSpatial() {
   });
   viewport.addEventListener("pointerdown", event => { dragging = { x: event.clientX, target, time: performance.now(), lastX: event.clientX, velocity: 0 }; viewport.classList.add("is-dragging"); viewport.setPointerCapture(event.pointerId); });
   viewport.addEventListener("pointermove", event => { if (dragging) { const now = performance.now(); const elapsed = Math.max(1, now - dragging.time); dragging.velocity = (dragging.lastX - event.clientX) / elapsed; dragging.lastX = event.clientX; dragging.time = now; target = dragging.target + (dragging.x - event.clientX) / Math.max(180, innerWidth * .3); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); } });
-  const release = () => { if (!dragging) return; target = Math.round(target + dragging.velocity * 1.8); dragging = null; viewport.classList.remove("is-dragging"); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); };
+  const release = () => { if (!dragging) return; target = Math.round(target + (reducedMotion() ? 0 : dragging.velocity * 1.8)); dragging = null; viewport.classList.remove("is-dragging"); cancelAnimationFrame(frame); frame = requestAnimationFrame(animate); };
   viewport.addEventListener("pointerup", release);
   viewport.addEventListener("pointercancel", release);
   cards.forEach((card, index) => {
