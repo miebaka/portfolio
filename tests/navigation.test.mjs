@@ -4,6 +4,8 @@ import { createIndexController } from "../js/core/navigation.js";
 import { renderIndexMarkup } from "../js/render/navigation.js";
 import { navigation } from "../data/navigation.js";
 import { renderFooter } from "../js/render/footer.js";
+import { createFooterSignatureController } from "../js/core/footer-signature.js";
+import { renderExperimentMediaMarkup } from "../js/render/experiments.js";
 
 class Element extends EventTarget {
   constructor(document) {
@@ -111,4 +113,59 @@ test("Print and Screen remain explicit in the accessible Index preferences", () 
   assert.match(html, /<legend>Theme<\/legend>/);
   assert.match(html, /data-theme-choice="light"[^>]*aria-pressed="false">Print/);
   assert.match(html, /data-theme-choice="dark"[^>]*aria-pressed="false">Screen/);
+});
+
+
+test("footer dot matrix respects reduced motion, visibility and cleanup", () => {
+  const document = new Element(null);
+  document.ownerDocument = document;
+  document.documentElement = { dataset: { motion: "reduced" } };
+  document.defaultView = { location: { search: "" }, matchMedia: () => ({ matches: false }) };
+  document.hidden = false;
+  let observer, created = 0, started = 0, stopped = 0, staticCount = 0, destroyed = 0;
+  class Observer {
+    constructor(callback) { observer = callback; }
+    observe() {}
+    disconnect() {}
+  }
+  const controller = createFooterSignatureController({}, {
+    document,
+    IntersectionObserver: Observer,
+    enhance: () => {
+      created++;
+      return {
+        start() { started++; },
+        stop() { stopped++; },
+        static() { staticCount++; },
+        destroy() { destroyed++; },
+      };
+    }
+  });
+  observer([{ isIntersecting: true }]);
+  assert.equal(created, 0, "reduced motion keeps the native SVG fallback");
+  document.documentElement.dataset.motion = "full";
+  document.dispatchEvent(new Event("visibilitychange"));
+  assert.equal(created, 1);
+  assert.equal(started, 1);
+  document.documentElement.dataset.motion = "reduced";
+  document.dispatchEvent(new Event("visibilitychange"));
+  assert.equal(staticCount, 1);
+  document.hidden = true;
+  document.documentElement.dataset.motion = "full";
+  document.dispatchEvent(new Event("visibilitychange"));
+  assert.ok(stopped > 0);
+  controller.destroy();
+  assert.equal(destroyed, 1);
+});
+
+test("experiment posters validate filenames, encode assets, and defer later images", () => {
+  const entry = { file: "#264 (Wada Sanzō).webp", type: "image", title: "Study", alt: "<study>" };
+  const first = renderExperimentMediaMarkup(entry, "", 0);
+  const later = renderExperimentMediaMarkup(entry, "", 4);
+  assert.match(first, /loading="eager"/);
+  assert.match(later, /loading="lazy"/);
+  assert.match(first, /%23264%20/);
+  assert.match(first, /alt="&lt;study&gt;"/);
+  for (const file of ["../foo.webp", "/foo.png", "folder\\foo.jpg", "photo.svg", "foo.webp?javascript:alert(1)"])
+    assert.equal(renderExperimentMediaMarkup({ ...entry, file }), "", file);
 });
