@@ -210,10 +210,9 @@ test("public service names are concrete disciplines backed by real published cha
     assert.ok(anchor, `${service.id} needs an explicit evidence chapter`);
     const slug = file.replace(/^work\//, "").replace(/\.html$/, "");
     const source = (await import("../data/case-studies.js")).caseStudies;
-    const record = source.find(entry => entry.slug === slug);
+    const record = source[slug];
     assert.ok(record, `${service.id} references a published case`);
-    assert.ok(JSON.stringify(record).includes(`"id":"${anchor}"`) ||
-      JSON.stringify(record).includes(`"id": "${anchor}"`),
+    assert.ok(record.chapters?.some(chapter => chapter.id === anchor),
       `${service.id} links to a real chapter`);
   }
   const markup = renderServiceSwatchesMarkup(services);
