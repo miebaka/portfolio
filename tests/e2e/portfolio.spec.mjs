@@ -399,6 +399,17 @@ test("client marquee runs without an unnecessary pause control", async ({ page }
   await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "playing");
 });
 
+test("client marquee responds to the site motion preference immediately", async ({ page }) => {
+  await page.goto("/index.html");
+  const marquee = page.locator(".client-marquee");
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
+  await page.evaluate(() => document.documentElement.dataset.motion = "reduced");
+  await expect(marquee).toHaveAttribute("data-marquee-state", "paused");
+  await page.evaluate(() => document.documentElement.dataset.motion = "full");
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
+});
+
 test("@a11y explicit focus and field descriptions", async ({ page }) => {
   await page.goto("/contact.html");
   await page.keyboard.press("Tab");

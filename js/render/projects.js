@@ -176,16 +176,28 @@ export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
   const Observer =
     deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
-  const reducedMotion = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches || false;
-  let visible = !Observer,
-    destroyed = false;
+  const AttrObserver =
+    deps.MutationObserver === undefined ? doc.defaultView?.MutationObserver : deps.MutationObserver;
+  const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
+  let visible = !Observer;
+  let destroyed = false;
+
+  const isReduced = () => {
+    const chosen = doc.documentElement?.dataset.motion;
+    return chosen === "reduced" || (chosen !== "full" && Boolean(motionQuery?.matches));
+  };
   const sync = () => {
-    const running = !reducedMotion && !destroyed && visible && !doc.hidden;
+    const running = !isReduced() && !destroyed && visible && !doc.hidden;
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
   };
   const onVisibility = () => sync();
   doc.addEventListener("visibilitychange", onVisibility);
+  motionQuery?.addEventListener?.("change", onVisibility);
+  const preferences = AttrObserver && doc.documentElement
+    ? new AttrObserver(sync)
+    : null;
+  preferences?.observe(doc.documentElement, { attributes: true, attributeFilter: ["data-motion"] });
   const observer = Observer
     ? new Observer(
         ([entry]) => {
@@ -202,6 +214,8 @@ export function createMarqueeController(root, deps = {}) {
       if (destroyed) return;
       destroyed = true;
       observer?.disconnect();
+      preferences?.disconnect();
+      motionQuery?.removeEventListener?.("change", onVisibility);
       doc.removeEventListener("visibilitychange", onVisibility);
       sync();
     },
