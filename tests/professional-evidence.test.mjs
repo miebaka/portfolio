@@ -15,7 +15,7 @@ import {
   renderCvMarkup,
 } from "../js/render/sections.js";
 import { renderIndexMarkup } from "../js/render/navigation.js";
-import { renderHomeProjectList } from "../js/render/projects.js";
+import { renderHomeProjectList, renderProjectArchiveMarkup } from "../js/render/projects.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 import { assertValidContent } from "../scripts/validate-content.mjs";
 
