@@ -289,31 +289,6 @@ body[data-page="home"] .service-journey {
   background: var(--ref-midnight) center/cover no-repeat;
   color: var(--ref-paper);
 }
-body[data-page="home"] .service-journey--brand-identity {
-  background-image:
-    linear-gradient(0deg, color-mix(in srgb, var(--ref-midnight) 92%, transparent), transparent),
-    url("../assets/images/optimized/rivo-in-use-1080.webp");
-}
-body[data-page="home"] .service-journey--brand-strategy {
-  background-image:
-    linear-gradient(0deg, color-mix(in srgb, var(--ref-midnight) 92%, transparent), transparent),
-    url("../assets/images/optimized/chopbox-platter-1080.webp");
-}
-body[data-page="home"] .service-journey--visual-graphic-design {
-  background-image:
-    linear-gradient(0deg, color-mix(in srgb, var(--ref-midnight) 92%, transparent), transparent),
-    url("../assets/images/optimized/tedx-rsu-campus-banner-1080.webp");
-}
-body[data-page="home"] .service-journey--art-direction {
-  background-image:
-    linear-gradient(0deg, color-mix(in srgb, var(--ref-midnight) 92%, transparent), transparent),
-    url("../assets/images/optimized/miebaka-joshua-profile-1200.webp");
-}
-body[data-page="home"] .service-journey--print-production-design {
-  background-image:
-    linear-gradient(0deg, color-mix(in srgb, var(--ref-midnight) 92%, transparent), transparent),
-    url("../assets/images/optimized/rivo-guidelines-1080.webp");
-}
 body[data-page="home"] .service-journey a {
   display: grid;
   grid-template-columns: 2.5rem 1fr auto;
