@@ -482,7 +482,7 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
 .experiments-spatial__hint{position:fixed;z-index:12;left:50%;bottom:max(1.5rem,var(--safe-bottom));margin:0;padding:.72rem 1rem .68rem;border:1px solid color-mix(in srgb,var(--ref-near-black) 20%,transparent);border-radius:99px;background:color-mix(in srgb,var(--ref-paper) 78%,transparent);box-shadow:0 .5rem 2rem color-mix(in srgb,var(--ref-black) 8%,transparent);font:500 .8125rem/1 var(--label);letter-spacing:.1em;white-space:nowrap;pointer-events:none;transform:translateX(-50%);backdrop-filter:blur(12px);transition:opacity 280ms ease}
 .experiments-spatial.has-interacted .experiments-spatial__hint{opacity:0}
 .no-js .experiments-spatial{min-height:auto;padding:var(--section-padding) var(--page);background:var(--paper);color:var(--ink)}
-.no-js .experiments-spatial__viewport{height:auto;overflow:visible}
+.no-js .experiments-spatial__viewport{display:none}
 .no-js .experiments-spatial__stage{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;width:auto;height:auto;transform:none}
 .no-js .experiment-tunnel__card{position:static;width:auto;transform:none;opacity:1;visibility:visible}
 .no-js .experiments-spatial__hint{display:none}
@@ -1373,10 +1373,8 @@ html[data-motion="reduced"] body[data-page="work"] .project-archive__preview-fra
 }
 
 /* Experiments: a fully accessible, meaningful gallery when JavaScript is disabled. */
-.no-js .experiments-spatial__viewport,
 .no-js .experiments-controls,
 .no-js .experiments-spatial__caption,
-.no-js .experiments-spatial__hint,
 .no-js .experiments-nav button {display:none}
 .experiments-static {position:relative;max-width:var(--content);margin-inline:auto;padding:clamp(2rem,5vw,5rem) var(--page) clamp(4rem,8vw,8rem);color:var(--ref-near-black)}
 .experiments-static__nav {display:flex;flex-wrap:wrap;gap:clamp(1rem,3vw,3rem);margin-bottom:clamp(3rem,6vw,6rem);padding-block:1rem;border-block:1px solid var(--ref-near-black)}
