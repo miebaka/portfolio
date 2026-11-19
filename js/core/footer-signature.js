@@ -12,7 +12,7 @@ function enhanceFooterSignature(host) {
   const context = canvas.getContext("2d");
   if (!context) return;
   const pointer = { x: -9999, y: -9999, active: false };
-  let points = [], width = 0, height = 0, frame = 0, running = false, generation = 0;
+  let points = [], width = 0, height = 0, frame = 0, running = false, enabled = false, generation = 0;
   let restColor = "rgba(255,255,255,.48)", activeColor = "rgba(255,160,143,.92)";
 
   const loadImage = () => new Promise((resolve, reject) => {
@@ -61,6 +61,7 @@ function enhanceFooterSignature(host) {
   function draw() {
     if (!running) return;
     context.clearRect(0, 0, width, height);
+    let unsettled = false;
     for (const point of points) {
       const dx = point.x - pointer.x;
       const dy = point.y - pointer.y;
@@ -77,10 +78,12 @@ function enhanceFooterSignature(host) {
       point.vy *= .79;
       point.x += point.vx;
       point.y += point.vy;
+      unsettled ||= Math.abs(point.x - point.homeX) > .12 || Math.abs(point.y - point.homeY) > .12;
       context.fillStyle = proximity > .08 ? activeColor : restColor;
       const size = DOT + proximity * 1.8;
       context.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     }
+    if (!pointer.active && !unsettled) { running = false; drawStatic(); return; }
     frame = requestAnimationFrame(draw);
   }
   function drawStatic() {
@@ -88,15 +91,17 @@ function enhanceFooterSignature(host) {
     context.fillStyle = restColor;
     for (const point of points) context.fillRect(point.homeX - DOT / 2, point.homeY - DOT / 2, DOT, DOT);
   }
-  const start = () => { if (!running) { running = true; frame = requestAnimationFrame(draw); } };
-  const stop = () => { running = false; cancelAnimationFrame(frame); };
+  const wake = () => { if (enabled && !running) { running = true; frame = requestAnimationFrame(draw); } };
+  const start = () => { enabled = true; canvas.hidden = false; drawStatic(); if (pointer.active) wake(); };
+  const stop = () => { enabled = false; running = false; pointer.active = false; cancelAnimationFrame(frame); };
   const onPointerMove = event => {
     const rect = host.getBoundingClientRect();
     pointer.x = event.clientX - rect.left;
     pointer.y = event.clientY - rect.top;
     pointer.active = true;
+    wake();
   };
-  const onPointerLeave = () => { pointer.active = false; };
+  const onPointerLeave = () => { pointer.active = false; wake(); };
   const resizeObserver = new ResizeObserver(rebuild);
   const mutationObserver = new MutationObserver(rebuild);
   host.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -105,7 +110,7 @@ function enhanceFooterSignature(host) {
   mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   rebuild();
   return {
-    start() { canvas.hidden = false; start(); },
+    start() { start(); },
     stop() { stop(); canvas.hidden = true; context.clearRect(0, 0, width, height); },
     static() { stop(); canvas.hidden = false; drawStatic(); },
     destroy() {
@@ -116,26 +121,44 @@ function enhanceFooterSignature(host) {
   };
 }
 
-export function createFooterSignatureController(host, { document: doc = document, enhance = enhanceFooterSignature, IntersectionObserver: Observer = globalThis.IntersectionObserver } = {}) {
+export function createFooterSignatureController(host, {
+  document: doc = document,
+  enhance = enhanceFooterSignature,
+  IntersectionObserver: Observer = globalThis.IntersectionObserver,
+} = {}) {
   let enhanced, visible = false, destroyed = false;
+  const root = doc.documentElement;
   const forceStatic = doc.defaultView?.location?.search.includes("visual-static=1") || false;
+  const reducedQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
+  const reduced = () => root?.dataset.motion === "reduced" ||
+    (root?.dataset.motion !== "full" && reducedQuery?.matches === true);
   const sync = () => {
     if (destroyed) return;
+    // Leave the authored SVG fallback intact when motion is reduced before first paint.
+    if (!enhanced && (!visible || forceStatic || reduced())) return;
     enhanced ||= enhance(host);
-    if (forceStatic) { enhanced?.static?.(); return; }
+    if (forceStatic || reduced()) { enhanced?.static?.(); return; }
     if (visible && !doc.hidden) enhanced?.start(); else enhanced?.stop();
   };
   const onVisibility = () => sync();
   if (!Observer) return { destroy() {} };
   doc.addEventListener("visibilitychange", onVisibility);
   const observer = new Observer(([entry]) => { visible = Boolean(entry?.isIntersecting); sync(); }, { threshold: .01 });
+  const motionObserver = root && typeof MutationObserver !== "undefined"
+    ? new MutationObserver(sync) : null;
+  motionObserver?.observe(root, { attributes: true, attributeFilter: ["data-motion"] });
+  reducedQuery?.addEventListener?.("change", sync);
   observer.observe(host);
-  sync();
   return {
     destroy() {
-      if (destroyed) return; destroyed = true; observer.disconnect();
+      if (destroyed) return;
+      destroyed = true;
+      observer.disconnect();
+      motionObserver?.disconnect();
+      reducedQuery?.removeEventListener?.("change", sync);
       doc.removeEventListener("visibilitychange", onVisibility);
-      enhanced?.destroy(); enhanced = null;
+      enhanced?.destroy();
+      enhanced = null;
     }
   };
 }

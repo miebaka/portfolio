@@ -578,7 +578,7 @@ Site destinations, relevant social links, privacy, and the name-shaped signature
 
 #### Confirmed bug to repair
 
-Current JS binds pointer movement to `.site-footer__signature-canvas`, while shared CSS assigns `pointer-events: none` to that canvas. This means the intended pointer interaction may never fire. Bind pointer events to the signature **host**, calculate coordinates relative to the host, and keep the canvas as a non-interactive visual layer. Confirm the canvas does not block footer links.
+**Implemented contract:** pointer movement belongs to the `.site-footer__signature` host; the canvas stays non-interactive (`pointer-events:none`) so it never blocks links. The controller defers enhancement until visible, stops at rest, supports reduced-motion fallbacks and cleans up on pagehide. Any future refactor MUST preserve those behaviors.
 
 #### Motion/graphics behavior
 
@@ -965,7 +965,7 @@ Target **LCP ≤2.5s**, **CLS ≤0.1**, **INP ≤200ms** at the 75th percentile 
 
 ### 16.1 Approved stack
 
-Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based validation/build, Playwright, axe-core, Lighthouse CI, Three.js isolated to hero shader, Vercel deployment. **Do not migrate to React/Next.js/GSAP/Lenis merely to implement visual references.** Introduce dependencies only after a performance, maintenance and licensing evaluation.
+Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based validation/build, Playwright, axe-core, Lighthouse CI, lightweight native WebGL isolated to the optional hero shader, Vercel deployment. **Do not migrate to React/Next.js/GSAP/Lenis merely to implement visual references.** Introduce dependencies only after a performance, maintenance and licensing evaluation.
 
 ### 16.2 File ownership and boundaries
 
@@ -978,7 +978,7 @@ Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based va
 | CSS entry | `styles/main.css` | Preserve cascade order / imports |
 | Browser startup | `js/main.js` | Preserve clear render then behavior sequence |
 | HTML ↔ JS mount contract | `js/core/contract.js` | Register new mounts before using them |
-| Home projects/clients | `js/render/projects.js` | Correct hard-coded feature order, preserve marquee controller |
+| Home projects/clients | `js/render/projects.js` | Maintain data-driven featured ordering and preserve marquee controller |
 | Home services | `js/render/sections.js` | Keep data source, update category presentation |
 | Menu | `js/render/navigation.js`, `js/core/navigation.js` | Maintain a11y and route registry |
 | Preferences | `js/core/preferences.js` | Keep theme/motion handling centralized |
@@ -1152,7 +1152,7 @@ A release is blocked by: missing/broken project links; hidden critical mobile ev
 2. Fix canonical URL config to the approved Vercel host.
 3. Formalize shared typography, spacing, color and motion roles.
 4. Fix footer pointer-event conflict.
-5. Convert hard-coded homepage projects into data-driven featured ordering.
+5. Verify homepage projects continue using validated, data-driven featured ordering.
 6. Improve cross-route interaction-state contracts and reduce CSS specificity collisions.
 
 **Exit:** Site behavior at least as good as baseline, documented roles consistent, tests passing.
@@ -1254,7 +1254,7 @@ The following observations are from the `main` branch reviewed on 19 November 20
 | --- | --- | --- |
 | Seven Home sections exist already in intended order | `index.html` | Refine rather than recreate |
 | Hero frame scales from `.64` while radius and clip-path change | `styles/home.css` | Tune animation/avoid unnecessary composite cost |
-| Featured homepage work slugs are hard-coded | `js/render/projects.js` | Introduce validated editorial order in data |
+| Featured homepage order | `data/projects.js` / `js/render/projects.js` | Implemented using `featuredOrder`; keep tested and avoid future hard-coded slugs |
 | Project visual starts hidden by opacity and is entirely hidden on mobile | `styles/home.css` | Mobile must show meaningful project images |
 | Services titles describe process steps, not discipline categories | `data/services.js` | Adjust category/title hierarchy while retaining method detail |
 | Client marquee already duplicates logos and pauses by observer | `js/render/projects.js` | Preserve logic, refine control/optical treatment |

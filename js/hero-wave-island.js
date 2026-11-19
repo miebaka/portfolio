@@ -1,196 +1,135 @@
-import {
-  Clock,
-  Color,
-  MathUtils,
-  Mesh,
-  OrthographicCamera,
-  PlaneGeometry,
-  Scene,
-  ShaderMaterial,
-  SRGBColorSpace,
-  Vector2,
-  WebGLRenderer,
-} from "three";
+/* Minimal authored water-plane shader. Native WebGL replaces the entire
+   scene-graph dependency; the semantic HTML hero remains the fallback. */
+const MAX_AUTOPLAY_MS=2400, POINTER_WAKE_MS=650, FRAME_MS=1000/30;
+const VERTEX="attribute vec2 aPosition;\nvarying vec2 vUv;\nvoid main(){vUv = aPosition * .5 + .5; gl_Position = vec4(aPosition,0.,1.);}";
+const FRAGMENT="precision mediump float;\nuniform float uTime;\nuniform float uMotion;\nuniform vec2 uPointer;\nuniform vec2 uAspect;\nuniform vec3 uColorA;\nuniform vec3 uColorB;\nuniform vec3 uColorC;\nvarying vec2 vUv;\nvoid main() {\n vec2 p = (vUv - .5)*uAspect;\n float broad = sin(p.x*7.8+uTime*.43)*.38;\n float cross = sin(p.y*8.2-p.x*2.3-uTime*.31)*.26;\n float detail = sin((p.x+p.y)*18.+uTime*.20)*.07;\n float pointerLight = exp(-9.*distance(vUv,uPointer*.15+.5));\n float relief = (broad+cross+detail+pointerLight*.16)*uMotion;\n float fold = smoothstep(-.67,.67,relief);\n float sheen = pow(max(0.,1.-abs(relief)),6.)*.16;\n float edge = .10*(1.-smoothstep(0.,.6,distance(vUv,vec2(.55,.5))));\n vec3 color = mix(uColorA,uColorB,fold);\n color = mix(color,uColorC,clamp(sheen+edge+pointerLight*.12,0.,.32));\n gl_FragColor = vec4(color,1.);\n}";
 
-const MAX_AUTOPLAY_MS = 4800;
-const POINTER_WAKE_MS = 1200;
-
-const vertexShader = `
-uniform float uTime;
-uniform float uMotion;
-uniform vec2 uPointer;
-varying vec2 vUv;
-varying float vHeight;
-
-void main() {
-  vUv = uv;
-  vec3 p = position;
-  float t = uTime;
-  float broad = sin(p.x * 0.72 + t * 0.56) * 0.48;
-  float cross = sin(p.y * 1.04 - t * 0.42 + p.x * 0.22) * 0.28;
-  float detail = sin((p.x + p.y) * 1.75 + t * 0.34) * 0.10;
-  float pointerWave = exp(-4.2 * distance(uv, uPointer * 0.18 + 0.5)) * 0.32;
-  p.z = (broad + cross + detail + pointerWave) * uMotion;
-  vHeight = p.z;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-}
-`;
-
-const fragmentShader = `
-uniform vec3 uColorA;
-uniform vec3 uColorB;
-uniform vec3 uColorC;
-uniform vec2 uPointer;
-varying vec2 vUv;
-varying float vHeight;
-
-void main() {
-  float fold = smoothstep(-0.75, 0.75, vHeight);
-  float sheen = pow(1.0 - abs(vHeight), 5.0) * 0.30;
-  float pointerLight = exp(-5.0 * distance(vUv, uPointer * 0.12 + 0.5)) * 0.16;
-  vec3 colour = mix(uColorA, uColorB, fold);
-  colour = mix(colour, uColorC, clamp(sheen + pointerLight, 0.0, 0.42));
-  gl_FragColor = vec4(colour, 1.0);
-}
-`;
-
-const parseColor = (value, fallback) => {
-  try { return new Color(value || fallback); }
-  catch { return new Color(fallback); }
+const compile=(gl,type,source)=>{
+ const shader=gl.createShader(type);
+ gl.shaderSource(shader,source);
+ gl.compileShader(shader);
+ if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
+   const message=gl.getShaderInfoLog(shader)||"Shader compilation failed";
+   gl.deleteShader(shader);
+   throw new Error(message);
+ }
+ return shader;
+};
+const rgb=(value,fallback)=>{
+ const color=String(value||"").trim();
+ const hex=/^#([0-9a-f]{6})$/i.exec(color);
+ if(hex) return [0,2,4].map(index=>parseInt(hex[1].slice(index,index+2),16)/255);
+ const css=/^rgba?\(\s*(\d+)[ ,]+\s*(\d+)[ ,]+\s*(\d+)/i.exec(color);
+ return css?css.slice(1,4).map(channel=>Math.min(255,Number(channel))/255):fallback;
 };
 
-export function mountHeroWave(host, initialState) {
-  const renderer = new WebGLRenderer({
-    alpha: false,
-    antialias: true,
-    powerPreference: "high-performance",
-  });
-  renderer.outputColorSpace = SRGBColorSpace;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-  renderer.domElement.className = "hero-wave__canvas";
-  renderer.domElement.setAttribute("aria-hidden", "true");
-  host.append(renderer.domElement);
-
-  const scene = new Scene();
-  const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 20);
-  camera.position.set(0, 0, 6);
-
-  const geometry = new PlaneGeometry(14, 9, 112, 72);
-  const material = new ShaderMaterial({
-    vertexShader,
-    fragmentShader,
-    uniforms: {
-      uTime: { value: 0 },
-      uMotion: { value: 1 },
-      uPointer: { value: new Vector2(0, 0) },
-      uColorA: { value: new Color("#07112b") },
-      uColorB: { value: new Color("#002080") },
-      uColorC: { value: new Color("#b1c5ff") },
-    },
-  });
-  const mesh = new Mesh(geometry, material);
-  mesh.rotation.x = MathUtils.degToRad(-12);
-  mesh.rotation.z = MathUtils.degToRad(-8);
-  scene.add(mesh);
-
-  const pointerTarget = new Vector2();
-  const clock = new Clock(false);
-  let state = { ...initialState };
-  let frame = 0;
-  let elapsed = 0;
-  let wakeUntil = 0;
-  let visible = true;
-  let destroyed = false;
-  let readyResolve;
-  const ready = new Promise(resolve => { readyResolve = resolve; });
-
-  const setPalette = next => {
-    const palette = next.colors || [];
-    material.uniforms.uColorA.value.copy(parseColor(palette[0], "#07112b"));
-    material.uniforms.uColorB.value.copy(parseColor(palette[1], "#002080"));
-    material.uniforms.uColorC.value.copy(parseColor(palette[2], "#b1c5ff"));
-  };
-
-  const resize = () => {
-    const width = Math.max(1, host.clientWidth);
-    const height = Math.max(1, host.clientHeight);
-    const aspect = width / height;
-    const halfHeight = 4.5;
-    camera.left = -halfHeight * aspect;
-    camera.right = halfHeight * aspect;
-    camera.top = halfHeight;
-    camera.bottom = -halfHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height, false);
-    renderer.render(scene, camera);
-  };
-
-  const shouldAnimate = () => state.animate && visible && !document.hidden &&
-    (elapsed < MAX_AUTOPLAY_MS / 1000 || performance.now() < wakeUntil);
-
-  const renderFrame = () => {
-    frame = 0;
-    if (destroyed) return;
-    const delta = Math.min(clock.getDelta(), 0.05);
-    if (shouldAnimate()) elapsed += delta;
-    material.uniforms.uTime.value += delta;
-    material.uniforms.uMotion.value = MathUtils.damp(
-      material.uniforms.uMotion.value,
-      state.animate ? 1 : 0.72,
-      4,
-      delta,
-    );
-    material.uniforms.uPointer.value.lerp(pointerTarget, 1 - Math.exp(-delta * 5));
-    renderer.render(scene, camera);
-    if (shouldAnimate()) frame = requestAnimationFrame(renderFrame);
-    else clock.stop();
-  };
-
-  const requestRender = () => {
-    if (destroyed || frame || !visible || document.hidden) return;
-    clock.start();
-    frame = requestAnimationFrame(renderFrame);
-  };
-
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(host);
-  const intersectionObserver = new IntersectionObserver(([entry]) => {
-    visible = Boolean(entry?.isIntersecting);
-    if (visible) requestRender();
-    else if (frame) { cancelAnimationFrame(frame); frame = 0; clock.stop(); }
-  }, { threshold: 0.01 });
-  intersectionObserver.observe(host);
-
-  setPalette(state);
-  resize();
-  renderer.render(scene, camera);
-  readyResolve();
-  requestRender();
-
-  return {
-    ready,
-    update(nextState) {
-      state = { ...state, ...nextState };
-      setPalette(state);
-      if (!state.animate) elapsed = MAX_AUTOPLAY_MS / 1000;
-      requestRender();
-    },
-    setPointer(x, y) {
-      pointerTarget.set(x, y);
-      if (state.animate) wakeUntil = performance.now() + POINTER_WAKE_MS;
-      requestRender();
-    },
-    destroy() {
-      if (destroyed) return;
-      destroyed = true;
-      if (frame) cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-      renderer.domElement.remove();
-    },
-  };
+export function mountHeroWave(host,initialState){
+ const canvas=document.createElement("canvas");
+ canvas.className="hero-wave__canvas";
+ canvas.setAttribute("aria-hidden","true");
+ const gl=canvas.getContext("webgl",{
+   alpha:false,antialias:false,depth:false,stencil:false,
+   preserveDrawingBuffer:true,powerPreference:"low-power",
+ });
+ if(!gl) throw new Error("WebGL is unavailable");
+ const vertex=compile(gl,gl.VERTEX_SHADER,VERTEX);
+ const fragment=compile(gl,gl.FRAGMENT_SHADER,FRAGMENT);
+ const program=gl.createProgram();
+ gl.attachShader(program,vertex);
+ gl.attachShader(program,fragment);
+ gl.linkProgram(program);
+ gl.deleteShader(vertex);
+ gl.deleteShader(fragment);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))
+   throw new Error(gl.getProgramInfoLog(program)||"Shader link failed");
+ gl.useProgram(program);
+ const buffer=gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+ const position=gl.getAttribLocation(program,"aPosition");
+ gl.enableVertexAttribArray(position);
+ gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
+ const names=["uTime","uMotion","uPointer","uAspect","uColorA","uColorB","uColorC"];
+ const uniforms=Object.fromEntries(names.map(name=>[name,gl.getUniformLocation(program,name)]));
+ host.append(canvas);
+ let state={...initialState},visible=true,destroyed=false,frame=0;
+ let elapsed=0,lastFrame=0,wakeUntil=0,pointer=[0,0],nextPointer=[0,0];
+ const palette=()=>{
+   const values=state.colors||[];
+   const fallbacks=[[7/255,17/255,43/255],[0,32/255,128/255],[177/255,197/255,1]];
+   ["uColorA","uColorB","uColorC"].forEach((name,index)=>{
+     gl.uniform3fv(uniforms[name],rgb(values[index],fallbacks[index]));
+   });
+ };
+ const draw=()=>{
+   if(destroyed)return;
+   gl.useProgram(program);
+   gl.uniform1f(uniforms.uTime,elapsed/1000);
+   gl.uniform1f(uniforms.uMotion,state.animate?1:.72);
+   gl.uniform2fv(uniforms.uPointer,pointer);
+   gl.uniform2fv(uniforms.uAspect,[canvas.width/canvas.height,1]);
+   palette();
+   gl.drawArrays(gl.TRIANGLES,0,6);
+ };
+ const resize=()=>{
+   if(destroyed)return;
+   const width=Math.max(1,Math.round(host.clientWidth));
+   const height=Math.max(1,Math.round(host.clientHeight));
+   if(canvas.width!==width||canvas.height!==height){
+     canvas.width=width;canvas.height=height;gl.viewport(0,0,width,height);
+   }
+   draw();
+ };
+ const shouldAnimate=()=>state.animate&&visible&&!document.hidden&&
+    (elapsed<MAX_AUTOPLAY_MS||performance.now()<wakeUntil);
+ const renderFrame=timestamp=>{
+   frame=0;
+   if(destroyed)return;
+   if(lastFrame&&timestamp-lastFrame<FRAME_MS){
+     frame=requestAnimationFrame(renderFrame);return;
+   }
+   const delta=lastFrame?Math.min(timestamp-lastFrame,50):FRAME_MS;
+   lastFrame=timestamp;
+   if(shouldAnimate())elapsed+=delta;
+   pointer=pointer.map((value,index)=>value+(nextPointer[index]-value)*.15);
+   draw();
+   if(shouldAnimate())frame=requestAnimationFrame(renderFrame);
+ };
+ const requestRender=()=>{
+   if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(renderFrame);
+ };
+ const resizeObserver=new ResizeObserver(resize);
+ resizeObserver.observe(host);
+ const intersectionObserver=new IntersectionObserver(([entry])=>{
+   visible=Boolean(entry?.isIntersecting);
+   if(visible)requestRender();
+   else if(frame){cancelAnimationFrame(frame);frame=0;lastFrame=0;}
+ },{threshold:.01});
+ intersectionObserver.observe(host);
+ resize();
+ requestRender();
+ return {
+   ready:Promise.resolve(),
+   update(next){
+     state={...state,...next};draw();
+     if(!state.animate&&frame){cancelAnimationFrame(frame);frame=0;}
+     if(state.animate)requestRender();
+   },
+   setPointer(x,y){
+     nextPointer=[x,y];
+     if(state.animate)wakeUntil=performance.now()+POINTER_WAKE_MS;
+     requestRender();
+   },
+   destroy(){
+     if(destroyed)return;
+     destroyed=true;
+     if(frame)cancelAnimationFrame(frame);
+     resizeObserver.disconnect();
+     intersectionObserver.disconnect();
+     gl.deleteBuffer(buffer);
+     gl.deleteProgram(program);
+     gl.getExtension("WEBGL_lose_context")?.loseContext();
+     canvas.remove();
+   },
+ };
 }

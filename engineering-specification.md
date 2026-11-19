@@ -52,7 +52,7 @@ Home has exactly this editorial order: **Landing → Selected Work → About Me 
 
 ## 2. Architecture: preserve the static-first system
 
-The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, optional Three.js shader island, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
+The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, optional native WebGL shader island, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
 
 - HTML contains meaningful first-render content, title/description/canonical/Open Graph metadata, landmarks, a single `h1`, skip link, navigation fallback and useful core page copy.
 - `data/site.js` composes separate content modules rather than duplicating authored content.
@@ -108,7 +108,7 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 **Landing:** Keep the semantic HTML hero independent of the shader. The framed opening MAY use scale/opacity animation; avoid animating layout sizes each frame. Maintain a fully legible static state while shader imports or WebGL initialization fail. A one-time reveal is not the same as scroll-driven expansion: document the desired trigger, start/end states, returning-visitor behavior and interruption rules before implementing. The hero must not delay LCP unnecessarily.
 
-**Selected Work:** Current `renderHomeProjectList` in `js/render/projects.js` hard-codes three slugs. Replace this with a validated editorial order (e.g., `featuredOrder`) driven by `data/projects.js` **while keeping published/case-ready filtering**. A featured item without a valid published case study must not render as a broken link. Preserve visual previews on touch/mobile: the current `styles/home.css` rule hides `.home-project-list__visual` below 48rem and contradicts the intended proof-first experience. Use actual project media and descriptive navigation labels; hover imagery must never be the sole visual proof.
+**Selected Work:** `renderHomeProjectList` uses `featuredOrder` from `data/projects.js`, filtering for complete published case studies. Do not regress to hard-coded slugs or broken links. Mobile and touch screens MUST retain visible project imagery; hover is enhancement, not the only way to see work.
 
 **About:** Use the optimized authored portrait, ensure correct dimensions/alt/crop and maintain readable biography with a working About link. Do not invent years of practice or achievements.
 
@@ -118,7 +118,7 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 **CTA:** Primary contact paths must be real working links or validated forms. A decorative CTA animation cannot block the email link. Ensure text wrapping and target size on phones.
 
-**Footer:** Retain the existing interactive name-shaped dot matrix. **Known implementation conflict:** `js/core/footer-signature.js` registers `pointermove` and `pointerleave` on its canvas, but `styles/components-v4.css` sets `.site-footer__signature-canvas { pointer-events:none }`. Move pointer listeners to the host or provide an equivalent event path without obscuring footer links. Keep a static visual fallback, proper lifecycle cleanup, viewport visibility pause, theme synchronization and reduced-motion behavior.
+**Footer:** Keep the interactive name-shaped dot matrix and its static SVG fallback. Pointer handlers are owned by the host while the canvas has `pointer-events:none`; do not reverse that architecture. Enhancement starts only when visible, rests when no interaction remains, stops in hidden/offscreen states and honors user/system reduced-motion settings. Keep lifecycle cleanup and theme synchronization tested.
 
 ### 4.3 Other chapter contracts
 
@@ -167,7 +167,7 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 
 1. Validate structured public content and local references.
 2. Rebuild the Experiments manifest.
-3. Build the Three.js hero-wave island.
+3. Build the lightweight native WebGL hero-wave island; do not add a scene-graph dependency unless a verified design requirement demands it.
 4. Generate `dist/` from the production allow-list.
 5. Prevent private documents, original working files, source maps and review artifacts from leaking into output.
 
@@ -262,7 +262,7 @@ A release is blocked by broken routes, inaccessible required navigation, dead pr
 ## 12. Implementation phases and dependency order
 
 1. **Reconcile documentation** — Commit the 19 November `DESIGN.md` v2.1.0, align this file, update README and resolve canonical configuration. Baseline existing tests and collect screenshots; don't claim new design is live yet.
-2. **Fix correctness first** — Repair footer canvas pointer handling, move homepage featured selection to structured data, and restore mobile work imagery. Add regression tests for each.
+2. **Preserve verified correctness** — Maintain the repaired footer pointer handling, data-driven featured work ordering and visible mobile imagery. Expand regression tests when those areas change.
 3. **Implement home reference lock** — Build framed hero, selected-work presentation, About, services, client marquee, CTA and footer in the required order. Centralize tokens and motion; no reference collage.
 4. **Propagate globally** — Work, case studies, About, Experiments, Essays, Contact, shared controls and navigation. Preserve content schemas and static fallbacks.
 5. **Prove and release** — Run automated quality suite, screenshot/interaction review, mobile/keyboard/reduced-motion audits, performance measurement, security inspection and live smoke checks.
@@ -295,9 +295,9 @@ A valid exception log records: **decision, owner, rationale, impacted pages, aff
 ## Appendix A — Known existing issues, not yet automatically fixed
 
 1. `data/site-config.js` contains `canonicalUrl: "https://miebaka-portfolio.vercel.app/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
-2. `js/render/projects.js` hard-codes featured slugs; implement validated ordering in data.
-3. `styles/home.css` hides Selected Work project previews on mobile; preserve meaningful media.
-4. Footer canvas pointer handlers currently target a `pointer-events:none` canvas; correct the event target and test it.
+2. Featured projects use `featuredOrder` in data; reject any regression to hard-coded renderer selection.
+3. Mobile Selected Work previews are visible; keep them accessible and meaningful.
+4. Footer host owns pointer handlers and the canvas is non-interactive; keep reduced-motion, idle and lifecycle tests.
 5. Homepage CSS and 800–1,200ms entrance animation need reconciliation with the earlier generic microinteraction duration guidance. Differentiate cinematic entrance vs routine feedback.
 6. `README.md` and checked-in `DESIGN.md` are not yet aligned to the new 19 November design constitution.
 7. The site-motion preference needs verification across CSS-only animation, marquee, shader and signature—system reduced motion and in-site preference must converge.

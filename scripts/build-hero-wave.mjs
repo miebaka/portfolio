@@ -19,4 +19,4 @@ await build({
   define: { "process.env.NODE_ENV": '"production"' },
 });
 const source = await readFile(outfile);
-console.log(`Built Three.js hero wave (${(source.byteLength / 1024).toFixed(1)} KiB).`);
+console.log(`Built native WebGL hero wave (${(source.byteLength / 1024).toFixed(1)} KiB).`);
