@@ -109,3 +109,14 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
 @media(prefers-reduced-motion:reduce) {
   body[data-page="home"] .service-stack__item {position:relative;top:auto;margin-bottom:1rem}
 }
+
+body[data-page="home"] .service-stack__item .service-journey__number {
+  position:static;display:inline;font:600 var(--type-label-m)/1 var(--label);margin-left:auto;
+}
+body[data-page="home"] .service-stack__item .service-stack__count {
+  margin-left:0;font:600 var(--type-label-m)/1 var(--label);
+}
+body[data-page="home"] .service-stack__evidence .service-journey__arrow {
+  display:inline;position:static;border:0;border-radius:0;
+  width:auto;height:auto;margin:0;transform:none;font-size:1rem;
+}
