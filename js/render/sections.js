@@ -4,17 +4,21 @@ import { escapeHTML as esc, safeURL, safeToken, mount, basePath } from "../utili
 import { MOUNT } from "../core/contract.js";
 
 export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
-  return '<ol class="service-journeys">' + items.map((service, index) => {
-    const cover = safeToken(service.cover);
-    const visual = cover ? '<span class="service-journey__image" aria-hidden="true"><picture>' +
-      '<source type="image/avif" srcset="assets/images/optimized/' + cover + '-540.avif 540w, assets/images/optimized/' + cover + '-1080.avif 1080w" sizes="(max-width: 64rem) 100vw, 50vw">' +
-      '<source type="image/webp" srcset="assets/images/optimized/' + cover + '-540.webp 540w, assets/images/optimized/' + cover + '-1080.webp 1080w" sizes="(max-width: 64rem) 100vw, 50vw">' +
-      '<img src="assets/images/optimized/' + cover + '-1080.webp" alt="" width="1080" height="810" loading="lazy" decoding="async"></picture></span>' : '';
-    return '<li class="service-journey service-journey--' + safeToken(service.id) + '"><a href="' + safeURL(service.evidenceHref) + '">' +
-      visual + '<span class="service-journey__number">' + String(index + 1).padStart(2, "0") + '</span>' +
-      '<div class="service-journey__copy"><span class="service-journey__discipline">' + esc(service.discipline || "") + '</span><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p><span class="service-journey__evidence">See the proof: ' + esc(service.evidenceLabel) + '</span></div>' +
-      '<span class="service-journey__arrow" aria-hidden="true">&#8599;</span></a></li>';
-  }).join('') + '</ol>';
+  // Stacked services, inspired by the user's supplied 16-second video.
+  // The source content and evidence links stay truthful and keyboard accessible.
+  const marks = ["✦", "✳", "◉", "❖", "▧"];
+  return '<ol class="service-journeys service-stack">' + items.map((service, index) => {
+    const outputs = String(service.outputs || "").split(",").map(value => value.trim()).filter(Boolean).slice(0, 4);
+    const tags = outputs.map(item => '<span class="service-stack__tag">' + esc(item) + '</span>').join("");
+    return '<li class="service-journey service-stack__item service-journey--' + safeToken(service.id) + '" style="--stack-index:' + index + '">' +
+      '<article class="service-stack__card">' +
+      '<div class="service-stack__heading"><span class="service-stack__symbol" aria-hidden="true">' + marks[index % marks.length] + '</span>' +
+      '<h3>' + esc(service.title) + '</h3><span class="service-journey__number" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><span class="service-stack__count" aria-hidden="true">/ ' + String(items.length).padStart(2, "0") + '</span></div>' +
+      '<div class="service-stack__bottom"><div class="service-stack__description"><p>' + esc(service.description) + '</p>' +
+      '<a class="service-stack__evidence service-journey__evidence" href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + ' <span class="service-journey__arrow" aria-hidden="true">↗</span></a></div>' +
+      '<div class="service-stack__tags" aria-label="Typical deliverables">' + tags + '</div></div>' +
+      '</article></li>';
+  }).join("") + '</ol>';
 }
 
 export function renderServiceFallbackMarkup(items = SITE.capabilities) {

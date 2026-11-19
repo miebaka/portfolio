@@ -1,178 +1,180 @@
-/* Three.js pool caustics: refracted sunlight focused by a deforming shallow-water surface.
-   Static CSS remains the fallback. No simulated fluid particles or postprocessing chain. */
-import { WebGLRenderer, Scene, OrthographicCamera, Mesh, PlaneGeometry, ShaderMaterial, Vector2, Vector3 } from "three";
-
-const VERTEX = [
-  "varying vec2 vUv;",
-  "void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",
+/* Persistent GPU shallow-water fluid with incompressible 2D Navier-Stokes
+   projection, Jacobi pressure solver, semi-Lagrangian advection, wave integration,
+   and water-to-air refraction caustic shading. Not a volumetric 3D simulation. */
+import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,ClampToEdgeWrapping,NoToneMapping} from "three";
+const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
+const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;";
+const advect=prefix+[
+ "uniform sampler2D velocity;",
+ "void main(){vec2 vel=texture2D(velocity,vUv).xy;",
+ "vec2 back=clamp(vUv-vel*dt*.6,texel,1.-texel);",
+ "vec2 carried=texture2D(velocity,back).xy*.995;",
+ "vec2 delta=vUv-cursor;float falloff=exp(-dot(delta,delta)*160.);",
+ "vec2 force=vec2(-delta.y,delta.x)*impulse*falloff*22.;",
+ "vec2 edge=smoothstep(vec2(0.),texel*3.,vUv)*smoothstep(vec2(0.),texel*3.,1.-vUv);",
+ "gl_FragColor=vec4((carried+force)*edge,0.,1.);}"
 ].join("\n");
-
-const FRAGMENT = [
-  "precision highp float;",
-  "varying vec2 vUv;",
-  "uniform float uTime;",
-  "uniform float uTransmission;",
-  "uniform float uMotion;",
-  "uniform vec2 uResolution;",
-  "uniform vec2 uPointer;",
-  "uniform vec3 uFloor;",
-  "uniform vec3 uDepth;",
-  "uniform vec3 uLight;",
-  "const float PI = 3.141592653589793;",
-  "float wave(vec2 p, float t) {",
-  "  float a = sin(dot(p,vec2(1.13,.62))*5.8 + t*.73);",
-  "  float b = sin(dot(p,vec2(-.58,1.20))*8.7 - t*.92);",
-  "  float c = sin(dot(p,vec2(.96,-.79))*13.4 + t*1.31);",
-  "  float d = sin(dot(p,vec2(-1.25,-.48))*18.2 - t*.48);",
-  "  return .070*a + .039*b + .022*c + .010*d;",
-  "}",
-  "vec2 gradient(vec2 p, float t) {",
-  "  const float h = .008;",
-  "  return vec2(wave(p+vec2(h,0.),t)-wave(p-vec2(h,0.),t),",
-  "              wave(p+vec2(0.,h),t)-wave(p-vec2(0.,h),t))/(2.*h);",
-  "}",
-  "vec2 refractedHit(vec2 p, float t) {",
-  "  vec2 g = gradient(p,t);",
-  "  vec3 normal = normalize(vec3(-g.x,-g.y,1.));",
-  "  vec3 sun = normalize(vec3(.26,.21,-1.));",
-  "  vec3 ray = refract(sun,normal,1.0/1.333);",
-  "  float depth = 1.18 + .06*sin(p.x*.65);",
-  "  return p + ray.xy / max(.28,abs(ray.z))*depth;",
-  "}",
-  "float caustics(vec2 p, float t) {",
-  "  const float d=.012;",
-  "  vec2 a=refractedHit(p,t);",
-  "  vec2 dx=(refractedHit(p+vec2(d,0.),t)-refractedHit(p-vec2(d,0.),t))/(2.*d);",
-  "  vec2 dy=(refractedHit(p+vec2(0.,d),t)-refractedHit(p-vec2(0.,d),t))/(2.*d);",
-  "  float jac=abs(dx.x*dy.y-dx.y*dy.x);",
-  "  float focus=pow(clamp(1./max(jac,.14),0.,7.),1.65);",
-  "  return clamp((focus-.78)*.49,0.,3.);",
-  "}",
-  "void main(){",
-  "  vec2 p=(vUv-.5)*vec2(uResolution.x/max(uResolution.y,1.),1.)*5.4;",
-  "  vec2 pointer=uPointer*.25;",
-  "  p+=pointer*(.24+.08*sin(uTime*.5));",
-  "  float t=uTime*.63;",
-  "  float mainLight=caustics(p,t);",
-  "  float secondary=caustics(p*1.41+vec2(4.7,2.3),t*.77);",
-  "  float shafts=pow(clamp(.5+.5*sin(p.x*.55+p.y*.23+t*.12),0.,1.),2.);",
-  "  float focus=mainLight*.71+secondary*.29;",
-  "  float attenuation=exp(-.30*(1.15+.2*length(p)*.17));",
-  "  float transmission=uTransmission*attenuation;",
-  "  float illumination=(.15+focus*.82+shafts*.09)*transmission;",
-  "  vec3 floorColor=mix(uFloor,uDepth,smoothstep(-2.5,3.5,p.y)*.28);",
-  "  vec3 color=floorColor+uLight*illumination;",
-  "  color=mix(color,floorColor,.10*smoothstep(1.5,4.,length(p)));",
-  "  color=1.-exp(-max(color,vec3(0.))*1.04);",
-  "  gl_FragColor=vec4(color,1.);",
-  "}",
+const divergence=prefix+[
+ "uniform sampler2D velocity;",
+ "void main(){float l=texture2D(velocity,vUv-vec2(texel.x,0.)).x;",
+ "float r=texture2D(velocity,vUv+vec2(texel.x,0.)).x;",
+ "float b=texture2D(velocity,vUv-vec2(0.,texel.y)).y;",
+ "float t=texture2D(velocity,vUv+vec2(0.,texel.y)).y;",
+ "gl_FragColor=vec4(.5*(r-l+t-b),0.,0.,1.);}"
 ].join("\n");
-
-const FALLBACK_COLORS = ["#07112b","#002080","#b1c5ff"];
-function colorToVec3(input, fallback) {
-  const value = /^#[\da-f]{6}$/i.test(String(input||"").trim()) ? String(input).trim() : fallback;
-  return new Vector3(...[1,3,5].map(i => parseInt(value.slice(i,i+2),16)/255));
-}
-export function mountHeroWave(host, initialState) {
-  const canvas=document.createElement("canvas");
-  canvas.className="hero-wave__canvas";
-  canvas.setAttribute("aria-hidden","true");
-  let renderer;
-  try {
-    renderer=new WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:"high-performance"});
-  } catch(error) {canvas.remove();throw error;}
-  renderer.setPixelRatio(1);
-  renderer.setClearColor(0x07112b,1);
-  host.append(canvas);
-  const scene=new Scene();
-  const camera=new OrthographicCamera(-1,1,1,-1,0,1);
-  const uniforms={
-    uTime:{value:0},uTransmission:{value:1.0},uMotion:{value:1.0},
-    uResolution:{value:new Vector2(1,1)},uPointer:{value:new Vector2()},
-    uFloor:{value:new Vector3()},uDepth:{value:new Vector3()},uLight:{value:new Vector3()}
-  };
-  const geometry=new PlaneGeometry(2,2);
-  const material=new ShaderMaterial({vertexShader:VERTEX,fragmentShader:FRAGMENT,uniforms,depthTest:false,depthWrite:false});
-  const mesh=new Mesh(geometry,material);
-  mesh.frustumCulled=false;scene.add(mesh);
-  let state={...initialState}, destroyed=false, visible=true, frame=0, elapsed=0, last=0;
-  let pointerX=0,pointerY=0,targetX=0,targetY=0;
-  const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)");
-  const quality=()=>Math.min(1.35,Math.max(.65,window.devicePixelRatio||1));
-  const resize=()=>{
-    if(destroyed)return;
-    const max=window.innerWidth<700?720:1280;
-    const scale=Math.min(quality(),max/Math.max(host.clientWidth,host.clientHeight,1));
-    const w=Math.max(1,Math.round(host.clientWidth*scale));
-    const h=Math.max(1,Math.round(host.clientHeight*scale));
-    renderer.setSize(w,h,false);
-    uniforms.uResolution.value.set(w,h);
-    render();
-  };
-  const render=()=>{
-    if(destroyed)return;
-    uniforms.uTime.value=elapsed*.001;
-    renderer.render(scene,camera);
-  };
-  const animate=()=>Boolean(state.animate)&&!reduced?.matches&&visible&&!document.hidden;
-  const frameStep=t=>{
-    frame=0;
-    if(destroyed)return;
-    if(last&&t-last<1000/30){frame=requestAnimationFrame(frameStep);return;}
-    const dt=last?Math.min(t-last,50):1000/30;
-    last=t;
-    if(animate())elapsed+=dt;
-    pointerX+=(targetX-pointerX)*.065;
-    pointerY+=(targetY-pointerY)*.065;
-    uniforms.uPointer.value.set(pointerX,pointerY);
-    render();
-    if(animate())frame=requestAnimationFrame(frameStep);
-  };
-  const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(frameStep);};
-  const update=next=>{
-    state={...state,...next};
-    const colors=state.colors||FALLBACK_COLORS;
-    const dark=state.theme==="dark";
-    // Light changes the water optics, not merely a CSS filter: shallow water
-    // transmits considerably more of the refracted sun than deep-night water.
-    uniforms.uFloor.value.copy(dark ? colorToVec3(colors[0],FALLBACK_COLORS[0]) : new Vector3(.018,.12,.27));
-    uniforms.uDepth.value.copy(dark ? colorToVec3(colors[1],FALLBACK_COLORS[1]) : new Vector3(.009,.06,.16));
-    uniforms.uLight.value.copy(dark ? colorToVec3(colors[2],FALLBACK_COLORS[2]) : new Vector3(.64,.88,1.));
-    uniforms.uTransmission.value=dark?.18:1.35;
-    uniforms.uMotion.value=state.animate?1:0;
-    host.dataset.waterTheme=dark?"dark":"light";
-    render();
-    if(!animate()&&frame){cancelAnimationFrame(frame);frame=0;last=0;}
-    if(animate())request();
-  };
-  const onVisibility=()=>{if(!document.hidden)request();else if(frame){cancelAnimationFrame(frame);frame=0;last=0;}};
-  const onContextLost=event=>{event.preventDefault();if(frame)cancelAnimationFrame(frame);frame=0;};
-  const onContextRestored=()=>{renderer.forceContextRestore?.();resize();request();};
-  canvas.addEventListener("webglcontextlost",onContextLost);
-  canvas.addEventListener("webglcontextrestored",onContextRestored);
-  document.addEventListener("visibilitychange",onVisibility);
-  const ro=typeof ResizeObserver!=="undefined"?new ResizeObserver(resize):null;
-  ro?.observe(host);
-  window.addEventListener("resize",resize,{passive:true});
-  const io=typeof IntersectionObserver!=="undefined"?new IntersectionObserver(([entry])=>{
-    visible=Boolean(entry?.isIntersecting);
-    if(visible)request();else if(frame){cancelAnimationFrame(frame);frame=0;last=0;}
-  },{threshold:.01}):null;
-  io?.observe(host);
-  update(state);resize();request();
-  return {
-    ready:Promise.resolve(),
-    update,
-    setPointer(x,y){targetX=x;targetY=y;if(!animate())request();},
-    destroy(){
-      if(destroyed)return;
-      destroyed=true;if(frame)cancelAnimationFrame(frame);
-      document.removeEventListener("visibilitychange",onVisibility);
-      canvas.removeEventListener("webglcontextlost",onContextLost);
-      canvas.removeEventListener("webglcontextrestored",onContextRestored);
-      window.removeEventListener("resize",resize);
-      ro?.disconnect();io?.disconnect();
-      geometry.dispose();material.dispose();renderer.dispose();canvas.remove();
-    }
-  };
+const jacobi=prefix+[
+ "uniform sampler2D pressure;uniform sampler2D divergence;",
+ "void main(){float l=texture2D(pressure,vUv-vec2(texel.x,0.)).x;",
+ "float r=texture2D(pressure,vUv+vec2(texel.x,0.)).x;",
+ "float b=texture2D(pressure,vUv-vec2(0.,texel.y)).x;",
+ "float t=texture2D(pressure,vUv+vec2(0.,texel.y)).x;",
+ "float d=texture2D(divergence,vUv).x;",
+ "gl_FragColor=vec4((l+r+b+t-d)*.25,0.,0.,1.);}"
+].join("\n");
+const project=prefix+[
+ "uniform sampler2D pressure;uniform sampler2D velocity;",
+ "void main(){float l=texture2D(pressure,vUv-vec2(texel.x,0.)).x;",
+ "float r=texture2D(pressure,vUv+vec2(texel.x,0.)).x;",
+ "float b=texture2D(pressure,vUv-vec2(0.,texel.y)).x;",
+ "float t=texture2D(pressure,vUv+vec2(0.,texel.y)).x;",
+ "vec2 vel=texture2D(velocity,vUv).xy-.5*vec2(r-l,t-b);",
+ "vec2 edge=step(texel*1.5,vUv)*step(texel*1.5,1.-vUv);",
+ "gl_FragColor=vec4(vel*edge,0.,1.);}"
+].join("\n");
+const wave=prefix+[
+ "uniform sampler2D surface;uniform sampler2D velocity;",
+ "void main(){vec2 vel=texture2D(velocity,vUv).xy;",
+ "vec2 p=clamp(vUv-vel*dt*.13,texel,1.-texel);",
+ "vec4 s=texture2D(surface,p);",
+ "float l=texture2D(surface,p-vec2(texel.x,0.)).r;",
+ "float r=texture2D(surface,p+vec2(texel.x,0.)).r;",
+ "float b=texture2D(surface,p-vec2(0.,texel.y)).r;",
+ "float t=texture2D(surface,p+vec2(0.,texel.y)).r;",
+ "float lap=l+r+b+t-4.*s.r;",
+ "float drop=exp(-dot(vUv-cursor,vUv-cursor)*200.)*impulse*.25;",
+ "float h=(2.*s.r-s.g+lap*.36)*.988+drop;",
+ "float edge=min(min(vUv.x,1.-vUv.x),min(vUv.y,1.-vUv.y));",
+ "h*=mix(.92,1.,smoothstep(0.,.05,edge));",
+ "float foam=max(s.b*.96,clamp(abs(h-s.r)*6.,0.,1.));",
+ "gl_FragColor=vec4(clamp(h,-1.,1.),s.r,foam,1.);}"
+].join("\n");
+const shade=[
+ "precision highp float;varying vec2 vUv;",
+ "uniform sampler2D surface;uniform vec2 texel;",
+ "uniform float transmission;uniform vec3 floorColor,deepColor,lightColor;",
+ "vec2 grad(vec2 p){",
+ " float l=texture2D(surface,p-vec2(texel.x,0.)).r;",
+ " float r=texture2D(surface,p+vec2(texel.x,0.)).r;",
+ " float b=texture2D(surface,p-vec2(0.,texel.y)).r;",
+ " float t=texture2D(surface,p+vec2(0.,texel.y)).r;",
+ " return .5*vec2(r-l,t-b);}",
+ "vec2 hit(vec2 p){",
+ " vec2 g=grad(p)*5.6;",
+ " vec3 n=normalize(vec3(-g,1.));",
+ " vec3 sun=normalize(vec3(.23,.18,-1.));",
+ " vec3 refracted=refract(sun,n,1./1.333);",
+ " return p+refracted.xy/max(.2,abs(refracted.z))*.08;}",
+ "void main(){vec2 p=clamp(vUv,texel*2.,1.-texel*2.);",
+ " vec2 a=(hit(p+vec2(texel.x*2.,0.))-hit(p-vec2(texel.x*2.,0.)))/(texel.x*4.);",
+ " vec2 b=(hit(p+vec2(0.,texel.y*2.))-hit(p-vec2(0.,texel.y*2.)))/(texel.y*4.);",
+ " float jac=abs(a.x*b.y-a.y*b.x);",
+ " float focusing=pow(clamp(1./max(jac,.08),0.,8.),1.35);",
+ " vec4 water=texture2D(surface,p);",
+ " float light=clamp((focusing-.78)*.9+.12,0.,4.)*transmission*exp(-.34*(1.1+water.r*.12));",
+ " vec3 base=mix(deepColor,floorColor,clamp(.52+water.r*.15,0.,1.));",
+ " vec3 c=base+lightColor*(light+water.b*.04);",
+ " gl_FragColor=vec4(1.-exp(-max(c,vec3(0.))),1.);}"
+].join("\n");
+const SIZE=144;
+const ITERATIONS=10;
+function hex(v,fallback){let s=/^#[a-f0-9]{6}$/i.test(v||"")?v:fallback;return new Vector3(...[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255));}
+export function mountHeroWave(host,initialState){
+ const canvas=document.createElement("canvas");canvas.className="hero-wave__canvas";canvas.setAttribute("aria-hidden","true");
+ const renderer=new WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:"high-performance"});
+ // Three.js r163+ requires WebGL2 in WebGLRenderer; capability flags may be absent.
+ const gl=renderer.getContext();
+ if(!gl.getExtension("EXT_color_buffer_float")&&!gl.getExtension("EXT_color_buffer_half_float")){renderer.dispose();throw new Error("Half float framebuffer unavailable");}
+ renderer.setPixelRatio(1);renderer.toneMapping=NoToneMapping;host.append(canvas);
+ const scene=new Scene(),camera=new OrthographicCamera(-1,1,1,-1,0,1),geometry=new PlaneGeometry(2,2);
+ const mesh=new Mesh(geometry,new ShaderMaterial({vertexShader:vertex,fragmentShader:shade,depthTest:false,depthWrite:false}));mesh.frustumCulled=false;scene.add(mesh);
+ const side=window.innerWidth<700?112:SIZE,texel=new Vector2(1/side,1/side),cursor=new Vector2(.55,.5);
+ const makeTarget=()=>new WebGLRenderTarget(side,side,{type:HalfFloatType,minFilter:NearestFilter,magFilter:NearestFilter,wrapS:ClampToEdgeWrapping,wrapT:ClampToEdgeWrapping,depthBuffer:false,stencilBuffer:false});
+ const pair=()=>({read:makeTarget(),write:makeTarget(),swap(){const a=this.read;this.read=this.write;this.write=a;},dispose(){this.read.dispose();this.write.dispose();}});
+ const vel=pair(),press=pair(),height=pair(),div=makeTarget();
+ const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
+ const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
+ screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()}};
+ let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7,steps=0,lastPointerAt=0;
+ const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
+ const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
+ function pass(mat,target,inputs){
+  mesh.material=mat;
+  mat.uniforms.impulse.value=impulse;
+  for(const [name,texture] of Object.entries(inputs))mat.uniforms[name].value=texture;
+  renderer.setRenderTarget(target);renderer.render(scene,camera);
+ }
+ function draw(){if(destroyed)return;mesh.material=screen;screen.uniforms.surface.value=height.read.texture;renderer.setRenderTarget(null);renderer.render(scene,camera);}
+ function step(){
+  // Natural low-amplitude disturbances keep the surface alive without input.
+  steps++;
+  if(steps%38===0&&performance.now()-lastPointerAt>1400){
+   cursor.set(.18+.64*(.5+.5*Math.sin(steps*.719)),.18+.64*(.5+.5*Math.cos(steps*.453)));
+   impulse=.22;
+  }
+  pass(ad,vel.write,{velocity:vel.read.texture});vel.swap();
+  pass(dv,div,{velocity:vel.read.texture});
+  for(let i=0;i<ITERATIONS;i++){pass(jac,press.write,{pressure:press.read.texture,divergence:div.texture});press.swap();}
+  pass(proj,vel.write,{velocity:vel.read.texture,pressure:press.read.texture});vel.swap();
+  pass(wav,height.write,{surface:height.read.texture,velocity:vel.read.texture});height.swap();
+  impulse=0;
+ }
+ function resize(){
+  if(destroyed)return;
+  const limit=window.innerWidth<700?720:1152;
+  const scale=Math.min(window.devicePixelRatio||1,1.25,limit/Math.max(host.clientWidth,host.clientHeight,1));
+  renderer.setSize(Math.max(1,Math.round(host.clientWidth*scale)),Math.max(1,Math.round(host.clientHeight*scale)),false);
+  draw();
+ }
+ function tick(timestamp){
+  frame=0;if(destroyed)return;
+  if(last&&timestamp-last<1000/24){frame=requestAnimationFrame(tick);return;}
+  last=timestamp;
+  if(running())step();
+  draw();if(running())frame=requestAnimationFrame(tick);
+ }
+ const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);};
+ function update(next){
+  state={...state,...next};const dark=state.theme==="dark",colors=state.colors||["#07112b","#002080","#b1c5ff"];
+  screen.uniforms.floorColor.value.copy(dark?hex(colors[0],"#07112b"):new Vector3(.02,.14,.28));
+  screen.uniforms.deepColor.value.copy(dark?hex(colors[1],"#002080"):new Vector3(.012,.06,.16));
+  screen.uniforms.lightColor.value.copy(dark?hex(colors[2],"#b1c5ff"):new Vector3(.64,.88,1.));
+  screen.uniforms.transmission.value=dark?.15:1.5;
+  host.dataset.simulation="gpu-fluid-heightfield";host.dataset.waterTheme=dark?"dark":"light";
+  draw();
+  if(!running()&&frame){cancelAnimationFrame(frame);frame=0;}
+  if(running())request();
+ }
+ function setPointer(x,y){
+  const nx=Math.max(.01,Math.min(.99,(x+1)*.5)),ny=Math.max(.01,Math.min(.99,1-(y+1)*.5));
+  const distance=Math.hypot(nx-cursor.x,ny-cursor.y);cursor.set(nx,ny);
+  if(distance>.006)lastPointerAt=performance.now();
+  if(distance>.006&&distance<.7&&running())impulse=Math.min(.9,distance*3.);
+  request();
+ }
+ const onVisibility=()=>{if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0;}else request();};
+ const lost=e=>{e.preventDefault();if(frame)cancelAnimationFrame(frame);frame=0;};
+ const ro=typeof ResizeObserver!=="undefined"?new ResizeObserver(resize):null;
+ const io=typeof IntersectionObserver!=="undefined"?new IntersectionObserver(([e])=>{visible=Boolean(e?.isIntersecting);if(!visible&&frame){cancelAnimationFrame(frame);frame=0;}else request();},{threshold:.01}):null;
+ document.addEventListener("visibilitychange",onVisibility);canvas.addEventListener("webglcontextlost",lost);
+ window.addEventListener("resize",resize,{passive:true});ro?.observe(host);io?.observe(host);
+ renderer.setClearColor(0x000000,0);
+ for(const target of [vel.read,vel.write,press.read,press.write,height.read,height.write,div]){renderer.setRenderTarget(target);renderer.clear();}
+ step();update(state);resize();request();
+ return {ready:Promise.resolve(),update,setPointer,destroy(){
+  if(destroyed)return;destroyed=true;if(frame)cancelAnimationFrame(frame);
+  document.removeEventListener("visibilitychange",onVisibility);canvas.removeEventListener("webglcontextlost",lost);
+  window.removeEventListener("resize",resize);ro?.disconnect();io?.disconnect();
+  vel.dispose();press.dispose();height.dispose();div.dispose();
+  [ad,dv,jac,proj,wav,screen].forEach(x=>x.dispose());geometry.dispose();renderer.dispose();canvas.remove();
+ }};
 }

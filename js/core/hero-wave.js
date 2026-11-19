@@ -49,6 +49,35 @@ export async function initHeroWave({
   let userPaused = false;
   const landing = doc.querySelector(".home-landing");
   if (!landing) return null;
+
+  // A software GL renderer turns the pressure solver into a multi-second
+  // main-thread block. Keep the accessible CSS hero instead of loading Three.js.
+  // Explicit shader-test routes retain the renderer for deterministic QA.
+  if (!testOptIn) {
+    let probeContext;
+    try {
+      const probe = doc.createElement("canvas");
+      probeContext = probe.getContext("webgl2", {
+        alpha: false, antialias: false, powerPreference: "high-performance",
+      });
+      if (!probeContext) return null;
+      const info = probeContext.getExtension("WEBGL_debug_renderer_info");
+      const name = info
+        ? probeContext.getParameter(info.UNMASKED_RENDERER_WEBGL)
+        : probeContext.getParameter(probeContext.RENDERER);
+      const software = /swiftshader|llvmpipe|softpipe|lavapipe|software raster|microsoft basic render/i.test(String(name || ""));
+      const unknownHardware = !info && !/(nvidia|amd|radeon|intel|apple|adreno|mali|powervr)/i.test(String(name || ""));
+      if (software || unknownHardware) {
+        probeContext.getExtension("WEBGL_lose_context")?.loseContext();
+        return null;
+      }
+    } catch {
+      return null;
+    } finally {
+      // Do not retain an extra GPU context after the capability probe.
+      probeContext?.getExtension("WEBGL_lose_context")?.loseContext();
+    }
+  }
   const host = doc.createElement("div");
   host.className = "hero-wave";
   host.dataset.heroWave = "";

@@ -265,30 +265,28 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /filter:saturate/i);
 });
 
-test("hero wave keeps a bounded, native WebGL contract", async () => {
+test("hero water ships a bounded Three.js GPU fluid simulation with graceful fallback", async () => {
   const source = await readFile(join(dist, "js", "core", "hero-wave.js"), "utf8");
-  const island = await readFile(join(root, "js", "hero-wave-island.js"), "utf8");
+  const island = await readFile(join(root, "js", "hero-water-three.js"), "utf8");
   const runtime = await readFile(join(dist, "assets", "runtime", "hero-wave.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"])
     assert.match(source, new RegExp(token));
   for (const contract of [
-    /getContext\("webgl"/, /gl\.createShader/, /gl\.drawArrays/,
-    /uniform2fv/, /uniform3fv/, /const shouldAnimate=\(\)=>state\.animate&&!softwareRenderer&&visible&&!document\.hidden/,
-    /FRAME_MS=1000\/24/, /FRAGMENT_SOFTWARE/, /softwareRenderer \? FRAGMENT_SOFTWARE : FRAGMENT/, /IntersectionObserver/, /ResizeObserver/,
-    /deleteBuffer/, /deleteProgram/, /WEBGL_lose_context/,
+    /WebGLRenderer/, /WebGLRenderTarget/, /HalfFloatType/,
+    /const advect=/, /const divergence=/, /const jacobi=/, /const project=/,
+    /const wave=/, /const shade=/, /PRESSURE|ITERATIONS/,
+    /setRenderTarget/, /renderer\.render/, /prefers-reduced-motion: reduce/,
+    /IntersectionObserver/, /ResizeObserver/, /renderer\.dispose/,
+    /transmission\.value=dark\?\.15:1\.5/,
   ]) assert.match(island, contract);
-  assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
-  assert.match(source, /pointermove|setPointer/);
   assert.match(source, /shader-static/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /Pause background motion/);
-  assert.doesNotMatch(runtime, /THREE|three\.module|WebGLRenderer|SceneGeometry/);
-  assert.match(
-    foundations,
-    /--hero-wave-color-1:var\(--ref-midnight\);--hero-wave-color-2:var\(--ref-ultramarine\);--hero-wave-color-3:var\(--ref-blue-80\)/,
-  );
-  assert.doesNotMatch(source + island + foundations, /ShaderGradient|shader-background|ref-shader/);
+  assert.match(source, /setPointer/);
+  assert.match(runtime, /WebGLRenderer|WebGLRenderTarget|webgl2/i);
+  assert.match(foundations, /--hero-wave-color-1:var\(--ref-midnight\)/);
+  assert.doesNotMatch(source + island, /ShaderGradient|shader-background|ref-shader/);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {
@@ -587,7 +585,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 5);
+  assert.equal((styles.match(/@import/g) || []).length, 7);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
