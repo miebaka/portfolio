@@ -938,3 +938,27 @@ html[data-motion="reduced"] body[data-page="home"] :is(.service-journey__image i
 .client-strip__fallback img{display:block;max-width:100%;width:auto;height:auto;max-height:2.5rem;object-fit:contain}
 .client-strip__fallback-label{display:block;margin-top:.75rem;font:500 var(--type-label-m)/1.3 var(--label);text-align:center;color:var(--editorial-inverse)}
 @media(max-width:48rem){.client-strip__fallback{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Portfolio services — keep the case proof visible without relying on hover.
+   This label stays inside the card's reading sequence and inherits the dark image overlay. */
+body[data-page="home"] .service-journey__evidence{
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  gap:.5rem;
+  max-width:100%;
+  margin-top:clamp(1rem,2vw,1.5rem);
+  padding:.7rem .9rem;
+  border:1px solid color-mix(in srgb,var(--ref-paper) 52%,transparent);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--editorial-stage) 45%,transparent);
+  color:var(--editorial-inverse);
+  font:600 clamp(.75rem,.8vw,.875rem)/1.35 var(--label);
+  letter-spacing:.015em;
+  overflow-wrap:anywhere;
+}
+body[data-page="home"] .service-journey a:focus-visible .service-journey__evidence{
+  border-color:currentColor;
+  text-decoration:underline;
+  text-underline-offset:.2em;
+}

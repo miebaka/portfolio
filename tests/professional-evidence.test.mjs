@@ -1,3 +1,4 @@
+import { isSoftwareRenderer } from "../js/hero-wave-island.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -15,7 +16,7 @@ import {
   renderCvMarkup,
 } from "../js/render/sections.js";
 import { renderIndexMarkup } from "../js/render/navigation.js";
-import { renderHomeProjectList } from "../js/render/projects.js";
+import { renderHomeProjectList, renderProjectArchiveMarkup } from "../js/render/projects.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 import { assertValidContent } from "../scripts/validate-content.mjs";
 
@@ -241,4 +242,23 @@ test("Home and About preserve authentic public proof without JavaScript", async 
   }
   assert.match(home,/client-strip__fallback/);
   assert.match(about,/experience-fallback/);
+});
+
+test("Work archive derives published cases and in-progress register from real project records", () => {
+  const markup = renderProjectArchiveMarkup(CONTENT.projects, "", CONTENT.caseStudies);
+  const published = CONTENT.projects.filter(project =>
+    project.status === "published" && CONTENT.caseStudies?.[project.slug]?.status === "published" && project.cover);
+  const drafts = CONTENT.projects.filter(project => project.status === "coming-soon" && project.featured !== true);
+  assert.equal((markup.match(/class="project-archive__item /g) || []).length, published.length);
+  assert.equal((markup.match(/class="project-archive__preview-frame"/g) || []).length, published.length);
+  for (const project of drafts) assert.ok(markup.includes(project.title));
+  assert.doesNotMatch(markup, /Detour|Out Of Office/);
+  assert.doesNotMatch(markup, /javascript:/);
+});
+
+test("WebGL caustics degrade to a static frame on software renderers", () => {
+  for (const name of ["Google SwiftShader", "ANGLE (Google, Vulkan SwiftShader)", "llvmpipe", "Mesa lavapipe", "Microsoft Basic Render Driver"])
+    assert.equal(isSoftwareRenderer(name), true, name);
+  for (const name of ["ANGLE (NVIDIA GeForce RTX)", "Apple M3", "AMD Radeon Pro"])
+    assert.equal(isSoftwareRenderer(name), false, name);
 });

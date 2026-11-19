@@ -79,45 +79,26 @@ export function renderProjectArchive() {
 }
 
 export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {
-  const bySlug = new Map(projects.map((project) => [project.slug, project]));
-  const workIndex = [
-    { ...bySlug.get("tedx-rsu"), title: "TEDx Rivers State University" },
-    bySlug.get("rivo"),
-    { ...bySlug.get("chopbox"), title: "ChopBox" },
-    { slug: "detour", title: "Detour", tagline: "Case study in progress.", year: "2026", status: "coming-soon" },
-    {
-      slug: "out-of-office",
-      title: "Out Of Office",
-      tagline: "Case study in progress.",
-      year: "2026",
-      status: "coming-soon",
-    },
-  ].filter(Boolean);
-  const previewFrames = {
-    rivo: ["rivo-in-use"],
-    "tedx-rsu": ["tedx-rsu-campus-banner"],
-    chopbox: ["chopbox-platter"],
-  };
-  const published = workIndex.filter((project) => project.status === "published");
-  const inProgress = workIndex.filter((project) => project.status !== "published");
+  // Only published, documented project cases belong in the primary Work archive.
+  // Essays have their own index and private work must never appear as a draft.
+  const published = projects
+    .filter(project => project.status === "published" && studies?.[project.slug]?.status === "published" && project.cover)
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
+  const inProgress = projects
+    .filter(project => project.status === "coming-soon" && project.featured !== true)
+    .sort((a, b) => Number(b.year) - Number(a.year) || a.title.localeCompare(b.title));
   const publishedMarkup = renderEditorialIndex(
     published.map((project) => {
       const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
       const study = studies?.[project.slug];
       const decision = study?.proof?.find((item) => item.type === "decision")?.statement || project.tagline;
       const role = study?.facts?.role || (project.tags || []).join(", ");
-      const frames = (previewFrames[project.slug] || [])
-        .map(
-          (src, index) =>
-            '<span class="project-archive__preview-frame" style="--preview-order:' +
-            index +
-            '"><img src="' +
-            base +
-            "assets/images/optimized/" +
-            safeToken(src) +
-            '-540.webp" alt="" loading="lazy" decoding="async"></span>',
-        )
-        .join("");
+      const frames = project.cover
+        ? '<span class="project-archive__preview-frame" style="--preview-order:0"><picture>' +
+          '<source type="image/avif" srcset="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.avif 540w, ' + base + "assets/images/optimized/" + safeToken(project.cover) + '-1080.avif 1080w" sizes="(max-width:48rem) calc(100vw - 2.5rem), 30vw">' +
+          '<source type="image/webp" srcset="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp 540w, ' + base + "assets/images/optimized/" + safeToken(project.cover) + '-1080.webp 1080w" sizes="(max-width:48rem) calc(100vw - 2.5rem), 30vw">' +
+          '<img src="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></picture></span>'
+        : "";
       return {
         href,
         label: project.title + ", view project",
@@ -195,16 +176,28 @@ export function createMarqueeController(root, deps = {}) {
   const doc = deps.document || root.ownerDocument || document;
   const Observer =
     deps.IntersectionObserver === undefined ? globalThis.IntersectionObserver : deps.IntersectionObserver;
-  const reducedMotion = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches || false;
-  let visible = !Observer,
-    destroyed = false;
+  const AttrObserver =
+    deps.MutationObserver === undefined ? doc.defaultView?.MutationObserver : deps.MutationObserver;
+  const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
+  let visible = !Observer;
+  let destroyed = false;
+
+  const isReduced = () => {
+    const chosen = doc.documentElement?.dataset.motion;
+    return chosen === "reduced" || (chosen !== "full" && Boolean(motionQuery?.matches));
+  };
   const sync = () => {
-    const running = !reducedMotion && !destroyed && visible && !doc.hidden;
+    const running = !isReduced() && !destroyed && visible && !doc.hidden;
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
   };
   const onVisibility = () => sync();
   doc.addEventListener("visibilitychange", onVisibility);
+  motionQuery?.addEventListener?.("change", onVisibility);
+  const preferences = AttrObserver && doc.documentElement
+    ? new AttrObserver(sync)
+    : null;
+  preferences?.observe(doc.documentElement, { attributes: true, attributeFilter: ["data-motion"] });
   const observer = Observer
     ? new Observer(
         ([entry]) => {
@@ -221,6 +214,8 @@ export function createMarqueeController(root, deps = {}) {
       if (destroyed) return;
       destroyed = true;
       observer?.disconnect();
+      preferences?.disconnect();
+      motionQuery?.removeEventListener?.("change", onVisibility);
       doc.removeEventListener("visibilitychange", onVisibility);
       sync();
     },

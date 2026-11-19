@@ -338,7 +338,7 @@ test("Work index separates complete cases from studies in progress", async ({ pa
     "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
   await expect(page.locator(".project-archive__media")).toHaveCount(3);
-  await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);
+  await expect(page.locator(".project-archive__progress li")).toHaveText(["Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021"]);
 });
 
 test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
@@ -397,6 +397,17 @@ test("client marquee runs without an unnecessary pause control", async ({ page }
   await expect(page.locator(".client-marquee__control")).toHaveCount(0);
   await page.locator(".client-marquee").scrollIntoViewIfNeeded();
   await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "playing");
+});
+
+test("client marquee responds to the site motion preference immediately", async ({ page }) => {
+  await page.goto("/index.html");
+  const marquee = page.locator(".client-marquee");
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
+  await page.evaluate(() => document.documentElement.dataset.motion = "reduced");
+  await expect(marquee).toHaveAttribute("data-marquee-state", "paused");
+  await page.evaluate(() => document.documentElement.dataset.motion = "full");
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
 });
 
 test("@a11y explicit focus and field descriptions", async ({ page }) => {
