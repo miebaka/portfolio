@@ -9,6 +9,10 @@ function enhanceFooterSignature(host) {
   const canvas = document.createElement("canvas");
   canvas.className = "site-footer__signature-canvas";
   host.append(canvas);
+  host.setAttribute("role", "button");
+  host.setAttribute("tabindex", "0");
+  host.setAttribute("aria-label", "Interactive dot-matrix signature. Move your pointer, tap, or press Enter to ripple the dots.");
+  host.removeAttribute("aria-hidden");
   const context = canvas.getContext("2d");
   if (!context) return;
   const pointer = { x: -9999, y: -9999, active: false };
@@ -102,9 +106,39 @@ function enhanceFooterSignature(host) {
     wake();
   };
   const onPointerLeave = () => { pointer.active = false; wake(); };
+  const ripple = (x, y, force = 8) => {
+    pointer.x = x;
+    pointer.y = y;
+    pointer.active = true;
+    for (const point of points) {
+      const dx = point.x - x, dy = point.y - y;
+      const distance = Math.hypot(dx, dy) || 1;
+      if (distance > RADIUS * 1.4) continue;
+      const falloff = Math.pow(1 - distance / (RADIUS * 1.4), 2);
+      point.vx += dx / distance * force * falloff;
+      point.vy += dy / distance * force * falloff;
+    }
+    wake();
+  };
+  const onPointerDown = event => {
+    const bounds = host.getBoundingClientRect();
+    ripple(event.clientX - bounds.left, event.clientY - bounds.top, event.pointerType === "touch" ? 12 : 8);
+  };
+  const onPointerUp = () => { pointer.active = false; wake(); };
+  const onKeyDown = event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    ripple(width * (.3 + .4 * Math.random()), height * (.3 + .4 * Math.random()), 13);
+    pointer.active = false;
+    wake();
+  };
   const resizeObserver = new ResizeObserver(rebuild);
   const mutationObserver = new MutationObserver(rebuild);
   host.addEventListener("pointermove", onPointerMove, { passive: true });
+  host.addEventListener("pointerdown", onPointerDown, { passive: true });
+  host.addEventListener("pointerup", onPointerUp, { passive: true });
+  host.addEventListener("pointercancel", onPointerUp, { passive: true });
+  host.addEventListener("keydown", onKeyDown);
   host.addEventListener("pointerleave", onPointerLeave);
   resizeObserver.observe(host);
   mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -116,6 +150,10 @@ function enhanceFooterSignature(host) {
     destroy() {
       stop(); generation++; resizeObserver.disconnect(); mutationObserver.disconnect();
       host.removeEventListener("pointermove", onPointerMove); host.removeEventListener("pointerleave", onPointerLeave);
+      host.removeEventListener("pointerdown", onPointerDown); host.removeEventListener("pointerup", onPointerUp);
+      host.removeEventListener("pointercancel", onPointerUp); host.removeEventListener("keydown", onKeyDown);
+      host.removeAttribute("role"); host.removeAttribute("tabindex");
+      host.setAttribute("aria-hidden", "true"); host.removeAttribute("aria-label");
       host.classList.remove("is-enhanced"); canvas.remove();
     }
   };
