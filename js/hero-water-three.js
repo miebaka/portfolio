@@ -91,7 +91,7 @@ function hex(v,fallback){let s=/^#[a-f0-9]{6}$/i.test(v||"")?v:fallback;return n
 export function mountHeroWave(host,initialState){
  const canvas=document.createElement("canvas");canvas.className="hero-wave__canvas";canvas.setAttribute("aria-hidden","true");
  const renderer=new WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:"high-performance"});
- if(!renderer.capabilities.isWebGL2){renderer.dispose();throw new Error("Water simulation requires WebGL2");}
+ // Three.js r163+ requires WebGL2 in WebGLRenderer; capability flags may be absent.
  const gl=renderer.getContext();
  if(!gl.getExtension("EXT_color_buffer_float")&&!gl.getExtension("EXT_color_buffer_half_float")){renderer.dispose();throw new Error("Half float framebuffer unavailable");}
  renderer.setPixelRatio(1);renderer.toneMapping=NoToneMapping;host.append(canvas);
