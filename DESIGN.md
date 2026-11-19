@@ -1,12 +1,75 @@
 # MIEBAKA JOSHUA — PORTFOLIO DESIGN & EXPERIENCE CONSTITUTION
 
 > **Status:** Authoritative target specification for the next portfolio redesign.  
-> **Version:** 2.1.0 — expanded research / unconstrained art direction mandate  
+> **Version:** 2.2.0 — critical-review evidence gates and seven-chapter build contract  
 > **Date:** 19 November 2026  
 > **Repository:** <https://github.com/miebaka/portfolio> (`main` at time of audit)  
 > **Public canonical host:** <https://miebaka-portfolio.vercel.app/>  
 > **Scope:** Every public page, template, interactive system, content module, motion effect, and delivery pipeline.  
 > **Purpose:** Define *what to build*, *why*, *how it must behave*, *what not to build*, and *how to prove it meets the standard*.
+
+---
+
+## 0A. NOVEMBER 19 CRITICAL REVIEW — RELEASE-BLOCKING CORRECTIONS
+
+**Source:** [Critical Portfolio Review, 19 November 2026](https://chatgpt.com/share/6aff4eb7-c454-83ea-9180-f7bff38eb8fe). The linked review is editorial assessment, not a verified multi-device performance or accessibility audit. This addendum is authoritative where earlier sections understate the evidence and positioning problems; the seven reference assignments below remain intact.
+
+### 0A.1 Problem to solve before polishing
+
+The strongest current portfolio claim—turning complicated briefs into reusable brand and campaign systems—is not adequately supported by the three visible flagship cases (TEDx RSU, Rivo Studio, ChopBox). A more expensive transition cannot compensate for absent leadership or commercial evidence. **Proof outranks animation.** Score each featured case against six dimensions: problem/strategy, original craft, rejected alternatives and constraints, personal ownership and stakeholder influence, scale/channels, and verifiable result. Distinguish **shipped/deployed** from **effective**. Never fabricate metrics, client approval, awards, production evidence or confidential Rise results.
+
+**P0 publication gate:** Select a current, approved Rise marketing-system case *only if* there are cleared assets and an evidence-backed account of the work. Otherwise keep an honest best-available existing case and flag the missing contemporary proof as an editorial blocker; no placeholder Rise case may be represented as completed. Select case variety by capabilities proved, not recency alone. The aspirational four-slot portfolio arc is: current marketing systems; strongest identity; creative-direction/campaign; production-intensive delivery. The homepage can display three or four completed works, provided the work index and its project data remain canonical. Demote unfinished Detour and Out Of Office from the completed feature list.
+
+### 0A.2 Mandatory corrections by route
+
+| Priority | Destination | Required change | Acceptance evidence |
+| --- | --- | --- | --- |
+| P0 | Home/Work | Make selected work the dominant editorial feature; prove role, constraint, decision and outcome, rather than showing a visual-only gallery | Real project media, accurate role/date/sector, valid destinations, a documented evidence matrix |
+| P0 | Contact | Fix mismatch between promised direct delivery and mailto fallback; ship functioning server-backed delivery **or** label mailto behavior before submission | Keyboard, mobile, success/error, failure and spam checks; no false success copy |
+| P0 | All case studies | Separate production outputs from effectiveness; add factual limitations and retrospective judgment | Reviewed evidence ledger and meaningful captions |
+| P1 | Navigation | Standardize Experiments at `experiments.html`, Essays at `essays.html` and `essays/{slug}.html`; preserve redirects for old URLs | Automated link crawl and redirect tests |
+| P1 | About | Tell a distinct story of progression, collaborators, real responsibilities and leadership; avoid repeating Home's service cards | Human editorial review, portrait, concise chronology |
+| P1 | Work | Give case studies different art-directed sequences appropriate to evidence, not mechanically identical template chapters | Three visually distinct case reviews with preserved shared components |
+| P1 | Experiments | Preserve discoverability and keyboard equivalents alongside drag/scroll experiences | Keyboard/touch/reduced-motion walkthrough |
+| P2 | Positioning | Remove “senior-leaning”; name the actual profession and demonstrate senior judgment through actions | Copy audit across data files and visible routes |
+
+### 0A.3 Exact seven-chapter implementation map
+
+| Chapter | Reference owner | Build contract | Functional fallback |
+| --- | --- | --- | --- |
+| 01 — Landing | [Artiom Yakushev](https://www.art-yakushev.com/) + [Integrated Biosciences](https://integratedbio.com/) | The authored name and an unambiguous service proposition anchor a full-height editorial hero. On enhanced entry, a generously rounded inset viewport panel scales out into the settled hero. Avoid a blocking preloader; the scale is a first-entry cue, not perpetual scroll hijacking. | Full-size readable hero immediately; no invisible content in no-JS/reduced-motion |
+| 02 — Selected Work | [Bulletproof](https://www.wearebulletproof.com/) | Oversized, individually art-directed project rows with row number, title, category, year and visible preview. Pointer/focus can change active preview; every row remains a native navigable link. | Static complete list and image; one tap navigates |
+| 03 — About Me | [Seun Badejo](https://seun.design/about/) | Quiet portrait/editorial essay, personal first-person voice and actual experience, not another capability grid. | Image alt text, readable column, normal document flow |
+| 04 — What I Do | [White Desert / Our Trips](https://white-desert.com/) | Immersive image-led service journeys; each card names the service, concrete contribution and a real example. Do not style an unsupported service as proven. | Visible headings, accessible links and text without hover |
+| 05 — Brands | [Beskar Labs marquee](https://dribbble.com/shots/21846626-Beskar-Labs-Logo-Marquee) | Optically balanced logos, continuous nonessential marquee, pause on hover/focus, short legitimate relationship label. | Static logo grid in reduced motion/no JS |
+| 06 — CTA | [Seun Badejo](https://seun.design/about/) | One clear human invitation, direct working contact, strong whitespace; do not invent availability. | Direct functioning link independent of forms and animation |
+| 07 — Footer | Existing portfolio dot matrix | Keep the genuinely interactive signature with pointer + keyboard path and ordinary navigation/social links; do not replace it with a screenshot or ambient particles. | Meaningful static signature and all links |
+| Global motion | [Jasmine Gunarto](https://jasminegunarto.com/) | A coherent sequence of typographic masks, image wipes, staggered disclosure and purposeful transitions; transform/opacity-first, avoid continuous aggressive motion or layout shifts. | `prefers-reduced-motion` removes nonessential animation without hiding information |
+
+**Source-confidence rule:** A text scrape confirms content but not timing, interaction curves, screenshot dimensions or proprietary implementations. Measure the real live references with browser captures at desktop and mobile before claiming pixel-perfect fidelity. Do not import reference assets or source code.
+
+### 0A.4 New typography roles and responsive scale
+
+Use the already licensed/local `Archivo-Variable.woff2` for display and all headings, `FinlandicaText-Variable.woff2` for prose and functional body copy, and `HostGrotesk-Variable.woff2` for ALL-CAPS labels, metadata, utility controls and nav microcopy. These are **role assignments across every route**, not merely homepage overrides. Never synthesize a fourth font or use font-weight alone as a substitute for hierarchy.
+
+| Role | Mobile | Desktop / fluid target | Line-height | Tracking |
+| --- | --- | --- | --- | --- |
+| Hero name | clamp(4rem, 13vw, 7rem) | clamp(7rem, 14vw, 17rem) | .77–.9 | -.07em to -.09em |
+| Editorial display | clamp(3.5rem, 10vw, 6rem) | clamp(6rem, 9vw, 11rem) | .88–.96 | -.06em |
+| Section heading | clamp(2.75rem, 8vw, 4.5rem) | clamp(4.5rem, 6.5vw, 8rem) | .9–1 | -.05em |
+| Card/project title | clamp(2rem, 7vw, 3.5rem) | clamp(3.5rem, 5vw, 6rem) | .95–1.05 | -.04em |
+| Intro/lead | clamp(1.35rem, 4.5vw, 1.75rem) | clamp(1.75rem, 2.5vw, 2.625rem) | 1.2–1.35 | -.015em |
+| Body | 1rem | clamp(1rem, .4vw + .95rem, 1.1875rem) | 1.5–1.65 | 0 |
+| Caption | .875rem | .9375rem | 1.35–1.5 | 0 |
+| All-caps label | .75rem | .8125rem | 1.2–1.4 | .10em–.16em |
+
+Honor minimum readable sizes and keep headlines from clipping in long strings or browser zoom. These are **new target values** pending screenshot and layout QA, not observations of the reference CSS. Update semantic tokens in `styles/foundations.css` first; eliminate ad hoc repeated overrides after verifying visual and contract tests. Do not weaken accessible focus indicators or spacing for the sake of enormous lettering.
+
+### 0A.5 Reverse-engineering and engineering acceptance
+
+Workflow: inspect source and reference screenshots; record **observed / estimated / proposed** measurements separately; map existing data and routes; create a reference-locked implementation; compare side-by-side at 375, 768, 1440 and 1920px; iterate; run Node **24.x** build, unit and integration tests, Playwright keyboard/touch/a11y runs, screenshot regression and shipped-dependency audit. Test menu overflow, essay padding, project rows, panel corner/radius transitions, footer pointer density, image cropping and no-JS behavior. Use the Reverse Engineer Anything and ponytail skills when actually installed in the coding environment; if missing, perform equivalent inspection and code-quality checks but **do not claim those named skills executed**. Keep assets original, all external links appropriate, deploy only after gates pass.
+
+**Release rule:** DESIGN.md edits are specification work, not proof the UI has been built. A merge requires concrete screenshots, passing tests, and a measured reference comparison. No unchecked claim of “exact” reference reproduction.
 
 ---
 
