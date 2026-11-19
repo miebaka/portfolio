@@ -308,7 +308,7 @@ test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) =>
 
 test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
-  await expect(page).toHaveURL(/\/explorations\.html$/);
+  await expect(page).toHaveURL(/\/experiments\.html$/);
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
 });
 
