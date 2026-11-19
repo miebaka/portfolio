@@ -84,13 +84,11 @@ test("the homepage makes the hiring proposition and proof available before biogr
   assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });
 
-test("the closing invitation clearly supports employment and collaboration", async () => {
+test("the closing invitation has a direct contact action without surplus availability copy", async () => {
   const html = await page("index.html");
-  assert.match(
-    html,
-    /Available for senior brand and marketing design roles, selected collaborations and design-led teams\./,
-  );
-  assert.match(html, /miebakakiki@gmail\.com/);
+  assert.match(html, /Have something worth making unmistakable\?/);
+  assert.match(html, /href="mailto:miebakakiki@gmail\.com"/);
+  assert.doesNotMatch(html, /Available for senior brand and marketing design roles/);
 });
 
 test("Home and About share the complete capability source", async () => {
