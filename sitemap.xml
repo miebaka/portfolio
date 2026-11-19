@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://miebaka-portfolio.vercel.app/</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/work.html</loc></url>
-  <url><loc>https://miebaka-portfolio.vercel.app/explorations.html</loc></url>
+  <url><loc>https://miebaka-portfolio.vercel.app/experiments.html</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/about.html</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/essays.html</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/contact.html</loc></url>
@@ -10,6 +10,6 @@
   <url><loc>https://miebaka-portfolio.vercel.app/work/rivo.html</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/work/tedx-rsu.html</loc></url>
   <url><loc>https://miebaka-portfolio.vercel.app/work/chopbox.html</loc></url>
-  <url><loc>https://miebaka-portfolio.vercel.app/writing/when-the-swoosh-lost-its-soul.html</loc></url>
-  <url><loc>https://miebaka-portfolio.vercel.app/writing/designing-for-disability-in-nigeria.html</loc></url>
+  <url><loc>https://miebaka-portfolio.vercel.app/essays/when-the-swoosh-lost-its-soul.html</loc></url>
+  <url><loc>https://miebaka-portfolio.vercel.app/essays/designing-for-disability-in-nigeria.html</loc></url>
 </urlset>

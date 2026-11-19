@@ -140,7 +140,7 @@ export function validateContent(content) {
     if (typeof project.featured !== "boolean") add(`${path}.featured`, "PROJECT_FEATURED_INVALID", "Featured must be a boolean.");
     if (typeof project.cover !== "string") add(`${path}.cover`, "PROJECT_FIELD_REQUIRED", "Cover must be a media stem or an empty string.");
     if (project.href !== undefined && !validRoute(project.href)) add(`${path}.href`, "ROUTE_INVALID", "Project links must use local HTML routes.");
-    const isArticle = validRoute(project.href) && routePath(project.href).startsWith("writing/");
+    const isArticle = validRoute(project.href) && routePath(project.href).startsWith("essays/");
     if (project.status === PROJECT_STATUS.PUBLISHED && !isArticle && !isRecord(studies[project.slug])) add(`${path}.slug`, "PUBLISHED_CASE_MISSING", "A published project must have a case study or a direct writing route.");
   });
 
@@ -202,7 +202,7 @@ export function validateContent(content) {
       const nextProject = projects.find(item => item?.slug === study.next?.slug);
       if (!nextProject) add(`${path}.next.slug`, "NEXT_PROJECT_MISSING", "Next must reference an existing project.");
       else if (nextProject.status === PROJECT_STATUS.PRIVATE) add(`${path}.next.slug`, "NEXT_PROJECT_PRIVATE", "Next cannot expose a private project.");
-      else if (!isRecord(studies[nextProject.slug]) || routePath(nextProject.href).startsWith("writing/")) add(`${path}.next.slug`, "NEXT_CASE_MISSING", "Next must reference a project with a usable case-study destination.");
+      else if (!isRecord(studies[nextProject.slug]) || routePath(nextProject.href).startsWith("essays/")) add(`${path}.next.slug`, "NEXT_CASE_MISSING", "Next must reference a project with a usable case-study destination.");
       else if (study.status === "published" && study.next.interactive !== false) {
         if (nextProject.status !== PROJECT_STATUS.PUBLISHED) add(`${path}.next.slug`, "NEXT_PROJECT_UNPUBLISHED", "An active next destination must be a published project; forthcoming entries must be noninteractive.");
         else if (studies[nextProject.slug].status !== "published") add(`${path}.next.slug`, "NEXT_CASE_UNPUBLISHED", "An active next destination must have a published case narrative.");

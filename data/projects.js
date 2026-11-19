@@ -86,7 +86,7 @@ export const projects = [
     "year": "2023",
     "tone": "#4b68c8",
     "cover": "disability-flying-stars",
-    "href": "writing/designing-for-disability-in-nigeria.html",
+    "href": "essays/designing-for-disability-in-nigeria.html",
     "featured": false,
     "caseReady": true,
     "status": "published"
@@ -104,7 +104,7 @@ export const projects = [
     "year": "2026",
     "tone": "#07112b",
     "cover": "swoosh-dream-crazy",
-    "href": "writing/when-the-swoosh-lost-its-soul.html",
+    "href": "essays/when-the-swoosh-lost-its-soul.html",
     "featured": false,
     "caseReady": true,
     "status": "published"
