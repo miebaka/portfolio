@@ -147,8 +147,7 @@ a `mailto:` action and direct email link as the no-JavaScript fallback.
   and JSON-LD (`Person` + `WebSite` on home, `BreadcrumbList` everywhere,
   `CreativeWork` on case studies). Plus `robots.txt`, `sitemap.xml`, SVG favicon.
 - **Canonical host:** `https://miebaka-portfolio.vercel.app`. Preview deployments remain
-  `noindex,nofollow`; remove the staging robots response header and disallow rule
-  only when the canonical domain is ready to launch.
+  `noindex,nofollow` where configured. The root `robots.txt` currently disallows crawlers; this is an explicit launch decision to revisit when public indexing is approved, not a design side effect.
 
 ## Shared shell and components
 
