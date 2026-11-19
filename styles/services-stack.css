@@ -324,3 +324,24 @@ body .site-nav__link,body .site-nav__menu-btn{min-height:44px}
     background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText;
   }
 }
+
+
+/* Specificity and full-bleed corrections verified against 1440px and 390px. */
+body[data-page="home"] section.home-capabilities--reference.container {
+  width:100vw!important;
+  max-width:none!important;
+  margin-inline:calc(50% - 50vw)!important;
+}
+body[data-page="home"] section.home-capabilities--reference .process-sequence,
+body[data-page="home"] section.home-capabilities--reference .service-stack,
+body[data-page="home"] section.home-capabilities--reference .service-stack__item,
+body[data-page="home"] section.home-capabilities--reference .service-stack__card {
+  width:100%!important;max-width:none!important;margin-inline:0;
+}
+html body .site-footer .site-footer__links a,
+html body .site-footer .site-footer__links a:visited {
+  color:var(--ink)!important;
+}
+html body .site-footer .site-footer__links a:focus-visible {
+  outline:3px solid var(--focus);outline-offset:3px;
+}
