@@ -146,3 +146,13 @@ body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .he
   font-size:clamp(3rem,5.1vw,5.3rem);
   line-height:.98;
 }
+
+/* Contrast is measured between the active row and its numbered pseudo element. */
+body[data-page="home"] .home-project-list .editorial-index__row:is(:hover,:focus-visible) {
+  color:var(--ink);
+}
+body[data-page="writing"].article-page .article-hero__title {
+  max-width:none;
+  font-size:clamp(3rem,4.1vw,4.75rem);
+  line-height:1;
+}
