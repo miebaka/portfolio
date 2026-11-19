@@ -268,7 +268,7 @@ body[data-page="home"] .marquee__item{
 }
 body[data-page="home"] .marquee__item img{
   width:var(--logo-render-width,auto);
-  height:var(--logo-render-height,auto);
+  height:auto;
   max-width:calc(100% - 1rem);
   max-height:100%;opacity:1;object-fit:contain;transform:none;
   filter:brightness(0);
