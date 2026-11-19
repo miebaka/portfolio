@@ -84,37 +84,10 @@ body[data-page="home"] .home-project-list .editorial-index__row:focus-visible .h
 body[data-page="home"] .work-view-controls {
   display:flex;gap:.4rem;align-items:center;margin-top:clamp(2rem,5vw,4rem)
 }
-body[data-page="home"] .work-view-controls button {
-  padding:.65rem .75rem;font:600 var(--type-label-m)/1 var(--label);
-  text-transform:uppercase;letter-spacing:.04em;color:var(--muted);
-  border:1px solid transparent;border-radius:.35rem
-}
-body[data-page="home"] .work-view-controls button[aria-pressed="true"] {
-  color:var(--ink);border-color:var(--ink)
-}
 body[data-page="home"] .work-view-controls a {
   margin-left:auto;padding:.65rem .85rem;border:1px solid var(--ink);
   border-radius:.35rem;color:var(--ink);text-decoration:none;
   text-transform:uppercase;font:600 var(--type-label-m)/1 var(--label)
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .editorial-index {
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .editorial-index__row {
-  display:flex;flex-direction:column;align-items:stretch;gap:1rem;min-height:0
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .editorial-index__row::before {
-  position:absolute;top:.75rem;left:.75rem;z-index:6;color:#fff;text-shadow:0 1px 8px #000
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .home-project-list__visual {
-  position:relative;inset:auto;order:-1;width:100%;aspect-ratio:4/5;
-  opacity:1;transform:none;border-radius:0
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .home-project-list__identity {
-  width:100%;padding:.4rem 0 1rem
-}
-body[data-page="home"] .home-project-list[data-work-view="grid"] .home-project-list__title {
-  white-space:normal;font-size:clamp(1.3rem,2.2vw,2.5rem);line-height:1
 }
 @media(max-width:48rem) {
   body[data-page] .theme-cord__prompt {display:none!important}
@@ -136,18 +109,9 @@ body[data-page="home"] .home-project-list[data-work-view="grid"] .home-project-l
   body[data-page="home"] .home-project-list .editorial-index__row:is(:hover,:focus-visible) .home-project-list__visual {
     transform:none
   }
-  body[data-page="home"] .home-project-list[data-work-view="grid"] .editorial-index {
-    grid-template-columns:repeat(2,minmax(0,1fr))
   }
-  body[data-page="home"] .home-project-list[data-work-view="grid"] .home-project-list__title {
-    font-size:clamp(1rem,4.4vw,1.5rem)
-  }
-}
 @media(max-width:32rem) {
-  body[data-page="home"] .home-project-list[data-work-view="grid"] .editorial-index {
-    grid-template-columns:1fr
   }
-}
 @media(prefers-reduced-motion:reduce) {
   body[data-page="home"] .home-project-list__title,
   body[data-page="home"] .home-project-list__visual {transition:none}
