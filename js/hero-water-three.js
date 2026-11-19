@@ -104,7 +104,7 @@ export function mountHeroWave(host,initialState){
  const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
  screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()}};
- let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7;
+ let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7,steps=0,lastPointerAt=0;
  const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
  const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
  function pass(mat,target,inputs){
@@ -115,6 +115,12 @@ export function mountHeroWave(host,initialState){
  }
  function draw(){if(destroyed)return;mesh.material=screen;screen.uniforms.surface.value=height.read.texture;renderer.setRenderTarget(null);renderer.render(scene,camera);}
  function step(){
+  // Natural low-amplitude disturbances keep the surface alive without input.
+  steps++;
+  if(steps%38===0&&performance.now()-lastPointerAt>1400){
+   cursor.set(.18+.64*(.5+.5*Math.sin(steps*.719)),.18+.64*(.5+.5*Math.cos(steps*.453)));
+   impulse=.22;
+  }
   pass(ad,vel.write,{velocity:vel.read.texture});vel.swap();
   pass(dv,div,{velocity:vel.read.texture});
   for(let i=0;i<ITERATIONS;i++){pass(jac,press.write,{pressure:press.read.texture,divergence:div.texture});press.swap();}
@@ -151,6 +157,7 @@ export function mountHeroWave(host,initialState){
  function setPointer(x,y){
   const nx=Math.max(.01,Math.min(.99,(x+1)*.5)),ny=Math.max(.01,Math.min(.99,1-(y+1)*.5));
   const distance=Math.hypot(nx-cursor.x,ny-cursor.y);cursor.set(nx,ny);
+  if(distance>.006)lastPointerAt=performance.now();
   if(distance>.006&&distance<.7&&running())impulse=Math.min(.9,distance*3.);
   request();
  }
