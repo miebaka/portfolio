@@ -37,12 +37,12 @@ The authoritative route registry is `data/navigation.js`:
 | Home | `index.html` | Seven-section landing experience |
 | Work | `work.html` | Published work, then clearly subordinate work-in-progress |
 | About | `about.html` | Background, experience, practice |
-| Experiments | `explorations.html` | Spatial creative experiments |
+| Experiments | `experiments.html` | Spatial creative experiments |
 | Essays | `essays.html` | Writing index |
 | Contact | `contact.html` | Primary contact path and form |
 | Privacy | `privacy.html` | Privacy statement and footer destination |
 | Case studies | `work/*.html` | Evidence-led project pages |
-| Articles | `writing/*.html` | Full readable articles |
+| Articles | `essays/*.html` | Full readable articles |
 | Legacy | `community.html` | Existing Experiments redirect |
 | Not found | `404.html` | Accessible error route; noindex |
 
@@ -294,7 +294,7 @@ A valid exception log records: **decision, owner, rationale, impacted pages, aff
 
 ## Appendix A — Known existing issues, not yet automatically fixed
 
-1. `data/site-config.js` contains `canonicalUrl: "https://miebaka.design/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
+1. `data/site-config.js` contains `canonicalUrl: "https://miebaka-portfolio.vercel.app/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
 2. `js/render/projects.js` hard-codes featured slugs; implement validated ordering in data.
 3. `styles/home.css` hides Selected Work project previews on mobile; preserve meaningful media.
 4. Footer canvas pointer handlers currently target a `pointer-events:none` canvas; correct the event target and test it.

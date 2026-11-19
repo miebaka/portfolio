@@ -89,14 +89,14 @@ test("the route registry has unique destinations and supports the approved globa
     navigation.primary.map((route) => route.label),
     ["Work", "Experiments", "About", "Essays", "Contact"],
   );
-  assert.ok(navigation.footer.some((route) => route.href === "explorations.html"));
+  assert.ok(navigation.footer.some((route) => route.href === "experiments.html"));
   assert.ok(navigation.footer.some((route) => route.href === "essays.html"));
 });
 
 test("every production shell exposes the complete Index as fallback navigation", async () => {
   const destinations = navigation.index.map((route) => route.href);
   for (const file of await walk(dist, ".html")) {
-    if (file.endsWith("explorations.html")) continue;
+    if (file.endsWith("experiments.html")) continue;
     const html = await readFile(file, "utf8");
     const header = html.match(/<header\b[^>]*data-mount="nav"[^>]*>([\s\S]*?)<\/header>/)?.[1] || "";
     const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
@@ -123,9 +123,9 @@ test("source and built footer fallbacks match the approved public navigation", a
 
 test("registry routes build with canonical URLs and generated sitemap entries", async () => {
   for (const [href, canonical] of [
-    ["index.html", "https://miebaka.design/"],
-    ["explorations.html", "https://miebaka.design/explorations.html"],
-    ["community.html", "https://miebaka.design/explorations.html"],
+    ["index.html", "https://miebaka-portfolio.vercel.app/"],
+    ["experiments.html", "https://miebaka-portfolio.vercel.app/experiments.html"],
+    ["community.html", "https://miebaka-portfolio.vercel.app/experiments.html"],
   ]) {
     const html = await readFile(join(dist, href), "utf8");
     assert.ok(html.includes(`<link rel="canonical" href="${canonical}">`), href);
@@ -133,12 +133,12 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
   const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   assert.equal(new Set(urls).size, urls.length);
-  assert.ok(urls.includes("https://miebaka.design/explorations.html"));
-  assert.ok(!urls.includes("https://miebaka.design/community.html"));
+  assert.ok(urls.includes("https://miebaka-portfolio.vercel.app/experiments.html"));
+  assert.ok(!urls.includes("https://miebaka-portfolio.vercel.app/community.html"));
   assert.ok(!urls.some((url) => url.endsWith("404.html")));
   for (const project of SITE.projects.filter((project) => SITE.caseStudies[project.slug]?.status !== "published")) {
     assert.ok(
-      !urls.includes(`https://miebaka.design/work/${project.slug}.html`),
+      !urls.includes(`https://miebaka-portfolio.vercel.app/work/${project.slug}.html`),
       `${project.slug} is not a published narrative`,
     );
   }
@@ -150,7 +150,7 @@ test("registry routes build with canonical URLs and generated sitemap entries", 
 });
 
 test("Experiments ships a readable archive and the retired route points to it", async () => {
-  const experiments = await readFile(join(dist, "explorations.html"), "utf8");
+  const experiments = await readFile(join(dist, "experiments.html"), "utf8");
   assert.match(experiments, /data-experiments-spatial/);
   assert.match(experiments, /<h1[^>]*>Experiments<\/h1>/);
   assert.match(experiments, /Wada Sanzō, Study 264/);
@@ -467,8 +467,8 @@ test("requested language and contact details stay canonical", async () => {
     join(dist, "contact.html"),
     join(dist, "essays.html"),
     join(dist, "privacy.html"),
-    join(dist, "writing", "when-the-swoosh-lost-its-soul.html"),
-    join(dist, "writing", "designing-for-disability-in-nigeria.html"),
+    join(dist, "essays", "when-the-swoosh-lost-its-soul.html"),
+    join(dist, "essays", "designing-for-disability-in-nigeria.html"),
   ];
   const source = (await Promise.all(sourceFiles.map((file) => readFile(file, "utf8")))).join("\n");
   assert.doesNotMatch(

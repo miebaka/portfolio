@@ -20,7 +20,7 @@ const study = (overrides = {}) => ({
 const fixture = (overrides = {}) => ({
   siteConfig: { name: "Designer", role: "Brand designer", email: "designer@example.com", location: "Lagos, Nigeria", socials: [], canonicalUrl: "https://miebaka-portfolio.vercel.app/", cv: null },
   services: Array.from({ length: 5 }, (_, index) => ({ id: `service-${index + 1}`, title: `Service ${index + 1}`, description: "Useful identity systems.", outputs: "A practical system.", fit: "Teams needing clarity.", evidenceLabel: "Sample case", evidenceHref: "work/sample.html" })),
-  writing: [{ title: "A design essay", href: "writing/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
+  writing: [{ title: "A design essay", href: "essays/essay.html", date: "2024-02-29", summary: "An authored design essay.", readingTime: "5 min read" }],
   clients: [{ name: "Sample client", logo: "assets/images/clients/sample.svg", logoW: 120, logoH: 40 }],
   navigation: {
     routes: [{ key: "work", label: "Work", href: "work.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] }],
@@ -57,7 +57,7 @@ test("published projects require a case study", () => {
   expectError(fixture({ caseStudies: {} }), "PUBLISHED_CASE_MISSING", "projects[0].slug");
 });
 test("published articles can use their direct writing route", () => {
-  assert.equal(validateContent(fixture({ projects: [project({ href: "writing/sample.html" })], caseStudies: {} })).ok, true);
+  assert.equal(validateContent(fixture({ projects: [project({ href: "essays/sample.html" })], caseStudies: {} })).ok, true);
   expectError(fixture({ projects: [project({ href: "work/sample.html" })], caseStudies: {} }), "PUBLISHED_CASE_MISSING", "projects[0].slug");
 });
 test("media requires positive dimensions and a meaningful alternative", () => {
@@ -75,7 +75,7 @@ test("next-project references must resolve to a public project", () => {
   expectError(fixture({ projects: [project({ status: "private" })], caseStudies: { sample: study({ next: { slug: "sample", title: "Sample" } }) } }), "NEXT_PROJECT_PRIVATE", "caseStudies.sample.next.slug");
 });
 test("next cannot route a published writing project to a nonexistent case page", () => {
-  expectError(fixture({ projects: [project(), project({ slug: "essay", featured: false, href: "writing/essay.html" })], caseStudies: { sample: study({ next: { slug: "essay", title: "Essay" } }) } }), "NEXT_CASE_MISSING", "caseStudies.sample.next.slug");
+  expectError(fixture({ projects: [project(), project({ slug: "essay", featured: false, href: "essays/essay.html" })], caseStudies: { sample: study({ next: { slug: "essay", title: "Essay" } }) } }), "NEXT_CASE_MISSING", "caseStudies.sample.next.slug");
 });
 test("next cannot route an unready project without a case destination", () => {
   expectError(fixture({ projects: [project(), project({ slug: "unready", status: "coming-soon", featured: false })], caseStudies: { sample: study({ next: { slug: "unready", title: "Unready" } }) } }), "NEXT_CASE_MISSING", "caseStudies.sample.next.slug");
@@ -84,7 +84,7 @@ test("next can link to an existing draft case destination", () => {
   assert.equal(validateContent(fixture({ projects: [project(), project({ slug: "up-next", status: "coming-soon", featured: false })], caseStudies: { sample: study({ next: { slug: "up-next", title: "Up next" } }), "up-next": study() } })).ok, true);
 });
 test("every public content domain rejects missing or null records", () => {
-  for (const [domain, code] of [["siteConfig", "SITE_CONFIG_INVALID"], ["services", "SERVICES_INVALID"], ["writing", "WRITING_INVALID"], ["clients", "CLIENTS_INVALID"]]) {
+  for (const [domain, code] of [["siteConfig", "SITE_CONFIG_INVALID"], ["services", "SERVICES_INVALID"], ["essays", "WRITING_INVALID"], ["clients", "CLIENTS_INVALID"]]) {
     for (const value of [undefined, null]) expectError(fixture({ [domain]: value }), code, domain);
   }
 });
@@ -114,7 +114,7 @@ test("writing rejects unsafe or invalid hrefs", () => {
   for (const href of [undefined, "", "javascript:alert(1)", "../essay.html", "//example.com/essay", "https://", "https://user:password@example.com/essay", "ftp://example.com/essay"]) expectError(fixture({ writing: [{ ...fixture().writing[0], href }] }), "WRITING_URL_INVALID", "writing[0].href");
 });
 test("writing permits valid local or HTTPS article destinations", () => {
-  for (const href of ["writing/essay.html", "https://example.com/essay"]) assert.equal(validateContent(fixture({ writing: [{ ...fixture().writing[0], href }] })).ok, true);
+  for (const href of ["essays/essay.html", "https://example.com/essay"]) assert.equal(validateContent(fixture({ writing: [{ ...fixture().writing[0], href }] })).ok, true);
 });
 test("client proof requires names and valid logo metadata", () => {
   expectError(fixture({ clients: {} }), "CLIENTS_INVALID", "clients");
@@ -219,7 +219,7 @@ test("adding a validated root route generates its build output and sitemap entry
   const directory = await mkdtemp(join(tmpdir(), "portfolio-route-build-"));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const sourceRoot = new URL("../", import.meta.url);
-  for (const folder of ["data", "scripts", "js", "styles", "work", "writing"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
+  for (const folder of ["data", "scripts", "js", "styles", "work", "essays"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
   for (const entry of await readdir(sourceRoot)) {
     if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
   }
@@ -234,19 +234,19 @@ test("adding a validated root route generates its build output and sitemap entry
   assert.match(await readFile(join(directory, "dist", "studio.html"), "utf8"), /<h1>Studio<\/h1>/);
   assert.match(await readFile(join(directory, "dist", "sitemap.xml"), "utf8"), /<loc>https:\/\/miebaka.design\/studio.html<\/loc>/);
   assert.match(await readFile(join(directory, "dist", "index.html"), "utf8"), /href="studio.html">Studio<\/a>/);
-  assert.match(await readFile(join(directory, "dist", "writing", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
+  assert.match(await readFile(join(directory, "dist", "essays", "when-the-swoosh-lost-its-soul.html"), "utf8"), /href="\.\.\/studio.html">Studio<\/a>/);
 });
 
 test("accepted local writing URL variants build their pathname and retain authored hrefs", async t => {
   const directory = await mkdtemp(join(tmpdir(), "portfolio-writing-build-"));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const sourceRoot = new URL("../", import.meta.url);
-  for (const folder of ["data", "scripts", "js", "styles", "work", "writing"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
+  for (const folder of ["data", "scripts", "js", "styles", "work", "essays"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
   for (const entry of await readdir(sourceRoot)) {
     if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
   }
   for (const folder of ["assets", "node_modules"]) await symlink(new URL(folder, sourceRoot).pathname, join(directory, folder), "dir");
-  const pathname = "writing/when-the-swoosh-lost-its-soul.html";
+  const pathname = "essays/when-the-swoosh-lost-its-soul.html";
   const authoredSource = await readFile(join(directory, pathname), "utf8");
   for (const href of [`./${pathname}`, `${pathname}#main`, `${pathname}?source=index`, `./${pathname}?source=index#main`]) {
     await t.test(href, async () => {
@@ -258,7 +258,7 @@ test("accepted local writing URL variants build their pathname and retain author
       const builtArticle = await readFile(join(directory, "dist", pathname), "utf8");
       assert.ok(builtArticle.includes(authoredSource.match(/<h1[\s\S]*?<\/h1>/)[0]));
       const sitemap = await readFile(join(directory, "dist", "sitemap.xml"), "utf8");
-      assert.ok(sitemap.includes('<loc>https://miebaka.design/writing/when-the-swoosh-lost-its-soul.html</loc>'));
+      assert.ok(sitemap.includes('<loc>https://miebaka-portfolio.vercel.app/essays/when-the-swoosh-lost-its-soul.html</loc>'));
       assert.doesNotMatch(sitemap, /#main|\?source=index/);
       assert.equal(await readFile(join(directory, "dist", "data", "writing.js"), "utf8"), module);
     });
