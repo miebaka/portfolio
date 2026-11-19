@@ -82,9 +82,9 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   const criticalProof = [
     ["Brand & visual designer", ".home-landing__meta > p:nth-child(2)"],
     ["Selected work", "#selected-title"],
-    ["Find the governing decision", "#what-i-do .service-fallback li:nth-child(1) :is(h2,h3)"],
-    ["Build the identity system", "#what-i-do .service-fallback li:nth-child(2) :is(h2,h3)"],
-    ["Hand over a usable system", "#what-i-do .service-fallback li:nth-child(5) :is(h2,h3)"],
+    ["Brand Identity & Systems", "#what-i-do .service-fallback li:nth-child(1) :is(h2,h3)"],
+    ["Art Direction", "#what-i-do .service-fallback li:nth-child(2) :is(h2,h3)"],
+    ["Design Systems & Production", "#what-i-do .service-fallback li:nth-child(5) :is(h2,h3)"],
     ["Hi, I’m Miebaka.", "#about-title"],
   ];
   for (const [text, selector] of criticalProof) {

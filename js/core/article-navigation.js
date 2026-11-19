@@ -1,3 +1,5 @@
+import { escapeHTML as esc } from "../utilities/dom.js";
+
 /* Progressive article navigation: the authored article remains complete without JS. */
 const slugify = value => String(value || "section")
   .toLowerCase()
@@ -33,8 +35,31 @@ export function initArticleNavigation() {
     const nav = document.createElement("nav");
     nav.className = "article-toc";
     nav.setAttribute("aria-label", "On this page");
-    nav.innerHTML = '<p>On this page</p><ol>' + headings.map((heading, index) => '<li><a href="#' + heading.id + '"><span class="article-toc__index" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><strong class="article-toc__title">' + heading.textContent + '</strong></a></li>').join("") + "</ol>";
+    nav.innerHTML = '<p>On this page</p><ol>' + headings.map((heading, index) => '<li><a href="#' + esc(heading.id) + '"><span class="article-toc__index" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><strong class="article-toc__title">' + esc(heading.textContent) + '</strong></a></li>').join("") + "</ol>";
     wrapper.append(nav, article);
+    const links = [...nav.querySelectorAll("a")];
+    let queued = false;
+    const updateActive = () => {
+      queued = false;
+      // The current section is the last heading crossed near the top of the reading area.
+      const line = Math.max(100, innerHeight * .28);
+      let activeIndex = 0;
+      headings.forEach((heading, index) => {
+        if (heading.getBoundingClientRect().top <= line) activeIndex = index;
+      });
+      links.forEach((link, index) => {
+        if (index === activeIndex) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+    };
+    const scheduleActive = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(updateActive);
+    };
+    addEventListener("scroll", scheduleActive, { passive: true });
+    addEventListener("resize", scheduleActive, { passive: true });
+    updateActive();
   }
 
   const current = location.pathname.split("/").pop();
@@ -43,7 +68,7 @@ export function initArticleNavigation() {
     const section = document.createElement("aside");
     section.className = "article-next container";
     section.setAttribute("aria-label", "Next article");
-    section.innerHTML = '<p>' + next.context + '</p><a href="' + next.href + '">' + next.title + '</a>';
+    section.innerHTML = '<p>' + esc(next.context) + '</p><a href="' + esc(next.href) + '">' + esc(next.title) + '</a>';
     (document.querySelector(".article-reading") || article).after(section);
   }
 

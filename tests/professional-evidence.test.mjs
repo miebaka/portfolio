@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { siteConfig } from "../data/site-config.js";
 import { CONTENT } from "../data/site.js";
 import { services } from "../data/services.js";
+import { escapeHTML } from "../js/utilities/dom.js";
 import {
   createServiceSwatches,
   renderExperienceLedger,
@@ -163,9 +164,9 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
   const markup = renderServiceAccordionMarkup(services);
   assert.equal((markup.match(/<details/g) || []).length, 5);
   for (const service of services) {
-    assert.ok(markup.includes(service.title));
-    assert.ok(markup.includes(service.description));
-    assert.ok(markup.includes(service.evidenceLabel));
+    assert.ok(markup.includes(escapeHTML(service.title)));
+    assert.ok(markup.includes(escapeHTML(service.description)));
+    assert.ok(markup.includes(escapeHTML(service.evidenceLabel)));
   }
   assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });
@@ -198,4 +199,46 @@ test("the homepage keeps selected work concise and image-led", () => {
   }
   assert.doesNotMatch(markup, /Governing decision|home-project-list__decision/);
   assert.equal((markup.match(/home-project-list__visual/g) || []).length, 3);
+});
+
+test("public service names are concrete disciplines backed by real published chapter anchors", async () => {
+  assert.deepEqual(services.map(service => service.title), [
+    "Brand Identity & Systems", "Art Direction", "Campaign & Marketing Design",
+    "Editorial & Graphic Design", "Design Systems & Production",
+  ]);
+  for (const service of services) {
+    const [file, anchor] = service.evidenceHref.split("#");
+    assert.ok(anchor, `${service.id} needs an explicit evidence chapter`);
+    const slug = file.replace(/^work\//, "").replace(/\.html$/, "");
+    const source = (await import("../data/case-studies.js")).caseStudies;
+    const record = source[slug];
+    assert.ok(record, `${service.id} references a published case`);
+    assert.ok(record.chapters?.some(chapter => chapter.id === anchor),
+      `${service.id} links to a real chapter`);
+  }
+  const markup = renderServiceSwatchesMarkup(services);
+  assert.equal((markup.match(/service-journey__evidence/g) || []).length, services.length);
+});
+
+test("About portrait and 404 recovery follow semantic design contracts", async () => {
+  const about = await page("about.html");
+  assert.doesNotMatch(about, /<\/picture>\s*<\/picture>/);
+  assert.match(about, /<div class="about-hero__media">[\s\S]*?<picture>[\s\S]*?<\/picture>\s*<\/div>/);
+  const missing = await page("404.html");
+  for (const href of ["index.html", "work.html", "contact.html"])
+    assert.match(missing, new RegExp(`href="${href}"`));
+});
+
+test("Home and About preserve authentic public proof without JavaScript", async () => {
+  const home = await page("index.html");
+  const about = await page("about.html");
+  for (const client of (await import("../data/clients.js")).clients) {
+    assert.ok(home.includes('alt="' + client.name.replaceAll("&", "&amp;") + '"'));
+  }
+  for (const job of siteConfig.experience) {
+    assert.ok(about.includes(job.organisation));
+    assert.ok(about.includes(job.period));
+  }
+  assert.match(home,/client-strip__fallback/);
+  assert.match(about,/experience-fallback/);
 });

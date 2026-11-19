@@ -12,7 +12,7 @@ export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
       '<img src="assets/images/optimized/' + cover + '-1080.webp" alt="" width="1080" height="810" loading="lazy" decoding="async"></picture></span>' : '';
     return '<li class="service-journey service-journey--' + safeToken(service.id) + '"><a href="' + safeURL(service.evidenceHref) + '">' +
       visual + '<span class="service-journey__number">' + String(index + 1).padStart(2, "0") + '</span>' +
-      '<div class="service-journey__copy"><span class="service-journey__discipline">' + esc(service.discipline || "") + '</span><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p></div>' +
+      '<div class="service-journey__copy"><span class="service-journey__discipline">' + esc(service.discipline || "") + '</span><h3>' + esc(service.title) + '</h3><p>' + esc(service.description) + '</p><span class="service-journey__evidence">See the proof: ' + esc(service.evidenceLabel) + '</span></div>' +
       '<span class="service-journey__arrow" aria-hidden="true">&#8599;</span></a></li>';
   }).join('') + '</ol>';
 }

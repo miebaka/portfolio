@@ -488,7 +488,7 @@ Portrait loads with appropriate sizes, has no layout shift, and does not bury th
 
 #### Service taxonomy
 
-The present `data/services.js` uses five **process descriptions** as top-level titles: “Find the governing decision,” “Build the identity system,” “Make it survive production,” “Direct the rollout,” and “Hand over a usable system.” These are valuable process steps but are weak as navigable service categories. Reframe the main labels as plain-English disciplines while retaining process language as evidence-oriented supporting copy.
+**Implementation:** `data/services.js` now uses five plain-language discipline titles with published case-study chapter URLs and explicit proof labels. Process explanations remain supporting copy. Keep those titles and source-of-proof links synchronized across Home, About, and the non-JavaScript fallback; verify their evidence on every release.
 
 Proposed categories, subject to accurately matching demonstrated services:
 
@@ -1013,7 +1013,7 @@ Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based va
 
 ### 16.5 SEO and canonical domain — resolved conflict
 
-**The authoritative public canonical host is `https://miebaka-portfolio.vercel.app/`** as defined in `engineering-specification.md`. The current `data/site-config.js` contains `canonicalUrl: "https://miebaka.design/"`, while public `index.html` uses the Vercel URL. The engineering spec explicitly says `miebaka.design` is not owned/active. **Fix `site-config.js` and audit all metadata/build outputs to use the Vercel canonical; do not activate `miebaka.design` without owner confirmation.**
+**The authoritative public canonical host is `https://miebaka-portfolio.vercel.app/`** as defined in `engineering-specification.md`. `data/site-config.js` and published metadata now agree on the Vercel canonical URL. Do not reintroduce `miebaka.design` or another canonical host without owner control and an intentional migration plan.
 
 Use one consistent canonical per route, correct open-graph/Twitter metadata, stable sitemap entries and `noindex` for 404 where appropriate. Validate structured data factual claims. Don't ship a project-specific canonical pointing at a nonexistent page.
 
