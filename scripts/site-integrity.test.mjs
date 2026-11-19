@@ -493,9 +493,9 @@ test("requested language and contact details stay canonical", async () => {
   const signature = await readFile(join(root, "js", "core", "footer-signature.js"), "utf8");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(signature, /site-footer__signature-canvas/);
-  assert.match(signature, /canvas\.addEventListener\("pointermove"/);
-  assert.match(css, /site-footer__signature-canvas\{[^}]*pointer-events:auto/);
-  assert.match(css, /site-footer__panel\{[^}]*pointer-events:none/);
+  assert.match(signature, /host\.addEventListener\("pointermove"/);
+  assert.match(css, /site-footer__signature-canvas\{[^}]*pointer-events:none/);
+  assert.match(css, /site-footer__panel\{[^}]*position:relative/);
   assert.match(signature, /drawStatic/);
   await access(join(dist, "js", "core", "footer-signature.js"));
 });
