@@ -105,6 +105,31 @@ body[data-page="home"] .hero-wave {
 body[data-page="home"] .hero-wave.is-ready {
   opacity: 1;
 }
+body[data-page="home"] .hero-wave__control {
+  position: absolute;
+  z-index: 3;
+  top: clamp(1rem, 2vw, 2rem);
+  right: clamp(1rem, 2vw, 2rem);
+  padding: 0.45rem 0.65rem;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 999px;
+  background: rgb(7 17 43 / 35%);
+  color: var(--ref-paper);
+  font: 500 0.7rem/1.3 var(--label);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+body[data-page="home"] .hero-wave__control:hover,
+body[data-page="home"] .hero-wave__control:focus-visible {
+  background: rgb(7 17 43 / 75%);
+}
+body[data-page="home"] .hero-wave__control:focus-visible {
+  outline: 2px solid var(--ref-paper);
+  outline-offset: 3px;
+}
+body[data-page="home"] .hero-wave__control[hidden] {
+  display: none;
+}
 body[data-page="home"] .hero-wave__canvas {
   display: block;
   width: 100%;
