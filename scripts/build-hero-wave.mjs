@@ -7,7 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outfile = resolve(root, "assets/runtime/hero-wave.js");
 await mkdir(dirname(outfile), { recursive: true });
 await build({
-  entryPoints: [resolve(root, "js/hero-wave-island.js")],
+  entryPoints: [resolve(root, "js/hero-water-three.js")],
   outfile,
   bundle: true,
   format: "esm",
