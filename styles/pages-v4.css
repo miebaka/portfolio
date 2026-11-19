@@ -1348,6 +1348,7 @@ body[data-page="work"]:not(.site-system-disabled) .project-archive__identity{
 @media (max-width: 48rem){
 body[data-page="work"]:not(.site-system-disabled) .project-archive__identity h2{
   font-size: clamp(2.25rem,10vw,4.25rem);
+  line-height: 1.12;
 }
 }
 

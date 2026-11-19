@@ -314,6 +314,20 @@ test("About exposes the CV only when configured", async ({ page }) => {
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
 });
 
+test("Mobile Work project titles have a readable multiline line height", async ({ page }) => {
+  for (const width of [320, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/work.html");
+    const titles = page.locator(".project-archive__identity h2");
+    await expect(titles).toHaveCount(3);
+    const values = await titles.evaluateAll(elements => elements.map(element => {
+      const style = getComputedStyle(element);
+      return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+    }));
+    for (const ratio of values) expect(ratio).toBeGreaterThanOrEqual(1.08);
+  }
+});
+
 test("Work index separates complete cases from studies in progress", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
