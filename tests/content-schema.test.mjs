@@ -84,7 +84,7 @@ test("next can link to an existing draft case destination", () => {
   assert.equal(validateContent(fixture({ projects: [project(), project({ slug: "up-next", status: "coming-soon", featured: false })], caseStudies: { sample: study({ next: { slug: "up-next", title: "Up next" } }), "up-next": study() } })).ok, true);
 });
 test("every public content domain rejects missing or null records", () => {
-  for (const [domain, code] of [["siteConfig", "SITE_CONFIG_INVALID"], ["services", "SERVICES_INVALID"], ["essays", "WRITING_INVALID"], ["clients", "CLIENTS_INVALID"]]) {
+  for (const [domain, code] of [["siteConfig", "SITE_CONFIG_INVALID"], ["services", "SERVICES_INVALID"], ["writing", "WRITING_INVALID"], ["clients", "CLIENTS_INVALID"]]) {
     for (const value of [undefined, null]) expectError(fixture({ [domain]: value }), code, domain);
   }
 });
