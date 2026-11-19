@@ -28,8 +28,13 @@ for (const [name, path, selector] of [
     });
     expect(padding[0]).toBeGreaterThanOrEqual(16);
     expect(padding[2]).toBeGreaterThanOrEqual(16);
-    expect(padding[1]).toBe(0);
-    expect(padding[3]).toBe(0);
+    if (name === "Essays") {
+      expect(padding[1]).toBeGreaterThanOrEqual(16);
+      expect(padding[3]).toBeGreaterThanOrEqual(16);
+    } else {
+      expect(padding[1]).toBe(0);
+      expect(padding[3]).toBe(0);
+    }
 
     await rows.first().focus();
     await expect(rows.first()).toHaveCSS("opacity", "1");

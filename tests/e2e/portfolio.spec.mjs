@@ -244,6 +244,52 @@ test("Global navigation uses the five approved destinations", async ({ page }) =
   expect(labels).toEqual(["Work", "Experiments", "About", "Essays", "Contact"]);
 });
 
+test("Index navigation rows have deliberate inner padding and clear hit areas", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/essays.html");
+    const menu = page.getByRole("button", { name: "Index", exact: true });
+    if (!(await menu.isVisible())) continue;
+    await menu.click();
+    const rows = page.locator(".site-index__destinations .site-index__link");
+    await expect(rows).toHaveCount(5);
+    const dimensions = await rows.evaluateAll(items => items.map(item => {
+      const style = getComputedStyle(item);
+      const rect = item.getBoundingClientRect();
+      return { left: parseFloat(style.paddingLeft), right: parseFloat(style.paddingRight), height: rect.height };
+    }));
+    for (const row of dimensions) {
+      expect(row.left).toBeGreaterThanOrEqual(12);
+      expect(row.right).toBeGreaterThanOrEqual(12);
+      expect(row.height).toBeGreaterThanOrEqual(44);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    await page.keyboard.press("Escape");
+  }
+});
+
+test("Essay cards maintain internal padding at mobile and desktop widths", async ({ page }) => {
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/essays.html");
+    const cards = page.locator(".editorial-index--notes .editorial-index__row");
+    await expect(cards).toHaveCount(2);
+    for (const card of await cards.all()) {
+      const geometry = await card.evaluate(element => {
+        const cs = getComputedStyle(element);
+        const card = element.getBoundingClientRect();
+        const title = element.querySelector(".writing-item__title").getBoundingClientRect();
+        return { left: parseFloat(cs.paddingLeft), right: parseFloat(cs.paddingRight),
+          titleInset: title.left - card.left };
+      });
+      expect(geometry.left).toBeGreaterThanOrEqual(16);
+      expect(geometry.right).toBeGreaterThanOrEqual(16);
+      expect(geometry.titleInset).toBeGreaterThanOrEqual(16);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+  }
+});
+
 test("Mobile navigation has a focus-trapped index", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/index.html");
@@ -266,6 +312,20 @@ test("About exposes the CV only when configured", async ({ page }) => {
   const cv = page.locator('[data-mount="cv"] a[download]');
   if (await cv.count()) await expect(cv).toHaveAttribute("href", /\.(pdf|docx?)$/i);
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
+});
+
+test("Mobile Work project titles have a readable multiline line height", async ({ page }) => {
+  for (const width of [320, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/work.html");
+    const titles = page.locator(".project-archive__identity h2");
+    await expect(titles).toHaveCount(3);
+    const values = await titles.evaluateAll(elements => elements.map(element => {
+      const style = getComputedStyle(element);
+      return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+    }));
+    for (const ratio of values) expect(ratio).toBeGreaterThanOrEqual(1.08);
+  }
 });
 
 test("Work index separates complete cases from studies in progress", async ({ page }) => {
