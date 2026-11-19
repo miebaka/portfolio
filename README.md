@@ -38,7 +38,8 @@ Portfolio/
 │   ├── main.css            # @imports everything in cascade order
 │   ├── foundations.css     # Tokens, reset, type, layout primitives, platform baseline
 │   ├── components-v4.css   # Navigation, controls, footer and shared components
-│   └── pages-v4.css        # Page and section composition
+│   ├── pages-v4.css        # Page and section composition
+│   └── living-editorial.css # Cross-page editorial art direction
 ├── data/
 │   └── site.js             # Single source of truth (ESM export): profile, projects, case studies…
 ├── js/                     # ES modules, one entry per page: <script type="module" src="js/main.js">

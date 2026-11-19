@@ -58,7 +58,7 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 - `data/site.js` composes separate content modules rather than duplicating authored content.
 - `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in optional motion, Last.fm, or a visual widget MUST NOT take down navigation or primary content.
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
-- `styles/main.css` is the single CSS entry. Its **current** layer order is `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, and **`home.css`**. Do not omit or bypass the last import in architectural documents.
+- `styles/main.css` is the single CSS entry. Its **current** layer order is `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, **`home.css`**, and **`living-editorial.css`**. Do not omit or bypass the last import in architectural documents.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
 - `api/contact.js` and `api/now-playing.js` are the only existing server-side boundaries. Adding another requires a documented need and security review.
 - Keep ESM dependencies intentional; do not introduce GSAP, an animation framework, a router, a UI framework, or a second CSS system just because a reference site uses one. If justified, document bundle impact, fallback, owner and tests.
@@ -83,6 +83,7 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Shared navigation/forms/footer/components | `styles/components-v4.css` |
 | Cross-page layouts and articles | `styles/pages-v4.css` |
 | Seven homepage sections and scoped behavior | `styles/home.css` |
+| Cross-page redesign refinements and art direction | `styles/living-editorial.css` |
 | Work/index/marquee rendering | `js/render/projects.js` |
 | Capabilities and experience | `js/render/sections.js` |
 | Case-study markup | `js/render/case-markup.js` |

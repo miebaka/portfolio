@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const names = ["foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css"];
+const names = ["foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css", "living-editorial.css"];
 const entries = await Promise.all(names.map(async name => [name, await readFile(join(root, "styles", name), "utf8")]));
 const css = Object.fromEntries(entries);
 const all = entries.map(([name, source]) => `/* ${name} */\n${source}`).join("\n");
@@ -53,8 +53,8 @@ reject(/transition\s*:\s*all(?:\s|;|$)/i.test(all), "transition: all is prohibit
 reject(/transition-property\s*:[^;}]*\ball\b/i.test(all), "transition-property: all is prohibited");
 reject(/(?:^|[\s:,])ease-in(?:[\s,;)]|$)/m.test(all.replaceAll("--ease-in-out-ui", "--allowed-ease")), "bare ease-in is prohibited");
 reject(/body\[data-page=/.test(css["foundations.css"] + css["components-v4.css"]), "route selectors belong in pages-v4.css");
-reject(/(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(|color\s*\()/i.test(css["components-v4.css"] + css["pages-v4.css"] + css["home.css"]), "raw colours belong in foundation token declarations");
-reject(/font(?:-family)?\s*:[^;}]*["']?(?:Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"] + css["home.css"]), "named font families must be consumed through permitted role tokens");
+reject(/(?:#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|lab\(|color\s*\()/i.test(css["components-v4.css"] + css["pages-v4.css"] + css["home.css"] + css["living-editorial.css"]), "raw colours belong in foundation token declarations");
+reject(/font(?:-family)?\s*:[^;}]*["']?(?:Google Sans Flex|Josefin Sans|Borges|Material Symbols Outlined)/i.test(css["components-v4.css"] + css["pages-v4.css"] + css["home.css"] + css["living-editorial.css"]), "named font families must be consumed through permitted role tokens");
 reject(/will-change\s*:\s*(?!auto)/i.test(all.replace(/\.client-marquee\.is-running \.client-marquee__track\{will-change:transform/g, "")), "will-change must be measured and active-state scoped");
 reject(/\bV(?:5|6|7|8|9|10|11|12|13)\b|historical\s+(?:override|layer)|override\s+strat/i.test(all), "historical version/override strata are prohibited");
 
