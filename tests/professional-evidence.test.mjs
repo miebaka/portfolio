@@ -163,9 +163,9 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
   const markup = renderServiceAccordionMarkup(services);
   assert.equal((markup.match(/<details/g) || []).length, 5);
   for (const service of services) {
-    assert.ok(markup.includes(service.title));
-    assert.ok(markup.includes(service.description));
-    assert.ok(markup.includes(service.evidenceLabel));
+    assert.ok(markup.includes(service.title.replaceAll("&", "&amp;")));
+    assert.ok(markup.includes(service.description.replaceAll("&", "&amp;")));
+    assert.ok(markup.includes(service.evidenceLabel.replaceAll("&", "&amp;")));
   }
   assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });

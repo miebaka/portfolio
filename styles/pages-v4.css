@@ -1373,11 +1373,11 @@ html[data-motion="reduced"] body[data-page="work"] .project-archive__preview-fra
 }
 
 /* Experiments: a fully accessible, meaningful gallery when JavaScript is disabled. */
-.no-js body[data-page="explorations"] .experiments-spatial__viewport,
-.no-js body[data-page="explorations"] .experiments-controls,
-.no-js body[data-page="explorations"] .experiments-spatial__caption,
-.no-js body[data-page="explorations"] .experiments-spatial__hint,
-.no-js body[data-page="explorations"] .experiments-nav button {display:none}
+.no-js .experiments-spatial__viewport,
+.no-js .experiments-controls,
+.no-js .experiments-spatial__caption,
+.no-js .experiments-spatial__hint,
+.no-js .experiments-nav button {display:none}
 .experiments-static {position:relative;max-width:var(--content);margin-inline:auto;padding:clamp(2rem,5vw,5rem) var(--page) clamp(4rem,8vw,8rem);color:var(--ref-near-black)}
 .experiments-static__nav {display:flex;flex-wrap:wrap;gap:clamp(1rem,3vw,3rem);margin-bottom:clamp(3rem,6vw,6rem);padding-block:1rem;border-block:1px solid var(--ref-near-black)}
 .experiments-static__nav a {display:inline-flex;align-items:center;min-height:2.75rem;padding:.4rem .25rem;color:inherit;text-underline-offset:.3em}
