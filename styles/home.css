@@ -105,6 +105,31 @@ body[data-page="home"] .hero-wave {
 body[data-page="home"] .hero-wave.is-ready {
   opacity: 1;
 }
+body[data-page="home"] .hero-wave__control {
+  position: absolute;
+  z-index: 3;
+  top: clamp(1rem, 2vw, 2rem);
+  right: clamp(1rem, 2vw, 2rem);
+  padding: 0.45rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--ref-paper) 30%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ref-midnight) 35%, transparent);
+  color: var(--ref-paper);
+  font: 500 0.7rem/1.3 var(--label);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+body[data-page="home"] .hero-wave__control:hover {
+  background: color-mix(in srgb, var(--ref-midnight) 75%, transparent);
+}
+body[data-page="home"] .hero-wave__control:focus-visible {
+  background: color-mix(in srgb, var(--ref-midnight) 75%, transparent);
+  outline: 2px solid var(--ref-paper);
+  outline-offset: 3px;
+}
+body[data-page="home"] .hero-wave__control[hidden] {
+  display: none;
+}
 body[data-page="home"] .hero-wave__canvas {
   display: block;
   width: 100%;

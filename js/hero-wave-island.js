@@ -1,8 +1,8 @@
-/* Minimal authored water-plane shader. Native WebGL replaces the entire
-   scene-graph dependency; the semantic HTML hero remains the fallback. */
-const MAX_AUTOPLAY_MS=2400, POINTER_WAKE_MS=650, FRAME_MS=1000/30;
+/* Single-pass procedural caustics. Native WebGL avoids a scene-graph bundle;
+   the semantic HTML hero and CSS stage remain the fallback. */
+const FRAME_MS=1000/30;
 const VERTEX="attribute vec2 aPosition;\nvarying vec2 vUv;\nvoid main(){vUv = aPosition * .5 + .5; gl_Position = vec4(aPosition,0.,1.);}";
-const FRAGMENT="precision mediump float;\nuniform float uTime;\nuniform float uMotion;\nuniform vec2 uPointer;\nuniform vec2 uAspect;\nuniform vec3 uColorA;\nuniform vec3 uColorB;\nuniform vec3 uColorC;\nvarying vec2 vUv;\nvoid main() {\n vec2 p = (vUv - .5)*uAspect;\n float broad = sin(p.x*7.8+uTime*.43)*.38;\n float cross = sin(p.y*8.2-p.x*2.3-uTime*.31)*.26;\n float detail = sin((p.x+p.y)*18.+uTime*.20)*.07;\n float pointerLight = exp(-9.*distance(vUv,uPointer*.15+.5));\n float relief = (broad+cross+detail+pointerLight*.16)*uMotion;\n float fold = smoothstep(-.67,.67,relief);\n float sheen = pow(max(0.,1.-abs(relief)),6.)*.16;\n float edge = .10*(1.-smoothstep(0.,.6,distance(vUv,vec2(.55,.5))));\n vec3 color = mix(uColorA,uColorB,fold);\n color = mix(color,uColorC,clamp(sheen+edge+pointerLight*.12,0.,.32));\n gl_FragColor = vec4(color,1.);\n}";
+const FRAGMENT="precision highp float;\nuniform float uTime;\nuniform float uMotion;\nuniform vec2 uPointer;\nuniform vec2 uAspect;\nuniform vec3 uColorA;\nuniform vec3 uColorB;\nuniform vec3 uColorC;\nvarying vec2 vUv;\n\nvec2 hash22(vec2 p) {\n  vec2 q=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));\n  return fract(sin(q)*43758.5453);\n}\n\n// F2-F1 produces interconnected luminous seams rather than flat moving waves.\nfloat network(vec2 p,float t) {\n  vec2 cell=floor(p),local=fract(p);\n  float f1=10.0,f2=10.0;\n  for(int y=-1;y<=1;y++){\n    for(int x=-1;x<=1;x++){\n      vec2 offset=vec2(float(x),float(y));\n      vec2 seed=hash22(cell+offset);\n      vec2 feature=offset+0.5+0.32*sin(seed*6.2831853+vec2(t*0.71,-t*0.56));\n      vec2 delta=feature-local;\n      float d=dot(delta,delta);\n      if(d<f1){f2=f1;f1=d;}\n      else if(d<f2){f2=d;}\n    }\n  }\n  float seam=sqrt(f2)-sqrt(f1);\n  float core=1.0-smoothstep(0.015,0.095,seam);\n  float halo=1.0-smoothstep(0.025,0.26,seam);\n  return core*0.76+halo*0.24;\n}\n\nvoid main(){\n  vec2 p=(vUv-0.5)*uAspect;\n  float t=uTime*0.21;\n  vec2 warp=0.075*vec2(\n    sin(p.y*4.2+t*1.1)+0.5*sin(p.x*6.1-t*0.7),\n    cos(p.x*3.8-t*0.9)+0.5*cos(p.y*5.7+t*0.6)\n  );\n  vec2 q=p+warp;\n  float broad=network(q*3.5+vec2(2.3,0.8),t);\n  float detail=network(q*6.0+vec2(9.4,3.7),-t*0.73);\n  float caustic=broad*0.74+detail*0.26;\n  // Preserve a dim field around the headline; concentrate the light off-centre.\n  float envelope=1.0-smoothstep(0.27,1.25,length(p-vec2(0.25,0.09)));\n  float textShield=1.0-0.58*exp(-pow((vUv.y-0.28)/0.18,2.0));\n  float cursor=exp(-12.0*distance(vUv,0.5+uPointer*0.15));\n  float intensity=clamp((caustic*0.24*envelope*textShield+cursor*0.025)*uMotion,0.0,0.28);\n  vec3 base=mix(uColorA,uColorB,0.18+0.12*(p.y+0.5));\n  vec3 color=mix(base,uColorC,intensity);\n  gl_FragColor=vec4(color,1.0);\n}";
 
 const compile=(gl,type,source)=>{
  const shader=gl.createShader(type);
@@ -29,7 +29,7 @@ export function mountHeroWave(host,initialState){
  canvas.setAttribute("aria-hidden","true");
  const gl=canvas.getContext("webgl",{
    alpha:false,antialias:false,depth:false,stencil:false,
-   preserveDrawingBuffer:true,powerPreference:"low-power",
+   preserveDrawingBuffer:false,powerPreference:"low-power",
  });
  if(!gl) throw new Error("WebGL is unavailable");
  const vertex=compile(gl,gl.VERTEX_SHADER,VERTEX);
@@ -53,7 +53,7 @@ export function mountHeroWave(host,initialState){
  const uniforms=Object.fromEntries(names.map(name=>[name,gl.getUniformLocation(program,name)]));
  host.append(canvas);
  let state={...initialState},visible=true,destroyed=false,frame=0;
- let elapsed=0,lastFrame=0,wakeUntil=0,pointer=[0,0],nextPointer=[0,0];
+ let elapsed=0,lastFrame=0,pointer=[0,0],nextPointer=[0,0];
  const palette=()=>{
    const values=state.colors||[];
    const fallbacks=[[7/255,17/255,43/255],[0,32/255,128/255],[177/255,197/255,1]];
@@ -73,15 +73,16 @@ export function mountHeroWave(host,initialState){
  };
  const resize=()=>{
    if(destroyed)return;
-   const width=Math.max(1,Math.round(host.clientWidth));
-   const height=Math.max(1,Math.round(host.clientHeight));
+   const pixelRatio=Math.min(window.devicePixelRatio||1,1.25);
+   const scale=Math.min(pixelRatio,1600/Math.max(host.clientWidth,host.clientHeight,1));
+   const width=Math.max(1,Math.round(host.clientWidth*scale));
+   const height=Math.max(1,Math.round(host.clientHeight*scale));
    if(canvas.width!==width||canvas.height!==height){
      canvas.width=width;canvas.height=height;gl.viewport(0,0,width,height);
    }
    draw();
  };
- const shouldAnimate=()=>state.animate&&visible&&!document.hidden&&
-    (elapsed<MAX_AUTOPLAY_MS||performance.now()<wakeUntil);
+ const shouldAnimate=()=>state.animate&&visible&&!document.hidden;
  const renderFrame=timestamp=>{
    frame=0;
    if(destroyed)return;
@@ -98,6 +99,7 @@ export function mountHeroWave(host,initialState){
  const requestRender=()=>{
    if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(renderFrame);
  };
+ document.addEventListener("visibilitychange",requestRender);
  const resizeObserver=new ResizeObserver(resize);
  resizeObserver.observe(host);
  const intersectionObserver=new IntersectionObserver(([entry])=>{
@@ -117,13 +119,13 @@ export function mountHeroWave(host,initialState){
    },
    setPointer(x,y){
      nextPointer=[x,y];
-     if(state.animate)wakeUntil=performance.now()+POINTER_WAKE_MS;
      requestRender();
    },
    destroy(){
      if(destroyed)return;
      destroyed=true;
      if(frame)cancelAnimationFrame(frame);
+     document.removeEventListener("visibilitychange",requestRender);
      resizeObserver.disconnect();
      intersectionObserver.disconnect();
      gl.deleteBuffer(buffer);
