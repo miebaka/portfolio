@@ -17,9 +17,9 @@ function resolvedColors(win, root) {
   };
 }
 
-function resolvedState(root) {
+function resolvedState(root, reducedMotion = false) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
-  return { theme, animate: root.dataset.motion !== "reduced" };
+  return { theme, animate: root.dataset.motion !== "reduced" && !reducedMotion };
 }
 
 export async function initHeroWave({
@@ -39,9 +39,10 @@ export async function initHeroWave({
   if (testOptIn) doc.documentElement.classList.add("shader-test-mode");
 
   const finePointerQuery = win.matchMedia?.(FINE_POINTER);
+  const reducedMotionQuery = win.matchMedia?.("(prefers-reduced-motion: reduce)");
   const root = doc.documentElement;
   const getState = () => {
-    const state = resolvedState(root);
+    const state = resolvedState(root, reducedMotionQuery?.matches === true);
     const colors = resolvedColors(win, root);
     return forceStatic ? { ...state, ...colors, animate: false } : { ...state, ...colors };
   };
@@ -105,6 +106,7 @@ export async function initHeroWave({
   const observer = new MutationObserver(sync);
   observer.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   finePointerQuery?.addEventListener?.("change", sync);
+  reducedMotionQuery?.addEventListener?.("change", sync);
   win.addEventListener("pointermove", onPointerMove, { passive: true });
   win.addEventListener("pointerout", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
@@ -122,6 +124,7 @@ export async function initHeroWave({
     destroyed = true;
     observer.disconnect();
     finePointerQuery?.removeEventListener?.("change", sync);
+    reducedMotionQuery?.removeEventListener?.("change", sync);
     win.removeEventListener("pointermove", onPointerMove);
     win.removeEventListener("pointerout", resetPointer);
     win.removeEventListener("blur", resetPointer);
