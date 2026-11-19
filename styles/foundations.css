@@ -10,6 +10,16 @@
   --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);--signature:var(--font-body);
   --icon:"Material Symbols Outlined";
 
+  /* 2026 editorial type scale — named roles are shared by all routes. */
+  --type-hero:clamp(4rem,13vw,17rem);
+  --type-editorial-display:clamp(3.5rem,9vw,11rem);
+  --type-section-title:clamp(2.75rem,6.5vw,8rem);
+  --type-project-title:clamp(2.25rem,5vw,6rem);
+  --type-lead:clamp(1.35rem,2.5vw,2.625rem);
+  --type-reading:clamp(1rem,.4vw + .95rem,1.1875rem);
+  --type-caption:.9375rem;
+  --type-eyebrow:.8125rem;
+
   /* Type scale */
   --type-label-s:.75rem;--type-label-m:.8125rem;--type-label-l:.9375rem;--type-nav-mobile:.75rem;--type-body-s:.9375rem;
   --type-body-m:1.0625rem;--type-body-l:clamp(1.125rem,.35vw + 1.04rem,1.3rem);
