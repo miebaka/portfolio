@@ -10,12 +10,7 @@ export function renderWork() {
   el.className = "home-project-list";
   el.dataset.workView = "list";
   el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath()) +
-    '<div class="work-view-controls" role="group" aria-label="Selected work presentation"><button type="button" data-view="list" aria-pressed="true">☷ List</button><button type="button" data-view="grid" aria-pressed="false">▦ Grid</button><a href="' + basePath() + 'work.html">All work →</a></div>';
-  el.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => {
-    const view = button.dataset.view;
-    el.dataset.workView = view;
-    el.querySelectorAll("[data-view]").forEach(option => option.setAttribute("aria-pressed", String(option.dataset.view === view)));
-  }));
+    '<div class="work-view-controls"><a href="' + basePath() + 'work.html">All work <span aria-hidden="true">↗</span></a></div>';
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
