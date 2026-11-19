@@ -112,7 +112,7 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 **About:** Use the optimized authored portrait, ensure correct dimensions/alt/crop and maintain readable biography with a working About link. Do not invent years of practice or achievements.
 
-**What I Do:** Use `data/services.js` for accurate service categories, descriptions, outputs and evidence links. The current five entries are process verbs; the target needs plain-language service naming while retaining the process in descriptions. Large photographic cards require accessible links, obvious scroll affordances, keyboard access and a layout that does not trap narrow-screen users in horizontal-only browsing.
+**What I Do:** Use `data/services.js` for accurate service categories, descriptions, outputs and evidence links. Five discipline labels and published case-study chapter destinations are implemented; preserve their accurate, verifiable links and distinguish evidence from process explanations. Large photographic cards require accessible links, obvious scroll affordances, keyboard access and a layout that does not trap narrow-screen users in horizontal-only browsing.
 
 **Brands:** Existing `renderClients` duplicates the list for seamless marquee looping, calculates optical logo scale and pauses when hidden. Preserve the semantics, deduplicate visible accessibility announcements (`aria-hidden` on the duplicate), and verify real SVG geometry. Apply accurate labelling of client, employer and collaborator relationships; do not imply that every employment relationship was an agency client contract. Pause when `prefers-reduced-motion` or the site motion preference reduces motion, and account for focus/visibility.
 
@@ -188,6 +188,10 @@ npm run quality
 ```
 
 Do not claim `npm run quality` succeeds without executing it. Use CI artifacts and logs as evidence. Keep a fast local feedback loop, but preserve the complete release gate.
+
+### Supported Node.js runtime (standardized)
+
+**Node.js 24 LTS** is the single supported major for local development, CI, build tooling, and Vercel functions. The repository owns `.nvmrc`, `.node-version`, `package.json#engines` and the lockfile; GitHub Actions reads `.nvmrc` through `setup-node@v7` and asserts the major before `npm ci`. The existing Vercel project is configured for `24.x`. Keep these settings in sync. A runtime-version change does not waive lint, browser, static-fallback, Lighthouse, accessibility or dependency gates.
 
 ## 8. Performance budgets and measurable targets
 
