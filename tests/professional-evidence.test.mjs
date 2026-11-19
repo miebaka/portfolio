@@ -68,7 +68,7 @@ test("service cards sanitize unsafe destinations, filenames and injected markup"
   const hostile = [{ ...services[0], title: '<img src=x onerror=alert(1)>', evidenceHref: 'javascript:alert(1)', cover: '../bad" onerror=alert(1)' }];
   const markup = renderServiceSwatchesMarkup(hostile);
   assert.match(markup, /href="#"/);
-  assert.doesNotMatch(markup, /href="javascript:|<img src=x onerror=|onerror=/);
+  assert.doesNotMatch(markup, /href="javascript:|<img src=x onerror=|<img[^>]+\\sonerror=/);
   assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
 });
 
