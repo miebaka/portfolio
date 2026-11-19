@@ -24,6 +24,8 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
       year: project.year,
       href: base + `work/${safeToken(project.slug)}.html`,
       cover: project.cover || "",
+      tagline: project.tagline || "",
+      role: studies?.[project.slug]?.facts?.role || "",
     }));
   return renderEditorialIndex(
     selected.map((project) => {
@@ -57,6 +59,8 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
         esc(project.category) +
         " / " +
         esc(project.year) +
+        '</span><span class="home-project-list__summary">' +
+        esc(project.tagline) +
         '</span></span><span class="home-project-list__arrow" aria-hidden="true">↗</span>' +
         visual;
       return {
