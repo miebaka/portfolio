@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { siteConfig } from "../data/site-config.js";
 import { CONTENT } from "../data/site.js";
 import { services } from "../data/services.js";
+import { escapeHTML } from "../js/utilities/dom.js";
 import {
   createServiceSwatches,
   renderExperienceLedger,
@@ -163,9 +164,9 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
   const markup = renderServiceAccordionMarkup(services);
   assert.equal((markup.match(/<details/g) || []).length, 5);
   for (const service of services) {
-    assert.ok(markup.includes(service.title.replaceAll("&", "&amp;")));
-    assert.ok(markup.includes(service.description.replaceAll("&", "&amp;")));
-    assert.ok(markup.includes(service.evidenceLabel.replaceAll("&", "&amp;")));
+    assert.ok(markup.includes(escapeHTML(service.title)));
+    assert.ok(markup.includes(escapeHTML(service.description)));
+    assert.ok(markup.includes(escapeHTML(service.evidenceLabel)));
   }
   assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });
