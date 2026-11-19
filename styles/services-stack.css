@@ -217,8 +217,7 @@ body[data-page="home"] .work-view-controls a{
   min-height:44px;display:inline-flex;align-items:center;gap:.75rem;
   margin-left:0;outline-offset:4px;
 }
-body[data-page="home"] .work-view-controls button,
-body[data-page="home"] .work-view-controls [data-view="grid"]{display:none!important}
+
 body[data-page="home"] .home-capabilities--reference {
   padding-inline:0;max-width:none;width:100%;
 }
