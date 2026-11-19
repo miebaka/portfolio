@@ -4,6 +4,7 @@ export const PROJECT_STATUS = Object.freeze({ PUBLISHED: "published", COMING_SOO
 export const projects = [
   {
     "slug": "rivo",
+    "featuredOrder": 2,
     "title": "Rivo Studio",
     "category": "Software studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
@@ -22,6 +23,7 @@ export const projects = [
   },
   {
     "slug": "tedx-rsu",
+    "featuredOrder": 1,
     "title": "TEDx Rivers State University",
     "category": "Event",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
@@ -40,6 +42,7 @@ export const projects = [
   },
   {
     "slug": "chopbox",
+    "featuredOrder": 3,
     "title": "ChopBox",
     "category": "Food brand",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",

@@ -12,20 +12,19 @@ export function renderWork() {
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
-  const bySlug = new Map(projects.map((project) => [project.slug, project]));
-  const selected = ["tedx-rsu", "rivo", "chopbox"].map((slug) => {
-    const project = bySlug.get(slug);
-    const study = studies?.[slug];
-    const published = project?.status === "published" && study?.status === "published";
-    return {
-      slug,
-      title: project?.title || slug,
-      category: project?.category || "Project",
-      year: project?.year || "",
-      href: published ? base + `work/${slug}.html` : "",
-      cover: project?.cover || "",
-    };
-  });
+  // The editorial selection is authored in project data, never duplicated here.
+  // An unpublished case must never become a dead featured link.
+  const selected = projects
+    .filter(project => project.featured === true && project.status === "published" && studies?.[project.slug]?.status === "published")
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER))
+    .map(project => ({
+      slug: project.slug,
+      title: project.title,
+      category: project.category,
+      year: project.year,
+      href: base + `work/${safeToken(project.slug)}.html`,
+      cover: project.cover || "",
+    }));
   return renderEditorialIndex(
     selected.map((project) => {
       const visual = project.cover

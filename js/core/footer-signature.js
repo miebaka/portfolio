@@ -99,8 +99,8 @@ function enhanceFooterSignature(host) {
   const onPointerLeave = () => { pointer.active = false; };
   const resizeObserver = new ResizeObserver(rebuild);
   const mutationObserver = new MutationObserver(rebuild);
-  canvas.addEventListener("pointermove", onPointerMove, { passive: true });
-  canvas.addEventListener("pointerleave", onPointerLeave);
+  host.addEventListener("pointermove", onPointerMove, { passive: true });
+  host.addEventListener("pointerleave", onPointerLeave);
   resizeObserver.observe(host);
   mutationObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   rebuild();
@@ -110,7 +110,7 @@ function enhanceFooterSignature(host) {
     static() { stop(); canvas.hidden = false; drawStatic(); },
     destroy() {
       stop(); generation++; resizeObserver.disconnect(); mutationObserver.disconnect();
-      canvas.removeEventListener("pointermove", onPointerMove); canvas.removeEventListener("pointerleave", onPointerLeave);
+      host.removeEventListener("pointermove", onPointerMove); host.removeEventListener("pointerleave", onPointerLeave);
       host.classList.remove("is-enhanced"); canvas.remove();
     }
   };
