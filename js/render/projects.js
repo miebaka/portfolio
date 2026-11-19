@@ -12,20 +12,19 @@ export function renderWork() {
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
-  const bySlug = new Map(projects.map((project) => [project.slug, project]));
-  const selected = ["tedx-rsu", "rivo", "chopbox"].map((slug) => {
-    const project = bySlug.get(slug);
-    const study = studies?.[slug];
-    const published = project?.status === "published" && study?.status === "published";
-    return {
-      slug,
-      title: project?.title || slug,
-      category: project?.category || "Project",
-      year: project?.year || "",
-      href: published ? base + `work/${slug}.html` : "",
-      cover: project?.cover || "",
-    };
-  });
+  // The editorial selection is authored in project data, never duplicated here.
+  // An unpublished case must never become a dead featured link.
+  const selected = projects
+    .filter(project => project.featured === true && project.status === "published" && studies?.[project.slug]?.status === "published")
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER))
+    .map(project => ({
+      slug: project.slug,
+      title: project.title,
+      category: project.category,
+      year: project.year,
+      href: base + `work/${safeToken(project.slug)}.html`,
+      cover: project.cover || "",
+    }));
   return renderEditorialIndex(
     selected.map((project) => {
       const visual = project.cover
@@ -152,7 +151,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
   const collectionMarkup =
     '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' +
     base +
-    'explorations.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' +
+    'experiments.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' +
     base +
     'essays.html"><span>Essays</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
   return publishedMarkup + progressMarkup + collectionMarkup;

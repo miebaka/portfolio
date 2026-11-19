@@ -15,7 +15,7 @@ This document defines **how** the portfolio must be built, verified, secured, an
 
 1. Security, privacy, truthful content, accessibility, and working functionality are mandatory.
 2. This file governs build, system architecture, interfaces, data integrity, performance budgets, APIs, automated verification, and deployment.
-3. The redesigned `DESIGN.md` version 2.0.0 (19 November 2026) governs editorial, visual, content hierarchy, page and motion requirements **once that version is committed**. Until then, the repository's existing `DESIGN.md` is the checked-in implementation reference, not proof that the new visual brief has shipped.
+3. The redesigned `DESIGN.md` version 2.1.0 (19 November 2026) governs editorial, visual, content hierarchy, page and motion requirements **as committed in the feature branch**. That document defines the target experience, not proof that all visual work has shipped.
 4. The current `styles/foundations.css` defines shipped token values pending an explicitly tested migration.
 5. `data/` remains the factual source for projects, biography, employer/client relationships, case-study evidence, and writing.
 6. External websites and ZeroSlop `DESIGN.md` captures are reference material, **not verified interaction specifications, licensed assets, approved token migrations, or evidence of accessibility**.
@@ -37,12 +37,12 @@ The authoritative route registry is `data/navigation.js`:
 | Home | `index.html` | Seven-section landing experience |
 | Work | `work.html` | Published work, then clearly subordinate work-in-progress |
 | About | `about.html` | Background, experience, practice |
-| Experiments | `explorations.html` | Spatial creative experiments |
+| Experiments | `experiments.html` | Spatial creative experiments |
 | Essays | `essays.html` | Writing index |
 | Contact | `contact.html` | Primary contact path and form |
 | Privacy | `privacy.html` | Privacy statement and footer destination |
 | Case studies | `work/*.html` | Evidence-led project pages |
-| Articles | `writing/*.html` | Full readable articles |
+| Articles | `essays/*.html` | Full readable articles |
 | Legacy | `community.html` | Existing Experiments redirect |
 | Not found | `404.html` | Accessible error route; noindex |
 
@@ -261,7 +261,7 @@ A release is blocked by broken routes, inaccessible required navigation, dead pr
 
 ## 12. Implementation phases and dependency order
 
-1. **Reconcile documentation** — Commit the 19 November `DESIGN.md` v2.0.0, align this file, update README and resolve canonical configuration. Baseline existing tests and collect screenshots; don't claim new design is live yet.
+1. **Reconcile documentation** — Commit the 19 November `DESIGN.md` v2.1.0, align this file, update README and resolve canonical configuration. Baseline existing tests and collect screenshots; don't claim new design is live yet.
 2. **Fix correctness first** — Repair footer canvas pointer handling, move homepage featured selection to structured data, and restore mobile work imagery. Add regression tests for each.
 3. **Implement home reference lock** — Build framed hero, selected-work presentation, About, services, client marquee, CTA and footer in the required order. Centralize tokens and motion; no reference collage.
 4. **Propagate globally** — Work, case studies, About, Experiments, Essays, Contact, shared controls and navigation. Preserve content schemas and static fallbacks.
@@ -294,7 +294,7 @@ A valid exception log records: **decision, owner, rationale, impacted pages, aff
 
 ## Appendix A — Known existing issues, not yet automatically fixed
 
-1. `data/site-config.js` contains `canonicalUrl: "https://miebaka.design/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
+1. `data/site-config.js` contains `canonicalUrl: "https://miebaka-portfolio.vercel.app/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
 2. `js/render/projects.js` hard-codes featured slugs; implement validated ordering in data.
 3. `styles/home.css` hides Selected Work project previews on mobile; preserve meaningful media.
 4. Footer canvas pointer handlers currently target a `pointer-events:none` canvas; correct the event target and test it.
@@ -306,7 +306,7 @@ These are **audit findings**, not claims that the present branch is broken in al
 
 ## Appendix B — Release checklist
 
-- [ ] Updated `DESIGN.md` v2.0.0 is committed and matches the implementation target.
+- [ ] Updated `DESIGN.md` v2.1.0 is committed and matches the implementation target.
 - [ ] Canonical/OG/JSON-LD/sitemap are consistent with the verified host.
 - [ ] All seven homepage sections render in required order with JS enabled and disabled.
 - [ ] All published project links, project images and evidence links resolve correctly.

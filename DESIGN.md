@@ -1,7 +1,7 @@
 # MIEBAKA JOSHUA — PORTFOLIO DESIGN & EXPERIENCE CONSTITUTION
 
 > **Status:** Authoritative target specification for the next portfolio redesign.  
-> **Version:** 2.0.0 — design mandate / implementation-ready  
+> **Version:** 2.1.0 — expanded research / unconstrained art direction mandate  
 > **Date:** 19 November 2026  
 > **Repository:** <https://github.com/miebaka/portfolio> (`main` at time of audit)  
 > **Public canonical host:** <https://miebaka-portfolio.vercel.app/>  
@@ -39,7 +39,7 @@ If this specification lacks enough detail, implement the least surprising access
 
 ### 0.3 The one-sentence brief
 
-**A precise, memorable, ultramarine-led editorial portfolio that makes a designer's judgment visible through strong work, credible evidence, accessible interactions and a distinct but disciplined motion language.**
+**An unmistakably authored, image-led portfolio that turns creative decisions into vivid, editorial experiences—without sacrificing comprehension, access, or proof. The current ultramarine system is a starting point, not an aesthetic ceiling.**
 
 ### 0.4 The purpose of the product
 
@@ -94,9 +94,9 @@ Maintain the **existing route registry** in `data/navigation.js`:
 | Work | `work.html` | Complete published work index plus honest in-progress register |
 | Case studies | `work/{slug}.html` | Detailed project decisions and outcomes |
 | About | `about.html` | Biography, thinking, experience, professional evidence |
-| Experiments | `explorations.html` | Exploratory visual practice with spatial interaction |
+| Experiments | `experiments.html` | Exploratory visual practice with spatial interaction |
 | Essays | `essays.html` | Editorial and professional writing |
-| Individual essays | `writing/{slug}.html` | Accessible long-form reading |
+| Individual essays | `essays/{slug}.html` | Accessible long-form reading |
 | Contact | `contact.html` | Contact routes and functional form |
 | Privacy | `privacy.html` | Truthful privacy policy |
 | 404 | `404.html` | Recovery to useful destinations |
@@ -154,7 +154,82 @@ The ZeroSlop library records computed values and sampled DOM elements. Many reco
 
 ### 2.2 Anti-collage rule
 
-The governing visual identity is the **existing refined editorial / ultramarine system**. External references borrow a narrow interaction or composition, never replace that system. Do not average colors, typefaces, radii and shadows from multiple sites. Do not inject a serif word into a headline merely to appear editorial. Do not make every section a different showcase of CSS tricks.
+The governing visual identity is the **evolving authored editorial system defined by the 2026 research direction below**. Existing ultramarine tokens are working production values, not a prohibition on stronger, tested alternatives. External references borrow a narrow interaction or composition, never replace that system. Do not average colors, typefaces, radii and shadows from multiple sites. Do not inject a serif word into a headline merely to appear editorial. Do not make every section a different showcase of CSS tricks.
+
+
+### 2.3 Expanded research — ZeroSlop, Awwwards and Refero access status (19 November 2026)
+
+This expanded research layer **supersedes any earlier instruction that forbids a fundamental visual redesign**. The original seven-section Home references remain binding *interaction assignments*, but the rest of the website may be redesigned decisively. Distinguish a cited observed pattern from a reviewed/approved implementation. Links below are primary reference landing pages, not licenses to reuse their assets.
+
+**Research provenance:** ZeroSlop's library was enumerated and multiple individual draft `DESIGN.md` capture records inspected. Awwwards' Portfolio, Typography and Interaction Design categories and the listed individual showcase pages were reviewed. A live Refero design-style search was attempted and returned `NO_SUBSCRIPTION`; **no Refero search result, screenshot, style UUID, or inferred detail is represented as verified**. Once Refero access is active, perform its mandatory styles → sections/screens → full-style review workflow and record real UUIDs and roles in this ledger before acting on them.
+
+| Source | URL | Observed contribution | Portfolio assignment | Explicit rejection |
+| --- | --- | --- | --- | --- |
+| Eugene Sokolovski (ZeroSlop) | https://www.zeroslop.design/library/sokolovski-pro | Dense tiny navigation and clean portfolio project-grid logic on white | Work index density, disciplined project meta and archive | Tiny labels without adequate reading contrast |
+| Cruz Estudio (ZeroSlop) | https://www.zeroslop.design/library/cruzestudio-com-ar | Cream/dark studio framing, compact bold sans, wireframe-3D emphasis | Controlled dimensional motif for hero and project-specific media | Unnecessary 3D ornament across every route |
+| Revelatio Studio (ZeroSlop) | https://www.zeroslop.design/library/revelatio-studio | Dark brand-studio page with pixelated moving imagery and direct statement | Distinctive media treatment for editorial opening and experiment transitions | Always-on high-cost video or unreadable text over it |
+| Research Design Agency (ZeroSlop) | https://www.zeroslop.design/library/researchdesignagency-com | Architectural photography with concise typographic statement | Work photography scale, large negative-space composition | Generic monochrome agency imitation |
+| Ohh My Design (ZeroSlop) | https://www.zeroslop.design/library/ohhmydesign-com | Condensed display and unmistakable graphic world | Characterful display-scale exploration, expressive typographic rhythm | Decorative patterned letters impairing reading |
+| Artem Shcherbakov (ZeroSlop) | https://www.zeroslop.design/library/artemartemartem-com | Director portfolio with white background, hand-drawn accent | Personal authored touches in Experiments or About only | Imported green sketch motif as default global decoration |
+| Ricardo Chance (ZeroSlop) | https://www.zeroslop.design/library/ricardochance-com | Dramatic serif/3D star contrast on deep purple | Evaluate rare unexpected typographic contrast in personal essays | A second unrelated 3D object or purple rebrand |
+| For Living (ZeroSlop) | https://www.zeroslop.design/library/for-living-it | Editorial materiality and considered interior imagery | About portrait art direction and image cropping discipline | Artificial warm beige everywhere |
+| Sasha Martynchuk (ZeroSlop) | https://www.zeroslop.design/library/sashamartynchuk-com | Heavy condensed headings against content-rich project imagery | Featured project hierarchy and strong visual work walls | Fonts/images and a product-only design identity |
+| Remedy Editorial (ZeroSlop) | https://www.zeroslop.design/library/remedyeditorial-com | Restrained type and readable black/white work sections | Essays and case-study explanatory prose | Flat minimalism across all chapters |
+| Everwonder Studio (ZeroSlop) | https://www.zeroslop.design/library/everwonder-studio | Assertive condensed headings with culture-led photography | Hero/art direction and flagship project imagery | Stock action photography and incoherent loudness |
+| White Desert (ZeroSlop) | https://www.zeroslop.design/library/white-desert-com | Image-led section progression and tall display | What I Do capabilities and section pacing | Copying hospitality content or images |
+| Carter Ogunsola (Awwwards SOTD, 19 Nov 2026) | https://www.awwwards.com/sites/carter-ogunsola | Listed home project wheel, theme flip, studio-pass/lab-grid interactions and About telemetry | Secondary study for Work discovery, theme transitions and Experiments | Adding a wheel solely for spectacle or substituting portfolio proof with games |
+| PSP Production (Awwwards SOTD, 18 Nov 2026) | https://www.awwwards.com/sites/psp-production | Listed distinct work/gallery, hero, contact and film/video treatments | Large project media and transitions between editorial sections | Full-screen preload and mandatory autoplay |
+| Voy Design (Awwwards nominee, 17 Nov 2026) | https://www.awwwards.com/sites/voy-design | Interactive principles, infinite canvas, draggable cards, progressive bento | Experiments exploratory field and interactive design-principles presentation | Infinite canvas as the only path to essential information |
+| Adrien Quéchon 2026 (Awwwards nominee, 19 Nov 2026) | https://www.awwwards.com/sites/adrien-quechon-2026-website | Listed selected work, page transitions, light/dark treatment, distinct footer | Nav, theme choreography and refined cross-page motion | Locking users into transitions or duplicating footer signature |
+| Louise Jongen (Awwwards nominee, 16 Nov 2026) | https://www.awwwards.com/sites/louise-jongen | VHS-inspired hero, scrolling profile, horizontal case-study and transition study | Art-directed occasional multimedia / project storytelling | VHS styling or horizontal scroll across every case |
+| mowa.studio (Awwwards nominee, 17 Nov 2026) | https://www.awwwards.com/sites/mowa-studio | Branding practice combined with interactive 3D craft | A standard for coherent brand + technical experimentation | React/Three.js migration as an aesthetic shortcut |
+
+**Reference filter:** favor distinctive creative leadership, art direction, mature typography, documentary evidence, excellent project imagery, technical imagination, and African creative specificity. Awwwards nomination is a discovery cue, **not proof** of inclusive UX, coding quality or actual user outcomes. ZeroSlop values are sampled computed styles, not approved semantic tokens. Each adopted behavior requires direct capture, interaction testing and a provenance note before final implementation.
+
+### 2.4 Reference authority — one conceptual direction, several tightly bounded mechanisms
+
+The prior references still own specific Home section interactions. The new research identifies **cross-page quality standards**. Use a single narrative language, not one full brand palette per website:
+
+- **Primary art direction:** a striking, graphic/editorial creative practice. High contrast, large typography, work that feels authored as objects, and deliberately varied project worlds.
+- **Primary work behavior:** Bulletproof-inspired typographic index on Home; Sasha/Eugene/PSP-informed confident full-media presentation in Work and case studies.
+- **Primary motion:** Jasmine for rhythm, Adrien for route/theme transition craft, and static/reduced-motion equivalence for all functional content.
+- **Primary experiment behavior:** Voy and Depth as *research evidence* for spatial interaction, keeping a complete keyboard-accessible discovery path.
+- **Primary biographies/CTAs:** Seun for honest, calm language and Arturo/Remedy for hierarchy; image personality from original photography, not reference-stock content.
+- **Primary governance:** ZeroSlop-style measurements and design-drift logs, with live interactions checked separately.
+
+### 2.5 Three visual directions evaluated; one chosen
+
+**A — Muted editorial restraint:** neutral canvas, modest type, small projects, understated interactions. Rejected as the primary direction: too easy to confuse with other portfolios and insufficiently expressive for a brand/marketing designer.
+
+**B — 3D experimental playground:** dark immersive canvas, 3D navigation and highly animated work browsing. Rejected as the primary direction: slows hiring evaluation and risks hiding the work behind the interface.
+
+**C — THE LIVING EDITORIAL (selected):** a confident typographic identity combined with ambitious, fully art-directed project imagery, cinematic *yet short* transitions, distinctive personal visual signatures, and plainspoken evidence. Projects are allowed different worlds; navigation and reading remain stable. The experience communicates **taste + judgment + production ability**, not just technical fireworks.
+
+Visual metaphor: **a living portfolio of decisions**. Treat each project as an authored editorial feature: a compelling cover, a short decision statement, large evidence plates and captions, and a decisive conclusion. Do not literalize this as notebook stickers, cartographic icons, paper texture everywhere or fake scientific labels. Graphic discipline must feel lived-in, not templated.
+
+### 2.6 Dramatic visual improvement — mandatory reinterpretation
+
+The new direction is **not** a facelift or continuation of the current visual proportions. Implement a controlled *generational leap*:
+
+1. **Hero:** strong name mark + kinetic scale choreography + one exceptional image/physical art-directed element (or the existing shader only if it withstands a direct visual comparison); no bland uniform gradient.
+2. **Work:** shift from a hidden-hover list to fully visual storytelling at every breakpoint. Project images must deserve attention—large composition, non-generic art direction and meaningful titles.
+3. **Case studies:** open with a strong media-led title spread and specific governing creative decision; alternate genuinely full-bleed imagery and precise evidence/text. Avoid repetitive blocks of images and generic 50/50 splits.
+4. **About:** commission/curate a memorable portrait sequence or existing original environmental imagery; never lead with a stock-looking headshot and resume prose.
+5. **Experiments:** become the experimental signature of the practice, with multiple entry paths: spatial exploration, simple accessible list/index, and distinctive individual artwork presentation.
+6. **Essays:** serious editorial typesetting, better typescale, generous margins, side annotations only when they carry information, graceful reading-progress/contents behavior.
+7. **Contact/footer:** a final memorable typographic close, with real contact conversion and a repaired dot-matrix signature—not another random animation.
+8. **Global chrome:** navigation has quiet precision; visual ambition is deliberately concentrated in authored work, not in every button or divider.
+
+**Image first:** For each flagship project, select one *excellent* cover image and 4–8 high-quality evidence frames with intentional crop, consistent visual logic and role-accurate captions. If assets are insufficient, surface the limitation rather than creating generic placeholders or overstating deliverables. Show the work's materiality—scale, print, real context, tactile depth—when supported by genuine files.
+
+**Typography is open to change:** Run three real, licensed type trials (current Archivo/Finlandica/Host; an expressive variable grotesk with accessible humanist text; a bold distinctive display with restrained text). Compare actual hero, work, About and essay screenshots, especially 320/390/768/1440px. Choose one *site-wide* family pairing by visual and legibility evidence. Ogaranya/Atkinson Hyperlegible Next MAY be evaluated as a candidate if font availability, usage rights, and rendering are verified; do not install or redistribute without permissions.
+
+**Color is open to change:** Retain an identifiable ultramarine signal **only if** it still performs best after comparative visual studies. Author up to three *complete* palette directions with real source imagery, test both Print/Screen states, contrast and project world transitions, then record the chosen semantic palette in `styles/foundations.css`. Never let references turn the system into a beige/olive/terracotta average.
+
+**Page rhythm:** Alternate dense and quiet with purpose. Aim for an unmistakable impact moment at arrival, high-confidence proof at Work, an emotional human pause in About, a discoverable but expressive capability chapter, then a strong CTA. Subsequent pages must feel like members of the same publication, not unrelated theme demos.
+
+**Implementation lock:** No whole-site visual redesign is accepted from CSS token changes alone. Before sign-off, provide actual before/after screenshots of every key template, accessibility/performance measurements, and a review of whether project imagery, typography, work hierarchy and motion *visibly* improved. "Awwwards-like" is not an acceptance criterion; observable craft is.
+
 
 ---
 
@@ -162,7 +237,7 @@ The governing visual identity is the **existing refined editorial / ultramarine 
 
 ### 3.1 Color roles and existing palette
 
-The portfolio already ships a layered color-token system in `styles/foundations.css`: raw `--ref-*` values → semantic `--sys-color-*` values → short aliases such as `--paper`, `--ink`, `--muted`, `--line`, `--accent` → component roles. **Preserve this architecture.** No hard-coded new hex values in component/page CSS. All colors must reference semantic roles or bounded project-specific tokens.
+The portfolio already ships a layered color-token system in `styles/foundations.css`. **Preserve the semantic-token architecture, not necessarily today's palette. A coherent, research-backed new palette is authorized if tested across light/dark surfaces, cases, forms, and focus states.** Existing architecture: raw `--ref-*` values → semantic `--sys-color-*` values → short aliases such as `--paper`, `--ink`, `--muted`, `--line`, `--accent` → component roles. **Preserve this architecture.** No hard-coded new hex values in component/page CSS. All colors must reference semantic roles or bounded project-specific tokens.
 
 Base source colors currently include:
 
@@ -176,7 +251,7 @@ Base source colors currently include:
 | Interaction accent | `--ref-coral-75` | `#FFA08F` | Select interactive emphasis on dark surfaces |
 | Neutral near-black | `--ref-near-black` | `#111111` | Bounded neutral use |
 
-**These are confirmed existing values, not a request to broaden the palette.** Match current token definitions before editing. Project brand colors (Rivo blue, ChopBox warm palette, TEDx purple) MAY appear **within project evidence, case-study imagery, and bounded project-highlight states**, not in global navigation or unrelated cards.
+**These are confirmed existing values, not a mandate to keep the visual identity unchanged.** Match current token definitions before editing. Project brand colors (Rivo blue, ChopBox warm palette, TEDx purple) MAY appear **within project evidence, case-study imagery, and bounded project-highlight states**, not in global navigation or unrelated cards.
 
 #### Color operating rules
 
@@ -188,9 +263,9 @@ Base source colors currently include:
 6. The existing Print/Screen preference is respected across all pages, including cases, essays, menus and footer.
 7. Source-brand logos may retain their originals when brand recognition depends on color; monochrome treatments must not destroy recognizability.
 
-### 3.2 Typography — preserve existing family roles
+### 3.2 Typography — current production roles, subject to critical redesign
 
-Do **not** replace the shipped font stack with a collection of reference fonts. Current families, self-hosted in `assets/fonts/`, are:
+Do **not** blindly combine reference-site fonts. However, the design redesign MAY replace the shipped font families when a documented, licensed alternative has a visibly better result across the entire site and passes legibility, performance and regression checks. Current production families, self-hosted in `assets/fonts/`, are:
 
 | Design role | Family | Typical use |
 | --- | --- | --- |
@@ -222,7 +297,7 @@ These map to `--display`, `--body`, `--label`. The system may use variable `font
 - Body text MUST remain readable at 200% zoom without overlapping or becoming inaccessible.
 - Keep metadata secondary but never so small/low contrast that it becomes decorative noise.
 - Font loading MUST not blank essential content; use the existing `font-display: swap` pattern and compatible fallbacks.
-- Do not introduce a fourth global typeface without a documented rationale, license and complete regression review.
+- A fourth family is discouraged, but the approved redesign may replace existing families when there is a documented rationale, license, actual cross-page visual trial and complete regression review.
 
 ### 3.3 Grid, widths and spacing
 
@@ -690,7 +765,7 @@ Acceptance: biography is scannable, timeline conveys clear dates/roles, copy is 
 
 ## 9. EXPERIMENTS PAGE
 
-**Owner:** `explorations.html`, `js/render/experiments.js`, `assets/experiments/`, metadata and manifest build scripts.
+**Owner:** `experiments.html`, `js/render/experiments.js`, `assets/experiments/`, metadata and manifest build scripts.
 
 This is the portfolio's explicitly **experimental** mode. It MAY be spatial, draggable, richly interactive and visually unusual, but MUST have accessible routes to each piece.
 
@@ -711,7 +786,7 @@ The lesson from Depth is **meaningful interaction tied to the content**, not a m
 
 ## 10. ESSAYS / WRITING
 
-**Owner:** `essays.html`, `writing/*.html`, `js/render/writing.js`, `js/core/article-navigation.js`, shared editorial CSS.
+**Owner:** `essays.html`, `essays/*.html`, `js/render/writing.js`, `js/core/article-navigation.js`, shared editorial CSS.
 
 ### 10.1 Index
 

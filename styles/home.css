@@ -523,7 +523,20 @@ body[data-page="home"] .home-close__email {
     grid-column: 2;
   }
   body[data-page="home"] .home-project-list__visual {
-    display: none;
+    position: relative;
+    inset: auto;
+    grid-column: 1/-1;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/10;
+    opacity: 1;
+    clip-path: none;
+    overflow: hidden;
+    border-radius: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  body[data-page="home"] .home-project-list__visual img {
+    object-fit: cover;
   }
   body[data-page="home"] .home-profile {
     grid-template-columns: 1fr;
@@ -627,6 +640,12 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer {
   min-height: clamp(34rem, 46vw, 48rem);
   background: var(--ref-black);
   color: var(--ref-blue-80);
+}
+body[data-page="home"]:not(.site-system-disabled) .site-footer__links a {
+  color: var(--ref-blue-80);
+}
+body[data-page="home"]:not(.site-system-disabled) .site-footer__links a:is(:hover, :focus-visible) {
+  color: var(--ref-paper);
 }
 body[data-page="home"]:not(.site-system-disabled) .site-footer__panel {
   position: relative;

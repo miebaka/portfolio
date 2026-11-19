@@ -4,6 +4,7 @@ export const PROJECT_STATUS = Object.freeze({ PUBLISHED: "published", COMING_SOO
 export const projects = [
   {
     "slug": "rivo",
+    "featuredOrder": 2,
     "title": "Rivo Studio",
     "category": "Software studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
@@ -22,6 +23,7 @@ export const projects = [
   },
   {
     "slug": "tedx-rsu",
+    "featuredOrder": 1,
     "title": "TEDx Rivers State University",
     "category": "Event",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
@@ -40,6 +42,7 @@ export const projects = [
   },
   {
     "slug": "chopbox",
+    "featuredOrder": 3,
     "title": "ChopBox",
     "category": "Food brand",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",
@@ -86,7 +89,7 @@ export const projects = [
     "year": "2023",
     "tone": "#4b68c8",
     "cover": "disability-flying-stars",
-    "href": "writing/designing-for-disability-in-nigeria.html",
+    "href": "essays/designing-for-disability-in-nigeria.html",
     "featured": false,
     "caseReady": true,
     "status": "published"
@@ -104,7 +107,7 @@ export const projects = [
     "year": "2026",
     "tone": "#07112b",
     "cover": "swoosh-dream-crazy",
-    "href": "writing/when-the-swoosh-lost-its-soul.html",
+    "href": "essays/when-the-swoosh-lost-its-soul.html",
     "featured": false,
     "caseReady": true,
     "status": "published"

@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
-  "/index.html", "/work.html", "/explorations.html", "/about.html",
+  "/index.html", "/work.html", "/experiments.html", "/about.html",
   "/essays.html", "/contact.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
-  "/writing/designing-for-disability-in-nigeria.html", "/writing/when-the-swoosh-lost-its-soul.html"
+  "/essays/designing-for-disability-in-nigeria.html", "/essays/when-the-swoosh-lost-its-soul.html"
 ];
 
 const settle = async page => {
@@ -100,7 +100,7 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
 
 test("desktop display headings use the shared grid without forced three-line measures", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
-  for (const route of routes.filter(route => route !== "/explorations.html")) {
+  for (const route of routes.filter(route => route !== "/experiments.html")) {
     await page.goto(route);
     await settle(page);
     const geometry = await page.locator("h1").evaluate(element => {
@@ -180,7 +180,7 @@ test("Essays inherits the Selected Work editorial-list interaction", async ({ pa
 });
 
 test("long-form notes expose contents, progress and a next article", async ({ page }) => {
-  await page.goto("/writing/designing-for-disability-in-nigeria.html");
+  await page.goto("/essays/designing-for-disability-in-nigeria.html");
   const contents = page.getByRole("navigation", { name: "On this page" });
   await expect(contents).toBeVisible();
   await expect(contents.getByRole("link")).toHaveCount(4);
@@ -297,7 +297,7 @@ test("Work index gives the selected project reciprocal focus", async ({ page, is
 });
 
 test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) => {
-  await page.goto("/explorations.html");
+  await page.goto("/experiments.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
   await expect(page.locator(".experiment-poster__face").first()).toHaveCSS("aspect-ratio", "4 / 5");
@@ -308,7 +308,7 @@ test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) =>
 
 test("retired community route redirects to Experiments", async ({ page }) => {
   await page.goto("/community.html");
-  await expect(page).toHaveURL(/\/explorations\.html$/);
+  await expect(page).toHaveURL(/\/experiments\.html$/);
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
 });
 

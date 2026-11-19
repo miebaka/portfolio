@@ -85,8 +85,8 @@ const rootFiles = routes.filter(route => route.includeIn.includes("build")).map(
 // destinations use only the normalized local pathname, while href data stays intact.
 const localPath = href => typeof href === "string" && !/^https:\/\//i.test(href)
   ? new URL(href, content.siteConfig.canonicalUrl).pathname.slice(1) : "";
-const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !localPath(project.href).startsWith("writing/"));
-const articleFiles = [...new Set(content.writing.map(entry => localPath(entry.href)).filter(path => path.startsWith("writing/")))];
+const caseProjects = content.projects.filter(project => project.status !== "private" && content.caseStudies[project.slug] && !localPath(project.href).startsWith("essays/"));
+const articleFiles = [...new Set(content.writing.map(entry => localPath(entry.href)).filter(path => path.startsWith("essays/")))];
 const canonicalHref = href => routes.find(route => route.href === href)?.canonicalHref || href;
 const canonicalUrl = href => new URL(canonicalHref(href) === "index.html" ? "" : canonicalHref(href), content.siteConfig.canonicalUrl).href;
 const sitemapRoutes = [
@@ -119,14 +119,14 @@ const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
 }).join("");
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);
-  const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("writing/") ? "writing" : "");
+  const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("essays/") ? "writing" : "");
   let rendered = normalizeHead(source, { canonicalUrl: canonicalUrl(href), base })
     .replace(/<header(?: class="[^"]*")? data-mount="nav">[\s\S]*?<\/header>/, renderHeader({ base, page }))
     .replace(/<footer(?: class="[^"]*")? data-mount="footer">[\s\S]*?<\/footer>/, renderFooter({ base }));
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '$1<div class="project-archive__list" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
-  if (href === "explorations.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
+  if (href === "experiments.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
 }
