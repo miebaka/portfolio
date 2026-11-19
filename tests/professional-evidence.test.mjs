@@ -199,3 +199,32 @@ test("the homepage keeps selected work concise and image-led", () => {
   assert.doesNotMatch(markup, /Governing decision|home-project-list__decision/);
   assert.equal((markup.match(/home-project-list__visual/g) || []).length, 3);
 });
+
+test("public service names are concrete disciplines backed by real published chapter anchors", async () => {
+  assert.deepEqual(services.map(service => service.title), [
+    "Brand Identity & Systems", "Art Direction", "Campaign & Marketing Design",
+    "Editorial & Graphic Design", "Design Systems & Production",
+  ]);
+  for (const service of services) {
+    const [file, anchor] = service.evidenceHref.split("#");
+    assert.ok(anchor, `${service.id} needs an explicit evidence chapter`);
+    const slug = file.replace(/^work\//, "").replace(/\.html$/, "");
+    const source = (await import("../data/case-studies.js")).caseStudies;
+    const record = source.find(entry => entry.slug === slug);
+    assert.ok(record, `${service.id} references a published case`);
+    assert.ok(JSON.stringify(record).includes(`"id":"${anchor}"`) ||
+      JSON.stringify(record).includes(`"id": "${anchor}"`),
+      `${service.id} links to a real chapter`);
+  }
+  const markup = renderServiceSwatchesMarkup(services);
+  assert.equal((markup.match(/service-journey__evidence/g) || []).length, services.length);
+});
+
+test("About portrait and 404 recovery follow semantic design contracts", async () => {
+  const about = await page("about.html");
+  assert.doesNotMatch(about, /<\/picture>\s*<\/picture>/);
+  assert.match(about, /<div class="about-hero__media">[\s\S]*?<picture>[\s\S]*?<\/picture>\s*<\/div>/);
+  const missing = await page("404.html");
+  for (const href of ["index.html", "work.html", "contact.html"])
+    assert.match(missing, new RegExp(`href="${href}"`));
+});
