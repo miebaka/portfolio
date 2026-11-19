@@ -47,7 +47,7 @@ test("Work archive separates published cases from work in progress", () => {
   const html = projectRender.renderProjectArchiveMarkup(SITE.projects);
   assert.match(html, /<a\b[^>]*href="work\/tedx-rsu.html"/);
   assert.match(html, /<a\b[^>]*href="work\/rivo.html"/);
-  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Detour", "Out Of Office"])
+  for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Poster A Week", "Kiki-Joshua", "Kigoma Hotels"])
     assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|Poster A Week|Kiki-Joshua|Kigoma Hotels|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);

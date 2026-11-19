@@ -338,7 +338,7 @@ test("Work index separates complete cases from studies in progress", async ({ pa
     "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
   await expect(page.locator(".project-archive__media")).toHaveCount(3);
-  await expect(page.locator(".project-archive__progress li")).toHaveText(["Detour2026", "Out Of Office2026"]);
+  await expect(page.locator(".project-archive__progress li")).toHaveText(["Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021"]);
 });
 
 test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
