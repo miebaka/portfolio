@@ -641,6 +641,12 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer {
   background: var(--ref-black);
   color: var(--ref-blue-80);
 }
+body[data-page="home"]:not(.site-system-disabled) .site-footer__links a {
+  color: var(--ref-blue-80);
+}
+body[data-page="home"]:not(.site-system-disabled) .site-footer__links a:is(:hover, :focus-visible) {
+  color: var(--ref-paper);
+}
 body[data-page="home"]:not(.site-system-disabled) .site-footer__panel {
   position: relative;
   z-index: 2;
