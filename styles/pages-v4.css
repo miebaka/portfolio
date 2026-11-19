@@ -1251,7 +1251,7 @@ body[data-page="about"] .about-principles li{
   font-size: var(--editorial-display-small);
   line-height: .95;
   letter-spacing: -.065em;
-  max-width: 16ch;
+  max-width: 24ch;
 }
 
 
