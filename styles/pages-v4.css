@@ -125,6 +125,7 @@
 .article-toc a{position:relative;isolation:isolate;display:grid;grid-template-columns:2rem 1fr;gap:.7rem;min-height:5.75rem;padding:1rem;color:var(--muted);line-height:1.35;text-decoration:none;overflow:hidden}
 .article-toc a::before{content:"";position:absolute;z-index:-1;inset:0;background:var(--accent);transform:scaleY(0);transform-origin:bottom;transition:transform 240ms var(--ease-standard)}
 .article-toc a:focus-visible{color:var(--paper)}
+.article-toc a[aria-current="location"]{color:var(--ink);background:var(--sys-color-surface-container-low);font-weight:600}
 .article-toc a:focus-visible::before{transform:scaleY(1)}
 .article-toc__index{font:600 .8125rem/1.5 var(--label);letter-spacing:.1em;color:var(--accent)}
 .article-toc__title{align-self:end;font:500 .88rem/1.35 var(--body)}
