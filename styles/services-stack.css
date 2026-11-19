@@ -130,3 +130,19 @@ body[data-page="home"] .service-stack__item a.service-stack__evidence {
   color:inherit;background:none;font:650 var(--type-label-m)/1.4 var(--label);
   letter-spacing:.02em;text-transform:uppercase;
 }
+
+/* Preserve the selected-work keyboard/contrast contract while using Bulletproof spacing. */
+body[data-page="home"] .home-project-list .editorial-index__row {
+  padding-block:clamp(1rem,2vw,2rem);
+}
+body[data-page="home"] .home-project-list__title {
+  font-weight:590;
+}
+body[data-page="home"] .home-project-list .editorial-index__row::before {
+  background-color:var(--paper);
+}
+body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
+  max-width:23ch;
+  font-size:clamp(3rem,5.1vw,5.3rem);
+  line-height:.98;
+}
