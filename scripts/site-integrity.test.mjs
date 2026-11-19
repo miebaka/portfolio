@@ -265,27 +265,23 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /filter:saturate/i);
 });
 
-test("hero wave keeps a bounded, direct Three.js rendering contract", async () => {
+test("hero wave keeps a bounded, native WebGL contract", async () => {
   const source = await readFile(join(dist, "js", "core", "hero-wave.js"), "utf8");
   const island = await readFile(join(root, "js", "hero-wave-island.js"), "utf8");
+  const runtime = await readFile(join(dist, "assets", "runtime", "hero-wave.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"])
     assert.match(source, new RegExp(token));
-  assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
-  assert.match(source, /pointermove/);
-  assert.match(source, /setPointer/);
-  assert.match(source, /shader-static/);
   for (const contract of [
-    /PlaneGeometry/,
-    /ShaderMaterial/,
-    /OrthographicCamera/,
-    /MAX_AUTOPLAY_MS = 4800/,
-    /IntersectionObserver/,
-    /ResizeObserver/,
-    /forceContextLoss/,
-    /SRGBColorSpace/,
-  ])
-    assert.match(island, contract);
+    /getContext\("webgl"/, /gl\.createShader/, /gl\.drawArrays/,
+    /uniform2fv/, /uniform3fv/, /MAX_AUTOPLAY_MS=2400/,
+    /FRAME_MS=1000\/30/, /IntersectionObserver/, /ResizeObserver/,
+    /deleteBuffer/, /deleteProgram/, /WEBGL_lose_context/,
+  ]) assert.match(island, contract);
+  assert.match(source, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(source, /pointermove|setPointer/);
+  assert.match(source, /shader-static/);
+  assert.doesNotMatch(runtime, /THREE|three\.module|WebGLRenderer|SceneGeometry/);
   assert.match(
     foundations,
     /--hero-wave-color-1:var\(--ref-midnight\);--hero-wave-color-2:var\(--ref-ultramarine\);--hero-wave-color-3:var\(--ref-blue-80\)/,

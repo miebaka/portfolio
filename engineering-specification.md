@@ -52,7 +52,7 @@ Home has exactly this editorial order: **Landing → Selected Work → About Me 
 
 ## 2. Architecture: preserve the static-first system
 
-The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, optional Three.js shader island, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
+The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, optional native WebGL shader island, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
 
 - HTML contains meaningful first-render content, title/description/canonical/Open Graph metadata, landmarks, a single `h1`, skip link, navigation fallback and useful core page copy.
 - `data/site.js` composes separate content modules rather than duplicating authored content.
@@ -167,7 +167,7 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 
 1. Validate structured public content and local references.
 2. Rebuild the Experiments manifest.
-3. Build the Three.js hero-wave island.
+3. Build the lightweight native WebGL hero-wave island; do not add a scene-graph dependency unless a verified design requirement demands it.
 4. Generate `dist/` from the production allow-list.
 5. Prevent private documents, original working files, source maps and review artifacts from leaking into output.
 

@@ -965,7 +965,7 @@ Target **LCP ≤2.5s**, **CLS ≤0.1**, **INP ≤200ms** at the 75th percentile 
 
 ### 16.1 Approved stack
 
-Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based validation/build, Playwright, axe-core, Lighthouse CI, Three.js isolated to hero shader, Vercel deployment. **Do not migrate to React/Next.js/GSAP/Lenis merely to implement visual references.** Introduce dependencies only after a performance, maintenance and licensing evaluation.
+Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based validation/build, Playwright, axe-core, Lighthouse CI, lightweight native WebGL isolated to the optional hero shader, Vercel deployment. **Do not migrate to React/Next.js/GSAP/Lenis merely to implement visual references.** Introduce dependencies only after a performance, maintenance and licensing evaluation.
 
 ### 16.2 File ownership and boundaries
 
