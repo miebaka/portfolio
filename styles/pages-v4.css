@@ -370,7 +370,7 @@ body[data-page="writing"] .hero__title{
 body[data-page="writing"] .section{padding-block:0 clamp(9rem,15vw,15rem)}
 body[data-page="writing"] .section-head{margin-bottom:clamp(4rem,6vw,6.875rem)}
 .editorial-index--notes .editorial-index__item{border-color:var(--line)}
-.editorial-index--notes .editorial-index__row{background:transparent;color:var(--ink)}
+.editorial-index--notes .editorial-index__row{background:transparent;color:var(--ink);padding-inline:clamp(1.25rem,2.5vw,2.75rem);column-gap:clamp(1rem,3vw,3rem)}
 .editorial-index--notes .writing-item__identity{display:grid;min-width:0}
 .editorial-index--notes .writing-item__title{grid-column:auto;grid-row:auto;order:initial}
 .editorial-index--notes .writing-item__summary{display:block;max-width:46rem;margin-top:var(--s2);color:var(--muted);font-size:clamp(1rem,1.2vw,1.2rem);line-height:1.55}
