@@ -233,7 +233,7 @@ test("Home and About preserve authentic public proof without JavaScript", async 
   const home = await page("index.html");
   const about = await page("about.html");
   for (const client of (await import("../data/clients.js")).clients) {
-    assert.match(home, new RegExp('alt="' + client.name.replace(/[.*+?^$\{\}()|[\]\\]/g,"\\$&") + '"'));
+    assert.ok(home.includes('alt="' + client.name.replaceAll("&", "&amp;") + '"'));
   }
   for (const job of siteConfig.experience) {
     assert.ok(about.includes(job.organisation));
