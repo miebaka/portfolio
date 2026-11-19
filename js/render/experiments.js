@@ -2,7 +2,9 @@ import { basePath, escapeHTML as esc, safeURL } from "../utilities/dom.js";
 
 // Only authored media filenames may enter an asset URL; never allow path segments.
 const validMediaFile = file => typeof file === "string" &&
-  /^[^/\\\\\\x00-\\x1f]+\\.(?:avif|webp|jpe?g|png|gif|mp4|webm)$/i.test(file);
+  !file.includes("/") && !file.includes("\\") &&
+  !/[\x00-\x1f]/.test(file) &&
+  /\.(?:avif|webp|jpe?g|png|gif|mp4|webm)$/i.test(file);
 
 export const renderExperimentMediaMarkup = (entry, base = "", index = 0) => {
   if (!validMediaFile(entry?.file)) return "";
