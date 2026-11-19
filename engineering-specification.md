@@ -15,7 +15,7 @@ This document defines **how** the portfolio must be built, verified, secured, an
 
 1. Security, privacy, truthful content, accessibility, and working functionality are mandatory.
 2. This file governs build, system architecture, interfaces, data integrity, performance budgets, APIs, automated verification, and deployment.
-3. The redesigned `DESIGN.md` version 2.0.0 (19 November 2026) governs editorial, visual, content hierarchy, page and motion requirements **once that version is committed**. Until then, the repository's existing `DESIGN.md` is the checked-in implementation reference, not proof that the new visual brief has shipped.
+3. The redesigned `DESIGN.md` version 2.1.0 (19 November 2026) governs editorial, visual, content hierarchy, page and motion requirements **as committed in the feature branch**. That document defines the target experience, not proof that all visual work has shipped.
 4. The current `styles/foundations.css` defines shipped token values pending an explicitly tested migration.
 5. `data/` remains the factual source for projects, biography, employer/client relationships, case-study evidence, and writing.
 6. External websites and ZeroSlop `DESIGN.md` captures are reference material, **not verified interaction specifications, licensed assets, approved token migrations, or evidence of accessibility**.
@@ -261,7 +261,7 @@ A release is blocked by broken routes, inaccessible required navigation, dead pr
 
 ## 12. Implementation phases and dependency order
 
-1. **Reconcile documentation** — Commit the 19 November `DESIGN.md` v2.0.0, align this file, update README and resolve canonical configuration. Baseline existing tests and collect screenshots; don't claim new design is live yet.
+1. **Reconcile documentation** — Commit the 19 November `DESIGN.md` v2.1.0, align this file, update README and resolve canonical configuration. Baseline existing tests and collect screenshots; don't claim new design is live yet.
 2. **Fix correctness first** — Repair footer canvas pointer handling, move homepage featured selection to structured data, and restore mobile work imagery. Add regression tests for each.
 3. **Implement home reference lock** — Build framed hero, selected-work presentation, About, services, client marquee, CTA and footer in the required order. Centralize tokens and motion; no reference collage.
 4. **Propagate globally** — Work, case studies, About, Experiments, Essays, Contact, shared controls and navigation. Preserve content schemas and static fallbacks.
@@ -306,7 +306,7 @@ These are **audit findings**, not claims that the present branch is broken in al
 
 ## Appendix B — Release checklist
 
-- [ ] Updated `DESIGN.md` v2.0.0 is committed and matches the implementation target.
+- [ ] Updated `DESIGN.md` v2.1.0 is committed and matches the implementation target.
 - [ ] Canonical/OG/JSON-LD/sitemap are consistent with the verified host.
 - [ ] All seven homepage sections render in required order with JS enabled and disabled.
 - [ ] All published project links, project images and evidence links resolve correctly.
