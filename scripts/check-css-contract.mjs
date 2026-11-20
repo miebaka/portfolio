@@ -134,7 +134,7 @@ for (const rule of leafRules(css["pages-v4.css"])) for (const selector of splitS
 }
 
 const imports = [...(await readFile(join(root, "styles/main.css"), "utf8")).matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?(?:\s+layer\([^)]*\))?;/g)].map(match => match[1]);
-assert.deepEqual(imports, [...canonicalNames, "reference-overrides.css", "services-stack.css", "forliving-editorial.css", "motion-language.css", "editorial-index.css"], "main.css must import the canonical foundations then authored page extensions in order");
+assert.deepEqual(imports, [...canonicalNames, "reference-overrides.css", "services-stack.css", "forliving-editorial.css", "motion-language.css", "editorial-index.css", "project-roster.css"], "main.css must import the canonical foundations then authored page extensions in order");
 reject(entries.some(([, source]) => /@import\s/.test(source)), "historical/nested CSS imports are prohibited");
 
 const requiredTokens = ["--motion-press:120ms", "--motion-hover:160ms", "--motion-panel-in:220ms", "--motion-panel-out:160ms", "--ease-out-ui:cubic-bezier(.25,1,.5,1)", "--ease-in-out-ui:cubic-bezier(.65,0,.35,1)"];

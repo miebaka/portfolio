@@ -14,63 +14,42 @@ export function renderWork() {
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
-  // The editorial selection is authored in project data, never duplicated here.
-  // An unpublished case must never become a dead featured link.
   const selected = projects
     .filter(project => project.featured === true && project.status === "published" && studies?.[project.slug]?.status === "published")
-    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER))
-    .map(project => ({
-      slug: project.slug,
-      title: project.title,
-      category: project.category,
-      year: project.year,
-      href: base + `work/${safeToken(project.slug)}.html`,
-      cover: project.cover || "",
-    }));
-  return renderEditorialIndex(
-    selected.map((project) => {
-      const visual = project.cover
-        ? '<span class="home-project-list__visual" aria-hidden="true"><picture><source type="image/avif" srcset="' +
-          base +
-          "assets/images/optimized/" +
-          safeToken(project.cover) +
-          "-540.avif 540w, " +
-          base +
-          "assets/images/optimized/" +
-          safeToken(project.cover) +
-          '-1080.avif 1080w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), 48vw"><source type="image/webp" srcset="' +
-          base +
-          "assets/images/optimized/" +
-          safeToken(project.cover) +
-          "-540.webp 540w, " +
-          base +
-          "assets/images/optimized/" +
-          safeToken(project.cover) +
-          '-1080.webp 1080w" sizes="(max-width: 48rem) calc(100vw - 2.5rem), 48vw"><img src="' +
-          base +
-          "assets/images/optimized/" +
-          safeToken(project.cover) +
-          '-1080.webp" alt="" width="1080" height="810" loading="lazy" decoding="async"></picture></span>'
-        : "";
-      const content =
-        '<span class="home-project-list__identity"><span class="home-project-list__title editorial-index__title">' +
-        esc(project.title) +
-        '</span><span class="home-project-list__meta">' +
-        esc(project.category) +
-        " / " +
-        esc(project.year) +
-        '</span></span><span class="home-project-list__arrow" aria-hidden="true">↗</span>' +
-        visual;
-      return {
-        href: project.href,
-        tone: project.slug,
-        className: project.href ? "" : "home-project-list__pending",
-        content,
-      };
-    }),
-    { variant: "work", ordered: true },
-  );
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
+
+  return renderEditorialIndex(selected.map(project => {
+    // These are actual case-study images curated alongside the project data.
+    // The cover is always the first frame, including on touch and without JS.
+    const frames = [...new Set([project.cover, ...(project.rosterImages || [])].filter(Boolean))].slice(0, 3);
+    const visual = '<span class="home-project-list__visual" aria-hidden="true">' +
+      frames.map((image, index) => {
+        const src = base + "assets/images/optimized/" + safeToken(image);
+        return '<span class="project-roster__photo project-roster__photo--' + (index + 1) + '"><picture>' +
+          '<source type="image/avif" srcset="' + src + '-540.avif 540w, ' + src + '-810.avif 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
+          '<source type="image/webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
+          '<img src="' + src + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async">' +
+          '</picture></span>';
+      }).join("") + '</span>';
+
+    const tags = [...new Set([...(project.tags || []), project.category].filter(Boolean))];
+    const content =
+      '<span class="home-project-list__identity"><span class="home-project-list__title editorial-index__title">' +
+      esc(project.title) + '</span><span class="home-project-list__meta">' +
+      esc(project.category) + ' / ' + esc(project.year) +
+      '</span></span>' + visual +
+      '<span class="project-roster__tags" data-roster-tags="' + esc(tags.join("|")) + '" aria-hidden="true"></span>' +
+      '<span class="home-project-list__arrow" aria-hidden="true">↗</span>';
+    return {
+      href: base + "work/" + safeToken(project.slug) + ".html",
+      label: project.title + ", view case study",
+      tone: project.slug,
+      className: "project-roster__row",
+      content,
+    };
+  }), { variant: "work", ordered: true });
 }
+
 
 export function renderProjectArchive() {
   const el = document.querySelector("[data-project-archive]");

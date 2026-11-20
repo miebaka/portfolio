@@ -591,7 +591,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 10); // Nine authored foundation/page/motion files and the editorial Index refinement.
+  assert.equal((styles.match(/@import/g) || []).length, 11); // Canonical page styles, editorial refinements and the projects roster.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
