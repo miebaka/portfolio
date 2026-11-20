@@ -234,13 +234,11 @@ test("Home content preserves the unblurred hero field", async ({ page }) => {
 
 test("Global navigation uses the five approved destinations", async ({ page }) => {
   await page.goto("/index.html");
-  if (page.viewportSize().width <= 640) await page.getByRole("button", { name: "Index" }).click();
-  const navigation = page.viewportSize().width <= 640
-    ? page.getByRole("navigation", { name: "All destinations" })
-    : page.getByRole("navigation", { name: "Primary", exact: true });
-  const labels = page.viewportSize().width <= 640
-    ? await navigation.locator(".site-index__link > span:last-child").allTextContents()
-    : await navigation.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("aria-label") || link.textContent.trim()));
+  const menu = page.getByRole("button", { name: "Index", exact: true });
+  await expect(menu).toBeVisible();
+  await menu.click();
+  const navigation = page.getByRole("navigation", { name: "All destinations" });
+  const labels = await navigation.locator(".site-index__link > span:last-child").allTextContents();
   expect(labels).toEqual(["Work", "Experiments", "About", "Essays", "Contact"]);
 });
 
@@ -342,13 +340,18 @@ test("Work index separates complete cases from studies in progress", async ({ pa
 });
 
 test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
-  test.skip(isMobile, "The reciprocal hover treatment is reserved for fine pointers");
   await page.goto("/work.html");
   const archive = page.locator(".editorial-index--archive");
   const rows = archive.locator(".editorial-index__row");
   const rivo = archive.getByRole("link", { name: /Rivo Studio/ });
   await expect(rows).toHaveCount(3);
-  await rivo.hover();
+  if (isMobile) {
+    await rivo.focus();
+    await expect(rivo).toBeFocused();
+    await expect(rivo.locator(".project-archive__media")).toBeVisible();
+  } else {
+    await rivo.hover();
+  }
   await expect(rivo).toHaveCSS("opacity", "1");
   await expect(rows.first()).toHaveCSS("opacity", "1");
   await expect(rows.last()).toHaveCSS("opacity", "1");

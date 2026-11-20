@@ -46,9 +46,6 @@ body[data-page="home"] .service-stack__card h3 {
   font:640 clamp(1.7rem,3.6vw,4.6rem)/.95 var(--display);
   letter-spacing:-.055em;max-width:22ch;text-transform:uppercase;
 }
-body[data-page="home"] .service-stack__count {
-  margin-left:auto;white-space:nowrap;font:600 var(--type-label-m)/1 var(--label);
-}
 body[data-page="home"] .service-stack__bottom {
   display:grid;grid-template-columns:minmax(0,1.4fr) minmax(10rem,.6fr);
   gap:clamp(2rem,7vw,7rem);align-items:end;
@@ -110,12 +107,6 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
   body[data-page="home"] .service-stack__item {position:relative;top:auto;margin-bottom:1rem}
 }
 
-body[data-page="home"] .service-stack__item .service-journey__number {
-  position:static;display:inline;font:600 var(--type-label-m)/1 var(--label);margin-left:auto;
-}
-body[data-page="home"] .service-stack__item .service-stack__count {
-  margin-left:0;font:600 var(--type-label-m)/1 var(--label);
-}
 body[data-page="home"] .service-stack__evidence .service-journey__arrow {
   display:inline;position:static;border:0;border-radius:0;
   width:auto;height:auto;margin:0;transform:none;font-size:1rem;

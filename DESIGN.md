@@ -164,7 +164,7 @@ The following references extend **The Living Editorial**, not the global brand. 
 | Source | Adopted feature | Rejected | Responsive and verification requirement |
 | --- | --- | --- | --- |
 | [Unsection](https://www.unsection.com/) | Clearer image-first Work media and deliberate case-study spacing | SaaS cards or new homepage chapters | One-cover previews occupy their full space; images remain visible on touch |
-| [Spell](https://spell.sh/docs/components) | Existing staggered text entrances with Geist Serif display, Geist Sans body, Geist Mono labels | Competing React animations or multiple effects per heading | Semantic first paint and reduced-motion state remain readable |
+| [Spell](https://spell.sh/docs/components) | Existing staggered text entrances with Geist Sans display, Geist Sans body, Geist Mono labels | Competing React animations or multiple effects per heading | Semantic first paint and reduced-motion state remain readable |
 | [Details](https://www.details.so/inspo) | Refinement of selected-work list and distinct case-study image rhythm | Hidden-on-touch previews or mandatory transitions | Keyboard, touch and static fallbacks preserve the work |
 | [Curated](https://curated.design/) | An authored editorial hierarchy across all templates | Importing unrelated palettes, images or typography | True evidence and readable image captions remain primary |
 
@@ -1303,3 +1303,12 @@ The following observations are from the `main` branch reviewed on 19 November 20
 ## APPENDIX C — SPECIFICATION CHANGELOG
 
 - **2.0.0 (2026-11-19):** Consolidated the current codebase review, seven-section Home reference locks, ZeroSlop-inspired governance, site-wide chapter contracts, motion/accessibility/performance requirements, canonical-host resolution, known defects and a comprehensive staged acceptance process. Maintained the existing ultramarine identity, Archivo/Finlandica Text/Host Grotesk roles, vanilla/static-first architecture, real case studies and dot-matrix signature.
+
+
+### The Index, Geist Sans and embossed signature (20 November 2026)
+
+- **Typography:** Geist Sans throughout headlines and body, Geist Mono for labels, with no Geist Serif font request. All small UI labels are visually uppercase; paragraph and project-title case stays authored.
+- **Navigation:** replace the centered dark pill with a restrained masthead and fullscreen Index inspired by [Alex Pierce on Navbar Gallery](https://www.navbar.gallery/navbar/alex-pierce). Keep canonical routes, focus trapping, Escape restoration, theme/motion preferences and static no-JavaScript navigation.
+- **What I Do:** five unnumbered semantic service cards, flat authored token colours and no spotlight or image-overlay gradient. Evidence links remain accessible on touch, hover, and keyboard.
+- **Footer:** the original script SVG uses opposing masked highlight/shadow layers for a tactile, raised embossed effect inspired by [For Living](https://www.for-living.it/). Its small keyboard-operable interaction is progressive, not a requirement for reading the signature.
+- **Tests:** desktop checks verify fine-pointer behavior; mobile checks verify always-visible images, focus, and reduced motion. No intentional mobile skips for these behaviors.

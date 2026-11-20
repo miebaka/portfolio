@@ -35,8 +35,8 @@ const remoteFontBuffers = await Promise.all(remoteFontUrls.map(async url => {
     `Font endpoint must return WOFF2: ${url}`);
   return { url, buffer: Buffer.from(await response.arrayBuffer()) };
 }));
-const displayFontBuffer = remoteFontBuffers.find(({url}) => url.includes("GeistSerif-Regular.woff2"))?.buffer;
-assert.ok(displayFontBuffer, "Geist Serif Regular display font is missing");
+const displayFontBuffer = remoteFontBuffers.find(({url}) => url.includes("/geist-sans/Geist-Regular.woff2"))?.buffer;
+assert.ok(displayFontBuffer, "Geist Sans Regular display font is missing");
 const displayFont = gzipSync(displayFontBuffer).byteLength;
 const totalFontBytes = gzipSync(Buffer.concat([
   ...fontFiles.map(file => readFileSync(resolve(dist, file))),

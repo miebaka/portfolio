@@ -11,13 +11,20 @@ test("explicit Reduce keeps every Home proof chapter readable without staged mot
 });
 
 test("selected-work image preview reacts to pointer on a fine-pointer desktop", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Fine-pointer editorial preview is intentionally disabled on touch");
-  await page.setViewportSize({ width: 1440, height: 900 });
+  if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/index.html");
   await expect(page.locator("html")).toHaveClass(/motion-language-ready/);
   const row = page.locator(".home-project-list .editorial-index__row").first();
   await row.scrollIntoViewIfNeeded();
+  if (isMobile) {
+    // On touch the image is persistently visible: assert meaningful equivalent behavior.
+    await expect(row.locator(".home-project-list__visual")).toBeVisible();
+    await row.focus();
+    await expect(row).toBeFocused();
+    expect(await row.evaluate(el => el.style.getPropertyValue("--motion-preview-x"))).toBe("");
+    return;
+  }
   const bounds = await row.boundingBox();
   expect(bounds).toBeTruthy();
   await page.mouse.move(bounds.x + bounds.width * .85, bounds.y + bounds.height * .5);
@@ -27,18 +34,22 @@ test("selected-work image preview reacts to pointer on a fine-pointer desktop", 
 });
 
 test("an on-page switch from Full to Reduce clears animated previews", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Checks desktop pointer choreography");
-  await page.setViewportSize({ width: 1440, height: 900 });
+  if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/index.html");
   const row = page.locator(".home-project-list .editorial-index__row").first();
   await row.scrollIntoViewIfNeeded();
-  const box = await row.boundingBox();
-  expect(box).toBeTruthy();
-  await page.mouse.move(box.x + box.width * .8, box.y + box.height * .5);
-  await expect.poll(() => row.evaluate(element => element.style.getPropertyValue("--motion-preview-x"))).not.toBe("");
+  if (!isMobile) {
+    const box = await row.boundingBox();
+    expect(box).toBeTruthy();
+    await page.mouse.move(box.x + box.width * .8, box.y + box.height * .5);
+    await expect.poll(() => row.evaluate(element => element.style.getPropertyValue("--motion-preview-x"))).not.toBe("");
+  } else {
+    await expect(row.locator(".home-project-list__visual")).toBeVisible();
+  }
   await page.evaluate(() => { document.documentElement.dataset.motion = "reduced"; });
   await expect(page.locator("html")).not.toHaveClass(/motion-language-ready/);
   await expect.poll(() => row.evaluate(element => element.style.getPropertyValue("--motion-preview-x"))).toBe("");
   await expect(page.locator("#selected-title")).toHaveCSS("opacity", "1");
+  if (isMobile) await expect(row.locator(".home-project-list__visual")).toBeVisible();
 });

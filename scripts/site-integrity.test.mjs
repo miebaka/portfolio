@@ -227,7 +227,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.match(css, /font-family:\s*"Geist Serif"/);
+  assert.doesNotMatch(css, /font-family:\s*"Geist Serif"/);
   assert.match(css, /font-family:\s*"Geist Sans"/);
   assert.match(css, /font-family:\s*"Geist Mono"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
@@ -255,7 +255,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"Geist Serif"/);
+  assert.match(css, /--font-display:\s*"Geist Sans"/);
   assert.match(css, /--font-body:\s*"Geist Sans"/);
   assert.match(css, /--font-label:\s*"Geist Mono"/);
   assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
@@ -587,7 +587,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 9); // Eight canonical/extension styles plus one authored motion stylesheet.
+  assert.equal((styles.match(/@import/g) || []).length, 10); // Nine authored foundation/page/motion files and the editorial Index refinement.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
