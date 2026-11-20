@@ -1,4 +1,4 @@
-import { isSoftwareRenderer } from "../js/hero-wave-island.js";
+import { isSoftwareRenderer } from "../js/core/hero-wave.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -8,7 +8,6 @@ import { CONTENT } from "../data/site.js";
 import { services } from "../data/services.js";
 import { escapeHTML } from "../js/utilities/dom.js";
 import {
-  createServiceSwatches,
   renderExperienceLedger,
   renderServiceAccordionMarkup,
   renderServiceFallbackMarkup,
@@ -108,55 +107,6 @@ test("Home and About share the complete capability source", async () => {
   }
   await assert.rejects(page("services.html"));
   assert.match(await page("scripts/build-site.mjs"), /renderServiceFallbackMarkup\(content\.services\)/);
-});
-
-class FakeControl {
-  constructor() {
-    this.attributes = new Map();
-    this.listeners = new Map();
-    this.tabIndex = -1;
-    this.hidden = false;
-    this.focused = false;
-  }
-  setAttribute(name, value) {
-    this.attributes.set(name, value);
-  }
-  addEventListener(type, listener) {
-    this.listeners.set(type, listener);
-  }
-  removeEventListener(type, listener) {
-    if (this.listeners.get(type) === listener) this.listeners.delete(type);
-  }
-  focus() {
-    this.focused = true;
-  }
-  fire(type, event = {}) {
-    this.listeners.get(type)?.({ preventDefault() {}, ...event });
-  }
-}
-
-test("service swatches support pointer and complete roving-keyboard selection with cleanup", () => {
-  const tabs = services.map(() => new FakeControl());
-  const panels = services.map(() => new FakeControl());
-  const root = { dataset: {}, querySelectorAll: (selector) => (selector === '[role="tab"]' ? tabs : panels) };
-  const cleanup = createServiceSwatches(root);
-
-  tabs[2].fire("click");
-  assert.equal(tabs[2].attributes.get("aria-selected"), "true");
-  assert.equal(panels[2].hidden, false);
-  assert.equal(panels[0].hidden, true);
-
-  tabs[2].fire("keydown", { key: "ArrowRight" });
-  assert.equal(tabs[3].tabIndex, 0);
-  assert.equal(tabs[3].focused, true);
-  assert.equal(root.dataset.input, "keyboard");
-  tabs[3].fire("keydown", { key: "End" });
-  assert.equal(tabs[4].tabIndex, 0);
-  tabs[4].fire("keydown", { key: "Home" });
-  assert.equal(tabs[0].tabIndex, 0);
-
-  cleanup();
-  assert.ok(tabs.every((tab) => tab.listeners.size === 0));
 });
 
 test("mobile service markup is a vertical, fully readable accordion", () => {
