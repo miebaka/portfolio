@@ -18,6 +18,7 @@ import { initHeroWave } from "./core/hero-wave.js";
 import { initCaseScrollIndex } from "./core/case-scroll-index.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initEditorialReveals } from "./core/editorial-reveals.js";
+import { initMotionLanguage } from "./core/motion-language.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
 
@@ -48,6 +49,7 @@ run("content slots", fillSlots);
 if (has('[data-mount="now-playing"]')) run("listening status", initNowPlaying);
 run("copy email", initCopyEmail);
 run("editorial reveals", initEditorialReveals);
+run("motion language", initMotionLanguage);
 if (page === "writing" && has(".article-body")) run("article navigation", initArticleNavigation);
 if (page === "explorations") run("experiments spatial archive", () => { void initExperimentsSpatial(); });
 
