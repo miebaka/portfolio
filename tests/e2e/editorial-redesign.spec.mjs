@@ -4,7 +4,7 @@ test("Geist typography roles and reference-centered desktop navigation",async({p
  await page.goto("/index.html");
  const fonts=await page.evaluate(()=>{
   const get=selector=>getComputedStyle(document.querySelector(selector)).fontFamily;
-  return {display:get(".home-landing h1"),body:get(".home-profile p"),label:get(".site-nav__link")};
+  return {display:get(".home-landing h1"),body:get(".home-profile__introduction p:not(.home-profile__lead)"),label:get(".site-nav__link")};
  });
  expect(fonts.display).toContain("Geist Serif");
  expect(fonts.body).toContain("Geist Sans");
