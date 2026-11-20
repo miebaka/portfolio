@@ -22,7 +22,7 @@ export function renderFooter() {
   el.className = "site-footer";
   el.innerHTML =
     '<div class="site-footer__invitation">' +
-      '<p class="site-footer__eyebrow">AN INDEPENDENT DESIGN PRACTICE · LAGOS / WORLDWIDE</p>' +
+      '<p class="site-footer__eyebrow">MIEBAKA JOSHUA · LAGOS / WORLDWIDE</p>' +
       '<h2>LET’S MAKE SOMETHING <em>MATTER.</em></h2>' +
       '<a class="site-footer__cta" href="' + basePath() + 'contact.html">START A PROJECT <span aria-hidden="true">↗</span></a>' +
     '</div>' +
