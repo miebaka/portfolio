@@ -1,0 +1,118 @@
+
+/* Fonts: official Geist 1.9.2 distribution, pinned and verified on unpkg.
+   These external WOFF2 files are licensed under SIL Open Font License. */
+@font-face{font-family:"Geist Serif";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerifVF.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-SemiBold.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-SemiBold.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
+/* Responsive transcription: For Living 81px/54px/18px at a 1905px capture;
+   1.1 display leading and 1.5 body leading, adapted to each viewport. */
+:root{
+ --font-display:"Geist Serif",Georgia,serif;
+ --font-body:"Geist Sans",Arial,system-ui,sans-serif;
+ --font-label:"Geist Mono","SFMono-Regular",ui-monospace,monospace;
+ --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);
+ --type-label-s:.6875rem;--type-label-m:.75rem;--type-label-l:.875rem;
+ --type-body-s:.9375rem;--type-body-m:1.0625rem;
+ --type-body-l:clamp(1.0625rem,1vw + .75rem,1.25rem);
+ --type-heading-s:clamp(1.5rem,2vw + 1rem,2.5rem);
+ --type-heading-l:clamp(2.25rem,3.25vw + 1rem,3.375rem);
+ --type-display-s:clamp(2.6rem,5vw,4rem);
+ --type-display-m:clamp(3rem,5.5vw,5.0625rem);
+ --type-display-l:clamp(3.2rem,6vw,5.0625rem);
+ --type-display-xxl:clamp(4.25rem,8vw,7.5rem);
+ --editorial-display:clamp(4.25rem,8vw,7.5rem);
+ --grid-max:100rem;
+ --grid-outer:clamp(1.25rem,4.667vw,5.25rem);
+ --grid-gutter:clamp(.875rem,1.5vw,1.5rem);
+ --baseline:1.5rem; /* 24px body baseline, split into 8px micro-rows */
+ --grid-row:calc(var(--baseline)/3);
+ --grid-column:calc((min(100vw - 2 * var(--grid-outer),var(--grid-max)) - 11 * var(--grid-gutter))/12);
+ --page:var(--grid-outer);
+ --content:var(--grid-max);
+ --grid-gap:var(--grid-gutter);
+}
+body{font-family:var(--body);line-height:1.5;font-size:var(--type-body-m)}
+:where(h1,h2,h3,h4){font-family:var(--display);font-weight:400;letter-spacing:-.035em}
+:where(.meta,.site-nav,.site-footer__links,.section-head,.swiss-section-head,.project-archive__meta,.service-stack__tag,button,.badge,time){font-family:var(--label)}
+body[data-page="home"] .home-landing h1{font-family:var(--display);font-weight:400;font-size:clamp(3.4rem,8.35vw,8.25rem);line-height:1.05;letter-spacing:-.055em;font-stretch:normal;white-space:normal}
+body[data-page="home"] .home-landing h1 span:last-child{font-weight:400;font-stretch:normal;letter-spacing:inherit}
+body[data-page="home"] .home-landing__statement{font-family:var(--display);font-size:clamp(1.6rem,2.75vw,3rem);line-height:1.12;letter-spacing:-.035em}
+body[data-page="home"] .swiss-section-head h2{font:400 clamp(2.75rem,5vw,5.0625rem)/1.1 var(--display);letter-spacing:-.035em}
+body[data-page="home"] .disciplines-heading h2{font:400 clamp(3rem,6vw,5.0625rem)/1.1 var(--display);letter-spacing:-.035em}
+body[data-page="home"] .home-project-list__title{font-family:var(--display);font-weight:400;letter-spacing:-.05em;line-height:1.04;font-size:clamp(2.25rem,6.6vw,7.25rem)}
+body[data-page="home"] .service-stack__card h3{font-family:var(--display);font-weight:400;letter-spacing:-.035em;line-height:1.08}
+:is(.hero__title,.article-hero__title,.case-hero__title,.project-archive__identity h2){font-family:var(--display);font-weight:400;line-height:1.09;letter-spacing:-.035em}
+.article-body{font-family:var(--body);font-size:clamp(1rem,1.1vw,1.125rem);line-height:1.65;max-width:68ch}
+.article-body :is(h2,h3){font-family:var(--display);font-weight:400;line-height:1.14;letter-spacing:-.035em}
+/* For Living centered navigation: floating 771/1905 (40.5%) width, 63px high.
+   Keep existing accessible Index, theme pull, real routes, and responsive fallback. */
+@media(min-width:72rem){
+ body .site-nav{height:5.5rem;min-height:5.5rem;background:var(--paper);border:0;box-shadow:none}
+ body .site-nav__inner{height:5.5rem;width:calc(100% - 2 * var(--page));max-width:none;display:grid;grid-template-columns:minmax(8rem,1fr) minmax(0,48rem) minmax(8rem,1fr);gap:clamp(.75rem,1vw,1.5rem);align-items:center}
+ body .site-nav__brand{grid-column:1;grid-row:1;justify-self:start}
+ body .site-nav__links{grid-column:2;grid-row:1;justify-self:center;display:flex!important;align-items:center;justify-content:center;gap:0;
+   width:min(100%,48.2rem);min-height:3.9375rem;padding:.25rem .75rem;background:var(--ink);color:var(--paper);border-radius:.5625rem;box-shadow:0 10px 28px color-mix(in srgb,var(--ink) 12%,transparent)}
+ body .site-nav__links .site-nav__link{color:var(--paper);opacity:.82;min-height:2.75rem;padding:.875rem clamp(.55rem,1.3vw,1.5rem);font:500 clamp(.72rem,.75vw,.88rem)/1.3 var(--label);letter-spacing:0;text-transform:uppercase;border-radius:.35rem;display:inline-flex;align-items:center;justify-content:center}
+ body .site-nav__links .site-nav__link:hover,body .site-nav__links .site-nav__link:focus-visible,body .site-nav__links .site-nav__link[aria-current="page"]{color:var(--paper);opacity:1;background:color-mix(in srgb,var(--paper) 15%,transparent)}
+ body .site-nav__themes{grid-column:3;grid-row:1;justify-self:end}
+ body .site-nav__menu-btn{display:none}
+}
+@media(min-width:48rem) and (max-width:71.999rem){
+ body .site-nav__links{gap:.4rem;justify-content:center}
+ body .site-nav__link{font-size:.72rem;padding-inline:.4rem}
+}
+@media(max-width:47.999rem){
+ body[data-page="home"] .home-landing h1{font-size:clamp(2.65rem,10.5vw,4.5rem);line-height:1.05}
+ body[data-page="home"] .home-landing__statement{font-size:clamp(1.25rem,5.6vw,2rem)}
+ body .site-nav__links{display:none}
+ body .site-nav__menu-btn{display:inline-flex}
+}
+/* Twelve-column editorial grid: 12/8/4 columns; asymmetrical art direction.
+   Empty spans are deliberate, never create inaccessible DOM order. */
+.editorial-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter)}
+.editorial-grid>*{min-width:0}
+.editorial-col-3{grid-column:span 3}.editorial-col-4{grid-column:span 4}
+.editorial-col-5{grid-column:span 5}.editorial-col-6{grid-column:span 6}
+.editorial-col-7{grid-column:span 7}.editorial-col-8{grid-column:span 8}
+.editorial-col-9{grid-column:span 9}.editorial-col-12{grid-column:span 12}
+.editorial-asymmetric{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--grid-gutter);row-gap:calc(var(--baseline)*2)}
+.editorial-asymmetric>:first-child{grid-column:1/span 7}
+.editorial-asymmetric>:nth-child(2){grid-column:9/span 4}
+.editorial-asymmetric>:nth-child(3){grid-column:3/span 8}
+body[data-page="home"] .home-profile{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter);align-items:start}
+body[data-page="home"] .home-profile__introduction{grid-column:2/span 6;max-width:68ch}
+body[data-page="home"] .home-profile__media{grid-column:9/span 4;align-self:start}
+body[data-page="work"] .project-archive__row{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--grid-gutter)}
+body[data-page="writing"] .article-reading{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter)}
+body[data-page="writing"] .article-reading .article-body{grid-column:4/span 7;max-width:68ch}
+body[data-page="writing"] .article-toc{grid-column:1/span 3}
+.case-page .case-gallery{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--grid-gutter);row-gap:calc(var(--baseline)*2)}
+.case-page .case-gallery>*{grid-column:span 6}
+.case-page .case-gallery>*:nth-child(3n+1){grid-column:span 7}
+.case-page .case-gallery>*:nth-child(3n+2){grid-column:span 5}
+@media(max-width:75rem){
+ body[data-page="home"] .home-profile__introduction{grid-column:1/span 7}
+ body[data-page="home"] .home-profile__media{grid-column:9/span 4}
+}
+@media(max-width:62rem){
+ .editorial-grid,.editorial-asymmetric{grid-template-columns:repeat(8,minmax(0,1fr))}
+ .editorial-asymmetric>:first-child{grid-column:1/span 5}
+ .editorial-asymmetric>:nth-child(2){grid-column:6/span 3}
+ .editorial-asymmetric>:nth-child(3){grid-column:2/span 6}
+ body[data-page="home"] .home-profile{grid-template-columns:repeat(8,minmax(0,1fr))}
+ body[data-page="home"] .home-profile__introduction{grid-column:1/span 5}
+ body[data-page="home"] .home-profile__media{grid-column:6/span 3}
+}
+@media(max-width:47.999rem){
+ .editorial-grid,.editorial-asymmetric{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .editorial-asymmetric>*{grid-column:1/-1!important}
+ .editorial-col-3,.editorial-col-4,.editorial-col-5,.editorial-col-6,.editorial-col-7,.editorial-col-8,.editorial-col-9,.editorial-col-12{grid-column:1/-1}
+ body[data-page="home"] .home-profile{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(var(--baseline)*1.25) var(--grid-gutter)}
+ body[data-page="home"] .home-profile__introduction,body[data-page="home"] .home-profile__media{grid-column:1/-1}
+ body[data-page="work"] .project-archive__row{grid-template-columns:1fr;gap:var(--grid-gutter)}
+ body[data-page="writing"] .article-reading{display:block}
+ .case-page .case-gallery{display:grid;grid-template-columns:1fr}
+ .case-page .case-gallery>*{grid-column:1/-1!important}
+}
