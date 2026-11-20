@@ -3,10 +3,15 @@
 @font-face{font-family:"Finlandica Text";src:url("../assets/fonts/FinlandicaText-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 @font-face{font-family:"Host Grotesk";src:url("../assets/fonts/HostGrotesk-Variable.woff2") format("woff2");font-weight:300 800;font-style:normal;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.woff2") format("woff2");font-weight:400;font-display:swap}
+/* Geist v1.9.2: pinned OFL WOFF2 assets from official npm distribution.
+   Serif display, Sans reading text, Mono metadata and interface labels. */
+@font-face{font-family:"Geist Serif";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerifVF.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
 :root{color-scheme:light dark;
 
   /* Typefaces: families, then the role names the CSS consumes */
-  --font-display:"Archivo", "Arial Narrow", sans-serif;--font-body:"Finlandica Text", system-ui, sans-serif;--font-label:"Host Grotesk", "Helvetica Neue", sans-serif;
+  --font-display:"Geist Serif", Georgia, serif;--font-body:"Geist Sans", system-ui, sans-serif;--font-label:"Geist Mono", ui-monospace, monospace;
   --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);--signature:var(--font-body);
   --icon:"Material Symbols Outlined";
 
