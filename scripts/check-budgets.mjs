@@ -23,7 +23,25 @@ const homepageMedia = unique(initialImages).reduce((sum, file) => sum + statSync
 const heroWave = gzipSync(readFileSync(resolve(dist, "assets/runtime/hero-wave.js"))).byteLength;
 const fontFiles = unique([...readFileSync(resolve(dist, "styles/main.css"), "utf8").matchAll(/url\(["']?\.\.\/assets\/fonts\/([^"')]+)["']?\)/giu)].map(match => `assets/fonts/${match[1]}`));
 const fontBytes = gzipBytes(fontFiles);
-const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/Archivo-Variable.woff2"))).byteLength;
+// In the Geist system, display/body/label font files are pinned to a remote
+// versioned CDN, so fetch their actual bytes rather than measuring retired Archivo.
+const stylesheet = readFileSync(resolve(dist, "styles/main.css"), "utf8");
+const remoteFontUrls = unique([...stylesheet.matchAll(/url\\(["']?(https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/geist@1\\.9\\.2\\/[^"')]+\\.woff2)["']?\\)/giu)].map(match => match[1]));
+assert.ok(remoteFontUrls.length >= 3, "Geist font budget must include display, body and mono fonts");
+const remoteFontBuffers = await Promise.all(remoteFontUrls.map(async url => {
+  const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+  assert.ok(response.ok, `Geist font unavailable (${response.status}): ${url}`);
+  assert.match(response.headers.get("content-type") || "", /font\\/woff2|application\\/font-woff/i,
+    `Font endpoint must return WOFF2: ${url}`);
+  return { url, buffer: Buffer.from(await response.arrayBuffer()) };
+}));
+const displayFontBuffer = remoteFontBuffers.find(({url}) => url.includes("GeistSerifVF.woff2"))?.buffer;
+assert.ok(displayFontBuffer, "Geist Serif variable display font is missing");
+const displayFont = gzipSync(displayFontBuffer).byteLength;
+const totalFontBytes = gzipSync(Buffer.concat([
+  ...fontFiles.map(file => readFileSync(resolve(dist, file))),
+  ...remoteFontBuffers.map(({buffer}) => buffer),
+])).byteLength;
 
 function assertBudget(label, actual, budget) {
   const display = bytes => `${(bytes / 1024).toFixed(1)} KiB`;
@@ -36,4 +54,4 @@ assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
 assertBudget("display font", displayFont, 100 * 1024);
-assertBudget("all site fonts", fontBytes, 420 * 1024);
+assertBudget("all site fonts (local + pinned Geist)", totalFontBytes, 420 * 1024);
