@@ -157,6 +157,19 @@ The ZeroSlop library records computed values and sampled DOM elements. Many reco
 The governing visual identity is the **evolving authored editorial system defined by the 2026 research direction below**. Existing ultramarine tokens are working production values, not a prohibition on stronger, tested alternatives. External references borrow a narrow interaction or composition, never replace that system. Do not average colors, typefaces, radii and shadows from multiple sites. Do not inject a serif word into a headline merely to appear editorial. Do not make every section a different showcase of CSS tricks.
 
 
+### 2.2a Four-library refinement lock (20 November 2026)
+
+The following references extend **The Living Editorial**, not the global brand. No framework migration or licensed reference asset copying is authorised.
+
+| Source | Adopted feature | Rejected | Responsive and verification requirement |
+| --- | --- | --- | --- |
+| [Unsection](https://www.unsection.com/) | Clearer image-first Work media and deliberate case-study spacing | SaaS cards or new homepage chapters | One-cover previews occupy their full space; images remain visible on touch |
+| [Spell](https://spell.sh/docs/components) | Existing staggered text entrances with Geist Serif display, Geist Sans body, Geist Mono labels | Competing React animations or multiple effects per heading | Semantic first paint and reduced-motion state remain readable |
+| [Details](https://www.details.so/inspo) | Refinement of selected-work list and distinct case-study image rhythm | Hidden-on-touch previews or mandatory transitions | Keyboard, touch and static fallbacks preserve the work |
+| [Curated](https://curated.design/) | An authored editorial hierarchy across all templates | Importing unrelated palettes, images or typography | True evidence and readable image captions remain primary |
+
+Initial delivery: repair display-type contract drift, show Work images at all widths, fill single-cover frames, vary case-gallery composition and fix nested 404 recovery URLs. Sound and paid interaction libraries remain out of scope.
+
 ### 2.3 Expanded research — ZeroSlop, Awwwards and Refero access status (19 November 2026)
 
 This expanded research layer **supersedes any earlier instruction that forbids a fundamental visual redesign**. The original seven-section Home references remain binding *interaction assignments*, but the rest of the website may be redesigned decisively. Distinguish a cited observed pattern from a reviewed/approved implementation. Links below are primary reference landing pages, not licenses to reuse their assets.

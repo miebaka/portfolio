@@ -1,6 +1,7 @@
 
 /* Fonts: official Geist 1.9.2 distribution, pinned and verified on unpkg.
    These external WOFF2 files are licensed under SIL Open Font License. */
+@font-face{font-family:"Geist Serif";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerif-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-SemiBold.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
@@ -67,6 +68,7 @@ body[data-page="writing"] .article-toc{grid-column:1/span 3}
 .case-page .case-gallery>*{grid-column:span 6}
 .case-page .case-gallery>*:nth-child(3n+1){grid-column:span 7}
 .case-page .case-gallery>*:nth-child(3n+2){grid-column:span 5}
+.case-page .case-gallery>*:nth-child(3n){grid-column:1/-1}
 @media(max-width:75rem){
  body[data-page="home"] .home-profile__introduction{grid-column:1/span 7}
  body[data-page="home"] .home-profile__media{grid-column:9/span 4}
@@ -105,7 +107,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer{
 body .site-footer__top{
  position:relative;z-index:6;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;
  width:calc(100% - 2 * var(--page));max-width:var(--content);margin-inline:auto;
- padding-block:clamp(1.5rem,3vw,3rem);border-bottom:1px solid var(--line);
+ padding-block:clamp(1.5rem,3vw,3rem);
 }
 body .site-footer__eyebrow{
  max-width:none;text-transform:uppercase;font:500 .75rem/1.5 var(--label);letter-spacing:.04em;
@@ -182,7 +184,7 @@ body .site-footer__signature .site-footer__signature-canvas{
 body .site-footer__bottom{
  width:calc(100% - 2 * var(--page));max-width:var(--content);
  margin:0 auto;display:flex;justify-content:space-between;gap:1rem;
- padding:1.25rem 0 calc(1.25rem + var(--safe-bottom));border-top:1px solid var(--line);
+ padding:1.25rem 0 calc(1.25rem + var(--safe-bottom));
  font:500 .6875rem/1.5 var(--label);color:var(--muted);
  text-transform:uppercase;letter-spacing:.035em
 }

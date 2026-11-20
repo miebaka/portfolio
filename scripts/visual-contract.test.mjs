@@ -45,7 +45,7 @@ test("approved visual contract remains intact", async () => {
   }
 
   // Material Symbols is an icon font. The authored typography assigns one
-  // family to each semantic role: Geist Sans for display and body; Geist Mono for labels.
+  // family to each semantic role: Geist Serif for display, Geist Sans for body and Geist Mono for labels.
   const roleFonts = ["display", "body", "label"].map(role => {
     const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
     assert.ok(roleMatch, `missing --${role} typography role`);
@@ -53,8 +53,8 @@ test("approved visual contract remains intact", async () => {
     assert.ok(familyMatch, `missing --font-${role} family token`);
     return familyMatch[1];
   });
-  assert.deepEqual(roleFonts, ["Geist Sans", "Geist Sans", "Geist Mono"]);
-  assert.equal(new Set(roleFonts).size, 2);
+  assert.deepEqual(roleFonts, ["Geist Serif", "Geist Sans", "Geist Mono"]);
+  assert.equal(new Set(roleFonts).size, 3);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");
@@ -76,7 +76,7 @@ test("approved visual contract remains intact", async () => {
     }
     const stylesheets = [...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi)];
     assert.equal(stylesheets.length, 1, `${path}: expected one stylesheet request`);
-    assert.match(stylesheets[0][0], /href=["'](?:\.\.\/)?styles\/main\.css["']/i, path);
+    assert.match(stylesheets[0][0], /href=["'](?:\/|\.\.\/)?styles\/main\.css["']/i, path);
   }
   assert.match(css, /body \.site-footer__signature::before\{display:block/);
   assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);

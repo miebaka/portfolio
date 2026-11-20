@@ -47,3 +47,30 @@ test("Magazine grid is twelve columns on desktop and four on mobile",async({page
  const columns=await page.locator(".home-profile").evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(" ").filter(Boolean).length);
  expect(columns).toBe(isMobile?4:12);
 });
+
+test("Published Work cover images remain visible at mobile and desktop widths",async({page})=>{
+ for(const width of [390,768,1440]){
+  await page.setViewportSize({width,height:900});
+  await page.goto("/work.html");
+  const frames=await page.locator(".project-archive__media").evaluateAll(nodes=>nodes.map(node=>{
+   const rect=node.getBoundingClientRect();
+   const frames=node.querySelectorAll(".project-archive__preview-frame");
+   return {display:getComputedStyle(node).display,width:rect.width,height:rect.height,
+    count:frames.length,firstWidth:frames[0]?.getBoundingClientRect().width||0};
+  }));
+  expect(frames).toHaveLength(3);
+  for(const frame of frames){
+   expect(frame.display).not.toBe("none");
+   expect(frame.width).toBeGreaterThan(120);
+   expect(frame.height).toBeGreaterThan(100);
+   if(frame.count===1)expect(frame.firstWidth/frame.width).toBeGreaterThan(.95);
+  }
+ }
+});
+
+test("404 recovery links remain valid from nested routes",async({page})=>{
+ await page.goto("/404.html");
+ const paths=await page.locator(".hero--404__copy a").evaluateAll(links=>links.map(link=>new URL(link.getAttribute("href"),"https://example.com/essays/missing.html").pathname));
+ expect(paths).toEqual(["/work.html","/index.html","/contact.html"]);
+ await expect(page.locator('link[rel="stylesheet"]')).toHaveAttribute("href","/styles/main.css");
+});

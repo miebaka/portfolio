@@ -3,7 +3,7 @@
 :root{color-scheme:light dark;
 
   /* Typefaces: families, then the role names the CSS consumes */
-  --font-display:"Geist Sans",Arial,system-ui,sans-serif;--font-body:"Geist Sans",Arial,system-ui,sans-serif;--font-label:"Geist Mono","SFMono-Regular",ui-monospace,monospace;
+  --font-display:"Geist Serif",Georgia,serif;--font-body:"Geist Sans",Arial,system-ui,sans-serif;--font-label:"Geist Mono","SFMono-Regular",ui-monospace,monospace;
   --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);--signature:var(--font-body);
   --icon:"Material Symbols Outlined";
 

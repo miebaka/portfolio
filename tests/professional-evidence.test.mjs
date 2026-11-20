@@ -175,7 +175,7 @@ test("About portrait and 404 recovery follow semantic design contracts", async (
   assert.match(about, /<div class="about-hero__media">[\s\S]*?<picture>[\s\S]*?<\/picture>\s*<\/div>/);
   const missing = await page("404.html");
   for (const href of ["index.html", "work.html", "contact.html"])
-    assert.match(missing, new RegExp(`href="${href}"`));
+    assert.match(missing, new RegExp(`href="/${href}"`));
 });
 
 test("Home and About preserve authentic public proof without JavaScript", async () => {

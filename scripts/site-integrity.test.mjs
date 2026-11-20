@@ -99,7 +99,7 @@ test("every production shell exposes the complete Index as fallback navigation",
     if (file.endsWith("experiments.html")) continue;
     const html = await readFile(file, "utf8");
     const header = html.match(/<header\b[^>]*data-mount="nav"[^>]*>([\s\S]*?)<\/header>/)?.[1] || "";
-    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
+    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1].startsWith("/") ? join(dist, match[1].slice(1)) : resolve(dirname(file), match[1]));
     for (const href of destinations) assert.ok(links.includes(join(dist, href)), `${file} omits fallback ${href}`);
   }
 });
@@ -113,7 +113,7 @@ test("source and built footer fallbacks match the approved public navigation", a
       const html = await readFile(file, "utf8");
       const footer = html.match(/<footer\b[\s\S]*?<div class="nav-fallback">([\s\S]*?)<a href="https:/)?.[1];
       if (!footer) continue;
-      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
+      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1].startsWith("/") ? join(directory, match[1].slice(1)) : resolve(dirname(file), match[1]));
       for (const href of destinations)
         assert.ok(links.includes(join(directory, href)), `${file} omits footer fallback ${href}`);
       assert.ok(!links.includes(join(directory, "community.html")), `${file} exposes retired Playground navigation`);
@@ -227,7 +227,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
-  assert.doesNotMatch(css, /font-family:\s*"Geist Serif"/);
+  assert.match(css, /font-family:\s*"Geist Serif"/);
   assert.match(css, /font-family:\s*"Geist Sans"/);
   assert.match(css, /font-family:\s*"Geist Mono"/);
   assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
@@ -255,7 +255,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"Geist Sans"/);
+  assert.match(css, /--font-display:\s*"Geist Serif"/);
   assert.match(css, /--font-body:\s*"Geist Sans"/);
   assert.match(css, /--font-label:\s*"Geist Mono"/);
   assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
