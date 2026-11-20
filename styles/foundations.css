@@ -1,7 +1,4 @@
 /* stylelint-disable font-family-name-quotes -- quoted family names are asserted by scripts/site-integrity.test.mjs */
-@font-face{font-family:"Archivo";src:url("../assets/fonts/Archivo-Variable.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-style:normal;font-display:swap}
-@font-face{font-family:"Finlandica Text";src:url("../assets/fonts/FinlandicaText-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
-@font-face{font-family:"Host Grotesk";src:url("../assets/fonts/HostGrotesk-Variable.woff2") format("woff2");font-weight:300 800;font-style:normal;font-display:swap}
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.woff2") format("woff2");font-weight:400;font-display:swap}
 :root{color-scheme:light dark;
 
