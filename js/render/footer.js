@@ -21,18 +21,18 @@ export function renderFooter() {
     '<div class="site-footer__group ' + className + '"><div class="site-footer__links" aria-label="' + esc(label) + '">' + content + '</div></div>';
   el.className = "site-footer";
   el.innerHTML =
-    '<div class="site-footer__invitation">' +
-      '<p class="site-footer__eyebrow">MIEBAKA JOSHUA · LAGOS / WORLDWIDE</p>' +
-      '<h2>LET’S MAKE SOMETHING <em>MATTER.</em></h2>' +
-      '<a class="site-footer__cta" href="' + basePath() + 'contact.html">START A PROJECT <span aria-hidden="true">↗</span></a>' +
+    '<div class="site-footer__top">' +
+      '<p class="site-footer__eyebrow">Lagos, Nigeria · Working worldwide</p>' +
+      '<a class="site-footer__start" href="' + safeURL('mailto:' + SITE.email + '?subject=Let%27s%20work%20together') + '">Start a project <span aria-hidden="true">↗</span></a>' +
     '</div>' +
-    '<div class="site-footer__emboss" aria-hidden="true"></div>' +
     '<div class="site-footer__panel">' +
+      '<p class="site-footer__statement">Ideas made unmistakable.<span>Design made to last.</span></p>' +
       '<nav class="site-footer__groups" aria-label="Footer">' +
         group('site-footer__explore', 'Explore', explore) +
         group('site-footer__socials', 'Social', socials) +
       '</nav>' +
     '</div>' +
-    '<div class="site-footer__signature" aria-hidden="true"></div>';
+    '<div class="site-footer__signature" aria-hidden="true"></div>' +
+    '<div class="site-footer__bottom"><span>Miebaka Joshua</span><span>Independent creative practice</span></div>';
 
 }

@@ -61,49 +61,39 @@ const wave=prefix+[
 const shade=[
  "precision highp float;varying vec2 vUv;",
  "uniform sampler2D surface;uniform vec2 texel;",
- "uniform float transmission,daylight;",
- "uniform vec3 floorColor,deepColor,lightColor;",
+ "uniform float transmission;uniform vec3 floorColor,deepColor,lightColor;",
+ "uniform vec3 lightDirection,skyColor;uniform float nightFactor;",
  "vec2 grad(vec2 p){",
  " float l=texture2D(surface,p-vec2(texel.x,0.)).r;",
  " float r=texture2D(surface,p+vec2(texel.x,0.)).r;",
  " float b=texture2D(surface,p-vec2(0.,texel.y)).r;",
  " float t=texture2D(surface,p+vec2(0.,texel.y)).r;",
  " return .5*vec2(r-l,t-b);}",
- "vec3 normalAt(vec2 p){return normalize(vec3(-grad(p)*6.25,1.));}",
  "vec2 hit(vec2 p){",
- " vec3 n=normalAt(p);",
- " // High noon sends near-vertical blue-white sun; the moon is cooler/oblique.",
- " vec3 rayIn=normalize(mix(vec3(.16,.08,-1.),vec3(.37,.18,-1.),1.-daylight));",
- " vec3 rayOut=refract(rayIn,n,1./1.333);",
- " return p+rayOut.xy/max(.2,abs(rayOut.z))*.072;}",
- "void main(){",
- " vec2 p=clamp(vUv,texel*2.,1.-texel*2.);",
- " vec2 x=(hit(p+vec2(texel.x*2.,0.))-hit(p-vec2(texel.x*2.,0.)))/(texel.x*4.);",
- " vec2 y=(hit(p+vec2(0.,texel.y*2.))-hit(p-vec2(0.,texel.y*2.)))/(texel.y*4.);",
- " float jac=abs(x.x*y.y-x.y*y.x);",
- " float focus=pow(clamp(1./max(jac,.075),0.,8.),1.45);",
+ " vec2 g=grad(p)*5.6;",
+ " vec3 n=normalize(vec3(-g,1.));",
+ " vec3 sun=normalize(lightDirection);",
+ " vec3 refracted=refract(sun,n,1./1.333);",
+ " return p+refracted.xy/max(.2,abs(refracted.z))*.08;}",
+ "void main(){vec2 p=clamp(vUv,texel*2.,1.-texel*2.);",
+ " vec2 a=(hit(p+vec2(texel.x*2.,0.))-hit(p-vec2(texel.x*2.,0.)))/(texel.x*4.);",
+ " vec2 b=(hit(p+vec2(0.,texel.y*2.))-hit(p-vec2(0.,texel.y*2.)))/(texel.y*4.);",
+ " float jac=abs(a.x*b.y-a.y*b.x);",
+ " float focusing=pow(clamp(1./max(jac,.08),0.,8.),1.35);",
  " vec4 water=texture2D(surface,p);",
- " vec3 n=normalAt(p);",
- " // Schlick Fresnel gives subtle natural reflection at high viewing angles.",
- " vec3 viewDir=normalize(vec3((p-.5)*.62,1.25));",
- " float cosTheta=clamp(dot(n,viewDir),0.,1.);",
- " float fresnel=.02+.98*pow(1.-cosTheta,5.);",
- " float shallow=clamp(.63+water.r*.16,0.,1.);",
- " vec3 absorption=mix(deepColor,floorColor,shallow);",
- " float depthAttenuation=exp(-mix(.66,.23,daylight)*(1.12+water.r*.15));",
- " float sunCaustic=clamp((focus-.72)*1.15+.11,0.,3.9);",
- " float moonCaustic=clamp((focus-.81)*.37+.045,0.,.62);",
- " float focused=mix(moonCaustic,sunCaustic,daylight);",
- " vec3 brightSky=mix(vec3(.026,.058,.11),vec3(.54,.84,1.),daylight);",
- " float sparkle=pow(max(dot(n,normalize(mix(vec3(.23,.35,1.),vec3(-.11,.04,1.),daylight))),0.),mix(110.,200.,daylight));",
- " vec3 reflected=brightSky*(fresnel*.54+sparkle*mix(.24,.5,daylight));",
- " float pathLight=transmission*focused*depthAttenuation;",
- " vec3 color=absorption+lightColor*pathLight+reflected;",
- " color+=lightColor*water.b*mix(.025,.06,daylight);",
- " float vignette=1.-.2*smoothstep(.35,.77,length(p-.5));",
- " color*=vignette;",
- " gl_FragColor=vec4(1.-exp(-max(color,vec3(0.))),1.);",
- "}"
+ " float light=clamp((focusing-.78)*.9+.12,0.,4.)*transmission*exp(-.34*(1.1+water.r*.12));",
+ " vec3 normal=normalize(vec3(-grad(p)*5.6,1.));",
+ " vec3 viewDir=normalize(vec3(.16,.09,1.));",
+ " vec3 toLight=normalize(-lightDirection);",
+ " float fresnel=.02+.98*pow(1.-clamp(dot(normal,viewDir),0.,1.),5.);",
+ " float glint=pow(max(dot(reflect(-toLight,normal),viewDir),0.),mix(38.,160.,nightFactor));",
+ " float illumination=clamp(dot(normal,toLight),0.,1.);",
+ " vec3 base=mix(deepColor,floorColor,clamp(.52+water.r*.15,0.,1.));",
+ " vec3 transmitted=base+lightColor*(light*(.55+.45*illumination)+water.b*.018);",
+ " vec3 c=mix(transmitted,skyColor,fresnel*mix(.7,1.25,nightFactor));",
+ " c+=lightColor*glint*mix(.4,2.4,nightFactor);",
+ " c=mix(c,deepColor,nightFactor*.14);",
+ " gl_FragColor=vec4(1.-exp(-max(c,vec3(0.))),1.);}"
 ].join("\n");
 const SIZE=144;
 const ITERATIONS=10;
@@ -123,7 +113,7 @@ export function mountHeroWave(host,initialState){
  const vel=pair(),press=pair(),height=pair(),div=makeTarget();
  const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
- screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},daylight:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()}};
+ screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.07,.12,-1)},skyColor:{value:new Vector3()},nightFactor:{value:0}};
  let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7,steps=0,lastPointerAt=0;
  const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
  const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
@@ -165,11 +155,15 @@ export function mountHeroWave(host,initialState){
  const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);};
  function update(next){
   state={...state,...next};const dark=state.theme==="dark",colors=state.colors||["#07112b","#002080","#b1c5ff"];
-  screen.uniforms.floorColor.value.copy(dark?new Vector3(.008,.026,.064):new Vector3(.035,.31,.41));
-  screen.uniforms.deepColor.value.copy(dark?new Vector3(.003,.01,.034):new Vector3(.012,.12,.24));
-  screen.uniforms.lightColor.value.copy(dark?new Vector3(.50,.69,1.):new Vector3(.86,.98,1.));
-  screen.uniforms.daylight.value=dark?0:1;
+  screen.uniforms.floorColor.value.copy(dark?new Vector3(.009,.022,.05):new Vector3(.028,.24,.35));
+  screen.uniforms.deepColor.value.copy(dark?new Vector3(.005,.013,.034):new Vector3(.008,.14,.24));
+  screen.uniforms.lightColor.value.copy(dark?new Vector3(.4,.57,.78):new Vector3(1.,.97,.88));
+  // Midday: high sun, turquoise transmission, warm-white focused highlights.
+  // Full moon: low-energy cold illumination and isolated silver glints.
   screen.uniforms.transmission.value=dark?.15:1.5;
+  screen.uniforms.lightDirection.value.set(dark?.38:.07,dark?.24:.12,dark?-.89:-1).normalize();
+  screen.uniforms.skyColor.value.set(dark?.018:.36,dark?.035:.62,dark?.09:.82);
+  screen.uniforms.nightFactor.value=dark?1:0;
   host.dataset.simulation="gpu-fluid-heightfield";host.dataset.waterTheme=dark?"dark":"light";
   draw();
   if(!running()&&frame){cancelAnimationFrame(frame);frame=0;}

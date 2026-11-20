@@ -327,8 +327,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
     css,
     /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/,
   );
-  assert.match(css, /--ed-max:104rem/);
-  assert.match(css, /--content:var\(--ed-max\)/);
+  assert.match(css, /--content:var\(--grid-max\)/);
+  assert.match(css, /--grid-max:100rem/);
   assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2rem,\s*3vw,\s*3\.25rem\)/);
   assert.doesNotMatch(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
@@ -336,7 +336,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(sections, /Evidence:/);
   assert.doesNotMatch(html, /Evidence:/);
   await assert.rejects(readFile(join(dist, "services.html"), "utf8"));
-  assert.doesNotMatch(footer, /mailto:/);
+  assert.match(footer, /site-footer__start/);
+  assert.match(footer, /mailto:/);
   for (const selector of [".site-nav a", ".btn", ".writing-item__link", ".site-footer a"]) {
     const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     assert.match(css, new RegExp(`${escaped}\\{[^}]*text-decoration:none`));
@@ -586,7 +587,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 7);
+  assert.equal((styles.match(/@import/g) || []).length, 8);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

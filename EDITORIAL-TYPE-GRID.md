@@ -1,3 +1,5 @@
+> **Historical companion study.** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
+
 # Editorial design system — For Living study (20 November 2026)
 
 ## Source-grounded observations

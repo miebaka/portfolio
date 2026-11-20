@@ -458,13 +458,9 @@ test("@a11y 200% zoom retains content and avoids horizontal overflow", async ({ 
 test("navigation works without JavaScript", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
-  // Navigation must work after parsing, even if cross-origin decorative fonts
-  // or media have not finished loading. Do not wait for the full load event.
-  await page.goto(`${baseURL}/index.html`, { waitUntil: "domcontentloaded" });
-  await Promise.all([
-    page.waitForURL(/work(?:\.html)?$/, { waitUntil: "domcontentloaded" }),
-    page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Work" }).click({ noWaitAfter: true })
-  ]);
+  await page.goto(`${baseURL}/index.html`);
+  await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Work" }).click();
+  await expect(page).toHaveURL(/work(?:\.html)?$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Selected work");
   await context.close();
 });
