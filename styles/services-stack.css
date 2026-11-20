@@ -408,7 +408,6 @@ body[data-page="work"] .project-archive__row {
 body[data-page="work"] .project-archive__identity {
   padding-inline:clamp(1.25rem,2.8vw,3.25rem)
 }
-body[data-page="writing"] .hero__title,
 body[data-page="about"] .hero__title,
 body[data-page="contact"] .hero__title,
 body[data-page="explorations"] .hero__title{
