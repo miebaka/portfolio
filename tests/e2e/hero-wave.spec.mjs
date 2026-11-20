@@ -56,3 +56,21 @@ test("system reduced-motion preference suppresses the motion toggle", async ({ p
   await expect(page.locator("[data-hero-wave]")).toHaveClass(/is-ready/);
   await expect(page.locator(".hero-wave__control")).toBeHidden();
 });
+
+test("light-front caustics show clear overhead daylight and restrained moonlight", async ({ page }) => {
+  await page.goto("/?shader-test=1&shader-static=1");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveClass(/is-ready/);
+  await expect(wave).toHaveAttribute("data-caustics", "refracted-lightfront");
+  await expect(wave).toHaveAttribute("data-light-source", "sun");
+  const sunlight = await sharp(await wave.screenshot({ scale: "css" })).stats();
+
+  await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
+  await expect(wave).toHaveAttribute("data-light-source", "moon");
+  const moonlight = await sharp(await wave.screenshot({ scale: "css" })).stats();
+
+  const luminance = stats => stats.channels.slice(0, 3)
+    .reduce((sum, channel) => sum + channel.mean, 0) / 3;
+  expect(luminance(sunlight)).toBeGreaterThan(luminance(moonlight) + 15);
+  await expect(wave.locator("canvas")).toHaveCount(1);
+});

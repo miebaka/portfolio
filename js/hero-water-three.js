@@ -1,7 +1,7 @@
 /* Persistent GPU shallow-water fluid with incompressible 2D Navier-Stokes
    projection, Jacobi pressure solver, semi-Lagrangian advection, wave integration,
-   and water-to-air refraction caustic shading. Not a volumetric 3D simulation. */
-import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,ClampToEdgeWrapping,NoToneMapping} from "three";
+   and air-to-water refraction caustic projection. Not a volumetric 3D simulation. */
+import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
 const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
 const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;";
 const advect=prefix+[
@@ -58,46 +58,127 @@ const wave=prefix+[
  "float foam=max(s.b*.96,clamp(abs(h-s.r)*6.,0.,1.));",
  "gl_FragColor=vec4(clamp(h,-1.,1.),s.r,foam,1.);}"
 ].join("\n");
-const shade=[
- "precision highp float;varying vec2 vUv;",
- "uniform sampler2D surface;uniform vec2 texel;",
- "uniform float transmission;uniform vec3 floorColor,deepColor,lightColor;",
- "uniform vec3 lightDirection,skyColor;uniform float nightFactor;",
- "vec2 grad(vec2 p){",
- " float l=texture2D(surface,p-vec2(texel.x,0.)).r;",
- " float r=texture2D(surface,p+vec2(texel.x,0.)).r;",
- " float b=texture2D(surface,p-vec2(0.,texel.y)).r;",
- " float t=texture2D(surface,p+vec2(0.,texel.y)).r;",
- " return .5*vec2(r-l,t-b);}",
- "vec2 hit(vec2 p){",
- " vec2 g=grad(p)*5.6;",
- " vec3 n=normalize(vec3(-g,1.));",
- " vec3 sun=normalize(lightDirection);",
- " vec3 refracted=refract(sun,n,1./1.333);",
- " return p+refracted.xy/max(.2,abs(refracted.z))*.08;}",
- "void main(){vec2 p=clamp(vUv,texel*2.,1.-texel*2.);",
- " vec2 a=(hit(p+vec2(texel.x*2.,0.))-hit(p-vec2(texel.x*2.,0.)))/(texel.x*4.);",
- " vec2 b=(hit(p+vec2(0.,texel.y*2.))-hit(p-vec2(0.,texel.y*2.)))/(texel.y*4.);",
- " float jac=abs(a.x*b.y-a.y*b.x);",
- " float focusing=pow(clamp(1./max(jac,.08),0.,8.),1.35);",
- " vec4 water=texture2D(surface,p);",
- " float light=clamp((focusing-.78)*.9+.12,0.,4.)*transmission*exp(-.34*(1.1+water.r*.12));",
- " vec3 normal=normalize(vec3(-grad(p)*5.6,1.));",
- " vec3 viewDir=normalize(vec3(.16,.09,1.));",
- " vec3 toLight=normalize(-lightDirection);",
- " float fresnel=.02+.98*pow(1.-clamp(dot(normal,viewDir),0.,1.),5.);",
- " float glint=pow(max(dot(reflect(-toLight,normal),viewDir),0.),mix(38.,160.,nightFactor));",
- " float illumination=clamp(dot(normal,toLight),0.,1.);",
- " vec3 base=mix(deepColor,floorColor,clamp(.52+water.r*.15,0.,1.));",
- " vec3 transmitted=base+lightColor*(light*(.55+.45*illumination)+water.b*.018);",
- " vec3 c=mix(transmitted,skyColor,fresnel*mix(.7,1.25,nightFactor));",
- " c+=lightColor*glint*mix(.4,2.4,nightFactor);",
- " c=mix(c,deepColor,nightFactor*.14);",
- " gl_FragColor=vec4(1.-exp(-max(c,vec3(0.))),1.);}"
-].join("\n");
+const waterField=String.raw`
+uniform sampler2D surface;
+uniform vec2 texel;
+uniform float time;
+
+// Continuously moving swell and cross-chop, shared by the light-front and
+// the visible water. The fluid simulation adds local pointer-driven ripples.
+float waterHeight(vec2 p) {
+  vec2 warp = p + .011 * vec2(
+    sin(p.y * 13.0 + time * .23),
+    cos(p.x * 11.0 - time * .19)
+  );
+  float swell = sin(dot(warp, vec2(38.0, 13.0)) - time * .69
+    + .27 * sin(dot(warp, vec2(-9.0, 18.0)) + time * .16));
+  float cross = sin(dot(warp, vec2(-18.0, 41.0)) + time * .48);
+  float detail = sin(dot(warp, vec2(68.0, -26.0)) - time * .91);
+  float fluid = texture2D(surface, clamp(p, texel * 2.0, 1.0 - texel * 2.0)).r;
+  return fluid * .019 + swell * .0034 + cross * .0029 + detail * .0011;
+}
+vec3 waterNormal(vec2 p) {
+  vec2 e = max(texel * .75, vec2(.0032));
+  vec2 slope = vec2(
+    waterHeight(p + vec2(e.x, 0.0)) - waterHeight(p - vec2(e.x, 0.0)),
+    waterHeight(p + vec2(0.0, e.y)) - waterHeight(p - vec2(0.0, e.y))
+  ) / (2.0 * e);
+  return normalize(vec3(-slope, 1.0));
+}
+`;
+const causticsVertex=String.raw`
+precision highp float;
+uniform vec3 lightDirection;
+uniform float waterDepth;
+varying vec2 vSource;
+varying vec2 vArrival;
+varying float vIrradiance;
+`+waterField+String.raw`
+void main() {
+  vec2 p = uv;
+  vec3 n = waterNormal(p);
+  vec3 incoming = normalize(lightDirection);
+  // Air -> water. Sun and moon are almost perpendicular to the surface.
+  vec3 transmitted = refract(incoming, n, 1.0 / 1.333);
+  float distanceToFloor = max(.1, waterDepth + waterHeight(p));
+  vec2 arrival = p + transmitted.xy / max(.2, -transmitted.z) * distanceToFloor;
+  vSource = p;
+  vArrival = arrival;
+  vIrradiance = max(dot(n, -incoming), 0.0);
+  gl_Position = vec4(arrival * 2.0 - 1.0, 0.0, 1.0);
+}
+`;
+const causticsFragment=String.raw`
+precision highp float;
+varying vec2 vSource;
+varying vec2 vArrival;
+varying float vIrradiance;
+void main() {
+  // Evan Wallace's light-front method: the projected area reduction is the
+  // actual geometric focusing factor. It also accumulates overlapping rays.
+  vec2 sx = dFdx(vSource), sy = dFdy(vSource);
+  vec2 ax = dFdx(vArrival), ay = dFdy(vArrival);
+  float sourceArea = abs(sx.x * sy.y - sx.y * sy.x);
+  float arrivalArea = abs(ax.x * ay.y - ax.y * ay.x);
+  float focus = min(sourceArea / max(arrivalArea, 0.00000001), 10.0);
+  float light = pow(max(focus - .72, 0.0), 1.25) * .29 * vIrradiance;
+  gl_FragColor = vec4(vec3(min(light, 5.0)), 1.0);
+}
+`;
+const shade=String.raw`
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D caustics;
+uniform float transmission, nightFactor;
+uniform vec3 floorColor, deepColor, lightColor, lightDirection, skyColor;
+`+waterField+String.raw`
+float grain(vec2 p) {
+  return fract(sin(dot(floor(p * vec2(480.0, 510.0)),
+    vec2(127.1, 311.7))) * 43758.5453123);
+}
+void main() {
+  vec2 p = clamp(vUv, texel * 2.0, 1.0 - texel * 2.0);
+  vec3 normal = waterNormal(p);
+  vec3 viewDirection = normalize(vec3(.035, .025, 1.0));
+  vec3 toLight = normalize(-lightDirection);
+
+  // The caustic texture is light energy on the floor, not a scrolling
+  // pattern. Tiny spectral separation imitates real water dispersion.
+  vec2 dispersion = vec2(.0011, -.0007);
+  vec3 focused = vec3(
+    texture2D(caustics, clamp(p + dispersion, 0.0, 1.0)).r,
+    texture2D(caustics, p).r,
+    texture2D(caustics, clamp(p - dispersion, 0.0, 1.0)).r
+  );
+  focused = min(focused, vec3(4.0));
+
+  // Subtle limestone/sand variation stays visible through clear water.
+  float stone = .95 + .035 * sin(p.x * 31.0 + sin(p.y * 11.0) * 1.7)
+    + .025 * sin(p.y * 27.0 + sin(p.x * 12.0));
+  stone += (grain(p) - .5) * .028;
+  float shallowDepth = clamp(.36 + .08 * waterHeight(p), 0.0, 1.0);
+  vec3 bed = mix(floorColor, deepColor, shallowDepth) * stone;
+  // Shallow Beer-Lambert attenuation, keeping the bed legible.
+  vec3 clearWater = mix(bed, bed * skyColor, .075 + nightFactor * .035);
+  float incidence = max(dot(normal, toLight), 0.0);
+  vec3 transmitted = clearWater
+    + focused * lightColor * transmission * (.75 + .25 * incidence);
+
+  // A top-down camera has only a small Fresnel reflection at normal incidence.
+  // Separate highlights on the surface from refraction caustics on the floor.
+  float fresnel = .02 + .98 * pow(
+    1.0 - clamp(dot(normal, viewDirection), 0.0, 1.0), 5.0
+  );
+  vec3 reflected = mix(transmitted, skyColor, fresnel * (.55 + nightFactor * .35));
+  vec3 halfVector = normalize(toLight + viewDirection);
+  float specular = pow(max(dot(normal, halfVector), 0.0),
+    mix(220.0, 320.0, nightFactor));
+  reflected += lightColor * specular * mix(.26, .15, nightFactor);
+  gl_FragColor = vec4(1.0 - exp(-max(reflected, vec3(0.0))), 1.0);
+}
+`;
 const SIZE=144;
 const ITERATIONS=10;
-function hex(v,fallback){let s=/^#[a-f0-9]{6}$/i.test(v||"")?v:fallback;return new Vector3(...[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255));}
 export function mountHeroWave(host,initialState){
  const canvas=document.createElement("canvas");canvas.className="hero-wave__canvas";canvas.setAttribute("aria-hidden","true");
  const renderer=new WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:"high-performance"});
@@ -111,10 +192,29 @@ export function mountHeroWave(host,initialState){
  const makeTarget=()=>new WebGLRenderTarget(side,side,{type:HalfFloatType,minFilter:NearestFilter,magFilter:NearestFilter,wrapS:ClampToEdgeWrapping,wrapT:ClampToEdgeWrapping,depthBuffer:false,stencilBuffer:false});
  const pair=()=>({read:makeTarget(),write:makeTarget(),swap(){const a=this.read;this.read=this.write;this.write=a;},dispose(){this.read.dispose();this.write.dispose();}});
  const vel=pair(),press=pair(),height=pair(),div=makeTarget();
+ const causticsTarget=new WebGLRenderTarget(side<SIZE?320:512,side<SIZE?320:512,{
+  type:HalfFloatType,minFilter:LinearFilter,magFilter:LinearFilter,
+  wrapS:ClampToEdgeWrapping,wrapT:ClampToEdgeWrapping,depthBuffer:false,stencilBuffer:false
+ });
+ const causticsMaterial=new ShaderMaterial({
+  vertexShader:causticsVertex,fragmentShader:causticsFragment,
+  depthTest:false,depthWrite:false,transparent:true,blending:AdditiveBlending,side:DoubleSide,
+  uniforms:{surface:{value:height.read.texture},texel:{value:texel},
+   time:{value:0},waterDepth:{value:.56},lightDirection:{value:new Vector3(.025,.035,-1)}}
+ });
+ const causticsGeometry=new PlaneGeometry(2,2,side<SIZE?96:160,side<SIZE?96:160);
+ const causticsScene=new Scene();
+ const causticsMesh=new Mesh(causticsGeometry,causticsMaterial);
+ causticsMesh.frustumCulled=false;
+ causticsScene.add(causticsMesh);
  const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
- screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.07,.12,-1)},skyColor:{value:new Vector3()},nightFactor:{value:0}};
- let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7,steps=0,lastPointerAt=0;
+ screen.uniforms={surface:{value:height.read.texture},caustics:{value:causticsTarget.texture},
+  texel:{value:texel},time:{value:0},transmission:{value:1},
+  floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},
+  lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.025,.035,-1)},
+  skyColor:{value:new Vector3()},nightFactor:{value:0}};
+ let state={...initialState},destroyed=false,visible=true,frame=0,last=0,time=0,impulse=.7,steps=0,lastPointerAt=0;
  const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
  const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
  function pass(mat,target,inputs){
@@ -124,6 +224,15 @@ export function mountHeroWave(host,initialState){
   renderer.setRenderTarget(target);renderer.render(scene,camera);
  }
  function draw(){if(destroyed)return;mesh.material=screen;screen.uniforms.surface.value=height.read.texture;renderer.setRenderTarget(null);renderer.render(scene,camera);}
+ function renderCaustics(){
+  causticsMaterial.uniforms.surface.value=height.read.texture;
+  causticsMaterial.uniforms.time.value=time;
+  screen.uniforms.time.value=time;
+  renderer.setRenderTarget(causticsTarget);
+  renderer.clear();
+  renderer.render(causticsScene,camera);
+  renderer.setRenderTarget(null);
+ }
  function step(){
   // Natural low-amplitude disturbances keep the surface alive without input.
   steps++;
@@ -137,6 +246,7 @@ export function mountHeroWave(host,initialState){
   pass(proj,vel.write,{velocity:vel.read.texture,pressure:press.read.texture});vel.swap();
   pass(wav,height.write,{surface:height.read.texture,velocity:vel.read.texture});height.swap();
   impulse=0;
+  renderCaustics();
  }
  function resize(){
   if(destroyed)return;
@@ -148,23 +258,29 @@ export function mountHeroWave(host,initialState){
  function tick(timestamp){
   frame=0;if(destroyed)return;
   if(last&&timestamp-last<1000/24){frame=requestAnimationFrame(tick);return;}
+  if(running()&&last)time+=Math.min(.06,Math.max(0,(timestamp-last)/1000));
   last=timestamp;
   if(running())step();
   draw();if(running())frame=requestAnimationFrame(tick);
  }
  const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);};
  function update(next){
-  state={...state,...next};const dark=state.theme==="dark",colors=state.colors||["#07112b","#002080","#b1c5ff"];
-  screen.uniforms.floorColor.value.copy(dark?new Vector3(.009,.022,.05):new Vector3(.028,.24,.35));
-  screen.uniforms.deepColor.value.copy(dark?new Vector3(.005,.013,.034):new Vector3(.008,.14,.24));
-  screen.uniforms.lightColor.value.copy(dark?new Vector3(.4,.57,.78):new Vector3(1.,.97,.88));
-  // Midday: high sun, turquoise transmission, warm-white focused highlights.
-  // Full moon: low-energy cold illumination and isolated silver glints.
-  screen.uniforms.transmission.value=dark?.15:1.5;
-  screen.uniforms.lightDirection.value.set(dark?.38:.07,dark?.24:.12,dark?-.89:-1).normalize();
-  screen.uniforms.skyColor.value.set(dark?.018:.36,dark?.035:.62,dark?.09:.82);
+  state={...state,...next};
+  const dark=state.theme==="dark";
+  screen.uniforms.floorColor.value.set(dark?.048:.49,dark?.085:.58,dark?.145:.51);
+  screen.uniforms.deepColor.value.set(dark?.009:.13,dark?.026:.37,dark?.064:.44);
+  screen.uniforms.lightColor.value.set(dark?.72:1.,dark?.83:.965,dark?1.:.86);
+  screen.uniforms.transmission.value=dark?.29:1.18;
+  // The sun and full moon are both close to the zenith, never near the horizon.
+  screen.uniforms.lightDirection.value.set(dark?-.025:.025,.035,-1.).normalize();
+  causticsMaterial.uniforms.lightDirection.value.copy(screen.uniforms.lightDirection.value);
+  screen.uniforms.skyColor.value.set(dark?.095:.54,dark?.15:.84,dark?.28:.92);
   screen.uniforms.nightFactor.value=dark?1:0;
-  host.dataset.simulation="gpu-fluid-heightfield";host.dataset.waterTheme=dark?"dark":"light";
+  host.dataset.simulation="gpu-fluid-heightfield";
+  host.dataset.caustics="refracted-lightfront";
+  host.dataset.lightSource=dark?"moon":"sun";
+  host.dataset.waterTheme=dark?"dark":"light";
+  renderCaustics();
   draw();
   if(!running()&&frame){cancelAnimationFrame(frame);frame=0;}
   if(running())request();
@@ -189,7 +305,8 @@ export function mountHeroWave(host,initialState){
   if(destroyed)return;destroyed=true;if(frame)cancelAnimationFrame(frame);
   document.removeEventListener("visibilitychange",onVisibility);canvas.removeEventListener("webglcontextlost",lost);
   window.removeEventListener("resize",resize);ro?.disconnect();io?.disconnect();
-  vel.dispose();press.dispose();height.dispose();div.dispose();
-  [ad,dv,jac,proj,wav,screen].forEach(x=>x.dispose());geometry.dispose();renderer.dispose();canvas.remove();
+  vel.dispose();press.dispose();height.dispose();div.dispose();causticsTarget.dispose();
+  [ad,dv,jac,proj,wav,screen,causticsMaterial].forEach(x=>x.dispose());
+  causticsGeometry.dispose();geometry.dispose();renderer.dispose();canvas.remove();
  }};
 }
