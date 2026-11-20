@@ -9,25 +9,39 @@
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");font-style:normal;font-weight:100 900;font-display:swap}
 :root{color-scheme:light dark;
+  /* Editorial grid/type roles. */
+  --ed-columns:12;
+  --ed-gutter:clamp(.75rem,1.65vw,1.65rem);
+  --ed-margin:clamp(1rem,4.5vw,5.5rem);
+  --ed-max:104rem;
+  --ed-measure:66ch;
+  --ed-overline:clamp(.68rem,.3vw + .63rem,.8125rem);
+  --ed-caption:clamp(.75rem,.22vw + .73rem,.9rem);
+  --ed-body:clamp(1.0625rem,.35vw + 1rem,1.27rem);
+  --ed-lead:clamp(1.3rem,1.1vw + 1.1rem,2.25rem);
+  --ed-subhead:clamp(2rem,2.7vw + 1.2rem,4.25rem);
+  --ed-headline:clamp(3.6rem,5.9vw,8.75rem);
+  --ed-cover:clamp(4.75rem,9.2vw,12.5rem);
+
 
   /* Typefaces: families, then the role names the CSS consumes */
-  --font-display:"Geist Serif", Georgia, serif;--font-body:"Geist Sans", system-ui, sans-serif;--font-label:"Geist Mono", ui-monospace, monospace;
+  --font-display:"Geist Serif",Georgia,serif;--font-body:"Geist Sans",system-ui,sans-serif;--font-label:"Geist Mono",ui-monospace,monospace;
   --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);--signature:var(--font-body);
   --icon:"Material Symbols Outlined";
 
   /* Type scale */
-  --type-label-s:.75rem;--type-label-m:.8125rem;--type-label-l:.9375rem;--type-nav-mobile:.75rem;--type-body-s:.9375rem;
-  --type-body-m:1.0625rem;--type-body-l:clamp(1.125rem,.35vw + 1.04rem,1.3rem);
-  --type-heading-s:clamp(1.5rem,.75vw + 1.3rem,2rem);--type-heading-l:clamp(2.5rem,2.6vw + 1.7rem,4.5rem);
-  --type-display-s:clamp(3rem,4vw + 1.8rem,5rem);--type-display-m:clamp(3.6rem,5vw + 1.8rem,6rem);
-  --type-display-l:clamp(4rem,6vw + 1.6rem,6rem);--type-display-xxl:clamp(4.5rem,7vw + 1.5rem,6rem);
+  --type-label-s:var(--ed-overline);--type-label-m:var(--ed-caption);--type-label-l:.9375rem;--type-nav-mobile:.75rem;--type-body-s:.9375rem;
+  --type-body-m:var(--ed-body);--type-body-l:var(--ed-lead);
+  --type-heading-s:var(--ed-subhead);--type-heading-l:var(--ed-headline);
+  --type-display-s:var(--ed-subhead);--type-display-m:var(--ed-headline);
+  --type-display-l:var(--ed-headline);--type-display-xxl:var(--ed-cover);
   --font-size-sm:var(--type-label-m);--font-size-md:clamp(1.125rem,.23vw + 1.07rem,1.25rem);
   --font-size-lg:var(--type-heading-s);--font-size-xl:clamp(1.75rem,1.1vw + 1.4rem,2.5rem);
   --font-size-2xl:var(--type-heading-l);
 
   /* Spacing and layout: --s1..--s12 is the only spacing scale */
-  --section-padding:clamp(4rem,8vw,8rem);--page:clamp(1.25rem,4.667vw,5.25rem);--content:102rem;
-  --grid-gap:clamp(1rem,1.333vw,1.5rem);--grid-edge:max(var(--page),calc((100vw - var(--content))/2));--nav-h:4.5rem;
+  --section-padding:clamp(4rem,8vw,8rem);--page:var(--ed-margin);--content:var(--ed-max);
+  --grid-gap:var(--ed-gutter);--grid-edge:max(var(--page),calc((100vw - var(--content))/2));--nav-h:4.5rem;
   --list-item-inline:clamp(1rem,2vw,1.5rem);--safe-top:env(safe-area-inset-top,0px);
   --safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
   --safe-left:env(safe-area-inset-left,0px);--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s5:2.625rem;
@@ -175,38 +189,5 @@ input{font-size:16px}
 /* Unified editorial design-token definitions. */
 :root {
   --ed-columns:12;
-  --ed-gutter:clamp(.75rem,1.65vw,1.65rem);
-  --ed-margin:clamp(1rem,4.5vw,5.5rem);
-  --ed-max:104rem;
-  --ed-baseline:.5rem;
-  --ed-measure:66ch;
-  --ed-overline:clamp(.68rem,.3vw + .63rem,.8125rem);
-  --ed-caption:clamp(.75rem,.22vw + .73rem,.9rem);
-  --ed-body:clamp(1.0625rem,.35vw + 1rem,1.27rem);
-  --ed-lead:clamp(1.3rem,1.1vw + 1.1rem,2.25rem);
-  --ed-subhead:clamp(2rem,2.7vw + 1.2rem,4.25rem);
-  --ed-headline:clamp(3.6rem,5.9vw,8.75rem);
-  --ed-cover:clamp(4.75rem,9.2vw,12.5rem);
-  --font-display:"Geist Serif",Georgia,serif;
-  --font-body:"Geist Sans",system-ui,sans-serif;
-  --font-label:"Geist Mono",ui-monospace,monospace;
-  --display:var(--font-display);
-  --body:var(--font-body);
-  --label:var(--font-label);
-  --type-label-s:var(--ed-overline);
-  --type-label-m:var(--ed-caption);
-  --type-body-m:var(--ed-body);
-  --type-body-l:var(--ed-lead);
-  --type-heading-s:var(--ed-subhead);
-  --type-heading-l:var(--ed-headline);
-  --type-display-s:var(--ed-subhead);
-  --type-display-m:var(--ed-headline);
-  --type-display-l:var(--ed-headline);
-  --type-display-xxl:var(--ed-cover);
-  --grid-gap:var(--ed-gutter);
-  --page:var(--ed-margin);
-  --content:var(--ed-max);
-  --editorial-rule:var(--line);
-}
-@media(max-width:60rem){:root{--ed-columns:8}}
-@media(max-width:48rem){:root{--ed-columns:4;--ed-gutter:.75rem}}
+  --ed-gutter:clamp(.75rem,1.
+75rem}}
