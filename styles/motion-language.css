@@ -46,7 +46,7 @@ html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-chi
     translate: var(--motion-preview-x, 0px) var(--motion-preview-y, 0px);
     transition:
       opacity 250ms ease,
-      transform 450ms var(--motion-expressive),
+      transform 280ms var(--motion-expressive),
       translate 190ms var(--motion-responsive);
   }
   html.motion-language-ready body[data-page="home"] .home-project-list .editorial-index__row::before {
