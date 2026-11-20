@@ -99,7 +99,7 @@ test("every production shell exposes the complete Index as fallback navigation",
     if (file.endsWith("experiments.html")) continue;
     const html = await readFile(file, "utf8");
     const header = html.match(/<header\b[^>]*data-mount="nav"[^>]*>([\s\S]*?)<\/header>/)?.[1] || "";
-    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => (match[1].startsWith("/") ? join(dist, match[1].slice(1)) : (match[1].startsWith("/") ? join(directory, match[1].slice(1)) : resolve(dirname(file), match[1]))));
+    const links = [...header.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1].startsWith("/") ? join(dist, match[1].slice(1)) : resolve(dirname(file), match[1]));
     for (const href of destinations) assert.ok(links.includes(join(dist, href)), `${file} omits fallback ${href}`);
   }
 });
@@ -113,7 +113,7 @@ test("source and built footer fallbacks match the approved public navigation", a
       const html = await readFile(file, "utf8");
       const footer = html.match(/<footer\b[\s\S]*?<div class="nav-fallback">([\s\S]*?)<a href="https:/)?.[1];
       if (!footer) continue;
-      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => resolve(dirname(file), match[1]));
+      const links = [...footer.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map((match) => match[1].startsWith("/") ? join(directory, match[1].slice(1)) : resolve(dirname(file), match[1]));
       for (const href of destinations)
         assert.ok(links.includes(join(directory, href)), `${file} omits footer fallback ${href}`);
       assert.ok(!links.includes(join(directory, "community.html")), `${file} exposes retired Playground navigation`);
