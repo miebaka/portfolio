@@ -203,7 +203,9 @@ body .site-footer__bottom{
 @media(prefers-reduced-motion:reduce){
  body .site-footer__signature::before,body .site-footer__signature::after{transition:none}
 }
-\nbody .site-footer__signature.is-enhanced::before,body[data-page="home"]:not(.site-system-disabled) .site-footer__signature.is-enhanced::before{opacity:1;display:block}\n
+
+body .site-footer__signature.is-enhanced::before,body[data-page="home"]:not(.site-system-disabled) .site-footer__signature.is-enhanced::before{opacity:1;display:block}
+
 /* Consume the 8px micro-row rhythm and calculated module width explicitly. */
 .editorial-asymmetric{grid-auto-rows:minmax(var(--grid-row),auto)}
 body[data-page="home"] .home-profile__introduction{max-width:min(68ch,calc(7 * var(--grid-column) + 6 * var(--grid-gutter)))}
