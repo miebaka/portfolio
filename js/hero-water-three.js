@@ -1,6 +1,6 @@
 /* Persistent GPU shallow-water fluid with incompressible 2D Navier-Stokes
    projection, Jacobi pressure solver, semi-Lagrangian advection, wave integration,
-   and water-to-air refraction caustic shading. Not a volumetric 3D simulation. */
+   and air-to-water refraction caustic projection. Not a volumetric 3D simulation. */
 import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
 const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
 const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;";
@@ -58,10 +58,125 @@ const wave=prefix+[
  "float foam=max(s.b*.96,clamp(abs(h-s.r)*6.,0.,1.));",
  "gl_FragColor=vec4(clamp(h,-1.,1.),s.r,foam,1.);}"
 ].join("\n");
-const waterField="\nuniform sampler2D surface;\nuniform vec2 texel;\nuniform float time;\n\n// Continuously moving swell and cross-chop, shared by the light-front and\n// the visible water. The fluid simulation adds local pointer-driven ripples.\nfloat waterHeight(vec2 p) {\n  vec2 warp = p + .011 * vec2(\n    sin(p.y * 13.0 + time * .23),\n    cos(p.x * 11.0 - time * .19)\n  );\n  float swell = sin(dot(warp, vec2(38.0, 13.0)) - time * .69\n    + .27 * sin(dot(warp, vec2(-9.0, 18.0)) + time * .16));\n  float cross = sin(dot(warp, vec2(-18.0, 41.0)) + time * .48);\n  float detail = sin(dot(warp, vec2(68.0, -26.0)) - time * .91);\n  float fluid = texture2D(surface, clamp(p, texel * 2.0, 1.0 - texel * 2.0)).r;\n  return fluid * .019 + swell * .0034 + cross * .0029 + detail * .0011;\n}\nvec3 waterNormal(vec2 p) {\n  vec2 e = max(texel * .75, vec2(.0032));\n  vec2 slope = vec2(\n    waterHeight(p + vec2(e.x, 0.0)) - waterHeight(p - vec2(e.x, 0.0)),\n    waterHeight(p + vec2(0.0, e.y)) - waterHeight(p - vec2(0.0, e.y))\n  ) / (2.0 * e);\n  return normalize(vec3(-slope, 1.0));\n}\n";
-const causticsVertex="\nprecision highp float;\nuniform vec3 lightDirection;\nuniform float waterDepth;\nvarying vec2 vSource;\nvarying vec2 vArrival;\nvarying float vIrradiance;\n"+waterField+"\nvoid main() {\n  vec2 p = uv;\n  vec3 n = waterNormal(p);\n  vec3 incoming = normalize(lightDirection);\n  // Air -> water. Sun and moon are almost perpendicular to the surface.\n  vec3 transmitted = refract(incoming, n, 1.0 / 1.333);\n  float distanceToFloor = max(.1, waterDepth + waterHeight(p));\n  vec2 arrival = p + transmitted.xy / max(.2, -transmitted.z) * distanceToFloor;\n  vSource = p;\n  vArrival = arrival;\n  vIrradiance = max(dot(n, -incoming), 0.0);\n  gl_Position = vec4(arrival * 2.0 - 1.0, 0.0, 1.0);\n}\n";
-const causticsFragment="\nprecision highp float;\nvarying vec2 vSource;\nvarying vec2 vArrival;\nvarying float vIrradiance;\nvoid main() {\n  // Evan Wallace's light-front method: the projected area reduction is the\n  // actual geometric focusing factor. It also accumulates overlapping rays.\n  vec2 sx = dFdx(vSource), sy = dFdy(vSource);\n  vec2 ax = dFdx(vArrival), ay = dFdy(vArrival);\n  float sourceArea = abs(sx.x * sy.y - sx.y * sy.x);\n  float arrivalArea = abs(ax.x * ay.y - ax.y * ay.x);\n  float focus = min(sourceArea / max(arrivalArea, 0.00000001), 10.0);\n  float light = pow(max(focus - .72, 0.0), 1.25) * .29 * vIrradiance;\n  gl_FragColor = vec4(vec3(min(light, 5.0)), 1.0);\n}\n";
-const shade="\nprecision highp float;\nvarying vec2 vUv;\nuniform sampler2D caustics;\nuniform float transmission, nightFactor;\nuniform vec3 floorColor, deepColor, lightColor, lightDirection, skyColor;\n"+waterField+"\nfloat grain(vec2 p) {\n  return fract(sin(dot(floor(p * vec2(480.0, 510.0)),\n    vec2(127.1, 311.7))) * 43758.5453123);\n}\nvoid main() {\n  vec2 p = clamp(vUv, texel * 2.0, 1.0 - texel * 2.0);\n  vec3 normal = waterNormal(p);\n  vec3 viewDirection = normalize(vec3(.035, .025, 1.0));\n  vec3 toLight = normalize(-lightDirection);\n\n  // The caustic texture is light energy on the floor, not a scrolling\n  // pattern. Tiny spectral separation imitates real water dispersion.\n  vec2 dispersion = vec2(.0011, -.0007);\n  vec3 focused = vec3(\n    texture2D(caustics, clamp(p + dispersion, 0.0, 1.0)).r,\n    texture2D(caustics, p).r,\n    texture2D(caustics, clamp(p - dispersion, 0.0, 1.0)).r\n  );\n  focused = min(focused, vec3(4.0));\n\n  // Subtle limestone/sand variation stays visible through clear water.\n  float stone = .95 + .035 * sin(p.x * 31.0 + sin(p.y * 11.0) * 1.7)\n    + .025 * sin(p.y * 27.0 + sin(p.x * 12.0));\n  stone += (grain(p) - .5) * .028;\n  float shallowDepth = clamp(.36 + .08 * waterHeight(p), 0.0, 1.0);\n  vec3 bed = mix(floorColor, deepColor, shallowDepth) * stone;\n  // Shallow Beer-Lambert attenuation, keeping the bed legible.\n  vec3 clearWater = mix(bed, bed * skyColor, .075 + nightFactor * .035);\n  float incidence = max(dot(normal, toLight), 0.0);\n  vec3 transmitted = clearWater\n    + focused * lightColor * transmission * (.75 + .25 * incidence);\n\n  // A top-down camera has only a small Fresnel reflection at normal incidence.\n  // Separate highlights on the surface from refraction caustics on the floor.\n  float fresnel = .02 + .98 * pow(\n    1.0 - clamp(dot(normal, viewDirection), 0.0, 1.0), 5.0\n  );\n  vec3 reflected = mix(transmitted, skyColor, fresnel * (.55 + nightFactor * .35));\n  vec3 halfVector = normalize(toLight + viewDirection);\n  float specular = pow(max(dot(normal, halfVector), 0.0),\n    mix(220.0, 320.0, nightFactor));\n  reflected += lightColor * specular * mix(.26, .15, nightFactor);\n  gl_FragColor = vec4(1.0 - exp(-max(reflected, vec3(0.0))), 1.0);\n}\n";
+const waterField=String.raw`
+uniform sampler2D surface;
+uniform vec2 texel;
+uniform float time;
+
+// Continuously moving swell and cross-chop, shared by the light-front and
+// the visible water. The fluid simulation adds local pointer-driven ripples.
+float waterHeight(vec2 p) {
+  vec2 warp = p + .011 * vec2(
+    sin(p.y * 13.0 + time * .23),
+    cos(p.x * 11.0 - time * .19)
+  );
+  float swell = sin(dot(warp, vec2(38.0, 13.0)) - time * .69
+    + .27 * sin(dot(warp, vec2(-9.0, 18.0)) + time * .16));
+  float cross = sin(dot(warp, vec2(-18.0, 41.0)) + time * .48);
+  float detail = sin(dot(warp, vec2(68.0, -26.0)) - time * .91);
+  float fluid = texture2D(surface, clamp(p, texel * 2.0, 1.0 - texel * 2.0)).r;
+  return fluid * .019 + swell * .0034 + cross * .0029 + detail * .0011;
+}
+vec3 waterNormal(vec2 p) {
+  vec2 e = max(texel * .75, vec2(.0032));
+  vec2 slope = vec2(
+    waterHeight(p + vec2(e.x, 0.0)) - waterHeight(p - vec2(e.x, 0.0)),
+    waterHeight(p + vec2(0.0, e.y)) - waterHeight(p - vec2(0.0, e.y))
+  ) / (2.0 * e);
+  return normalize(vec3(-slope, 1.0));
+}
+`;
+const causticsVertex=String.raw`
+precision highp float;
+uniform vec3 lightDirection;
+uniform float waterDepth;
+varying vec2 vSource;
+varying vec2 vArrival;
+varying float vIrradiance;
+`+waterField+String.raw`
+void main() {
+  vec2 p = uv;
+  vec3 n = waterNormal(p);
+  vec3 incoming = normalize(lightDirection);
+  // Air -> water. Sun and moon are almost perpendicular to the surface.
+  vec3 transmitted = refract(incoming, n, 1.0 / 1.333);
+  float distanceToFloor = max(.1, waterDepth + waterHeight(p));
+  vec2 arrival = p + transmitted.xy / max(.2, -transmitted.z) * distanceToFloor;
+  vSource = p;
+  vArrival = arrival;
+  vIrradiance = max(dot(n, -incoming), 0.0);
+  gl_Position = vec4(arrival * 2.0 - 1.0, 0.0, 1.0);
+}
+`;
+const causticsFragment=String.raw`
+precision highp float;
+varying vec2 vSource;
+varying vec2 vArrival;
+varying float vIrradiance;
+void main() {
+  // Evan Wallace's light-front method: the projected area reduction is the
+  // actual geometric focusing factor. It also accumulates overlapping rays.
+  vec2 sx = dFdx(vSource), sy = dFdy(vSource);
+  vec2 ax = dFdx(vArrival), ay = dFdy(vArrival);
+  float sourceArea = abs(sx.x * sy.y - sx.y * sy.x);
+  float arrivalArea = abs(ax.x * ay.y - ax.y * ay.x);
+  float focus = min(sourceArea / max(arrivalArea, 0.00000001), 10.0);
+  float light = pow(max(focus - .72, 0.0), 1.25) * .29 * vIrradiance;
+  gl_FragColor = vec4(vec3(min(light, 5.0)), 1.0);
+}
+`;
+const shade=String.raw`
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D caustics;
+uniform float transmission, nightFactor;
+uniform vec3 floorColor, deepColor, lightColor, lightDirection, skyColor;
+`+waterField+String.raw`
+float grain(vec2 p) {
+  return fract(sin(dot(floor(p * vec2(480.0, 510.0)),
+    vec2(127.1, 311.7))) * 43758.5453123);
+}
+void main() {
+  vec2 p = clamp(vUv, texel * 2.0, 1.0 - texel * 2.0);
+  vec3 normal = waterNormal(p);
+  vec3 viewDirection = normalize(vec3(.035, .025, 1.0));
+  vec3 toLight = normalize(-lightDirection);
+
+  // The caustic texture is light energy on the floor, not a scrolling
+  // pattern. Tiny spectral separation imitates real water dispersion.
+  vec2 dispersion = vec2(.0011, -.0007);
+  vec3 focused = vec3(
+    texture2D(caustics, clamp(p + dispersion, 0.0, 1.0)).r,
+    texture2D(caustics, p).r,
+    texture2D(caustics, clamp(p - dispersion, 0.0, 1.0)).r
+  );
+  focused = min(focused, vec3(4.0));
+
+  // Subtle limestone/sand variation stays visible through clear water.
+  float stone = .95 + .035 * sin(p.x * 31.0 + sin(p.y * 11.0) * 1.7)
+    + .025 * sin(p.y * 27.0 + sin(p.x * 12.0));
+  stone += (grain(p) - .5) * .028;
+  float shallowDepth = clamp(.36 + .08 * waterHeight(p), 0.0, 1.0);
+  vec3 bed = mix(floorColor, deepColor, shallowDepth) * stone;
+  // Shallow Beer-Lambert attenuation, keeping the bed legible.
+  vec3 clearWater = mix(bed, bed * skyColor, .075 + nightFactor * .035);
+  float incidence = max(dot(normal, toLight), 0.0);
+  vec3 transmitted = clearWater
+    + focused * lightColor * transmission * (.75 + .25 * incidence);
+
+  // A top-down camera has only a small Fresnel reflection at normal incidence.
+  // Separate highlights on the surface from refraction caustics on the floor.
+  float fresnel = .02 + .98 * pow(
+    1.0 - clamp(dot(normal, viewDirection), 0.0, 1.0), 5.0
+  );
+  vec3 reflected = mix(transmitted, skyColor, fresnel * (.55 + nightFactor * .35));
+  vec3 halfVector = normalize(toLight + viewDirection);
+  float specular = pow(max(dot(normal, halfVector), 0.0),
+    mix(220.0, 320.0, nightFactor));
+  reflected += lightColor * specular * mix(.26, .15, nightFactor);
+  gl_FragColor = vec4(1.0 - exp(-max(reflected, vec3(0.0))), 1.0);
+}
+`;
 const SIZE=144;
 const ITERATIONS=10;
 export function mountHeroWave(host,initialState){
