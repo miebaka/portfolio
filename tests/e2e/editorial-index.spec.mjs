@@ -38,7 +38,10 @@ for (const [name, path, selector] of [
 
     await rows.first().focus();
     await expect(rows.first()).toHaveCSS("opacity", "1");
-    await expect(rows.first().locator(".editorial-index__title")).toHaveCSS("font-weight", "400");
+    // Home's deliberately heavier Geist Sans display is a section-specific
+    // art-direction decision. The shared Work and Essays index remains weight 400.
+    await expect(rows.first().locator(".editorial-index__title"))
+      .toHaveCSS("font-weight", name === "Home" ? /^(550|560)$/ : "400");
     if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
     const focusColors = await rows.first().evaluate(element => ({
       foreground: getComputedStyle(element).color,
