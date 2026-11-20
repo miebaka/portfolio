@@ -62,6 +62,7 @@ const shade=[
  "precision highp float;varying vec2 vUv;",
  "uniform sampler2D surface;uniform vec2 texel;",
  "uniform float transmission;uniform vec3 floorColor,deepColor,lightColor;",
+ "uniform vec3 lightDirection,skyColor;uniform float nightFactor;",
  "vec2 grad(vec2 p){",
  " float l=texture2D(surface,p-vec2(texel.x,0.)).r;",
  " float r=texture2D(surface,p+vec2(texel.x,0.)).r;",
@@ -71,7 +72,7 @@ const shade=[
  "vec2 hit(vec2 p){",
  " vec2 g=grad(p)*5.6;",
  " vec3 n=normalize(vec3(-g,1.));",
- " vec3 sun=normalize(vec3(.23,.18,-1.));",
+ " vec3 sun=normalize(lightDirection);",
  " vec3 refracted=refract(sun,n,1./1.333);",
  " return p+refracted.xy/max(.2,abs(refracted.z))*.08;}",
  "void main(){vec2 p=clamp(vUv,texel*2.,1.-texel*2.);",
@@ -81,8 +82,17 @@ const shade=[
  " float focusing=pow(clamp(1./max(jac,.08),0.,8.),1.35);",
  " vec4 water=texture2D(surface,p);",
  " float light=clamp((focusing-.78)*.9+.12,0.,4.)*transmission*exp(-.34*(1.1+water.r*.12));",
+ " vec3 normal=normalize(vec3(-grad(p)*5.6,1.));",
+ " vec3 viewDir=normalize(vec3(.16,.09,1.));",
+ " vec3 toLight=normalize(-lightDirection);",
+ " float fresnel=.02+.98*pow(1.-clamp(dot(normal,viewDir),0.,1.),5.);",
+ " float glint=pow(max(dot(reflect(-toLight,normal),viewDir),0.),mix(38.,160.,nightFactor));",
+ " float illumination=clamp(dot(normal,toLight),0.,1.);",
  " vec3 base=mix(deepColor,floorColor,clamp(.52+water.r*.15,0.,1.));",
- " vec3 c=base+lightColor*(light+water.b*.04);",
+ " vec3 transmitted=base+lightColor*(light*(.55+.45*illumination)+water.b*.018);",
+ " vec3 c=mix(transmitted,skyColor,fresnel*mix(.7,1.25,nightFactor));",
+ " c+=lightColor*glint*mix(.4,2.4,nightFactor);",
+ " c=mix(c,deepColor,nightFactor*.14);",
  " gl_FragColor=vec4(1.-exp(-max(c,vec3(0.))),1.);}"
 ].join("\n");
 const SIZE=144;
@@ -103,7 +113,7 @@ export function mountHeroWave(host,initialState){
  const vel=pair(),press=pair(),height=pair(),div=makeTarget();
  const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
- screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()}};
+ screen.uniforms={surface:{value:height.read.texture},texel:{value:texel},transmission:{value:1},floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.07,.12,-1)},skyColor:{value:new Vector3()},nightFactor:{value:0}};
  let state={...initialState},destroyed=false,visible=true,frame=0,last=0,impulse=.7,steps=0,lastPointerAt=0;
  const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
  const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
@@ -145,10 +155,15 @@ export function mountHeroWave(host,initialState){
  const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);};
  function update(next){
   state={...state,...next};const dark=state.theme==="dark",colors=state.colors||["#07112b","#002080","#b1c5ff"];
-  screen.uniforms.floorColor.value.copy(dark?hex(colors[0],"#07112b"):new Vector3(.02,.14,.28));
-  screen.uniforms.deepColor.value.copy(dark?hex(colors[1],"#002080"):new Vector3(.012,.06,.16));
-  screen.uniforms.lightColor.value.copy(dark?hex(colors[2],"#b1c5ff"):new Vector3(.64,.88,1.));
+  screen.uniforms.floorColor.value.copy(dark?new Vector3(.009,.022,.05):new Vector3(.028,.24,.35));
+  screen.uniforms.deepColor.value.copy(dark?new Vector3(.005,.013,.034):new Vector3(.008,.14,.24));
+  screen.uniforms.lightColor.value.copy(dark?new Vector3(.4,.57,.78):new Vector3(1.,.97,.88));
+  // Midday: high sun, turquoise transmission, warm-white focused highlights.
+  // Full moon: low-energy cold illumination and isolated silver glints.
   screen.uniforms.transmission.value=dark?.15:1.5;
+  screen.uniforms.lightDirection.value.set(dark?.38:.07,dark?.24:.12,dark?-.89:-1).normalize();
+  screen.uniforms.skyColor.value.set(dark?.018:.36,dark?.035:.62,dark?.09:.82);
+  screen.uniforms.nightFactor.value=dark?1:0;
   host.dataset.simulation="gpu-fluid-heightfield";host.dataset.waterTheme=dark?"dark":"light";
   draw();
   if(!running()&&frame){cancelAnimationFrame(frame);frame=0;}
