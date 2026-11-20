@@ -308,6 +308,13 @@ body[data-page="home"] .home-project-list .work-view-controls a:focus-visible {
     box-shadow: none;
   }
 
+  body[data-page="home"] .home-project-list .editorial-index__row:is(.is-open, :focus-visible) .project-roster__photo--1 {
+    inset: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+
   body[data-page="home"] .home-project-list .project-roster__photo:not(.project-roster__photo--1),
   body[data-page="home"] .home-project-list .project-roster__tags {
     display: none;
