@@ -6,7 +6,7 @@
 :root{color-scheme:light dark;
 
   /* Typefaces: families, then the role names the CSS consumes */
-  --font-display:"Archivo", "Arial Narrow", sans-serif;--font-body:"Finlandica Text", system-ui, sans-serif;--font-label:"Host Grotesk", "Helvetica Neue", sans-serif;
+  --font-display:"Geist Serif",Georgia,serif;--font-body:"Geist Sans",Arial,system-ui,sans-serif;--font-label:"Geist Mono",ui-monospace,monospace;
   --display:var(--font-display);--body:var(--font-body);--label:var(--font-label);--signature:var(--font-body);
   --icon:"Material Symbols Outlined";
 
