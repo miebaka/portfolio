@@ -55,9 +55,9 @@ export async function initHeroWave({
   const landing = doc.querySelector(".home-landing");
   if (!landing) return null;
 
-  // A software GL renderer turns the pressure solver into a multi-second
-  // main-thread block. Keep the accessible CSS hero instead of loading Three.js.
-  // Explicit shader-test routes retain the renderer for deterministic QA.
+  // Only reject confirmed software rendering. Missing GPU-identification
+  // details are normal on mobile and must not suppress a working WebGL2 device.
+  // Explicit shader-test routes retain software GL for deterministic QA.
   if (!testOptIn) {
     let probeContext;
     try {
@@ -71,11 +71,10 @@ export async function initHeroWave({
         ? probeContext.getParameter(info.UNMASKED_RENDERER_WEBGL)
         : probeContext.getParameter(probeContext.RENDERER);
       const software = isSoftwareRenderer(name);
-      const unknownHardware = !info && !/(nvidia|amd|radeon|intel|apple|adreno|mali|powervr)/i.test(String(name || ""));
-      if (software || unknownHardware) {
-        probeContext.getExtension("WEBGL_lose_context")?.loseContext();
-        return null;
-      }
+      // Mobile Safari and privacy-conscious browsers often report only
+      // "WebKit WebGL" or "WebGL" and hide WEBGL_debug_renderer_info.
+      // An unrecognized name is NOT evidence of a software renderer.
+      if (software) return null;
     } catch {
       return null;
     } finally {
