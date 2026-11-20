@@ -8,8 +8,8 @@ Measured from a ~1905px desktop viewport (these are *reference measurements*, no
 
 | Role | Font used on reference | Measured size | Leading | New portfolio role |
 |---|---|---:|---:|---|
-| Main headline | PP Fragment | 81px | 89.1px (1.1) | Geist Serif / display XXL |
-| Section heading | PP Fragment | 54px | 59.4px (1.1) | Geist Serif / display L |
+| Main headline | PP Fragment | 81px | 89.1px (1.1) | Geist Sans / display XXL |
+| Section heading | PP Fragment | 54px | 59.4px (1.1) | Geist Sans / display L |
 | Paragraph | Instrument Sans | 18px | 27px (1.5) | Geist Sans / body M |
 | Navigation | Instrument Sans | 18px | 27px | Geist Mono / navigational labels |
 | Handwritten accent | Adobe Handwriting Ernie | 22.5–24.75px | 19.8–36px | Existing personal script SVG, not a substitute typeface |
@@ -20,7 +20,7 @@ The original reference footer is about 742px tall on the measured desktop and us
 
 ## Type roles
 
-- **Headline/display:** Geist Serif, 400. This high-contrast serif is most effective at large sizes; do not force 700/900 synthetic weights.
+- **Headline/display:** Geist Sans, 400. Use the shared sans-serif family with responsive display sizes, disciplined leading, and tracking rather than a separate serif face.
 - **Body:** Geist Sans, regular 400 and semibold 600, 1.5–1.65 line height.
 - **Metadata/labels/navigation:** Geist Mono regular 400 and semibold 600, 0.69–0.875rem, uppercase where appropriate.
 - Fonts sourced from Vercel's official `geist@1.9.2` distribution, using pinned WOFF2 URLs. The intended complete font family roles always include accessible system fallbacks.
@@ -38,7 +38,7 @@ An authored **12-column, 24px baseline editorial grid** (an 8px micro-row system
 | Mobile below 768px | 4 | 20px | 14–24px | page width |
 
 Composition archetypes:
-1. **Lead spread** — bold serif headline and quiet mono location labels. Centered headline when appropriate, not uniformly center-aligned prose.
+1. **Lead spread** — large sans-serif headline and quiet mono location labels. Centered headline when appropriate, not uniformly center-aligned prose.
 2. **Asymmetric portrait editorial** — copy occupying 6/12 columns and portrait 4/12, with a planned one-column negative space interval.
 3. **Work index** — strong typographic row and controlled photo preview. Identity is at the center while the sequence number remains in the margin.
 4. **Case-study gallery** — alternating 7+5, 6+6, and full-span image modules, preserving reading order and author-supplied image aspect ratios.
@@ -58,7 +58,7 @@ The GPU solver remains a persistent *2.5D water-surface simulation*; it is not i
 
 ## Acceptance checks
 
-- Confirm all page headings use Geist Serif, bodies use Geist Sans, labels use Geist Mono; ensure external font files actually resolve, or system fallbacks are clearly disclosed.
+- Confirm all page headings use Geist Sans, bodies use Geist Sans, labels use Geist Mono; ensure external font files actually resolve, or system fallbacks are clearly disclosed.
 - Check centered desktop navigation and responsive Index fallback without overflow or loss of the lamp-pull theme switch.
 - Compare light/dark footer colors, SVG emboss and pointer/touch/keyboard ripple; ensure the footer matches across every HTML route.
 - Validate work/case/writing/contact layouts across mobile 390px, tablet 768px and desktop 1440px, including keyboard focus and 200% zoom.
