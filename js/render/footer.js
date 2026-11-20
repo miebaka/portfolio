@@ -24,7 +24,7 @@ export function renderFooter() {
     '<div class="site-footer__invitation">' +
       '<p class="site-footer__eyebrow">AN INDEPENDENT DESIGN PRACTICE · LAGOS / WORLDWIDE</p>' +
       '<h2>LET’S MAKE SOMETHING <em>MATTER.</em></h2>' +
-      '<a class="site-footer__cta" href="' + safeURL('mailto:' + (SITE.email || '')) + '">START A PROJECT <span aria-hidden="true">↗</span></a>' +
+      '<a class="site-footer__cta" href="' + basePath() + 'contact.html">START A PROJECT <span aria-hidden="true">↗</span></a>' +
     '</div>' +
     '<div class="site-footer__emboss" aria-hidden="true"></div>' +
     '<div class="site-footer__panel">' +
