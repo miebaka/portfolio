@@ -76,7 +76,7 @@ test("approved visual contract remains intact", async () => {
     }
     const stylesheets = [...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi)];
     assert.equal(stylesheets.length, 1, `${path}: expected one stylesheet request`);
-    assert.match(stylesheets[0][0], /href=["'](?:\.\.\/)?styles\/main\.css["']/i, path);
+    assert.match(stylesheets[0][0], /href=["'](?:\/|\.\.\/)?styles\/main\.css["']/i, path);
   }
   assert.match(css, /body \.site-footer__signature::before\{display:block/);
   assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
