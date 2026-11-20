@@ -33,39 +33,6 @@ export function renderServiceAccordionMarkup(items = SITE.capabilities) {
   ).join('') + '</div>';
 }
 
-export function createServiceSwatches(root) {
-  if (!root) return () => {};
-  const tabs = [...root.querySelectorAll('[role="tab"]')];
-  const panels = [...root.querySelectorAll('[role="tabpanel"]')];
-  const select = (next, { focus = false, keyboard = false } = {}) => {
-    root.dataset.input = keyboard ? "keyboard" : "pointer";
-    tabs.forEach((tab, index) => {
-      const selected = index === next;
-      tab.setAttribute("aria-selected", String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-      panels[index].hidden = !selected;
-    });
-    if (focus) tabs[next]?.focus();
-  };
-  const cleanups = tabs.map((tab, index) => {
-    const click = () => select(index);
-    const keydown = event => {
-      let next;
-      if (["ArrowRight", "ArrowDown"].includes(event.key)) next = (index + 1) % tabs.length;
-      if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = (index - 1 + tabs.length) % tabs.length;
-      if (event.key === "Home") next = 0;
-      if (event.key === "End") next = tabs.length - 1;
-      if (next === undefined) return;
-      event.preventDefault();
-      select(next, { focus: true, keyboard: true });
-    };
-    tab.addEventListener("click", click);
-    tab.addEventListener("keydown", keydown);
-    return () => { tab.removeEventListener("click", click); tab.removeEventListener("keydown", keydown); };
-  });
-  return () => cleanups.forEach(cleanup => cleanup());
-}
-
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;

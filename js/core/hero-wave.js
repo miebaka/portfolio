@@ -1,4 +1,9 @@
+import { isMotionReduced } from "./motion-language.js";
+
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
+
+export const isSoftwareRenderer = name =>
+  /swiftshader|llvmpipe|softpipe|lavapipe|software raster|microsoft basic render/i.test(String(name || ""));
 
 export const HERO_WAVE_PRESETS = Object.freeze({
   light: Object.freeze({
@@ -17,9 +22,9 @@ function resolvedColors(win, root) {
   };
 }
 
-function resolvedState(root, reducedMotion = false) {
+function resolvedState(root, reducedMotionQuery) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
-  return { theme, animate: root.dataset.motion !== "reduced" && !reducedMotion };
+  return { theme, animate: !isMotionReduced(root, reducedMotionQuery) };
 }
 
 export async function initHeroWave({
@@ -42,7 +47,7 @@ export async function initHeroWave({
   const reducedMotionQuery = win.matchMedia?.("(prefers-reduced-motion: reduce)");
   const root = doc.documentElement;
   const getState = () => {
-    const state = resolvedState(root, reducedMotionQuery?.matches === true);
+    const state = resolvedState(root, reducedMotionQuery);
     const colors = resolvedColors(win, root);
     return { ...state, ...colors, animate: state.animate && !forceStatic && !userPaused };
   };
@@ -65,7 +70,7 @@ export async function initHeroWave({
       const name = info
         ? probeContext.getParameter(info.UNMASKED_RENDERER_WEBGL)
         : probeContext.getParameter(probeContext.RENDERER);
-      const software = /swiftshader|llvmpipe|softpipe|lavapipe|software raster|microsoft basic render/i.test(String(name || ""));
+      const software = isSoftwareRenderer(name);
       const unknownHardware = !info && !/(nvidia|amd|radeon|intel|apple|adreno|mali|powervr)/i.test(String(name || ""));
       if (software || unknownHardware) {
         probeContext.getExtension("WEBGL_lose_context")?.loseContext();
@@ -135,7 +140,7 @@ export async function initHeroWave({
   const sync = () => {
     if (destroyed) return;
     const state = getState();
-    control.hidden = forceStatic || reducedMotionQuery?.matches === true || root.dataset.motion === "reduced";
+    control.hidden = forceStatic || isMotionReduced(root, reducedMotionQuery);
     const preset = HERO_WAVE_PRESETS[state.theme];
     host.dataset.preset = preset.name;
     island.update(state);
