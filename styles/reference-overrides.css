@@ -48,8 +48,8 @@ body[data-page="home"] .home-project-list__identity {
 }
 body[data-page="home"] .home-project-list__title {
   display:block;max-width:none;font:500 clamp(3.25rem,8.7vw,10rem)/.88 var(--display);
-  letter-spacing:-.075em;font-stretch:78%;white-space:nowrap;
-  text-transform:uppercase;overflow-wrap:normal;
+  letter-spacing:-.055em;font-stretch:normal;white-space:normal;
+  text-transform:none;overflow-wrap:normal;
   transition:color .28s ease,transform .32s cubic-bezier(.16,1,.3,1)
 }
 body[data-page="home"] .home-project-list__meta,
@@ -109,8 +109,6 @@ body[data-page="home"] .work-view-controls a {
   body[data-page="home"] .home-project-list .editorial-index__row:is(:hover,:focus-visible) .home-project-list__visual {
     transform:none
   }
-  }
-@media(max-width:32rem) {
   }
 @media(prefers-reduced-motion:reduce) {
   body[data-page="home"] .home-project-list__title,

@@ -21,7 +21,8 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F8F9FC">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#07112B">
   <link rel="icon" href="/assets/images/miebaka-joshua-logo.svg" type="image/svg+xml">
-  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Archivo-Variable.woff2" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerif-Regular.woff2" crossorigin>
   <script>(function(r){
     r.classList.replace("no-js","has-js");
     /* localStorage throws outright when storage is blocked (Safari private
@@ -30,7 +31,7 @@
     try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
   })(document.documentElement);</script>
 
-  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body data-page="404">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -40,11 +41,11 @@
          site has no navigation at all in those cases, for people and for
          crawlers that do not execute scripts. -->
     <nav class="nav-fallback" aria-label="Primary">
-        <a href="work.html">Work</a>
-        <a href="about.html">About</a>
-        <a href="experiments.html">Experiments</a>
-        <a href="essays.html">Essays</a>
-        <a href="contact.html">Contact</a>
+        <a href="/work.html">Work</a>
+        <a href="/about.html">About</a>
+        <a href="/experiments.html">Experiments</a>
+        <a href="/essays.html">Essays</a>
+        <a href="/contact.html">Contact</a>
     </nav>
   </header>
 
@@ -52,7 +53,7 @@
     <section class="hero hero--404 container">
       <div class="hero--404__copy">
         <h1 class="hero__title measure-hero">Page not found.</h1>
-        <p class="hero__lede measure-lead">The link may be old or incomplete. Browse <a class="link" href="work.html">selected work</a>, return <a class="link" href="index.html">home</a>, or <a class="link" href="contact.html">contact me</a> if you were looking for something specific.</p>
+        <p class="hero__lede measure-lead">The link may be old or incomplete. Browse <a class="link" href="/work.html">selected work</a>, return <a class="link" href="/index.html">home</a>, or <a class="link" href="/contact.html">contact me</a> if you were looking for something specific.</p>
       </div>
       <div class="decision-field" aria-hidden="true"><div class="decision-field__fallback"></div></div>
     </section>
@@ -61,12 +62,12 @@
   <footer data-mount="footer">
     <!-- Static fallback, replaced by renderFooter(). -->
     <div class="nav-fallback">
-        <a href="work.html">Work</a>
-        <a href="about.html">About</a>
-        <a href="experiments.html">Experiments</a>
-        <a href="essays.html">Essays</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy.html">Privacy</a>
+        <a href="/work.html">Work</a>
+        <a href="/about.html">About</a>
+        <a href="/experiments.html">Experiments</a>
+        <a href="/essays.html">Essays</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy</a>
         <a href="https://www.behance.net/miebaka" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="https://www.linkedin.com/in/miebakajoshua" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="https://instagram.com/sheikmoujabaa" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -74,6 +75,6 @@
     </div>
   </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>

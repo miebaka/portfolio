@@ -415,6 +415,8 @@ body[data-page="work"] .project-archive__media{min-width:0;align-self:stretch;ba
 body[data-page="work"] .project-archive__media:has(.project-archive__preview-frame){position:relative;display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden;background:var(--ref-midnight)}
 body[data-page="work"] .project-archive__preview-frame{position:relative;min-width:0;overflow:hidden;opacity:calc(.58 + var(--preview-order) * .16);transform:scale(1.025);transition:opacity 240ms var(--ease-enter),transform 240ms var(--ease-enter);transition-delay:calc(var(--preview-order) * 45ms)}
 body[data-page="work"] .project-archive__preview-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+body[data-page="work"] .project-archive__media:has(> .project-archive__preview-frame:only-child){grid-template-columns:minmax(0,1fr)}
+body[data-page="work"] .project-archive__preview-frame picture{display:block;width:100%;height:100%}
 body[data-page="work"] .project-archive__item--tedx-rsu .project-archive__preview-frame:last-child{view-transition-name:project-tedx-rsu}
 body.case-page--tedx .case-shot--hero{view-transition-name:project-tedx-rsu}
 body[data-page="work"] .project-archive__item--rivo .project-archive__preview-frame:last-child{view-transition-name:project-rivo}
@@ -509,6 +511,18 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
   .editorial-index--notes .writing-item__identity>.writing-item__summary{display:block;font-size:var(--font-size-sm)}
   body .site-footer{min-height:34rem}body .site-footer__groups{grid-template-columns:1fr;padding-top:14rem;gap:2rem}body .site-footer__explore,body .site-footer__socials{grid-column:1}body .site-footer__signature{top:1.5rem;height:14rem}body .site-footer__panel{padding-bottom:3rem}body .site-footer__links{display:flex;flex-wrap:wrap}
 }
+
+/* Keep real project imagery visible with a mouse, keyboard or touch.
+   A single cover fills its frame; static multi-frame fallbacks retain their grid. */
+@media(max-width:48rem){
+  body[data-page="work"] .project-archive__row{gap:var(--s3)}
+  body[data-page="work"] .project-archive__media{display:grid;aspect-ratio:16/10;min-height:12rem}
+  body[data-page="work"] .project-archive__preview-frame{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body[data-page="work"] .project-archive__preview-frame{transition:none;transform:none}
+}
+html[data-motion="reduced"] body[data-page="work"] .project-archive__preview-frame{transition:none;transform:none}
 
 /* Hedvig/Finlandica editorial expansion. The hero mark floats as the dark
    opening recedes, then the project document takes over in a single light
