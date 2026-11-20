@@ -5,7 +5,7 @@
   --motion-expressive: cubic-bezier(.16, 1, .3, 1);
   --motion-responsive: cubic-bezier(.25, 1, .5, 1);
   --motion-enter: 800ms;
-  --motion-hover: 220ms;
+  --motion-response-duration: 220ms;
 }
 
 /* Kawai-style staggered slide/blur, applied only after JS has initialised.
@@ -50,7 +50,7 @@ html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-chi
       translate 190ms var(--motion-responsive);
   }
   html.motion-language-ready body[data-page="home"] .home-project-list .editorial-index__row::before {
-    transition: transform var(--motion-hover) var(--motion-responsive);
+    transition: transform var(--motion-response-duration) var(--motion-responsive);
   }
   html.motion-language-ready body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible)::before {
     transform: translateX(.3rem);
@@ -61,8 +61,8 @@ html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-chi
    paragraph: lift the active surface and the directional arrow by a few pixels. */
 @media (hover: hover) and (pointer: fine) {
   html.motion-language-ready body .site-nav__links .site-nav__link {
-    transition: background-color var(--motion-hover) var(--motion-responsive),
-      translate var(--motion-hover) var(--motion-responsive);
+    transition: background-color var(--motion-response-duration) var(--motion-responsive),
+      translate var(--motion-response-duration) var(--motion-responsive);
   }
   html.motion-language-ready body .site-nav__links .site-nav__link:is(:hover, :focus-visible) {
     translate: 0 -2px;
@@ -71,7 +71,7 @@ html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-chi
 html.motion-language-ready body[data-page="home"] .service-stack__evidence .service-journey__arrow,
 html.motion-language-ready body[data-page="home"] .home-close__email > span {
   display: inline-block;
-  transition: translate var(--motion-hover) var(--motion-responsive);
+  transition: translate var(--motion-response-duration) var(--motion-responsive);
 }
 html.motion-language-ready body[data-page="home"] .service-stack__evidence:is(:hover, :focus-visible) .service-journey__arrow,
 html.motion-language-ready body[data-page="home"] .home-close__email:is(:hover, :focus-visible) > span {
@@ -94,7 +94,7 @@ body[data-page="home"] .service-stack__card::before {
     transparent 72%
   );
   opacity: 0;
-  transition: opacity var(--motion-hover) ease-out;
+  transition: opacity var(--motion-response-duration) ease-out;
 }
 body[data-page="home"] .service-stack__card > * {
   position: relative;
