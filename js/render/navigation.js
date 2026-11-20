@@ -40,9 +40,11 @@ export function renderNavigation() {
   const order = ["work", "explorations", "about", "writing", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
+  const section = navigation.routes.find(route => route.key === page)?.label || (page === "home" ? "Home" : "Portfolio");
   el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
-    '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button>' +
-    '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary">' + links + '</nav>' +
+    '<div class="site-nav__identity" aria-hidden="true"><strong>Miebaka Joshua</strong><span>' + esc(section) + ' / Independent Design</span></div>' +
+    '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button>' +
+    '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary" aria-hidden="true">' + links + '</nav>' +
     '<div class="site-nav__themes"><span class="theme-cord__prompt" aria-hidden="true">Theme</span><button class="theme-cord" type="button" role="switch" aria-checked="false" aria-label="Theme: switch to Screen mode"><svg viewBox="0 0 68 58" width="68" height="58" aria-hidden="true"><path class="theme-cord__line" data-cord-line fill="none"/><path data-cord-hit fill="none" stroke="transparent" stroke-width="18"/><g class="theme-cord__bead" data-cord-bead><circle r="10" fill="transparent"/><rect x="-4" y="-1" width="8" height="13" rx="4"/></g></svg><span class="theme-cord__mode" data-cord-mode>Print</span></button></div></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");

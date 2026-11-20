@@ -54,7 +54,7 @@ test("the service system has exactly five complete shared records", () => {
   }
   const markup = renderServiceSwatchesMarkup(services);
   assert.equal((markup.match(/class="service-journey /g) || []).length, 5);
-  assert.equal((markup.match(/class="service-journey__number"/g) || []).length, 5);
+  assert.doesNotMatch(markup, /service-journey__number|service-stack__count/);
   const fallback = renderServiceFallbackMarkup(services);
   for (const service of services)
     for (const field of ["title", "description", "outputs", "fit"]) {
@@ -120,9 +120,9 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
   assert.doesNotMatch(markup, /role="tab"|role="tabpanel"/);
 });
 
-test("service journeys expose persistent number, title and evidence link cues", async () => {
+test("service journeys expose unnumbered titles and evidence links", async () => {
   const markup = renderServiceSwatchesMarkup(services);
-  assert.equal((markup.match(/class="service-journey__number"/g) || []).length, 5);
+  assert.doesNotMatch(markup, /service-journey__number|service-stack__count/);
   assert.equal((markup.match(/class="service-journey__arrow"/g) || []).length, 5);
   for (const service of services) assert.ok(markup.includes(service.evidenceHref));
 });

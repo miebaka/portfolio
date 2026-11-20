@@ -1,0 +1,221 @@
+/* Alex Pierce-inspired editorial Index: navigation belongs to the work, not a floating UI pill.
+   Always keep the site route registry, escape/focus handling, theme control, and no-JS fallbacks. */
+body .site-nav {
+  min-height:5.25rem;
+  height:5.25rem;
+  background:var(--paper);
+  border:0;
+  border-bottom:1px solid var(--line);
+  box-shadow:none;
+}
+body .site-nav__inner {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:clamp(.8rem,2.3vw,2.25rem);
+  width:calc(100% - 2 * var(--page));
+  max-width:var(--content);
+  height:5.25rem;
+  padding:0;
+}
+body .site-nav__brand {
+  grid-column:1;
+  grid-row:1;
+  align-self:center;
+  justify-self:start;
+  margin:0;
+}
+body .site-nav__identity {
+  grid-column:2;
+  grid-row:1;
+  display:grid;
+  gap:.3rem;
+  align-content:center;
+  min-width:0;
+  color:var(--ink);
+  line-height:1.1;
+}
+body .site-nav__identity strong {
+  font:650 .78rem/1.2 var(--label);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+body .site-nav__identity span {
+  color:var(--muted);
+  font:500 .65rem/1.3 var(--label);
+  letter-spacing:.065em;
+  text-transform:uppercase;
+}
+body .site-nav__links {
+  display:none!important;
+}
+body .site-nav__menu-btn {
+  grid-column:3;
+  grid-row:1;
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  gap:.7rem;
+  min-width:6rem;
+  min-height:2.75rem;
+  padding:.55rem .8rem;
+  border:1px solid var(--line);
+  border-radius:0;
+  background:transparent;
+  color:var(--ink);
+  font:650 .76rem/1 var(--label);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease;
+}
+body .site-nav__menu-btn:is(:hover,:focus-visible,[aria-expanded="true"]) {
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--paper);
+}
+body .site-nav__menu-btn:focus-visible {outline:2px solid var(--focus);outline-offset:3px}
+body .site-nav__menu-mark {
+  display:block;
+  position:relative;
+  width:1.05rem;
+  height:.8rem;
+  flex:none;
+}
+body .site-nav__menu-mark::before,body .site-nav__menu-mark::after {
+  content:"";
+  position:absolute;
+  left:0;
+  width:100%;
+  height:1px;
+  background:currentColor;
+  transform-origin:center;
+  transition:transform 180ms ease,top 180ms ease;
+}
+body .site-nav__menu-mark::before{top:.18rem}
+body .site-nav__menu-mark::after{top:.55rem}
+body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::before{top:.37rem;transform:rotate(45deg)}
+body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::after{top:.37rem;transform:rotate(-45deg)}
+body[data-page] .site-nav__themes {
+  grid-column:4;
+  grid-row:1;
+  justify-self:end;
+  display:flex;
+  align-items:center;
+  margin:0;
+}
+body .site-index {
+  background:var(--paper);
+  color:var(--ink);
+  border:0;
+}
+body .site-index__inner {
+  width:calc(100% - 2 * var(--page));
+  max-width:var(--content);
+  margin-inline:auto;
+  min-height:100dvh;
+  padding:clamp(1.25rem,3vw,3rem) 0 clamp(2.25rem,4vw,4rem);
+}
+body .site-index__heading {
+  border-bottom:1px solid var(--line);
+}
+body .site-index__heading h2,body .site-index__close {
+  color:var(--ink);
+}
+body .site-index .site-index__body {
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(16rem,.6fr);
+  grid-template-rows:auto;
+  align-items:center;
+  min-height:calc(100dvh - 11rem);
+  gap:clamp(2rem,7vw,8rem);
+  padding:clamp(2rem,5vw,5rem) 0;
+}
+body .site-index__destinations{align-content:center}
+html body .site-index .site-index__link {
+  grid-template-columns:2.6rem minmax(0,1fr);
+  min-height:clamp(4.25rem,11vh,7.75rem);
+  padding:clamp(.7rem,1.8vw,1.5rem) clamp(.75rem,2vw,2rem);
+  border-bottom:1px solid var(--line);
+  color:var(--ink);
+  background:transparent;
+  text-decoration:none;
+}
+html body .site-index .site-index__link>span:last-child {
+  font:500 clamp(2.35rem,5vw,5.5rem)/.95 var(--display);
+  letter-spacing:-.055em;
+  text-transform:uppercase;
+}
+body .site-index__number{color:var(--muted);font:500 .72rem/1.5 var(--label)}
+body .site-index__link[aria-current="page"] .site-index__number {color:var(--accent)}
+html body .site-index .site-index__link:is(:hover,:focus-visible,[aria-current="page"]) {
+  color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 4%,var(--paper));
+}
+body .site-index .site-index__aside {
+  display:grid;
+  grid-template-columns:1fr;
+  align-self:center;
+  gap:clamp(1.5rem,3vw,3rem);
+  padding:0;
+  border:0;
+}
+body .site-index__contact a{color:var(--ink)}
+body .site-index .site-index__cv span{color:var(--muted)}
+body .site-index__preferences{display:grid;gap:1.25rem;min-width:0}
+body .site-index__preferences legend{color:var(--ink)}
+body .site-index__themes{background:var(--line)}
+body .site-index__themes button{background:var(--paper);color:var(--ink)}
+body .site-index__themes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+body .site-index__motion button{color:var(--ink)}
+body .site-index__motion button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:.35em}
+body .site-index__close:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+/* All microcopy rendered as a label is visually uppercase; body text and titles keep their case. */
+body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[class*="__meta"],[class*="__tag"],[class*="__number"],[class*="__state"],[class*="__discipline"],[class*="__count"],[class*="__period"],.site-nav__menu-btn,.site-index__link,.site-footer__links a,.site-footer__eyebrow) {
+  text-transform:uppercase;
+}
+/* Flat colour only: no spotlight gradient, dark image overlay, or decorative numbering. */
+body[data-page="home"] .service-stack__card::before{content:none;display:none;background:none}
+body[data-page="home"] .service-stack__card{background-image:none}
+body[data-page="home"] .service-journey a::before{content:none;display:none}
+/* Raised lettering inspired by For Living, using the original authored SVG.
+   Opposite directional light/shadow shape the relief without an external raster. */
+body .site-footer__signature::before {
+  opacity:1;
+  background:var(--paper);
+  filter:drop-shadow(-2px -2px 1px color-mix(in srgb,var(--paper) 62%,white))
+    drop-shadow(3px 3px 2px color-mix(in srgb,var(--ink) 29%,transparent));
+}
+body .site-footer__signature::after {
+  opacity:.68;
+  background:linear-gradient(135deg,
+    color-mix(in srgb,var(--paper) 76%,white),
+    color-mix(in srgb,var(--paper) 94%,var(--ink)) 43%,
+    color-mix(in srgb,var(--paper) 76%,var(--ink)) 76%,
+    color-mix(in srgb,var(--paper) 90%,var(--ink)));
+  filter:drop-shadow(-1px -1px 1px color-mix(in srgb,var(--paper) 70%,white))
+    drop-shadow(2px 2px 1px color-mix(in srgb,var(--ink) 20%,transparent));
+}
+body .site-footer__signature .site-footer__signature-canvas{
+  opacity:.14;
+  mix-blend-mode:soft-light;
+}
+:root[data-theme="dark"] body .site-footer__signature .site-footer__signature-canvas{opacity:.22;mix-blend-mode:screen}
+@media(max-width:47.999rem){
+  body .site-nav__inner{grid-template-columns:auto minmax(0,1fr) auto auto;gap:.45rem;width:calc(100% - 2 * var(--page))}
+  body .site-nav__identity strong{font-size:.68rem}
+  body .site-nav__identity span{display:none}
+  body .site-nav__menu-btn{min-width:4.5rem;min-height:2.75rem;gap:.45rem;padding:.45rem .5rem;font-size:.68rem}
+  body[data-page] .site-nav__themes{margin:0}
+  body .site-index .site-index__body{grid-template-columns:minmax(0,1fr);gap:2.5rem;align-items:start;min-height:0;padding:2rem 0}
+  html body .site-index .site-index__link{min-height:3.9rem;grid-template-columns:2rem minmax(0,1fr);padding:.7rem .35rem}
+  html body .site-index .site-index__link>span:last-child{font-size:clamp(2.1rem,9vw,3.7rem)}
+  body .site-index .site-index__aside{gap:1.5rem;padding-bottom:var(--safe-bottom)}
+  body .site-index__preferences{display:grid;gap:.7rem}
+}
+@media(max-width:23.5rem){
+  body .site-nav__identity{display:none}
+  body .site-nav__inner{grid-template-columns:auto 1fr auto auto}
+}
+@media(prefers-reduced-motion:reduce){
+  body .site-nav__menu-mark::before,body .site-nav__menu-mark::after{transition:none}
+}

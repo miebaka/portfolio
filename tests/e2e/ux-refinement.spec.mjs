@@ -17,6 +17,7 @@ test("What I Do uses full-bleed token-coloured cards without the green section",
   const section=page.locator("#what-i-do");
   const cards=section.locator(".service-stack__card");
   await expect(cards).toHaveCount(5);
+  await expect(section.locator(".service-journey__number,.service-stack__count")).toHaveCount(0);
   const sizes=await page.evaluate(()=>{
     const wrapper=document.querySelector("#what-i-do");
     const card=wrapper.querySelector(".service-stack__card");

@@ -1,4 +1,4 @@
-> **Historical companion study (superseded typeface choice).** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. As of November 20, 2026, the current headline/display typeface is **Geist Sans**, not Geist Serif. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
+> **Historical companion study (superseded typeface choice).** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. As of November 20, 2026, the current headline/display typeface is **Geist Sans**, not Geist Sans. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
 
 # Editorial design system — For Living study (20 November 2026)
 
@@ -11,7 +11,7 @@ The source's descriptive typography classes include `heading-style-h2_custom`, `
 ## Fonts — licensed, pinned, and traceable
 
 User-chosen fonts, not copied from For Living:
-- **Display (historical decision, now superseded):** Vercel Geist Serif variable, 100–900, `GeistSerifVF.woff2`. Current production display uses **Geist Sans**.
+- **Display (historical decision, now superseded):** Vercel Geist Sans variable, 100–900, `GeistSerifVF.woff2`. Current production display uses **Geist Sans**.
 - **Body:** Vercel Geist Sans variable, 100–900, `Geist-Variable.woff2`.
 - **Labels:** Vercel Geist Mono variable, 100–900, `GeistMono-Variable.woff2`.
 

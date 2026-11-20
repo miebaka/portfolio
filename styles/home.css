@@ -825,16 +825,6 @@ body[data-page="home"] .service-journey__image img{
 }
 
 
-body[data-page="home"] .service-journey a::before{
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: linear-gradient(180deg,transparent 7%,color-mix(in srgb,var(--editorial-stage) 15%,transparent) 35%,color-mix(in srgb,var(--editorial-stage) 96%,transparent) 100%);
-  pointer-events: none;
-}
-
-
 body[data-page="home"] .service-journey__discipline{
   display: block;
   margin-bottom: var(--s2);

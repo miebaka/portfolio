@@ -1,25 +1,30 @@
 import {test,expect} from "@playwright/test";
 
-test("Geist typography roles and reference-centered desktop navigation",async({page,isMobile})=>{
+test("Geist Sans typography roles and full-screen editorial Index are consistent on every viewport",async({page})=>{
  await page.goto("/index.html");
  const fonts=await page.evaluate(()=>{
   const get=selector=>getComputedStyle(document.querySelector(selector)).fontFamily;
-  return {display:get(".home-landing h1"),body:get(".home-profile__introduction p:not(.home-profile__lead)"),label:get(".site-nav__link")};
+  return {display:get(".home-landing h1"),body:get(".home-profile__introduction p:not(.home-profile__lead)"),label:get(".site-nav__menu-btn")};
  });
- expect(fonts.display).toContain("Geist Serif");
+ expect(fonts.display).toContain("Geist Sans");
  expect(fonts.body).toContain("Geist Sans");
  expect(fonts.label).toContain("Geist Mono");
- const navigation=page.locator(".site-nav__links");
- if(!isMobile){
-  await expect(navigation).toBeVisible();
-  const box=await navigation.boundingBox();
-  const viewport=page.viewportSize();
-  expect(Math.abs(box.x+box.width/2-viewport.width/2)).toBeLessThanOrEqual(3);
-  expect(box.height).toBeGreaterThanOrEqual(60);
-  expect(box.height).toBeLessThan(72);
- }else{
-  await expect(page.locator(".site-nav__menu-btn")).toBeVisible();
- }
+ const brand=page.getByRole("link",{name:/Miebaka Joshua, home/i});
+ await expect(brand).toBeVisible();
+ const menu=page.getByRole("button",{name:"Index",exact:true});
+ await expect(menu).toBeVisible();
+ await expect(page.locator(".site-nav__links")).toBeHidden();
+ const menuBox=await menu.boundingBox();
+ expect(menuBox.width).toBeGreaterThanOrEqual(44);
+ expect(menuBox.x + menuBox.width).toBeLessThanOrEqual(page.viewportSize().width);
+ await menu.click();
+ const dialog=page.getByRole("dialog",{name:"Index"});
+ await expect(dialog).toBeVisible();
+ const labels=dialog.locator(".site-index__link");
+ await expect(labels).toHaveCount(5);
+ for(const link of await labels.all())await expect(link).toHaveCSS("text-transform","uppercase");
+ await page.keyboard.press("Escape");
+ await expect(menu).toBeFocused();
 });
 
 test("One original embossed footer is present and theme-aware on key routes",async({page})=>{
@@ -73,4 +78,40 @@ test("404 recovery links remain valid from nested routes",async({page})=>{
  const paths=await page.locator(".hero--404__copy a").evaluateAll(links=>links.map(link=>new URL(link.getAttribute("href"),"https://example.com/essays/missing.html").pathname));
  expect(paths).toEqual(["/work.html","/index.html","/contact.html"]);
  await expect(page.locator('link[rel="stylesheet"]')).toHaveAttribute("href","/styles/main.css");
+});
+
+test("What I Do has no numbers or card gradients and all UI labels are uppercase",async({page})=>{
+ await page.goto("/index.html");
+ const section=page.locator("#what-i-do");
+ await expect(section.locator(".service-stack__card")).toHaveCount(5);
+ await expect(section.locator(".service-journey__number,.service-stack__count")).toHaveCount(0);
+ const visuals=await section.locator(".service-stack__card").evaluateAll(cards=>cards.map(card=>{
+   const cs=getComputedStyle(card),pseudo=getComputedStyle(card,"::before");
+   return {image:cs.backgroundImage,pseudo: pseudo.content,pseudoImage:pseudo.backgroundImage};
+ }));
+ for(const visual of visuals){
+  expect(visual.image).toBe("none");
+  expect(["none","normal"]).toContain(visual.pseudo);
+  expect(visual.pseudoImage).toBe("none");
+ }
+ for(const selector of [".site-footer__eyebrow",".home-project-list__meta",".service-stack__tag"]){
+  await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
+ }
+});
+test("Footer signature maintains two masked relief layers and visible shape",async({page})=>{
+ await page.goto("/index.html");
+ const relief=await page.locator(".site-footer__signature").evaluate(node=>({
+  front:getComputedStyle(node,"::before"),back:getComputedStyle(node,"::after")
+ })).catch(()=>null);
+ expect(relief).not.toBeNull();
+ const layers=await page.locator(".site-footer__signature").evaluate(node=>({
+  frontMask:getComputedStyle(node,"::before").maskImage,
+  frontFilter:getComputedStyle(node,"::before").filter,
+  backMask:getComputedStyle(node,"::after").maskImage,
+  backFilter:getComputedStyle(node,"::after").filter
+ }));
+ expect(layers.frontMask).toContain("miebaka-joshua-script-name.svg");
+ expect(layers.backMask).toContain("miebaka-joshua-script-name.svg");
+ expect(layers.frontFilter).toContain("drop-shadow");
+ expect(layers.backFilter).toContain("drop-shadow");
 });

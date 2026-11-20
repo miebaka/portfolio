@@ -1,7 +1,6 @@
 
 /* Fonts: official Geist 1.9.2 distribution, pinned and verified on unpkg.
    These external WOFF2 files are licensed under SIL Open Font License. */
-@font-face{font-family:"Geist Serif";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerif-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-SemiBold.woff2") format("woff2");font-weight:600 900;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
@@ -22,8 +21,8 @@ body[data-page="home"] .service-stack__card h3{font-family:var(--display);font-w
 :is(.hero__title,.article-hero__title,.case-hero__title,.project-archive__identity h2){font-family:var(--display);font-weight:400;line-height:1.09;letter-spacing:-.035em}
 .article-body{font-family:var(--body);font-size:clamp(1rem,1.1vw,1.125rem);line-height:1.65;max-width:68ch}
 .article-body :is(h2,h3){font-family:var(--display);font-weight:400;line-height:1.14;letter-spacing:-.035em}
-/* For Living centered navigation: floating 771/1905 (40.5%) width, 63px high.
-   Keep existing accessible Index, theme pull, real routes, and responsive fallback. */
+/* Original centered reference navbar retained only as legacy cascade; editorial-index.css
+   now owns the intentionally different, accessible fullscreen-index masthead. */
 @media(min-width:72rem){
  body .site-nav{height:5.5rem;min-height:5.5rem;background:var(--paper);border:0;box-shadow:none}
  body .site-nav__inner{height:5.5rem;width:calc(100% - 2 * var(--page));max-width:none;display:grid;grid-template-columns:minmax(8rem,1fr) minmax(0,48rem) minmax(8rem,1fr);gap:clamp(.75rem,1vw,1.5rem);align-items:center}
