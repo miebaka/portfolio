@@ -764,18 +764,6 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
 }
 
 
-body[data-page="home"] .home-landing::before{
-  content: "PORTFOLIO / 2026";
-  position: absolute;
-  z-index: 3;
-  top: clamp(1.5rem,3vw,3rem);
-  left: var(--page);
-  font: 600 var(--type-label-s)/1.2 var(--label);
-  letter-spacing: .16em;
-  color: var(--editorial-inverse);
-  pointer-events: none;
-}
-
 
 body[data-page="home"] :is(.swiss-selected,.home-profile,.home-capabilities--reference,.home-close){
   padding-block: clamp(6.5rem,12vw,12.5rem);
