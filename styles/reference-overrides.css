@@ -19,7 +19,7 @@ body[data-page="home"] .swiss-selected {
   background:var(--paper);color:var(--ink);overflow:clip;
 }
 body[data-page="home"] .swiss-selected .swiss-section-head {
-  margin:0 0 clamp(2rem,5vw,5rem);padding-block:1.25rem;border-top:1px solid var(--line)
+  margin:0 0 clamp(2rem,5vw,5rem);padding-block:1.25rem
 }
 body[data-page="home"] .swiss-selected .swiss-section-head h2 {
   font-size:var(--type-label-m);line-height:1.2;letter-spacing:.16em;
@@ -30,7 +30,7 @@ body[data-page="home"] .home-project-list .editorial-index {
   list-style:none;border:0;counter-reset:case-row;padding:0;margin:0
 }
 body[data-page="home"] .home-project-list .editorial-index__item {
-  position:relative;border:0;counter-increment:case-row
+  position:relative;counter-increment:case-row
 }
 body[data-page="home"] .home-project-list .editorial-index__row {
   display:grid;grid-template-columns:minmax(2.5rem,5vw) minmax(0,1fr);
