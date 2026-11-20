@@ -186,8 +186,5 @@ input{font-size:16px}
 .section--tight{padding-block:4.8rem}
 }
 
-/* Unified editorial design-token definitions. */
-:root {
-  --ed-columns:12;
-  --ed-gutter:clamp(.75rem,1.
-75rem}}
+@media(max-width:60rem){:root{--ed-columns:8}}
+@media(max-width:48rem){:root{--ed-columns:4;--ed-gutter:.75rem}}
