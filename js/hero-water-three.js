@@ -104,7 +104,7 @@ const shade=[
  " color*=vignette;",
  " gl_FragColor=vec4(1.-exp(-max(color,vec3(0.))),1.);",
  "}"
-].join("\\n");
+].join("\n");
 const SIZE=144;
 const ITERATIONS=10;
 function hex(v,fallback){let s=/^#[a-f0-9]{6}$/i.test(v||"")?v:fallback;return new Vector3(...[1,3,5].map(i=>parseInt(s.slice(i,i+2),16)/255));}
