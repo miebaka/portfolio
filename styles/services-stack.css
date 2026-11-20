@@ -561,6 +561,7 @@ body .site-footer__links a:is(:hover,:focus-visible){text-decoration:underline;t
   body .site-nav__inner{gap:clamp(.65rem,2.5vw,1.5rem)}
   body .site-nav__menu-btn{order:2}
   body .site-nav__themes{order:3}
+  body[data-page="home"] .home-profile{grid-template-columns:repeat(8,minmax(0,1fr))}
   body[data-page="home"] .home-profile__introduction{grid-column:1/6}
   body[data-page="home"] .home-profile__media{grid-column:6/9}
 }
