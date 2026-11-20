@@ -1,4 +1,4 @@
-> **Historical companion study.** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
+> **Historical companion study (superseded typeface choice).** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. As of November 20, 2026, the current headline/display typeface is **Geist Sans**, not Geist Serif. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
 
 # Editorial design system — For Living study (20 November 2026)
 
@@ -11,11 +11,11 @@ The source's descriptive typography classes include `heading-style-h2_custom`, `
 ## Fonts — licensed, pinned, and traceable
 
 User-chosen fonts, not copied from For Living:
-- **Display:** Vercel Geist Serif variable, 100–900, `GeistSerifVF.woff2`.
+- **Display (historical decision, now superseded):** Vercel Geist Serif variable, 100–900, `GeistSerifVF.woff2`. Current production display uses **Geist Sans**.
 - **Body:** Vercel Geist Sans variable, 100–900, `Geist-Variable.woff2`.
 - **Labels:** Vercel Geist Mono variable, 100–900, `GeistMono-Variable.woff2`.
 
-All three are pinned to the Vercel `geist@1.9.2` npm distribution and delivered through jsDelivr WOFF2. The original portfolio font files remain as inactive legacy assets until a separate archive cleanup. The Vercel family uses SIL Open Font License 1.1. The script-name SVG is the original artwork owned by this portfolio and has not been replaced.
+The historically evaluated three families were pinned to the Vercel `geist@1.9.2` npm distribution and delivered through jsDelivr WOFF2. The original portfolio font files remain as inactive legacy assets until a separate archive cleanup. The Vercel family uses SIL Open Font License 1.1. The script-name SVG is the original artwork owned by this portfolio and has not been replaced.
 
 ## Type scale
 
@@ -29,7 +29,7 @@ All three are pinned to the Vercel `geist@1.9.2` npm distribution and delivered 
 | Caption | `--ed-caption` | clamp(.75rem, .22vw + .73rem, .9rem) | Evidence metadata |
 | Overline | `--ed-overline` | clamp(.68rem, .3vw + .63rem, .8125rem) | Nav, numbering, labels |
 
-Typical display line-height .88–1.07, body 1.57–1.72; serif negative tracking only for large display sizes. All long-form text remains comfortably readable and labels remain monospaced.
+Typical display line-height .88–1.07, body 1.57–1.72; tight display tracking only where legibility permits. All long-form text remains comfortably readable and labels remain monospaced.
 
 ## Grid — adaptable magazine language
 
