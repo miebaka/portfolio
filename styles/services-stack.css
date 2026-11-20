@@ -415,6 +415,12 @@ body[data-page="explorations"] .hero__title{
   font:430 clamp(3.2rem,6vw,7rem)/1.04 var(--display);letter-spacing:-.06em;
   max-width:18ch;text-wrap:balance;
 }
+body[data-page="writing"] .hero__title{
+  max-width:none;
+  font-size:clamp(1.8rem,3.3vw,3.25rem);
+  line-height:1.06;
+  letter-spacing:-.04em;
+}
 body[data-page="writing"].article-page .article-hero__title{
   font:430 clamp(2.5rem,4.7vw,5.6rem)/1.03 var(--display);
   letter-spacing:-.045em;max-width:23ch;
@@ -725,11 +731,4 @@ body[data-page="home"]:not(.site-system-disabled) footer.site-footer {
 }
 body[data-page="home"]:not(.site-system-disabled) .site-footer__eyebrow{
   color:var(--ink);
-}
-body[data-page="writing"] .hero__title{
-  max-width:none;
-  width:100%;
-  font-size:clamp(1.8rem,3.3vw,3.25rem);
-  line-height:1.06;
-  letter-spacing:-.04em;
 }
