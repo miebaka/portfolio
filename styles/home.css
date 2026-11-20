@@ -170,9 +170,6 @@ body[data-page="home"] :is(.swiss-section-head, .disciplines-heading) h2 {
   font-stretch: 82%;
   letter-spacing: -0.055em;
 }
-body[data-page="home"] .home-project-list .editorial-index {
-  border-top: 1px solid var(--editorial-rule);
-}
 body[data-page="home"] .home-project-list .editorial-index__item {
   border-bottom: 1px solid var(--line);
 }
@@ -187,7 +184,6 @@ body[data-page="home"] .home-project-list .editorial-index__row {
   color: var(--ink);
   text-decoration: none;
   min-height: clamp(12rem,22vw,24rem);
-  border-bottom: 1px solid var(--editorial-rule);
   isolation: isolate;
 }
 body[data-page="home"] .home-project-list__identity {
@@ -276,7 +272,6 @@ body[data-page="home"] .home-profile {
   grid-template-columns: repeat(12, 1fr);
   align-items: start;
   gap: clamp(2rem,6vw,7rem);
-  border-top: 1px solid var(--editorial-rule);
 }
 body[data-page="home"] .home-profile__introduction {
   grid-column: 7/-1;
@@ -326,9 +321,6 @@ body[data-page="home"] .home-profile__portrait img {
   transition: transform 260ms var(--editorial-ease);
 }
 
-body[data-page="home"] .home-capabilities--reference {
-  border-top: 1px solid var(--editorial-rule);
-}
 body[data-page="home"] .service-journeys {
   display: grid;
   grid-template-columns: repeat(12,minmax(0,1fr));
@@ -417,8 +409,6 @@ body[data-page="home"] .journey h2 {
   max-width: 15ch;
 }
 body[data-page="home"] .client-strip {
-  border-top: 1px solid color-mix(in srgb,var(--editorial-inverse) 25%,transparent);
-  border-bottom: 1px solid color-mix(in srgb,var(--editorial-inverse) 25%,transparent);
   margin-top: clamp(2rem,4vw,4rem);
 }
 body[data-page="home"] .client-strip__viewport {
@@ -473,7 +463,6 @@ body[data-page="home"] .home-close {
   grid-template-columns: repeat(12, 1fr);
   gap: var(--grid-gap);
   align-content: end;
-  border-top: 1px solid var(--editorial-rule);
   min-height: min(80svh,60rem);
 }
 body[data-page="home"] .home-close h2 {
@@ -551,7 +540,6 @@ body[data-page="home"] .home-close__email {
     display: flex;
     justify-content: space-between;
     padding-top: 1rem;
-    border-top: 1px solid color-mix(in srgb, var(--ref-paper) 35%, transparent);
   }
   body[data-page="home"] :is(.swiss-selected, .home-profile, .home-capabilities--reference, .home-close) {
     padding-block: 6rem;
@@ -771,7 +759,6 @@ body[data-page="home"] :is(.swiss-selected,.home-profile,.home-capabilities--ref
 
 
 body[data-page="home"] .swiss-section-head{
-  border-top: 1px solid var(--editorial-rule);
   padding-top: var(--s3);
   margin-bottom: clamp(3rem,7vw,8rem);
 }
