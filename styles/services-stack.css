@@ -358,41 +358,7 @@ body:not(.site-system-disabled) .site-footer__signature {
 /* Living Editorial · Geist / FOR LIVING study · 2026-11
    Site-wide scale and a 12 / 8 / 4-column magazine grid with strong baseline
    rhythm. All the styling below uses the portfolio's semantic colour tokens. */
-:root {
-  --ed-columns:12;
-  --ed-gutter:clamp(.75rem,1.65vw,1.65rem);
-  --ed-margin:clamp(1rem,4.5vw,5.5rem);
-  --ed-max:104rem;
-  --ed-baseline:.5rem;
-  --ed-measure:66ch;
-  --ed-overline:clamp(.68rem,.3vw + .63rem,.8125rem);
-  --ed-caption:clamp(.75rem,.22vw + .73rem,.9rem);
-  --ed-body:clamp(1.0625rem,.35vw + 1rem,1.27rem);
-  --ed-lead:clamp(1.3rem,1.1vw + 1.1rem,2.25rem);
-  --ed-subhead:clamp(2rem,2.7vw + 1.2rem,4.25rem);
-  --ed-headline:clamp(3.6rem,5.9vw,8.75rem);
-  --ed-cover:clamp(4.75rem,9.2vw,12.5rem);
-  --font-display:"Geist Serif",Georgia,serif;
-  --font-body:"Geist Sans",system-ui,sans-serif;
-  --font-label:"Geist Mono",ui-monospace,monospace;
-  --display:var(--font-display);
-  --body:var(--font-body);
-  --label:var(--font-label);
-  --type-label-s:var(--ed-overline);
-  --type-label-m:var(--ed-caption);
-  --type-body-m:var(--ed-body);
-  --type-body-l:var(--ed-lead);
-  --type-heading-s:var(--ed-subhead);
-  --type-heading-l:var(--ed-headline);
-  --type-display-s:var(--ed-subhead);
-  --type-display-m:var(--ed-headline);
-  --type-display-l:var(--ed-headline);
-  --type-display-xxl:var(--ed-cover);
-  --grid-gap:var(--ed-gutter);
-  --page:var(--ed-margin);
-  --content:var(--ed-max);
-  --editorial-rule:var(--line);
-}
+
 html {font-kerning:normal;font-optical-sizing:auto}
 body {font:400 var(--ed-body)/1.57 var(--body);letter-spacing:-.012em}
 :where(h1,h2,h3,h4){font-family:var(--display);font-optical-sizing:auto;font-weight:430;letter-spacing:-.052em;text-wrap:balance}
@@ -590,7 +556,7 @@ body .site-footer__links a:is(:hover,:focus-visible){text-decoration:underline;t
   body .site-nav__link{padding-inline:.5rem}
 }
 @media(max-width:60rem){
-  :root{--ed-columns:8}
+  
   body .site-nav__links{display:none}
   body .site-nav__inner{gap:clamp(.65rem,2.5vw,1.5rem)}
   body .site-nav__menu-btn{order:2}
@@ -599,7 +565,7 @@ body .site-footer__links a:is(:hover,:focus-visible){text-decoration:underline;t
   body[data-page="home"] .home-profile__media{grid-column:6/9}
 }
 @media(max-width:48rem){
-  :root{--ed-columns:4;--ed-gutter:.75rem}
+  
   body .site-nav{top:max(8px,env(safe-area-inset-top));max-width:calc(100vw - 1rem)}
   body .site-nav__inner{height:3.4rem;max-width:calc(100vw - 1rem);gap:.6rem;padding-inline:.75rem}
   body .site-nav__brand,body .nav-logo{width:1.75rem;height:1.75rem;min-width:1.75rem;min-height:1.75rem}
