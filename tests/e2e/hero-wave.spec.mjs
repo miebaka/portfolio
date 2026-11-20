@@ -74,3 +74,26 @@ test("light-front caustics show clear overhead daylight and restrained moonlight
   expect(luminance(sunlight)).toBeGreaterThan(luminance(moonlight) + 15);
   await expect(wave.locator("canvas")).toHaveCount(1);
 });
+
+test("privacy-restricted mobile renderer works without the shader-test bypass", async ({ page }) => {
+  // Chromium is instrumented to expose the generic GPU identity common on
+  // Safari. shader-perf opts automation in but does NOT bypass GPU detection.
+  await page.addInitScript(() => {
+    const context = WebGL2RenderingContext.prototype;
+    const getExtension = context.getExtension;
+    const getParameter = context.getParameter;
+    context.getExtension = function (name) {
+      if (name === "WEBGL_debug_renderer_info") return null;
+      return getExtension.call(this, name);
+    };
+    context.getParameter = function (name) {
+      if (name === this.RENDERER) return "WebKit WebGL";
+      return getParameter.call(this, name);
+    };
+  });
+  await page.goto("/?shader-perf=1&shader-static=1");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveClass(/is-ready/);
+  await expect(wave.locator("canvas")).toHaveCount(1);
+  await expect(wave).toHaveAttribute("data-caustics", "refracted-lightfront");
+});
