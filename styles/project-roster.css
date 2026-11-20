@@ -49,7 +49,7 @@ body[data-page="home"] .home-project-list .editorial-index__row {
   width: 100%;
   height: clamp(9rem, 13vw, 12rem);
   min-height: 0;
-  padding: 0;
+  padding: 1rem 0;
   overflow: hidden;
   isolation: isolate;
   background: var(--roster-bg);
