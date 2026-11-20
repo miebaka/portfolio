@@ -5,7 +5,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const names = ["foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css"];
+const canonicalNames = ["foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css"];
+const names = [...canonicalNames, "motion-language.css"];
 const entries = await Promise.all(names.map(async name => [name, await readFile(join(root, "styles", name), "utf8")]));
 const css = Object.fromEntries(entries);
 const all = entries.map(([name, source]) => `/* ${name} */\n${source}`).join("\n");
@@ -133,7 +134,7 @@ for (const rule of leafRules(css["pages-v4.css"])) for (const selector of splitS
 }
 
 const imports = [...(await readFile(join(root, "styles/main.css"), "utf8")).matchAll(/@import\s+(?:url\()?['"]([^'"]+)['"]\)?(?:\s+layer\([^)]*\))?;/g)].map(match => match[1]);
-assert.deepEqual(imports, [...names, "reference-overrides.css", "services-stack.css", "forliving-editorial.css"], "main.css must import the canonical foundations then authored page extensions in order");
+assert.deepEqual(imports, [...canonicalNames, "reference-overrides.css", "services-stack.css", "forliving-editorial.css", "motion-language.css"], "main.css must import the canonical foundations then authored page extensions in order");
 reject(entries.some(([, source]) => /@import\s/.test(source)), "historical/nested CSS imports are prohibited");
 
 const requiredTokens = ["--motion-press:120ms", "--motion-hover:160ms", "--motion-panel-in:220ms", "--motion-panel-out:160ms", "--ease-out-ui:cubic-bezier(.25,1,.5,1)", "--ease-in-out-ui:cubic-bezier(.65,0,.35,1)"];
