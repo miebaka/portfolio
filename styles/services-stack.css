@@ -715,3 +715,21 @@ body[data-page="experiments"] .experiments-static__grid>*:nth-child(5n + 2){grid
  body[data-page="experiments"] .experiments-static__grid>*,
  body[data-page="experiments"] .experiments-static__grid>*:nth-child(n){grid-column:1/-1}
 }
+
+
+/* Shared footer must never inherit the previous homepage black surface. */
+body[data-page="home"]:not(.site-system-disabled) .site-footer,
+body[data-page="home"]:not(.site-system-disabled) footer.site-footer {
+  background-color:var(--paper);
+  color:var(--ink);
+}
+body[data-page="home"]:not(.site-system-disabled) .site-footer__eyebrow{
+  color:var(--ink);
+}
+body[data-page="writing"] .hero__title{
+  max-width:none;
+  width:100%;
+  font-size:clamp(1.8rem,3.3vw,3.25rem);
+  line-height:1.06;
+  letter-spacing:-.04em;
+}
