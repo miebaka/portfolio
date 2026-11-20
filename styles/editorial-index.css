@@ -219,3 +219,17 @@ body .site-footer__signature .site-footer__signature-canvas{
 @media(prefers-reduced-motion:reduce){
   body .site-nav__menu-mark::before,body .site-nav__menu-mark::after{transition:none}
 }
+
+/* The prerendered masthead is the no-JavaScript navigation. The fullscreen
+   Index only exists after enhancement, so do not conceal real links in no-JS. */
+html.no-js body .site-nav {height:auto;min-height:5.25rem}
+html.no-js body .site-nav__inner {height:auto;min-height:5.25rem;grid-template-columns:minmax(0,1fr);padding-block:.85rem}
+html.no-js body .site-nav__brand {grid-column:1;grid-row:1}
+html.no-js body .site-nav__links {
+  display:flex!important;grid-column:1/-1;grid-row:2;position:static;
+  width:100%;min-height:2.75rem;padding:.5rem 0;gap:.75rem 1.25rem;
+  flex-wrap:wrap;justify-content:flex-start;opacity:1;visibility:visible;
+  pointer-events:auto;transform:none;box-shadow:none;border:0;background:transparent;
+}
+html.no-js body .site-nav__links .site-nav__link {color:var(--ink);min-height:2.75rem;opacity:1;padding:.5rem .4rem}
+html.no-js body .site-nav__menu-btn,html.no-js body .site-nav__themes {display:none!important}
