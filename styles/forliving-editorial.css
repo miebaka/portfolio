@@ -207,3 +207,16 @@ body .site-footer__bottom{
 /* Consume the 8px micro-row rhythm and calculated module width explicitly. */
 .editorial-asymmetric{grid-auto-rows:minmax(var(--grid-row),auto)}
 body[data-page="home"] .home-profile__introduction{max-width:min(68ch,calc(7 * var(--grid-column) + 6 * var(--grid-gutter)))}
+
+
+/* Override the older high-specificity site-nav variants. Without this
+   rule light-mode nav text becomes dark-on-dark (axe ratio ~1.7:1). */
+@media(min-width:72rem){
+ body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link,
+ body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link:visited{
+  color:var(--paper);opacity:1;background:transparent
+ }
+ body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link:is(:hover,:focus-visible,[aria-current="page"]){
+  color:var(--paper);opacity:1;background:color-mix(in srgb,var(--paper) 15%,transparent)
+ }
+}
