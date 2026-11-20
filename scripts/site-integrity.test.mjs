@@ -278,7 +278,11 @@ test("hero water ships a bounded Three.js GPU fluid simulation with graceful fal
     /const wave=/, /const shade=/, /PRESSURE|ITERATIONS/,
     /setRenderTarget/, /renderer\.render/, /prefers-reduced-motion: reduce/,
     /IntersectionObserver/, /ResizeObserver/, /renderer\.dispose/,
-    /transmission\.value=dark\?\.15:1\.5/,
+    /const causticsVertex=/, /const causticsFragment=/,
+    /dFdx\(vSource\)/, /refract\(incoming, n, 1\.0 \/ 1\.333\)/,
+    /host\.dataset\.caustics="refracted-lightfront"/,
+    /screen\.uniforms\.transmission\.value=dark\?/,
+  
   ]) assert.match(island, contract);
   assert.match(source, /shader-static/);
   assert.match(source, /prefers-reduced-motion: reduce/);
