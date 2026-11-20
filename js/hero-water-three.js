@@ -155,9 +155,9 @@ export function mountHeroWave(host,initialState){
  const request=()=>{if(!destroyed&&!frame&&visible&&!document.hidden)frame=requestAnimationFrame(tick);};
  function update(next){
   state={...state,...next};const dark=state.theme==="dark",colors=state.colors||["#07112b","#002080","#b1c5ff"];
-  screen.uniforms.floorColor.value.copy(dark?hex(colors[0],"#07112b"):new Vector3(.02,.14,.28));
-  screen.uniforms.deepColor.value.copy(dark?hex(colors[1],"#002080"):new Vector3(.012,.06,.16));
-  screen.uniforms.lightColor.value.copy(dark?hex(colors[2],"#b1c5ff"):new Vector3(.64,.88,1.));
+  screen.uniforms.floorColor.value.copy(dark?new Vector3(.009,.022,.05):new Vector3(.028,.24,.35));
+  screen.uniforms.deepColor.value.copy(dark?new Vector3(.005,.013,.034):new Vector3(.008,.14,.24));
+  screen.uniforms.lightColor.value.copy(dark?new Vector3(.4,.57,.78):new Vector3(1.,.97,.88));
   // Midday: high sun, turquoise transmission, warm-white focused highlights.
   // Full moon: low-energy cold illumination and isolated silver glints.
   screen.uniforms.transmission.value=dark?.15:1.5;
