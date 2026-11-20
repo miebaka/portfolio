@@ -22,7 +22,19 @@ export function renderFooter({ base = "" } = {}) {
   const socials = siteConfig.socials.filter(item => ["Behance", "LinkedIn", "Instagram", "X"].includes(item.label)).map(item =>
     `<a href="${escapeHTML(item.href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(item.label)}</a>`
   ).join("");
-  return `<footer class="site-footer" data-mount="footer"><div class="site-footer__panel"><nav class="site-footer__groups" aria-label="Footer"><div class="site-footer__group site-footer__explore"><div class="site-footer__links" aria-label="Explore">${explore}</div></div><div class="site-footer__group site-footer__socials"><div class="site-footer__links" aria-label="Social">${socials}</div></div></nav></div><div class="site-footer__signature" aria-hidden="true"></div></footer>`;
+  const subject = "mailto:" + siteConfig.email + "?subject=Let%27s%20work%20together";
+  return `<footer class="site-footer" data-mount="footer">
+    <div class="site-footer__top"><p class="site-footer__eyebrow">Lagos, Nigeria · Working worldwide</p><a class="site-footer__start" href="${escapeHTML(subject)}">Start a project <span aria-hidden="true">↗</span></a></div>
+    <div class="site-footer__panel">
+      <p class="site-footer__statement">Ideas made unmistakable.<span>Design made to last.</span></p>
+      <nav class="site-footer__groups" aria-label="Footer">
+        <div class="site-footer__group site-footer__explore"><div class="site-footer__links" aria-label="Explore">${explore}</div></div>
+        <div class="site-footer__group site-footer__socials"><div class="site-footer__links" aria-label="Social">${socials}</div></div>
+      </nav>
+    </div>
+    <div class="site-footer__signature" aria-hidden="true"></div>
+    <div class="site-footer__bottom"><span>Miebaka Joshua</span><span>Independent creative practice</span></div>
+  </footer>`;
 }
 
 export function normalizeHead(source, { canonicalUrl, base = "" } = {}) {
