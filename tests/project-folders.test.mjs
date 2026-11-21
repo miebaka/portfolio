@@ -48,3 +48,27 @@ test("Work page never loads retired drawer or WebGL components", () => {
   assert.match(css, /prefers-reduced-motion: reduce/);
   assert.match(css, /pointer: coarse/);
 });
+
+test("paper rack retains direct links and labels all three real files", () => {
+  const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
+  const fallback = readFileSync(resolve("work.html"), "utf8");
+  for (const markup of [html, fallback]) {
+    assert.equal((markup.match(/class="project-folder__spine"/g) || []).length, 3);
+    assert.equal((markup.match(/class="project-folder__serial"/g) || []).length, 3);
+    assert.equal((markup.match(/class="project-folder__index-row"/g) || []).length, 15);
+    for (const number of ["01", "02", "03"]) {
+      assert.match(markup, new RegExp("FILE " + number));
+    }
+    assert.doesNotMatch(markup, /demo.*would open|TEDx RSU.*Rise.*Hisa Nigeria/i);
+  }
+});
+
+test("folder surface keeps one target per case and static, non-intercepting papers", () => {
+  const css = readFileSync(resolve("styles/project-folders.css"), "utf8");
+  assert.match(css, /\.project-folder__paper\s*\{/);
+  assert.match(css, /pointer-events:\s*none/);
+  assert.match(css, /\.project-folder__link:focus-visible/);
+  assert.match(css, /\.project-folder:focus-within/);
+  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
+});
