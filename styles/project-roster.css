@@ -7,6 +7,7 @@ body[data-page="home"] .swiss-selected {
   --roster-bg: var(--ref-midnight);
   --roster-fg: var(--ref-paper);
   --roster-rest: var(--ref-blue-80);
+
   background: var(--roster-bg);
   color: var(--roster-fg);
   padding-block: clamp(5rem, 9vw, 9rem);

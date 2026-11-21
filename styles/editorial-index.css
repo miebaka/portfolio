@@ -169,14 +169,17 @@ body .site-index__themes button[aria-pressed="true"]{background:var(--ink);color
 body .site-index__motion button{color:var(--ink)}
 body .site-index__motion button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:.35em}
 body .site-index__close:focus-visible{outline:2px solid var(--focus);outline-offset:4px}
+
 /* All microcopy rendered as a label is visually uppercase; body text and titles keep their case. */
 body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[class*="__meta"],[class*="__tag"],[class*="__number"],[class*="__state"],[class*="__discipline"],[class*="__count"],[class*="__period"],.site-nav__menu-btn,.site-index__link,.site-footer__links a,.site-footer__eyebrow) {
   text-transform:uppercase;
 }
+
 /* Flat colour only: no spotlight gradient, dark image overlay, or decorative numbering. */
 body[data-page="home"] .service-stack__card::before{content:none;display:none;background:none}
 body[data-page="home"] .service-stack__card{background-image:none}
 body[data-page="home"] .service-journey a::before{content:none;display:none}
+
 /* Raised lettering inspired by For Living, using the original authored SVG.
    Opposite directional light/shadow shape the relief without an external raster. */
 body .site-footer__signature::before {

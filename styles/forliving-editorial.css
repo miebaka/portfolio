@@ -5,6 +5,7 @@
 @font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-mono/GeistMono-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+
 /* Responsive transcription: For Living 81px/54px/18px at a 1905px capture;
    1.1 display leading and 1.5 body leading, adapted to each viewport. */
 
@@ -21,6 +22,7 @@ body[data-page="home"] .service-stack__card h3{font-family:var(--display);font-w
 :is(.hero__title,.article-hero__title,.case-hero__title,.project-archive__identity h2){font-family:var(--display);font-weight:var(--type-weight-regular);line-height:var(--type-leading-heading);letter-spacing:var(--type-tracking-heading)}
 .article-body{font-family:var(--body);font-size:var(--type-body-l);line-height:var(--type-leading-reading);max-width:68ch}
 .article-body :is(h2,h3){font-family:var(--display);font-weight:var(--type-weight-regular);line-height:var(--type-leading-lead);letter-spacing:var(--type-tracking-heading)}
+
 /* Original centered reference navbar retained only as legacy cascade; editorial-index.css
    now owns the intentionally different, accessible fullscreen-index masthead. */
 @media(min-width:72rem){
@@ -44,6 +46,7 @@ body[data-page="home"] .service-stack__card h3{font-family:var(--display);font-w
  body .site-nav__links{display:none}
  body .site-nav__menu-btn{display:inline-flex}
 }
+
 /* Twelve-column editorial grid: 12/8/4 columns; asymmetrical art direction.
    Empty spans are deliberate, never create inaccessible DOM order. */
 .editorial-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter)}
@@ -128,7 +131,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__panel{
 body .site-footer__panel>*{pointer-events:auto}
 body .site-footer__statement{
  grid-column:1;max-width:14ch;margin:0;
- font:var(--type-weight-regular) var(--type-heading-xl)/var(--type-leading-heading) var(--display);letter-spacing:-.045em
+ font:var(--type-weight-regular) var(--type-heading-xl)/var(--type-leading-heading) var(--display);letter-spacing:var(--type-tracking-heading)
 }
 body .site-footer__statement span{display:block}
 body .site-footer__groups{
@@ -150,6 +153,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature{
  margin:clamp(.25rem,1vw,1.25rem) auto 0;width:min(100%,calc(var(--content) + 2 * var(--page)));
  height:clamp(16rem,31vw,32rem);overflow:hidden;background:transparent;
  color:var(--ink);--footer-signature-active:var(--accent);
+
  pointer-events:auto;cursor:crosshair
 }
 body .site-footer__signature::before,body .site-footer__signature::after{
@@ -185,7 +189,7 @@ body .site-footer__bottom{
  margin:0 auto;display:flex;justify-content:space-between;gap:1rem;
  padding:1.25rem 0 calc(1.25rem + var(--safe-bottom));
  font:var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-body) var(--label);color:var(--muted);
- text-transform:uppercase;letter-spacing:.035em
+ text-transform:uppercase;letter-spacing:var(--type-tracking-ui)
 }
 @media(max-width:47.999rem){
  body .site-footer__top{align-items:flex-start;flex-direction:column}

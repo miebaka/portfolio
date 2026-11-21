@@ -29,7 +29,7 @@ body[data-page="home"] .service-stack__card {
   min-height:clamp(23rem,58vh,39rem);border-radius:clamp(.7rem,1.5vw,1.5rem);
   padding:clamp(1.5rem,3.2vw,3.7rem);overflow:hidden;
   color:#0e171a;background:#c3d5fa;
-  box-shadow:0 -.7rem 0 -.28rem rgba(244,242,233,.44),0 .65rem 1.6rem rgba(3,16,14,.08);
+  box-shadow:0 -.7rem 0 -.28rem rgb(244 242 233 / .44),0 .65rem 1.6rem rgb(3 16 14 / .08);
 }
 body[data-page="home"] .service-stack__item:nth-child(2) .service-stack__card {background:#fa493d;color:#131414}
 body[data-page="home"] .service-stack__item:nth-child(3) .service-stack__card {background:#f7a7de;color:#221423}
