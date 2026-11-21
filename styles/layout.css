@@ -1,26 +1,21 @@
 .container {
   width: min(calc(100% - 2 * var(--page)), var(--content));
-  margin-inline: auto;
-}
+  margin-inline: auto;}
 
 .grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--grid-gap);
-}
+  gap: var(--grid-gap);}
 
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, 1.5rem);
-}
+  gap: var(--stack-gap, 1.5rem);}
 
 .section {
-  padding-block: var(--section-padding);
-}
+  padding-block: var(--section-padding);}
 
 @media (max-width: 48rem) {
   .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+    grid-template-columns: repeat(4, minmax(0, 1fr));}
 }

@@ -44,15 +44,10 @@ test("approved visual contract remains intact", async () => {
     assert.ok(!compactCss.includes(pattern), `forbidden CSS: ${pattern}`);
   }
 
-  // Material Symbols is an icon font. The authored typography assigns one
-  // family to each semantic role: Geist Sans for display and body, Geist Mono for labels.
-  const roleFonts = ["display", "body", "label"].map(role => {
-    const familyMatch = css.match(new RegExp(`--type-family-${role}:\\s*"([^"]+)"`));
-    assert.ok(familyMatch, `missing --type-family-${role} role`);
-    return familyMatch[1];
-  });
-  assert.deepEqual(roleFonts, ["Geist Sans", "Geist Sans", "Geist Mono"]);
-  assert.equal(new Set(roleFonts).size, 2);
+  // Fonts and their roles live only in styles/tokens.css.
+  assert.match(css, /--font-sans:\s*"Geist Sans"/);
+  assert.match(css, /--font-mono:\s*"Geist Mono"/);
+  assert.doesNotMatch(css, /--(?:font-display|font-body|font-label|font-size-[\w-]+|editorial-display)\s*:/);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);
     assert.ok(family, "@font-face has no family");
@@ -80,8 +75,13 @@ test("approved visual contract remains intact", async () => {
     if (folderPage)
       assert.match(stylesheets[1][0], /href=["']styles\/project-folders\.css["']/i, path);
   }
-  assert.match(css, /body \.site-footer__signature::before\{display:block/);
-  assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
+  // Assert exact authored footer selectors before build minification normalizes syntax.
+  const mainSource = await readFile(join(root, "styles", "main.css"), "utf8");
+  const sourceNames = [...mainSource.matchAll(/@import url\("([^"]+)"\)/g)].map(match => match[1]);
+  const authoredCss = (await Promise.all(sourceNames.map(name =>
+    readFile(join(root, "styles", name), "utf8")))).join("\n");
+  assert.match(authoredCss, /body \.site-footer__signature::before\{display:block/);
+  assert.match(authoredCss, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
   assert.match(css, /\.site-footer__signature-canvas/);
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__signature/);

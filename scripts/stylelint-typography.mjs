@@ -1,43 +1,17 @@
 import stylelint from "stylelint";
-import { readFileSync } from "node:fs";
 
-/** Enforce the sole source of typography metrics: styles/tokens.css. */
+/** All typography properties must live in styles/tokens.css, never page CSS. */
 export const ruleName = "portfolio/typography-tokens";
 const messages = stylelint.utils.ruleMessages(ruleName, {
-  rejected: (property, value) => "Use a sanctioned typography token for " + property + ": " + value
+  rejected: (property, value) => `Typography belongs in styles/tokens.css: ${property}: ${value}`,
 });
-const keywords = /^(inherit|initial|unset|revert|revert-layer|normal)$/i;
-const retiredNames = /^--(?:font-size-|font-(?:display|body|label)$|editorial-display|display$|body$|label$|signature$|icon$)/;
-/* Read actual declared tokens so invented names and wrong-role references cannot pass lint. */
-const definedTypeTokens = new Set(
-  [...readFileSync(new URL("../styles/tokens.css", import.meta.url), "utf8")
-    .matchAll(/^\s*(--type-[\w-]+)\s*:/gm)].map(match => match[1])
-);
-const valid = {
-  "font-size": /^var\(--type-(?:label|nav|input|body|heading|display|inline-mark)(?:-[\w-]+)?\)$/,
-  "font-weight": /^var\(--type-weight-(regular|semibold)\)$/,
-  "font-family": /^var\(--type-family-(display|body|label|icon)\)$/,
-  "line-height": /^var\(--type-leading-[\w-]+\)$/,
-  "letter-spacing": /^var\(--type-tracking-[\w-]+\)$/,
-  "font-stretch": /^normal$/,
-  font: /^var\(--type-weight-(regular|semibold)\) var\(--type-(?:label|nav|input|body|heading|display|inline-mark)(?:-[\w-]+)?\)\/var\(--type-leading-[\w-]+\) var\(--type-family-(display|body|label|icon)\)$/
-};
-
+const typographyProperty = /^(?:font(?:-[\w-]+)?|line-height|letter-spacing|word-spacing|text-(?:align|transform|wrap|rendering|indent|overflow|shadow|decoration(?:-[\w-]+)?|underline-[\w-]+|size-adjust|emphasis(?:-[\w-]+)?)|white-space|word-break|overflow-wrap|hyphens|tab-size|-webkit-(?:font-[\w-]+|text-[\w-]+))$/;
 export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
   if (!enabled || /(?:^|[/\\])tokens\.css$/.test(root.source.input.file ?? "")) return;
   root.walkDecls(decl => {
-    if (decl.parent.type === "atrule" && decl.parent.name === "font-face") return;
-    const property = decl.prop.toLowerCase();
-    if (property.startsWith("--type-") || retiredNames.test(property)) {
-      stylelint.utils.report({ ruleName, result, node: decl, message: messages.rejected(property, decl.value.trim()) });
-      return;
-    }
-    const allowed = valid[property];
-    if (!allowed) return;
-    const value = decl.value.trim();
-    const references = [...value.matchAll(/var\((--type-[\w-]+)\)/g)];
-    const referencesExist = references.every(match => definedTypeTokens.has(match[1]));
-    if (keywords.test(value) || (allowed.test(value) && referencesExist)) return;
-    stylelint.utils.report({ruleName, result, node: decl, message: messages.rejected(property, value)});
+    if (!typographyProperty.test(decl.prop.toLowerCase())) return;
+    stylelint.utils.report({
+      ruleName, result, node: decl, message: messages.rejected(decl.prop, decl.value.trim()),
+    });
   });
 });

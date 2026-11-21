@@ -133,7 +133,8 @@ All opt-in and degrade gracefully — the editorial base never depends on them:
 
 ## Customise
 
-- **Colour, type families, the fluid type scale, spacing, motion and layout tokens:** `styles/foundations.css`.
+- **Typography:** all font faces, families, type sizes and text styling live exclusively in `styles/tokens.css`.
+- **Colour, spacing, motion and layout tokens:** `styles/foundations.css`.
 - **Name, email, socials, availability, projects, case studies:** `data/site.js`.
 
 ## Contact form

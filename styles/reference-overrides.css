@@ -1,12 +1,4 @@
 
-/* Shared typography and navigation overrides. Selected Work owns its styles
-   exclusively in project-roster.css to avoid competing legacy rules. */
-:where(h1,h2,h3,h4,.editorial-index__title,.site-index__link>span:last-child,
-  .service-journey h3,.home-profile__lead,.home-close h2) {text-transform:uppercase}
-:where(label,legend,button,.meta,.site-nav__link,.site-nav__menu-btn,
-  .site-index__number,.project-archive__meta,
-  .service-journey__number,.service-journey__discipline,
-  .swiss-section-head>p,.client-strip__fallback-label) {text-transform:uppercase}
 body[data-page] .site-nav__themes {display:flex;align-items:center;gap:.4rem}
 body[data-page] .theme-cord svg {display:block!important;width:3rem;min-width:3rem;height:4.1rem;overflow:visible}
 body[data-page] .theme-cord__prompt {display:inline!important}

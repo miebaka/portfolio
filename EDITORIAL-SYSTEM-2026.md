@@ -1,5 +1,3 @@
-> Historical reference study — **not an active typography system**. For all implemented type sizes, weights, families, line heights, and tracking, use [docs/TYPOGRAPHY-SYSTEM.md](docs/TYPOGRAPHY-SYSTEM.md) and its single source `styles/tokens.css`. Do not apply older reference measurements as CSS tokens.
-
 # EDITORIAL DESIGN SYSTEM — NOVEMBER 2026
 
 ## Source study
@@ -20,9 +18,14 @@ Reference centered nav measured 771.02 × 63px on a 1905px viewport; its centere
 
 The original reference footer is about 742px tall on the measured desktop and uses a large embossed SVG (directional drop shadows and opposing inner highlights). We reproduce the *arrangement, visual depth, and typography hierarchy* using Miebaka's own signature, links, and brand content, not the other company's artwork.
 
-## Typography authority
+## Type roles
 
-The preceding table is a historical measurement of an external site, not a second scale for this portfolio. All typography must consume `--type-*` tokens from `styles/tokens.css` per `docs/TYPOGRAPHY-SYSTEM.md`.
+- **Headline/display:** Geist Sans, 400. Use the shared sans-serif family with responsive display sizes, disciplined leading, and tracking rather than a separate serif face.
+- **Body:** Geist Sans, regular 400 and semibold 600, 1.5–1.65 line height.
+- **Metadata/labels/navigation:** Geist Mono regular 400 and semibold 600, 0.69–0.875rem, uppercase where appropriate.
+- Fonts sourced from Vercel's official `geist@1.9.2` distribution, using pinned WOFF2 URLs. The intended complete font family roles always include accessible system fallbacks.
+- Typography is driven by semantic tokens, not multiple per-page hard-coded font families.
+- Preserved uppercase display behavior from the existing system; no forced uppercase for essays or normal body paragraphs.
 
 ## Grid specification
 

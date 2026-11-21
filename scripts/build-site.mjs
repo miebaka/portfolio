@@ -160,7 +160,10 @@ for (const project of caseProjects) {
 }
 
 await mkdir(join(output, "styles"), { recursive: true });
-await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
+const cssBundle = await bundleCss(join(root, "styles/main.css"));
+const { transform } = await import("esbuild");
+const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify: true, legalComments: "inline" });
+await writeFile(join(output, "styles/main.css"), minifiedCss);
 await ensureCopy(join(root, "styles/project-folders.css"), join(output, "styles/project-folders.css"));
 await copyJsGraph("js/main.js");
 await copyJsGraph("js/core/case-arrival.js"); // Published case-study arrival; no global JS cost.

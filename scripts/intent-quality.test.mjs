@@ -39,7 +39,7 @@ test("project introductions expose specific propositions rather than generic lab
   }
 });
 
-test("every published case shows the five approved evidence chapters", () => {
+test("every published case exposes the approved five-part evidence narrative", () => {
   const published = Object.values(SITE.caseStudies).filter(study => study.status === "published");
   assert.ok(published.length > 0);
   for (const study of published) {

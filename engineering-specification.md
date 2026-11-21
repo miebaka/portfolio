@@ -100,7 +100,7 @@ Avoid new duplicate content definitions, theme overrides, inline color literals,
 
 Preserve the existing **Geist Sans display and body / Geist Mono label** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
 
-Raw color definitions and semantic role assignments belong in `styles/foundations.css`. Components consume role tokens. Maintain the token-integrity checks and both explicit dark/theme fallback paths. Fonts must self-host only where permitted, use `font-display: swap`, and retain usable fallback stacks. Do not distribute font binaries as part of review documents.
+Raw color definitions and semantic colour role assignments belong in `styles/foundations.css`. All font loading and typography declarations belong only in `styles/tokens.css`, imported last in the `typography` cascade layer. Page and component stylesheets must not set typography properties. Components consume the named shared type roles. Maintain the token-integrity checks and both explicit dark/theme fallback paths. Fonts must self-host only where permitted, use `font-display: swap`, and retain usable fallback stacks. Do not distribute font binaries as part of review documents.
 
 The layout is a responsive 12-column editorial grid on wide screens. Verify actual rendered widths, wrapping and alignment rather than treating desktop screenshots as specifications for intermediate sizes. Media queries are content-driven; target widths for visual regression: **320, 390, 430, 768, 1024, 1440 and 1800 CSS pixels**. The site MUST have no unintended horizontal document overflow at any supported width or 200% zoom.
 
@@ -287,7 +287,8 @@ When editing any of these areas, update its governing source in the same change:
 
 - Visual treatment, service taxonomy, component behavior, motion: `DESIGN.md`.
 - Build, source ownership, infrastructure, budgets, API/security, tests: this file.
-- Tokens and typography: `styles/foundations.css` and token tests.
+- Typography: `styles/tokens.css`, the typography lint rule, and typography/token integrity tests.
+- Colour, spacing, motion and layout tokens: `styles/foundations.css` and the token integrity tests.
 - Public content and verified evidence: appropriate `data/` module and content validators.
 - Route names: `data/navigation.js`, static HTML, sitemap/redirect checks.
 - Developer instructions: `README.md` (keep it synchronized with actual section order and current files).

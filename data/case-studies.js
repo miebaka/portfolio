@@ -325,7 +325,7 @@ export const caseStudies = {
         "body": [
           "The final identity carried one invitation to pause and reflect, from social promotion into garments, campus signage, printed materials and the event-day environment, while keeping TEDx recognisable.",
           "The theme travelled from an authored pause mark and palette into a public campus invitation, merchandise and the event-day environment while keeping TEDx recognisable. The photographed banner and attendee setting, alongside the printed and visual applications, substantiate that rollout.",
-          "There are no accompanying attendance, engagement, recall or satisfaction measurements. What can be claimed is a delivered and publicly encountered event identity, not a quantified change in audience behaviour."
+          "There are no accompanying attendance, engagement, recall or satisfaction measurements. The evidence supports delivery and public exposure of the event identity. It does not establish a measurable change in audience behaviour."
         ]
       }
     ],
