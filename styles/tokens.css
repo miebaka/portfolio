@@ -1323,3 +1323,24 @@ body[data-page="work"] .project-folder-stack__intro {
     font-size: var(--type-label);}
 }
 
+/* Work file-rack typography. All font roles remain owned by this sheet. */
+.project-folder__spine {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: var(--type-tracking-label-wide);
+  text-transform: uppercase;
+}
+
+.project-folder__serial {
+  font: var(--type-weight-regular) var(--type-heading-lg)/1 var(--font-sans);
+  letter-spacing: var(--type-tracking-display);
+}
+
+.project-folder__index {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: var(--type-tracking-ui);
+  text-transform: uppercase;
+}
+
+.project-folder__index b {
+  font-weight: var(--type-weight-semibold);
+}
