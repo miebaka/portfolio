@@ -10,46 +10,39 @@ test("explicit Reduce keeps every Home proof chapter readable without staged mot
   await expect(page.locator(".home-landing h1 > span").first()).toHaveCSS("animation-name", "none");
 });
 
-test("selected-work image preview reacts to pointer on a fine-pointer desktop", async ({ page, isMobile }) => {
+test("selected-work image preview changes on desktop hover without pointer displacement", async ({ page, isMobile }) => {
   if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/index.html");
   await expect(page.locator("html")).toHaveClass(/motion-language-ready/);
-  const row = page.locator(".home-project-list .editorial-index__row").first();
-  await row.scrollIntoViewIfNeeded();
+  const first = page.locator(".home-project-list .editorial-index__row").first();
+  await first.scrollIntoViewIfNeeded();
+
   if (isMobile) {
-    // On touch the image is persistently visible: assert meaningful equivalent behavior.
-    await expect(row.locator(".home-project-list__visual")).toBeVisible();
-    await row.focus();
-    await expect(row).toBeFocused();
-    expect(await row.evaluate(el => el.style.getPropertyValue("--motion-preview-x"))).toBe("");
-    return;
+    await expect(first.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+    await first.focus();
+    await expect(first).toBeFocused();
+  } else {
+    await first.hover();
+    await expect(first.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
   }
-  const bounds = await row.boundingBox();
-  expect(bounds).toBeTruthy();
-  await page.mouse.move(bounds.x + bounds.width * .85, bounds.y + bounds.height * .5);
-  await expect.poll(() => row.evaluate(element =>
-    Number.parseFloat(element.style.getPropertyValue("--motion-preview-x")) || 0
-  )).toBeGreaterThan(1);
+
+  expect(await first.evaluate(el => el.style.getPropertyValue("--motion-preview-x"))).toBe("");
+  expect(await first.evaluate(el => el.style.getPropertyValue("--motion-preview-y"))).toBe("");
 });
 
-test("an on-page switch from Full to Reduce clears animated previews", async ({ page, isMobile }) => {
+test("on-page switch from Full to Reduce preserves the large visual and stops transitions", async ({ page, isMobile }) => {
   if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/index.html");
-  const row = page.locator(".home-project-list .editorial-index__row").first();
-  await row.scrollIntoViewIfNeeded();
-  if (!isMobile) {
-    const box = await row.boundingBox();
-    expect(box).toBeTruthy();
-    await page.mouse.move(box.x + box.width * .8, box.y + box.height * .5);
-    await expect.poll(() => row.evaluate(element => element.style.getPropertyValue("--motion-preview-x"))).not.toBe("");
-  } else {
-    await expect(row.locator(".home-project-list__visual")).toBeVisible();
-  }
+  const active = page.locator(".home-project-list .editorial-index__row").nth(isMobile ? 0 : 1);
+  await active.scrollIntoViewIfNeeded();
+  if (!isMobile) await active.focus();
+  await expect(active.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+
   await page.evaluate(() => { document.documentElement.dataset.motion = "reduced"; });
   await expect(page.locator("html")).not.toHaveClass(/motion-language-ready/);
-  await expect.poll(() => row.evaluate(element => element.style.getPropertyValue("--motion-preview-x"))).toBe("");
+  await expect(active.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+  await expect(active.locator(".home-project-list__visual")).toHaveCSS("transition-duration", "0s");
   await expect(page.locator("#selected-title")).toHaveCSS("opacity", "1");
-  if (isMobile) await expect(row.locator(".home-project-list__visual")).toBeVisible();
 });
