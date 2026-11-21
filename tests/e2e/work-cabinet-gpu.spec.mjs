@@ -48,18 +48,34 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   }
   expect(colors.size, "The 3D canvas should show multiple rendered materials and shadows")
     .toBeGreaterThan(25);
-  // Verify that the WebGL surface actually contributes visible pixels.
-  // Merely counting colours in a screenshot can accidentally count HTML layers.
-  // Element screenshots wait for a "stable" layout and can time out under
-  // continuous WebGL/scroll activity even when rendering is correct.
-  // Capture the same fixed page rectangle in both states instead.
+  // Verify that WebGL contributes visible pixels rather than just existing
+  // as a DOM canvas. Hiding an active SwiftShader canvas and immediately
+  // capturing the same page can deadlock Chromium's software compositor.
+  // Compare against a separate, same-viewport CSS-only page instead.
   const clip = await well.boundingBox();
   expect(clip, "The drawer must occupy a measurable viewport rectangle").not.toBeNull();
   const screenshotOptions = { clip, animations: "disabled" };
   const visible = await page.screenshot(screenshotOptions);
-  await canvas.evaluate(node => { node.style.visibility = "hidden"; });
-  const hidden = await page.screenshot(screenshotOptions);
-  await canvas.evaluate(node => { node.style.visibility = ""; });
+  const fallbackPage = await page.context().newPage();
+  let hidden;
+  try {
+    await fallbackPage.addInitScript(() => {
+      Object.defineProperty(window, "WebGL2RenderingContext", {
+        configurable: true, value: undefined,
+      });
+    });
+    await fallbackPage.goto("/work.html");
+    const fallbackWell = fallbackPage.locator(".filing-cabinet__well");
+    await fallbackWell.scrollIntoViewIfNeeded();
+    await expect(fallbackWell.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
+    const fallbackClip = await fallbackWell.boundingBox();
+    expect(fallbackClip).not.toBeNull();
+    hidden = await fallbackPage.screenshot({
+      clip: fallbackClip, animations: "disabled",
+    });
+  } finally {
+    await fallbackPage.close();
+  }
   const [on, off] = await Promise.all([visible, hidden].map(async png =>
     sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })));
   expect(on.info.width).toBe(off.info.width);
