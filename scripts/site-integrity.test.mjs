@@ -243,6 +243,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   await assert.rejects(access(join(dist, "js", "core", "decision-field.js")));
   await access(join(dist, "js", "core", "hero-wave.js"));
   await access(join(dist, "assets", "runtime", "hero-wave.js"));
+  await access(join(dist, "assets", "runtime", "motion-experience.js"));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.module.js")));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.core.js")));
   await assert.rejects(access(join(dist, "node_modules")));
