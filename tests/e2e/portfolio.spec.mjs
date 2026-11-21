@@ -81,7 +81,6 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   await page.goto("/index.html");
   const criticalProof = [
     ["Brand & visual designer", ".home-landing__meta > p:nth-child(2)"],
-    ["Selected work", "#selected-title"],
     ["Brand Identity & Systems", "#what-i-do .service-fallback li:nth-child(1) :is(h2,h3)"],
     ["Art Direction", "#what-i-do .service-fallback li:nth-child(2) :is(h2,h3)"],
     ["Design Systems & Production", "#what-i-do .service-fallback li:nth-child(5) :is(h2,h3)"],
@@ -95,6 +94,9 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
     expect(box?.x ?? -1, text).toBeGreaterThanOrEqual(0);
     expect((box?.x ?? 0) + (box?.width ?? 999), text).toBeLessThanOrEqual(391);
   }
+  // Section names remain accessible headings without reintroducing visual micro-labels.
+  await expect(page.locator("#selected-title")).toHaveText("Selected work");
+  await expect(page.locator(".swiss-selected .swiss-section-head")).toHaveCSS("clip-path", "inset(50%)");
   await context.close();
 });
 

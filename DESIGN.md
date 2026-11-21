@@ -414,26 +414,26 @@ The opening frame is a visually distinct, dark rounded rectangle floating inside
 #### Content contract
 
 - Exactly three **complete, published, linked** flagship cases by default; current set: **TEDx Rivers State University**, **Rivo Studio**, **ChopBox**. This editorial selection is intentional, not the same as showing all projects.
-- Each item MUST show title, role/category, year and reliable project destination.
+- Each item MUST show a large project title and a reliable project destination. Category and year remain in the accessible link name and full case study, but not as redundant visual micro-labels in the Home index.
 - Each item MUST have a real corresponding image from `assets/images/optimized/`, not a decorative generic asset.
 - Every destination must provide case-study evidence; no broken or empty routes.
-- Add a discreet **View all work** route after the flagship list if needed; preserve clear hierarchy.
+- Place one visually substantial **All Work** button centered horizontally beneath the full flagship list. No tiny corner CTA or additional per-row arrow controls.
 - Feature selection MUST derive from `data/projects.js` plus published case availability, using explicit `featuredOrder` or equivalent editorial field. Do not hard-code slug order inside the renderer. Validate uniqueness and publication state.
 
 #### Visual behavior
 
-Desktop uses large editorial rows, clear hairline separation and generous type. The active project gains a controlled visual emphasis: an accompanying image reveals or strengthens, title shifts slightly and arrow responds. Title remains readable on top of any media or tint. The image must feel connected to the project, not like a thumbnail floating randomly at one side.
+Desktop uses a light neutral canvas, truly oversized, centered project headlines, and one substantial real project image positioned centrally behind the active title. The second featured project provides the resting image; hovering or focusing any row changes the visible artwork without moving or expanding the list. Inactive headings use a muted but readable grey. Do not render a visible section eyebrow, row numbers, category/year stamps, circular arrow buttons, floating capsules or redundant image thumbnails. Each entire row is the project link, with a clear keyboard focus indicator. The image remains close to the typographic composition rather than sitting as a small detached thumbnail.
 
 **Critical mobile rule:** Project imagery remains **visible in the default mobile state**. Hover-only visual proof is unacceptable. Use stacked rows with compact but strong media or a split thumbnail composition that survives touch. Never set primary visual proof to `display:none` merely because the viewport is narrow.
 
 #### Interaction states
 
-- **Default:** Readable title, metadata, clear affordance, appropriate visual evidence.
-- **Hover (fine pointer only):** Image may expand/fade in; title translation is restrained (approximately 6–10px), arrow movement 2–6px; no content jump.
-- **Keyboard focus:** Same informational emphasis as hover, with **visible focus ring** and no dependence on hover media.
+- **Default:** Three oversized titles, a visible centrally positioned real project image, and a single centered All Work CTA. Category and year are available to screen readers via the link name.
+- **Hover (fine pointer only):** Activate that project's centered image and darker title. No falling tags, row expansion, extra icons, overlapping interface controls or content jump.
+- **Keyboard focus:** Same image/title emphasis as hover, with a **visible focus ring** and a direct Enter-to-open link.
 - **Touch:** Single tap opens the project. Do not require first tap to “activate preview.”
 - **Pending/unpublished:** Must be non-clickable and explicitly marked *In progress* in the Work archive; never masquerade as a link or compete with the three complete flagship pieces.
-- **Reduced motion:** Immediate visual state changes. All content remains accessible.
+- **Reduced motion:** Image and title changes are immediate; never remove the image's centering transform. All case links remain accessible.
 
 #### Proposed data contract (illustrative; adapt validators)
 
@@ -459,7 +459,7 @@ Before rendering, filter for valid published entries with complete case-study re
 - Source data—not a hard-coded slug array—controls selection and order.
 - Media is present at desktop and 320/390/430px mobile.
 - Hover/focus/touch are equivalent in access to information, not necessarily identical in animation.
-- Title wrapping is deliberately composed at all breakpoints.
+- Title wrapping is deliberately composed at all breakpoints, with visual metadata and arrow clutter removed.
 - Project colors never reduce text contrast below required thresholds.
 
 ### 4.3 HOME / SECTION 03 — ABOUT ME

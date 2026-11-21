@@ -20,7 +20,6 @@ import { initCopyEmail } from "./core/copy-email.js";
 import { initEditorialReveals } from "./core/editorial-reveals.js";
 import { initMotionLanguage } from "./core/motion-language.js";
 import { initScrollExperience } from "./core/scroll-experience.js";
-import { initProjectRoster } from "./core/project-roster.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
 
@@ -53,7 +52,6 @@ run("copy email", initCopyEmail);
 run("editorial reveals", initEditorialReveals);
 run("motion language", initMotionLanguage);
 run("scroll experience", initScrollExperience);
-run("project roster", initProjectRoster);
 if (page === "writing" && has(".article-body")) run("article navigation", initArticleNavigation);
 if (page === "explorations") run("experiments spatial archive", () => { void initExperimentsSpatial(); });
 

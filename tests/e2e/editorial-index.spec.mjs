@@ -40,7 +40,7 @@ for (const [name, path, selector] of [
     // Home is deliberately heavier; Essays retains the standard editorial weight.
     // Work has its own cabinet presentation and dedicated interaction tests.
     await expect(rows.first().locator(".editorial-index__title"))
-      .toHaveCSS("font-weight", name === "Home" ? /^(550|560)$/ : "400");
+      .toHaveCSS("font-weight", name === "Home" ? "500" : "400");
     if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
     const focusColors = await rows.first().evaluate(element => ({
       foreground: getComputedStyle(element).color,
