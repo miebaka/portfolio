@@ -3,7 +3,6 @@
 :root{color-scheme:light dark;
 
   /* Typography tokens are owned by styles/tokens.css. */
-  --icon:"Material Symbols Outlined";
 
   /* Spacing and layout: --s1..--s12 is the only spacing scale */
   --section-padding:clamp(4rem,8vw,8rem);--page:var(--grid-outer);--content:var(--grid-max);
@@ -106,7 +105,7 @@
 *::before{box-sizing:border-box;margin:0}
 *{box-sizing:border-box;margin:0}
 html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + 1rem)}
-body{background:var(--paper);color:var(--ink);font:var(--type-weight-regular) var(--type-input)/var(--type-leading-body) var(--body);font-synthesis:none;-webkit-font-smoothing:antialiased;overflow-x:clip;min-height:100svh}
+body{background:var(--paper);color:var(--ink);font:var(--type-weight-regular) var(--type-input)/var(--type-leading-body) var(--type-family-body);font-synthesis:none;-webkit-font-smoothing:antialiased;overflow-x:clip;min-height:100svh}
 svg{display:block;max-width:100%;height:auto}
 picture{display:block;max-width:100%;height:auto}
 img{display:block;max-width:100%;height:auto}
@@ -118,10 +117,10 @@ input{font:inherit;color:inherit}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 :focus-visible{outline:2px solid var(--focus);outline-offset:4px}
 ::selection{background:var(--selection-bg);color:var(--selection-fg)}
-h4{font-family:var(--display);font-size:var(--type-body-lead);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-ui);text-wrap:balance}
-h3{font-family:var(--display);font-size:var(--type-heading-s);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-ui);text-wrap:balance}
-h2{font-family:var(--display);font-size:var(--type-heading-m);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-lead);text-wrap:balance}
-h1{font-family:var(--display);font-size:var(--type-heading-l);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-heading);text-wrap:balance}
+h4{font-family:var(--type-family-display);font-size:var(--type-body-lead);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-ui);text-wrap:balance}
+h3{font-family:var(--type-family-display);font-size:var(--type-heading-s);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-ui);text-wrap:balance}
+h2{font-family:var(--type-family-display);font-size:var(--type-heading-m);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-lead);text-wrap:balance}
+h1{font-family:var(--type-family-display);font-size:var(--type-heading-l);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-title);line-height:var(--type-leading-heading);text-wrap:balance}
 strong{font-weight:var(--type-weight-semibold)}
 p{max-width:44rem;text-wrap:pretty}
 main{min-height:70vh;text-align:left;position:relative;z-index:1}
@@ -138,8 +137,8 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 .stack>h2{margin-top:var(--s8);font-size:var(--type-heading-m)}
 .stack>h2:first-child{margin-top:0}
 .measure-hero{max-width:none}
-.meta{font:var(--type-weight-semibold) var(--type-label-ui)/var(--type-leading-label) var(--label);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase;color:var(--muted)}
-.material-symbols-outlined{font:var(--type-weight-regular) var(--type-body-l)/var(--type-leading-display-comfort) var(--icon);font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
+.meta{font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--type-family-label);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase;color:var(--muted)}
+.material-symbols-outlined{font:var(--type-weight-regular) var(--type-body-l)/var(--type-leading-display-comfort) var(--type-family-icon);font-feature-settings:"liga";letter-spacing:normal;text-transform:none;white-space:nowrap}
 @media(forced-colors:active){:focus-visible{outline:2px solid Highlight}
 }
 @view-transition{navigation:auto}
