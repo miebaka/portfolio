@@ -299,14 +299,14 @@ body[data-page="work"] .project-folder-stack__intro {
     display: grid;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .project-folder:hover .project-folder__index {
-      opacity: .92;
-      transform: none;
-    }
-  }
-
   .project-folder:focus-within .project-folder__index {
+    opacity: .92;
+    transform: none;
+  }
+}
+
+@media (min-width: 90rem) and (hover: hover) and (pointer: fine) {
+  .project-folder:hover .project-folder__index {
     opacity: .92;
     transform: none;
   }
