@@ -213,8 +213,8 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-page .case-gallery{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
 .case-page .case-gallery .case-shot{min-width:0;margin:0;align-self:start}
 .case-page .case-gallery .case-shot:last-child:nth-child(odd){grid-column:1/-1}
-.has-js .case-page .case-chapter :is(.case-chapter__copy h2,.case-chapter__body){opacity:.001;transform:translate3d(0,10px,0);transition:opacity 280ms var(--ease-enter),transform 280ms var(--ease-enter)}
-.has-js .case-page .case-chapter .case-chapter__copy h2{transition-delay:55ms}
+.has-js .case-page .case-chapter :is(.case-chapter__intro,.case-chapter__heading,.case-chapter__body){opacity:.001;transform:translate3d(0,10px,0);transition:opacity 280ms var(--ease-enter),transform 280ms var(--ease-enter)}
+.has-js .case-page .case-chapter .case-chapter__intro{transition-delay:55ms}
 .has-js .case-page .case-chapter .case-chapter__body{transition-delay:110ms}
 .has-js .case-page .case-chapter.is-revealed :is(.case-chapter__copy h2,.case-chapter__body){opacity:1;transform:translate3d(0,0,0)}
 .case-page .case-shot__caption{
