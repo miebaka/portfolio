@@ -11,7 +11,7 @@ const fonts = await readFile(join(styles, "forliving-editorial.css"), "utf8");
 
 test("tokens load first, before foundation and page styling", () => {
   assert.ok(imports.indexOf('url("tokens.css")') < imports.indexOf('url("foundations.css")'));
-  assert.match(tokens, /--type-display-hero: clamp\(3\.4rem, 12vw, 13\.25rem\)/);
+  assert.match(tokens, /--type-display-hero: clamp\(3\.4rem, 8\.4vw, 11rem\)/);
 });
 
 test("Geist Sans and Mono have only their real registered static weights", () => {

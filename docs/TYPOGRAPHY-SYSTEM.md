@@ -35,7 +35,7 @@ All px figures assume 16px root size and are indicative; browser zoom preserves 
 | Project list | `--type-display-project` | 48–118px | Selected Work and project roster |
 | Section display | `--type-display-section` | 52–160px | About Me, What I Do and archive chapters |
 | Wide editorial | `--type-display-xxl` | 68–120px | Full-width editorial moments |
-| Home name | `--type-display-hero` | 54–212px | Home hero ONLY: major point of visual impact |
+| Home name | `--type-display-hero` | 54–176px | Home hero ONLY: major point of visual impact |
 | Decorative signature | `--type-display-signature*` | Fluid / proportional | Existing signature visuals |
 | Inline mark | `--type-inline-mark` | Relative 0.35em | Arrow and minimal punctuation motifs |
 

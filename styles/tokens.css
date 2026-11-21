@@ -42,7 +42,7 @@
   --type-display-project: clamp(3rem, 6.9vw, 7.4rem);
   --type-display-section: clamp(3.25rem, 8.7vw, 10rem);
   --type-display-xxl: clamp(4.25rem, 8vw, 7.5rem);
-  --type-display-hero: clamp(3.4rem, 12vw, 13.25rem);
+  --type-display-hero: clamp(3.4rem, 8.4vw, 11rem);
   --type-display-signature: clamp(2rem, 7.6vw, 7rem);
   --type-display-signature-vw: 7.6vw;
   --type-display-signature-wide-vw: 8.69vw;
