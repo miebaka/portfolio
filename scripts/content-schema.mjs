@@ -179,8 +179,8 @@ export function validateContent(content) {
       if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
       else {
         const ids = study.chapters.map(chapter => chapter?.id);
-        const wanted = ["context", "decision", "system", "applications", "reflection"];
-        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use question, governing decision, system, system in use, then reflection.");
+        const wanted = ["decision", "system", "survival", "encounter"];
+        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use Decision, System, Survival, then Encounter.");
         const usedMedia = new Set([study.hero]);
         study.chapters.forEach((chapter, index) => {
           const chapterPath = `${path}.chapters[${index}]`;
