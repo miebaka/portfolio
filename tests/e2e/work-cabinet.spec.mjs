@@ -510,7 +510,7 @@ test("touch reading lift leaves the following year visible instead of covering p
     const next = document.querySelectorAll(".filing-cabinet__divider")[1];
     return face.getBoundingClientRect().bottom - next.getBoundingClientRect().top;
   });
-  expect(overlap, "Active folder must not hide the next year index").toBeLessThan(14);
+  expect(overlap, "Active folder must leave the next year completely unobstructed").toBeLessThan(-8);
   await expect(page.locator(".filing-cabinet__divider-caption")).toHaveCount(0);
 });
 

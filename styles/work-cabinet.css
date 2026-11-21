@@ -422,6 +422,13 @@ body[data-page="work"] .filing-cabinet__caption {
     --folder-face: calc(var(--file-step) + 1.8rem);
   }
 
+  /* The folder's lower lip is real paper, not space inside the list item.
+     Reserve that exact overhang before the next year guide, so 2023/2022
+     remain fully readable instead of being covered by the preceding face. */
+  body[data-page="work"] .filing-cabinet__folder:not(:last-child) {
+    margin-bottom: calc(var(--folder-face) - var(--file-step) + .25rem);
+  }
+
   body[data-page="work"] .filing-cabinet__tab {
     width: 57%;
     min-height: 3.15rem;
