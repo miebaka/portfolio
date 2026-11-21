@@ -1,5 +1,4 @@
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { transform } from "esbuild";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
@@ -162,6 +161,7 @@ for (const project of caseProjects) {
 
 await mkdir(join(output, "styles"), { recursive: true });
 const cssBundle = await bundleCss(join(root, "styles/main.css"));
+const { transform } = await import("esbuild");
 const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify: true, legalComments: "inline" });
 await writeFile(join(output, "styles/main.css"), minifiedCss);
 await ensureCopy(join(root, "styles/project-folders.css"), join(output, "styles/project-folders.css"));
