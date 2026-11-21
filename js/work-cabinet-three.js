@@ -165,8 +165,9 @@ export function initWorkCabinetThree({
       file.group.scale.set(scale, scale, 1);
       if (file.occlusion) {
         // Contact shadow remains anchored to the drawer when paper rises.
-        file.occlusion.material.opacity =
-          Math.max(.16, .72 - (lift + selectedDepth) * .022);
+        file.occlusion.material.opacity = Math.max(
+          .16, .72 - (lift + selectedDepth) * .022
+        );
       }
     }
     renderer.render(scene, camera);
