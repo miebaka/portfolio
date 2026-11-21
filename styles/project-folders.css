@@ -92,6 +92,7 @@ body[data-page="work"] .project-folder-stack__intro {
   border-radius: 2rem 2rem 0 0;
   background: var(--folder-tone, #002080);
 }
+
 /* The orange cover keeps its original brand color; the smaller tab is darker
    so its white label clears WCAG AA with room to spare. */
 .project-folder--chopbox .project-folder__tab {
