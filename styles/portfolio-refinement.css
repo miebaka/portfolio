@@ -499,6 +499,7 @@ body[data-page] .site-index__home:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
+
 /* The liquid theme switch stays tactile rather than reading as an OS checkbox. */
 body[data-page] .theme-liquid-toggle__track {
   background: linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--ink) 75%, var(--accent)));
