@@ -384,7 +384,7 @@ export function initWorkCabinetThree({
       });
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.AgXToneMapping;
-      renderer.toneMappingExposure = 1.05;
+      renderer.toneMappingExposure = 1.18;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       scene = new THREE.Scene();
@@ -401,7 +401,7 @@ export function initWorkCabinetThree({
       light.shadow.radius = 2;
       scene.add(light, light.target);
       shadowMaterial = new THREE.ShadowMaterial({ color: 0x090e1c, opacity: 0.33 });
-      for (const [hex, seed] of [["#ece4d6", 11], ["#e7dccb", 29], ["#ded0bb", 43]]) {
+      for (const [hex, seed] of [["#f7efdf", 11], ["#f2e6d4", 29], ["#e9dbc4", 43]]) {
         const texture = paperTexture(doc, hex, seed);
         if (texture) textures.push(texture);
         materials.push(new THREE.MeshStandardMaterial({
