@@ -618,7 +618,13 @@ export function initWorkCabinetThree({
 
       well.prepend(canvas);
       rebuild();
-      renderer.render(scene, camera);
+      // The CSS reading/hover transform may already be active when the lazy
+      // renderer starts. Render from the measured face rectangles before
+      // exposing WebGL; otherwise the first visible GPU frame leaves native
+      // tab text lifted above paper that is still at its resting position.
+      if (frame) win.cancelAnimationFrame(frame);
+      frame = 0;
+      render(win.performance?.now?.() ?? Date.now());
       cabinet.dataset.cabinet3d = "ready";
       // Late font swaps and line wrapping can change tab geometry without
       // changing the cabinet width; rebuild against the settled document.
