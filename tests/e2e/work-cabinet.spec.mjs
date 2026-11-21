@@ -463,6 +463,10 @@ test("active WebGL cabinet produces actual physical pixels, not an empty canvas"
   await expect(page.locator("[data-project-archive]"))
     .toHaveAttribute("data-cabinet3d", "ready", { timeout: 20_000 });
   const canvas = well.locator(".filing-cabinet__three-canvas");
+  // Wait for the short native reading-axis transition to settle before
+  // generating art-direction evidence. The first WebGL frame itself is
+  // already synchronized synchronously before the ready flag is set.
+  await page.waitForTimeout(300);
   const png = await canvas.screenshot();
   const { data, info } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const colors = new Set();
