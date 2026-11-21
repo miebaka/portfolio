@@ -104,6 +104,14 @@ test("reading-axis register follows the nearest real folder, never a year divide
 
 test("scroll temporarily suppresses decorative pointer hover and clears after 140ms", async ({ page, isMobile }) => {
   test.skip(isMobile, "Pointer hover applies only to fine-pointer devices");
+  // Test the native scrolling controller in isolation. Running a separate
+  // shader compile while asserting a 140ms timer measures GPU startup, not
+  // whether the scroll state reliably settles. GPU is tested separately.
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
   await page.goto("/work.html");
   const cabinet = page.locator("[data-project-archive]");
   const link = page.locator(".filing-cabinet__link").first();
