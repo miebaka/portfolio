@@ -194,9 +194,10 @@ progressive loader, reduced-motion and WebGL-failure behavior.
 - Desktop file spacing is compressed moderately while preserving a clear
   hover/focus lip and the following year guide. Mobile keeps its tested year
   clearance and uses a slightly wider, fully legible paper tab.
-- HTML tab backgrounds remain opaque for consistent contrast across light,
-  dark and WebGL failure cases. Their floating-card gradient and external drop
-  shadow are removed after WebGL is ready.
+- The native HTML tab becomes transparent only when WebGL is ready,
+  exposing the physically die-cut rear-leaf surface beneath the text instead
+  of painting a rectangular white badge. The CSS-only, accessibility and
+  context-loss fallbacks retain opaque stock for readable labels.
 
 **Release acceptance:** Run Node 24 build and cabinet/unit tests, all
 Playwright desktop/mobile/CSS-fallback checks, and GPU screenshots. Confirm
