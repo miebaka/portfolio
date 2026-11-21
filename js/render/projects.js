@@ -118,17 +118,16 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
 
   return '<div class="filing-cabinet__stage">' +
     '<div class="filing-cabinet__shell">' +
-    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>FILING SYSTEM / 001</span><span>' +
-      count + ' OPEN FILES</span></div>' +
+    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>THE ARCHIVE</span><span>' +
+      count + ' CASE STUDIES</span></div>' +
     '<div class="filing-cabinet__well">' +
     '<ol class="filing-cabinet__drawer" aria-label="Published case studies, newest first">' +
     drawer + '</ol></div>' +
     '<div class="filing-cabinet__register" aria-hidden="true">' +
-    '<span class="filing-cabinet__register-label">CURRENT FILE / REGISTER</span>' +
+    '<span class="filing-cabinet__register-label">CURRENT FILE</span>' +
     '<span class="filing-cabinet__register-values">' + active + '</span></div>' +
     '</div>' +
-    '<p class="filing-cabinet__caption"><span>DESIGN SYSTEMS / SELECTED WORK</span>' +
-    '<span>' + count + ' FILES / ' + count + ' AVAILABLE TO OPEN</span></p>' +
+    '<p class="filing-cabinet__caption"><span>IDENTITY / ART DIRECTION / DESIGN SYSTEMS</span></p>' +
     '</div>';
 }
 
