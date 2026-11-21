@@ -20,6 +20,20 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
     .toHaveAttribute("data-cabinet3d", "ready", { timeout: 20_000 });
 
   const canvas = well.locator(".filing-cabinet__three-canvas");
+  const hiddenLabels = well.locator(".filing-cabinet__link > .sr-only");
+  await expect(hiddenLabels).toHaveCount(3);
+  const hiddenStyles = await hiddenLabels.first().evaluate(node => {
+    const css = getComputedStyle(node);
+    return { width: css.width, height: css.height, clipPath: css.clipPath };
+  });
+  expect(hiddenStyles.width).toBe("1px");
+  expect(hiddenStyles.height).toBe("1px");
+  expect(hiddenStyles.clipPath).toBe("inset(50%)");
+  // Native labels must retain opaque surfaces over the physical paper.
+  await expect(well.locator(".filing-cabinet__tab").first())
+    .not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(well.locator(".filing-cabinet__divider").first())
+    .not.toHaveCSS("background-image", "none");
   await expect(canvas).toHaveAttribute("aria-hidden", "true");
   await expect(canvas).toHaveCSS("pointer-events", "none");
   const png = await canvas.screenshot();

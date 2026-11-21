@@ -513,3 +513,18 @@ test("touch reading lift leaves the following year visible instead of covering p
   expect(overlap, "Active folder must not hide the next year index").toBeLessThan(14);
   await expect(page.locator(".filing-cabinet__divider-caption")).toHaveCount(0);
 });
+
+test("source Work cabinet has true visually-hidden accessibility names with or without WebGL", async ({ page }) => {
+  await page.goto("/work.html");
+  const hidden = page.locator(".filing-cabinet__link > .sr-only");
+  await expect(hidden).toHaveCount(3);
+  for (const node of await hidden.all()) {
+    const style = await node.evaluate(element => {
+      const css = getComputedStyle(element);
+      return { width: css.width, height: css.height, clipPath: css.clipPath };
+    });
+    expect(style.width).toBe("1px");
+    expect(style.height).toBe("1px");
+    expect(style.clipPath).toBe("inset(50%)");
+  }
+});
