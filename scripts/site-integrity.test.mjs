@@ -599,7 +599,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 12); // Canonical page styles, editorial refinements, projects roster and Work cabinet.
+  assert.equal((styles.match(/@import/g) || []).length, 11); // The Work cabinet is a page-scoped stylesheet, not a global import.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
