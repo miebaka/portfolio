@@ -31,7 +31,29 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   }
   expect(colors.size, "The 3D canvas should show multiple rendered materials and shadows")
     .toBeGreaterThan(25);
+  // Verify that the WebGL surface actually contributes visible pixels.
+  // Merely counting colours in a screenshot can accidentally count HTML layers.
+  const visible = await well.screenshot();
+  await canvas.evaluate(node => { node.style.visibility = "hidden"; });
+  const hidden = await well.screenshot();
+  await canvas.evaluate(node => { node.style.visibility = ""; });
+  const [on, off] = await Promise.all([visible, hidden].map(async png =>
+    sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })));
+  expect(on.info.width).toBe(off.info.width);
+  let changed = 0, sampled = 0;
+  for (let i = 0; i < on.info.width * on.info.height; i += 71) {
+    const offset = i * on.info.channels;
+    const distance = Math.abs(on.data[offset] - off.data[offset]) +
+      Math.abs(on.data[offset + 1] - off.data[offset + 1]) +
+      Math.abs(on.data[offset + 2] - off.data[offset + 2]);
+    if (distance > 25) changed++;
+    sampled++;
+  }
+  expect(changed / sampled, "Showing the 3D canvas must materially change the rendered drawer")
+    .toBeGreaterThan(0.02);
   await well.screenshot({ path: "test-results/cabinet-gpu-webgl.png" });
+  await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
+  await well.screenshot({ path: "test-results/cabinet-gpu-dark.png" });
 
   await canvas.evaluate(element => {
     element.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
