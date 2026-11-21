@@ -367,8 +367,8 @@ export function initWorkCabinetThree({
         // on the drawer rods; these are decorative, not click targets.
         const hanger = createSuspensionHardware(width, {
           metal: materials[9],
-          // A folded paper sleeve should read as stock, not a black T-bar.
-          shade: materials[4],
+          // The rod hem must use this folder's paper stock, not a dark band.
+          shade: materials[stock],
           detail: quality.environment,
           leftRailX: innerLeftRail - x,
           rightRailX: innerRightRail - x,
