@@ -437,11 +437,15 @@ body[data-page="work"] .filing-cabinet__caption {
   }
 
   body[data-page="work"] .filing-cabinet__tab {
-    width: 57%;
-    min-height: 3.15rem;
-    top: -1.65rem;
-    padding-inline: .5rem;
-    font-size: var(--type-label-ui);
+    /* The mobile file label is a compact reinforced tab, never a tall
+       floating card. The extra width accommodates truthful project names. */
+    width: 68%;
+    min-height: 2.65rem;
+    top: -1.5rem;
+    gap: .42rem;
+    padding: .45rem .65rem;
+    font-size: clamp(.72rem, 3vw, .82rem);
+    line-height: 1.22;
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="a"] {
@@ -449,11 +453,11 @@ body[data-page="work"] .filing-cabinet__caption {
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="b"] {
-    --tab-left: 21%;
+    --tab-left: 16%;
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="c"] {
-    --tab-left: 42%;
+    --tab-left: 31%;
   }
 
   body[data-page="work"] .filing-cabinet__divider {

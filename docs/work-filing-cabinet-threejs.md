@@ -132,3 +132,30 @@ tone mapping disabled; it cannot wash out under RoomEnvironment, and a
 deterministic colour-variation test ensures it is not a featureless flat fill.
 Folder stock, metal rails, real geometry and dynamic PCF shadows remain
 physically lit.
+
+### Physical construction: late November refinement
+
+A file cabinet is not a collection of rectangular cards. The overhead view
+must show authentic suspension and the physical tension of thin stock.
+
+- Paper fronts now include a bounded, tessellated **calendered sheet surface**:
+  a subtle centre bow, edge spring, and restrained fibre tension. UVs are
+  projected in world-size units so existing colour, relief and roughness maps
+  remain correctly registered across the full visible sheet.
+- Top-tab suspension is modelled as a pair of small, bent metal hooks on each
+  folder, reaching the existing support rails. Rolled slot sleeves, a two-ply
+  tab crown, and an embossed reinforcement line give the die-cut folder real
+  construction clues without taking over the HTML labels.
+- Mobile white label pockets use a more compact tab with a wider but lower
+  profile and smaller type, so a long project name does not inflate into
+  a giant floating card. A new viewport geometry test guards readability,
+  tab size and horizontal overflow.
+- The additional surface detail is made only on optional GPU activation;
+  mobile has fewer paper subdivisions and lower-resolution hanger geometry.
+  Geometry is disposed with its owning file group after resize/context loss.
+- Furniture construction was cross-checked against physical hanging-folder
+  photographs and filing-supplies catalogues; details are modelled rather
+  than copying photographic artwork.
+
+The material remains a crafted real-time simulation, not a photographic scan.
+Preserve the orthographic view and native case-study links.

@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { createPaperMaps, createContactShadow, createMetalRoughness, createDrawerFloorMap } from "./three/work-cabinet-materials.js";
+import { createBowedPaperGeometry, createSuspensionHardware, createTabReinforcement } from "./three/work-cabinet-geometry.js";
 
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
@@ -330,6 +331,39 @@ export function initWorkCabinetThree({
         front.receiveShadow = true;
         group.add(front);
 
+        // The thin cut silhouette remains an actual extrusion. An inset
+        // subdivided paper face adds restrained curl and distributed tension:
+        // highlights now change through the stock instead of staying flat.
+        const bowedFace = new THREE.Mesh(
+          createBowedPaperGeometry(
+            Math.max(16, width - 12), Math.max(20, faceHeight - 14), {
+              seed: index * 17 + stock,
+              segmentsX: quality.environment ? 24 : 12,
+              segmentsY: quality.environment ? 9 : 5,
+            }
+          ),
+          materials[stock]
+        );
+        bowedFace.name = "calendered-paper-face";
+        bowedFace.position.set(width / 2, faceHeight / 2 + 2.5, 0);
+        bowedFace.castShadow = true;
+        bowedFace.receiveShadow = true;
+        group.add(bowedFace);
+
+        // Metal suspensions show the actual means by which a file rests
+        // on the drawer rods; these are decorative, not click targets.
+        const hanger = createSuspensionHardware(width, {
+          metal: materials[9], shade: materials[6],
+          detail: quality.environment,
+        });
+        group.add(hanger);
+        const reinforcedTab = createTabReinforcement(
+          tab.offsetLeft, tab.offsetWidth, tab.offsetTop, {
+            stock: materials[8], crease: materials[7],
+          }
+        );
+        group.add(reinforcedTab);
+
         // Calendering/folding creates a darker pressure crease followed by
         // a tiny raised, warm edge. These are true 3D layers with soft light
         // response, not a painted CSS separator or a plastic-looking bevel.
@@ -338,13 +372,13 @@ export function initWorkCabinetThree({
           new THREE.PlaneGeometry(Math.max(1, width - 14), .92),
           materials[7]
         );
-        crease.position.set(width / 2, foldY, 1.04);
+        crease.position.set(width / 2, foldY, 2.27);
         group.add(crease);
         const foldHighlight = new THREE.Mesh(
           new THREE.BoxGeometry(Math.max(1, width - 14), .34, .25),
           materials[8]
         );
-        foldHighlight.position.set(width / 2, foldY - 1.15, 1.08);
+        foldHighlight.position.set(width / 2, foldY - 1.15, 2.31);
         group.add(foldHighlight);
         const exposedLeaf = new THREE.Mesh(
           new THREE.BoxGeometry(Math.max(1, width - 7), .52, .76),

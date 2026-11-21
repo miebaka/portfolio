@@ -578,3 +578,35 @@ test("desktop lifted folder lip does not overpaint the next year-guide label", a
     .toBeGreaterThan(6);
   await expect(page.locator(".filing-cabinet__lip-copy")).toHaveCount(0);
 });
+
+
+test("mobile paper tabs remain compact, readable and within their physical file bands", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "This contract targets the small-screen filing tabs");
+  await page.goto("/work.html");
+  const measurements = await page.locator(".filing-cabinet__folder").evaluateAll(nodes =>
+    nodes.map(node => {
+      const tab = node.querySelector(".filing-cabinet__tab");
+      const label = node.querySelector(".filing-cabinet__tab-title");
+      const parent = node.getBoundingClientRect();
+      const rect = tab.getBoundingClientRect();
+      const css = getComputedStyle(tab);
+      return {
+        label: label?.textContent?.trim(),
+        height: rect.height,
+        widthRatio: rect.width / parent.width,
+        overhang: rect.right - parent.right,
+        fontSize: parseFloat(css.fontSize),
+        clipped: label.scrollHeight > label.clientHeight + 1,
+      };
+    })
+  );
+  expect(measurements).toHaveLength(3);
+  for (const tab of measurements) {
+    expect(tab.height, tab.label + " should resemble a small paper tab, not a tall card")
+      .toBeLessThan(84);
+    expect(tab.widthRatio).toBeGreaterThan(.64);
+    expect(tab.overhang).toBeLessThan(3);
+    expect(tab.fontSize).toBeGreaterThanOrEqual(11);
+    expect(tab.clipped).toBe(false);
+  }
+});

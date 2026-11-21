@@ -40,7 +40,7 @@
     "lint:typography": "stylelint \"styles/**/*.css\"",
     "test:typography": "node --test scripts/typography-contract.test.mjs",
     "build:cabinet": "node scripts/build-work-cabinet-three.mjs",
-    "test:cabinet": "node --test tests/work-cabinet-three.test.mjs tests/work-cabinet-materials.test.mjs"
+    "test:cabinet": "node --test tests/work-cabinet-three.test.mjs tests/work-cabinet-materials.test.mjs tests/work-cabinet-geometry.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
