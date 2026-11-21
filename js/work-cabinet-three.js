@@ -297,7 +297,8 @@ export function initWorkCabinetThree({
       }
     });
 
-    light.position.set(-width * 0.22, -height * 0.35, 400);
+    // A large, high key light keeps contact shadows near the paper edges.
+    light.position.set(width * 0.33, height * 0.18, 620);
     light.target.position.set(width / 2, height / 2, 0);
     light.target.updateMatrixWorld();
     const extent = Math.max(width, height) * 1.6;
@@ -413,11 +414,13 @@ export function initWorkCabinetThree({
       motionObserver.observe(doc.documentElement, {
         attributes: true, attributeFilter: ["data-motion"],
       });
-      visibilityObserver = new win.IntersectionObserver(entries => {
-        inView = entries[0]?.isIntersecting ?? true;
-        if (inView) invalidate();
-      }, { rootMargin: "200px" });
-      visibilityObserver.observe(well);
+      if (typeof win.IntersectionObserver === "function") {
+        visibilityObserver = new win.IntersectionObserver(entries => {
+          inView = entries[0]?.isIntersecting ?? true;
+          if (inView) invalidate();
+        }, { rootMargin: "200px" });
+        visibilityObserver.observe(well);
+      }
     } catch (error) {
       fallback();
       // Rendering is an enhancement: no error may block the three native links.
