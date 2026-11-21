@@ -75,8 +75,13 @@ test("approved visual contract remains intact", async () => {
     if (folderPage)
       assert.match(stylesheets[1][0], /href=["']styles\/project-folders\.css["']/i, path);
   }
-  assert.match(css, /body \.site-footer__signature::before\{display:block/);
-  assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
+  // Assert exact authored footer selectors before build minification normalizes syntax.
+  const mainSource = await readFile(join(root, "styles", "main.css"), "utf8");
+  const sourceNames = [...mainSource.matchAll(/@import url\("([^"]+)"\)/g)].map(match => match[1]);
+  const authoredCss = (await Promise.all(sourceNames.map(name =>
+    readFile(join(root, "styles", name), "utf8")))).join("\n");
+  assert.match(authoredCss, /body \.site-footer__signature::before\{display:block/);
+  assert.match(authoredCss, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
   assert.match(css, /\.site-footer__signature-canvas/);
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__signature/);
