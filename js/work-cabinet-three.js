@@ -308,6 +308,10 @@ export function initWorkCabinetThree({
       top: extent,
       bottom: -extent,
     });
+    // The key sits more than 500 units from the drawer. Three.js's default
+    // directional shadow-camera far plane is 500, which clips every folder.
+    light.shadow.camera.near = 1;
+    light.shadow.camera.far = 1400;
     light.shadow.camera.updateProjectionMatrix();
     lastFrame = 0;
     invalidate();
