@@ -65,6 +65,14 @@ export function createBowedPaperGeometry(width, height, {
  * They are tiny at normal scale, but expose the hardware during a lift.
  * The user still interacts with real DOM links, never these meshes.
  */
+/**
+ * A hanging folder is suspended by one continuous wire through a folded hem,
+ * not by two unattached pins. Keep the actual rail contact points in DOM
+ * coordinates so this assembly works at desktop and narrow mobile widths.
+ *
+ * The entire assembly shares the parent file's transform and is decorative;
+ * native anchors remain responsible for interaction and accessible labels.
+ */
 export function createSuspensionHardware(width, {
   metal, shade, detail = true,
   leftRailX = -23,
@@ -72,38 +80,93 @@ export function createSuspensionHardware(width, {
 } = {}) {
   finitePositive(width, "width");
   if (!metal || !shade) throw new TypeError("metal and shade materials required");
+  if (!Number.isFinite(leftRailX) || !Number.isFinite(rightRailX) ||
+      rightRailX <= leftRailX) {
+    throw new RangeError("suspension rail coordinates must be ordered and finite");
+  }
   const group = new THREE.Group();
   group.name = "folder-suspension-hardware";
+
+  const span = rightRailX - leftRailX;
+  const rod = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.1, 1.1, span, detail ? 12 : 8),
+    metal
+  );
+  rod.name = "full-width-suspension-rod";
+  rod.geometry.rotateZ(Math.PI / 2);
+  rod.position.set((leftRailX + rightRailX) / 2, 8, -1);
+  rod.castShadow = detail;
+  group.add(rod);
+
+  // The central hem visually encases the suspension rod. Thin cardstock
+  // remains visible along the shoulder; only notched tips extend onto rails.
+  const hem = new THREE.Mesh(
+    new THREE.BoxGeometry(Math.max(12, width - 14), 4.3, .72),
+    shade
+  );
+  hem.name = "folded-suspension-hem";
+  hem.position.set(width / 2, 9.7, .64);
+  group.add(hem);
+
   for (const side of [-1, 1]) {
     const right = side === 1;
-    const innerX = right ? width - 14 : 14;
-    // A file's rail distance changes with responsive drawer padding.
-    // Measuring the real rail location is essential on narrow screens.
-    const outsideX = right ? rightRailX : leftRailX;
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(innerX, 10, 2.9),
-      new THREE.Vector3(innerX + side * 10, 8.8, 3.1),
-      new THREE.Vector3(outsideX - side * 6, 8.4, 3.1),
-      new THREE.Vector3(outsideX, 11.6, 2.8),
-      new THREE.Vector3(outsideX - side * 1.8, 16.8, 2.1),
+    const railX = right ? rightRailX : leftRailX;
+    const insideX = right ? width - 13 : 13;
+    // The bent end is a shallow U whose notch is directly over the measured
+    // support rail rather than a free-floating pin beside the file.
+    const hookPath = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(insideX, 8, -1),
+      new THREE.Vector3(railX - side * 5, 8, -1),
+      new THREE.Vector3(railX, 10.1, -1.1),
+      new THREE.Vector3(railX + side * 1.6, 12.6, -1.2),
+      new THREE.Vector3(railX - side * 1.3, 14.1, -1.4),
     ], false, "centripetal");
-    const arm = new THREE.Mesh(
-      new THREE.TubeGeometry(curve, detail ? 20 : 10,
-        detail ? 1.18 : 1.08, detail ? 7 : 5, false),
+    const hook = new THREE.Mesh(
+      new THREE.TubeGeometry(hookPath, detail ? 18 : 10,
+        detail ? .9 : .85, detail ? 8 : 5, false),
       metal
     );
-    arm.name = right ? "right-hanger" : "left-hanger";
-    arm.castShadow = detail;
-    group.add(arm);
-    // Reinforced rolled slot at the paper/metal junction.
+    hook.name = right ? "right-hanger" : "left-hanger";
+    hook.castShadow = detail;
+    group.add(hook);
+
     const sleeve = new THREE.Mesh(
-      new THREE.BoxGeometry(12.5, 2.7, .55),
+      new THREE.BoxGeometry(11, 2.2, .48),
       shade
     );
     sleeve.name = right ? "right-sleeve" : "left-sleeve";
-    sleeve.position.set(innerX + side * 2.5, 10, 2.22);
-    sleeve.rotation.z = side * .035;
+    sleeve.position.set(insideX, 9.7, .98);
     group.add(sleeve);
+  }
+  return group;
+}
+
+/**
+ * Three extremely shallow, continuous expansion scores across the lower
+ * paper leaf. Separate narrow meshes keep creases visible at any viewport
+ * width; coarse mobile tessellation cannot accidentally erase them.
+ */
+export function createExpansionScoreGeometry(width, height, { crease, highlight } = {}) {
+  finitePositive(width, "width");
+  finitePositive(height, "height");
+  if (!crease || !highlight) throw new TypeError("crease and highlight materials required");
+  const group = new THREE.Group();
+  group.name = "folder-expansion-scores";
+  const length = Math.max(1, width - 16);
+  for (let index = 0; index < 3; index++) {
+    const y = height - 9 - index * 4.2;
+    const rule = new THREE.Mesh(
+      new THREE.BoxGeometry(length, .26, .14), crease
+    );
+    rule.position.set(width / 2, y, 2.35);
+    rule.name = "score-" + (index + 1);
+    group.add(rule);
+
+    const lightEdge = new THREE.Mesh(
+      new THREE.BoxGeometry(length, .16, .12), highlight
+    );
+    lightEdge.position.set(width / 2, y - .55, 2.36);
+    group.add(lightEdge);
   }
   return group;
 }
