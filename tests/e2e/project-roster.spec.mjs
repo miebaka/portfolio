@@ -96,6 +96,7 @@ test("reduced motion keeps static images correctly centered and all links operat
   await expect(defaultImage).toHaveCSS("opacity", "1");
   await expect(defaultImage).toHaveCSS("transition-duration", "0s");
   const transform = await defaultImage.evaluate(element => getComputedStyle(element).transform);
-  expect(transform).not.toBe("none");
+  if (page.viewportSize().width <= 768) expect(transform).toBe("none");
+  else expect(transform).not.toBe("none");
   await expect(rows(page).first().locator(".home-project-list__title")).toBeVisible();
 });

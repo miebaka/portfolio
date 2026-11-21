@@ -1,6 +1,6 @@
 import {test,expect} from "@playwright/test";
 
-test("Home keeps the landing restrained and Selected Work list-only",async({page})=>{
+test("Home keeps the landing restrained and Selected Work list-only",async({page,isMobile})=>{
   await page.goto("/index.html");
   await expect(page.locator("body")).not.toContainText("Available for senior brand and marketing design roles");
   await expect(page.locator(".home-landing")).toHaveCSS("position","sticky");
@@ -8,7 +8,7 @@ test("Home keeps the landing restrained and Selected Work list-only",async({page
   const badge=await page.locator(".home-landing").evaluate(node=>getComputedStyle(node,"::before").content);
   expect(["none","normal","\"none\""]).toContain(badge);
   await expect(page.locator('.work-view-controls [data-view="grid"]')).toHaveCount(0);
-  await expect(page.locator(".home-project-list__title").first()).toHaveCSS("text-align","center");
+  await expect(page.locator(".home-project-list__title").first()).toHaveCSS("text-align",isMobile ? "left" : "center");
   await expect(page.getByRole("link",{name:/all work/i}).first()).toBeVisible();
 });
 

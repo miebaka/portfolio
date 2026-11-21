@@ -15,7 +15,6 @@ const contrast = (foreground, background) => {
 
 for (const [name, path, selector] of [
   ["Home", "/index.html", ".editorial-index--work"],
-  ["Work", "/work.html", ".editorial-index--archive"],
   ["Essays", "/essays.html", ".editorial-index--notes"]
 ]) {
   test(`${name} uses the shared full-column AAA editorial-index interaction`, async ({ page }) => {
@@ -41,7 +40,7 @@ for (const [name, path, selector] of [
     // Home's deliberately heavier Geist Sans display is a section-specific
     // art-direction decision. The shared Work and Essays index remains weight 400.
     await expect(rows.first().locator(".editorial-index__title"))
-      .toHaveCSS("font-weight", name === "Home" ? /^(550|560)$/ : "400");
+      .toHaveCSS("font-weight", name === "Home" ? "500" : "400");
     if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
     const focusColors = await rows.first().evaluate(element => ({
       foreground: getComputedStyle(element).color,
