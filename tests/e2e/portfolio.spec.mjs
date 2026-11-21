@@ -526,7 +526,10 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         document.elementFromPoint(x, y)?.closest(".project-folder__link")?.getAttribute("href"),
       { x, y });
       expect(hit, "hover should hit the project under the pointer").toBe(hrefs[i]);
-      await expect(folders.nth(i)).toHaveCSS("z-index", "1");
+      // Touch browsers have coarse pointers even at wide viewport sizes.
+      // Their folders remain interactive without the hover-only elevation.
+      if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches))
+        await expect(folders.nth(i)).toHaveCSS("z-index", "1");
     }
   }
 });

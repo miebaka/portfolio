@@ -1209,7 +1209,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__desc
   line-height: var(--type-leading-reading);}
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
-  font: var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-display) var(--font-sans);
+  font: var(--type-weight-semibold) var(--type-heading-md)/var(--type-leading-display) var(--font-sans);
   letter-spacing: var(--type-tracking-display);}
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > h2,

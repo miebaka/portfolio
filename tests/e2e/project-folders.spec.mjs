@@ -3,8 +3,9 @@ import { test, expect } from "@playwright/test";
 test("project archive is a branded stack, without a filing drawer or WebGL", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.locator(".project-folder")).toHaveCount(3);
-  await expect(page.locator(".project-folder__paper--left")).toHaveCount(3);
-  await expect(page.locator(".project-folder__paper--right")).toHaveCount(3);
+  await expect(page.locator(".project-folder__paper")).toHaveCount(15);
+  for (const sheet of [1, 2, 3, 4, 5])
+    await expect(page.locator(`.project-folder__paper--${sheet}`)).toHaveCount(3);
   await expect(page.locator(".filing-cabinet,.filing-cabinet__three-canvas")).toHaveCount(0);
   await expect(page.locator(".project-folder").nth(0)).toHaveAttribute("style", /#000041/);
   await expect(page.locator(".project-folder").nth(1)).toHaveAttribute("style", /#6e2962/);

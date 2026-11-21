@@ -160,7 +160,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   padding: 0;
   min-width: 0;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
-  max-width: 15ch;}
+  max-width: none;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
   grid-column: 2;
   grid-row: 1;
