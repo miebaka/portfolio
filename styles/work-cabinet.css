@@ -523,3 +523,46 @@ html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__face::after 
 html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__lip {
   transition: opacity 120ms ease;
 }
+
+
+/* Stage C: enable same-origin document transitions only on Work. Published
+   case pages opt in independently; unsupported browsers navigate normally. */
+@view-transition {
+  navigation: auto;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-extracting="true"] {
+  z-index: 48;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-extracting="true"] .filing-cabinet__face {
+  will-change: transform;
+}
+
+body[data-page="work"] .cabinet-extraction__shade,
+body[data-page="work"] .cabinet-extraction__paper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+body[data-page="work"] .cabinet-extraction__shade {
+  z-index: 9998;
+  background: rgb(7 17 43 / 35%);
+  opacity: 0;
+}
+
+body[data-page="work"] .cabinet-extraction__paper {
+  z-index: 9999;
+  background: var(--paper);
+  opacity: 0;
+  contain: paint;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .01ms;
+  }
+}
