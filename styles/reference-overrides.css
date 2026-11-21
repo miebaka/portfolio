@@ -22,8 +22,8 @@ body[data-page="home"] .swiss-selected .swiss-section-head {
   margin:0 0 clamp(2rem,5vw,5rem);padding-block:1.25rem
 }
 body[data-page="home"] .swiss-selected .swiss-section-head h2 {
-  font-size:var(--type-label-m);line-height:1.2;letter-spacing:.16em;
-  font-weight:600;text-transform:uppercase
+  font-size:var(--type-label-m);line-height:var(--type-leading-ui);letter-spacing:var(--type-tracking-label-wide);
+  font-weight:var(--type-weight-semibold);text-transform:uppercase
 }
 body[data-page="home"] .home-project-list {position:relative;width:100%;max-width:1200px;margin-inline:auto}
 body[data-page="home"] .home-project-list .editorial-index {
@@ -47,8 +47,8 @@ body[data-page="home"] .home-project-list__identity {
   pointer-events:none
 }
 body[data-page="home"] .home-project-list__title {
-  display:block;max-width:none;font:500 clamp(3.25rem,8.7vw,10rem)/.88 var(--display);
-  letter-spacing:-.055em;font-stretch:normal;white-space:normal;
+  display:block;max-width:none;font:var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--display);
+  letter-spacing:var(--type-tracking-display);font-stretch:normal;white-space:normal;
   text-transform:none;overflow-wrap:normal;
   transition:color .28s ease,transform .32s cubic-bezier(.16,1,.3,1)
 }
@@ -98,7 +98,7 @@ body[data-page="home"] .work-view-controls a {
     gap:.4rem;min-height:0;padding:1.4rem 0
   }
   body[data-page="home"] .home-project-list__title {
-    font-size:clamp(2rem,9vw,4.5rem);line-height:.95;white-space:normal;
+    font-size:var(--type-display-mobile);line-height:var(--type-leading-display-comfort);white-space:normal;
     overflow-wrap:anywhere
   }
   body[data-page="home"] .home-project-list__visual {
