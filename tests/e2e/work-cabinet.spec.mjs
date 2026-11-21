@@ -561,5 +561,12 @@ test("desktop lifted folder lip does not overpaint the next year-guide label", a
     return guide.getBoundingClientRect().top - face.getBoundingClientRect().bottom;
   });
   expect(gap, "The lifted paper face must finish above the next year heading").toBeGreaterThan(6);
+  const inset = await folder.evaluate(node => {
+    const face = node.querySelector(".filing-cabinet__face").getBoundingClientRect();
+    const details = node.querySelector(".filing-cabinet__lip").getBoundingClientRect();
+    return face.bottom - details.bottom;
+  });
+  expect(inset, "Title and category metadata must fit completely inside the lifted paper face")
+    .toBeGreaterThan(6);
   await expect(page.locator(".filing-cabinet__lip-copy")).toHaveCount(0);
 });
