@@ -78,7 +78,7 @@ body[data-page] .theme-liquid-toggle:active .theme-liquid-toggle__thumb {
   border-radius: 44% 56% 56% 44%;
 }
 body[data-page] .theme-liquid-toggle__mode {
-  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--type-family-label);
   text-transform: uppercase;
   letter-spacing: var(--type-tracking-ui);
 }
@@ -92,14 +92,14 @@ body[data-page] .theme-liquid-toggle:focus-visible {
 body[data-page="home"] .home-landing__statement {
   max-width: 34ch;
   align-self: center;
-  font: var(--type-weight-regular) var(--type-heading-s)/var(--type-leading-lead) var(--display);
+  font: var(--type-weight-regular) var(--type-heading-s)/var(--type-leading-lead) var(--type-family-display);
   letter-spacing: var(--type-tracking-heading);
 }
 body[data-page="home"] .home-landing h1 {
   width: 100%;
   max-width: 100%;
   gap: clamp(.5rem, 3vw, 4rem);
-  font: var(--type-weight-semibold) var(--type-display-hero)/var(--type-leading-hero) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-hero)/var(--type-leading-hero) var(--type-family-display);
   letter-spacing: var(--type-tracking-compressed);
   text-transform: none;
 }
@@ -126,7 +126,7 @@ body[data-page="home"] .home-project-list .editorial-index__item:first-child .ed
   background: transparent;
 }
 body[data-page="home"] .home-project-list .home-project-list__title {
-  font: var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--type-family-display);
   letter-spacing: var(--type-tracking-display);
 }
 body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
@@ -160,13 +160,13 @@ body[data-page="home"] .home-profile .home-profile__media {
 }
 body[data-page="home"] .home-profile__introduction h2 {
   max-width: 12ch;
-  font: var(--type-weight-semibold) var(--type-display-m)/var(--type-leading-display-comfort) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-compact)/var(--type-leading-display-comfort) var(--type-family-display);
   letter-spacing: var(--type-tracking-display);
   text-transform: none;
 }
 body[data-page="home"] .home-profile__lead {
   max-width: 24ch;
-  font: var(--type-weight-regular) var(--type-heading-m)/var(--type-leading-lead) var(--display);
+  font: var(--type-weight-regular) var(--type-heading-m)/var(--type-leading-lead) var(--type-family-display);
   letter-spacing: var(--type-tracking-heading);
 }
 body[data-page="home"] .home-profile__introduction p:not(.home-profile__lead) {
@@ -189,7 +189,7 @@ body[data-page="home"] .home-profile__portrait img {
 
 /* What I Do is a supporting display, not a rival to the name. */
 body[data-page="home"] .home-capabilities--reference .disciplines-heading h2 {
-  font: var(--type-weight-semibold) var(--type-display-s)/var(--type-leading-display-comfort) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-compact)/var(--type-leading-display-comfort) var(--type-family-display);
   letter-spacing: var(--type-tracking-display);
 }
 body[data-page="home"] section.home-capabilities--reference .service-stack {
@@ -208,7 +208,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
 }
 body[data-page="home"] section.home-capabilities--reference .service-stack__card h3 {
   max-width: 18ch;
-  font: var(--type-weight-semibold) var(--type-heading-xl)/var(--type-leading-heading) var(--display);
+  font: var(--type-weight-semibold) var(--type-heading-xl)/var(--type-leading-heading) var(--type-family-display);
   letter-spacing: var(--type-tracking-heading);
 }
 body[data-page="home"] section.home-capabilities--reference .service-stack__symbol {
@@ -239,7 +239,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 }
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
   max-width: 15ch;
-  font: var(--type-weight-semibold) var(--type-display-m)/var(--type-leading-display-comfort) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-compact)/var(--type-leading-display-comfort) var(--type-family-display);
   letter-spacing: var(--type-tracking-display);
 }
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
@@ -268,7 +268,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > h2,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > h2 {
   grid-column: 1;
-  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--type-family-label);
   letter-spacing: var(--type-tracking-label-wide);
   text-transform: uppercase;
 }
@@ -278,7 +278,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   max-width: 64ch;
 }
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__copy p {
-  font: var(--type-weight-regular) var(--type-body-intro)/var(--type-leading-body) var(--body);
+  font: var(--type-weight-regular) var(--type-body-intro)/var(--type-leading-body) var(--type-family-body);
   letter-spacing: var(--type-tracking-title);
 }
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__copy--large p {
@@ -305,7 +305,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   grid-column: 2;
 }
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__closing p {
-  font-size: var(--type-display-m);
+  font-size: var(--type-display-compact);
   line-height: var(--type-leading-lead);
 }
 
@@ -393,7 +393,7 @@ body .site-footer__panel {
   }
   body[data-page="home"] .home-project-list .home-project-list__title,
   body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
-    font-size: var(--type-display-mobile);
+    font-size: var(--type-display-compact);
   }
   body[data-page="home"] .home-profile {
     grid-template-columns: 1fr;
@@ -450,7 +450,7 @@ body .site-footer__panel {
     grid-row: auto;
   }
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
-    font-size: var(--type-display-mobile);
+    font-size: var(--type-display-compact);
   }
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__copy p {
     font-size: var(--type-body-lead);
@@ -490,7 +490,7 @@ body[data-page] .site-index__home {
   width: fit-content;
   min-height: 2.75rem;
   color: var(--ink);
-  font: var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-ui) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-ui) var(--type-family-label);
   letter-spacing: var(--type-tracking-label);
   text-transform: uppercase;
   text-decoration: none;
