@@ -161,6 +161,7 @@ for (const project of caseProjects) {
 
 await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
+await ensureCopy(join(root, "styles/work-cabinet.css"), join(output, "styles/work-cabinet.css"));
 await copyJsGraph("js/main.js");
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
 // Unit tests build intentionally minimal fixtures without optional runtime
