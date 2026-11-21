@@ -15,12 +15,17 @@ test("archive publishes exactly three honest brand-specific native folder links"
   assert.doesNotMatch(html, /filing-cabinet|drawer|webgl|canvas/i);
 });
 
-test("each paper folder has rear tab, two sheets, opaque front and full text", () => {
+test("each folder has a rear tab, five fixed case-section sheets, and opaque front", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   for (const className of ["project-folder__back", "project-folder__tab",
-    "project-folder__paper--left", "project-folder__paper--right",
+    "project-folder__paper--1", "project-folder__paper--2", "project-folder__paper--3",
+    "project-folder__paper--4", "project-folder__paper--5",
     "project-folder__front", "project-folder__title", "project-folder__view"]) {
     assert.equal((html.match(new RegExp('class="[^"]*' + className + '(?: [^"]*)?"', "g")) || []).length, 3, className);
+  }
+  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
+  for (const section of ["The Call", "The System", "What Survived", "First Contact", "The Results"]) {
+    assert.equal((html.match(new RegExp(">" + section + "<", "g")) || []).length, 3, section);
   }
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
