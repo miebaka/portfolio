@@ -1,25 +1,32 @@
 import { test, expect } from "@playwright/test";
 
-test("desktop opt-in mounts Lenis and GSAP without hiding native content", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Smooth wheel applies only to pointer-fine desktop.");
+test("scroll enhancement is desktop-only and keeps content visible on both devices", async ({ page, isMobile }) => {
   await page.goto("/?motion-test=1");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "active");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-engine", "lenis-gsap");
+  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
+  if (isMobile) {
+    await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
+  } else {
+    await expect(page.locator("html")).toHaveAttribute("data-scroll-engine", "lenis-gsap");
+  }
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator(".home-project-list .project-roster__row")).toHaveCount(3);
   await page.locator(".home-profile").scrollIntoViewIfNeeded();
   await expect(page.locator(".home-profile")).toBeVisible();
 });
 
-test("the approved motion preference deactivates the scroll engine immediately", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Desktop-only scroll enhancement.");
+test("motion preference changes preserve correct native or enhanced scrolling", async ({ page, isMobile }) => {
   await page.goto("/?motion-test=1");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "active");
+  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
   await page.evaluate(() => { document.documentElement.dataset.motion = "reduced"; });
   await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "native");
   await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
   await page.evaluate(() => { document.documentElement.dataset.motion = "full"; });
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "active");
+  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
+  if (isMobile) {
+    await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
+  } else {
+    await expect(page.locator("html")).toHaveAttribute("data-scroll-engine", "lenis-gsap");
+  }
 });
 
 test("a system reduced-motion preference leaves native scroll intact", async ({ page }) => {
@@ -30,19 +37,31 @@ test("a system reduced-motion preference leaves native scroll intact", async ({ 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
-test("hero-local mouse movement reaches GPU ripple input", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Mobile uses tap pressure and native touch scrolling.");
+test("hero pointer input uses cursor on desktop and touch ripples on mobile", async ({ page, isMobile }) => {
   await page.goto("/?shader-test=1");
   const host = page.locator("[data-hero-wave]");
   await expect(host).toHaveClass(/is-ready/);
   const rect = await page.locator(".home-landing").boundingBox();
   expect(rect).toBeTruthy();
-  await page.mouse.move(rect.x + rect.width * .2, rect.y + rect.height * .25);
-  await expect(host).toHaveAttribute("data-interaction", "cursor");
+  if (isMobile) {
+    await page.touchscreen.tap(
+      Math.round(rect.x + rect.width * .2),
+      Math.round(rect.y + rect.height * .25)
+    );
+  } else {
+    await page.mouse.move(rect.x + rect.width * .2, rect.y + rect.height * .25);
+  }
+  await expect(host).toHaveAttribute("data-interaction", isMobile ? "touch" : "cursor");
   await expect.poll(async () => Number(await host.getAttribute("data-cursor-x"))).toBeLessThan(-.5);
   await expect.poll(async () => Number(await host.getAttribute("data-cursor-y"))).toBeLessThan(-.4);
   await expect(host).toHaveAttribute("data-ripple-brush", "150px");
   await expect(host).toHaveAttribute("data-ripple-rings", "4");
-  await page.mouse.move(rect.x + rect.width + 10, rect.y + rect.height + 10);
-  await expect(host).toHaveAttribute("data-interaction", "static");
+  if (isMobile) {
+    // The touch gesture must not disable native vertical scrolling.
+    await page.locator(".home-profile").scrollIntoViewIfNeeded();
+    await expect(page.locator(".home-profile")).toBeVisible();
+  } else {
+    await page.mouse.move(rect.x + rect.width + 10, rect.y + rect.height + 10);
+    await expect(host).toHaveAttribute("data-interaction", "static");
+  }
 });
