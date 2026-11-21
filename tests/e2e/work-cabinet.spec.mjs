@@ -102,8 +102,7 @@ test("reading-axis register follows the nearest real folder, never a year divide
   }
 });
 
-test("scroll temporarily suppresses decorative pointer hover and clears after 140ms", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Pointer hover applies only to fine-pointer devices");
+test("scroll temporarily suppresses visual selection and restores it on desktop and touch", async ({ page, isMobile }) => {
   // Test the native scrolling controller in isolation. Running a separate
   // shader compile while asserting a 140ms timer measures GPU startup, not
   // whether the scroll state reliably settles. GPU is tested separately.
@@ -114,8 +113,11 @@ test("scroll temporarily suppresses decorative pointer hover and clears after 14
   });
   await page.goto("/work.html");
   const cabinet = page.locator("[data-project-archive]");
-  const link = page.locator(".filing-cabinet__link").first();
-  await link.hover();
+  await expect(page.locator('.filing-cabinet__folder[data-reading="true"]')).toHaveCount(1);
+  const link = isMobile
+    ? page.locator('.filing-cabinet__folder[data-reading="true"] .filing-cabinet__link')
+    : page.locator(".filing-cabinet__link").first();
+  if (!isMobile) await link.hover();
   await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
   // Capture the transient 140ms suppression synchronously: a polling
   // assertion would outlive that state and report a false failure.
@@ -151,8 +153,7 @@ test("keyboard focus lifts the face instantly and keeps the ring visible", async
   expect(parseFloat(state.outlineWidth)).toBeGreaterThanOrEqual(2);
 });
 
-test("touch reading-axis folder exposes its lip and opens on one tap", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "Touch affordance tested on mobile project");
+test("selected folder exposes its lip and opens on mobile touch or desktop focus", async ({ page, isMobile }) => {
   await page.goto("/work.html");
   const second = page.locator(".filing-cabinet__folder").nth(1);
   await second.locator(".filing-cabinet__link").evaluate(link => {
@@ -160,6 +161,7 @@ test("touch reading-axis folder exposes its lip and opens on one tap", async ({ 
     window.scrollTo({ top: scrollY + rect.top + rect.height / 2 - innerHeight * .4, behavior: "instant" });
   });
   await expect(second).toHaveAttribute("data-reading", "true");
+  if (!isMobile) await second.locator(".filing-cabinet__link").focus();
   await expect(second.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
   await second.locator(".filing-cabinet__tab").click();
   await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
@@ -456,7 +458,7 @@ test("active WebGL cabinet produces actual physical pixels, not an empty canvas"
       return enabled;
     } catch { return false; }
   });
-  test.skip(!supported, "WebGL2 or the device quality tier is unavailable");
+  expect(supported, "GPU regression coverage requires WebGL2 on desktop and mobile").toBe(true);
   const well = page.locator(".filing-cabinet__well");
   await well.scrollIntoViewIfNeeded();
   await well.hover();
@@ -503,8 +505,7 @@ test("cabinet visual QA records its CSS-first fallback on every configured viewp
 });
 
 
-test("touch reading lift leaves the following year visible instead of covering project navigation", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile", "Mobile touch stacking contract");
+test("selected filing-folder lift keeps the next year visible on both devices", async ({ page }, testInfo) => {
   await page.addInitScript(() => {
     Object.defineProperty(window, "WebGL2RenderingContext", {
       configurable: true, value: undefined,
@@ -515,14 +516,22 @@ test("touch reading lift leaves the following year visible instead of covering p
   await well.scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
   const folder = page.locator('.filing-cabinet__folder[data-slug="rivo"]');
-  await folder.evaluate(node => { node.dataset.reading = "true"; });
+  if (testInfo.project.name === "mobile") {
+    await folder.evaluate(node => { node.dataset.reading = "true"; });
+  } else {
+    await folder.locator(".filing-cabinet__link").focus();
+  }
   await page.waitForTimeout(230);
-  const overlap = await page.evaluate(() => {
+  const clearance = await page.evaluate(() => {
     const face = document.querySelector('.filing-cabinet__folder[data-slug="rivo"] .filing-cabinet__face');
     const next = document.querySelectorAll(".filing-cabinet__divider")[1];
-    return face.getBoundingClientRect().bottom - next.getBoundingClientRect().top;
+    const target = matchMedia("(hover: none) and (pointer: coarse)").matches
+      ? next : next.querySelector(".filing-cabinet__divider-year");
+    return target.getBoundingClientRect().top - face.getBoundingClientRect().bottom;
   });
-  expect(overlap, "Active folder must leave the next year completely unobstructed").toBeLessThan(-8);
+  expect(clearance, "Selected paper cannot cover the next year guide").toBeGreaterThan(
+    testInfo.project.name === "mobile" ? 8 : 2
+  );
   await expect(page.locator(".filing-cabinet__divider-caption")).toHaveCount(0);
 });
 
@@ -542,29 +551,42 @@ test("source Work cabinet has true visually-hidden accessibility names with or w
 });
 
 
-test("mobile year-guide text stays clear of each following folder tab", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile", "Mobile text/physical tab separation");
+test("year guides and following index tabs remain readable on desktop and mobile", async ({ page }, testInfo) => {
   await page.goto("/work.html");
   const distances = await page.locator(".filing-cabinet__drawer").evaluate(drawer => {
     const guides = [...drawer.querySelectorAll(".filing-cabinet__divider")];
     return guides.map(guide => {
       const year = guide.querySelector(".filing-cabinet__divider-year");
       const tab = guide.nextElementSibling?.querySelector(".filing-cabinet__tab");
-      return tab.getBoundingClientRect().top - year.getBoundingClientRect().bottom;
+      const yearRect = year.getBoundingClientRect();
+      const tabRect = tab.getBoundingClientRect();
+      const drawerRect = drawer.getBoundingClientRect();
+      return {
+        verticalGap: tabRect.top - yearRect.bottom,
+        tabWithinDrawer: tabRect.left >= drawerRect.left - 2 && tabRect.right <= drawerRect.right + 2,
+        yearLabel: year.textContent.trim(),
+      };
     });
   });
   expect(distances).toHaveLength(3);
-  for (const gap of distances) {
-    expect(gap, "No year number may be obscured by its following cut tab").toBeGreaterThan(3);
+  for (const entry of distances) {
+    expect(entry.yearLabel).toMatch(/^20\\d{2}$/);
+    expect(entry.tabWithinDrawer, "A die-cut tab must stay inside its drawer").toBe(true);
+    if (testInfo.project.name === "mobile") {
+      expect(entry.verticalGap, "Mobile year numbers must clear the following tab").toBeGreaterThan(3);
+    }
   }
 });
 
-test("desktop lifted folder lip does not overpaint the next year-guide label", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "desktop", "Desktop hover/lip separation");
+test("lifted folder details remain inside the paper and above the next year", async ({ page }, testInfo) => {
   await page.goto("/work.html");
   const folder = page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"]');
   await folder.scrollIntoViewIfNeeded();
-  await folder.hover();
+  if (testInfo.project.name === "desktop") {
+    await folder.hover();
+  } else {
+    await folder.evaluate(node => { node.dataset.reading = "true"; });
+  }
   await page.waitForTimeout(220);
   const gap = await page.evaluate(() => {
     const folder = document.querySelector('.filing-cabinet__folder[data-slug="tedx-rsu"]');
@@ -584,8 +606,7 @@ test("desktop lifted folder lip does not overpaint the next year-guide label", a
 });
 
 
-test("mobile paper tabs remain compact, readable and within their physical file bands", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile", "This contract targets the small-screen filing tabs");
+test("index tabs stay readable, proportional and inside their drawer on both devices", async ({ page }, testInfo) => {
   await page.goto("/work.html");
   const measurements = await page.locator(".filing-cabinet__folder").evaluateAll(nodes =>
     nodes.map(node => {
@@ -608,7 +629,12 @@ test("mobile paper tabs remain compact, readable and within their physical file 
   for (const tab of measurements) {
     expect(tab.height, tab.label + " should resemble a small paper tab, not a tall card")
       .toBeLessThan(84);
-    expect(tab.widthRatio).toBeGreaterThan(.64);
+    if (testInfo.project.name === "mobile") {
+      expect(tab.widthRatio).toBeGreaterThan(.64);
+    } else {
+      expect(tab.widthRatio).toBeGreaterThan(.36);
+      expect(tab.widthRatio).toBeLessThan(.45);
+    }
     expect(tab.overhang).toBeLessThan(3);
     expect(tab.fontSize).toBeGreaterThanOrEqual(11);
     expect(tab.clipped).toBe(false);
