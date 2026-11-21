@@ -1,76 +1,96 @@
-# Geist Unified — portfolio typography system
+# Unified portfolio typography — Jacobsen-informed
 
-**Status:** Binding design and engineering contract  
-**Date:** 21 November 2026  
-**Authoritative CSS:** `styles/tokens.css`  
-**Import order:** `styles/tokens.css` before `styles/foundations.css`, followed by component and page layers.
+**Authoritative stylesheet:** `styles/tokens.css`  
+**Reference:** https://lexingtonthemes.com/viewports/jacobsen  
+**Updated:** 21 November 2026  
+**Status:** Binding design and engineering contract
 
-## 1. Design intent
+## Decision
 
-Typography is the portfolio's most prominent visual device. Oversized, image-led editorial headings are a deliberate signature, not a reason to invent new fonts and numbers for every page. The scale provides **one reusable hierarchy** with enough breadth for small UI, long-form essays, and large creative displays. Project imagery and content stay central. The large type must not impede reading or interaction.
+There is **one source of truth for all typography-related CSS**, not merely one set of design tokens. `styles/tokens.css` owns:
 
-## 2. Families and verified face coverage
+- Geist Sans and Geist Mono font families, plus Material Symbols as an icon font only.
+- The entire size, weight, line-height and letter-spacing scale.
+- All font-face declarations (the two text families each load Regular 400 and SemiBold 600).
+- **All typographic selectors and declarations**, including uppercase transformations, text wrapping, text alignment, text decoration, letter spacing and responsive typography.
 
-| Role | Family | Allowed weights | Case |
+No other file in `styles/` is allowed to set typography properties. The remaining stylesheets are strictly concerned with layout, interaction, colours, motion, and component appearance.
+
+`styles/main.css` imports the typography stylesheet **once, last**, into the `typography` cascade layer. CSS variables are resolved at computed-value time, so earlier layout rules may safely reference them. The Work page may keep its separate `styles/project-folders.css`, but that file no longer contains any typography declarations.
+
+## Families
+
+| Role | Token | Font | Supported weights |
 | --- | --- | --- | --- |
-| Displays / headings / project titles | Geist Sans | 400, 600 | Author's case |
-| Body / essays / narrative / emphasis | Geist Sans | 400, 600 | Sentence case |
-| Navigation / labels / metadata / captions | Geist Mono | 400, 600 | Uppercase for UI labels |
-| Symbols (icons ONLY) | Material Symbols Outlined | 400 | Not used as prose |
+| Headings, display and body | `--font-sans` | Geist Sans | 400, 600 |
+| Navigation, metadata and labels | `--font-mono` | Geist Mono | 400, 600 |
+| Icons only | `--icon` | Material Symbols Outlined | 400 |
 
-The currently loaded Geist Sans and Geist Mono Regular and SemiBold WOFF2 files are *static* faces. They are declared at exactly 400 and 600 with `font-display:swap`; there are no licensed, installed files for weights such as 430, 535, 550, 640, 700 or the arbitrary 600–900 range. Do not request synthetic weights or condensed `font-stretch` percentages. The icon font is a functional exception, not another text family.
+No legacy family aliases are kept. Do not reintroduce `--display`, `--body`, `--label`, `--font-display`, `--font-body` or `--font-label`.
 
-## 3. Canonical size hierarchy
+## Canonical size scale
 
-All px figures assume 16px root size and are indicative; browser zoom preserves the underlying rem and fluid calculations. Use token names in code, never copied numbers from this table.
+These ranges assume the browser's default 16px root. Keep `rem` bounds so zoom remains effective.
 
-| Role | Tokens | Range or fixed size at 16px root | Primary placement |
-| --- | --- | --- | --- |
-| Secondary labels | `--type-label-s` / `m` / `ui` / `l` | 11 / 12 / 13 / 14px | Eyebrows, metadata, labels; 11px only when genuinely secondary |
-| Input and mobile nav | `--type-input` / `--type-nav-mobile` | 16 / 13px | Form fields, touch navigation |
-| Small & normal body | `--type-body-s` / `m` / `l` | 15 / 17 / 17–20px | Cards, case text, essays |
-| Lead and intro | `--type-body-lead` / `intro` | 18–24 / 20–38px | Ledes and restrained introductory statements |
-| Content headings | `--type-heading-s` / `m` / `l` / `xl` | 24–40 / 30–54 / 36–54 / 40–84px | Case chapters, cards and page subsections |
-| Compact editorial | `--type-display-mobile` / `s` / `m` / `l` | 37–72 / 42–64 / 48–81 / 51–120px | Responsive editorial headings |
-| Project list | `--type-display-project` | 48–118px | Selected Work and project roster |
-| Section display | `--type-display-section` | 52–160px | About Me, What I Do and archive chapters |
-| Wide editorial | `--type-display-xxl` | 68–120px | Full-width editorial moments |
-| Home name | `--type-display-hero` | 54–176px | Home hero ONLY: major point of visual impact |
-| Decorative signature | `--type-display-signature*` | Fluid / proportional | Existing signature visuals |
-| Inline mark | `--type-inline-mark` | Relative 0.35em | Arrow and minimal punctuation motifs |
+| Token | Size | Usage |
+| --- | --- | --- |
+| `--type-label` | 13px | Eyebrows, uppercase metadata |
+| `--type-caption` | 14px | Captions, navigation |
+| `--type-input` | 16px | Form inputs and controls |
+| `--type-body` | 17px | Regular reading |
+| `--type-body-lg` | 17–20px | Essays and case studies |
+| `--type-lead` | 20–28px | Lead text |
+| `--type-heading-sm` | 24–36px | Card headings |
+| `--type-heading-md` | 32–56px | Subsection headings |
+| `--type-heading-lg` | 40–72px | Project titles and feature headings |
+| `--type-display` | 52–96px | Major section displays |
+| `--type-hero` | 56–160px | Homepage hero and truly exceptional moments |
+| `--type-signature` | 32–112px | Decorative signature |
+| `--type-signature-vw` | 7.6vw | Signature proportional geometry |
+| `--type-signature-wide-vw` | 8.69vw | Wide signature proportional geometry |
+| `--type-inline-mark` | .35em | Decorative inline marks |
 
-## 4. Weight, leading and tracking
+These fifteen roles form one unified scale. The three proportional signature / ornament values are not independent editorial scales.
 
-Font weights are `--type-weight-regular:400` and `--type-weight-semibold:600`. Default body and main display copy use 400; use 600 for meaningful emphasis and for short functional labels, not to force visual hierarchy through faux-bold.
+**Line heights:** `--type-leading-hero` 0.92, `--type-leading-display` 1, `--type-leading-heading` 1.12, `--type-leading-ui` 1.3, `--type-leading-body` 1.5, `--type-leading-reading` 1.65.
 
-Leading tokens are `--type-leading-hero` (.82), `display` (.9), `display-comfort` (.96), `heading` (1.08), `lead` (1.12), `ui` (1.25), `label` (1.3), `body` (1.5), `reading` (1.65) and `loose` (1.8). The first three are for very short display lines, never paragraphs.
+**Tracking:** `--type-tracking-display` −.055em, `--type-tracking-heading` −.025em, `--type-tracking-normal` 0, `--type-tracking-ui` .04em, `--type-tracking-label` .08em, `--type-tracking-label-wide` .12em.
 
-Tracking tokens are `--type-tracking-compressed` (-.08em), `display` (-.055em), `heading` (-.035em), `title` (-.02em), `normal` (0), `ui` (+.04em), `label` (+.1em), `label-wide` (+.16em) and `label-ultra` (+.24em). Labels are tracked positively; long-form prose should not acquire editorial headline tracking.
+**Weights:** 400 and 600 only. Do not synthesize unsupported intermediate or condensed weights.
 
-## 5. Usage contract
-
-In CSS, a component consumes a semantic family and size:
+## Example
 
 ```css
-.case-chapter__copy h2 {
-  font-family: var(--display);
-  font-size: var(--type-heading-l);
-  font-weight: var(--type-weight-regular);
-  line-height: var(--type-leading-heading);
+/* styles/tokens.css: allowed */
+.case-chapter__heading {
+  font: var(--type-weight-semibold) var(--type-heading-lg) /
+    var(--type-leading-display) var(--font-sans);
   letter-spacing: var(--type-tracking-heading);
-}
-
-.meta {
-  font: var(--type-weight-semibold) var(--type-label-ui)/var(--type-leading-label) var(--label);
-  letter-spacing: var(--type-tracking-label);
-  text-transform: uppercase;
 }
 ```
 
-Never introduce hard-coded `font-size`, numeric `font-weight`, `line-height`, `letter-spacing`, an undocumented font family, or an unsupported `font-stretch` inside page or component styles. Add a meaningful token and update this spec instead. `--font-size-*` and `--editorial-display*` remain temporary compatibility aliases only; new code uses `--type-*`.
+Do not put this rule in `pages-v4.css`, `home.css`, `project-folders.css`, or any other stylesheet. CSS page owners retain `grid`, `padding`, `margin`, `color`, `background`, and similar *non-typographic* rules for the same selectors.
 
-## 6. Compliance and CI
+## Why Jacobsen
 
-Run `npm ci`, `npm run lint:typography`, `npm run test:typography`, `npm run test:tokens`, `npm run build` and the existing E2E/quality suite. `stylelint.config.mjs` loads `scripts/stylelint-typography.mjs`. The Quality workflow runs the typography gate before Playwright. A new raw size, weight, tracking or line-height is a blocking error; do not hide it with a lint-disable comment.
+Jacobsen uses its typography to support image-led editorial storytelling rather than filling every viewport with oversized words. This portfolio adapts its restrained hierarchy, not its specific font face, colours, or brand.
 
-**Browser review is still required before merge.** Inspect 320, 390, 768, 1024, 1440 and 1920px widths and 200% zoom. Check Home hero clipping and intentional breakpoints, Selected Work titles, menu and buttons, About and What I Do headings, Work archive, case-study chapter headings, essay reading width, contact inputs, uppercase labels and fallback font loading. Static checks are not a substitute for rendered QA.
+Keep the name dominant, section displays controlled, projects clearly distinguishable, and reading matter comfortable. Small labels should not fall under 13px.
+
+## Enforcement
+
+`scripts/stylelint-typography.mjs` prohibits typography properties in every stylesheet except `styles/tokens.css`, **even if the rule uses a valid token**. `scripts/typography-contract.test.mjs` independently checks for escaped declarations and font faces outside the canonical file; `scripts/typography-structure.test.mjs` checks scale bounds and count; `scripts/token-integrity.test.mjs` checks token ownership and resolution.
+
+Before merge or release, run:
+
+```sh
+npm ci
+npm run lint:typography
+npm run test:typography
+npm run test:tokens
+npm run build
+npm test
+npm run test:e2e
+```
+
+Check 320, 390, 768, 1024, 1440 and 1920px viewports as well as 200% browser zoom. Verify hero and project-title wrapping, Work folder tabs, case-study readability, uppercase metadata, and contact form inputs. Static contracts do not substitute for visual and interaction testing.

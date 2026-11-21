@@ -1,6 +1,5 @@
-@layer reset, base, layout, components, utilities, pages;
+@layer reset, base, layout, components, utilities, pages, typography;
 
-@import url("tokens.css") layer(base);
 @import url("foundations.css") layer(base);
 @import url("layout.css") layer(layout);
 @import url("components-v4.css") layer(components);
@@ -13,3 +12,6 @@
 @import url("editorial-index.css") layer(pages);
 @import url("project-roster.css") layer(pages);
 @import url("portfolio-refinement.css") layer(pages);
+
+/* Typography has a single source, applied after layout and components. */
+@import url("tokens.css") layer(typography);
