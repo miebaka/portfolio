@@ -112,3 +112,13 @@ test("matte drawer paint excludes environment reflections and shadows detach on 
   assert.match(source, /file\.occlusion\.material\.opacity = Math\.max/);
   assert.match(source, /object\.userData\?\.ownsMaterial/);
 });
+
+test("physical folder geometry keeps the tab on the rear leaf and front pocket below the hem", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
+  assert.match(source, /back\.name = "rear-die-cut-leaf"/);
+  assert.match(source, /front\.name = "short-front-pocket-leaf"/);
+  assert.match(source, /front\.position\.set\(0, 10, 0\)/);
+  assert.match(source, /createExpansionScoreGeometry\(width, faceHeight/);
+  assert.match(source, /const baseZ = 13\.5 \+ index \* \.6/);
+  assert.match(source, /canvas\?\.removeEventListener\("webglcontextlost", onContextLost\)/);
+});
