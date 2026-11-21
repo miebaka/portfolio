@@ -111,6 +111,7 @@ export async function initHeroWave({
 
   let destroyed = false;
   let pointerFrame = 0;
+  let touchReleaseFrame = 0;
   let pendingPointer = { x: 0, y: 0, force: 0, quiet: true, source: "static" };
   const applyPointer = () => {
     pointerFrame = 0;
@@ -157,6 +158,23 @@ export async function initHeroWave({
     pendingPointer = { x: 0, y: 0, force: 0, quiet: true, source: "static" };
     if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
   };
+  const onPointerLeave = event => {
+    if (event.pointerType !== "touch") {
+      resetPointer();
+      return;
+    }
+    // Touch browsers dispatch pointerleave as soon as the finger lifts.
+    // Resetting immediately can replace a queued pointerdown impulse
+    // before its first animation frame: a real tap then produces no ripple.
+    // Give the touch impulse one render frame before returning to idle.
+    if (touchReleaseFrame) win.cancelAnimationFrame(touchReleaseFrame);
+    touchReleaseFrame = win.requestAnimationFrame(() => {
+      touchReleaseFrame = win.requestAnimationFrame(() => {
+        touchReleaseFrame = 0;
+        resetPointer();
+      });
+    });
+  };
   const sync = () => {
     if (destroyed) return;
     const state = getState();
@@ -179,7 +197,7 @@ export async function initHeroWave({
   reducedMotionQuery?.addEventListener?.("change", sync);
   landing.addEventListener("pointermove", onPointerMove, { passive: true });
   landing.addEventListener("pointerdown", onPointerDown, { passive: true });
-  landing.addEventListener("pointerleave", resetPointer, { passive: true });
+  landing.addEventListener("pointerleave", onPointerLeave, { passive: true });
   win.addEventListener("blur", resetPointer);
   const markReady = async () => {
     await island?.ready;
@@ -200,9 +218,10 @@ export async function initHeroWave({
     reducedMotionQuery?.removeEventListener?.("change", sync);
     landing.removeEventListener("pointermove", onPointerMove);
     landing.removeEventListener("pointerdown", onPointerDown);
-    landing.removeEventListener("pointerleave", resetPointer);
+    landing.removeEventListener("pointerleave", onPointerLeave);
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
+    if (touchReleaseFrame) win.cancelAnimationFrame(touchReleaseFrame);
     win.removeEventListener("pagehide", destroy);
     island.destroy();
     host.remove();
