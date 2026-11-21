@@ -96,7 +96,7 @@ export function createSuspensionHardware(width, {
   // The central hem visually encases the suspension rod. Thin cardstock
   // remains visible along the shoulder; only notched tips extend onto rails.
   const hem = new THREE.Mesh(
-    new THREE.BoxGeometry(Math.max(12, width - 14), 4.3, .72),
+    new THREE.BoxGeometry(Math.max(12, width - 14), 2.7, .72),
     shade
   );
   hem.name = "folded-suspension-hem";
