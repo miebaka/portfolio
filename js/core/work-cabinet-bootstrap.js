@@ -16,7 +16,7 @@ if (well && !constrained && window.WebGLRenderingContext && window.WebGL2Renderi
   let settleTimer = 0;
 
   function disposeTriggers() {
-    well.removeEventListener("pointerenter", load);
+    well.removeEventListener("pointerenter", onPointerEnter);
     well.removeEventListener("focusin", load);
     window.removeEventListener("scroll", onScroll);
     if (settleTimer) clearTimeout(settleTimer);
@@ -33,6 +33,12 @@ if (well && !constrained && window.WebGLRenderingContext && window.WebGL2Renderi
     });
   }
 
+  function onPointerEnter() {
+    // Scroll can move the cabinet underneath a stationary cursor.
+    // In that case wait for the scroll-settle path instead of compiling now.
+    if (!cabinet.classList.contains("is-scrolling")) load();
+  }
+
   function onScroll() {
     if (started) return;
     const bounds = well.getBoundingClientRect();
@@ -44,7 +50,7 @@ if (well && !constrained && window.WebGLRenderingContext && window.WebGL2Renderi
 
   // No observer-only auto-start. Merely visiting Work must not incur the
   // rendering cost, even if a tall desktop viewport includes the drawer.
-  well.addEventListener("pointerenter", load, { passive: true });
+  well.addEventListener("pointerenter", onPointerEnter, { passive: true });
   well.addEventListener("focusin", load);
   window.addEventListener("scroll", onScroll, { passive: true });
 }
