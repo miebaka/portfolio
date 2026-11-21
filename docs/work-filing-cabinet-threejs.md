@@ -198,6 +198,11 @@ progressive loader, reduced-motion and WebGL-failure behavior.
   exposing the physically die-cut rear-leaf surface beneath the text instead
   of painting a rectangular white badge. The CSS-only, accessibility and
   context-loss fallbacks retain opaque stock for readable labels.
+- The year guides likewise surrender their painted CSS backgrounds once
+  WebGL is ready. Otherwise a white HTML year panel masks the raised die-cut
+  crowns, making desktop folder labels appear to float on the year plate.
+  Native year numbers stay legible over the physically modelled guide; both
+  tab and year backgrounds return on WebGL failure.
 
 **Release acceptance:** Run Node 24 build and cabinet/unit tests, all
 Playwright desktop/mobile/CSS-fallback checks, and GPU screenshots. Confirm
