@@ -59,10 +59,10 @@ test("Published Work cabinet folders are legible at mobile and desktop widths",a
   await page.goto("/work.html");
   const bands=await page.locator(".filing-cabinet__link").evaluateAll(nodes=>nodes.map(node=>{
    const rect=node.getBoundingClientRect();
-   const tab=node.querySelector(".filing-cabinet__tab-title");
+   const tab=node.querySelector(".filing-cabinet__tab");
    const label=tab?.getBoundingClientRect();
    return {display:getComputedStyle(node).display,width:rect.width,height:rect.height,
-    tabWidth:label?.width||0,title:tab?.textContent?.trim()};
+    tabWidth:label?.width||0,title:tab?.querySelector(".filing-cabinet__tab-title")?.textContent?.trim()};
   }));
   expect(bands).toHaveLength(3);
   expect(bands.map(band=>band.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
