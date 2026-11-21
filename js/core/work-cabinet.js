@@ -191,3 +191,10 @@ export function initWorkCabinet({
     },
   };
 }
+
+// This module is loaded only by work.html, after its source/prerendered markup.
+// An exception here never replaces or intercepts the native case-study links.
+if (typeof document !== "undefined" && document.body?.dataset.page === "work") {
+  try { initWorkCabinet(); }
+  catch (error) { console.warn("Work cabinet enhancement unavailable", error); }
+}
