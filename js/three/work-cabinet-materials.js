@@ -156,6 +156,36 @@ export function createContactShadow(doc, size = 192) {
   return tex(canvas);
 }
 
+/**
+ * Reproducible baked finish for the deep drawer interior. No environment
+ * reflection is mixed into this map: from the overhead editorial camera,
+ * powder-coated steel must remain reliably midnight navy on both mobile
+ * and desktop. Subtle side-rim bounce and tiny pigment variation read as
+ * physical paint without the old pale showroom effect.
+ */
+export function createDrawerFloorMap(doc, size = 256) {
+  const canvas = createCanvas(doc, size);
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) return null;
+  const pixels = context.createImageData(size, size);
+  const random = seeded(72049);
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const edge = Math.min(x, size - 1 - x) / size;
+      const sideBounce = 7 * Math.exp(-edge * 34);
+      const depth = 2 * (y / size);
+      const grain = (random() - .5) * 4.6;
+      const k = (y * size + x) * 4;
+      pixels.data[k] = clamp(14 + sideBounce + depth + grain);
+      pixels.data[k + 1] = clamp(25 + sideBounce + depth + grain);
+      pixels.data[k + 2] = clamp(43 + sideBounce + depth + grain);
+      pixels.data[k + 3] = 255;
+    }
+  }
+  context.putImageData(pixels, 0, 0);
+  return tex(canvas, { color: true, anisotropy: 2 });
+}
+
 /** Subtle stamped powder coat, not a polished chrome showroom surface. */
 export function createMetalRoughness(doc, size = 128) {
   const canvas = createCanvas(doc, size);

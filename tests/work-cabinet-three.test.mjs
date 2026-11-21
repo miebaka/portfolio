@@ -102,8 +102,9 @@ test("sparse archive is grounded by modeled steel floor and support rails, not f
 
 test("matte drawer paint excludes environment reflections and shadows detach on lift", () => {
   const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
-  assert.match(source, /color: 0x162641, roughness: 0\.97, metalness: 0/);
-  assert.match(source, /roughnessMap: metalRoughness, envMapIntensity: 0/);
+  assert.match(source, /createDrawerFloorMap\(doc\)/);
+  assert.match(source, /materials\.push\(new THREE\.MeshBasicMaterial\(\{\s*color: floorMap/);
+  assert.match(source, /toneMapped: false,\s*side: THREE\.DoubleSide/);
   assert.match(source, /contactShadowMaterial\.clone\(\)/);
   assert.match(source, /sceneContents\.add\(occlusion\)/);
   assert.match(source, /file\.occlusion\.material\.opacity = Math\.max/);

@@ -118,3 +118,17 @@ while Three.js PCF cast shadows continue to track the actual lifted geometry.
 A per-folder cloned shadow material is explicitly disposed at rebuild/teardown.
 The screenshot contract samples the unobstructed drawer floor to prevent
 the former bright-grey desktop regression from returning.
+
+
+### HDR floor-regression follow-up
+
+The first dielectric MeshStandard floor still appeared grey under the desktop
+studio pipeline (GPU test sampled roughly 180 luminance versus the 115
+limit), while mobile remained dark. Because the floor is a mostly stationary,
+near-orthographic powder-coat surface, it now uses a deliberately baked
+low-contrast colour texture: tiny pigment grain, slight depth falloff, and
+narrow side-rim bounce. The floor uses a colour-only basic material with
+tone mapping disabled; it cannot wash out under RoomEnvironment, and a
+deterministic colour-variation test ensures it is not a featureless flat fill.
+Folder stock, metal rails, real geometry and dynamic PCF shadows remain
+physically lit.

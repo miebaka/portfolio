@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import * as THREE from "three";
-import { createPaperMaps, createContactShadow, createMetalRoughness }
+import { createPaperMaps, createContactShadow, createMetalRoughness, createDrawerFloorMap }
   from "../js/three/work-cabinet-materials.js";
 
 function canvasDocument() {
@@ -67,4 +67,26 @@ test("metal roughness and contact shadow are local optional GPU assets", () => {
   assert.equal(metal.repeat.x, 1 / 80);
   metal.dispose();
   occlusion.dispose();
+});
+
+
+test("deep navy floor pigment is stable, shaded at the rims and independent of HDR", () => {
+  const doc = canvasDocument();
+  const a = createDrawerFloorMap(doc, 64);
+  const b = createDrawerFloorMap(doc, 64);
+  assert.ok(a?.isTexture);
+  assert.equal(a.colorSpace, THREE.SRGBColorSpace);
+  assert.deepEqual([...a.image.pixels], [...b.image.pixels]);
+  let brightest = 0;
+  let dimmest = 255;
+  for (let i = 0; i < a.image.pixels.length; i += 4) {
+    const p = a.image.pixels;
+    const luminance = .2126 * p[i] + .7152 * p[i + 1] + .0722 * p[i + 2];
+    brightest = Math.max(brightest, luminance);
+    dimmest = Math.min(dimmest, luminance);
+  }
+  assert.ok(brightest < 60, "powder coat must not blow out under studio HDR");
+  assert.ok(brightest - dimmest > 4, "floor needs real directional finish, not flat fill");
+  a.dispose();
+  b.dispose();
 });

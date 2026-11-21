@@ -8,7 +8,7 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { createPaperMaps, createContactShadow, createMetalRoughness } from "./three/work-cabinet-materials.js";
+import { createPaperMaps, createContactShadow, createMetalRoughness, createDrawerFloorMap } from "./three/work-cabinet-materials.js";
 
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
@@ -536,12 +536,16 @@ export function initWorkCabinetThree({
         color: 0x0a1727, transparent: true, opacity: 0.78,
         depthWrite: false,
       }));
-      materials.push(new THREE.MeshStandardMaterial({
-        // Powder coat is dielectric paint, not exposed reflective metal.
-        // It must stay navy with *or without* the optional RoomEnvironment.
-        color: 0x162641, roughness: 0.97, metalness: 0,
-        roughnessMap: metalRoughness, envMapIntensity: 0,
-        emissive: 0x091324, emissiveIntensity: 0.12,
+      // The recessed drawer floor uses calibrated, locally authored
+      // powder-coat pigment. A baked directional rim response is stable in
+      // desktop HDR and mobile non-HDR tiers; the physically lit rails and
+      // folders continue to cast real moving shadows above it.
+      const floorMap = createDrawerFloorMap(doc);
+      if (floorMap) textures.push(floorMap);
+      materials.push(new THREE.MeshBasicMaterial({
+        color: floorMap ? 0xffffff : 0x101b2c,
+        map: floorMap,
+        toneMapped: false,
         side: THREE.DoubleSide,
       }));
       const contactShadow = createContactShadow(doc, quality.environment ? 192 : 128);
