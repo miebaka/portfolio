@@ -39,6 +39,7 @@
   --ref-black:#000;--ref-rivo:#0000a8;--ref-rivo-light:#b1c5ff;--ref-chopbox:#b84314;--ref-chopbox-light:#ffcf2f;
   --ref-tedx:#702963;--ref-tedx-light:#e6b8dd;
   --hero-wave-color-1:var(--ref-midnight);--hero-wave-color-2:var(--ref-ultramarine);--hero-wave-color-3:var(--ref-blue-80);
+
   /* Static water-render fallback: palette values owned by foundations. */
   --ref-water-light-glow:rgb(243 254 255 / .88);
   --ref-water-light-depth:rgb(56 117 165 / .4);
