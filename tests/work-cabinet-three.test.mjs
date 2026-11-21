@@ -21,13 +21,10 @@ test("3D cabinet enhancement is inert outside a browser with a Work drawer", () 
   assert.equal(typeof initWorkCabinetThree({ document: null, window: null }).destroy, "function");
 });
 
-test("Work production page loads the 3D enhancement only after its DOM fallback", () => {
+test("Work source attaches a lazy Three.js loader after native HTML links", () => {
   const root = resolve(import.meta.dirname, "..");
-  const htmlPath = resolve(root, "dist/work.html");
-  if (!existsSync(htmlPath)) return; // Build is checked by production integrity tests.
-  const html = readFileSync(htmlPath, "utf8");
-  const runtime = resolve(root, "dist/assets/runtime/work-cabinet-three.js");
-  assert.ok(existsSync(runtime), "page-scoped Three.js runtime must ship with Work");
+  const html = readFileSync(resolve(root, "work.html"), "utf8");
+  assert.ok(existsSync(resolve(root, "js/core/work-cabinet-bootstrap.js")));
   assert.match(html, /js\/core\/work-cabinet-bootstrap\.js/);
   assert.match(html, /class="filing-cabinet__drawer"/);
   assert.match(html, /href="work\/rivo\.html"/);
