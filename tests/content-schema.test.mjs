@@ -182,8 +182,10 @@ test("draft case narratives remain locked despite a published project listing", 
   assert.doesNotMatch(markup, /case-index|sample-hero/);
 });
 test("published case narratives render when their project is published", () => {
-  const markup = renderCaseMarkup(fixture({ caseStudies: { sample: study({ status: "published" }) } }), "sample");
-  assert.match(markup, /case-index/);
+  const chapters = ["decision", "system", "survival", "encounter"].map(id => ({ id, label: id[0].toUpperCase() + id.slice(1), title: "A focused chapter", body: ["A documented design decision."] }));
+  const markup = renderCaseMarkup(fixture({ caseStudies: { sample: study({ status: "published", hero: "sample-hero", facts: { role: "Identity", delivered: "Application system" }, chapters }) } }), "sample");
+  assert.match(markup, /id="encounter"/);
+  assert.doesNotMatch(markup, /case-index|case-lede/);
   assert.doesNotMatch(markup, /Coming soon/);
 });
 test("malformed content returns structured errors instead of throwing", () => {
