@@ -1,82 +1,68 @@
-/* Geist Unified: the only source of typography values.
-   Material Symbols remains a reserved icon face, not a third text family. */
+/* PORTFOLIO TYPOGRAPHY — ONE AUTHORITATIVE TOKEN SYSTEM.
+   Jacobsen-informed: calm editorial hierarchy, restrained section sizing,
+   readable long-form text, and responsive zoom-safe bounds.
+   No compatibility aliases or page-local typography token definitions. */
 :root {
-  --font-display: "Geist Sans", Arial, system-ui, sans-serif;
-  --font-body: "Geist Sans", Arial, system-ui, sans-serif;
-  --font-label: "Geist Mono", "SFMono-Regular", ui-monospace, monospace;
-  --display: var(--font-display);
-  --body: var(--font-body);
-  --label: var(--font-label);
-  --signature: var(--font-display);
+  /* Text families: Geist Sans and Geist Mono. Icons are not text. */
+  --type-family-display: "Geist Sans", Arial, system-ui, sans-serif;
+  --type-family-body: "Geist Sans", Arial, system-ui, sans-serif;
+  --type-family-label: "Geist Mono", "SFMono-Regular", ui-monospace, monospace;
+  --type-family-icon: "Material Symbols Outlined";
 
-  /* Separate static regular/semibold files: no interpolated weights. */
+  /* Installed static weights only. */
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
 
-  /* Labels and controls */
-  --type-label-s: .6875rem;
-  --type-label-m: .75rem;
-  --type-label-ui: .8125rem;
-  --type-label-l: .875rem;
-  --type-nav-mobile: var(--type-label-ui);
+  /* UI and labels, with a 13px floor. */
+  --type-label-s: .8125rem;
+  --type-label-m: .875rem;
+  --type-label-l: 1rem;
   --type-input: 1rem;
 
-  /* Reading */
-  --type-body-s: .9375rem;
+  /* Reading hierarchy. */
+  --type-body-s: 1rem;
   --type-body-m: 1.0625rem;
-  --type-body-l: clamp(1.0625rem, 1vw + .75rem, 1.25rem);
-  --type-body-lead: clamp(1.125rem, 1.7vw, 1.5rem);
-  --type-body-intro: clamp(1.25rem, 2.3vw, 2.4rem);
+  --type-body-l: clamp(1.0625rem, 1.2vw, 1.25rem);
+  --type-body-lead: clamp(1.25rem, 1.5vw, 1.5rem);
+  --type-body-intro: clamp(1.25rem, 1.8vw, 2rem);
 
-  /* Heading */
-  --type-heading-s: clamp(1.5rem, 2vw + 1rem, 2.5rem);
-  --type-heading-m: clamp(1.875rem, 3.2vw, 3.4rem);
-  --type-heading-l: clamp(2.25rem, 3.25vw + 1rem, 3.375rem);
-  --type-heading-xl: clamp(2.5rem, 4.6vw, 5.25rem);
+  /* Content headings. */
+  --type-heading-s: clamp(1.5rem, 2vw, 2.25rem);
+  --type-heading-m: clamp(1.875rem, 3vw, 3rem);
+  --type-heading-l: clamp(2.25rem, 3.4vw, 3.5rem);
+  --type-heading-xl: clamp(2.625rem, 4.2vw, 4.75rem);
 
-  /* Image-led editorial hierarchy */
-  --type-display-mobile: clamp(2.3rem, 9.6vw, 4.5rem);
-  --type-display-s: clamp(2.6rem, 5vw, 4rem);
-  --type-display-m: clamp(3rem, 5.5vw, 5.0625rem);
-  --type-display-l: clamp(3.2rem, 6vw, 7.5rem);
-  --type-display-project: clamp(3rem, 6.9vw, 7.4rem);
-  --type-display-section: clamp(3.25rem, 8.7vw, 10rem);
-  --type-display-xxl: clamp(4.25rem, 8vw, 7.5rem);
+  /* Editorial displays: only four meaningfully distinct sizes. */
+  --type-display-compact: clamp(2.375rem, 4.5vw, 4.75rem);
+  --type-display-project: clamp(2.75rem, 5.2vw, 6.25rem);
+  --type-display-section: clamp(3rem, 6.2vw, 6.5rem);
   --type-display-hero: clamp(3.4rem, 8.4vw, 11rem);
-  --type-display-signature: clamp(2rem, 7.6vw, 7rem);
+
+  /* Signature geometry, not alternate heading scales. */
   --type-display-signature-vw: 7.6vw;
   --type-display-signature-wide-vw: 8.69vw;
   --type-inline-mark: .35em;
 
-  /* Line height: tightly set roles are for short display headlines only. */
-  --type-leading-hero: .82;
-  --type-leading-display: .9;
-  --type-leading-display-comfort: .96;
-  --type-leading-heading: 1.08;
-  --type-leading-lead: 1.12;
+  /* Leading. */
+  --type-leading-hero: .9;
+  --type-leading-display: .98;
+  --type-leading-display-comfort: 1.02;
+  --type-leading-heading: 1.14;
+  --type-leading-lead: 1.2;
   --type-leading-ui: 1.25;
-  --type-leading-label: 1.3;
+  --type-leading-label: 1.35;
   --type-leading-body: 1.5;
-  --type-leading-reading: 1.65;
-  --type-leading-loose: 1.8;
+  --type-leading-reading: 1.6;
+  --type-leading-loose: 1.75;
 
-  /* Tracking */
-  --type-tracking-compressed: -.08em;
-  --type-tracking-display: -.055em;
-  --type-tracking-heading: -.035em;
-  --type-tracking-title: -.02em;
+  /* Tracking. */
+  --type-tracking-compressed: -.06em;
+  --type-tracking-display: -.035em;
+  --type-tracking-heading: -.025em;
+  --type-tracking-title: -.015em;
   --type-tracking-normal: 0;
   --type-tracking-ui: .04em;
-  --type-tracking-label: .1em;
-  --type-tracking-label-wide: .16em;
-  --type-tracking-label-ultra: .24em;
-
-  /* Deprecated compatibility aliases; never use in new components. */
-  --font-size-sm: var(--type-label-m);
-  --font-size-md: var(--type-body-lead);
-  --font-size-lg: var(--type-heading-s);
-  --font-size-xl: var(--type-heading-m);
-  --font-size-2xl: var(--type-heading-l);
-  --editorial-display: var(--type-display-xxl);
-  --editorial-display-small: var(--type-display-l);
+  --type-tracking-label: .08em;
+  --type-tracking-label-wide: .12em;
+  --type-tracking-label-ultra: .16em;
 }
