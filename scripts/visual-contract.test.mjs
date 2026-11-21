@@ -33,7 +33,7 @@ function visibleText(html) {
 test("approved visual contract remains intact", async () => {
   assert.equal(contract.baselineCommit, "54dcc41");
   const cssFiles = (await readdir(join(dist, "styles"))).filter(file => file.endsWith(".css"));
-  assert.deepEqual(cssFiles, ["main.css"], "production has one bundled stylesheet");
+  assert.deepEqual(cssFiles, ["main.css", "work-cabinet.css"], "Work-only CSS must stay separate from the bundled site CSS");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   const compactCss = css.replace(/\s+/g, "").toLowerCase();
   assert.doesNotMatch(css, /@import\b/i);
@@ -75,8 +75,12 @@ test("approved visual contract remains intact", async () => {
       assert.ok(!text.toLowerCase().includes(phrase.toLowerCase()), `${path}: forbidden copy: ${phrase}`);
     }
     const stylesheets = [...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi)];
-    assert.equal(stylesheets.length, 1, `${path}: expected one stylesheet request`);
+    const cabinetPage = path.endsWith("/work.html");
+    assert.equal(stylesheets.length, cabinetPage ? 2 : 1,
+      `${path}: only Work may use a second page-scoped stylesheet`);
     assert.match(stylesheets[0][0], /href=["'](?:\/|\.\.\/)?styles\/main\.css["']/i, path);
+    if (cabinetPage)
+      assert.match(stylesheets[1][0], /href=["']styles\/work-cabinet\.css["']/i, path);
   }
   assert.match(css, /body \.site-footer__signature::before\{display:block/);
   assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
