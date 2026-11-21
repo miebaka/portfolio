@@ -55,78 +55,48 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
 export function renderProjectArchive() {
   const el = document.querySelector("[data-project-archive]");
   if (!el) return;
-  el.className = "filing-cabinet";
+  el.className = "project-folder-stack";
   if (el.dataset.prerendered !== "true")
     el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath(), SITE.caseStudies);
 }
 
 /* Filing Cabinet V2: the source data determines the filing order and truthful
    divider dates; case studies stay ordinary links even if JS fails entirely. */
-export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
+/* Published projects become layered, native-link paper folders.
+   The design works without WebGL or any hover-specific JavaScript. */
+export function renderProjectFolderStackMarkup(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
   const published = projects
-    .filter(project =>
-      project.status === "published" &&
+    .filter(project => project.status === "published" &&
       studies?.[project.slug]?.status === "published" &&
-      project.cover &&
-      !(project.href || "").startsWith("essays/"))
+      project.cover && !(project.href || "").startsWith("essays/"))
     .sort((a, b) => Number(b.year) - Number(a.year) ||
       (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) ||
       a.title.localeCompare(b.title));
-  const numberOf = number => String(number).padStart(2, "0");
-  const count = numberOf(published.length);
-  let lastYear = "";
-  let folders = 0;
 
-  const drawer = published.map(project => {
-    const year = String(project.year);
-    const divider = year !== lastYear
-      ? '<li class="filing-cabinet__divider" aria-hidden="true">' +
-        '<span class="filing-cabinet__divider-year">' + esc(year) + '</span>' +
-        '</li>'
-      : "";
-    lastYear = year;
-    const index = ++folders;
-    const tab = ["a", "b", "c"][(index - 1) % 3];
-    const number = numberOf(index);
-    const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
-    const label = esc(project.title);
-    const category = esc(project.category);
-    const encodedYear = esc(year);
-    return divider +
-      '<li class="filing-cabinet__folder" data-tab="' + tab +
-      '" data-slug="' + safeToken(project.slug) +
-      '" data-file-number="' + number + '" data-year="' + encodedYear + '">' +
-      '<a class="filing-cabinet__link" href="' + esc(href) + '">' +
-      '<span class="filing-cabinet__face" aria-hidden="true">' +
-      '<span class="filing-cabinet__tab"><span class="filing-cabinet__number">' + number + '</span>' +
-      '<span class="filing-cabinet__tab-title">' + label + '</span></span>' +
-      '<span class="filing-cabinet__lip"><strong class="filing-cabinet__lip-title">' + label + '</strong>' +
-      '<span class="filing-cabinet__lip-meta">' + category + ' / ' + encodedYear + '</span>' +
-      '</span></span>' +
-      '<span class="sr-only">Open ' + label + ' case study, ' + category + ', ' + encodedYear + '</span>' +
+  const folders = published.map((project, index) => {
+    const slug = safeToken(project.slug);
+    const title = esc(project.title);
+    const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
+    const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
+    const href = base + safeURL(project.href || "work/" + slug + ".html");
+    const paperOne = esc(project.tags?.[0] || "Visual identity");
+    const paperTwo = esc(project.tags?.[1] || "Art direction");
+    return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
+      '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
+      '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study">' +
+      '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
+      '<span class="project-folder__tab-title">' + title + '</span></span></span>' +
+      '<span class="project-folder__paper project-folder__paper--left" aria-hidden="true"><span>' + paperOne + '</span></span>' +
+      '<span class="project-folder__paper project-folder__paper--right" aria-hidden="true"><span>' + paperTwo + '</span></span>' +
+      '<span class="project-folder__front"><span class="project-folder__overline">CASE STUDY / ' +
+      esc(project.year) + '</span><strong class="project-folder__title">' + title +
+      '</strong><span class="project-folder__bottom"><span>' + esc(project.category) +
+      '</span><span class="project-folder__view">View project <span aria-hidden="true">↗</span></span></span></span>' +
       '</a></li>';
   }).join("");
 
-  const current = published[0];
-  const active = current
-    ? '<span class="filing-cabinet__register-number">NO. 01 / ' + count + '</span>' +
-      '<strong class="filing-cabinet__register-title">' + esc(current.title) + '</strong>' +
-      '<span class="filing-cabinet__register-year">' + esc(current.year) + '</span>'
-    : '<strong class="filing-cabinet__register-title">NO PUBLISHED FILES</strong>';
-
-  return '<div class="filing-cabinet__stage">' +
-    '<div class="filing-cabinet__shell">' +
-    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>THE ARCHIVE</span><span>' +
-      count + ' CASE STUDIES</span></div>' +
-    '<div class="filing-cabinet__well">' +
-    '<ol class="filing-cabinet__drawer" aria-label="Published case studies, newest first">' +
-    drawer + '</ol></div>' +
-    '<div class="filing-cabinet__register" aria-hidden="true">' +
-    '<span class="filing-cabinet__register-label">CURRENT FILE</span>' +
-    '<span class="filing-cabinet__register-values">' + active + '</span></div>' +
-    '</div>' +
-    '<p class="filing-cabinet__caption"><span>IDENTITY / ART DIRECTION / DESIGN SYSTEMS</span></p>' +
-    '</div>';
+  return '<div class="project-folder-stack__stage"><ol class="project-folder-stack__cards" aria-label="Published case studies">' +
+    folders + '</ol></div>';
 }
 
 export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {
@@ -145,7 +115,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
     'experiments.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' +
     base +
     'essays.html"><span>Essays</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
-  return renderFilingCabinetMarkup(projects, studies, base) + progressMarkup + collectionMarkup;
+  return renderProjectFolderStackMarkup(projects, studies, base) + progressMarkup + collectionMarkup;
 }
 
 function clientItem(client) {

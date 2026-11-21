@@ -51,12 +51,11 @@ test("Work archive separates published cases from work in progress", () => {
     assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|When the Swoosh Lost Its Soul|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
-  assert.equal((html.match(/class="filing-cabinet__link"/g) || []).length, 3);
-  assert.equal((html.match(/class="filing-cabinet__divider"/g) || []).length, 3);
-  assert.match(html, /class="filing-cabinet__drawer"/);
-  assert.ok(html.indexOf('data-year="2024"') < html.indexOf('data-year="2023"'));
-  assert.ok(html.indexOf('data-year="2023"') < html.indexOf('data-year="2022"'));
-  assert.doesNotMatch(html, /CHOPBOX 2026|2025.*YEAR INDEX|folder--sealed/);
+  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.match(html, /class="project-folder-stack__cards"/);
+  assert.ok(html.indexOf("CASE STUDY / 2024") < html.indexOf("CASE STUDY / 2023"));
+  assert.ok(html.indexOf("CASE STUDY / 2023") < html.indexOf("CASE STUDY / 2022"));
+  assert.doesNotMatch(html, /filing-cabinet|drawer|folder--sealed/);
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
   assert.match(html, /href="experiments\.html"/);
@@ -76,16 +75,16 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
   assert.doesNotMatch(home, /Case study in progress|Detour|Out Of Office/);
   assert.match(work, /<h2 id="in-progress-title">In progress<\/h2>/);
-  assert.equal((work.match(/class="filing-cabinet__link"/g) || []).length, 3);
-  assert.equal((work.match(/class="filing-cabinet__divider"/g) || []).length, 3);
+  assert.equal((work.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.doesNotMatch(work, /filing-cabinet|work-cabinet/);
   assert.doesNotMatch(work, /class="editorial-index--archive"/);
   for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
   for (const html of [home, work]) assert.doesNotMatch(html, /href="work\/(?:detour|out-of-office)\.html"/);
 });
 
-test("project hit areas are full rows", async () => {
-  const css = await readFile(join(dist, "styles", "work-cabinet.css"), "utf8");
-  assert.match(css, /\.filing-cabinet__link\s*\{[^}]*display:\s*block/);
+test("project folders are full native links", async () => {
+  const css = await readFile(join(dist, "styles", "project-folders.css"), "utf8");
+  assert.match(css, /\.project-folder__link\s*\{[^}]*display:\s*block/);
 });
 
 test("the route registry has unique destinations and supports the approved global masthead", () => {
@@ -236,12 +235,13 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const cssFiles = await walk(join(dist, "styles"), ".css");
   assert.deepEqual(cssFiles, [
     join(dist, "styles", "main.css"),
-    join(dist, "styles", "work-cabinet.css"),
+    join(dist, "styles", "project-folders.css"),
   ]);
   const workPage = await readFile(join(dist, "work.html"), "utf8");
-  assert.match(workPage, /href="styles\/work-cabinet\.css"/);
-  assert.match(workPage, /src="js\/core\/work-cabinet\.js"/);
-  await access(join(dist, "js", "core", "work-cabinet.js"));
+  assert.match(workPage, /href="styles\/project-folders\.css"/);
+  assert.match(workPage, /class="project-folder-stack"/);
+  assert.doesNotMatch(workPage, /work-cabinet|filing-cabinet/);
+  await assert.rejects(access(join(dist, "js", "core", "work-cabinet.js")));
   await access(join(dist, "js", "core", "case-arrival.js"));
   for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
@@ -249,7 +249,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     assert.match(html, /src="\.\.\/js\/core\/case-arrival\.js"/);
   }
   const homePage = await readFile(join(dist, "index.html"), "utf8");
-  assert.doesNotMatch(homePage, /work-cabinet\.css/);
+  assert.doesNotMatch(homePage, /project-folders\.css/);
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
@@ -382,9 +382,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.doesNotMatch(html, /\b0[1-9] \/ (?:Work|About me|Practice|Selected clients|Let(?:&rsquo;|')s work)\b/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
   assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
-  assert.match(navigation, /class="theme-cord"[^>]*role="switch"[^>]*aria-checked="false"/);
-  assert.match(navigation, /data-cord-mode>Print/);
-  assert.match(navigation, /createThemePullCord\(cordButton, \{ onToggle: toggleTheme \}\)/);
+  assert.match(navigation, /class="theme-liquid-toggle"[^>]*role="switch"[^>]*aria-checked="false"/);
+  assert.match(navigation, /data-theme-mode>Light/);
+  assert.match(navigation, /themeButton\.addEventListener\("click", toggleTheme\)/);
   assert.match(css, /--hr:\s*clamp\(1\.25rem,\s*2\.5vw,\s*2\.75rem\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);
@@ -618,7 +618,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 12); // The Work cabinet is a page-scoped stylesheet, not a global import.
+  assert.equal((styles.match(/@import/g) || []).length, 13); // The paper-folder archive remains page-scoped.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

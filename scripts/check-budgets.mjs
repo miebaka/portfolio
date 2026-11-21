@@ -53,11 +53,9 @@ function assertBudget(label, actual, budget) {
 assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 const workHtml = readFileSync(resolve(dist, "work.html"), "utf8");
 const workCss = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu, workHtml));
-assertBudget("Work cabinet supplemental CSS", gzipBytes(["styles/work-cabinet.css"]), 5 * 1024);
-assertBudget("Work cabinet page-scoped JavaScript", gzipBytes(["js/core/work-cabinet.js", "js/core/work-cabinet-bootstrap.js"]), 8 * 1024);
-assertBudget("lazy Three.js physical Work cabinet", gzipBytes(["assets/runtime/work-cabinet-three.js"]), 175 * 1024);
+assertBudget("Work folder stack CSS", gzipBytes(["styles/project-folders.css"]), 6 * 1024);
 assertBudget("case arrival page-scoped JavaScript", gzipBytes(["js/core/case-arrival.js"]), 2 * 1024);
-assertBudget("total Work CSS (main + cabinet)", gzipBytes(workCss), 49 * 1024);
+assertBudget("total Work CSS (main + folders)", gzipBytes(workCss), 53 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
 assertBudget("lazy Lenis + GSAP JavaScript", motionEngine, 110 * 1024);

@@ -12,7 +12,7 @@ test("Home keeps the landing restrained and Selected Work list-only",async({page
   await expect(page.getByRole("link",{name:/all work/i}).first()).toBeVisible();
 });
 
-test("What I Do uses full-bleed token-coloured cards without the green section",async({page})=>{
+test("What I Do uses rounded inset cards and no colored section wrapper",async({page})=>{
   await page.goto("/index.html");
   const section=page.locator("#what-i-do");
   const cards=section.locator(".service-stack__card");
@@ -24,9 +24,11 @@ test("What I Do uses full-bleed token-coloured cards without the green section",
     return {viewport:innerWidth,width:card.getBoundingClientRect().width,
       sectionBg:getComputedStyle(wrapper).backgroundColor,bodyBg:getComputedStyle(document.body).backgroundColor};
   });
-  expect(sizes.width).toBeGreaterThanOrEqual(sizes.viewport-2);
+  expect(sizes.width).toBeLessThan(sizes.viewport);
+  expect(sizes.width).toBeGreaterThan(sizes.viewport * .8);
   expect(sizes.sectionBg).toBe(sizes.bodyBg);
-  await expect(cards.first()).toHaveCSS("border-top-left-radius","0px");
+  const radius=await cards.first().evaluate(node=>parseFloat(getComputedStyle(node).borderTopLeftRadius));
+  expect(radius).toBeGreaterThanOrEqual(12);
 });
 
 test("Client marks are fitted mathematically without distortion",async({page})=>{

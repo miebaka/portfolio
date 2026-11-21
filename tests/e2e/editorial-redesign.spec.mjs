@@ -27,7 +27,7 @@ test("Geist Sans typography roles and full-screen editorial Index are consistent
  await expect(menu).toBeFocused();
 });
 
-test("One original embossed footer is present and theme-aware on key routes",async({page})=>{
+test("One original interactive dot-matrix footer is present and theme-aware on key routes",async({page})=>{
  for(const route of ["/index.html","/work.html","/about.html","/essays.html","/contact.html"]){
   await page.goto(route);
   const footer=page.locator(".site-footer");
@@ -47,32 +47,31 @@ test("One original embossed footer is present and theme-aware on key routes",asy
  }
 });
 
-test("Magazine grid is twelve columns on desktop and four on mobile",async({page,isMobile})=>{
+test("About introduction has a robust two-column grid on desktop and one on mobile",async({page,isMobile})=>{
  await page.goto("/index.html");
  const columns=await page.locator(".home-profile").evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(" ").filter(Boolean).length);
- expect(columns).toBe(isMobile?4:12);
+ expect(columns).toBe(isMobile?1:2);
 });
 
-test("Published Work cabinet folders are legible at mobile and desktop widths",async({page})=>{
- for(const width of [390,768,1440]){
-  await page.setViewportSize({width,height:900});
-  await page.goto("/work.html");
-  const bands=await page.locator(".filing-cabinet__link").evaluateAll(nodes=>nodes.map(node=>{
-   const rect=node.getBoundingClientRect();
-   const tab=node.querySelector(".filing-cabinet__tab");
-   const label=tab?.getBoundingClientRect();
-   return {display:getComputedStyle(node).display,width:rect.width,height:rect.height,
-    tabWidth:label?.width||0,title:tab?.querySelector(".filing-cabinet__tab-title")?.textContent?.trim()};
-  }));
-  expect(bands).toHaveLength(3);
-  expect(bands.map(band=>band.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
-  for(const band of bands){
-   expect(band.display).not.toBe("none");
-   expect(band.width).toBeGreaterThan(120);
-   expect(band.height).toBeGreaterThanOrEqual(44);
-   expect(band.tabWidth).toBeGreaterThan(60);
+test("Published project folders are readable at mobile and desktop widths", async ({page}) => {
+  for (const width of [390, 768, 1440]) {
+    await page.setViewportSize({width, height: 900});
+    await page.goto("/work.html");
+    const bands = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(node => {
+      const rect = node.getBoundingClientRect();
+      const tab = node.querySelector(".project-folder__tab-title");
+      return {display: getComputedStyle(node).display, width: rect.width, height: rect.height,
+        title: tab?.textContent?.trim(), tabWidth: tab?.getBoundingClientRect().width || 0};
+    }));
+    expect(bands).toHaveLength(3);
+    expect(bands.map(b => b.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
+    for (const band of bands) {
+      expect(band.display).not.toBe("none");
+      expect(band.width).toBeGreaterThan(120);
+      expect(band.height).toBeGreaterThanOrEqual(44);
+      expect(band.tabWidth).toBeGreaterThan(60);
+    }
   }
- }
 });
 
 test("404 recovery links remain valid from nested routes",async({page})=>{
@@ -100,20 +99,21 @@ test("What I Do has no numbers or card gradients and all UI labels are uppercase
   await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
  }
 });
-test("Footer signature maintains two masked relief layers and visible shape",async({page})=>{
- await page.goto("/index.html");
- const relief=await page.locator(".site-footer__signature").evaluate(node=>({
-  front:getComputedStyle(node,"::before"),back:getComputedStyle(node,"::after")
- })).catch(()=>null);
- expect(relief).not.toBeNull();
- const layers=await page.locator(".site-footer__signature").evaluate(node=>({
-  frontMask:getComputedStyle(node,"::before").maskImage,
-  frontFilter:getComputedStyle(node,"::before").filter,
-  backMask:getComputedStyle(node,"::after").maskImage,
-  backFilter:getComputedStyle(node,"::after").filter
- }));
- expect(layers.frontMask).toContain("miebaka-joshua-script-name.svg");
- expect(layers.backMask).toContain("miebaka-joshua-script-name.svg");
- expect(layers.frontFilter).toContain("drop-shadow");
- expect(layers.backFilter).toContain("drop-shadow");
+test("Footer is a masked dot matrix, never an embossed relief", async ({page}) => {
+  await page.goto("/index.html");
+  const sig = page.locator(".site-footer__signature");
+  const layers = await sig.evaluate(node => ({
+    width: node.getBoundingClientRect().width,
+    height: node.getBoundingClientRect().height,
+    frontMask: getComputedStyle(node, "::before").maskImage,
+    frontBackground: getComputedStyle(node, "::before").backgroundImage,
+    backContent: getComputedStyle(node, "::after").content,
+  }));
+  expect(layers.width).toBeGreaterThan(200);
+  expect(layers.height).toBeGreaterThan(100);
+  expect(layers.frontMask).toContain("miebaka-joshua-script-name.svg");
+  expect(layers.frontBackground).toContain("radial-gradient");
+  expect(["none", "normal"]).toContain(layers.backContent);
+  await sig.scrollIntoViewIfNeeded();
+  await expect(sig.locator("canvas")).toHaveCount(1);
 });

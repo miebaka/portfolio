@@ -125,7 +125,7 @@ function renderShell(source, href) {
     .replace(/<footer(?: class="[^"]*")? data-mount="footer">[\s\S]*?<\/footer>/, renderFooter({ base }));
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
-  if (href === "work.html") rendered = rendered.replace(/<div class="filing-cabinet" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="filing-cabinet" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
+  if (href === "work.html") rendered = rendered.replace(/<div class="project-folder-stack" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="project-folder-stack" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
   if (href === "experiments.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
   return rendered;
@@ -161,19 +161,10 @@ for (const project of caseProjects) {
 
 await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
-await ensureCopy(join(root, "styles/work-cabinet.css"), join(output, "styles/work-cabinet.css"));
+await ensureCopy(join(root, "styles/project-folders.css"), join(output, "styles/project-folders.css"));
 await copyJsGraph("js/main.js");
-await copyJsGraph("js/core/work-cabinet.js"); // Page-scoped Work enhancement; not in global JS entry.
-await copyJsGraph("js/core/work-cabinet-bootstrap.js"); // Lightweight lazy WebGL entry.
 await copyJsGraph("js/core/case-arrival.js"); // Published case-study arrival; no global JS cost.
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
-// Isolated content-schema tests build a minimal fixture without optional
-// generated runtime bundles. The production build creates this first.
-try {
-  await ensureCopy(join(root, "assets/runtime/work-cabinet-three.js"), join(output, "assets/runtime/work-cabinet-three.js"));
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
-}
 // Unit tests build intentionally minimal fixtures without optional runtime
 // bundles. Production npm run build:motion always supplies this asset.
 try {

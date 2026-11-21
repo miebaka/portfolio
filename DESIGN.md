@@ -1,8 +1,8 @@
 # MIEBAKA JOSHUA — PORTFOLIO DESIGN & EXPERIENCE CONSTITUTION
 
 > **Status:** Authoritative target specification for the next portfolio redesign.  
-> **Version:** 2.1.0 — expanded research / unconstrained art direction mandate  
-> **Date:** 19 November 2026  
+> **Version:** 2.2.0 — approved layered project-folder direction and dot-matrix restoration  
+> **Date:** 21 November 2026  
 > **Repository:** <https://github.com/miebaka/portfolio> (`main` at time of audit)  
 > **Public canonical host:** <https://miebaka-portfolio.vercel.app/>  
 > **Scope:** Every public page, template, interactive system, content module, motion effect, and delivery pipeline.  
@@ -1294,3 +1294,20 @@ The following observations are from the `main` branch reviewed on 19 November 20
 - **What I Do:** five unnumbered semantic service cards, flat authored token colours and no spotlight or image-overlay gradient. Evidence links remain accessible on touch, hover, and keyboard.
 - **Footer:** the original script SVG uses opposing masked highlight/shadow layers for a tactile, raised embossed effect inspired by [For Living](https://www.for-living.it/). Its small keyboard-operable interaction is progressive, not a requirement for reading the signature.
 - **Tests:** desktop checks verify fine-pointer behavior; mobile checks verify always-visible images, focus, and reduced motion. No intentional mobile skips for these behaviors.
+
+
+### Approved portfolio direction (21 November 2026) — overrides the earlier embossed/footer and cabinet concepts
+
+This is the current design contract when older sections above or historical Work handoff files conflict:
+
+1. **Navigation:** no written identity or “Home / Independent Design” line in the masthead. Keep the logo at the left and the **Index** control mathematically centered, with an accessible, animated light/dark liquid toggle at the right. Keep the fullscreen Index, live status, focus trap and preference persistence.
+2. **Landing hierarchy:** “Miebaka Joshua” gets the largest sanctioned display token; the creative-partner statement drops to a supporting heading token. No invented sizes outside `styles/tokens.css`.
+3. **Selected Work:** on the shared page surface with no isolated tinted background; large headings, no rows touching, generous space, real case-study links and no decorative labels competing for attention.
+4. **About:** use a robust editorial text/portrait split on large screens and readable single-column text/portrait order on mobile. The complete About page follows the same typographic rhythm and retains verified biography, roles and proof.
+5. **What I Do:** supporting—not hero-sized—section heading. Five existing, unnumbered, rounded, visually distinct sticky cards with natural native scrolling; no scroll-jacking. Every service and evidence link must be usable by keyboard and touch.
+6. **Footer:** the **whole original scripted-name signature is an interactive dot matrix**. Its source is `js/core/footer-signature.js` and the authored SVG. The embossed shadow/highlight relief layers are retired. The fallback is a dotted, SVG-masked shape; canvas enhancement must not obscure the signature, interfere with links or force motion on visitors opting out.
+7. **Work:** the three published projects form a large **overlapping stack of physical-paper folder cards** rather than a metal drawer or 3D cabinet. Each has a raised labeled tab, two white inset project/discipline papers and an opaque rounded front pocket. Assign each project its actual dominant case-study color from `data/projects.js` (Rivo, TEDx RSU, ChopBox). Hovering/focusing a folder brings it to the foreground with measured, smooth transform-only motion; no fake perspective, WebGL or click-target overlays. On coarse pointers/mobile, cards stack vertically and remain readable. The complete page and links must work without JavaScript.
+
+**Implementation ownership:** `styles/portfolio-refinement.css` owns the current global refinements; `styles/project-folders.css` and `js/render/projects.js` own the new Work archive; `js/render/navigation.js` and `scripts/render-partials.mjs` own the masthead. The historical files under `docs/work-filing-cabinet-*.md` and `docs/WORK-CABINET-GEMINI-HANDOFF.md` are superseded research records only, not instructions to restore cabinet code. The old 3D drawer scripts and source CSS are intentionally removed.
+
+**Acceptance:** npm validation, typography lint, project and navigation unit tests, complete Playwright coverage at desktop and mobile (zero skipped), reduced-motion/keyboard/no-JS checks, bundle budgets, and lighthouse must pass before releasing to main.
