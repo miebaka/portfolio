@@ -622,11 +622,13 @@ body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__
 }
 
 body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab {
-  /* Readable HTML ink stays on an opaque stock tone, while the physical
-     die-cut shape and lighting come from Three.js rather than a floating card. */
-  background: var(--stock);
+  /* A flat HTML badge hides the physical cut tab. When WebGL is ready,
+     let its die-cut rear leaf own the surface and keep only crisp native ink.
+     In CSS-only, reduced-motion and context-loss modes the opaque fallback
+     defined above is retained. */
+  background: transparent;
   border-color: transparent;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 52%);
+  box-shadow: none;
 }
 
 body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
