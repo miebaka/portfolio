@@ -195,3 +195,20 @@ test("reading-axis fallback works when IntersectionObserver is unavailable", asy
   await expect(last).toHaveAttribute("data-reading", "true");
   await expect(page.locator(".filing-cabinet__register-title")).toHaveText("ChopBox");
 });
+
+
+test("a fresh Work visit never restores an unrelated or stale folder", async ({ page }) => {
+  await page.goto("/index.html");
+  await page.evaluate(() => {
+    sessionStorage.setItem("portfolio.workCabinet.return.v2", JSON.stringify({
+      slug: "tedx-rsu", source: "/work.html", scrollY: 450, savedAt: Date.now(),
+    }));
+  });
+  await page.goto("/work.html");
+  await expect(page.locator("[data-project-archive]"))
+    .toHaveAttribute("data-cabinet-interactive", "true");
+  await expect.poll(() => page.evaluate(() => sessionStorage.getItem("portfolio.workCabinet.return.v2")))
+    .toBeNull();
+  await expect(page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"] .filing-cabinet__link'))
+    .not.toBeFocused();
+});
