@@ -224,7 +224,10 @@ body[data-page="work"] .filing-cabinet__tab-title {
 
 body[data-page="work"] .filing-cabinet__lip {
   position: absolute;
-  top: calc(var(--file-step) - 1.45rem);
+  /* Pin the reveal to the paper's actual bottom edge rather than deriving
+     its top from an unrelated band height. Wrapped titles remain inside. */
+  top: auto;
+  bottom: .75rem;
   right: clamp(.8rem, 2vw, 1.8rem);
   left: clamp(.8rem, 2vw, 1.8rem);
   display: grid;
@@ -465,7 +468,8 @@ body[data-page="work"] .filing-cabinet__caption {
   }
 
   body[data-page="work"] .filing-cabinet__lip {
-    top: calc(var(--file-step) - 1.4rem);
+    top: auto;
+    bottom: .5rem;
     grid-template-columns: 1fr;
     gap: .25rem;
   }
