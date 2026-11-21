@@ -31,25 +31,6 @@ html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-chi
   to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
 }
 
-/* OriginKit/21st hover-preview principle: an already-authored project image
-   follows the pointer within a small, clamped distance. Keyboard focus retains
-   the same static project preview. Touch keeps the full-width image in flow. */
-@media (hover: hover) and (pointer: fine) {
-  html.motion-language-ready body[data-page="home"] .home-project-list__visual {
-    translate: var(--motion-preview-x, 0px) var(--motion-preview-y, 0px);
-    transition:
-      opacity 250ms ease,
-      transform 280ms var(--motion-expressive),
-      translate 190ms var(--motion-responsive);
-  }
-  html.motion-language-ready body[data-page="home"] .home-project-list .editorial-index__row::before {
-    transition: transform var(--motion-response-duration) var(--motion-responsive);
-  }
-  html.motion-language-ready body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible)::before {
-    transform: translateX(.3rem);
-  }
-}
-
 /* Quiet micro-feedback is meaningful on navigation and proof links, not every
    paragraph: lift the active surface and the directional arrow by a few pixels. */
 @media (hover: hover) and (pointer: fine) {
@@ -100,7 +81,6 @@ html[data-motion="reduced"] body[data-page="home"] [data-editorial-reveal]
   animation: none !important;
 }
 html[data-motion="reduced"] body[data-page="home"] .service-stack__item { position: relative; top: auto; }
-html[data-motion="reduced"] body[data-page="home"] .home-project-list__visual { translate: none; transition: none; }
 html[data-motion="reduced"] body[data-page="home"] :is(.service-journey__arrow, .home-close__email > span) { transition: none; translate: none; }
 html[data-motion="reduced"]::view-transition-old(root),
 html[data-motion="reduced"]::view-transition-new(root) { animation-duration: .01ms !important; }
