@@ -28,9 +28,9 @@ test("Work production page loads the 3D enhancement only after its DOM fallback"
   const html = readFileSync(htmlPath, "utf8");
   const runtime = resolve(root, "dist/assets/runtime/work-cabinet-three.js");
   assert.ok(existsSync(runtime), "page-scoped Three.js runtime must ship with Work");
-  assert.match(html, /assets\/runtime\/work-cabinet-three\.js/);
+  assert.match(html, /js\/core\/work-cabinet-bootstrap\.js/);
   assert.match(html, /class="filing-cabinet__drawer"/);
   assert.match(html, /href="work\/rivo\.html"/);
   assert.ok(html.indexOf('src="js/core/work-cabinet.js"') <
-    html.indexOf('src="assets/runtime/work-cabinet-three.js"'));
+    html.indexOf('src="js/core/work-cabinet-bootstrap.js"'));
 });
