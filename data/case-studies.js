@@ -112,10 +112,9 @@ export const caseStudies = {
         "label": "What Survived",
         "title": "Keep the identity usable across formats",
         "body": [
-          "The system was extended from a carried object to a large environmental surface. The same short proposition and yellow signal remain legible without turning every touchpoint into the same composition.",
-          "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward.",
-          "The same wordmark and restrained palette are tested across stationery, carried objects and environmental formats. These are application visualisations rather than proof that every item was produced.",
-          "The project record does not include budget figures or a delivery calendar. The supported stress test is visual consistency across scale and formats, not an unverified claim about cost or speed."
+          "The same wordmark, short proposition and yellow signal were extended from stationery and a carried object to an environmental scale without repeating a fixed composition.",
+          "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward. The tote, flag and stage images are visualisations, not proof that every object was produced.",
+          "The record contains no confirmed budget figures or delivery calendar. The supported result of this stress test is consistency across scales, not a claim about money or time saved."
         ],
         "media": [
           "rivo-tote",
@@ -298,10 +297,9 @@ export const caseStudies = {
         "label": "What Survived",
         "title": "Carry the idea into the physical event",
         "body": [
-          "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
-          "The hoodie places the theme mark beside the TEDx lockup. The street banner turns the idea into a public prompt, while campus and event-day photographs show the identity in use with attendees.",
-          "The hoodie places the theme mark beside the TEDx lockup, while the street banner turns the idea into a public prompt. These applications test whether the system stays clear outside the original identity presentation.",
-          "The global TEDx identity was fixed, and the local theme had to work in digital, print and physical settings. The available record does not establish budget amounts or production deadlines, so the demonstrated survival is the motif's consistent use across these formats."
+          "The “Pause…” motif translated from social promotion into programmes, merchandise, campus signage and the event environment without competing with the fixed TEDx identity.",
+          "The hoodie pairs the theme mark with the TEDx lockup. The street banner uses a reflective question and ripple pattern, while campus and event-day photographs show related pieces in a physical setting.",
+          "No budget figures or production timetable accompany the case. What survived was the repeatable motif across documented formats, not a measured cost or speed improvement."
         ],
         "media": [
           "tedx-rsu-merch",
@@ -480,10 +478,9 @@ export const caseStudies = {
         "label": "What Survived",
         "title": "One appetite-led voice across formats",
         "body": [
-          "Packaging, uniform, campaign and out-of-home applications show how the rounded voice and warm palette stay recognisable at very different scales.",
-          "Together, the applications establish a consistent kit for presenting food, packaging offers and direct campaign messages.",
-          "Packaging, uniform and outdoor visualisations stress-test the visual system across scale and context. They show how the kit is intended to work, not that each format was manufactured or deployed.",
-          "Budget, delivery schedule and manufactured samples are not documented. Packaging, uniform and billboard mockups show what survived the change of scale in the design exercise, not what was ultimately printed or produced."
+          "Packaging, uniform, campaign and out-of-home applications show how the rounded voice and warm palette stay recognisable at different scales.",
+          "Together the visualisations establish a kit for presenting food, packaging offers and direct campaign messages. They do not establish that the items were manufactured or deployed.",
+          "No signed-off budget, delivery schedule or production record is available. The supported survival is design coherence in proposed uses, not a verified production or savings outcome."
         ],
         "media": [
           "chopbox-packaging",
