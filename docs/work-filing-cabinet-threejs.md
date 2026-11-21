@@ -47,7 +47,8 @@ and cabinet-gpu-webgl.png in a dedicated Chromium project running with a
 software-backed WebGL2 renderer. This is intentionally stronger than tests
 that only check for a canvas element. The GPU project must assert that the
 scene contains nonempty pixel variation, and verify real context-loss
-recovery. Download and inspect these CI artefacts before merging.
+recovery. A software GPU proves the rendering path runs in CI; it does not
+replace testing on real low-power hardware. Download and inspect these CI artefacts before merging.
 
 - First navigation to Work: no Three.js network request or GPU allocation.
 - First physical interaction: the immediate CSS response must paint before
