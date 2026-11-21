@@ -200,14 +200,6 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .service-fallback dt{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase;}
 
-.service-swatch{text-align:left;}
-
-.service-swatch[aria-selected="true"]::after{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase}
-
-.service-swatch__number{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label)}
-
-.service-swatch>span:last-child{font:var(--type-weight-regular) var(--type-heading-sm)/var(--type-leading-display) var(--font-sans);letter-spacing:var(--type-tracking-heading)}
-
 .service-panel__description{font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-heading) var(--font-sans);letter-spacing:var(--type-tracking-heading)}
 
 .service-panel dt{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase;}
