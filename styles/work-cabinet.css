@@ -224,6 +224,7 @@ body[data-page="work"] .filing-cabinet__tab-title {
 
 body[data-page="work"] .filing-cabinet__lip {
   position: absolute;
+
   /* Pin the reveal to the paper's actual bottom edge rather than deriving
      its top from an unrelated band height. Wrapped titles remain inside. */
   top: auto;
