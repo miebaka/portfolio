@@ -461,7 +461,7 @@ body[data-page="work"] .filing-cabinet__caption {
      before its die-cut tab starts, including long titles wrapping to 3 lines. */
   body[data-page="work"] .filing-cabinet__divider {
     /* A 24px reading-axis lift must not hide the year printed above it. */
-    margin-bottom: 2.25rem;
+    margin-bottom: 2.5rem;
   }
 
   body[data-page="work"] .filing-cabinet__lip {
