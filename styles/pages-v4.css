@@ -1211,8 +1211,7 @@ body[data-page="about"] .about-editorial__copy{
   font-size:var(--type-display-l);
   line-height:var(--type-leading-display-comfort);
   letter-spacing:var(--type-tracking-display);
-  max-width: none;
-  text-wrap: balance;
+  max-width: 24ch;
 }
 
 
