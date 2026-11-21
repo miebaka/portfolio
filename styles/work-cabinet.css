@@ -650,6 +650,15 @@ body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__
   text-shadow: 0 1px 0 rgb(255 255 255 / 22%);
 }
 
+/* On coarse-pointer devices, an HTML-only Y lift can outrun the
+   screenshot-aligned WebGL sheet during native scroll selection. Keep the
+   label on the paper; the renderer adds a small Z lift and contact shadow. */
+@media (hover: none) and (pointer: coarse) {
+  body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__face {
+    transform: none;
+  }
+}
+
 @media (forced-colors: active) {
   body[data-page="work"] .filing-cabinet__three-canvas {
     display: none;
