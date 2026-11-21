@@ -26,6 +26,8 @@ The current \`data/projects.js\` establishes the actual published case order:
 
 Coming-soon entries currently include Poster A Week (2024), Kiki-Joshua (2022), and Kigoma Hotels (2021). A coming-soon record is **not** evidence of publication within the next quarter. **Default to zero sealed folders in the first prototype** unless completion targets are confirmed and the data includes a public-safe, current preparation status. Do not use unrelated essays, older year dividers, or fabricated projects to thicken the drawer. Three cases and three truthful year dividers are a defensible six-band starting point. Perceived depth can come from paper edges and staggered tabs, not fake content. The in-progress projects can remain in a clearly labelled, non-clickable section outside the drawer.
 
+**Existing fallback mismatch:** the checked-in `work.html` currently lists Detour and Out Of Office (both 2026) under In progress, while the data-driven `renderProjectArchiveMarkup()` derives Poster A Week, Kiki-Joshua and Kigoma Hotels. That means the source HTML and generated page are not the same without JS. PR A must reconcile them and test the actual source/no-JS document as well as the built output; the cabinet cannot depend on client-side replacement for truthful content.
+
 For each live folder, **short tab = actual project title** and **revealed lip = category/year plus a concise case-specific governing decision** already supported by the case-study data. Avoid inventing separate case-study titles. On narrow screens, use wrapping or an explicit two-line lip rather than truncating the essential name to 48 characters.
 
 ## 3. Interaction state model
