@@ -163,6 +163,7 @@ await mkdir(join(output, "styles"), { recursive: true });
 await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "styles/main.css")));
 await copyJsGraph("js/main.js");
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
+await ensureCopy(join(root, "assets/runtime/motion-experience.js"), join(output, "assets/runtime/motion-experience.js"));
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();
