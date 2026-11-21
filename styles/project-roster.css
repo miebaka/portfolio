@@ -106,7 +106,7 @@ body[data-page="home"] .home-project-list .home-project-list__title {
   margin: 0;
   padding: 0;
   color: inherit;
-  font: var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--type-family-display);
   letter-spacing: var(--type-tracking-compressed);
   text-transform: uppercase;
   text-wrap: balance;
@@ -228,7 +228,7 @@ body[data-page="home"] .home-project-list .work-view-controls a {
   border-radius: 0.3rem;
   background: var(--roster-ink);
   color: #fff;
-  font: var(--type-weight-semibold) var(--type-body-lead)/var(--type-leading-lead) var(--label);
+  font: var(--type-weight-semibold) var(--type-body-lead)/var(--type-leading-lead) var(--type-family-label);
   letter-spacing: var(--type-tracking-title);
   text-decoration: none;
   text-transform: uppercase;
@@ -289,7 +289,7 @@ body[data-page="home"] .home-project-list .work-view-controls a:focus-visible {
   body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible) .home-project-list__title {
     max-width: 100%;
     color: var(--roster-ink);
-    font-size: var(--type-display-mobile);
+    font-size: var(--type-display-compact);
     line-height: var(--type-leading-display-comfort);
     letter-spacing: var(--type-tracking-compressed);
     text-align: left;
@@ -298,7 +298,7 @@ body[data-page="home"] .home-project-list .work-view-controls a:focus-visible {
 
   body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
     max-width: 100%;
-    font-size: var(--type-display-mobile);
+    font-size: var(--type-display-compact);
   }
 
   body[data-page="home"] .home-project-list .home-project-list__visual,
