@@ -76,3 +76,122 @@ test("Work uses native scrolling rather than Lenis, including explicit motion op
   await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "native");
   await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
 });
+
+
+test("reading-axis register follows the nearest real folder, never a year divider", async ({ page }) => {
+  await page.goto("/work.html");
+  const drawer = page.locator(".filing-cabinet__drawer");
+  await expect(drawer).toBeVisible();
+  await expect(page.locator("[data-project-archive]")).toHaveAttribute("data-cabinet-interactive", "true");
+  for (const [index, name, year] of [
+    [0, "Rivo Studio", "2024"],
+    [1, "TEDx Rivers State University", "2023"],
+    [2, "ChopBox", "2022"],
+  ]) {
+    await drawer.locator(".filing-cabinet__link").nth(index).evaluate(link => {
+      const box = link.getBoundingClientRect();
+      window.scrollTo({ top: scrollY + box.top + box.height / 2 - innerHeight * .4, behavior: "instant" });
+    });
+    await expect(drawer.locator(".filing-cabinet__folder").nth(index))
+      .toHaveAttribute("data-reading", "true");
+    await expect(page.locator(".filing-cabinet__register-title")).toHaveText(name);
+    await expect(page.locator(".filing-cabinet__register-year")).toHaveText(year);
+    await expect(drawer.locator('[data-reading="true"]')).toHaveCount(1);
+    await expect(page.locator(".filing-cabinet__register")).toHaveAttribute("aria-hidden", "true");
+  }
+});
+
+test("scroll temporarily suppresses decorative pointer hover and clears after 140ms", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Pointer hover applies only to fine-pointer devices");
+  await page.goto("/work.html");
+  const cabinet = page.locator("[data-project-archive]");
+  const link = page.locator(".filing-cabinet__link").first();
+  await link.hover();
+  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  await expect(cabinet).toHaveClass(/is-scrolling/);
+  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "0");
+  await expect(cabinet).not.toHaveClass(/is-scrolling/, { timeout: 2000 });
+  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+});
+
+test("keyboard focus lifts the face instantly and keeps the ring visible", async ({ page }) => {
+  await page.goto("/work.html");
+  const link = page.locator(".filing-cabinet__link").nth(1);
+  await link.focus();
+  await expect(link).toBeFocused();
+  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+  const state = await link.evaluate(element => {
+    const face = element.querySelector(".filing-cabinet__face");
+    const transform = new DOMMatrixReadOnly(getComputedStyle(face).transform);
+    const ring = getComputedStyle(element);
+    return { y: transform.m42, duration: getComputedStyle(face).transitionDuration,
+      outline: ring.outlineStyle, outlineWidth: ring.outlineWidth };
+  });
+  expect(state.y).toBeCloseTo(-20, 0);
+  expect(state.duration).toBe("0s");
+  expect(state.outline).toBe("solid");
+  expect(parseFloat(state.outlineWidth)).toBeGreaterThanOrEqual(2);
+});
+
+test("touch reading-axis folder exposes its lip and opens on one tap", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Touch affordance tested on mobile project");
+  await page.goto("/work.html");
+  const second = page.locator(".filing-cabinet__folder").nth(1);
+  await second.locator(".filing-cabinet__link").evaluate(link => {
+    const rect = link.getBoundingClientRect();
+    window.scrollTo({ top: scrollY + rect.top + rect.height / 2 - innerHeight * .4, behavior: "instant" });
+  });
+  await expect(second).toHaveAttribute("data-reading", "true");
+  await expect(second.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+  await second.locator(".filing-cabinet__tab").click();
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+});
+
+test("browser Back re-files the correct folder with native scroll and focus", async ({ page }) => {
+  await page.goto("/work.html");
+  const second = page.locator(".filing-cabinet__folder").nth(1);
+  await second.locator(".filing-cabinet__link").evaluate(link => {
+    const rect = link.getBoundingClientRect();
+    window.scrollTo({ top: scrollY + rect.top + rect.height / 2 - innerHeight * .4, behavior: "instant" });
+  });
+  await expect(second).toHaveAttribute("data-reading", "true");
+  const startingY = await page.evaluate(() => scrollY);
+  await second.locator(".filing-cabinet__tab").click();
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/work\.html$/);
+  await expect(page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"] .filing-cabinet__link'))
+    .toBeFocused({ timeout: 5000 });
+  await expect.poll(() => page.evaluate(() => Math.abs(scrollY - startingY))).toBeLessThan(25);
+  await expect(page.locator(".filing-cabinet__register-title")).toHaveText("TEDx Rivers State University");
+  await expect(page.locator(".filing-cabinet__drawer").locator('[data-reading="true"]')).toHaveCount(1);
+  await expect(page.locator(".filing-cabinet")).not.toHaveClass(/is-scrolling/);
+});
+
+test("reduced motion keeps folder details visible without travel", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/work.html");
+  const link = page.locator(".filing-cabinet__link").first();
+  await link.focus();
+  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+  const face = link.locator(".filing-cabinet__face");
+  await expect(face).toHaveCSS("transform", "none");
+  await expect(face).toHaveCSS("transition-duration", "0s");
+  await link.press("Enter");
+  await expect(page).toHaveURL(/\/work\/rivo\.html$/);
+});
+
+test("reading-axis fallback works when IntersectionObserver is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "IntersectionObserver", { value: undefined, configurable: true });
+  });
+  await page.goto("/work.html");
+  const last = page.locator('.filing-cabinet__folder[data-slug="chopbox"]');
+  await last.locator(".filing-cabinet__link").evaluate(link => {
+    const rect = link.getBoundingClientRect();
+    window.scrollTo({ top: scrollY + rect.top + rect.height / 2 - innerHeight * .4, behavior: "instant" });
+  });
+  await expect(last).toHaveAttribute("data-reading", "true");
+  await expect(page.locator(".filing-cabinet__register-title")).toHaveText("ChopBox");
+});
