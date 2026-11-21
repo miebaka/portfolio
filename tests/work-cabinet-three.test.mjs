@@ -41,3 +41,35 @@ test("Work bootstrap requires user engagement rather than eager viewport observa
   assert.match(source, /addEventListener\("scroll"/);
   assert.doesNotMatch(source, /new IntersectionObserver/);
 });
+
+
+test("quality tier disables GPU material layer when visitors request accessibility or data savings", () => {
+  for (const preference of [
+    { reducedMotion: true },
+    { forcedColors: true },
+    { deviceMemory: 2 },
+    { hardwareConcurrency: 2 },
+    { saveData: true },
+  ]) {
+    const quality = cabinetQuality({ width: 1440, hardwareConcurrency: 8, ...preference });
+    assert.equal(quality.enabled, false, JSON.stringify(preference));
+  }
+});
+
+test("3D geometry follows browser-computed transforms, not competing easing constants", () => {
+  const root = resolve(import.meta.dirname, "..");
+  const source = readFileSync(resolve(root, "js/work-cabinet-three.js"), "utf8");
+  assert.match(source, /file\.face\.getBoundingClientRect\(\)/);
+  assert.match(source, /file\.group\.scale\.set\(scale, scale, 1\)/);
+  assert.doesNotMatch(source, /file\.travel\s*\+=/);
+  assert.match(source, /function cleanup\(\)/);
+  assert.match(source, /contextFailed = true;\s+cleanup\(\)/);
+});
+
+test("bootstrap cancels scroll-load work when the drawer leaves the viewport", () => {
+  const root = resolve(import.meta.dirname, "..");
+  const source = readFileSync(resolve(root, "js/core/work-cabinet-bootstrap.js"), "utf8");
+  assert.match(source, /if \(settleTimer\) clearTimeout\(settleTimer\)/);
+  assert.match(source, /if \(inViewport\(\)\) load\(\)/);
+  assert.match(source, /requestIdleCallback/);
+});

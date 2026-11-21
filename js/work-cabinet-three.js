@@ -11,15 +11,21 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
 const MOBILE_DPR = 1.25;
-const EPSILON = 0.14;
+const TRANSITION_WINDOW_MS = 240;
 
 export function cabinetQuality({
   width = 0,
   devicePixelRatio = 1,
   saveData = false,
   hardwareConcurrency = 4,
+  deviceMemory = 4,
+  reducedMotion = false,
+  forcedColors = false,
 } = {}) {
-  if (saveData || hardwareConcurrency <= 2) return { enabled: false, pixelRatio: 1, environment: false };
+  if (saveData || hardwareConcurrency <= 2 || deviceMemory <= 2 ||
+      reducedMotion || forcedColors) {
+    return { enabled: false, pixelRatio: 1, environment: false };
+  }
   const mobile = width < 700;
   return {
     enabled: true,
@@ -106,12 +112,6 @@ function extrudedPaper(shape) {
   });
 }
 
-function isMotionReduced(doc, win) {
-  const choice = doc.documentElement.dataset.motion;
-  return choice === "reduced" ||
-    (choice !== "full" && win.matchMedia("(prefers-reduced-motion: reduce)").matches);
-}
-
 export function initWorkCabinetThree({
   document: doc = globalThis.document,
   window: win = globalThis.window,
@@ -124,6 +124,10 @@ export function initWorkCabinetThree({
     devicePixelRatio: win.devicePixelRatio,
     saveData: Boolean(win.navigator?.connection?.saveData),
     hardwareConcurrency: win.navigator?.hardwareConcurrency ?? 4,
+    deviceMemory: win.navigator?.deviceMemory ?? 4,
+    reducedMotion: doc.documentElement.dataset.motion === "reduced" ||
+      win.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    forcedColors: win.matchMedia("(forced-colors: active)").matches,
   });
   if (!quality.enabled || !win.WebGLRenderingContext || !win.WebGL2RenderingContext) {
     return { destroy() {} };
@@ -144,7 +148,7 @@ export function initWorkCabinetThree({
   let textures = [];
   let files = [];
   let frame = 0;
-  let lastFrame = 0;
+  let activeUntil = 0;
   let inView = true;
   let hidden = false;
   let contextFailed = false;
@@ -156,40 +160,38 @@ export function initWorkCabinetThree({
   const mq = win.matchMedia("(prefers-reduced-motion: reduce)");
   const pointerMq = win.matchMedia("(hover: hover) and (pointer: fine)");
 
-  function invalidate() {
+  // HTML transforms are authoritative. Reading them avoids the former drift
+  // between CSS easing, focus-visible, extraction scaling and the 3D mesh.
+  // Only redraw for the duration of the underlying CSS/WAAPI transition.
+  function scheduleFrame() {
     if (destroyed || !started || hidden || !inView || contextFailed || frame) return;
     frame = win.requestAnimationFrame(render);
   }
 
-  function currentTarget(file) {
-    const focused = file.node.contains(doc.activeElement);
-    const extracting = file.node.dataset.extracting === "true";
-    const hovered = pointerMq.matches && !cabinet.classList.contains("is-scrolling") &&
-      file.node.matches(":hover");
-    const reading = !pointerMq.matches && file.node.dataset.reading === "true";
-    return extracting ? 48 : focused || hovered ? 20 : reading ? 24 : 0;
+  function invalidate() {
+    activeUntil = Math.max(activeUntil,
+      (win.performance?.now?.() ?? Date.now()) + TRANSITION_WINDOW_MS);
+    scheduleFrame();
   }
 
   function render(now) {
     frame = 0;
-    if (destroyed || hidden || !inView || contextFailed) return;
-    const delta = Math.min(48, Math.max(0, now - (lastFrame || now - 16)));
-    lastFrame = now;
-    const instant = isMotionReduced(doc, win) ||
-      Boolean(doc.activeElement?.closest?.(".filing-cabinet__link"));
-    const easing = instant ? 1 : 1 - Math.exp(-delta / 62);
-    let animating = false;
+    if (destroyed || hidden || !inView || contextFailed || !renderer) return;
+    const bounds = well.getBoundingClientRect();
     for (const file of files) {
-      const target = currentTarget(file);
-      file.travel += (target - file.travel) * easing;
-      if (Math.abs(file.travel - target) < EPSILON) file.travel = target;
-      else animating = true;
-      file.group.position.set(file.x, file.y - file.travel, file.baseZ + file.travel * 1.65);
-      file.group.rotation.z = file.node.dataset.extracting === "true" && !instant
-        ? -file.travel * 0.00065 : 0;
+      const face = file.face.getBoundingClientRect();
+      if (!face.width || !file.faceWidth) continue;
+      const scale = face.width / file.faceWidth;
+      const x = face.left - bounds.left;
+      const y = face.top - bounds.top;
+      const lift = Math.max(0, file.y - y);
+      // The tab, paper edges and HTML label now share the *same* transform.
+      // Scale origin is aligned to the transformed HTML face's top-left.
+      file.group.position.set(x, y, file.baseZ + lift * 1.65);
+      file.group.scale.set(scale, scale, 1);
     }
     renderer.render(scene, camera);
-    if (animating) invalidate();
+    if (now < activeUntil) scheduleFrame();
   }
 
   function disposeGeometry(group) {
@@ -286,7 +288,7 @@ export function initWorkCabinetThree({
         );
         crease.position.set(width / 2, faceHeight - 9, 2.2);
         group.add(crease);
-        files.push({ node: element, group, x, y, baseZ, travel: 0 });
+        files.push({ node: element, face, faceWidth: face.offsetWidth, group, x, y, baseZ });
       } else {
         const height = Math.max(20, hit.offsetHeight);
         const divider = new THREE.Mesh(
@@ -319,12 +321,50 @@ export function initWorkCabinetThree({
     invalidate();
   }
 
-  function fallback() {
-    contextFailed = true;
-    delete cabinet.dataset.cabinet3d;
+  // One idempotent cleanup path for initialization failure, context loss and
+  // explicit teardown. No orphaned GPU objects or observers after fallback.
+  function cleanup() {
+    startupObserver?.disconnect();
+    visibilityObserver?.disconnect();
+    resizeObserver?.disconnect();
+    mutationObserver?.disconnect();
+    motionObserver?.disconnect();
     if (frame) win.cancelAnimationFrame(frame);
     frame = 0;
+    cabinet.removeEventListener("pointerover", invalidate);
+    cabinet.removeEventListener("pointerout", invalidate);
+    cabinet.removeEventListener("focusin", invalidate);
+    cabinet.removeEventListener("focusout", invalidate);
+    win.removeEventListener("scroll", invalidate);
+    win.removeEventListener("resize", rebuild);
+    doc.removeEventListener("visibilitychange", onVisibilityChange);
+    win.removeEventListener("pagehide", pageHide);
+    win.removeEventListener("pageshow", pageShow);
+    mq.removeEventListener("change", invalidate);
+    pointerMq.removeEventListener("change", invalidate);
+    if (sceneContents) disposeGeometry(sceneContents);
+    sceneContents = null;
+    textures.forEach(texture => texture.dispose());
+    materials.forEach(material => material.dispose());
+    textures = [];
+    materials = [];
+    shadowMaterial?.dispose();
+    shadowMaterial = null;
+    environmentTarget?.dispose();
+    environmentTarget = null;
+    pmrem?.dispose();
+    pmrem = null;
+    try { renderer?.dispose(); } catch { /* WebGL context may already be lost. */ }
+    renderer = null;
     canvas?.remove();
+    canvas = null;
+    files = [];
+    delete cabinet.dataset.cabinet3d;
+  }
+
+  function fallback() {
+    contextFailed = true;
+    cleanup();
   }
 
   function onContextLost(event) {
@@ -407,9 +447,18 @@ export function initWorkCabinetThree({
       rebuild();
       renderer.render(scene, camera);
       cabinet.dataset.cabinet3d = "ready";
+      // Late font swaps and line wrapping can change tab geometry without
+      // changing the cabinet width; rebuild against the settled document.
+      if (doc.fonts?.ready) {
+        void doc.fonts.ready.then(() => {
+          if (!destroyed && !contextFailed && renderer) rebuild();
+        });
+      }
       if (typeof win.ResizeObserver === "function") {
         resizeObserver = new win.ResizeObserver(rebuild);
         resizeObserver.observe(well);
+        const drawer = well.querySelector(".filing-cabinet__drawer");
+        if (drawer) resizeObserver.observe(drawer);
       }
       mutationObserver = new win.MutationObserver(invalidate);
       mutationObserver.observe(cabinet, {
@@ -476,32 +525,7 @@ export function initWorkCabinetThree({
     destroy() {
       if (destroyed) return;
       destroyed = true;
-      startupObserver?.disconnect();
-      visibilityObserver?.disconnect();
-      resizeObserver?.disconnect();
-      mutationObserver?.disconnect();
-      motionObserver?.disconnect();
-      if (frame) win.cancelAnimationFrame(frame);
-      cabinet.removeEventListener("pointerover", invalidate);
-      cabinet.removeEventListener("pointerout", invalidate);
-      cabinet.removeEventListener("focusin", invalidate);
-      cabinet.removeEventListener("focusout", invalidate);
-      win.removeEventListener("scroll", invalidate);
-      win.removeEventListener("resize", rebuild);
-      doc.removeEventListener("visibilitychange", onVisibilityChange);
-      win.removeEventListener("pagehide", pageHide);
-      win.removeEventListener("pageshow", pageShow);
-      mq.removeEventListener("change", invalidate);
-      pointerMq.removeEventListener("change", invalidate);
-      if (sceneContents) disposeGeometry(sceneContents);
-      textures.forEach(texture => texture.dispose());
-      materials.forEach(material => material.dispose());
-      shadowMaterial?.dispose();
-      environmentTarget?.dispose();
-      pmrem?.dispose();
-      renderer?.dispose();
-      canvas?.remove();
-      delete cabinet.dataset.cabinet3d;
+      cleanup();
     },
   };
 }

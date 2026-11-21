@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import sharp from "sharp";
 
 test("Work's visual drawer has exactly three real files in true year order", async ({ page }) => {
   await page.goto("/work.html");
@@ -420,4 +421,71 @@ test("Work first paint does not download or initialise the heavy 3D scene", asyn
   await page.waitForTimeout(700);
   expect(requests).toBe(0);
   await expect(page.locator("[data-project-archive]")).not.toHaveAttribute("data-cabinet3d", "ready");
+});
+
+
+test("reduced-motion preference keeps the physical layer disabled and labels visible", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await page.locator(".filing-cabinet__link").first().focus();
+  await page.waitForTimeout(400);
+  await expect(well.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
+  await expect(page.locator(".filing-cabinet__face").first()).toHaveCSS("transform", "none");
+  await expect(page.locator(".filing-cabinet__tab-title").first()).toBeVisible();
+});
+
+test("active WebGL cabinet produces actual physical pixels, not an empty canvas", async ({ page }, testInfo) => {
+  await page.goto("/work.html");
+  const supported = await page.evaluate(() => {
+    try {
+      const context = document.createElement("canvas").getContext("webgl2");
+      const enabled = !!context && (navigator.hardwareConcurrency ?? 4) > 2 &&
+        (navigator.deviceMemory ?? 4) > 2 && !navigator.connection?.saveData &&
+        !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+      return enabled;
+    } catch { return false; }
+  });
+  test.skip(!supported, "WebGL2 or the device quality tier is unavailable");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await well.hover();
+  await expect(page.locator("[data-project-archive]"))
+    .toHaveAttribute("data-cabinet3d", "ready", { timeout: 20_000 });
+  const canvas = well.locator(".filing-cabinet__three-canvas");
+  const png = await canvas.screenshot();
+  const { data, info } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const colors = new Set();
+  for (let i = 0; i < info.width * info.height; i += 53) {
+    const offset = i * info.channels;
+    colors.add([data[offset], data[offset + 1], data[offset + 2]].join(","));
+  }
+  expect(colors.size).toBeGreaterThan(20);
+  // Evidence for human art-direction QA, not a brittle automated golden.
+  await well.screenshot({ path: "test-results/cabinet-" + testInfo.project.name + "-webgl.png" });
+
+  await canvas.evaluate(node => {
+    node.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
+  });
+  await expect(page.locator("[data-project-archive]"))
+    .not.toHaveAttribute("data-cabinet3d", "ready");
+  await expect(canvas).toHaveCount(0);
+  await expect(page.locator(".filing-cabinet__face").first())
+    .not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+});
+
+test("cabinet visual QA records its CSS-first fallback on every configured viewport", async ({ page }, testInfo) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await expect(well.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
+  await well.screenshot({ path: "test-results/cabinet-" + testInfo.project.name + "-css.png" });
 });

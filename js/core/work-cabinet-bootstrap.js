@@ -1,19 +1,26 @@
 /**
- * Optional Work-only Three.js enhancement.
- *
- * Loading this bundle during first paint causes expensive GPU shader setup
- * and a measurable main-thread penalty. Native HTML/CSS is the fast, complete
- * first view. Only progressive visitor interaction opts into real-time 3D.
+ * Optional Work-only 3D enhancement. Real links and CSS paper render first;
+ * expensive WebGL compilation never runs on the initial navigation.
  */
 const cabinet = document.querySelector("[data-project-archive]");
 const well = cabinet?.querySelector(".filing-cabinet__well");
+const reducedMotion = document.documentElement.dataset.motion === "reduced" ||
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const constrained = navigator.connection?.saveData ||
-  (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+  (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) ||
+  (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+  reducedMotion ||
+  window.matchMedia("(forced-colors: active)").matches;
 
-// Three.js r187 requires WebGL2. Browsers with only WebGL1 keep CSS.
 if (well && !constrained && window.WebGLRenderingContext && window.WebGL2RenderingContext) {
   let started = false;
   let settleTimer = 0;
+
+  function inViewport() {
+    const bounds = well.getBoundingClientRect();
+    return bounds.bottom > 0 && bounds.top < window.innerHeight &&
+      document.visibilityState !== "hidden";
+  }
 
   function disposeTriggers() {
     well.removeEventListener("pointerenter", onPointerEnter);
@@ -27,29 +34,38 @@ if (well && !constrained && window.WebGLRenderingContext && window.WebGL2Renderi
     if (started) return;
     started = true;
     disposeTriggers();
-    void import("../../assets/runtime/work-cabinet-three.js").catch(error => {
-      // Ordinary case-study links and the complete CSS archive still work.
-      console.warn("Optional 3D Work cabinet failed to load", error);
-    });
+    const importScene = () => {
+      void import("../../assets/runtime/work-cabinet-three.js").catch(error => {
+        // Navigation, focus and responsive CSS remain independent of WebGL.
+        console.warn("Optional 3D Work cabinet failed to load", error);
+      });
+    };
+    // Let the browser paint the immediate hover/focus/scroll response before
+    // parsing Three.js, allocating textures and compiling shaders.
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(importScene, { timeout: 1500 });
+    } else {
+      setTimeout(importScene, 64);
+    }
   }
 
   function onPointerEnter() {
-    // Scroll can move the cabinet underneath a stationary cursor.
-    // In that case wait for the scroll-settle path instead of compiling now.
+    // Scrolling can place the drawer under a stationary cursor: don't compile.
     if (!cabinet.classList.contains("is-scrolling")) load();
   }
 
   function onScroll() {
     if (started) return;
-    const bounds = well.getBoundingClientRect();
-    if (bounds.bottom < -100 || bounds.top > window.innerHeight + 100) return;
-    // Debounce. Do not compile shaders in the middle of an active scroll.
     if (settleTimer) clearTimeout(settleTimer);
-    settleTimer = setTimeout(load, 180);
+    settleTimer = 0;
+    if (!inViewport()) return;
+    // The visitor must still be looking at this drawer after scroll settles.
+    settleTimer = setTimeout(() => {
+      settleTimer = 0;
+      if (inViewport()) load();
+    }, 220);
   }
 
-  // No observer-only auto-start. Merely visiting Work must not incur the
-  // rendering cost, even if a tall desktop viewport includes the drawer.
   well.addEventListener("pointerenter", onPointerEnter, { passive: true });
   well.addEventListener("focusin", load);
   window.addEventListener("scroll", onScroll, { passive: true });
