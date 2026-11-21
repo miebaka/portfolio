@@ -570,7 +570,7 @@ test("year guides and following index tabs remain readable on desktop and mobile
   });
   expect(distances).toHaveLength(3);
   for (const entry of distances) {
-    expect(entry.yearLabel).toMatch(/^20\\d{2}$/);
+    expect(["2024", "2023", "2022"]).toContain(entry.yearLabel);
     expect(entry.tabWithinDrawer, "A die-cut tab must stay inside its drawer").toBe(true);
     if (testInfo.project.name === "mobile") {
       expect(entry.verticalGap, "Mobile year numbers must clear the following tab").toBeGreaterThan(3);
