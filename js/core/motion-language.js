@@ -1,22 +1,9 @@
-/* Cohesive motion enhancements. No framework, scroll listeners, or content cloning.
-   Pointer work is confined to visible interactive surfaces; content stays usable
-   without this module. Inspiration: OriginKit hover-image reveal, 21st.dev
-   Kawai's masked/blur entrances, and the existing DESIGN.md. */
-
-const PROJECT = ".home-project-list .editorial-index__row";
-const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+/* Shared motion preference. The Selected Work preview is CSS-driven:
+   no pointer tracking, forced animation frames or inline position updates. */
 
 export function isMotionReduced(root, systemQuery) {
   const setting = root?.dataset?.motion;
   return setting === "reduced" || (setting !== "full" && systemQuery?.matches === true);
-}
-
-export function pointerDisplacement(rect, x, y, maxX = 28, maxY = 16) {
-  if (!rect || rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
-  return {
-    x: clamp(((x - rect.left) / rect.width - 0.5) * 2, -1, 1) * maxX,
-    y: clamp(((y - rect.top) / rect.height - 0.5) * 2, -1, 1) * maxY,
-  };
 }
 
 export function initMotionLanguage({
@@ -24,66 +11,16 @@ export function initMotionLanguage({
   window: win = globalThis.window,
 } = {}) {
   if (!doc?.documentElement || !win) return { destroy() {} };
+
   const root = doc.documentElement;
-  const projects = doc.querySelector(".home-project-list");
   const systemQuery = win.matchMedia?.("(prefers-reduced-motion: reduce)");
-  const finePointer = win.matchMedia?.("(hover: hover) and (pointer: fine)");
-  let enabled = false;
   let destroyed = false;
-  let frame = 0;
-  let next = null;
-
-  const resetProject = row => {
-    row.style.removeProperty("--motion-preview-x");
-    row.style.removeProperty("--motion-preview-y");
-  };
-  const resetPointers = () => {
-    projects?.querySelectorAll(PROJECT).forEach(resetProject);
-  };
-  const pointerEnabled = () => enabled && finePointer?.matches === true;
-  const clearFrame = () => {
-    if (frame) win.cancelAnimationFrame(frame);
-    frame = 0;
-    next = null;
-  };
-
-  const flush = () => {
-    frame = 0;
-    const current = next;
-    next = null;
-    if (!current || !pointerEnabled() || !current.target.isConnected) return;
-    const { target, x, y } = current;
-    const offset = pointerDisplacement(target.getBoundingClientRect(), x, y);
-    target.style.setProperty("--motion-preview-x", offset.x.toFixed(1) + "px");
-    target.style.setProperty("--motion-preview-y", offset.y.toFixed(1) + "px");
-  };
-
-  const onProjectMove = event => {
-    if (!pointerEnabled()) return;
-    const target = event.target.closest?.(PROJECT);
-    if (!target) return;
-    next = { target, x: event.clientX, y: event.clientY };
-    if (!frame) frame = win.requestAnimationFrame(flush);
-  };
-  const leave = (event, selector, reset) => {
-    const target = event.target.closest?.(selector);
-    if (target && !target.contains(event.relatedTarget)) reset(target);
-  };
-  const onProjectLeave = event => leave(event, PROJECT, resetProject);
 
   const sync = () => {
-    if (destroyed) return;
-    enabled = !isMotionReduced(root, systemQuery);
-    root.classList.toggle("motion-language-ready", enabled);
-    if (!pointerEnabled()) {
-      clearFrame();
-      resetPointers();
-    }
+    if (!destroyed) root.classList.toggle("motion-language-ready", !isMotionReduced(root, systemQuery));
   };
-  projects?.addEventListener("pointermove", onProjectMove, { passive: true });
-  projects?.addEventListener("pointerout", onProjectLeave);
+
   systemQuery?.addEventListener?.("change", sync);
-  finePointer?.addEventListener?.("change", sync);
   const PreferenceObserver = win.MutationObserver;
   const preferences = PreferenceObserver ? new PreferenceObserver(sync) : null;
   preferences?.observe(root, { attributes: true, attributeFilter: ["data-motion"] });
@@ -93,13 +30,8 @@ export function initMotionLanguage({
     destroy() {
       if (destroyed) return;
       destroyed = true;
-      clearFrame();
-      resetPointers();
       root.classList.remove("motion-language-ready");
-      projects?.removeEventListener("pointermove", onProjectMove);
-      projects?.removeEventListener("pointerout", onProjectLeave);
       systemQuery?.removeEventListener?.("change", sync);
-      finePointer?.removeEventListener?.("change", sync);
       preferences?.disconnect();
     },
   };
