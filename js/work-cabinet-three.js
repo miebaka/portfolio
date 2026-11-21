@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { createPaperMaps, createContactShadow, createMetalRoughness, createDrawerFloorMap } from "./three/work-cabinet-materials.js";
-import { createBowedPaperGeometry, createSuspensionHardware, createTabReinforcement } from "./three/work-cabinet-geometry.js";
+import { createBowedPaperGeometry, createSuspensionHardware, createTabReinforcement, createExpansionScoreGeometry } from "./three/work-cabinet-geometry.js";
 
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
@@ -289,7 +289,9 @@ export function initWorkCabinetThree({
       const width = hit.clientWidth;
       if (width < 8) return;
       const group = new THREE.Group();
-      const baseZ = 34 + index * 8;
+      // Rod ends rest close to the physical support rails (top surface ~12px).
+       // Minimal layer spacing preserves z-order without floating paper slabs.
+       const baseZ = 13.5 + index * .6;
       group.position.set(x, y, baseZ);
       sceneContents.add(group);
 
@@ -320,20 +322,24 @@ export function initWorkCabinetThree({
           );
           sceneContents.add(occlusion);
         }
-        // Two real paper leaves, not one thick block. A small lateral shift
-        // reveals the lower leaf and makes the bottom binding physically legible.
+        // A real hanging folder has a die-cut rear leaf carrying the tab.
+        // Its shorter front leaf starts below the rod hem and creates an open
+        // mouth rather than covering the tab with a flat card silhouette.
         const back = new THREE.Mesh(
-          extrudedPaper(rectangle(width - 3.5, faceHeight - 3.5)),
+          extrudedPaper(shape),
           [materials[stock], materials[4]]
         );
-        back.position.set(2, 5.1, -2.05);
+        back.position.set(0, 0, -2.05);
+        back.name = "rear-die-cut-leaf";
         back.castShadow = true;
         back.receiveShadow = true;
         group.add(back);
         const front = new THREE.Mesh(
-          extrudedPaper(shape),
+          extrudedPaper(rectangle(width, Math.max(20, faceHeight - 10))),
           [materials[stock], materials[4]]
         );
+        front.name = "short-front-pocket-leaf";
+        front.position.set(0, 10, 0);
         front.castShadow = true;
         front.receiveShadow = true;
         group.add(front);
@@ -343,7 +349,7 @@ export function initWorkCabinetThree({
         // highlights now change through the stock instead of staying flat.
         const bowedFace = new THREE.Mesh(
           createBowedPaperGeometry(
-            Math.max(16, width - 12), Math.max(20, faceHeight - 14), {
+            Math.max(16, width - 12), Math.max(20, faceHeight - 20), {
               seed: index * 17 + stock,
               segmentsX: quality.environment ? 24 : 12,
               segmentsY: quality.environment ? 9 : 5,
@@ -352,7 +358,7 @@ export function initWorkCabinetThree({
           materials[stock]
         );
         bowedFace.name = "calendered-paper-face";
-        bowedFace.position.set(width / 2, faceHeight / 2 + 2.5, 0);
+        bowedFace.position.set(width / 2, faceHeight / 2 + 4, 0);
         bowedFace.castShadow = true;
         bowedFace.receiveShadow = true;
         group.add(bowedFace);
@@ -375,22 +381,12 @@ export function initWorkCabinetThree({
         );
         group.add(reinforcedTab);
 
-        // Calendering/folding creates a darker pressure crease followed by
-        // a tiny raised, warm edge. These are true 3D layers with soft light
-        // response, not a painted CSS separator or a plastic-looking bevel.
-        const foldY = faceHeight - 9;
-        const crease = new THREE.Mesh(
-          new THREE.PlaneGeometry(Math.max(1, width - 14), .92),
-          materials[7]
-        );
-        crease.position.set(width / 2, foldY, 2.27);
-        group.add(crease);
-        const foldHighlight = new THREE.Mesh(
-          new THREE.BoxGeometry(Math.max(1, width - 14), .34, .25),
-          materials[8]
-        );
-        foldHighlight.position.set(width / 2, foldY - 1.15, 2.31);
-        group.add(foldHighlight);
+        // Three continuous scored expansion lines catch oblique light even
+        // on the coarse mobile mesh, without cloth-like wave deformation.
+        const scores = createExpansionScoreGeometry(width, faceHeight, {
+          crease: materials[7], highlight: materials[8],
+        });
+        group.add(scores);
         const exposedLeaf = new THREE.Mesh(
           new THREE.BoxGeometry(Math.max(1, width - 7), .52, .76),
           materials[4]
@@ -446,6 +442,7 @@ export function initWorkCabinetThree({
     motionObserver?.disconnect();
     if (frame) win.cancelAnimationFrame(frame);
     frame = 0;
+    canvas?.removeEventListener("webglcontextlost", onContextLost);
     cabinet.removeEventListener("pointerover", invalidate);
     cabinet.removeEventListener("pointerout", invalidate);
     cabinet.removeEventListener("focusin", invalidate);
