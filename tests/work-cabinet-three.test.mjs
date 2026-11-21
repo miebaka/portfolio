@@ -130,3 +130,12 @@ test("first WebGL frame syncs active CSS folder lifts before showing canvas", ()
   assert.ok(firstSync > 0 && exposed > firstSync,
     "the first native-transform-aligned frame must render before WebGL is exposed");
 });
+
+test("mobile reading selection lifts in depth without detaching HTML tab", () => {
+  const root = resolve(import.meta.dirname, "..");
+  const source = readFileSync(resolve(root, "js/work-cabinet-three.js"), "utf8");
+  const css = readFileSync(resolve(root, "styles/work-cabinet.css"), "utf8");
+  assert.match(source, /const selectedDepth = !pointerMq\.matches/);
+  assert.match(source, /file\.group\.position\.set\(x, y, file\.baseZ \+ lift \* 1\.65 \+ selectedDepth\)/);
+  assert.match(css, /\.filing-cabinet\[data-cabinet3d="ready"\] \.filing-cabinet__folder\[data-reading="true"\]:not\(:focus-within\) \.filing-cabinet__face \{/);
+});
