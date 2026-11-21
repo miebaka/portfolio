@@ -171,6 +171,7 @@ body[data-page="work"] .filing-cabinet__face {
   background: var(--stock);
   border: 1px solid color-mix(in srgb, var(--ref-neutral-30) 40%, var(--stock));
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%), 0 6px 10px rgb(0 0 0 / 18%);
+  pointer-events: none;
   transform: translateY(0);
   transform-origin: 50% 0;
   transition: transform 110ms cubic-bezier(.23, 1, .32, 1);
@@ -212,6 +213,7 @@ body[data-page="work"] .filing-cabinet__tab {
   background: var(--stock);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 92%);
   color: var(--ref-midnight);
+  pointer-events: auto;
   font: 650 clamp(.68rem, 1vw, .8rem)/1.35 var(--label);
   letter-spacing: .035em;
   text-transform: uppercase;
