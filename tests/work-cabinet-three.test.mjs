@@ -62,6 +62,7 @@ test("3D geometry follows browser-computed transforms, not competing easing cons
   assert.match(source, /file\.face\.getBoundingClientRect\(\)/);
   assert.match(source, /file\.group\.scale\.set\(scale, scale, 1\)/);
   assert.doesNotMatch(source, /file\.travel\s*\+=/);
+  assert.doesNotMatch(source, /\blastFrame\b/, "stale frame state crashes WebGL startup");
   assert.match(source, /function cleanup\(\)/);
   assert.match(source, /contextFailed = true;\s+cleanup\(\)/);
 });
