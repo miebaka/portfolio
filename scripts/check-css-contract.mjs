@@ -98,8 +98,8 @@ for (const [name, source] of entries) {
   const intentionalResponsiveOverrides = new Set([
     'body[data-page="home"] .home-landing h1', 'body[data-page="home"] .home-landing__inner', 'body .editorial-index__row',
     '.case-page .case-statement', '.case-page .case-opening', '.case-page .case-back', '.case-page .case-opening h1',
-    '.case-page .case-opening .case-facts', '.case-page .case-shot--hero', '.case-page .case-gallery', '.case-page .case-lede',
-    '.case-page .case-index', '.case-page .case-chapter', '.case-page .case-chapter__copy', '.case-page .case-chapter__copy h2',
+    '.case-page .case-opening .case-facts', '.case-page .case-shot--hero', '.case-page .case-gallery',
+    '.case-page .case-chapter', '.case-page .case-chapter__copy', '.case-page .case-chapter__copy h2',
     '.case-page .case-chapter__body', '.case-page .case-chapter__media', '.case-page .case-shot img',
     '.experiments-spatial', '.experiments-spatial__viewport', '.experiments-spatial__stage', '.experiments-spatial__hint'
   ]);

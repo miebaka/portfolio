@@ -8,7 +8,7 @@ import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 
 const root = new URL("../", import.meta.url);
-const chapterIds = ["problem", "decision", "system", "applications", "outcome"];
+const chapterIds = ["decision", "system", "survival", "encounter"];
 const markup = () => renderCaseMarkup(SITE, "tedx-rsu", "../");
 const reject = (change, code, path) => {
   const content = structuredClone(CONTENT);
@@ -31,7 +31,7 @@ test("published narratives reject missing, reordered, duplicated or empty chapte
   reject(study => { study.chapters.pop(); }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { [study.chapters[0], study.chapters[1]] = [study.chapters[1], study.chapters[0]]; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { study.chapters[1].id = "context"; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
-  reject(study => { study.chapters[4].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[4].body");
+  reject(study => { study.chapters[3].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[3].body");
   reject(study => { study.chapters[0].body = [null]; }, "CASE_CHAPTER_BODY_INVALID", "chapters[0].body");
   reject(study => { study.chapters[0].label = ""; }, "CASE_CHAPTER_LABEL_REQUIRED", "chapters[0].label");
 });
@@ -61,7 +61,7 @@ test("active next destinations require a published project and published case", 
   reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
 });
 
-test("TEDx opens with its proposition, hero and supported project facts", () => {
+test("TEDx opens with its title, hero and supported project facts", () => {
   const html = markup();
   assert.doesNotMatch(html, /case-locked|aria-disabled/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
@@ -69,16 +69,14 @@ test("TEDx opens with its proposition, hero and supported project facts", () => 
   const hero = html.indexOf('case-shot--hero');
   const facts = html.indexOf('<dl class="case-facts">');
   assert.ok(opening >= 0 && opening < facts && facts < hero);
-  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
+  assert.doesNotMatch(html, /case-opening__summary|case-lede|case-index|case-proof|case-scroll-index/);
   assert.match(html, /tedx-rsu-campus-banner-1080\.jpg/);
   assert.match(html, /<dt>Role<\/dt><dd>Identity design, creative direction and print<\/dd>/);
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
   assert.match(html, /<dt>Delivered<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
-  assert.match(html, /Evidence trail/);
-  assert.match(html, /From governing decision to work in use/);
-  assert.match(html, /href="#decision"/);
-  assert.match(html, /href="#applications"/);
+  assert.match(html, /id="decision-title">Decision<\/h2>/);
+  assert.match(html, /id="encounter-title">Encounter<\/h2>/);
 });
 
 test("Rivo publishes as a confident identity case with a concrete delivery result", () => {
@@ -86,11 +84,11 @@ test("Rivo publishes as a confident identity case with a concrete delivery resul
   const markup = renderCaseMarkup(SITE, "rivo");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
-  assert.match(markup, /How can access feel like a brand position\?/);
+  assert.match(markup, /Rivo Studio needed an identity/);
   assert.match(markup, /delivered identity included guidelines, stationery and a practical application system/i);
-  assert.match(markup, /A focused system built for everyday use/);
+  assert.match(markup, /What another designer can take forward/);
   assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
-  assert.match(markup, /Application visualisations test the system/);
+  assert.match(markup, /do not establish public rollout/i);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
 });
 
@@ -101,21 +99,21 @@ test("ChopBox publishes as a focused application system", () => {
   assert.equal(SITE.projects.find(project => project.slug === "chopbox").status, "published");
   assert.match(html, /does this make you hungry/i);
   assert.match(html, /Packaging, uniform, campaign and out-of-home applications/i);
-  assert.match(html, /One appetite-led system across every touchpoint/i);
-  assert.match(html, /Presentation visualisations test the system/);
+  assert.match(html, /What customers might meet in the world/);
+  assert.match(html, /not evidence of a live rollout/i);
 });
 
-test("the complete narrative and chapter links follow the approved sequence", () => {
+test("the complete narrative follows the approved four-part sequence without chapter navigation", () => {
   const html = markup();
   const sections = [...html.matchAll(/<section class="case-chapter" id="([^"]+)" aria-labelledby="([^"]+)">/g)];
   assert.deepEqual(sections.map(match => match[1]), chapterIds);
   for (const [, id, labelId] of sections) {
     assert.equal(labelId, `${id}-title`);
     assert.match(html, new RegExp(`<h2 id="${labelId}">[^<]+<\\/h2>`));
-    assert.match(html, new RegExp(`href="#${id}"`));
+    assert.doesNotMatch(html, new RegExp(`href="#${id}"`));
   }
-  assert.doesNotMatch(html, /id="reflection"|id="result"/);
-  assert.ok(html.indexOf('id="outcome"') < html.indexOf('class="case-next'));
+  assert.doesNotMatch(html, /id="problem"|id="applications"|id="outcome"|id="reflection"|id="result"/);
+  assert.ok(html.indexOf('id="encounter"') < html.indexOf('class="case-next'));
 });
 
 test("all owner media is shown once, with intrinsic dimensions, alternatives and factual captions", async () => {
@@ -168,7 +166,7 @@ test("chapter rendering honours authored media references and escapes content", 
         status: "published", title: "Sample", tagline: 'A <clear> proposition', hero: "sample-wide",
         facts: { role: "Design", delivered: "Identity", collaborators: "A & B" },
         media: [{ src: "sample-wide", label: "Wide", w: 1440, h: 810, alt: 'A <wide> image', caption: "The final & approved application." }, { src: "sample-tall", label: "Tall", w: 1240, h: 1550, alt: "The complete tall application.", caption: "All of the tall application." }],
-        chapters: [{ id: "context", label: "Context", title: "The <brief>", body: ["Keep <script> readable."], media: ["sample-tall"] }]
+        chapters: [{ id: "decision", label: "Decision", title: "The <brief>", body: ["Keep <script> readable."], media: ["sample-tall"] }]
       }
     }
   };
