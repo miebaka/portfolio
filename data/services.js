@@ -31,7 +31,7 @@ export const services = [
     "outputs": "Campaign imagery, marketing layouts, social and event applications.",
     "fit": "Brands turning a core idea into communication across channels.",
     "evidenceLabel": "ChopBox applications",
-    "evidenceHref": "work/chopbox.html#applications"
+    "evidenceHref": "work/chopbox.html#survival"
   },
   {
     "id": "editorial-graphic",
@@ -42,7 +42,7 @@ export const services = [
     "outputs": "Typography systems, editorial layouts, posters and print-ready design.",
     "fit": "Teams commissioning visual communication with a strong point of view.",
     "evidenceLabel": "TEDx design applications",
-    "evidenceHref": "work/tedx-rsu.html#applications"
+    "evidenceHref": "work/tedx-rsu.html#survival"
   },
   {
     "id": "design-systems-production",
