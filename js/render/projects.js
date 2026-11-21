@@ -10,46 +10,47 @@ export function renderWork() {
   el.className = "home-project-list";
   el.dataset.workView = "list";
   el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath()) +
-    '<div class="work-view-controls"><a href="' + basePath() + 'work.html">All work <span aria-hidden="true">↗</span></a></div>';
+    '<div class="work-view-controls"><a href="' + basePath() +
+    'work.html">All work <span aria-hidden="true">↗</span></a></div>';
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
   const selected = projects
-    .filter(project => project.featured === true && project.status === "published" && studies?.[project.slug]?.status === "published")
+    .filter(project =>
+      project.featured === true &&
+      project.status === "published" &&
+      project.cover &&
+      studies?.[project.slug]?.status === "published"
+    )
     .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
 
-  return renderEditorialIndex(selected.map(project => {
-    // These are actual case-study images curated alongside the project data.
-    // The cover is always the first frame, including on touch and without JS.
-    const frames = [...new Set([project.cover, ...(project.rosterImages || [])].filter(Boolean))].slice(0, 3);
-    const visual = '<span class="home-project-list__visual" aria-hidden="true">' +
-      frames.map((image, index) => {
-        const src = base + "assets/images/optimized/" + safeToken(image);
-        return '<span class="project-roster__photo project-roster__photo--' + (index + 1) + '"><picture>' +
-          '<source type="image/avif" srcset="' + src + '-540.avif 540w, ' + src + '-810.avif 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
-          '<source type="image/webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
-          '<img src="' + src + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async">' +
-          '</picture></span>';
-      }).join("") + '</span>';
-
-    const tags = [...new Set([...(project.tags || []), project.category].filter(Boolean))];
+  // One substantial, real project image per case. No floating tags, metadata
+  // capsules or redundant arrow controls; the entire title/visual is the link.
+  const items = selected.map(project => {
+    const image = base + "assets/images/optimized/" + safeToken(project.cover);
+    const title = esc(project.title);
     const content =
-      '<span class="home-project-list__identity"><span class="home-project-list__title editorial-index__title">' +
-      esc(project.title) + '</span><span class="home-project-list__meta">' +
-      esc(project.category) + ' / ' + esc(project.year) +
-      '</span></span>' + visual +
-      '<span class="project-roster__tags" data-roster-tags="' + esc(tags.join("|")) + '" aria-hidden="true"></span>' +
-      '<span class="home-project-list__arrow" aria-hidden="true">↗</span>';
+      '<span class="home-project-list__identity"><h3 class="home-project-list__title editorial-index__title">' +
+      title + '</h3></span>' +
+      '<span class="home-project-list__visual" aria-hidden="true"><picture>' +
+      '<source type="image/avif" srcset="' + image + '-540.avif 540w, ' +
+      image + '-810.avif 810w, ' + image + '-1080.avif 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<source type="image/webp" srcset="' + image + '-540.webp 540w, ' +
+      image + '-810.webp 810w, ' + image + '-1080.webp 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<img src="' + image + '-810.webp" alt="" width="1080" height="810" loading="lazy" decoding="async">' +
+      '</picture></span>';
+
     return {
       href: base + "work/" + safeToken(project.slug) + ".html",
-      label: project.title + ", view case study",
+      label: project.title + ", " + project.category + ", " + project.year + ", view case study",
       tone: project.slug,
       className: "project-roster__row",
       content,
     };
-  }), { variant: "work", ordered: true });
-}
+  });
 
+  return renderEditorialIndex(items, { variant: "work", ordered: true });
+}
 
 export function renderProjectArchive() {
   const el = document.querySelector("[data-project-archive]");
