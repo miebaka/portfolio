@@ -51,12 +51,14 @@ test("Stylelint rejects wrong-role and undeclared tokens, not just raw numbers",
     "p{line-height:var(--type-body-m)}",
     "small{letter-spacing:var(--type-label-m)}",
     "b{font-weight:500}",
-    "em{font:var(--type-weight-semibold) var(--type-leading-hero)/var(--type-leading-body) var(--body)}",
+    "em{font:var(--type-weight-semibold) var(--type-leading-hero)/var(--type-leading-body) var(--type-family-body)}",
+    "h1{--type-display-hero:20rem}",
+    "aside{--font-size-xl:5rem}",
   ];
   const accepted = [
     "h3{font-size:var(--type-heading-l)}",
     "p{line-height:var(--type-leading-body)}",
-    "span{font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label)}",
+    "span{font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--type-family-label)}",
   ];
   const report = await stylelint.lint({
     code: [...rejected, ...accepted].join("\n"),
@@ -65,5 +67,18 @@ test("Stylelint rejects wrong-role and undeclared tokens, not just raw numbers",
   });
   const warnings = report.results[0].warnings.filter(warning => warning.rule === ruleName);
   assert.equal(warnings.length, rejected.length, JSON.stringify(warnings));
-  assert.deepEqual(warnings.map(warning => warning.line), [1, 2, 3, 4, 5, 6]);
+  assert.deepEqual(warnings.map(warning => warning.line), [1, 2, 3, 4, 5, 6, 7, 8]);
+});
+
+test("only tokens.css can define a type token and legacy aliases stay retired", async () => {
+  const files = (await readdir(styles)).filter(path => path.endsWith(".css"));
+  for (const path of files) {
+    const source = (await readFile(join(styles, path), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
+    assert.doesNotMatch(source, /--(?:font-size-[\w-]+|editorial-display[\w-]*|font-(?:display|body|label)\b)/,
+      `${path}: obsolete typography alias found`);
+    if (path !== "tokens.css") {
+      assert.doesNotMatch(source, /--type-[\w-]+\s*:/,
+        `${path}: only tokens.css may declare typography tokens`);
+    }
+  }
 });
