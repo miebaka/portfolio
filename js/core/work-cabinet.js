@@ -244,7 +244,16 @@ export function initWorkCabinet({
         savedAt: Date.now(),
       }));
     } catch { /* Blocked storage must not affect navigation. */ }
-    extract(event, link, folder);
+    try {
+      extract(event, link, folder);
+    } catch {
+      // Even a failure while constructing the overlay must not trap an
+      // already-cancelled click. Before preventDefault, the anchor is native.
+      if (event.defaultPrevented) {
+        try { win.location.assign(link.href); }
+        catch { win.location.href = link.href; }
+      }
+    }
   }
 
   function restoreReturn(event) {
