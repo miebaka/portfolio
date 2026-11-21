@@ -444,8 +444,8 @@ body[data-page="work"] .filing-cabinet__caption {
     top: -1.5rem;
     gap: .42rem;
     padding: .45rem .65rem;
-    font-size: clamp(.72rem, 3vw, .82rem);
-    line-height: 1.22;
+    font-size: var(--type-label-m);
+    line-height: var(--type-leading-label);
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="a"] {
