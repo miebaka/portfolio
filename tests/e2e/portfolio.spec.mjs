@@ -361,8 +361,8 @@ test("Work folder is raised on hover or keyboard focus", async ({ page, isMobile
   await expect(first).toBeFocused();
   await expect(first.locator(".project-folder__front")).toBeVisible();
   if (!isMobile) {
-    await first.hover();
-    const transform = await first.locator("..").evaluate(el => getComputedStyle(el).transform);
+    await first.locator(".project-folder__tab").hover();
+    const transform = await first.locator("xpath=..").evaluate(el => getComputedStyle(el).transform);
     expect(transform).not.toBe("none");
   }
 });
