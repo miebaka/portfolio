@@ -54,6 +54,16 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   const [on, off] = await Promise.all([visible, hidden].map(async png =>
     sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })));
   expect(on.info.width).toBe(off.info.width);
+  // A reflective RoomEnvironment once turned the desktop filing drawer
+  // into a bright grey showroom panel, while mobile stayed near black.
+  // Sample the exposed floor above the first year card on both renderers.
+  const floorX = Math.floor(on.info.width * .5);
+  const floorY = Math.min(16, on.info.height - 1);
+  const floorOffset = (floorY * on.info.width + floorX) * on.info.channels;
+  const floorLuminance = .2126 * on.data[floorOffset] +
+    .7152 * on.data[floorOffset + 1] + .0722 * on.data[floorOffset + 2];
+  expect(floorLuminance, "Powder-coated drawer floor must stay dark under desktop HDR reflections")
+    .toBeLessThan(115);
   let changed = 0, sampled = 0;
   for (let i = 0; i < on.info.width * on.info.height; i += 71) {
     const offset = i * on.info.channels;

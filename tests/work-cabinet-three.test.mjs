@@ -99,3 +99,13 @@ test("sparse archive is grounded by modeled steel floor and support rails, not f
   assert.match(source, /new RoundedBoxGeometry\(3\.6/);
   assert.match(source, /RoundedBoxGeometry\(7\.2/);
 });
+
+test("matte drawer paint excludes environment reflections and shadows detach on lift", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
+  assert.match(source, /color: 0x162641, roughness: 0\.97, metalness: 0/);
+  assert.match(source, /roughnessMap: metalRoughness, envMapIntensity: 0/);
+  assert.match(source, /contactShadowMaterial\.clone\(\)/);
+  assert.match(source, /sceneContents\.add\(occlusion\)/);
+  assert.match(source, /file\.occlusion\.material\.opacity = Math\.max/);
+  assert.match(source, /object\.userData\?\.ownsMaterial/);
+});

@@ -100,3 +100,21 @@ keeps an opaque paper-toned background for text contrast, but uses very
 subtle directional highlights to match the model's warm key light.
 Stock selection follows each folder's A/B/C tab token—not the list
 index, which also counts year separators.
+
+### Physical shadow and reflectance correction
+
+Desktop screenshot QA revealed that a metallic drawer-floor shader was
+incorrectly reflecting the white studio environment, washing the drawer
+interior to pale grey. Mobile, without that environment, became nearly black.
+The floor has therefore been corrected to **dielectric powder-coat paint**:
+navy diffuse colour, near-matte roughness, no studio environment reflections,
+and a tiny ambient emissive floor to preserve consistent colour across tiers.
+The metal rails also have lower metallic reflectance; screws retain a true
+steel finish.
+
+The fine contact-occlusion patch now remains anchored to the original
+drawer surface when a folder moves. Its opacity decreases as the paper lifts,
+while Three.js PCF cast shadows continue to track the actual lifted geometry.
+A per-folder cloned shadow material is explicitly disposed at rebuild/teardown.
+The screenshot contract samples the unobstructed drawer floor to prevent
+the former bright-grey desktop regression from returning.

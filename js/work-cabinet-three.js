@@ -158,6 +158,11 @@ export function initWorkCabinetThree({
       // Scale origin is aligned to the transformed HTML face's top-left.
       file.group.position.set(x, y, file.baseZ + lift * 1.65);
       file.group.scale.set(scale, scale, 1);
+      if (file.occlusion) {
+        // A physical cast shadow remains on the drawer as the leaf lifts;
+        // it cannot travel glued to the moving paper surface.
+        file.occlusion.material.opacity = Math.max(.16, .72 - lift * .022);
+      }
     }
     renderer.render(scene, camera);
     if (now < activeUntil) scheduleFrame();
@@ -166,6 +171,7 @@ export function initWorkCabinetThree({
   function disposeGeometry(group) {
     group.traverse(object => {
       if (object.geometry) object.geometry.dispose();
+      if (object.userData?.ownsMaterial) object.material?.dispose();
     });
   }
 
@@ -294,13 +300,17 @@ export function initWorkCabinetThree({
         });
         // Micro-occlusion is baked into a diffuse, soft contact patch, while
         // directional shadows move naturally with the entire lifted sheet.
+        let occlusion = null;
         if (contactShadowMaterial) {
-          const occlusion = new THREE.Mesh(
+          occlusion = new THREE.Mesh(
             new THREE.PlaneGeometry(width + 22, faceHeight + 24),
-            contactShadowMaterial
+            contactShadowMaterial.clone()
           );
-          occlusion.position.set(width / 2 + 3, faceHeight / 2 + 7, -6.5);
-          group.add(occlusion);
+          occlusion.userData.ownsMaterial = true;
+          occlusion.position.set(
+            x + width / 2 + 3, y + faceHeight / 2 + 7, baseZ - 6.5
+          );
+          sceneContents.add(occlusion);
         }
         // Two real paper leaves, not one thick block. A small lateral shift
         // reveals the lower leaf and makes the bottom binding physically legible.
@@ -342,7 +352,7 @@ export function initWorkCabinetThree({
         );
         exposedLeaf.position.set(width / 2, faceHeight + 3.2, -1.35);
         group.add(exposedLeaf);
-        files.push({ node: element, face, faceWidth: face.offsetWidth, group, x, y, baseZ });
+        files.push({ node: element, face, faceWidth: face.offsetWidth, group, x, y, baseZ, occlusion });
       } else {
         const height = Math.max(20, hit.offsetHeight);
         // Satin archival partition sheet, more rigid than manila stock.
@@ -501,12 +511,12 @@ export function initWorkCabinetThree({
       const metalRoughness = createMetalRoughness(doc);
       if (metalRoughness) textures.push(metalRoughness);
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0x334057, roughness: 0.57, roughnessMap: metalRoughness,
-        metalness: 0.75, envMapIntensity: 0.85,
+        color: 0x293850, roughness: 0.76, roughnessMap: metalRoughness,
+        metalness: 0.29, envMapIntensity: 0.22,
       }));
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0x111b2c, roughness: 0.66, roughnessMap: metalRoughness,
-        metalness: 0.65, envMapIntensity: 0.65,
+        color: 0x131d2c, roughness: 0.81, roughnessMap: metalRoughness,
+        metalness: 0.25, envMapIntensity: 0.12,
       }));
       materials.push(new THREE.MeshBasicMaterial({
         color: 0x8d7661, transparent: true, opacity: 0.28,
@@ -527,8 +537,11 @@ export function initWorkCabinetThree({
         depthWrite: false,
       }));
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0x101b30, roughness: 0.91, metalness: 0.33,
-        roughnessMap: metalRoughness, envMapIntensity: 0.24,
+        // Powder coat is dielectric paint, not exposed reflective metal.
+        // It must stay navy with *or without* the optional RoomEnvironment.
+        color: 0x162641, roughness: 0.97, metalness: 0,
+        roughnessMap: metalRoughness, envMapIntensity: 0,
+        emissive: 0x091324, emissiveIntensity: 0.12,
         side: THREE.DoubleSide,
       }));
       const contactShadow = createContactShadow(doc, quality.environment ? 192 : 128);
