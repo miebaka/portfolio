@@ -230,7 +230,14 @@ test("unfinished case studies explain their state before JavaScript runs", async
 
 test("production CSS is bundled and dead runtime modules are absent", async () => {
   const cssFiles = await walk(join(dist, "styles"), ".css");
-  assert.deepEqual(cssFiles, [join(dist, "styles", "main.css")]);
+  assert.deepEqual(cssFiles, [
+    join(dist, "styles", "main.css"),
+    join(dist, "styles", "work-cabinet.css"),
+  ]);
+  const workPage = await readFile(join(dist, "work.html"), "utf8");
+  assert.match(workPage, /href="styles\/work-cabinet\.css"/);
+  const homePage = await readFile(join(dist, "index.html"), "utf8");
+  assert.doesNotMatch(homePage, /work-cabinet\.css/);
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
