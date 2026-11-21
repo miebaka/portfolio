@@ -406,3 +406,18 @@ test("Work preserves its CSS filing cabinet when WebGL is unavailable", async ({
   await expect(page.locator(".filing-cabinet__face").first()).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
 });
+
+
+test("Work first paint does not download or initialise the heavy 3D scene", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/assets/runtime/work-cabinet-three.js", async route => {
+    requests++;
+    await route.continue();
+  });
+  await page.goto("/work.html");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+  // An eager viewport observer would load/compile shaders without input.
+  await page.waitForTimeout(700);
+  expect(requests).toBe(0);
+  await expect(page.locator("[data-project-archive]")).not.toHaveAttribute("data-cabinet3d", "ready");
+});
