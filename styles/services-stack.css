@@ -10,7 +10,7 @@ body[data-page="home"] .home-capabilities--reference .disciplines-heading {
   margin:0 0 clamp(3rem,8vw,8rem);padding:0;border:0;
 }
 body[data-page="home"] .home-capabilities--reference .disciplines-heading h2 {
-  max-width:16ch;color:#f4f2e9;font:var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--display);
+  max-width:16ch;color:#f4f2e9;font:var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--type-family-display);
   text-transform:uppercase;letter-spacing:var(--type-tracking-compressed);
 }
 body[data-page="home"] .home-capabilities--reference .process-sequence {
@@ -40,10 +40,10 @@ body[data-page="home"] .service-stack__heading {
 }
 body[data-page="home"] .service-stack__symbol {
   display:grid;place-items:center;width:clamp(2.3rem,4vw,4rem);
-  font:var(--type-weight-semibold) var(--type-heading-l)/var(--type-leading-display-comfort) var(--display);flex:none;
+  font:var(--type-weight-semibold) var(--type-heading-l)/var(--type-leading-display-comfort) var(--type-family-display);flex:none;
 }
 body[data-page="home"] .service-stack__card h3 {
-  font:var(--type-weight-semibold) var(--type-heading-xl)/var(--type-leading-display-comfort) var(--display);
+  font:var(--type-weight-semibold) var(--type-heading-xl)/var(--type-leading-display-comfort) var(--type-family-display);
   letter-spacing:var(--type-tracking-display);max-width:22ch;text-transform:uppercase;
 }
 body[data-page="home"] .service-stack__bottom {
@@ -55,11 +55,11 @@ body[data-page="home"] .service-stack__description {
 }
 body[data-page="home"] .service-stack__description p {
   max-width:55ch;margin:0;color:inherit;
-  font:var(--type-weight-semibold) var(--type-body-l)/var(--type-leading-body) var(--body);
+  font:var(--type-weight-semibold) var(--type-body-l)/var(--type-leading-body) var(--type-family-body);
 }
 body[data-page="home"] .service-stack__evidence {
   width:max-content;max-width:100%;min-height:2.75rem;display:inline-flex;align-items:center;
-  gap:.6rem;color:inherit;font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
+  gap:.6rem;color:inherit;font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--type-family-label);
   text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor;
 }
 body[data-page="home"] .service-stack__evidence:focus-visible {outline:3px solid currentColor;outline-offset:4px}
@@ -68,7 +68,7 @@ body[data-page="home"] .service-stack__tags {
 }
 body[data-page="home"] .service-stack__tag {
   display:inline-block;max-width:100%;padding:.45rem .8rem;
-  font:var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-ui) var(--label);
+  font:var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-ui) var(--type-family-label);
   text-transform:uppercase;border:1px solid currentColor;border-radius:999px;
 }
 body[data-page="home"] .journey {padding-block:clamp(3rem,5vw,6rem)}
@@ -118,7 +118,7 @@ body[data-page="home"] .service-stack__item a.service-stack__evidence {
   width:max-content;max-width:100%;padding:0;margin:0;justify-content:flex-start;
   align-items:center;gap:.6rem;flex-direction:row;
   border:0;border-bottom:1px solid currentColor;border-radius:0;
-  color:inherit;background:none;font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
+  color:inherit;background:none;font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--type-family-label);
   letter-spacing:var(--type-tracking-normal);text-transform:uppercase;
 }
 
@@ -134,7 +134,7 @@ body[data-page="home"] .home-project-list .editorial-index__row::before {
 }
 body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
   max-width:23ch;
-  font-size:var(--type-display-m);
+  font-size:var(--type-display-compact);
   line-height:var(--type-leading-display-comfort);
 }
 
@@ -144,7 +144,7 @@ body[data-page="home"] .home-project-list .editorial-index__row:is(:hover,:focus
 }
 body[data-page="writing"].article-page .article-hero__title {
   max-width:none;
-  font-size:var(--type-display-m);
+  font-size:var(--type-display-compact);
   line-height:var(--type-leading-display-comfort);
 }
 
