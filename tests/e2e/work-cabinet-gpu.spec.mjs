@@ -29,9 +29,10 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   expect(hiddenStyles.width).toBe("1px");
   expect(hiddenStyles.height).toBe("1px");
   expect(hiddenStyles.clipPath).toBe("inset(50%)");
-  // Native labels must retain opaque surfaces over the physical paper.
+  // The WebGL die-cut paper must be visible under native text; the HTML
+  // label may not look like an opaque rectangular card pasted onto the mesh.
   await expect(well.locator(".filing-cabinet__tab").first())
-    .not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    .toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await expect(well.locator(".filing-cabinet__divider").first())
     .not.toHaveCSS("background-image", "none");
   await expect(canvas).toHaveAttribute("aria-hidden", "true");
