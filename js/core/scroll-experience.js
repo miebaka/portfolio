@@ -18,7 +18,7 @@ export function initScrollExperience({
   let instance = null, pending = false, revision = 0, destroyed = false;
   // Playwright exercises this separately through ?motion-test; normal CI
   // routes stay native so GPU and motion tests remain deterministic.
-  const allowed = () => !destroyed && screen?.matches === true &&
+  const allowed = () => !destroyed && doc.body?.dataset.page !== "work" && screen?.matches === true &&
     !isMotionReduced(root, reduce) && (preview || win.navigator?.webdriver !== true);
 
   const disable = () => {
