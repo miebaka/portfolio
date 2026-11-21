@@ -149,14 +149,21 @@ test("published case studies preserve the editorial reading order", async ({ pag
   }
 });
 
-test("every published case uses the same four chapters without an intro index or side rail", async ({ page }) => {
+test("every published case uses the same five labeled questions without an intro index or side rail", async ({ page }) => {
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(`/work/${slug}.html`);
     const chapters = page.locator(".case-chapter");
-    await expect(chapters).toHaveCount(4);
-    expect(await chapters.evaluateAll(items => items.map(item => item.id))).toEqual(["decision", "system", "survival", "encounter"]);
-    expect(await chapters.locator("h2").allTextContents()).toEqual(["Decision", "System", "Survival", "Encounter"]);
+    await expect(chapters).toHaveCount(5);
+    expect(await chapters.evaluateAll(items => items.map(item => item.id))).toEqual(["decision", "system", "survival", "encounter", "results"]);
+    expect(await chapters.locator("h2").allTextContents()).toEqual(["The Call", "The System", "What Survived", "First Contact", "The Results"]);
+    expect(await chapters.locator(".case-chapter__descriptor").allTextContents()).toEqual([
+      "What did I decide, and what did I turn down to get there?",
+      "What did I build so the decision outlived the first week?",
+      "What did the deadline and the budget leave standing?",
+      "How did the people it was made for first meet it?",
+      "What changed because this existed, and how do I know?",
+    ]);
     await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
