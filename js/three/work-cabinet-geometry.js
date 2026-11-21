@@ -61,11 +61,6 @@ export function createBowedPaperGeometry(width, height, {
 }
 
 /**
- * Two thin, bent metal hanger arms which engage the actual inner rails.
- * They are tiny at normal scale, but expose the hardware during a lift.
- * The user still interacts with real DOM links, never these meshes.
- */
-/**
  * A hanging folder is suspended by one continuous wire through a folded hem,
  * not by two unattached pins. Keep the actual rail contact points in DOM
  * coordinates so this assembly works at desktop and narrow mobile widths.
