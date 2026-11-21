@@ -237,12 +237,14 @@ test("a primary pointer opens a bounded paper sheet and arrives at the matching 
         color: paper && getComputedStyle(paper).backgroundColor,
         background: getComputedStyle(document.documentElement).backgroundColor,
         extracting: link.closest(".filing-cabinet__folder")?.dataset.extracting,
+        viewTransition: !!document.querySelector('style[data-cabinet-view-transition="true"]'),
       };
     });
   expect(state.prevented).toBe(true);
   expect(state.shade).toBe(true);
   expect(state.sheet).toBe(true);
   expect(state.extracting).toBe("true");
+  expect(state.viewTransition).toBe(true);
   expect(state.color).toBe(state.background);
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
   await expect(page.locator("body")).toHaveAttribute("data-cabinet-arrival", "true");
@@ -292,9 +294,10 @@ test("keyboard and explicit reduced motion bypass travel and retain normal links
     return {
       prevented: event.defaultPrevented,
       overlay: document.querySelector(".cabinet-extraction__paper") !== null,
+      viewTransition: !!document.querySelector("style[data-cabinet-view-transition]"),
     };
   });
-  expect(result).toEqual({ prevented: false, overlay: false });
+  expect(result).toEqual({ prevented: false, overlay: false, viewTransition: false });
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
   await expect(page.locator("body")).not.toHaveAttribute("data-cabinet-arrival", "true");
   await page.goto("/work.html");
