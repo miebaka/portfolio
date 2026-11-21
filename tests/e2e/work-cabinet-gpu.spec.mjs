@@ -29,11 +29,14 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   expect(hiddenStyles.width).toBe("1px");
   expect(hiddenStyles.height).toBe("1px");
   expect(hiddenStyles.clipPath).toBe("inset(50%)");
-  // Native labels must retain opaque surfaces over the physical paper.
+  // The WebGL die-cut paper must be visible under native text; the HTML
+  // label may not look like an opaque rectangular card pasted onto the mesh.
   await expect(well.locator(".filing-cabinet__tab").first())
-    .not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    .toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  // WebGL also renders the year guide stock: the CSS plate cannot hide
+  // a folder tab merely because its crown overlaps the next guide.
   await expect(well.locator(".filing-cabinet__divider").first())
-    .not.toHaveCSS("background-image", "none");
+    .toHaveCSS("background-image", "none");
   await expect(canvas).toHaveAttribute("aria-hidden", "true");
   await expect(canvas).toHaveCSS("pointer-events", "none");
   const png = await canvas.screenshot();
@@ -47,9 +50,15 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
     .toBeGreaterThan(25);
   // Verify that the WebGL surface actually contributes visible pixels.
   // Merely counting colours in a screenshot can accidentally count HTML layers.
-  const visible = await well.screenshot();
+  // Element screenshots wait for a "stable" layout and can time out under
+  // continuous WebGL/scroll activity even when rendering is correct.
+  // Capture the same fixed page rectangle in both states instead.
+  const clip = await well.boundingBox();
+  expect(clip, "The drawer must occupy a measurable viewport rectangle").not.toBeNull();
+  const screenshotOptions = { clip, animations: "disabled" };
+  const visible = await page.screenshot(screenshotOptions);
   await canvas.evaluate(node => { node.style.visibility = "hidden"; });
-  const hidden = await well.screenshot();
+  const hidden = await page.screenshot(screenshotOptions);
   await canvas.evaluate(node => { node.style.visibility = ""; });
   const [on, off] = await Promise.all([visible, hidden].map(async png =>
     sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })));
@@ -75,9 +84,9 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   }
   expect(changed / sampled, "Showing the 3D canvas must materially change the rendered drawer")
     .toBeGreaterThan(0.02);
-  await well.screenshot({ path: "test-results/cabinet-gpu-webgl.png" });
+  await page.screenshot({ ...screenshotOptions, path: "test-results/cabinet-gpu-webgl.png" });
   await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
-  await well.screenshot({ path: "test-results/cabinet-gpu-dark.png" });
+  await page.screenshot({ ...screenshotOptions, path: "test-results/cabinet-gpu-dark.png" });
 
   await canvas.evaluate(element => {
     element.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));

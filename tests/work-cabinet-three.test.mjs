@@ -112,3 +112,30 @@ test("matte drawer paint excludes environment reflections and shadows detach on 
   assert.match(source, /file\.occlusion\.material\.opacity = Math\.max/);
   assert.match(source, /object\.userData\?\.ownsMaterial/);
 });
+
+test("physical folder geometry keeps the tab on the rear leaf and front pocket below the hem", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
+  assert.match(source, /back\.name = "rear-die-cut-leaf"/);
+  assert.match(source, /front\.name = "short-front-pocket-leaf"/);
+  assert.match(source, /front\.position\.set\(0, 10, 0\)/);
+  assert.match(source, /createExpansionScoreGeometry\(width, faceHeight/);
+  assert.match(source, /const baseZ = \(isFolder \? 15\.4 : 8\.5\) \+ index \* \.6/);
+  assert.match(source, /canvas\?\.removeEventListener\("webglcontextlost", onContextLost\)/);
+});
+
+test("first WebGL frame syncs active CSS folder lifts before showing canvas", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
+  const firstSync = source.indexOf("render(win.performance?.now?.() ?? Date.now());");
+  const exposed = source.indexOf('cabinet.dataset.cabinet3d = "ready"');
+  assert.ok(firstSync > 0 && exposed > firstSync,
+    "the first native-transform-aligned frame must render before WebGL is exposed");
+});
+
+test("mobile reading selection lifts in depth without detaching HTML tab", () => {
+  const root = resolve(import.meta.dirname, "..");
+  const source = readFileSync(resolve(root, "js/work-cabinet-three.js"), "utf8");
+  const css = readFileSync(resolve(root, "styles/work-cabinet.css"), "utf8");
+  assert.match(source, /const selectedDepth = !pointerMq\.matches/);
+  assert.match(source, /file\.group\.position\.set\(x, y, file\.baseZ \+ lift \* 1\.65 \+ selectedDepth\)/);
+  assert.match(css, /\.filing-cabinet\[data-cabinet3d="ready"\] \.filing-cabinet__folder\[data-reading="true"\]:not\(:focus-within\) \.filing-cabinet__face \{/);
+});

@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { createPaperMaps, createContactShadow, createMetalRoughness, createDrawerFloorMap } from "./three/work-cabinet-materials.js";
-import { createBowedPaperGeometry, createSuspensionHardware, createTabReinforcement } from "./three/work-cabinet-geometry.js";
+import { createBowedPaperGeometry, createSuspensionHardware, createTabReinforcement, createExpansionScoreGeometry } from "./three/work-cabinet-geometry.js";
 
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
@@ -155,14 +155,19 @@ export function initWorkCabinetThree({
       const x = face.left - bounds.left;
       const y = face.top - bounds.top;
       const lift = Math.max(0, file.y - y);
-      // The tab, paper edges and HTML label now share the *same* transform.
-      // Scale origin is aligned to the transformed HTML face's top-left.
-      file.group.position.set(x, y, file.baseZ + lift * 1.65);
+      // Coarse-pointer reading selection stays on the original paper plane
+      // in screen space. A small Z lift preserves tactile shadow separation
+      // without leaving the native index label hovering above the 3D tab.
+      const selectedDepth = !pointerMq.matches &&
+        file.node.dataset.reading === "true" ? 2.5 : 0;
+      // The tab, paper edges and HTML label share their native XY transform.
+      file.group.position.set(x, y, file.baseZ + lift * 1.65 + selectedDepth);
       file.group.scale.set(scale, scale, 1);
       if (file.occlusion) {
-        // A physical cast shadow remains on the drawer as the leaf lifts;
-        // it cannot travel glued to the moving paper surface.
-        file.occlusion.material.opacity = Math.max(.16, .72 - lift * .022);
+        // Contact shadow remains anchored to the drawer when paper rises.
+        file.occlusion.material.opacity = Math.max(
+          .16, .72 - (lift + selectedDepth) * .022
+        );
       }
     }
     renderer.render(scene, camera);
@@ -289,7 +294,11 @@ export function initWorkCabinetThree({
       const width = hit.clientWidth;
       if (width < 8) return;
       const group = new THREE.Group();
-      const baseZ = 34 + index * 8;
+      // The rear tab is 2.05 units behind its folder's front leaf.
+      // Year-guide stock must lie behind that tab, or the 3D tab crown
+      // disappears beneath the guide even with transparent HTML styling.
+      // Keep both tiers close to the inner steel rails rather than floating.
+      const baseZ = (isFolder ? 15.4 : 8.5) + index * .6;
       group.position.set(x, y, baseZ);
       sceneContents.add(group);
 
@@ -320,20 +329,24 @@ export function initWorkCabinetThree({
           );
           sceneContents.add(occlusion);
         }
-        // Two real paper leaves, not one thick block. A small lateral shift
-        // reveals the lower leaf and makes the bottom binding physically legible.
+        // A real hanging folder has a die-cut rear leaf carrying the tab.
+        // Its shorter front leaf starts below the rod hem and creates an open
+        // mouth rather than covering the tab with a flat card silhouette.
         const back = new THREE.Mesh(
-          extrudedPaper(rectangle(width - 3.5, faceHeight - 3.5)),
+          extrudedPaper(shape),
           [materials[stock], materials[4]]
         );
-        back.position.set(2, 5.1, -2.05);
+        back.position.set(0, 0, -2.05);
+        back.name = "rear-die-cut-leaf";
         back.castShadow = true;
         back.receiveShadow = true;
         group.add(back);
         const front = new THREE.Mesh(
-          extrudedPaper(shape),
+          extrudedPaper(rectangle(width, Math.max(20, faceHeight - 10))),
           [materials[stock], materials[4]]
         );
+        front.name = "short-front-pocket-leaf";
+        front.position.set(0, 10, 0);
         front.castShadow = true;
         front.receiveShadow = true;
         group.add(front);
@@ -343,7 +356,7 @@ export function initWorkCabinetThree({
         // highlights now change through the stock instead of staying flat.
         const bowedFace = new THREE.Mesh(
           createBowedPaperGeometry(
-            Math.max(16, width - 12), Math.max(20, faceHeight - 14), {
+            Math.max(16, width - 12), Math.max(20, faceHeight - 20), {
               seed: index * 17 + stock,
               segmentsX: quality.environment ? 24 : 12,
               segmentsY: quality.environment ? 9 : 5,
@@ -352,7 +365,7 @@ export function initWorkCabinetThree({
           materials[stock]
         );
         bowedFace.name = "calendered-paper-face";
-        bowedFace.position.set(width / 2, faceHeight / 2 + 2.5, 0);
+        bowedFace.position.set(width / 2, faceHeight / 2 + 4, 0);
         bowedFace.castShadow = true;
         bowedFace.receiveShadow = true;
         group.add(bowedFace);
@@ -361,8 +374,8 @@ export function initWorkCabinetThree({
         // on the drawer rods; these are decorative, not click targets.
         const hanger = createSuspensionHardware(width, {
           metal: materials[9],
-          // A folded paper sleeve should read as stock, not a black T-bar.
-          shade: materials[4],
+          // The rod hem must use this folder's paper stock, not a dark band.
+          shade: materials[stock],
           detail: quality.environment,
           leftRailX: innerLeftRail - x,
           rightRailX: innerRightRail - x,
@@ -375,22 +388,12 @@ export function initWorkCabinetThree({
         );
         group.add(reinforcedTab);
 
-        // Calendering/folding creates a darker pressure crease followed by
-        // a tiny raised, warm edge. These are true 3D layers with soft light
-        // response, not a painted CSS separator or a plastic-looking bevel.
-        const foldY = faceHeight - 9;
-        const crease = new THREE.Mesh(
-          new THREE.PlaneGeometry(Math.max(1, width - 14), .92),
-          materials[7]
-        );
-        crease.position.set(width / 2, foldY, 2.27);
-        group.add(crease);
-        const foldHighlight = new THREE.Mesh(
-          new THREE.BoxGeometry(Math.max(1, width - 14), .34, .25),
-          materials[8]
-        );
-        foldHighlight.position.set(width / 2, foldY - 1.15, 2.31);
-        group.add(foldHighlight);
+        // Three continuous scored expansion lines catch oblique light even
+        // on the coarse mobile mesh, without cloth-like wave deformation.
+        const scores = createExpansionScoreGeometry(width, faceHeight, {
+          crease: materials[7], highlight: materials[8],
+        });
+        group.add(scores);
         const exposedLeaf = new THREE.Mesh(
           new THREE.BoxGeometry(Math.max(1, width - 7), .52, .76),
           materials[4]
@@ -446,6 +449,7 @@ export function initWorkCabinetThree({
     motionObserver?.disconnect();
     if (frame) win.cancelAnimationFrame(frame);
     frame = 0;
+    canvas?.removeEventListener("webglcontextlost", onContextLost);
     cabinet.removeEventListener("pointerover", invalidate);
     cabinet.removeEventListener("pointerout", invalidate);
     cabinet.removeEventListener("focusin", invalidate);
@@ -619,7 +623,13 @@ export function initWorkCabinetThree({
 
       well.prepend(canvas);
       rebuild();
-      renderer.render(scene, camera);
+      // The CSS reading/hover transform may already be active when the lazy
+      // renderer starts. Render from the measured face rectangles before
+      // exposing WebGL; otherwise the first visible GPU frame leaves native
+      // tab text lifted above paper that is still at its resting position.
+      if (frame) win.cancelAnimationFrame(frame);
+      frame = 0;
+      render(win.performance?.now?.() ?? Date.now());
       cabinet.dataset.cabinet3d = "ready";
       // Late font swaps and line wrapping can change tab geometry without
       // changing the cabinet width; rebuild against the settled document.

@@ -172,3 +172,53 @@ extends to that *exact* measured rail coordinate. Reinforced sleeves use
 paper-stock colour instead of black channel paint, removing the artificial
 T-shaped cap. Geometry tests cover both desktop outward reach and the
 shorter mobile reach.
+
+### Continuous suspension and die-cut anatomy (November 21, 2026)
+
+The authoritative file construction is the existing accessible DOM plus a
+decorative, optional Three.js material layer. The preceding Gemini proposal
+informed this pass, but its replacement renderer was **not** pasted into the
+repository: it would have bypassed the existing reading-axis controller,
+progressive loader, reduced-motion and WebGL-failure behavior.
+
+- The **rear leaf** carries the die-cut index tab; a shorter front leaf begins
+  below the suspension hem, leaving a physical pocket mouth.
+- Each file has one **continuous steel suspension rod** connecting its measured
+  left and right support rails, not two floating pins. Hooked ends, paper-stock
+  sleeves and the full-length rolled hem use the same DOM-derived geometry.
+- Folder depth tracks the actual support-rail height; minimal z separation
+  orders the sheets without floating them far above the cabinet hardware.
+- Three shallow **expansion score lines** are stable at desktop and mobile
+  geometry densities. They use narrow geometry rather than relying on
+  vertices coincidentally landing on a tiny crease band.
+- Desktop file spacing is compressed moderately while preserving a clear
+  hover/focus lip and the following year guide. Mobile keeps its tested year
+  clearance and uses a slightly wider, fully legible paper tab.
+- The native HTML tab becomes transparent only when WebGL is ready,
+  exposing the physically die-cut rear-leaf surface beneath the text instead
+  of painting a rectangular white badge. The CSS-only, accessibility and
+  context-loss fallbacks retain opaque stock for readable labels.
+- The year guides likewise surrender their painted CSS backgrounds once
+  WebGL is ready. Otherwise a white HTML year panel masks the raised die-cut
+  crowns, making desktop folder labels appear to float on the year plate.
+  Native year numbers stay legible over the physically modelled guide; both
+  tab and year backgrounds return on WebGL failure.
+
+**Release acceptance:** Run Node 24 build and cabinet/unit tests, all
+Playwright desktop/mobile/CSS-fallback checks, and GPU screenshots. Confirm
+that year guides never collide with lifted folders; labels do not clip;
+continuous rod hooks visibly meet the rails; focus and native links still
+work; context loss returns to the CSS cabinet; no material/geometry leaks
+appear after viewport rebuild. A passing CI suite establishes functional
+safety, not photographic quality: human desktop/mobile screenshot review
+is still required before calling the work complete.
+
+### Coarse-pointer tab registration and first-frame stability
+
+The mobile reader's selection animation now uses a restrained positive Z
+offset in WebGL mode rather than translating HTML ink away from the rendered
+paper in screen space. The native CSS mode retains the original vertical
+selection lift. The initial WebGL frame synchronously samples computed
+HTML face rectangles before the ready flag removes the CSS background.
+This specifically prevents a selected first file's label from appearing
+suspended over an empty navy strip during the lazy-renderer transition.
