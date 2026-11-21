@@ -475,3 +475,58 @@ test("navigation works without JavaScript", async ({ browser, baseURL }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Selected work");
   await context.close();
 });
+
+test("Work folder hover hits exactly the intended project", async ({ page }) => {
+  const hrefs = ["work/rivo.html", "work/tedx-rsu.html", "work/chopbox.html"];
+  for (const width of [390, 900, 1440]) {
+    await page.setViewportSize({ width, height: 1100 });
+    await page.goto("/work.html");
+    await settle(page);
+    const folders = page.locator(".project-folder");
+    await expect(folders).toHaveCount(3);
+
+    const bounds = await folders.evaluateAll(items => items.map(item => {
+      const rect = item.getBoundingClientRect();
+      return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom,
+        ratio: rect.width / rect.height };
+    }));
+    for (const rect of bounds) {
+      expect(rect.ratio, "folder must be tall like a physical file").toBeCloseTo(.75, 1);
+    }
+    for (let i = 0; i < bounds.length; i++) {
+      for (let j = i + 1; j < bounds.length; j++) {
+        const a = bounds[i], b = bounds[j];
+        const overlaps = a.left < b.right - 1 && a.right > b.left + 1 &&
+          a.top < b.bottom - 1 && a.bottom > b.top + 1;
+        expect(overlaps, "folder link hit areas must not overlap").toBe(false);
+      }
+    }
+    for (let i = 0; i < 3; i++) {
+      const folder = folders.nth(i);
+      await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
+      await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", hrefs[i]);
+      const paperMotion = await folder.locator(".project-folder__paper").evaluateAll(items =>
+        items.map(item => ({
+          pointerEvents: getComputedStyle(item).pointerEvents,
+          transitionDuration: getComputedStyle(item).transitionDuration,
+        })));
+      for (const sheet of paperMotion) {
+        expect(sheet.pointerEvents).toBe("none");
+        expect(sheet.transitionDuration).toBe("0s");
+      }
+    }
+    if (width !== 1440) continue;
+    for (let i = 0; i < 3; i++) {
+      await folders.nth(i).scrollIntoViewIfNeeded();
+      const rect = await folders.nth(i).boundingBox();
+      const x = rect.x + rect.width / 2;
+      const y = rect.y + rect.height * .65;
+      await page.mouse.move(x, y);
+      const hit = await page.evaluate(({ x, y }) =>
+        document.elementFromPoint(x, y)?.closest(".project-folder__link")?.getAttribute("href"),
+      { x, y });
+      expect(hit, "hover should hit the project under the pointer").toBe(hrefs[i]);
+      await expect(folders.nth(i)).toHaveCSS("z-index", "1");
+    }
+  }
+});
