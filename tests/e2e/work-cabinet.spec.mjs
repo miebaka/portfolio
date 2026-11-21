@@ -220,3 +220,130 @@ test("a fresh Work visit never restores an unrelated or stale folder", async ({ 
   await expect(page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"] .filing-cabinet__link'))
     .not.toBeFocused();
 });
+
+
+test("a primary pointer opens a bounded paper sheet and arrives at the matching case", async ({ page }) => {
+  await page.goto("/work.html");
+  const state = await page.locator('.filing-cabinet__folder[data-slug="rivo"] .filing-cabinet__link')
+    .evaluate(link => {
+      const event = new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, detail: 1 });
+      link.dispatchEvent(event);
+      const shade = document.querySelector(".cabinet-extraction__shade");
+      const paper = document.querySelector(".cabinet-extraction__paper");
+      return {
+        prevented: event.defaultPrevented,
+        shade: !!shade,
+        sheet: !!paper,
+        color: paper && getComputedStyle(paper).backgroundColor,
+        background: getComputedStyle(document.documentElement).backgroundColor,
+        extracting: link.closest(".filing-cabinet__folder")?.dataset.extracting,
+      };
+    });
+  expect(state.prevented).toBe(true);
+  expect(state.shade).toBe(true);
+  expect(state.sheet).toBe(true);
+  expect(state.extracting).toBe("true");
+  expect(state.color).toBe(state.background);
+  await expect(page).toHaveURL(/\/work\/rivo\.html$/);
+  await expect(page.locator("body")).toHaveAttribute("data-cabinet-arrival", "true");
+  await expect(page.locator(".case-opening h1")).toContainText("Rivo Studio");
+  expect(await page.evaluate(() => sessionStorage.getItem("portfolio.workCabinet.arrival.v2"))).toBeNull();
+});
+
+test("a cancelled or stalled paper animation cannot block case navigation", async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      if (this.classList?.contains("cabinet-extraction__paper")) {
+        const animation = original.apply(this, args);
+        animation.pause(); // A never-settling finished promise must hit the 390ms deadline.
+        return animation;
+      }
+      return original.apply(this, args);
+    };
+  });
+  await page.goto("/work.html");
+  await page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"] .filing-cabinet__tab').click();
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+  await expect(page.locator(".case-opening h1")).toContainText("TEDx Rivers State University");
+});
+
+test("a thrown paper animation navigates without leaving the visitor trapped", async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      if (this.classList?.contains("cabinet-extraction__paper"))
+        throw new Error("simulated Web Animations failure");
+      return original.apply(this, args);
+    };
+  });
+  await page.goto("/work.html");
+  await page.locator('.filing-cabinet__folder[data-slug="chopbox"] .filing-cabinet__tab').click();
+  await expect(page).toHaveURL(/\/work\/chopbox\.html$/);
+});
+
+test("keyboard and explicit reduced motion bypass travel and retain normal links", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/work.html");
+  const link = page.locator(".filing-cabinet__link").first();
+  const result = await link.evaluate(anchor => {
+    const event = new MouseEvent("click", { bubbles: true, cancelable: true, detail: 1, button: 0 });
+    anchor.dispatchEvent(event);
+    return {
+      prevented: event.defaultPrevented,
+      overlay: document.querySelector(".cabinet-extraction__paper") !== null,
+    };
+  });
+  expect(result).toEqual({ prevented: false, overlay: false });
+  await expect(page).toHaveURL(/\/work\/rivo\.html$/);
+  await expect(page.locator("body")).not.toHaveAttribute("data-cabinet-arrival", "true");
+  await page.goto("/work.html");
+  await page.locator(".filing-cabinet__link").nth(1).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+  await expect(page.locator("body")).not.toHaveAttribute("data-cabinet-arrival", "true");
+});
+
+test("modified and auxiliary clicks are never intercepted", async ({ page }) => {
+  await page.goto("/work.html");
+  const result = await page.locator(".filing-cabinet__link").first().evaluate(anchor => {
+    const ctrl = new MouseEvent("click", {
+      bubbles: true, cancelable: true, button: 0, detail: 1, ctrlKey: true,
+    });
+    anchor.dispatchEvent(ctrl);
+    const middle = new MouseEvent("auxclick", {
+      bubbles: true, cancelable: true, button: 1, detail: 1,
+    });
+    anchor.dispatchEvent(middle);
+    return {
+      ctrlPrevented: ctrl.defaultPrevented,
+      middlePrevented: middle.defaultPrevented,
+      overlay: document.querySelector(".cabinet-extraction__paper") !== null,
+    };
+  });
+  expect(result).toEqual({ ctrlPrevented: false, middlePrevented: false, overlay: false });
+});
+
+test("direct case visits never animate and case pages opt in independently", async ({ page }) => {
+  for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
+    await page.goto("/work/" + slug + ".html");
+    await expect(page.locator(".case-opening h1")).toBeVisible();
+    await expect(page.locator("body")).not.toHaveAttribute("data-cabinet-arrival", "true");
+    const rule = await page.evaluate(() => [...document.querySelectorAll("head style")]
+      .some(style => /@view-transition\s*\{\s*navigation:\s*auto/.test(style.textContent)));
+    expect(rule).toBe(true);
+  }
+});
+
+test("Back clears the extraction sheet and retains the real folder", async ({ page }) => {
+  await page.goto("/work.html");
+  await page.locator('.filing-cabinet__folder[data-slug="chopbox"] .filing-cabinet__tab').click();
+  await expect(page).toHaveURL(/\/work\/chopbox\.html$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/work\.html$/);
+  await expect(page.locator(".filing-cabinet__folder[data-slug='chopbox'] .filing-cabinet__link"))
+    .toBeFocused();
+  await expect(page.locator(".cabinet-extraction__paper")).toHaveCount(0);
+  await expect(page.locator(".cabinet-extraction__shade")).toHaveCount(0);
+  await expect(page.locator("[data-extracting]")).toHaveCount(0);
+});
