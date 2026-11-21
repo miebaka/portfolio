@@ -236,6 +236,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   ]);
   const workPage = await readFile(join(dist, "work.html"), "utf8");
   assert.match(workPage, /href="styles\/work-cabinet\.css"/);
+  assert.match(workPage, /src="js\/core\/work-cabinet\.js"/);
+  await access(join(dist, "js", "core", "work-cabinet.js"));
   const homePage = await readFile(join(dist, "index.html"), "utf8");
   assert.doesNotMatch(homePage, /work-cabinet\.css/);
   const css = await readFile(cssFiles[0], "utf8");
