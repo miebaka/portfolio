@@ -279,6 +279,17 @@ body[data-page="work"] .filing-cabinet__folder[data-reading="true"] .filing-cabi
   font-weight: 750;
 }
 
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__face {
+  transform: none;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__face::after,
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__lip {
+  opacity: 0;
+  transition: none;
+}
+
 body[data-page="work"] .filing-cabinet__link:focus-visible {
   outline: 2px solid var(--ref-coral-30);
   outline-offset: 3px;
