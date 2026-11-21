@@ -281,7 +281,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--font-display:\s*"Geist Sans"/);
   assert.match(css, /--font-body:\s*"Geist Sans"/);
   assert.match(css, /--font-label:\s*"Geist Mono"/);
-  assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
+  assert.match(css, /--display:\s*var\(--font-display\);\s*--body:\s*var\(--font-body\);\s*--label:\s*var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
@@ -405,7 +405,7 @@ test("interactive controls include the approved Figma button states", async () =
   assert.match(css, /@media\s*\(hover:hover\) and \(pointer:fine\)/);
   assert.match(
     css,
-    /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:16px\}\s*select\{font-size:16px\}\s*input\{font-size:16px\}\s*\}/,
+    /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:var\(--type-input\)\}\s*select\{font-size:var\(--type-input\)\}\s*input\{font-size:var\(--type-input\)\}\s*\}/,
   );
 });
 
@@ -614,7 +614,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 11); // The Work cabinet is a page-scoped stylesheet, not a global import.
+  assert.equal((styles.match(/@import/g) || []).length, 12); // The Work cabinet is a page-scoped stylesheet, not a global import.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

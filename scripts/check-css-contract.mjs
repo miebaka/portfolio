@@ -5,7 +5,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const canonicalNames = ["foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css"];
+const canonicalNames = ["tokens.css", "foundations.css", "layout.css", "components-v4.css", "pages-v4.css", "home.css"];
 const names = [...canonicalNames, "motion-language.css"];
 const entries = await Promise.all(names.map(async name => [name, await readFile(join(root, "styles", name), "utf8")]));
 const css = Object.fromEntries(entries);

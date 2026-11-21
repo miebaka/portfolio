@@ -21,7 +21,7 @@ When implementation instructions conflict, resolve them in this order:
 1. **Security, privacy, accessibility, factual accuracy and working functionality.** These cannot be sacrificed for a reference aesthetic.
 2. **This document's explicit decisions and acceptance criteria**, including the Reference Responsibility Map and page contracts.
 3. **`engineering-specification.md`** for build architecture, deployment, canonical host, production budgets, server boundaries and security. In a genuine technical contradiction, preserve the safer existing engineering rule and record a change request rather than silently overriding it.
-4. **`styles/foundations.css`** for currently shipped token values until a formally approved token migration is implemented. This document describes the intended roles and refinements; a proposal is not permission to rewrite the palette.
+4. **`styles/tokens.css`** for the approved typography roles; `styles/foundations.css` remains authoritative for colour, spacing and motion. This document describes the intended roles and refinements; a proposal is not permission to rewrite the palette.
 5. **Content files under `data/`** as the source of facts about projects, experience, clients, case studies and writing. Do not fabricate business outcomes to fill a design layout.
 6. **Reference websites and ZeroSlop reference records** as bounded *inspiration*, not as code, licenses, authoritative brand assets or evidence of accessibility.
 
@@ -235,7 +235,7 @@ The new direction is **not** a facelift or continuation of the current visual pr
 
 **Image first:** For each flagship project, select one *excellent* cover image and 4–8 high-quality evidence frames with intentional crop, consistent visual logic and role-accurate captions. If assets are insufficient, surface the limitation rather than creating generic placeholders or overstating deliverables. Show the work's materiality—scale, print, real context, tactile depth—when supported by genuine files.
 
-**Typography is open to change:** Run three real, licensed type trials (current Archivo/Finlandica/Host; an expressive variable grotesk with accessible humanist text; a bold distinctive display with restrained text). Compare actual hero, work, About and essay screenshots, especially 320/390/768/1440px. Choose one *site-wide* family pairing by visual and legibility evidence. Ogaranya/Atkinson Hyperlegible Next MAY be evaluated as a candidate if font availability, usage rights, and rendering are verified; do not install or redistribute without permissions.
+**Typography is governed by Geist Unified:** Run three real, licensed type trials (current Archivo/Finlandica/Host; an expressive variable grotesk with accessible humanist text; a bold distinctive display with restrained text). Compare actual hero, work, About and essay screenshots, especially 320/390/768/1440px. Choose one *site-wide* family pairing by visual and legibility evidence. Ogaranya/Atkinson Hyperlegible Next MAY be evaluated as a candidate if font availability, usage rights, and rendering are verified; do not install or redistribute without permissions.
 
 **Color is open to change:** Retain an identifiable ultramarine signal **only if** it still performs best after comparative visual studies. Author up to three *complete* palette directions with real source imagery, test both Print/Screen states, contrast and project world transitions, then record the chosen semantic palette in `styles/foundations.css`. Never let references turn the system into a beige/olive/terracotta average.
 
@@ -276,41 +276,22 @@ Base source colors currently include:
 6. The existing Print/Screen preference is respected across all pages, including cases, essays, menus and footer.
 7. Source-brand logos may retain their originals when brand recognition depends on color; monochrome treatments must not destroy recognizability.
 
-### 3.2 Typography — current production roles, subject to critical redesign
+### 3.2 Typography — Geist Unified (production contract)
 
-Do **not** blindly combine reference-site fonts. However, the design redesign MAY replace the shipped font families when a documented, licensed alternative has a visibly better result across the entire site and passes legibility, performance and regression checks. Current production families, self-hosted in `assets/fonts/`, are:
+**Binding specification:** [docs/TYPOGRAPHY-SYSTEM.md](docs/TYPOGRAPHY-SYSTEM.md). **Values:** `styles/tokens.css`. This formally approved migration supersedes earlier font trials and the typography ownership rules in `styles/foundations.css`.
 
-| Design role | Family | Typical use |
-| --- | --- | --- |
-| Display | `Archivo` variable | Hero name, key editorial headlines, project titles |
-| Body | `Finlandica Text` variable | Descriptions, case narratives, articles |
-| Label | `Host Grotesk` variable | Navigation, metadata, captions, UI controls |
+| Role | Font | Weight | Source |
+| --- | --- | --- | --- |
+| Home hero, project titles, editorial displays | Geist Sans | 400 / 600 | `--type-display-*` |
+| Section, card and article headings | Geist Sans | 400 / 600 | `--type-heading-*` |
+| Body, narrative and essays | Geist Sans | 400 / 600 | `--type-body-*` |
+| Navigation, metadata and short UI labels | Geist Mono | 400 / 600 | `--type-label-*` |
 
-These map to `--display`, `--body`, `--label`. The system may use variable `font-weight` and supported `font-stretch` deliberately, but MUST test the rendering of each intended axis in supported browsers. Avoid faux italic/faux bold where an actual face or variable style is unavailable. Preserve font licensing information in the repo; do not expose font assets in generated reference documents.
+The standalone Material Symbols font is an **icon font only**, not a third text family. All typography declarations MUST use the type roles for size, font weight, line height and tracking; select families with `--display`, `--body`, `--label` or `--signature`. Only 400/600 static font weights are supported; invented weights and percentages for unsupported stretch axes are prohibited. The main Home name is substantially larger than the old 81px editorial override and scales fluidly up to 212px.
 
-#### Typographic roles
+**Accessibility remains mandatory:** exactly one semantic visible h1 per page; strong type hierarchy; accurate case on project names; uppercase UI labels, not paragraphs; short-line compressed display only; legible reading at 320px and 200% zoom; and proper fallback during font swap. Long-form copy SHOULD measure roughly 55–75 characters per line and use comfortable `--type-leading-reading`.
 
-| Role | Preferred CSS source | Suggested visual behavior |
-| --- | --- | --- |
-| Hero name | Home-specific rule, `--display` | Extremely large, compressed, high impact; never clips unintended glyphs |
-| Section display | `--type-display-*` | High contrast with body, controlled 1–3 line breaks |
-| Standard heading | `--type-heading-*` | Clear hierarchy and strong scanning |
-| Body / long reading | `--type-body-*`, `--body` | Comfortable 1.45–1.7 line-height depending on context |
-| Small captions/labels | `--type-label-*`, `--label` | Compact but readable; letterspacing only where appropriate |
-| Interface links | Shared component rules | Clear action affordance, never rely on font novelty |
-
-**Text width is a design tool.** Long prose SHOULD generally remain approximately 55–75 characters per line, adjusted by typeface and viewport. Headlines SHOULD use intentional max-widths and `text-wrap: balance` where supported. Avoid `overflow-wrap: anywhere` as a primary solution for project-title composition: it can break words unattractively. Use calibrated sizes and tested breakpoints first. Do not use all-caps for paragraphs.
-
-#### Typography quality rules
-
-- Exactly one visible semantic `h1` per page.
-- Heading levels represent document structure, not merely font sizes.
-- Avoid orphaned final words in hero and CTA headlines at tested widths.
-- Do not use `line-height: .72` with unrestricted copy. Such compression is permissible only for carefully tested display lettering that does not clip.
-- Body text MUST remain readable at 200% zoom without overlapping or becoming inaccessible.
-- Keep metadata secondary but never so small/low contrast that it becomes decorative noise.
-- Font loading MUST not blank essential content; use the existing `font-display: swap` pattern and compatible fallbacks.
-- A fourth family is discouraged, but the approved redesign may replace existing families when there is a documented rationale, license, actual cross-page visual trial and complete regression review.
+Stylelint rule `portfolio/typography-tokens`, `npm run test:typography` and the GitHub Actions Quality job are the release gate. Add a named token in the authoritative file if a new editorial role is genuinely necessary. Do not suppress lint as a workaround.
 
 ### 3.3 Grid, widths and spacing
 
@@ -984,7 +965,8 @@ Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based va
 
 | System | Current source files | Approved action |
 | --- | --- | --- |
-| Shared tokens/typography | `styles/foundations.css` | Refine values and roles centrally |
+| Typography | `styles/tokens.css` | Single owner of font families, size, weight, leading, and tracking |
+| Colour, layout and motion | `styles/foundations.css` | Preserve shared design tokens independently from typography |
 | Shared UI/nav/footer | `styles/components-v4.css` | Keep shared states and components consistent |
 | Page composition | `styles/pages-v4.css` | Scope by page/section; avoid leakage |
 | Home composition | `styles/home.css` | Own all Home-only layout and motion rules |
@@ -1302,7 +1284,7 @@ The following observations are from the `main` branch reviewed on 19 November 20
 
 ## APPENDIX C — SPECIFICATION CHANGELOG
 
-- **2.0.0 (2026-11-19):** Consolidated the current codebase review, seven-section Home reference locks, ZeroSlop-inspired governance, site-wide chapter contracts, motion/accessibility/performance requirements, canonical-host resolution, known defects and a comprehensive staged acceptance process. Maintained the existing ultramarine identity, Archivo/Finlandica Text/Host Grotesk roles, vanilla/static-first architecture, real case studies and dot-matrix signature.
+- **2.0.0 (2026-11-19):** Consolidated the current codebase review, seven-section Home reference locks, ZeroSlop-inspired governance, site-wide chapter contracts, motion/accessibility/performance requirements, canonical-host resolution, known defects and a comprehensive staged acceptance process. Maintained the ultramarine identity, vanilla/static-first architecture, real case studies and dot-matrix signature. Typography was subsequently migrated to Geist Unified on 21 November 2026.
 
 
 ### The Index, Geist Sans and embossed signature (20 November 2026)
