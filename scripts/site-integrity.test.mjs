@@ -282,10 +282,11 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-display:\s*"Geist Sans"/);
-  assert.match(css, /--font-body:\s*"Geist Sans"/);
-  assert.match(css, /--font-label:\s*"Geist Mono"/);
-  assert.match(css, /--display:\s*var\(--font-display\);\s*--body:\s*var\(--font-body\);\s*--label:\s*var\(--font-label\)/);
+  assert.match(css, /--type-family-display:\s*"Geist Sans"/);
+  assert.match(css, /--type-family-body:\s*"Geist Sans"/);
+  assert.match(css, /--type-family-label:\s*"Geist Mono"/);
+  assert.match(css, /--type-family-icon:\s*"Material Symbols Outlined"/);
+  assert.doesNotMatch(css, /--(?:font-display|font-body|font-label|display|body|label):/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
