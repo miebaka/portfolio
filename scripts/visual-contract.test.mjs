@@ -47,10 +47,8 @@ test("approved visual contract remains intact", async () => {
   // Material Symbols is an icon font. The authored typography assigns one
   // family to each semantic role: Geist Sans for display and body, Geist Mono for labels.
   const roleFonts = ["display", "body", "label"].map(role => {
-    const roleMatch = css.match(new RegExp(`--${role}:\\s*var\\(--font-${role}\\)`));
-    assert.ok(roleMatch, `missing --${role} typography role`);
-    const familyMatch = css.match(new RegExp(`--font-${role}:\\s*"([^"]+)"`));
-    assert.ok(familyMatch, `missing --font-${role} family token`);
+    const familyMatch = css.match(new RegExp(`--type-family-${role}:\\s*"([^"]+)"`));
+    assert.ok(familyMatch, `missing --type-family-${role} role`);
     return familyMatch[1];
   });
   assert.deepEqual(roleFonts, ["Geist Sans", "Geist Sans", "Geist Mono"]);
