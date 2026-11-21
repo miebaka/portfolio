@@ -25,7 +25,7 @@ test("each folder has a rear tab, five fixed case-section sheets, and opaque fro
   }
   assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
   for (const section of ["The Call", "The System", "What Survived", "First Contact", "The Results"]) {
-    assert.equal((html.match(new RegExp(">" + section + "<", "g")) || []).length, 3, section);
+    assert.equal((html.match(new RegExp(">" + section + "<", "g")) || []).length, 6, section); // Paper head + printed index per folder
   }
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
