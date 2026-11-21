@@ -10,6 +10,14 @@ import * as projectRender from "../js/render/projects.js";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
+ 
+// Source-format assertions inspect authored rules. The shipped CSS is
+// separately tested as a bundled, minified artifact with a strict gzip budget.
+async function readAuthoredCss() {
+  const main = await readFile(join(root, "styles", "main.css"), "utf8");
+  const names = [...main.matchAll(/@import url\("([^"]+)"\)/g)].map(match => match[1]);
+  return (await Promise.all(names.map(name => readFile(join(root, "styles", name), "utf8")))).join("\n");
+}
 
 test("homepage proof precedes biography in the source and built document", async () => {
   for (const directory of [root, dist]) {
@@ -254,9 +262,9 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
   assert.doesNotMatch(css, /font-family:\s*"Geist Serif"/);
-  assert.match(css, /font-family:\s*"Geist Sans"/);
-  assert.match(css, /font-family:\s*"Geist Mono"/);
-  assert.match(css, /font-family:\s*"Material Symbols Outlined"/);
+  assert.match(css, /font-family:\s*"?Geist Sans"?/);
+  assert.match(css, /font-family:\s*"?Geist Mono"?/);
+  assert.match(css, /font-family:\s*"?Material Symbols Outlined"?/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
     const value = match[1];
@@ -342,7 +350,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
   const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const css = await readAuthoredCss();
 
   assert.doesNotMatch(html, /Curiosity is part of the job/i);
   assert.doesNotMatch(html, /swiss-selected__all|View all work/i);
@@ -391,7 +399,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 });
 
 test("interactive controls include the approved Figma button states", async () => {
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const css = await readAuthoredCss();
   assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
   assert.match(css, /body\[data-page="contact"\] \.contact__submit \.btn\{[^}]*width:100%[^}]*min-height:4rem/);
   assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
@@ -413,7 +421,7 @@ test("interactive controls include the approved Figma button states", async () =
 });
 
 test("alignment, service parity and article hierarchy stay systemic", async () => {
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const css = await readAuthoredCss();
   const home = await readFile(join(dist, "index.html"), "utf8");
   const writing = await readFile(join(dist, "js", "render", "writing.js"), "utf8");
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
