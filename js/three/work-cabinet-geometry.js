@@ -67,6 +67,8 @@ export function createBowedPaperGeometry(width, height, {
  */
 export function createSuspensionHardware(width, {
   metal, shade, detail = true,
+  leftRailX = -23,
+  rightRailX = width + 23,
 } = {}) {
   finitePositive(width, "width");
   if (!metal || !shade) throw new TypeError("metal and shade materials required");
@@ -75,7 +77,9 @@ export function createSuspensionHardware(width, {
   for (const side of [-1, 1]) {
     const right = side === 1;
     const innerX = right ? width - 14 : 14;
-    const outsideX = right ? width + 23 : -23;
+    // A file's rail distance changes with responsive drawer padding.
+    // Measuring the real rail location is essential on narrow screens.
+    const outsideX = right ? rightRailX : leftRailX;
     const curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(innerX, 10, 2.9),
       new THREE.Vector3(innerX + side * 10, 8.8, 3.1),

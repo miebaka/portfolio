@@ -159,3 +159,16 @@ must show authentic suspension and the physical tension of thin stock.
 
 The material remains a crafted real-time simulation, not a photographic scan.
 Preserve the orthographic view and native case-study links.
+
+
+### Responsive suspension correction
+
+The first hardware screenshots showed disconnected hooks at both sides of
+the narrow mobile drawer. A fixed hanger overhang does not work when the
+drawer padding changes responsively: some support rails then lie inside the
+folder faces. The renderer now measures the real drawer left edge and places
+the two support rods at the corresponding inset. Each folder's hanger curve
+extends to that *exact* measured rail coordinate. Reinforced sleeves use
+paper-stock colour instead of black channel paint, removing the artificial
+T-shaped cap. Geometry tests cover both desktop outward reach and the
+shorter mobile reach.

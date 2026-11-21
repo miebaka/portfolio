@@ -222,6 +222,13 @@ export function initWorkCabinetThree({
     const railMaterial = materials[5];
     const railShade = materials[6];
     const railHeight = Math.max(20, height - 9);
+    const drawerEdge = well.querySelector(".filing-cabinet__drawer")
+      .getBoundingClientRect().left - bounds.left;
+    // On mobile the drawer starts close to the chassis wall: a fixed
+    // 22px rod would be *inside* a paper folder, leaving the hanger loose.
+    const supportInset = Math.max(7, Math.min(22, drawerEdge - 4));
+    const innerLeftRail = supportInset;
+    const innerRightRail = width - supportInset;
     for (const x of [8, width - 8]) {
       const side = x < width / 2 ? 1 : -1;
       const rail = new THREE.Mesh(
@@ -260,7 +267,7 @@ export function initWorkCabinetThree({
     // The narrower interior support rods carry hanging folders behind the
     // visible faces. They also visually connect the drawer across sparse gaps
     // without inventing fake projects or sealed files.
-    for (const x of [22, width - 22]) {
+    for (const x of [supportInset, width - supportInset]) {
       const support = new THREE.Mesh(
         new RoundedBoxGeometry(3.6, Math.max(8, railHeight - 3), 3.3, 2, .65),
         materials[9]
@@ -353,8 +360,12 @@ export function initWorkCabinetThree({
         // Metal suspensions show the actual means by which a file rests
         // on the drawer rods; these are decorative, not click targets.
         const hanger = createSuspensionHardware(width, {
-          metal: materials[9], shade: materials[6],
+          metal: materials[9],
+          // A folded paper sleeve should read as stock, not a black T-bar.
+          shade: materials[4],
           detail: quality.environment,
+          leftRailX: innerLeftRail - x,
+          rightRailX: innerRightRail - x,
         });
         group.add(hanger);
         const reinforcedTab = createTabReinforcement(

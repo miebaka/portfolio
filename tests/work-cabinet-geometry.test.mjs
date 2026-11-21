@@ -70,3 +70,20 @@ test("tab reinforcement contains a folded crown and impressed rule", () => {
   stock.dispose();
   crease.dispose();
 });
+
+
+test("suspension hooks can meet responsive rails inside a narrow drawer", () => {
+  const metal = new THREE.MeshStandardMaterial();
+  const shade = new THREE.MeshStandardMaterial();
+  const group = createSuspensionHardware(360, {
+    metal, shade, detail: false,
+    leftRailX: -5, rightRailX: 365,
+  });
+  const left = new THREE.Box3().setFromObject(group.getObjectByName("left-hanger"));
+  const right = new THREE.Box3().setFromObject(group.getObjectByName("right-hanger"));
+  assert.ok(left.min.x <= -3 && left.min.x > -20);
+  assert.ok(right.max.x >= 363 && right.max.x < 380);
+  group.traverse(node => node.geometry?.dispose());
+  metal.dispose();
+  shade.dispose();
+});

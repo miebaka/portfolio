@@ -95,7 +95,9 @@ test("sparse archive is grounded by modeled steel floor and support rails, not f
   const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
   assert.match(source, /const floor = new THREE.Mesh\(/);
   assert.match(source, /materials\[11\]/);
-  assert.match(source, /for \(const x of \[22, width - 22\]\)/);
+  assert.match(source, /for \(const x of \[supportInset, width - supportInset\]\)/);
+  assert.match(source, /leftRailX: innerLeftRail - x/);
+  assert.match(source, /rightRailX: innerRightRail - x/);
   assert.match(source, /new RoundedBoxGeometry\(3\.6/);
   assert.match(source, /RoundedBoxGeometry\(7\.2/);
 });
