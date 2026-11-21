@@ -1,5 +1,5 @@
-/* Project archive: native, overlapping paper folders. No drawer, canvas or WebGL.
-   Case-study tones come from data/projects.js. */
+/* Physical case-study folders: portrait proportions, five fixed sheets,
+   and separate native-link targets. No 3D drawer or paper pop-out motion. */
 body[data-page="work"] .project-archive--folders {
   width: min(calc(100% - 2 * var(--page)), var(--content));
   max-width: var(--content);
@@ -37,64 +37,64 @@ body[data-page="work"] .project-folder-stack__intro {
 .project-folder-stack__stage {
   position: relative;
   width: 100%;
-  min-height: clamp(36rem, calc(100svh - 18rem), 59rem);
+  min-height: 0;
   margin: 0 auto clamp(5rem, 11vw, 10rem);
-  isolation: isolate;
 }
 .project-folder-stack__cards {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  inset: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.4vw, 2.5rem);
+  align-items: start;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .project-folder {
-  --folder-offset: clamp(4.5rem, 6vw, 7rem);
-
-  position: absolute;
-  inset-inline: 0;
-  top: calc(var(--folder-index, 0) * var(--folder-offset));
-  height: calc(100% - var(--folder-index, 0) * var(--folder-offset));
-  z-index: calc(1 + var(--folder-index, 0));
-  min-height: 23rem;
+  position: relative;
+  inset: auto;
+  z-index: 0;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 3 / 4;
   border: 0;
   background: none;
-  transform-origin: 50% 100%;
-  transition: transform 540ms cubic-bezier(.16, 1, .3, 1), filter 540ms cubic-bezier(.16, 1, .3, 1);
+  transform-origin: 50% 70%;
+  transition: transform 320ms cubic-bezier(.16, 1, .3, 1),
+    filter 320ms cubic-bezier(.16, 1, .3, 1);
 }
 .project-folder__link {
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  min-height: inherit;
   color: var(--folder-on, #fff);
   text-decoration: none;
   isolation: isolate;
 }
 .project-folder__back {
   position: absolute;
-  inset: 3.65rem 0 0;
+  inset: 3.5rem 0 0;
   background: var(--folder-tone, #002080);
-  border-radius: clamp(1.35rem, 2.4vw, 2.4rem);
-  box-shadow: 0 .8rem 1.4rem rgb(0 0 0 / .1);
+  border-radius: 1.2rem 1.2rem .9rem .9rem;
+  box-shadow: 0 .55rem 1.3rem rgb(0 0 0 / .12);
 }
 .project-folder__tab {
   position: absolute;
-  bottom: calc(100% - .35rem);
-  left: 7%;
+  bottom: calc(100% - .18rem);
+  left: 6%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(47%, 29rem);
-  min-height: 3.8rem;
-  padding: .7rem 1.25rem;
-  border-radius: 2rem 2rem 0 0;
+  width: 79%;
+  min-height: 3.55rem;
+  padding: .65rem 1rem;
+  border-radius: .95rem .95rem 0 0;
   background: var(--folder-tone, #002080);
 }
-
-/* The orange cover keeps its original brand color; the smaller tab is darker
-   so its white label clears WCAG AA with room to spare. */
 .project-folder--chopbox .project-folder__tab {
   background: color-mix(in srgb, var(--folder-tone, #c2531c) 78%, black);
   color: #fff;
@@ -102,105 +102,146 @@ body[data-page="work"] .project-folder-stack__intro {
 .project-folder__tab-title {
   display: block;
   max-width: 100%;
-  font: var(--type-weight-semibold) var(--type-body-lead)/var(--type-leading-ui) var(--display);
+  font: var(--type-weight-semibold) var(--type-body-m)/var(--type-leading-ui) var(--display);
   text-align: center;
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
 .project-folder__paper {
   position: absolute;
-  top: 6.7rem;
-  left: 8%;
-  display: flex;
-  align-items: flex-start;
-  width: 47%;
-  height: 42%;
-  min-height: 7rem;
-  padding: clamp(1.3rem, 2.6vw, 2.7rem);
-  background: #fff;
-  color: #26272a;
-  border: 1px solid #e6e6e6;
-  border-radius: clamp(1rem, 1.6vw, 1.6rem);
-  box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / .14);
-  transform: rotate(-3.5deg);
-  transition: transform 500ms cubic-bezier(.16, 1, .3, 1);
+  top: 15%;
+  left: 9%;
+  z-index: 1;
+  width: 79%;
+  height: 73%;
+  padding: clamp(.85rem, 1.4vw, 1.3rem);
+  border: 1px solid #e0e2e3;
+  border-radius: .28rem .28rem .12rem .12rem;
+  background: #fcfcf8;
+  color: #5f6366;
+  box-shadow: 0 .2rem .65rem rgb(0 0 0 / .13);
+  pointer-events: none;
 }
 .project-folder__paper span {
-  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-ui) var(--display);
-  letter-spacing: var(--type-tracking-heading);
-  text-wrap: balance;
+  display: block;
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-ui);
+  text-transform: uppercase;
 }
-.project-folder__paper--right {
-  top: 7.9rem;
-  left: 44%;
-  width: 49%;
-  transform: rotate(3deg);
+.project-folder__paper::after {
+  position: absolute;
+  inset: 3.4rem 9% auto;
+  height: 1px;
+  background: #e3e6e7;
+  content: "";
+}
+.project-folder__paper--1 {
+  top: 15%;
+  left: 9%;
+  transform: rotate(-2deg);
+}
+.project-folder__paper--2 {
+  top: 16.3%;
+  left: 10%;
+  z-index: 2;
+  transform: rotate(-1deg);
+}
+.project-folder__paper--3 {
+  top: 17.6%;
+  left: 11%;
+  z-index: 3;
+  transform: rotate(.2deg);
+}
+.project-folder__paper--4 {
+  top: 18.9%;
+  left: 12%;
+  z-index: 4;
+  transform: rotate(1deg);
+}
+.project-folder__paper--5 {
+  top: 20.2%;
+  left: 13%;
+  z-index: 5;
+  transform: rotate(1.8deg);
 }
 .project-folder__front {
   position: absolute;
-  inset: 35% 0 0;
+  inset: 40% 0 0;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: clamp(1.5rem, 3.75vw, 4rem);
+  gap: .9rem;
+  min-height: 0;
+  padding: clamp(1.2rem, 2.2vw, 2.25rem);
+  border: 1px solid color-mix(in srgb, white 16%, transparent);
+  border-radius: 1rem 1rem 1.2rem 1.2rem;
   background: color-mix(in srgb, var(--folder-tone, #002080) 94%, white);
   color: var(--folder-on, #fff);
-  border: 1px solid color-mix(in srgb, white 16%, transparent);
-  border-radius: clamp(1.4rem, 2.5vw, 2.5rem);
-  box-shadow: 0 -.15rem 0 color-mix(in srgb, white 25%, transparent),
-    0 .85rem 1.8rem rgb(0 0 0 / .13);
+  box-shadow: 0 -.16rem 0 color-mix(in srgb, white 25%, transparent),
+    0 .85rem 1.8rem rgb(0 0 0 / .15);
 }
-.project-folder__overline, .project-folder__bottom {
-  font: var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-ui) var(--label);
+.project-folder__overline,
+.project-folder__bottom {
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--label);
   letter-spacing: var(--type-tracking-ui);
   text-transform: uppercase;
 }
 .project-folder__title {
   display: block;
-  max-width: 16ch;
-  font: var(--type-weight-semibold) var(--type-display-project)/var(--type-leading-display-comfort) var(--display);
-  letter-spacing: var(--type-tracking-display);
+  max-width: 100%;
+  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-heading) var(--display);
+  letter-spacing: var(--type-tracking-heading);
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .project-folder__bottom {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: .75rem;
 }
 .project-folder__view {
   display: inline-flex;
   align-items: center;
-  gap: .75rem;
+  gap: .45rem;
   border-bottom: 1px solid currentColor;
-  padding-bottom: .35rem;
+  padding-bottom: .25rem;
 }
 .project-folder__link:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 5px;
-  border-radius: 1.5rem;
+  border-radius: 1.2rem;
 }
 @media (hover: hover) and (pointer: fine) {
   .project-folder:hover {
-    z-index: 20;
-    transform: translate3d(0, -1.5rem, 0) scale(1.012);
-    filter: drop-shadow(0 1.4rem 1.5rem rgb(0 0 0 / .14));
+    z-index: 1;
+    transform: translate3d(0, -.65rem, 0);
+    filter: drop-shadow(0 1rem 1.1rem rgb(0 0 0 / .14));
   }
-  .project-folder:hover .project-folder__paper--left {
-    transform: translate3d(-.35rem, -.8rem, 0) rotate(-4.5deg);
+  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
+    opacity: 0;
+    transform: translateY(.4rem);
+    transition: opacity 260ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
   }
-  .project-folder:hover .project-folder__paper--right {
-    transform: translate3d(.35rem, -.7rem, 0) rotate(4deg);
+  .project-folder:is(:hover, :focus-within) .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 .project-folder:focus-within {
-  z-index: 21;
-  transform: translate3d(0, -1.2rem, 0) scale(1.008);
+  z-index: 2;
+  transform: translate3d(0, -.65rem, 0);
 }
 .project-folder-stack .project-archive__progress,
 .project-folder-stack .project-archive__collections {
   margin-block-start: clamp(5rem, 9vw, 9rem);
+}
+@media (max-width: 70rem) {
+  .project-folder-stack__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 48rem), (pointer: coarse) {
   body[data-page="work"] .project-archive--folders .project-archive__head {
@@ -212,88 +253,48 @@ body[data-page="work"] .project-folder-stack__intro {
     font-size: var(--type-display-mobile);
   }
   .project-folder-stack__stage {
-    min-height: 0;
     margin-bottom: clamp(3rem, 8vw, 5rem);
   }
   .project-folder-stack__cards {
-    position: relative;
-    display: grid;
-    gap: clamp(1.35rem, 4vw, 2rem);
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: clamp(2rem, 6vw, 3rem);
   }
   .project-folder {
-    position: relative;
-    inset: auto;
-    height: clamp(23rem, 68svh, 34rem);
-    min-height: 23rem;
+    width: min(100%, 32rem);
     transform: none;
-    z-index: auto;
   }
   .project-folder:focus-within {
     transform: none;
   }
   .project-folder__tab {
-    left: 5%;
-    width: 65%;
     min-height: 3.5rem;
-    padding: .6rem 1rem;
+    padding: .55rem .85rem;
   }
   .project-folder__tab-title {
-    font-size: var(--type-body-m);
+    font-size: var(--type-body-s);
   }
   .project-folder__paper {
-    top: 6rem;
-    width: 57%;
-    padding: 1.15rem;
-  }
-  .project-folder__paper--right {
-    top: 7.25rem;
-    left: 38%;
-    width: 57%;
-  }
-  .project-folder__paper span {
-    font-size: var(--type-body-lead);
+    padding: .75rem;
   }
   .project-folder__front {
-    top: 38%;
-    padding: clamp(1.25rem, 5vw, 2rem);
+    padding: clamp(1rem, 4.5vw, 1.75rem);
   }
   .project-folder__title {
-    font-size: var(--type-heading-m);
+    font-size: var(--type-heading-s);
   }
-  .project-folder__overline, .project-folder__bottom {
+  .project-folder__overline,
+  .project-folder__bottom {
     font-size: var(--type-label-s);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .project-folder, .project-folder__paper {
+  .project-folder,
+  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
     transition: none;
   }
 }
 html[data-motion="reduced"] .project-folder,
-html[data-motion="reduced"] .project-folder__paper {
+html[data-motion="reduced"] .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
   transition: none;
 }
-
-/* The reference has an unbroken coloured front. Reveal the case details on
-   intent; the permanent tab still names the native link before interaction. */
-@media (hover: hover) and (pointer: fine) {
-  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
-    opacity: 0;
-    transform: translateY(.65rem);
-    transition: opacity 350ms ease, transform 500ms cubic-bezier(.16, 1, .3, 1);
-  }
-  .project-folder:is(:hover, :focus-within) .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (hover: none), (pointer: coarse) {
-  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
-    opacity: 1;
-    transform: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) { transition: none; }
-}
-html[data-motion="reduced"] .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) { transition: none; }
