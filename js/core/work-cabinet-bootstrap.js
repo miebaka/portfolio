@@ -6,7 +6,8 @@ const cabinet = document.querySelector("[data-project-archive]");
 const well = cabinet?.querySelector(".filing-cabinet__well");
 const constrained = navigator.connection?.saveData ||
   (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
-if (well && !constrained && window.WebGLRenderingContext) {
+// Three.js r187 requires WebGL2. Avoid loading the heavy runtime on WebGL1-only devices.
+if (well && !constrained && window.WebGLRenderingContext && window.WebGL2RenderingContext) {
   let started = false;
   let observer;
   const load = () => {
