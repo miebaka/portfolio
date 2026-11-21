@@ -37,7 +37,9 @@ test("Work cabinet remains real HTML when JavaScript is disabled", async ({ brow
     ]);
     await expect(page.locator(".filing-cabinet__register-title")).toHaveText("Rivo Studio");
     await expect(page.locator(".project-archive__progress li")).toHaveCount(3);
-    await page.locator(".filing-cabinet__link").first().click();
+    // The raised physical tab remains a direct link target, even when
+    // its paper face extends underneath the next folder.
+    await page.locator(".filing-cabinet__tab").first().click();
     await expect(page).toHaveURL(/\/work\/rivo\.html$/);
   } finally {
     await context.close();
