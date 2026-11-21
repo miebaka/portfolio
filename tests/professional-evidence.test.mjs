@@ -197,8 +197,9 @@ test("Work archive derives published cases and in-progress register from real pr
   const published = CONTENT.projects.filter(project =>
     project.status === "published" && CONTENT.caseStudies?.[project.slug]?.status === "published" && project.cover);
   const drafts = CONTENT.projects.filter(project => project.status === "coming-soon" && project.featured !== true);
-  assert.equal((markup.match(/class="project-archive__item /g) || []).length, published.length);
-  assert.equal((markup.match(/class="project-archive__preview-frame"/g) || []).length, published.length);
+  assert.equal((markup.match(/class="filing-cabinet__link"/g) || []).length, published.length);
+  assert.equal((markup.match(/class="filing-cabinet__folder"/g) || []).length, published.length);
+  assert.equal((markup.match(/class="filing-cabinet__divider"/g) || []).length, new Set(published.map(project => project.year)).size);
   for (const project of drafts) assert.ok(markup.includes(project.title));
   assert.doesNotMatch(markup, /Detour|Out Of Office/);
   assert.doesNotMatch(markup, /javascript:/);
