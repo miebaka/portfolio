@@ -1,0 +1,103 @@
+name: Work Cabinet — Gemini Handoff Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feat/photorealistic-threejs-filing-cabinet
+    paths:
+      - ".github/workflows/cabinet-gemini-handoff.yml"
+      - "docs/WORK-CABINET-GEMINI-HANDOFF.md"
+      - "docs/work-filing-cabinet-threejs.md"
+      - "js/work-cabinet-three.js"
+      - "js/three/**"
+      - "styles/work-cabinet.css"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Assemble handoff source and documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="cabinet-gemini-source"
+          mkdir -p "$output"
+          files=(
+            README.md
+            DESIGN.md
+            engineering-specification.md
+            docs/WORK-CABINET-GEMINI-HANDOFF.md
+            docs/work-filing-cabinet-concept.md
+            docs/work-filing-cabinet-implementation-plan.md
+            docs/work-filing-cabinet-threejs.md
+            work.html
+            styles/work-cabinet.css
+            styles/tokens.css
+            styles/foundations.css
+            data/projects.js
+            data/case-studies.js
+            data/site.js
+            js/render/projects.js
+            js/core/work-cabinet.js
+            js/core/work-cabinet-bootstrap.js
+            js/work-cabinet-three.js
+            js/three/work-cabinet-materials.js
+            js/three/work-cabinet-geometry.js
+            scripts/build-work-cabinet-three.mjs
+            scripts/build-site.mjs
+            scripts/check-budgets.mjs
+            scripts/site-integrity.test.mjs
+            tests/work-cabinet-three.test.mjs
+            tests/work-cabinet-materials.test.mjs
+            tests/work-cabinet-geometry.test.mjs
+            tests/e2e/work-cabinet.spec.mjs
+            tests/e2e/work-cabinet-gpu.spec.mjs
+            playwright.config.mjs
+            .github/workflows/quality.yml
+            package.json
+            package-lock.json
+          )
+          for file in "${files[@]}"; do
+            test -f "$file" || { echo "Required handoff source missing: $file"; exit 1; }
+            mkdir -p "$output/$(dirname "$file")"
+            cp "$file" "$output/$file"
+          done
+          cat > "$output/START_HERE.md" <<'INSTRUCTIONS'
+          # Gemini Source Package: Work Filing Cabinet
+
+          1. First read docs/WORK-CABINET-GEMINI-HANDOFF.md.
+          2. Read DESIGN.md, docs/work-filing-cabinet-concept.md and docs/work-filing-cabinet-threejs.md.
+          3. Inspect the full source for js/work-cabinet-three.js, js/three, and styles/work-cabinet.css.
+          4. Study the BEFORE/AFTER screenshots in visual_evidence when available.
+          5. Preserve actual HTML links, case-study data, typography tokens, accessibility and performance tiers.
+          6. For working build/test execution, clone https://github.com/miebaka/portfolio and use Node.js 24 + npm ci.
+          7. This package intentionally excludes font binary files and unrelated portfolio images.
+          INSTRUCTIONS
+          printf 'Git commit: %s\nSource: https://github.com/miebaka/portfolio\n' "$GITHUB_SHA" > "$output/SOURCE_REVISION.txt"
+      - name: Include reviewed WebGL visual evidence when accessible
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p cabinet-gemini-source/visual_evidence
+          if gh run download 44908371553 --repo "${{ github.repository }}"               --name work-cabinet-visual-review               --dir cabinet-gemini-source/visual_evidence; then
+            echo "Included reviewed desktop and mobile WebGL screenshots."
+          else
+            echo "Earlier screenshot artifact unavailable; source package remains complete."
+            printf '%s\n' 'See https://github.com/miebaka/portfolio/actions/runs/44908371553'               > cabinet-gemini-source/visual_evidence/SOURCE_LINK.txt
+          fi
+      - name: Upload curated source bundle
+        uses: actions/upload-artifact@v6
+        with:
+          name: work-cabinet-gemini-source
+          path: cabinet-gemini-source
+          retention-days: 30
+          if-no-files-found: error
