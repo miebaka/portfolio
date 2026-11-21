@@ -38,7 +38,7 @@
     "test:motion": "node --test tests/motion-language.test.mjs",
     "build:motion": "node scripts/build-motion-experience.mjs",
     "lint:typography": "stylelint \"styles/**/*.css\"",
-    "test:typography": "node --test scripts/typography-contract.test.mjs",
+    "test:typography": "node --test scripts/typography-contract.test.mjs scripts/typography-structure.test.mjs",
     "build:cabinet": "node scripts/build-work-cabinet-three.mjs",
     "test:cabinet": "node --test tests/work-cabinet-three.test.mjs tests/work-cabinet-materials.test.mjs tests/work-cabinet-geometry.test.mjs"
   },

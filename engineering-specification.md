@@ -98,7 +98,7 @@ Avoid new duplicate content definitions, theme overrides, inline color literals,
 
 ### 4.1 Tokens, CSS and typography
 
-Preserve the existing **Archivo display / Finlandica Text body / Host Grotesk label** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
+Preserve the existing **Geist Sans display and body / Geist Mono label** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
 
 Raw color definitions and semantic role assignments belong in `styles/foundations.css`. Components consume role tokens. Maintain the token-integrity checks and both explicit dark/theme fallback paths. Fonts must self-host only where permitted, use `font-display: swap`, and retain usable fallback stacks. Do not distribute font binaries as part of review documents.
 
