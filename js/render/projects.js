@@ -77,7 +77,7 @@ export function renderProjectFolderStackMarkup(projects = SITE.projects, studies
     const slug = safeToken(project.slug);
     const title = esc(project.title);
     const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
-    const onColor = slug === "chopbox" ? "#22130a" : "#ffffff";
+    const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
     const href = base + safeURL(project.href || "work/" + slug + ".html");
     const paperOne = esc(project.tags?.[0] || "Visual identity");
     const paperTwo = esc(project.tags?.[1] || "Art direction");
