@@ -284,7 +284,9 @@ export function initWorkCabinet({
 
   function onPageHide() {
     pageHidden = true;
-    clearExtraction();
+    // Keep the completed paper sheet for a cross-document snapshot. A bfcache
+    // return always cleans it on pageshow before interaction resumes.
+    if (!extraction?.navigating) clearExtraction();
     suspend();
     observer?.disconnect();
     observerActive = false;
