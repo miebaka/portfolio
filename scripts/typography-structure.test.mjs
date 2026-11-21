@@ -6,12 +6,12 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const tokens = (await readFile(join(root, "styles", "tokens.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
-const sizes = [...tokens.matchAll(/(--type-(?!weight|leading|tracking)[\w-]+)\s*:\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);
+const sizes = [...tokens.matchAll(/(--type-(?!weight|leading|tracking|family)[\w-]+)\s*:\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]);
 
 // Intentionally not rem-bounded: documented in docs/TYPOGRAPHY-SYSTEM.md as proportional or relative to the surrounding text.
 const PROPORTIONAL = new Set(["--type-display-signature-vw", "--type-display-signature-wide-vw", "--type-inline-mark"]);
-// The documented minimum is 11px ("only when genuinely secondary"). Lowering it needs a spec change, not just a token edit.
-const FLOOR_REM = 0.6875;
+// No functional label may be smaller than 13px.
+const FLOOR_REM = 0.8125;
 
 // Split "a, b + c, d" on top-level commas.
 function split(value) {
@@ -26,7 +26,7 @@ function split(value) {
 }
 
 test("every size token is bounded in rem, ordered, and at or above the documented floor", () => {
-  assert.ok(sizes.length > 20, "size tokens were not found in styles/tokens.css");
+  assert.ok(sizes.length >= 19, "size tokens were not found in styles/tokens.css");
   for (const [name, value] of sizes) {
     if (PROPORTIONAL.has(name) || value.startsWith("var(")) continue;
     const parts = value.startsWith("clamp(") ? split(value.slice(6, -1)) : [value, value, value];
@@ -48,4 +48,23 @@ test("the written docs describe the typefaces the code loads", async () => {
     const stale = text.split("\n").filter(line => retired.test(line) && !versionLog.test(line));
     assert.deepEqual(stale.map(line => `${doc}: ${line.slice(0, 100)}`), [], "doc names a typeface the code does not load");
   }
+});
+
+test("fluid display hierarchy never crosses at responsive widths", () => {
+  const sizeMap = new Map(sizes);
+  const sizePx = (name, viewport) => {
+    const value = sizeMap.get(name);
+    assert.ok(value, `Missing display token: ${name}`);
+    const matched = value.match(/^clamp\(([\d.]+)rem, ([\d.]+)vw, ([\d.]+)rem\)$/);
+    assert.ok(matched, `Invalid fluid token: ${name}`);
+    const [, min, fluid, max] = matched.map(Number);
+    return Math.min(max * 16, Math.max(min * 16, (fluid * viewport) / 100));
+  };
+  const names = ["--type-display-hero", "--type-display-section", "--type-display-project", "--type-display-compact"];
+  for (const width of [320, 390, 768, 1440, 1920]) {
+    const values = names.map(name => sizePx(name, width));
+    for (let i = 1; i < values.length; i++)
+      assert.ok(values[i - 1] > values[i], `Display hierarchy crosses at ${width}px: ${values}`);
+  }
+  assert.equal(sizeMap.get("--type-label-s"), ".8125rem");
 });
