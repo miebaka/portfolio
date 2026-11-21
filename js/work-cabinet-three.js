@@ -7,6 +7,8 @@
  */
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { createPaperMaps, createContactShadow, createMetalRoughness } from "./three/work-cabinet-materials.js";
 
 const SELECTOR = "[data-project-archive]";
 const MAX_DPR = 1.5;
@@ -32,42 +34,6 @@ export function cabinetQuality({
     pixelRatio: Math.min(Math.max(devicePixelRatio || 1, 1), mobile ? MOBILE_DPR : MAX_DPR),
     environment: !mobile && hardwareConcurrency >= 4,
   };
-}
-
-function seededRandom(seed) {
-  let value = seed >>> 0;
-  return () => {
-    value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
-    return value / 4294967296;
-  };
-}
-
-function paperTexture(doc, hex, seed) {
-  const canvas = doc.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 256;
-  const context = canvas.getContext("2d");
-  if (!context) return null;
-  context.fillStyle = hex;
-  context.fillRect(0, 0, 256, 256);
-  const random = seededRandom(seed);
-  for (let i = 0; i < 6800; i++) {
-    const x = random() * 256;
-    const y = random() * 256;
-    const opacity = 0.012 + random() * 0.045;
-    context.fillStyle = random() > 0.55
-      ? "rgba(77,57,36," + opacity.toFixed(3) + ")"
-      : "rgba(255,255,255," + opacity.toFixed(3) + ")";
-    context.fillRect(x, y, random() > 0.9 ? 1.5 : 0.6, 0.6 + random() * 3.3);
-  }
-  const map = new THREE.CanvasTexture(canvas);
-  map.colorSpace = THREE.SRGBColorSpace;
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  // ExtrudeGeometry uses world-size UVs, not normalised 0–1 UVs.
-  map.repeat.set(1 / 440, 1 / 280);
-  map.anisotropy = 4;
-  return map;
 }
 
 function folderOutline(width, height, tab) {
@@ -101,14 +67,16 @@ function rectangle(width, height) {
 }
 
 function extrudedPaper(shape) {
+  // A real 250–300gsm archival folder is much thinner than cardboard:
+  // softened die-cut edges, less than one display unit of stock thickness.
   return new THREE.ExtrudeGeometry(shape, {
     steps: 1,
-    depth: 1.4,
+    depth: 0.52,
     bevelEnabled: true,
-    bevelSize: 0.65,
-    bevelThickness: 0.6,
+    bevelSize: 0.22,
+    bevelThickness: 0.14,
     bevelSegments: 2,
-    curveSegments: 4,
+    curveSegments: 5,
   });
 }
 
@@ -146,6 +114,7 @@ export function initWorkCabinetThree({
   let shadowMaterial;
   let materials = [];
   let textures = [];
+  let contactShadowMaterial;
   let files = [];
   let frame = 0;
   let activeUntil = 0;
@@ -227,16 +196,46 @@ export function initWorkCabinetThree({
     receiver.receiveShadow = true;
     sceneContents.add(receiver);
 
+    // Powder-coated steel slide rails with a rolled outer edge, recessed
+    // running channel and countersunk steel fixings. They are intentionally
+    // small enough to stay peripheral to the actual case studies.
     const railMaterial = materials[5];
     const railShade = materials[6];
+    const railHeight = Math.max(20, height - 9);
     for (const x of [8, width - 8]) {
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(6, height - 5, 13), railMaterial);
+      const side = x < width / 2 ? 1 : -1;
+      const rail = new THREE.Mesh(
+        new RoundedBoxGeometry(7.2, railHeight, 12.5, 2, 1.15),
+        railMaterial
+      );
       rail.position.set(x, height / 2, 18);
+      rail.castShadow = true;
       rail.receiveShadow = true;
       sceneContents.add(rail);
-      const groove = new THREE.Mesh(new THREE.BoxGeometry(1.25, height - 9, 1), railShade);
-      groove.position.set(x + (x < width / 2 ? 1 : -1), height / 2, 25);
+      const groove = new THREE.Mesh(
+        new RoundedBoxGeometry(1.35, Math.max(8, railHeight - 6), 0.9, 2, .35),
+        railShade
+      );
+      groove.position.set(x + side * 1.05, height / 2, 24.65);
       sceneContents.add(groove);
+      const count = height >= 660 ? 4 : 3;
+      for (let i = 0; i < count; i++) {
+        const y = 25 + (height - 50) * (i + .5) / count;
+        const head = new THREE.Mesh(
+          new THREE.CylinderGeometry(1.65, 1.65, .48, 14),
+          materials[9]
+        );
+        head.rotation.x = Math.PI / 2;
+        head.position.set(x - side * 1.35, y, 24.75);
+        sceneContents.add(head);
+        const drive = new THREE.Mesh(
+          new THREE.BoxGeometry(2.35, .28, .16),
+          materials[10]
+        );
+        drive.position.set(x - side * 1.35, y, 25.13);
+        drive.rotation.z = i % 2 ? -.12 : .12;
+        sceneContents.add(drive);
+      }
     }
 
     const entries = [...well.querySelectorAll(
@@ -265,13 +264,24 @@ export function initWorkCabinetThree({
           width: tab.offsetWidth,
           top: tab.offsetTop,
         });
-        // The second leaf, faintly visible at the lower seam, makes it
-        // physically read as a folder rather than a flat UI card.
+        // Micro-occlusion is baked into a diffuse, soft contact patch, while
+        // directional shadows move naturally with the entire lifted sheet.
+        if (contactShadowMaterial) {
+          const occlusion = new THREE.Mesh(
+            new THREE.PlaneGeometry(width + 22, faceHeight + 24),
+            contactShadowMaterial
+          );
+          occlusion.position.set(width / 2 + 3, faceHeight / 2 + 7, -6.5);
+          group.add(occlusion);
+        }
+        // Two real paper leaves, not one thick block. A small lateral shift
+        // reveals the lower leaf and makes the bottom binding physically legible.
         const back = new THREE.Mesh(
-          extrudedPaper(rectangle(width - 4, faceHeight - 3)),
-          [materials[(index % 3) + 0], materials[4]]
+          extrudedPaper(rectangle(width - 3.5, faceHeight - 3.5)),
+          [materials[(index % 3)], materials[4]]
         );
-        back.position.set(2, 7, -3.1);
+        back.position.set(2, 5.1, -2.05);
+        back.castShadow = true;
         back.receiveShadow = true;
         group.add(back);
         const front = new THREE.Mesh(
@@ -282,15 +292,32 @@ export function initWorkCabinetThree({
         front.receiveShadow = true;
         group.add(front);
 
+        // Calendering/folding creates a darker pressure crease followed by
+        // a tiny raised, warm edge. These are true 3D layers with soft light
+        // response, not a painted CSS separator or a plastic-looking bevel.
+        const foldY = faceHeight - 9;
         const crease = new THREE.Mesh(
-          new THREE.PlaneGeometry(width - 9, 0.85),
+          new THREE.PlaneGeometry(Math.max(1, width - 14), .92),
           materials[7]
         );
-        crease.position.set(width / 2, faceHeight - 9, 2.2);
+        crease.position.set(width / 2, foldY, 1.04);
         group.add(crease);
+        const foldHighlight = new THREE.Mesh(
+          new THREE.BoxGeometry(Math.max(1, width - 14), .34, .25),
+          materials[8]
+        );
+        foldHighlight.position.set(width / 2, foldY - 1.15, 1.08);
+        group.add(foldHighlight);
+        const exposedLeaf = new THREE.Mesh(
+          new THREE.BoxGeometry(Math.max(1, width - 7), .52, .76),
+          materials[4]
+        );
+        exposedLeaf.position.set(width / 2, faceHeight + 3.2, -1.35);
+        group.add(exposedLeaf);
         files.push({ node: element, face, faceWidth: face.offsetWidth, group, x, y, baseZ });
       } else {
         const height = Math.max(20, hit.offsetHeight);
+        // Satin archival partition sheet, more rigid than manila stock.
         const divider = new THREE.Mesh(
           extrudedPaper(rectangle(width, height)),
           [materials[3], materials[4]]
@@ -298,11 +325,17 @@ export function initWorkCabinetThree({
         divider.castShadow = true;
         divider.receiveShadow = true;
         group.add(divider);
+        const rolledEdge = new THREE.Mesh(
+          new THREE.BoxGeometry(Math.max(4, width - 7), .52, .38),
+          materials[9]
+        );
+        rolledEdge.position.set(width / 2, height - 2.3, 1.05);
+        group.add(rolledEdge);
       }
     });
 
     // A large, high key light keeps contact shadows near the paper edges.
-    light.position.set(width * 0.33, height * 0.18, 620);
+    light.position.set(width * 0.23, height * 0.16, 620);
     light.target.position.set(width / 2, height / 2, 0);
     light.target.updateMatrixWorld();
     const extent = Math.max(width, height) * 1.6;
@@ -349,6 +382,8 @@ export function initWorkCabinetThree({
     materials = [];
     shadowMaterial?.dispose();
     shadowMaterial = null;
+    contactShadowMaterial?.dispose();
+    contactShadowMaterial = null;
     environmentTarget?.dispose();
     environmentTarget = null;
     pmrem?.dispose();
@@ -391,42 +426,87 @@ export function initWorkCabinetThree({
       camera = new THREE.OrthographicCamera(0, 1, 0, 1, 0.1, 2000);
       camera.position.set(0, 0, 1000);
       camera.lookAt(0, 0, 0);
-      const fill = new THREE.AmbientLight(0xfff5e6, 1.15);
-      scene.add(fill);
-      light = new THREE.DirectionalLight(0xfff4df, 2.05);
+      // Warm softbox + cool reflected fill, like real window light falling
+      // across an archival drawer. Avoid a flat, omnidirectional CGI wash.
+      const fill = new THREE.HemisphereLight(0xfff4e8, 0x52627d, 1.25);
+      const bounce = new THREE.DirectionalLight(0xcddcf2, 0.46);
+      bounce.position.set(900, 420, 530);
+      scene.add(fill, bounce);
+      light = new THREE.DirectionalLight(0xffe9ce, 2.1);
       light.castShadow = true;
       light.shadow.mapSize.set(quality.environment ? 2048 : 1024, quality.environment ? 2048 : 1024);
       light.shadow.bias = -0.00004;
       light.shadow.normalBias = 0.8;
       light.shadow.radius = 2;
       scene.add(light, light.target);
-      shadowMaterial = new THREE.ShadowMaterial({ color: 0x090e1c, opacity: 0.33 });
+      shadowMaterial = new THREE.ShadowMaterial({ color: 0x090e1c, opacity: 0.27 });
+      const textureSize = quality.environment ? 384 : 256;
+      const paperMaps = [];
       for (const [hex, seed] of [["#f7efdf", 11], ["#f2e6d4", 29], ["#e9dbc4", 43]]) {
-        const texture = paperTexture(doc, hex, seed);
-        if (texture) textures.push(texture);
+        const maps = createPaperMaps(doc, { tone: hex, seed, size: textureSize });
+        if (maps) {
+          paperMaps.push(maps);
+          textures.push(maps.albedo, maps.height, maps.roughness);
+        }
         materials.push(new THREE.MeshStandardMaterial({
-          color: texture ? 0xffffff : hex,
-          map: texture,
-          roughness: 0.94,
+          color: maps ? 0xffffff : hex,
+          map: maps?.albedo ?? null,
+          roughnessMap: maps?.roughness ?? null,
+          bumpMap: maps?.height ?? null,
+          bumpScale: 0.46,
+          roughness: 0.93,
           metalness: 0,
+          envMapIntensity: 0.32,
           side: THREE.DoubleSide,
         }));
       }
+      const primary = paperMaps[0];
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0xc2c5ca, roughness: 0.79, metalness: 0, side: THREE.DoubleSide,
+        color: 0xd1d0ca, roughness: 0.84, metalness: 0,
+        bumpMap: primary?.height ?? null, bumpScale: 0.25,
+        roughnessMap: primary?.roughness ?? null, side: THREE.DoubleSide,
       }));
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0xb5a78f, roughness: 0.96, metalness: 0, side: THREE.DoubleSide,
+        color: 0xc9b79f, roughness: 0.98, metalness: 0,
+        bumpMap: primary?.height ?? null, bumpScale: 0.34, side: THREE.DoubleSide,
+      }));
+      const metalRoughness = createMetalRoughness(doc);
+      if (metalRoughness) textures.push(metalRoughness);
+      materials.push(new THREE.MeshStandardMaterial({
+        color: 0x334057, roughness: 0.57, roughnessMap: metalRoughness,
+        metalness: 0.75, envMapIntensity: 0.85,
       }));
       materials.push(new THREE.MeshStandardMaterial({
-        color: 0x26334e, roughness: 0.42, metalness: 0.24,
-      }));
-      materials.push(new THREE.MeshStandardMaterial({
-        color: 0x121a2d, roughness: 0.5, metalness: 0.2,
+        color: 0x111b2c, roughness: 0.66, roughnessMap: metalRoughness,
+        metalness: 0.65, envMapIntensity: 0.65,
       }));
       materials.push(new THREE.MeshBasicMaterial({
-        color: 0xa89a83, transparent: true, opacity: 0.27,
+        color: 0x8d7661, transparent: true, opacity: 0.28,
+        depthWrite: false,
       }));
+      // Fine paper-edge highlights are visible only at the grazing-light seam.
+      materials.push(new THREE.MeshStandardMaterial({
+        color: 0xf3e7d2, roughness: 0.94, metalness: 0,
+        side: THREE.DoubleSide,
+      }));
+      // Fasteners are properly metallic but deliberately subdued.
+      materials.push(new THREE.MeshStandardMaterial({
+        color: 0x7d8190, roughness: 0.37, metalness: 0.86,
+        roughnessMap: metalRoughness, envMapIntensity: 1.1,
+      }));
+      materials.push(new THREE.MeshBasicMaterial({
+        color: 0x0a1727, transparent: true, opacity: 0.78,
+        depthWrite: false,
+      }));
+      const contactShadow = createContactShadow(doc, quality.environment ? 192 : 128);
+      if (contactShadow) {
+        textures.push(contactShadow);
+        contactShadowMaterial = new THREE.MeshBasicMaterial({
+          map: contactShadow, transparent: true, opacity: 0.72,
+          depthWrite: false, toneMapped: false,
+          polygonOffset: true, polygonOffsetFactor: -1,
+        });
+      }
 
       if (quality.environment) {
         const room = new RoomEnvironment();

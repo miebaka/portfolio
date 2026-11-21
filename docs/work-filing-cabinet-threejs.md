@@ -60,3 +60,31 @@ replace testing on real low-power hardware. Download and inspect these CI artefa
   screenshots at 390px and 1440px across bright and dark themes.
 - Do not invent case studies to make the drawer more dense; the published
   set and project URLs stay unchanged until real content is supplied.
+
+
+## Material and geometric realism pass
+
+The Work cabinet retains its 90-degree fixed orthographic composition. Rather
+than introducing a controllable camera or expensive post-processing, the scene
+now uses physically based construction cues that read correctly at this angle:
+
+- **Three layers per manila stock colour:** a seeded colour map, a separate
+  linear-height bump map and a separate linear roughness map. Grain is weak,
+  uneven and directionally fibrous. Colour maps are sRGB; data maps are not.
+- **True thin folded stock:** the die-cut outline is extruded only 0.52 units
+  deep with a restrained paper bevel, plus a second offset leaf and a
+  pressure crease with a subtle raised edge.
+- **Contact occlusion:** a baked diffuse under-leaf shadow reinforces the
+  directional PCF shadows as folders lift, without screen-space effects.
+- **Powder-coated metal:** rails have radiused outer edges, recessed channels,
+  subdued metal reflections and small countersunk mechanical fasteners.
+- **Material and performance guardrails:** texture resolution is 384 on
+  desktop and 256 on mobile; the GPU scene is never imported during first
+  paint; textures/materials and geometries are disposed on teardown.
+
+The material generator is deterministic and locally authored: no downloaded
+photo scans or third-party textures. It may look more photographic than a
+flat colour card, but realism still requires human judgement of a screenshot
+and a real-device interaction trace. Do not equate passing tests with a
+validated photorealistic result. The scene remains deliberately subordinate
+to the real accessible labels and native case-study links.
