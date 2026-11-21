@@ -122,3 +122,11 @@ test("physical folder geometry keeps the tab on the rear leaf and front pocket b
   assert.match(source, /const baseZ = \(isFolder \? 15\.4 : 8\.5\) \+ index \* \.6/);
   assert.match(source, /canvas\?\.removeEventListener\("webglcontextlost", onContextLost\)/);
 });
+
+test("first WebGL frame syncs active CSS folder lifts before showing canvas", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../js/work-cabinet-three.js"), "utf8");
+  const firstSync = source.indexOf("render(win.performance?.now?.() ?? Date.now());");
+  const exposed = source.indexOf('cabinet.dataset.cabinet3d = "ready"');
+  assert.ok(firstSync > 0 && exposed > firstSync,
+    "the first native-transform-aligned frame must render before WebGL is exposed");
+});
