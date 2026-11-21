@@ -3,14 +3,18 @@
    and air-to-water refraction caustic projection. Not a volumetric 3D simulation. */
 import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
 const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
-const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;";
+const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;uniform vec2 brushRadius;uniform float swirl;uniform float ringCount;uniform float rippleStrength;";
 const advect=prefix+[
  "uniform sampler2D velocity;",
  "void main(){vec2 vel=texture2D(velocity,vUv).xy;",
  "vec2 back=clamp(vUv-vel*dt*.6,texel,1.-texel);",
  "vec2 carried=texture2D(velocity,back).xy*.995;",
- "vec2 delta=vUv-cursor;float falloff=exp(-dot(delta,delta)*160.);",
- "vec2 force=vec2(-delta.y,delta.x)*impulse*falloff*22.;",
+ "vec2 delta=vUv-cursor;vec2 scaled=delta/max(brushRadius,vec2(.0001));",
+ "float radius=length(scaled);float falloff=exp(-dot(scaled,scaled)*1.8);",
+ "float echoes=.82+.18*cos(radius*ringCount*6.283185);",
+ "vec2 tangent=vec2(-delta.y,delta.x)*22.*swirl;",
+ "vec2 spread=normalize(delta+vec2(.00001))*.055;",
+ "vec2 force=(tangent+spread)*impulse*falloff*echoes;",
  "vec2 edge=smoothstep(vec2(0.),texel*3.,vUv)*smoothstep(vec2(0.),texel*3.,1.-vUv);",
  "gl_FragColor=vec4((carried+force)*edge,0.,1.);}"
 ].join("\n");
@@ -51,7 +55,11 @@ const wave=prefix+[
  "float b=texture2D(surface,p-vec2(0.,texel.y)).r;",
  "float t=texture2D(surface,p+vec2(0.,texel.y)).r;",
  "float lap=l+r+b+t-4.*s.r;",
- "float drop=exp(-dot(vUv-cursor,vUv-cursor)*200.)*impulse*.25;",
+ "vec2 brushDelta=(vUv-cursor)/max(brushRadius,vec2(.0001));",
+ "float radius=length(brushDelta);",
+ "float falloff=exp(-dot(brushDelta,brushDelta)*2.2);",
+ "float rings=.82+.18*cos(radius*ringCount*6.283185);",
+ "float drop=falloff*rings*impulse*rippleStrength;",
  "float h=(2.*s.r-s.g+lap*.36)*.988+drop;",
  "float edge=min(min(vUv.x,1.-vUv.x),min(vUv.y,1.-vUv.y));",
  "h*=mix(.92,1.,smoothstep(0.,.05,edge));",
@@ -188,7 +196,7 @@ export function mountHeroWave(host,initialState){
  renderer.setPixelRatio(1);renderer.toneMapping=NoToneMapping;host.append(canvas);
  const scene=new Scene(),camera=new OrthographicCamera(-1,1,1,-1,0,1),geometry=new PlaneGeometry(2,2);
  const mesh=new Mesh(geometry,new ShaderMaterial({vertexShader:vertex,fragmentShader:shade,depthTest:false,depthWrite:false}));mesh.frustumCulled=false;scene.add(mesh);
- const side=window.innerWidth<700?112:SIZE,texel=new Vector2(1/side,1/side),cursor=new Vector2(.55,.5);
+ const side=window.innerWidth<700?112:SIZE,texel=new Vector2(1/side,1/side),cursor=new Vector2(.55,.5),brushRadius=new Vector2(.075,.075);
  const makeTarget=()=>new WebGLRenderTarget(side,side,{type:HalfFloatType,minFilter:NearestFilter,magFilter:NearestFilter,wrapS:ClampToEdgeWrapping,wrapT:ClampToEdgeWrapping,depthBuffer:false,stencilBuffer:false});
  const pair=()=>({read:makeTarget(),write:makeTarget(),swap(){const a=this.read;this.read=this.write;this.write=a;},dispose(){this.read.dispose();this.write.dispose();}});
  const vel=pair(),press=pair(),height=pair(),div=makeTarget();
@@ -207,7 +215,7 @@ export function mountHeroWave(host,initialState){
  const causticsMesh=new Mesh(causticsGeometry,causticsMaterial);
  causticsMesh.frustumCulled=false;
  causticsScene.add(causticsMesh);
- const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null}}});
+ const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null},brushRadius:{value:brushRadius},swirl:{value:1},ringCount:{value:4},rippleStrength:{value:.2}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
  screen.uniforms={surface:{value:height.read.texture},caustics:{value:causticsTarget.texture},
   texel:{value:texel},time:{value:0},transmission:{value:1},
@@ -253,6 +261,8 @@ export function mountHeroWave(host,initialState){
   const limit=window.innerWidth<700?720:1152;
   const scale=Math.min(window.devicePixelRatio||1,1.25,limit/Math.max(host.clientWidth,host.clientHeight,1));
   renderer.setSize(Math.max(1,Math.round(host.clientWidth*scale)),Math.max(1,Math.round(host.clientHeight*scale)),false);
+  // A 150px brush is circular on screen, even on very wide hero viewports.
+  brushRadius.set(Math.min(.25,75/Math.max(host.clientWidth,1)),Math.min(.25,75/Math.max(host.clientHeight,1)));
   draw();
  }
  function tick(timestamp){
@@ -280,16 +290,18 @@ export function mountHeroWave(host,initialState){
   host.dataset.caustics="refracted-lightfront";
   host.dataset.lightSource=dark?"moon":"sun";
   host.dataset.waterTheme=dark?"dark":"light";
+  host.dataset.rippleBrush="150px";host.dataset.rippleRings="4";host.dataset.rippleSwirl="1";
   renderCaustics();
   draw();
   if(!running()&&frame){cancelAnimationFrame(frame);frame=0;}
   if(running())request();
  }
- function setPointer(x,y){
+ function setPointer(x,y,force=0,quiet=false){
   const nx=Math.max(.01,Math.min(.99,(x+1)*.5)),ny=Math.max(.01,Math.min(.99,1-(y+1)*.5));
   const distance=Math.hypot(nx-cursor.x,ny-cursor.y);cursor.set(nx,ny);
-  if(distance>.006)lastPointerAt=performance.now();
-  if(distance>.006&&distance<.7&&running())impulse=Math.min(.9,distance*3.);
+  if(!quiet&&(distance>.004||force>0))lastPointerAt=performance.now();
+  if(!quiet&&running()&&(force>0||(distance>.004&&distance<.7)))
+   impulse=Math.max(impulse,Math.min(.92,Math.max(force,distance*2.6)));
   request();
  }
  const onVisibility=()=>{if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0;}else request();};

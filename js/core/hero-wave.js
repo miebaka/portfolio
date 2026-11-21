@@ -111,29 +111,50 @@ export async function initHeroWave({
 
   let destroyed = false;
   let pointerFrame = 0;
-  let pendingPointer = { x: 0, y: 0 };
+  let pendingPointer = { x: 0, y: 0, force: 0, quiet: true, source: "static" };
   const applyPointer = () => {
     pointerFrame = 0;
     const state = getState();
-    const interactive = state.animate && finePointerQuery?.matches === true;
-    const pointer = interactive ? pendingPointer : { x: 0, y: 0 };
-    host.dataset.interaction = interactive ? "cursor" : "static";
+    const pointer = state.animate ? pendingPointer :
+      { x: 0, y: 0, force: 0, quiet: true, source: "static" };
+    host.dataset.interaction = pointer.source;
     if (testOptIn) {
       host.dataset.cursorX = pointer.x.toFixed(3);
       host.dataset.cursorY = pointer.y.toFixed(3);
     }
-    island.setPointer(pointer.x, pointer.y);
+    island.setPointer(pointer.x, pointer.y, pointer.force, pointer.quiet);
   };
-  const onPointerMove = event => {
+  const queuePointer = (event, force = 0) => {
+    if (!getState().animate) return;
+    const rect = landing.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+    // Vanta-style controls use the affected element, not the viewport.
+    // This keeps the brush directly under the finger/cursor after scrolling.
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    if (x < 0 || x > 1 || y < 0 || y > 1) return;
     pendingPointer = {
-      x: Math.max(-1, Math.min(1, (event.clientX / win.innerWidth) * 2 - 1)),
-      y: Math.max(-1, Math.min(1, (event.clientY / win.innerHeight) * 2 - 1)),
+      x: Math.max(-1, Math.min(1, x * 2 - 1)),
+      y: Math.max(-1, Math.min(1, y * 2 - 1)),
+      force,
+      quiet: false,
+      source: event.pointerType === "touch" ? "touch" : "cursor",
     };
     if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
   };
-  const resetPointer = event => {
-    if (event?.type === "pointerout" && event.relatedTarget) return;
-    pendingPointer = { x: 0, y: 0 };
+  const onPointerMove = event => {
+    if (event.pointerType === "touch") {
+      // Touch movement should never steal the browser's vertical scroll.
+      if (!event.buttons) return;
+    } else if (!finePointerQuery?.matches) return;
+    queuePointer(event);
+  };
+  const onPointerDown = event => {
+    // Tap creates a single ripple. Touch-action remains native pan/zoom.
+    queuePointer(event, event.pointerType === "touch" ? .52 : .36);
+  };
+  const resetPointer = () => {
+    pendingPointer = { x: 0, y: 0, force: 0, quiet: true, source: "static" };
     if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
   };
   const sync = () => {
@@ -143,7 +164,7 @@ export async function initHeroWave({
     const preset = HERO_WAVE_PRESETS[state.theme];
     host.dataset.preset = preset.name;
     island.update(state);
-    applyPointer();
+    resetPointer();
   };
   const toggleMotion = () => {
     userPaused = !userPaused;
@@ -156,8 +177,9 @@ export async function initHeroWave({
   observer.observe(root, { attributes: true, attributeFilter: ["data-theme", "data-motion"] });
   finePointerQuery?.addEventListener?.("change", sync);
   reducedMotionQuery?.addEventListener?.("change", sync);
-  win.addEventListener("pointermove", onPointerMove, { passive: true });
-  win.addEventListener("pointerout", resetPointer, { passive: true });
+  landing.addEventListener("pointermove", onPointerMove, { passive: true });
+  landing.addEventListener("pointerdown", onPointerDown, { passive: true });
+  landing.addEventListener("pointerleave", resetPointer, { passive: true });
   win.addEventListener("blur", resetPointer);
   const markReady = async () => {
     await island?.ready;
@@ -176,8 +198,9 @@ export async function initHeroWave({
     control.remove();
     finePointerQuery?.removeEventListener?.("change", sync);
     reducedMotionQuery?.removeEventListener?.("change", sync);
-    win.removeEventListener("pointermove", onPointerMove);
-    win.removeEventListener("pointerout", resetPointer);
+    landing.removeEventListener("pointermove", onPointerMove);
+    landing.removeEventListener("pointerdown", onPointerDown);
+    landing.removeEventListener("pointerleave", resetPointer);
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     win.removeEventListener("pagehide", destroy);
