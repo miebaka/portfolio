@@ -238,6 +238,12 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.match(workPage, /href="styles\/work-cabinet\.css"/);
   assert.match(workPage, /src="js\/core\/work-cabinet\.js"/);
   await access(join(dist, "js", "core", "work-cabinet.js"));
+  await access(join(dist, "js", "core", "case-arrival.js"));
+  for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
+    const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
+    assert.match(html, /@view-transition\s*\{\s*navigation:\s*auto/);
+    assert.match(html, /src="\.\.\/js\/core\/case-arrival\.js"/);
+  }
   const homePage = await readFile(join(dist, "index.html"), "utf8");
   assert.doesNotMatch(homePage, /work-cabinet\.css/);
   const css = await readFile(cssFiles[0], "utf8");
