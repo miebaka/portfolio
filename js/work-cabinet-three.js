@@ -155,14 +155,18 @@ export function initWorkCabinetThree({
       const x = face.left - bounds.left;
       const y = face.top - bounds.top;
       const lift = Math.max(0, file.y - y);
-      // The tab, paper edges and HTML label now share the *same* transform.
-      // Scale origin is aligned to the transformed HTML face's top-left.
-      file.group.position.set(x, y, file.baseZ + lift * 1.65);
+      // Coarse-pointer reading selection stays on the original paper plane
+      // in screen space. A small Z lift preserves tactile shadow separation
+      // without leaving the native index label hovering above the 3D tab.
+      const selectedDepth = !pointerMq.matches &&
+        file.node.dataset.reading === "true" ? 2.5 : 0;
+      // The tab, paper edges and HTML label share their native XY transform.
+      file.group.position.set(x, y, file.baseZ + lift * 1.65 + selectedDepth);
       file.group.scale.set(scale, scale, 1);
       if (file.occlusion) {
-        // A physical cast shadow remains on the drawer as the leaf lifts;
-        // it cannot travel glued to the moving paper surface.
-        file.occlusion.material.opacity = Math.max(.16, .72 - lift * .022);
+        // Contact shadow remains anchored to the drawer when paper rises.
+        file.occlusion.material.opacity =
+          Math.max(.16, .72 - (lift + selectedDepth) * .022);
       }
     }
     renderer.render(scene, camera);
