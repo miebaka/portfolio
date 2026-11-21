@@ -13,7 +13,9 @@ export function mountMotionExperience({ doc = document, win = window } = {}) {
   const lenis = new Lenis({
     autoRaf: false,
     anchors: true,
-    autoToggle: true,
+    // No CSS overflow transitions: navigation locks are handled natively.
+    autoToggle: false,
+    stopInertiaOnNavigate: true,
     smoothWheel: true,
     syncTouch: false,
     duration: 1.0,
