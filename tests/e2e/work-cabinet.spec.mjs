@@ -284,6 +284,21 @@ test("a thrown paper animation navigates without leaving the visitor trapped", a
   await expect(page).toHaveURL(/\/work\/chopbox\.html$/);
 });
 
+test("unexpected overlay construction errors still follow the real link", async ({ page }) => {
+  await page.goto("/work.html");
+  await page.evaluate(() => {
+    const original = document.createElement.bind(document);
+    document.createElement = function (tag, ...args) {
+      if (tag === "div" && window.__failCabinetOverlay)
+        throw new Error("simulated DOM allocation failure");
+      return original(tag, ...args);
+    };
+    window.__failCabinetOverlay = true;
+  });
+  await page.locator('.filing-cabinet__folder[data-slug="chopbox"] .filing-cabinet__tab').click();
+  await expect(page).toHaveURL(/\/work\/chopbox\.html$/);
+});
+
 test("keyboard and explicit reduced motion bypass travel and retain normal links", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/work.html");
