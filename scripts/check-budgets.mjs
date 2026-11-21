@@ -51,6 +51,10 @@ function assertBudget(label, actual, budget) {
 }
 
 assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
+const workHtml = readFileSync(resolve(dist, "work.html"), "utf8");
+const workCss = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu, workHtml));
+assertBudget("Work cabinet supplemental CSS", gzipBytes(["styles/work-cabinet.css"]), 5 * 1024);
+assertBudget("total Work CSS (main + cabinet)", gzipBytes(workCss), 49 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
 assertBudget("lazy Lenis + GSAP JavaScript", motionEngine, 110 * 1024);
