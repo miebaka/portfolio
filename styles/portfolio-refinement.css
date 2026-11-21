@@ -56,7 +56,7 @@ body[data-page] .theme-liquid-toggle__moon {
   display: inline-block;
   width: 1.4rem;
   text-align: center;
-  line-height: 1;
+  line-height: var(--type-leading-ui);
   font-size: var(--type-body-m);
 }
 body[data-page] .theme-liquid-toggle__thumb {
