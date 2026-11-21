@@ -90,12 +90,13 @@ test("project artwork fits the viewport with device-appropriate positioning", as
     const image = row.locator(".home-project-list__visual");
     await expect(image).toBeVisible();
     await expect(image).toHaveCSS("position", isMobile ? "relative" : "absolute");
-    if (isMobile || await row.getAttribute("data-tone") === "rivo") {
-      await expect(image).toHaveCSS("opacity", "1");
-    }
+    if (isMobile) await expect(image).toHaveCSS("opacity", "1");
     const bounds = await image.boundingBox();
     expect(bounds.width).toBeGreaterThan(200);
     expect(bounds.height).toBeGreaterThan(150);
+  }
+  if (!isMobile) {
+    await expect(rows(page).nth(1).locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
   }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
