@@ -625,7 +625,15 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 13); // The paper-folder archive remains page-scoped.
+  // Every stylesheet must be imported or explicitly page-scoped; no orphaned
+  // compatibility or override file can silently ship.
+  const imports = [...styles.matchAll(/@import url\("([^"]+)"\)/g)].map(match => match[1]);
+  const available = (await readdir(join(root, "styles"))).filter(name => name.endsWith(".css")).sort();
+  assert.deepEqual(available, [...imports, "main.css", "project-folders.css"].sort());
+  assert.doesNotMatch(styles, /reference-overrides\.css/);
+  const css = (await Promise.all(imports.map(name => readFile(join(root, "styles", name), "utf8")))).join("\n");
+  const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  assert.doesNotMatch(source, /\.(?:theme-cord|theme-toggle|site-nav__identity|site-nav__availability|mobile-tabbar|practice-standard|hero-noir|project-archive__preview-frame|service-swatch|service-detail|about-evidence|about-portrait)(?![\w-])/);
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 

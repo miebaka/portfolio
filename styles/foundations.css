@@ -149,7 +149,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 @media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}}
 html[data-motion="reduced"]{scroll-behavior:auto}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
-:is(button,.btn,.site-nav__menu-btn,.theme-toggle){user-select:none;-webkit-user-select:none}
+:is(button,.btn,.site-nav__menu-btn){user-select:none;-webkit-user-select:none}
 @media(max-width:48rem){:root{--nav-h:4.25rem;--page:1.25rem}
 .section--tight{padding-block:4.8rem}
 }
