@@ -33,8 +33,10 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   // label may not look like an opaque rectangular card pasted onto the mesh.
   await expect(well.locator(".filing-cabinet__tab").first())
     .toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  // WebGL also renders the year guide stock: the CSS plate cannot hide
+  // a folder tab merely because its crown overlaps the next guide.
   await expect(well.locator(".filing-cabinet__divider").first())
-    .not.toHaveCSS("background-image", "none");
+    .toHaveCSS("background-image", "none");
   await expect(canvas).toHaveAttribute("aria-hidden", "true");
   await expect(canvas).toHaveCSS("pointer-events", "none");
   const png = await canvas.screenshot();
