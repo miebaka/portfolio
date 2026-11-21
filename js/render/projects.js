@@ -30,8 +30,8 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     const image = base + "assets/images/optimized/" + safeToken(project.cover);
     const title = esc(project.title);
     const content =
-      '<span class="home-project-list__identity"><h3 class="home-project-list__title editorial-index__title">' +
-      title + '</h3></span>' +
+      '<div class="home-project-list__identity"><h3 class="home-project-list__title editorial-index__title">' +
+      title + '</h3></div>' +
       '<span class="home-project-list__visual" aria-hidden="true"><picture>' +
       '<source type="image/avif" srcset="' + image + '-540.avif 540w, ' +
       image + '-810.avif 810w, ' + image + '-1080.avif 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
