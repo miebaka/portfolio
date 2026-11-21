@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import stylelint from "stylelint";
+import typographyRule, { ruleName } from "./stylelint-typography.mjs";
 import { readFile, readdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 
@@ -40,4 +42,28 @@ test("all CSS typography metrics come from semantic variables", async () => {
     }
   }
   assert.deepEqual(errors, []);
+});
+
+test("Stylelint rejects wrong-role and undeclared tokens, not just raw numbers", async () => {
+  const rejected = [
+    "h1{font-size:var(--type-leading-ui)}",
+    "h2{font-size:var(--type-heading-imaginary)}",
+    "p{line-height:var(--type-body-m)}",
+    "small{letter-spacing:var(--type-label-m)}",
+    "b{font-weight:500}",
+    "em{font:var(--type-weight-semibold) var(--type-leading-hero)/var(--type-leading-body) var(--body)}",
+  ];
+  const accepted = [
+    "h3{font-size:var(--type-heading-l)}",
+    "p{line-height:var(--type-leading-body)}",
+    "span{font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label)}",
+  ];
+  const report = await stylelint.lint({
+    code: [...rejected, ...accepted].join("\n"),
+    codeFilename: join(styles, "typography-rule-fixture.css"),
+    config: { plugins: [typographyRule], rules: { [ruleName]: true } },
+  });
+  const warnings = report.results[0].warnings.filter(warning => warning.rule === ruleName);
+  assert.equal(warnings.length, rejected.length, JSON.stringify(warnings));
+  assert.deepEqual(warnings.map(warning => warning.line), [1, 2, 3, 4, 5, 6]);
 });
