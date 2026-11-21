@@ -92,6 +92,12 @@ body[data-page="work"] .project-folder-stack__intro {
   border-radius: 2rem 2rem 0 0;
   background: var(--folder-tone, #002080);
 }
+/* The orange cover keeps its original brand color; the smaller tab is darker
+   so its white label clears WCAG AA with room to spare. */
+.project-folder--chopbox .project-folder__tab {
+  background: color-mix(in srgb, var(--folder-tone, #c2531c) 78%, black);
+  color: #fff;
+}
 .project-folder__tab-title {
   display: block;
   max-width: 100%;
@@ -251,7 +257,7 @@ body[data-page="work"] .project-folder-stack__intro {
     padding: clamp(1.25rem, 5vw, 2rem);
   }
   .project-folder__title {
-    font-size: var(--type-heading-xl);
+    font-size: var(--type-heading-m);
   }
   .project-folder__overline, .project-folder__bottom {
     font-size: var(--type-label-s);
