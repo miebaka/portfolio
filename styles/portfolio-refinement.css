@@ -112,6 +112,7 @@ body[data-page="home"] .swiss-selected {
   --roster-bg: var(--paper);
   --roster-ink: var(--ink);
   --roster-muted: var(--muted);
+
   background: var(--paper);
   color: var(--ink);
 }
@@ -321,6 +322,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
   color: var(--ink);
   background: transparent;
   --footer-signature-active: var(--accent);
+
   cursor: crosshair;
 }
 body .site-footer__signature::before,
