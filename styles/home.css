@@ -71,6 +71,7 @@ body[data-page="home"] .hero-wave {
   transition: opacity 280ms var(--ease-enter);}
 body[data-page="home"] .hero-wave.is-ready {
   opacity: 1;}
+
 /* Always show a water surface when the GPU cannot initialise.
    A successful Three.js mount replaces this lightweight surface immediately. */
 body[data-page="home"] .hero-wave.is-fallback {

@@ -919,10 +919,6 @@ body[data-page="work"] .project-archive__item:hover .project-archive__preview-fr
   object-fit: cover;}
 
 
-  border-block: 1px solid var(--editorial-rule);
-}
-
-
 .case-page .case-chapter__media .case-shot{
   overflow: hidden;}
 
