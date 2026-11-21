@@ -47,10 +47,10 @@ test("One original interactive dot-matrix footer is present and theme-aware on k
  }
 });
 
-test("Magazine grid is twelve columns on desktop and four on mobile",async({page,isMobile})=>{
+test("About introduction has a robust two-column grid on desktop and one on mobile",async({page,isMobile})=>{
  await page.goto("/index.html");
  const columns=await page.locator(".home-profile").evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(" ").filter(Boolean).length);
- expect(columns).toBe(isMobile?4:12);
+ expect(columns).toBe(isMobile?1:2);
 });
 
 test("Published project folders are readable at mobile and desktop widths", async ({page}) => {
