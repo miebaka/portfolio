@@ -190,7 +190,20 @@ export function initWorkCabinetThree({
     scene.add(sceneContents);
     files = [];
 
-    // Shadows fall onto a transparent plane, leaving the site's navy well visible.
+    // A physical powder-coated drawer floor is visible between honest gaps
+    // in the real project roster. Unlike a flat CSS fill, its raking-light
+    // response continues the cabinet construction through empty space.
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(Math.max(1, width - 3), height),
+      materials[11]
+    );
+    floor.position.set(width / 2, height / 2, -13);
+    // The separate ShadowMaterial plane handles shadows without double-darkening.
+    floor.receiveShadow = false;
+    sceneContents.add(floor);
+
+    // Soft dynamic cast shadows still fall onto a transparent receiver
+    // just above the metal floor; links and labels remain native HTML.
     const receiver = new THREE.Mesh(new THREE.PlaneGeometry(width, height), shadowMaterial);
     receiver.position.set(width / 2, height / 2, -7);
     receiver.receiveShadow = true;
@@ -237,6 +250,18 @@ export function initWorkCabinetThree({
         sceneContents.add(drive);
       }
     }
+    // The narrower interior support rods carry hanging folders behind the
+    // visible faces. They also visually connect the drawer across sparse gaps
+    // without inventing fake projects or sealed files.
+    for (const x of [22, width - 22]) {
+      const support = new THREE.Mesh(
+        new RoundedBoxGeometry(3.6, Math.max(8, railHeight - 3), 3.3, 2, .65),
+        materials[9]
+      );
+      support.position.set(x, height / 2, 10.5);
+      support.receiveShadow = true;
+      sceneContents.add(support);
+    }
 
     const entries = [...well.querySelectorAll(
       ".filing-cabinet__drawer > .filing-cabinet__folder, .filing-cabinet__drawer > .filing-cabinet__divider"
@@ -259,6 +284,9 @@ export function initWorkCabinetThree({
         const tab = element.querySelector(".filing-cabinet__tab");
         if (!face || !tab) return;
         const faceHeight = face.offsetHeight;
+        // Folder tone is keyed to its real staggered tab, not its DOM index:
+        // year dividers sit between folders and would otherwise shift colours.
+        const stock = { a: 0, b: 1, c: 2 }[element.dataset.tab] ?? 0;
         const shape = folderOutline(width, faceHeight, {
           left: tab.offsetLeft,
           width: tab.offsetWidth,
@@ -278,7 +306,7 @@ export function initWorkCabinetThree({
         // reveals the lower leaf and makes the bottom binding physically legible.
         const back = new THREE.Mesh(
           extrudedPaper(rectangle(width - 3.5, faceHeight - 3.5)),
-          [materials[(index % 3)], materials[4]]
+          [materials[stock], materials[4]]
         );
         back.position.set(2, 5.1, -2.05);
         back.castShadow = true;
@@ -286,7 +314,7 @@ export function initWorkCabinetThree({
         group.add(back);
         const front = new THREE.Mesh(
           extrudedPaper(shape),
-          [materials[index % 3], materials[4]]
+          [materials[stock], materials[4]]
         );
         front.castShadow = true;
         front.receiveShadow = true;
@@ -497,6 +525,11 @@ export function initWorkCabinetThree({
       materials.push(new THREE.MeshBasicMaterial({
         color: 0x0a1727, transparent: true, opacity: 0.78,
         depthWrite: false,
+      }));
+      materials.push(new THREE.MeshStandardMaterial({
+        color: 0x101b30, roughness: 0.91, metalness: 0.33,
+        roughnessMap: metalRoughness, envMapIntensity: 0.24,
+        side: THREE.DoubleSide,
       }));
       const contactShadow = createContactShadow(doc, quality.environment ? 192 : 128);
       if (contactShadow) {

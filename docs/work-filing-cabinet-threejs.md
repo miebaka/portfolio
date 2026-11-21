@@ -88,3 +88,15 @@ flat colour card, but realism still requires human judgement of a screenshot
 and a real-device interaction trace. Do not equate passing tests with a
 validated photorealistic result. The scene remains deliberately subordinate
 to the real accessible labels and native case-study links.
+
+### Open-drawer continuity
+
+The archive intentionally holds only three real published case studies.
+To avoid making the necessary mobile spacing look like floating website
+cards, the scene models a powder-coated recessed metal floor below the
+shadow receiver, plus two thin interior hanging-file support rails.
+This is physical furniture, not fake project content. The HTML tab face
+keeps an opaque paper-toned background for text contrast, but uses very
+subtle directional highlights to match the model's warm key light.
+Stock selection follows each folder's A/B/C tab token—not the list
+index, which also counts year separators.
