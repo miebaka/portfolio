@@ -31,3 +31,13 @@ test("Work source attaches a lazy Three.js loader after native HTML links", () =
   assert.ok(html.indexOf('src="js/core/work-cabinet.js"') <
     html.indexOf('src="js/core/work-cabinet-bootstrap.js"'));
 });
+
+
+test("Work bootstrap requires user engagement rather than eager viewport observation", () => {
+  const root = resolve(import.meta.dirname, "..");
+  const source = readFileSync(resolve(root, "js/core/work-cabinet-bootstrap.js"), "utf8");
+  assert.match(source, /pointerenter/);
+  assert.match(source, /focusin/);
+  assert.match(source, /addEventListener\("scroll"/);
+  assert.doesNotMatch(source, /new IntersectionObserver/);
+});
