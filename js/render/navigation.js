@@ -16,7 +16,7 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
   return '<section class="site-index" id="site-index" role="dialog" aria-modal="true" aria-labelledby="site-index-title" tabindex="-1" hidden inert>' +
     '<div class="site-index__inner container"><div class="site-index__heading"><h2 id="site-index-title">Index</h2><button class="site-index__close" type="button" data-index-close>Close<span aria-hidden="true"> ×</span></button></div>' +
     '<div class="site-index__body"><nav class="site-index__destinations" aria-label="All destinations">' + destinations + '</nav>' +
-    '<div class="site-index__aside"><div class="site-index__contact"><a href="' + safeURL('mailto:' + (site.email || "")) + '">' + esc(site.email) + '</a>' + cv + '</div>' +
+    '<div class="site-index__aside"><a class="site-index__home" href="' + base + 'index.html">Home <span aria-hidden="true">↗</span></a><div class="site-index__contact"><a href="' + safeURL('mailto:' + (site.email || "")) + '">' + esc(site.email) + '</a>' + cv + '</div>' +
     '<fieldset class="site-index__preferences"><legend>Theme</legend><div class="site-index__themes"><button type="button" data-theme-choice="light" aria-pressed="false">Print<span>Light</span></button><button type="button" data-theme-choice="dark" aria-pressed="false">Screen<span>Dark</span></button></div><div class="site-index__motion" role="group" aria-label="Motion"><button type="button" data-motion-choice="system" aria-pressed="false">System</button><button type="button" data-motion-choice="reduce" aria-pressed="false">Reduce</button><button type="button" data-motion-choice="full" aria-pressed="false">Full</button></div></fieldset></div></div></div></section>';
 }
 
@@ -39,7 +39,7 @@ export function renderNavigation() {
   const order = ["work", "explorations", "about", "writing", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
-  el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
+  el.innerHTML = '<div class="site-nav__inner"><span class="site-nav__balance" aria-hidden="true"></span>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button>' +
     '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary" aria-hidden="true">' + links + '</nav>' +
     '<div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div>';

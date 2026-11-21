@@ -144,7 +144,7 @@ body[data-page="work"] .project-folder-stack__intro {
   justify-content: space-between;
   gap: 1.5rem;
   padding: clamp(1.5rem, 3.75vw, 4rem);
-  background: color-mix(in srgb, var(--folder-tone, #002080) 89%, white);
+  background: color-mix(in srgb, var(--folder-tone, #002080) 94%, white);
   color: var(--folder-on, #fff);
   border: 1px solid color-mix(in srgb, white 16%, transparent);
   border-radius: clamp(1.4rem, 2.5vw, 2.5rem);
@@ -273,3 +273,27 @@ html[data-motion="reduced"] .project-folder,
 html[data-motion="reduced"] .project-folder__paper {
   transition: none;
 }
+
+/* The reference has an unbroken coloured front. Reveal the case details on
+   intent; the permanent tab still names the native link before interaction. */
+@media (hover: hover) and (pointer: fine) {
+  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
+    opacity: 0;
+    transform: translateY(.65rem);
+    transition: opacity 350ms ease, transform 500ms cubic-bezier(.16, 1, .3, 1);
+  }
+  .project-folder:is(:hover, :focus-within) .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (hover: none), (pointer: coarse) {
+  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) { transition: none; }
+}
+html[data-motion="reduced"] .project-folder__front > :is(.project-folder__overline, .project-folder__title, .project-folder__bottom) { transition: none; }

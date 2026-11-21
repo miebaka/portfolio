@@ -58,3 +58,16 @@ test("Footer dot field is keyboard-operable after entering viewport",async({page
   await field.press("Enter");
   await expect(field.locator("canvas")).toHaveCount(1);
 });
+
+// The previous cascade hid the restored dots on every page except Home.
+test("Dot-matrix footer is rendered on Home, Work, and About", async ({page}) => {
+  for (const route of ["/index.html", "/work.html", "/about.html"]) {
+    await page.goto(route);
+    const signature = page.locator(".site-footer__signature");
+    await signature.scrollIntoViewIfNeeded();
+    await expect(signature).toBeVisible();
+    const { width, height } = await signature.evaluate(node => node.getBoundingClientRect().toJSON());
+    expect(width).toBeGreaterThan(200);
+    expect(height).toBeGreaterThan(100);
+  }
+});
