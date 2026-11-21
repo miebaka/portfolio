@@ -61,7 +61,7 @@ test("active next destinations require a published project and published case", 
   reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
 });
 
-test("TEDx opens with its proposition, hero and supported project facts", () => {
+test("TEDx opens with its title, hero and supported project facts", () => {
   const html = markup();
   assert.doesNotMatch(html, /case-locked|aria-disabled/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
@@ -84,9 +84,9 @@ test("Rivo publishes as a confident identity case with a concrete delivery resul
   const markup = renderCaseMarkup(SITE, "rivo");
   assert.equal(study.status, "published");
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
-  assert.match(markup, /How can access feel like a brand position\?/);
+  assert.match(markup, /Rivo Studio needed an identity/);
   assert.match(markup, /delivered identity included guidelines, stationery and a practical application system/i);
-  assert.match(markup, /A focused system built for everyday use/);
+  assert.match(markup, /What another designer can take forward/);
   assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
   assert.match(markup, /do not establish public rollout/i);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
@@ -99,11 +99,11 @@ test("ChopBox publishes as a focused application system", () => {
   assert.equal(SITE.projects.find(project => project.slug === "chopbox").status, "published");
   assert.match(html, /does this make you hungry/i);
   assert.match(html, /Packaging, uniform, campaign and out-of-home applications/i);
-  assert.match(html, /One appetite-led system across every touchpoint/i);
+  assert.match(html, /What customers might meet in the world/);
   assert.match(html, /not evidence of a live rollout/i);
 });
 
-test("the complete narrative and chapter links follow the approved sequence", () => {
+test("the complete narrative follows the approved four-part sequence without chapter navigation", () => {
   const html = markup();
   const sections = [...html.matchAll(/<section class="case-chapter" id="([^"]+)" aria-labelledby="([^"]+)">/g)];
   assert.deepEqual(sections.map(match => match[1]), chapterIds);
