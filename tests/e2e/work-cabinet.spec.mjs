@@ -108,9 +108,17 @@ test("scroll temporarily suppresses decorative pointer hover and clears after 14
   const link = page.locator(".filing-cabinet__link").first();
   await link.hover();
   await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
-  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
-  await expect(cabinet).toHaveClass(/is-scrolling/);
-  await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "0");
+  // Capture the transient 140ms suppression synchronously: a polling
+  // assertion would outlive that state and report a false failure.
+  const during = await page.evaluate(() => {
+    window.dispatchEvent(new Event("scroll"));
+    return {
+      scrolling: document.querySelector("[data-project-archive]").classList.contains("is-scrolling"),
+      opacity: Number(getComputedStyle(document.querySelector(".filing-cabinet__lip")).opacity),
+    };
+  });
+  expect(during.scrolling).toBe(true);
+  expect(during.opacity).toBe(0);
   await expect(cabinet).not.toHaveClass(/is-scrolling/, { timeout: 2000 });
   await expect(link.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
 });
@@ -163,7 +171,7 @@ test("browser Back re-files the correct folder with native scroll and focus", as
   await expect(page).toHaveURL(/\/work\.html$/);
   await expect(page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"] .filing-cabinet__link'))
     .toBeFocused({ timeout: 5000 });
-  await expect.poll(() => page.evaluate(() => Math.abs(scrollY - startingY))).toBeLessThan(25);
+  await expect.poll(() => page.evaluate(y => Math.abs(scrollY - y), startingY)).toBeLessThan(25);
   await expect(page.locator(".filing-cabinet__register-title")).toHaveText("TEDx Rivers State University");
   await expect(page.locator(".filing-cabinet__drawer").locator('[data-reading="true"]')).toHaveCount(1);
   await expect(page.locator(".filing-cabinet")).not.toHaveClass(/is-scrolling/);
