@@ -572,12 +572,39 @@ body[data-page="work"] .filing-cabinet__drawer {
   z-index: 1;
 }
 
-body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face,
-body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab,
-body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
+/* The case-study name stays accessible but must never paint over paper.
+   Without a visually-hidden rule it was only obscured by CSS backgrounds,
+   then became visibly exposed when the WebGL layer made faces transparent. */
+body[data-page="work"] .filing-cabinet__link > .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Render the physical paper face in WebGL, but retain opaque native tabs and
+   year-guide faces where HTML lettering needs a reliable contrast surface.
+   Transparent tab/divider backgrounds had exposed lettering beneath them. */
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face {
   border-color: transparent;
   background: transparent;
   box-shadow: none;
+}
+
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab {
+  background: var(--stock);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 86%);
+}
+
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
+  background: linear-gradient(180deg, var(--ref-neutral-94), var(--ref-neutral-80));
+  box-shadow: 0 4px 9px rgb(0 0 0 / 12%);
 }
 
 body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face::before,
