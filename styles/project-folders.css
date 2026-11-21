@@ -14,12 +14,12 @@ body[data-page="work"] .project-archive--folders .project-archive__head {
 }
 body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   max-width: 12ch;
-  font: var(--type-weight-semibold) var(--type-display-l)/var(--type-leading-display) var(--display);
+  font: var(--type-weight-semibold) var(--type-display-section)/var(--type-leading-display) var(--type-family-display);
   letter-spacing: var(--type-tracking-display);
 }
 body[data-page="work"] .project-folder-stack__eyebrow {
   margin-bottom: 1.5rem;
-  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--type-family-label);
   letter-spacing: var(--type-tracking-label-wide);
   text-transform: uppercase;
   color: var(--muted);
@@ -102,7 +102,7 @@ body[data-page="work"] .project-folder-stack__intro {
 .project-folder__tab-title {
   display: block;
   max-width: 100%;
-  font: var(--type-weight-semibold) var(--type-body-m)/var(--type-leading-ui) var(--display);
+  font: var(--type-weight-semibold) var(--type-body-m)/var(--type-leading-ui) var(--type-family-display);
   text-align: center;
   text-wrap: balance;
   overflow-wrap: anywhere;
@@ -124,7 +124,7 @@ body[data-page="work"] .project-folder-stack__intro {
 }
 .project-folder__paper span {
   display: block;
-  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--type-family-label);
   letter-spacing: var(--type-tracking-ui);
   text-transform: uppercase;
 }
@@ -183,14 +183,14 @@ body[data-page="work"] .project-folder-stack__intro {
 }
 .project-folder__overline,
 .project-folder__bottom {
-  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--type-family-label);
   letter-spacing: var(--type-tracking-ui);
   text-transform: uppercase;
 }
 .project-folder__title {
   display: block;
   max-width: 100%;
-  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-heading) var(--display);
+  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-heading) var(--type-family-display);
   letter-spacing: var(--type-tracking-heading);
   text-wrap: balance;
   overflow-wrap: anywhere;
@@ -250,7 +250,7 @@ body[data-page="work"] .project-folder-stack__intro {
     margin-bottom: 2.75rem;
   }
   body[data-page="work"] .project-archive--folders .project-archive__head h1 {
-    font-size: var(--type-display-mobile);
+    font-size: var(--type-display-compact);
   }
   .project-folder-stack__stage {
     margin-bottom: clamp(3rem, 8vw, 5rem);
