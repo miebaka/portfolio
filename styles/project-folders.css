@@ -50,6 +50,7 @@ body[data-page="work"] .project-folder-stack__intro {
 }
 .project-folder {
   --folder-offset: clamp(4.5rem, 6vw, 7rem);
+
   position: absolute;
   inset-inline: 0;
   top: calc(var(--folder-index) * var(--folder-offset));
