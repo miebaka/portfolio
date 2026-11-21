@@ -317,61 +317,54 @@ test("About exposes the CV only when configured", async ({ page }) => {
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
 });
 
-test("Mobile Work cabinet tabs stay readable at narrow widths", async ({ page }) => {
+test("Mobile Work folders are readable without horizontal overflow", async ({ page }) => {
   for (const width of [320, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/work.html");
-    const titles = page.locator(".filing-cabinet__tab-title");
+    const titles = page.locator(".project-folder__tab-title");
     await expect(titles).toHaveCount(3);
     for (const element of await titles.all()) {
       const geometry = await element.evaluate(node => ({
-        height: node.getBoundingClientRect().height,
         scrollWidth: node.scrollWidth,
         width: node.clientWidth,
-        lineHeight: parseFloat(getComputedStyle(node).lineHeight),
+        height: node.getBoundingClientRect().height,
       }));
       expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width + 2);
-      expect(geometry.height + 0.25).toBeGreaterThanOrEqual(geometry.lineHeight); // Browser subpixel rounding tolerance
+      expect(geometry.height).toBeGreaterThan(20);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
       .toBeLessThanOrEqual(1);
   }
 });
 
-test("Work cabinet separates real case studies from studies in progress", async ({ page }) => {
+test("Work folders separate published cases from unfinished projects", async ({ page }) => {
   await page.goto("/work.html");
-  const folderLinks = page.locator(".filing-cabinet__link");
-  await expect(folderLinks).toHaveCount(3);
-  await expect(folderLinks.nth(0)).toHaveAttribute("href", "work/rivo.html");
-  await expect(folderLinks.nth(1)).toHaveAttribute("href", "work/tedx-rsu.html");
-  await expect(folderLinks.nth(2)).toHaveAttribute("href", "work/chopbox.html");
-  await expect(page.locator(".filing-cabinet__tab-title")).toHaveText([
+  const links = page.locator(".project-folder__link");
+  await expect(links).toHaveCount(3);
+  await expect(links.nth(0)).toHaveAttribute("href", "work/rivo.html");
+  await expect(links.nth(1)).toHaveAttribute("href", "work/tedx-rsu.html");
+  await expect(links.nth(2)).toHaveAttribute("href", "work/chopbox.html");
+  await expect(page.locator(".project-folder__tab-title")).toHaveText([
     "Rivo Studio", "TEDx Rivers State University", "ChopBox",
   ]);
-  await expect(page.locator(".filing-cabinet__divider-year")).toHaveText(["2024", "2023", "2022"]);
   await expect(page.locator(".project-archive__progress li")).toHaveText([
     "Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021",
   ]);
-  await expect(page.locator(".filing-cabinet__register")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator(".filing-cabinet,.filing-cabinet__three-canvas")).toHaveCount(0);
 });
 
-test("Work cabinet reveals folder details with stable hover or keyboard focus", async ({ page, isMobile }) => {
+test("Work folder is raised on hover or keyboard focus", async ({ page, isMobile }) => {
   await page.goto("/work.html");
-  const rivo = page.locator(".filing-cabinet__link").first();
-  await expect(rivo).toBeVisible();
-  if (isMobile) {
-    await rivo.focus();
-    await expect(rivo).toBeFocused();
-    await expect(rivo.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
-    const focus = await rivo.evaluate(el => getComputedStyle(el).outlineStyle);
-    expect(focus).toBe("solid");
-  } else {
-    await rivo.hover();
-    await expect(rivo.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+  const first = page.locator(".project-folder__link").first();
+  await expect(first).toBeVisible();
+  await first.focus();
+  await expect(first).toBeFocused();
+  await expect(first.locator(".project-folder__front")).toBeVisible();
+  if (!isMobile) {
+    await first.hover();
+    const transform = await first.locator("..").evaluate(el => getComputedStyle(el).transform);
+    expect(transform).not.toBe("none");
   }
-  await expect(page.locator(".filing-cabinet__tab-title")).toHaveText([
-    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
-  ]);
 });
 
 test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) => {
@@ -398,16 +391,15 @@ test("stored theme preference persists", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("theme pull cord exposes and changes the Print/Screen state", async ({ page }) => {
+test("liquid theme switch exposes and changes the light/dark state", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("color-theme", "light"));
   await page.goto("/index.html");
-  const cord = page.getByRole("switch", { name: "Switch to Screen mode" });
-  await expect(cord).toHaveAttribute("aria-checked", "false");
-  await cord.click();
+  const control = page.getByRole("switch", { name: "Switch to dark mode" });
+  await expect(control).toHaveAttribute("aria-checked", "false");
+  await control.click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  const changedCord = page.locator(".theme-cord");
-  await expect(changedCord).toHaveAttribute("aria-checked", "true");
-  await expect(changedCord).toHaveAccessibleName("Theme: switch to Print mode");
+  await expect(page.locator(".theme-liquid-toggle")).toHaveAttribute("aria-checked", "true");
+  await expect(page.locator(".theme-liquid-toggle")).toHaveAccessibleName("Switch to light mode");
 });
 
 test("client marquee runs without an unnecessary pause control", async ({ page }) => {
