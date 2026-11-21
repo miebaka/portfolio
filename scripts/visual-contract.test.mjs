@@ -80,7 +80,7 @@ test("approved visual contract remains intact", async () => {
       `${path}: only Work may use a second page-scoped stylesheet`);
     assert.match(stylesheets[0][0], /href=["'](?:\/|\.\.\/)?styles\/main\.css["']/i, path);
     if (folderPage)
-      assert.match(stylesheets[1][0], /href=["']styles\/work-cabinet\.css["']/i, path);
+      assert.match(stylesheets[1][0], /href=["']styles\/project-folders\.css["']/i, path);
   }
   assert.match(css, /body \.site-footer__signature::before\{display:block/);
   assert.match(css, /\.site-footer__signature\.is-enhanced::before\{opacity:0/);
