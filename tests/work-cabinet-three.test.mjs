@@ -119,6 +119,6 @@ test("physical folder geometry keeps the tab on the rear leaf and front pocket b
   assert.match(source, /front\.name = "short-front-pocket-leaf"/);
   assert.match(source, /front\.position\.set\(0, 10, 0\)/);
   assert.match(source, /createExpansionScoreGeometry\(width, faceHeight/);
-  assert.match(source, /const baseZ = 13\.5 \+ index \* \.6/);
+  assert.match(source, /const baseZ = \(isFolder \? 15\.4 : 8\.5\) \+ index \* \.6/);
   assert.match(source, /canvas\?\.removeEventListener\("webglcontextlost", onContextLost\)/);
 });
