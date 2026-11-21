@@ -79,15 +79,19 @@ export function renderProjectFolderStackMarkup(projects = SITE.projects, studies
     const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
     const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
     const href = base + safeURL(project.href || "work/" + slug + ".html");
-    const paperOne = esc(project.tags?.[0] || "Visual identity");
-    const paperTwo = esc(project.tags?.[1] || "Art direction");
+    // These five fixed sheets mirror the five case-study sections.
+    // They are decorative only; the whole folder is one ordinary link.
+    const papers = ["The Call", "The System", "What Survived", "First Contact", "The Results"]
+      .map((section, paperIndex) =>
+        '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
+        '" aria-hidden="true"><span>' + esc(section) + '</span></span>')
+      .join("");
     return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
       '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
       '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study">' +
       '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
       '<span class="project-folder__tab-title">' + title + '</span></span></span>' +
-      '<span class="project-folder__paper project-folder__paper--left" aria-hidden="true"><span>' + paperOne + '</span></span>' +
-      '<span class="project-folder__paper project-folder__paper--right" aria-hidden="true"><span>' + paperTwo + '</span></span>' +
+      papers +
       '<span class="project-folder__front"><span class="project-folder__overline">CASE STUDY / ' +
       esc(project.year) + '</span><strong class="project-folder__title">' + title +
       '</strong><span class="project-folder__bottom"><span>' + esc(project.category) +
