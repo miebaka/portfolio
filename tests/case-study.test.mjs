@@ -5,10 +5,11 @@ import { execFileSync } from "node:child_process";
 import sharp from "sharp";
 import { SITE, CONTENT } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
+import { CASE_STORY_STRUCTURE } from "../data/case-story-structure.js";
 import { validateContent } from "../scripts/content-schema.mjs";
 
 const root = new URL("../", import.meta.url);
-const chapterIds = ["decision", "system", "survival", "encounter"];
+const chapterIds = ["decision", "system", "survival", "encounter", "results"];
 const markup = () => renderCaseMarkup(SITE, "tedx-rsu", "../");
 const reject = (change, code, path) => {
   const content = structuredClone(CONTENT);
@@ -31,9 +32,10 @@ test("published narratives reject missing, reordered, duplicated or empty chapte
   reject(study => { study.chapters.pop(); }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { [study.chapters[0], study.chapters[1]] = [study.chapters[1], study.chapters[0]]; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
   reject(study => { study.chapters[1].id = "context"; }, "CASE_CHAPTER_ORDER_INVALID", "chapters");
-  reject(study => { study.chapters[3].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[3].body");
+  reject(study => { study.chapters[4].body = []; }, "CASE_CHAPTER_BODY_INVALID", "chapters[4].body");
   reject(study => { study.chapters[0].body = [null]; }, "CASE_CHAPTER_BODY_INVALID", "chapters[0].body");
   reject(study => { study.chapters[0].label = ""; }, "CASE_CHAPTER_LABEL_REQUIRED", "chapters[0].label");
+  reject(study => { study.chapters[0].label = "Decision"; }, "CASE_CHAPTER_LABEL_INVALID", "chapters[0].label");
 });
 
 test("published media references cannot silently disappear or duplicate a plate", () => {
@@ -75,8 +77,9 @@ test("TEDx opens with its title, hero and supported project facts", () => {
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
   assert.match(html, /<dt>Delivered<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
-  assert.match(html, /id="decision-title">Decision<\/h2>/);
-  assert.match(html, /id="encounter-title">Encounter<\/h2>/);
+  assert.match(html, /id="decision-title">The Call<\/h2>/);
+  assert.match(html, /id="encounter-title">First Contact<\/h2>/);
+  assert.match(html, /id="results-title">The Results<\/h2>/);
 });
 
 test("Rivo publishes as a confident identity case with a concrete delivery result", () => {
@@ -86,9 +89,9 @@ test("Rivo publishes as a confident identity case with a concrete delivery resul
   assert.equal(SITE.projects.find(project => project.slug === "rivo").status, "published");
   assert.match(markup, /Rivo Studio needed an identity/);
   assert.match(markup, /delivered identity included guidelines, stationery and a practical application system/i);
-  assert.match(markup, /What another designer can take forward/);
+  assert.match(markup, /A usable identity, with measurable adoption still unknown/);
   assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
-  assert.match(markup, /do not establish public rollout/i);
+  assert.match(markup, /not an invented impact figure/i);
   assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
 });
 
@@ -100,20 +103,23 @@ test("ChopBox publishes as a focused application system", () => {
   assert.match(html, /does this make you hungry/i);
   assert.match(html, /Packaging, uniform, campaign and out-of-home applications/i);
   assert.match(html, /What customers might meet in the world/);
-  assert.match(html, /not evidence of a live rollout/i);
+  assert.match(html, /not a proven commercial return/i);
 });
 
-test("the complete narrative follows the approved four-part sequence without chapter navigation", () => {
+test("every published narrative follows the five-question sequence without chapter navigation", () => {
   const html = markup();
   const sections = [...html.matchAll(/<section class="case-chapter" id="([^"]+)" aria-labelledby="([^"]+)">/g)];
   assert.deepEqual(sections.map(match => match[1]), chapterIds);
-  for (const [, id, labelId] of sections) {
+  for (const [index, [, id, labelId]] of sections.entries()) {
+    const spec = CASE_STORY_STRUCTURE[index];
+    assert.equal(id, spec.id);
     assert.equal(labelId, `${id}-title`);
-    assert.match(html, new RegExp(`<h2 id="${labelId}">[^<]+<\\/h2>`));
+    const expected = `<div class="case-chapter__intro"><h2 id="${labelId}">${spec.label}</h2><p class="case-chapter__descriptor">${spec.descriptor}</p></div>`;
+    assert.ok(html.includes(expected), `${id} must put the exact question directly under its label`);
     assert.doesNotMatch(html, new RegExp(`href="#${id}"`));
   }
   assert.doesNotMatch(html, /id="problem"|id="applications"|id="outcome"|id="reflection"|id="result"/);
-  assert.ok(html.indexOf('id="encounter"') < html.indexOf('class="case-next'));
+  assert.ok(html.indexOf('id="results"') < html.indexOf('class="case-next'));
 });
 
 test("all owner media is shown once, with intrinsic dimensions, alternatives and factual captions", async () => {
@@ -166,12 +172,12 @@ test("chapter rendering honours authored media references and escapes content", 
         status: "published", title: "Sample", tagline: 'A <clear> proposition', hero: "sample-wide",
         facts: { role: "Design", delivered: "Identity", collaborators: "A & B" },
         media: [{ src: "sample-wide", label: "Wide", w: 1440, h: 810, alt: 'A <wide> image', caption: "The final & approved application." }, { src: "sample-tall", label: "Tall", w: 1240, h: 1550, alt: "The complete tall application.", caption: "All of the tall application." }],
-        chapters: [{ id: "decision", label: "Decision", title: "The <brief>", body: ["Keep <script> readable."], media: ["sample-tall"] }]
+        chapters: [{ id: "decision", label: "The Call", title: "The <brief>", body: ["Keep <script> readable."], media: ["sample-tall"] }]
       }
     }
   };
   const html = renderCaseMarkup(fixture, "sample", "./");
-  assert.match(html, /A &lt;clear&gt; proposition/);
+  assert.match(html, /<h1>Sample<\/h1>/);
   assert.match(html, /Keep &lt;script&gt; readable\./);
   assert.match(html, /<dt>Collaborators<\/dt><dd>A &amp; B<\/dd>/);
   assert.match(html, /sample-tall-1080\.jpg/);
