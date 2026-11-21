@@ -10,8 +10,6 @@ body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__inn
 body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__balance {
   grid-column: 1;
   min-width: 0;}
-body[data-page] .site-nav__identity {
-  display: none;}
 body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__menu-btn {
   grid-column: 2;
   justify-self: center;}
