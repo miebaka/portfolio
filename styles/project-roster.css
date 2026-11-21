@@ -343,7 +343,7 @@ html[data-motion="reduced"] body[data-page="home"] .home-project-list .work-view
 
 /* Preserve the active image when switching motion preferences at runtime. */
 @media (min-width: 48.001rem) and (hover: hover) and (pointer: fine) {
-  html[data-motion="reduced"] body[data-page="home"] .home-project-list .editorial-index__item:nth-child(2) .home-project-list__visual {
+  html[data-motion="reduced"] body[data-page="home"] .home-project-list .editorial-index:has(.editorial-index__item:nth-child(2) .editorial-index__row:focus-visible) .editorial-index__item:nth-child(2) .home-project-list__visual {
     opacity: 1;
   }
 }
