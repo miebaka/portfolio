@@ -312,51 +312,61 @@ test("About exposes the CV only when configured", async ({ page }) => {
   else await expect(page.locator('[data-mount="cv"]')).toBeEmpty();
 });
 
-test("Mobile Work project titles have a readable multiline line height", async ({ page }) => {
+test("Mobile Work cabinet tabs stay readable at narrow widths", async ({ page }) => {
   for (const width of [320, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/work.html");
-    const titles = page.locator(".project-archive__identity h2");
+    const titles = page.locator(".filing-cabinet__tab-title");
     await expect(titles).toHaveCount(3);
-    const values = await titles.evaluateAll(elements => elements.map(element => {
-      const style = getComputedStyle(element);
-      return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
-    }));
-    for (const ratio of values) expect(ratio).toBeGreaterThanOrEqual(1.08);
+    for (const element of await titles.all()) {
+      const geometry = await element.evaluate(node => ({
+        height: node.getBoundingClientRect().height,
+        scrollWidth: node.scrollWidth,
+        width: node.clientWidth,
+        lineHeight: parseFloat(getComputedStyle(node).lineHeight),
+      }));
+      expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width + 2);
+      expect(geometry.height).toBeGreaterThanOrEqual(geometry.lineHeight);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
+      .toBeLessThanOrEqual(1);
   }
 });
 
-test("Work index separates complete cases from studies in progress", async ({ page }) => {
+test("Work cabinet separates real case studies from studies in progress", async ({ page }) => {
   await page.goto("/work.html");
-  await expect(page.getByRole("link", { name: /TEDx Rivers State University/ })).toHaveAttribute("href", "work/tedx-rsu.html");
-  await expect(page.getByRole("link", { name: /Rivo Studio/ })).toHaveAttribute("href", "work/rivo.html");
-  await expect(page.locator(".project-archive__item")).toHaveCount(3);
-  await expect(page.locator(".project-archive__media img")).toHaveCount(3);
-  await expect(page.locator(".project-archive__identity h2")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
+  const folderLinks = page.locator(".filing-cabinet__link");
+  await expect(folderLinks).toHaveCount(3);
+  await expect(folderLinks.nth(0)).toHaveAttribute("href", "work/rivo.html");
+  await expect(folderLinks.nth(1)).toHaveAttribute("href", "work/tedx-rsu.html");
+  await expect(folderLinks.nth(2)).toHaveAttribute("href", "work/chopbox.html");
+  await expect(page.locator(".filing-cabinet__tab-title")).toHaveText([
+    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
   ]);
-  await expect(page.locator(".project-archive__media")).toHaveCount(3);
-  await expect(page.locator(".project-archive__progress li")).toHaveText(["Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021"]);
+  await expect(page.locator(".filing-cabinet__divider-year")).toHaveText(["2024", "2023", "2022"]);
+  await expect(page.locator(".project-archive__progress li")).toHaveText([
+    "Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021",
+  ]);
+  await expect(page.locator(".filing-cabinet__register")).toHaveAttribute("aria-hidden", "true");
 });
 
-test("Work index gives the selected project reciprocal focus", async ({ page, isMobile }) => {
+test("Work cabinet reveals folder details with stable hover or keyboard focus", async ({ page, isMobile }) => {
   await page.goto("/work.html");
-  const archive = page.locator(".editorial-index--archive");
-  const rows = archive.locator(".editorial-index__row");
-  const rivo = archive.getByRole("link", { name: /Rivo Studio/ });
-  await expect(rows).toHaveCount(3);
+  const rivo = page.locator(".filing-cabinet__link").first();
+  await expect(rivo).toBeVisible();
   if (isMobile) {
     await rivo.focus();
     await expect(rivo).toBeFocused();
-    await expect(rivo.locator(".project-archive__media")).toBeVisible();
+    await expect(rivo.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
+    const focus = await rivo.evaluate(el => getComputedStyle(el).outlineStyle);
+    expect(focus).toBe("solid");
   } else {
     await rivo.hover();
+    await expect(rivo.locator(".filing-cabinet__lip")).toHaveCSS("opacity", "1");
   }
-  await expect(rivo).toHaveCSS("opacity", "1");
-  await expect(rows.first()).toHaveCSS("opacity", "1");
-  await expect(rows.last()).toHaveCSS("opacity", "1");
-  await expect(rivo.locator(".editorial-index__title")).toHaveCSS("font-weight", "400");
-  await expect(rivo.locator(".project-archive__preview-frame").first()).toHaveCSS("opacity", "1");
+  await expect(page.locator(".filing-cabinet__tab-title")).toHaveText([
+    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
+  ]);
 });
 
 test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) => {
