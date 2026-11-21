@@ -105,6 +105,48 @@ body[data-page="home"] .hero-wave {
 body[data-page="home"] .hero-wave.is-ready {
   opacity: 1;
 }
+/* Always show a water surface when the GPU cannot initialise.
+   A successful Three.js mount replaces this lightweight surface immediately. */
+body[data-page="home"] .hero-wave.is-fallback {
+  opacity: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 75% 60% at 20% 12%, rgb(243 254 255 / .88), transparent 80%),
+    radial-gradient(ellipse 70% 90% at 90% 82%, rgb(56 117 165 / .4), transparent 78%),
+    linear-gradient(145deg, #d7e9ed, #97cad1 53%, #6ea7be);
+}
+body[data-page="home"] .hero-wave.is-fallback::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(ellipse 29% 21% at 27% 39%, transparent 0 23px, rgb(255 255 255 / .48) 25px 28px, transparent 31px 69px),
+    repeating-radial-gradient(ellipse 27% 26% at 81% 53%, transparent 0 19px, rgb(255 255 255 / .4) 21px 24px, transparent 27px 66px);
+  background-size: 94% 115%, 112% 96%;
+  filter: blur(3px);
+  opacity: .58;
+  animation: water-fallback-drift 16s ease-in-out infinite alternate;
+}
+:root[data-theme="dark"] body[data-page="home"] .hero-wave.is-fallback {
+  background:
+    radial-gradient(ellipse 60% 70% at 22% 22%, rgb(44 97 160 / .4), transparent 78%),
+    radial-gradient(ellipse 68% 83% at 85% 88%, rgb(10 45 118 / .52), transparent 82%),
+    linear-gradient(145deg, #10264d, #08152f 70%, #061027);
+}
+:root[data-theme="dark"] body[data-page="home"] .hero-wave.is-fallback::after {
+  opacity: .2;
+}
+@keyframes water-fallback-drift {
+  from { transform: translate3d(-2%, 1%, 0) rotate(-2deg); }
+  to { transform: translate3d(3%, -2%, 0) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] .hero-wave.is-fallback::after { animation: none; }
+}
+html[data-motion="reduced"] body[data-page="home"] .hero-wave.is-fallback::after {
+  animation: none;
+}
 body[data-page="home"] .hero-wave__control {
   position: absolute;
   z-index: 3;
