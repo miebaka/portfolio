@@ -235,7 +235,7 @@ The new direction is **not** a facelift or continuation of the current visual pr
 
 **Image first:** For each flagship project, select one *excellent* cover image and 4–8 high-quality evidence frames with intentional crop, consistent visual logic and role-accurate captions. If assets are insufficient, surface the limitation rather than creating generic placeholders or overstating deliverables. Show the work's materiality—scale, print, real context, tactile depth—when supported by genuine files.
 
-**Typography is governed by Geist Unified:** Geist Sans carries display and body, Geist Mono carries labels, and `styles/tokens.css` is the only source of size, weight, leading and tracking values. The contract is in [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md). Evaluating another family is a separate, deliberate project: compare actual hero, work, About and essay screenshots at 320/390/768/1440px, verify licensing and font availability before installing or redistributing anything, then update the tokens, the docs and the contract tests in the same pull request.
+**Typography is governed by the unified Geist system:** Geist Sans carries display and body, Geist Mono carries labels, and `styles/tokens.css` is the only source of all typography-related CSS declarations. The contract is in [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md). Evaluating another family is a separate, deliberate project: compare actual hero, work, About and essay screenshots at 320/390/768/1440px, verify licensing and font availability before installing or redistributing anything, then update the tokens, the docs and the contract tests in the same pull request.
 
 **Color is open to change:** Retain an identifiable ultramarine signal **only if** it still performs best after comparative visual studies. Author up to three *complete* palette directions with real source imagery, test both Print/Screen states, contrast and project world transitions, then record the chosen semantic palette in `styles/foundations.css`. Never let references turn the system into a beige/olive/terracotta average.
 
@@ -282,12 +282,12 @@ Base source colors currently include:
 
 | Role | Font | Weight | Source |
 | --- | --- | --- | --- |
-| Home hero, project titles, editorial displays | Geist Sans | 400 / 600 | `--type-display-*` |
-| Section, card and article headings | Geist Sans | 400 / 600 | `--type-heading-*` |
-| Body, narrative and essays | Geist Sans | 400 / 600 | `--type-body-*` |
-| Navigation, metadata and short UI labels | Geist Mono | 400 / 600 | `--type-label-*` |
+| Home hero and editorial displays | Geist Sans | 400 / 600 | `--type-hero`, `--type-display` |
+| Section, card and article headings | Geist Sans | 400 / 600 | `--type-heading-sm`, `--type-heading-md`, `--type-heading-lg` |
+| Body, narrative and essays | Geist Sans | 400 / 600 | `--type-body`, `--type-body-lg`, `--type-lead` |
+| Navigation, metadata and short UI labels | Geist Mono | 400 / 600 | `--type-label`, `--type-caption` |
 
-The standalone Material Symbols font is an **icon font only**, not a third text family. All typography declarations MUST use the type roles for size, font weight, line height and tracking; select families with `--display`, `--body`, `--label` or `--signature`. Only 400/600 static font weights are supported; invented weights and percentages for unsupported stretch axes are prohibited. The main Home name is substantially larger than the old 81px editorial override and scales fluidly up to 212px.
+Material Symbols is an **icon font only**, not a third text family. **Every typography declaration** (font face, family, size, weight, leading, tracking, text wrapping, text decoration, uppercase transformation and responsive typography) belongs in `styles/tokens.css`. All other CSS files contain layout, appearance and behaviour only. The two text families are `--font-sans` and `--font-mono`; 400/600 are the only supported static weights. The home hero is an exceptional display role, fluidly capped at 160px. Do not reintroduce `--display`, `--body`, `--label`, `--signature` or the retired size aliases.
 
 **Accessibility remains mandatory:** exactly one semantic visible h1 per page; strong type hierarchy; accurate case on project names; uppercase UI labels, not paragraphs; short-line compressed display only; legible reading at 320px and 200% zoom; and proper fallback during font swap. Long-form copy SHOULD measure roughly 55–75 characters per line and use comfortable `--type-leading-reading`.
 
@@ -965,7 +965,7 @@ Static HTML, authored CSS with cascade layers, vanilla ES modules, Node-based va
 
 | System | Current source files | Approved action |
 | --- | --- | --- |
-| Typography | `styles/tokens.css` | Single owner of font families, size, weight, leading, and tracking |
+| Typography | `styles/tokens.css` | Single owner of all typography declarations, including responsive selectors |
 | Colour, layout and motion | `styles/foundations.css` | Preserve shared design tokens independently from typography |
 | Shared UI/nav/footer | `styles/components-v4.css` | Keep shared states and components consistent |
 | Page composition | `styles/pages-v4.css` | Scope by page/section; avoid leakage |

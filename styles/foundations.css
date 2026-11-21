@@ -39,6 +39,7 @@
   --ref-tedx:#702963;--ref-tedx-light:#e6b8dd;
   --hero-wave-color-1:var(--ref-midnight);--hero-wave-color-2:var(--ref-ultramarine);--hero-wave-color-3:var(--ref-blue-80);
   --ref-white:#fff;--ref-white-13:rgb(255 255 255/.13);
+
   /* Water shader fallback palette: authored centrally, never in page CSS. */
   --ref-water-light-glint: rgb(243 254 255 / .88);
   --ref-water-light-depth: rgb(56 117 165 / .4);
