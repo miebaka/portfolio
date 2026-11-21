@@ -58,7 +58,8 @@ function paperTexture(doc, hex, seed) {
   map.colorSpace = THREE.SRGBColorSpace;
   map.wrapS = THREE.RepeatWrapping;
   map.wrapT = THREE.RepeatWrapping;
-  map.repeat.set(2.2, 1.35);
+  // ExtrudeGeometry uses world-size UVs, not normalised 0–1 UVs.
+  map.repeat.set(1 / 440, 1 / 280);
   map.anisotropy = 4;
   return map;
 }
@@ -164,7 +165,7 @@ export function initWorkCabinetThree({
     const hovered = pointerMq.matches && !cabinet.classList.contains("is-scrolling") &&
       file.node.matches(":hover");
     const reading = !pointerMq.matches && file.node.dataset.reading === "true";
-    return extracting ? 48 : focused || hovered || reading ? 20 : 0;
+    return extracting ? 48 : focused || hovered ? 20 : reading ? 24 : 0;
   }
 
   function render(now) {
@@ -172,7 +173,8 @@ export function initWorkCabinetThree({
     if (destroyed || hidden || !inView || contextFailed) return;
     const delta = Math.min(48, Math.max(0, now - (lastFrame || now - 16)));
     lastFrame = now;
-    const instant = isMotionReduced(doc, win);
+    const instant = isMotionReduced(doc, win) ||
+      Boolean(doc.activeElement?.closest?.(".filing-cabinet__link"));
     const easing = instant ? 1 : 1 - Math.exp(-delta / 62);
     let animating = false;
     for (const file of files) {
@@ -435,10 +437,11 @@ export function initWorkCabinetThree({
     invalidate();
   }
 
-  doc.addEventListener("visibilitychange", () => {
+  function onVisibilityChange() {
     hidden = doc.visibilityState === "hidden";
     if (!hidden) invalidate();
-  });
+  }
+  doc.addEventListener("visibilitychange", onVisibilityChange);
   win.addEventListener("pagehide", pageHide);
   win.addEventListener("pageshow", pageShow);
 
@@ -468,6 +471,7 @@ export function initWorkCabinetThree({
       cabinet.removeEventListener("focusout", invalidate);
       win.removeEventListener("scroll", invalidate);
       win.removeEventListener("resize", rebuild);
+      doc.removeEventListener("visibilitychange", onVisibilityChange);
       win.removeEventListener("pagehide", pageHide);
       win.removeEventListener("pageshow", pageShow);
       mq.removeEventListener("change", invalidate);
