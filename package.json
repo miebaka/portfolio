@@ -23,7 +23,7 @@
     "test:css": "node scripts/check-css-contract.mjs",
     "test:intent": "node --test scripts/intent-quality.test.mjs",
     "test:tokens": "node --test scripts/token-integrity.test.mjs",
-    "test:e2e": "playwright test tests/e2e",
+    "test:e2e": "playwright test tests/e2e && node scripts/assert-no-skipped-e2e.mjs",
     "test:a11y": "playwright test tests/e2e/portfolio.spec.mjs --grep @a11y",
     "test:budgets": "node scripts/check-budgets.mjs",
     "test:lighthouse": "lhci autorun",
