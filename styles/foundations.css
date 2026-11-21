@@ -28,7 +28,7 @@
   --dur-proof-fade:700ms;--dur-proof-shift:800ms;--motion-press:120ms;--motion-hover:160ms;--motion-panel-in:220ms;
   --motion-panel-out:160ms;--ease-out-ui:cubic-bezier(.25,1,.5,1);--ease-in-out-ui:cubic-bezier(.65,0,.35,1);
   --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--dur-fast:var(--motion-press);
-  --dur-ui:180ms;--dur-spatial:240ms;
+  --dur-ui:180ms;
 
   /* Reference palette: raw values, the only place hex lives */
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;--ref-blue-30:#1c3da4;
