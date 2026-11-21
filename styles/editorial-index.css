@@ -36,13 +36,13 @@ body .site-nav__identity {
   line-height:var(--type-leading-heading);
 }
 body .site-nav__identity strong {
-  font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--label);
+  font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-ui) var(--type-family-label);
   letter-spacing:var(--type-tracking-ui);
   text-transform:uppercase;
 }
 body .site-nav__identity span {
   color:var(--muted);
-  font:var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--label);
+  font:var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--type-family-label);
   letter-spacing:var(--type-tracking-ui);
   text-transform:uppercase;
 }
@@ -63,7 +63,7 @@ body .site-nav__menu-btn {
   border-radius:0;
   background:transparent;
   color:var(--ink);
-  font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-display-comfort) var(--label);
+  font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-display-comfort) var(--type-family-label);
   letter-spacing:var(--type-tracking-label);
   text-transform:uppercase;
   transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease;
@@ -141,11 +141,11 @@ html body .site-index .site-index__link {
   text-decoration:none;
 }
 html body .site-index .site-index__link>span:last-child {
-  font:var(--type-weight-semibold) var(--type-display-m)/var(--type-leading-display-comfort) var(--display);
+  font:var(--type-weight-semibold) var(--type-display-compact)/var(--type-leading-display-comfort) var(--type-family-display);
   letter-spacing:var(--type-tracking-display);
   text-transform:uppercase;
 }
-body .site-index__number{color:var(--muted);font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-body) var(--label)}
+body .site-index__number{color:var(--muted);font:var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-body) var(--type-family-label)}
 body .site-index__link[aria-current="page"] .site-index__number {color:var(--accent)}
 html body .site-index .site-index__link:is(:hover,:focus-visible,[aria-current="page"]) {
   color:var(--accent);
