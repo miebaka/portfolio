@@ -10,105 +10,137 @@ export function renderWork() {
   el.className = "home-project-list";
   el.dataset.workView = "list";
   el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath()) +
-    '<div class="work-view-controls"><a href="' + basePath() + 'work.html">All work <span aria-hidden="true">↗</span></a></div>';
+    '<div class="work-view-controls"><a href="' + basePath() +
+    'work.html">All work <span aria-hidden="true">↗</span></a></div>';
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
   const selected = projects
-    .filter(project => project.featured === true && project.status === "published" && studies?.[project.slug]?.status === "published")
+    .filter(project =>
+      project.featured === true &&
+      project.status === "published" &&
+      project.cover &&
+      studies?.[project.slug]?.status === "published"
+    )
     .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
 
-  return renderEditorialIndex(selected.map(project => {
-    // These are actual case-study images curated alongside the project data.
-    // The cover is always the first frame, including on touch and without JS.
-    const frames = [...new Set([project.cover, ...(project.rosterImages || [])].filter(Boolean))].slice(0, 3);
-    const visual = '<span class="home-project-list__visual" aria-hidden="true">' +
-      frames.map((image, index) => {
-        const src = base + "assets/images/optimized/" + safeToken(image);
-        return '<span class="project-roster__photo project-roster__photo--' + (index + 1) + '"><picture>' +
-          '<source type="image/avif" srcset="' + src + '-540.avif 540w, ' + src + '-810.avif 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
-          '<source type="image/webp" srcset="' + src + '-540.webp 540w, ' + src + '-810.webp 810w" sizes="(max-width:48rem) 88vw, 25vw">' +
-          '<img src="' + src + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async">' +
-          '</picture></span>';
-      }).join("") + '</span>';
-
-    const tags = [...new Set([...(project.tags || []), project.category].filter(Boolean))];
+  // One substantial, real project image per case. No floating tags, metadata
+  // capsules or redundant arrow controls; the entire title/visual is the link.
+  const items = selected.map(project => {
+    const image = base + "assets/images/optimized/" + safeToken(project.cover);
+    const title = esc(project.title);
     const content =
-      '<span class="home-project-list__identity"><span class="home-project-list__title editorial-index__title">' +
-      esc(project.title) + '</span><span class="home-project-list__meta">' +
-      esc(project.category) + ' / ' + esc(project.year) +
-      '</span></span>' + visual +
-      '<span class="project-roster__tags" data-roster-tags="' + esc(tags.join("|")) + '" aria-hidden="true"></span>' +
-      '<span class="home-project-list__arrow" aria-hidden="true">↗</span>';
+      '<div class="home-project-list__identity"><h3 class="home-project-list__title editorial-index__title">' +
+      title + '</h3></div>' +
+      '<span class="home-project-list__visual" aria-hidden="true"><picture>' +
+      '<source type="image/avif" srcset="' + image + '-540.avif 540w, ' +
+      image + '-810.avif 810w, ' + image + '-1080.avif 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<source type="image/webp" srcset="' + image + '-540.webp 540w, ' +
+      image + '-810.webp 810w, ' + image + '-1080.webp 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<img src="' + image + '-810.webp" alt="" width="1080" height="810" loading="lazy" decoding="async">' +
+      '</picture></span>';
+
     return {
       href: base + "work/" + safeToken(project.slug) + ".html",
-      label: project.title + ", view case study",
+      label: project.title + ", " + project.category + ", " + project.year + ", view case study",
       tone: project.slug,
       className: "project-roster__row",
       content,
     };
-  }), { variant: "work", ordered: true });
-}
+  });
 
+  return renderEditorialIndex(items, { variant: "work", ordered: true });
+}
 
 export function renderProjectArchive() {
   const el = document.querySelector("[data-project-archive]");
   if (!el) return;
-  el.className = "project-archive__list";
+  el.className = "filing-cabinet";
   if (el.dataset.prerendered !== "true")
     el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath(), SITE.caseStudies);
 }
 
-export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {
-  // Only published, documented project cases belong in the primary Work archive.
-  // Essays have their own index and private work must never appear as a draft.
+/* Filing Cabinet V2: the source data determines the filing order and truthful
+   divider dates; case studies stay ordinary links even if JS fails entirely. */
+export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
   const published = projects
-    .filter(project => project.status === "published" && studies?.[project.slug]?.status === "published" && project.cover)
-    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
+    .filter(project =>
+      project.status === "published" &&
+      studies?.[project.slug]?.status === "published" &&
+      project.cover &&
+      !(project.href || "").startsWith("essays/"))
+    .sort((a, b) => Number(b.year) - Number(a.year) ||
+      (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) ||
+      a.title.localeCompare(b.title));
+  const numberOf = number => String(number).padStart(2, "0");
+  const count = numberOf(published.length);
+  let lastYear = "";
+  let folders = 0;
+
+  const drawer = published.map(project => {
+    const year = String(project.year);
+    const divider = year !== lastYear
+      ? '<li class="filing-cabinet__divider" aria-hidden="true">' +
+        '<span class="filing-cabinet__divider-year">' + esc(year) + '</span>' +
+        '<span class="filing-cabinet__divider-caption">YEAR INDEX</span></li>'
+      : "";
+    lastYear = year;
+    const index = ++folders;
+    const tab = ["a", "b", "c"][(index - 1) % 3];
+    const number = numberOf(index);
+    const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
+    const label = esc(project.title);
+    const category = esc(project.category);
+    const description = esc(project.tagline);
+    const encodedYear = esc(year);
+    return divider +
+      '<li class="filing-cabinet__folder" data-tab="' + tab +
+      '" data-slug="' + safeToken(project.slug) +
+      '" data-file-number="' + number + '" data-year="' + encodedYear + '">' +
+      '<a class="filing-cabinet__link" href="' + esc(href) + '">' +
+      '<span class="filing-cabinet__face" aria-hidden="true">' +
+      '<span class="filing-cabinet__tab"><span class="filing-cabinet__number">' + number + '</span>' +
+      '<span class="filing-cabinet__tab-title">' + label + '</span></span>' +
+      '<span class="filing-cabinet__lip"><strong class="filing-cabinet__lip-title">' + label + '</strong>' +
+      '<span class="filing-cabinet__lip-copy">' + description + '</span>' +
+      '<span class="filing-cabinet__lip-meta">' + category + ' / ' + encodedYear + '</span>' +
+      '</span></span>' +
+      '<span class="sr-only">Open ' + label + ' case study, ' + category + ', ' + encodedYear + '</span>' +
+      '</a></li>';
+  }).join("");
+
+  const current = published[0];
+  const active = current
+    ? '<span class="filing-cabinet__register-number">NO. 01 / ' + count + '</span>' +
+      '<strong class="filing-cabinet__register-title">' + esc(current.title) + '</strong>' +
+      '<span class="filing-cabinet__register-year">' + esc(current.year) + '</span>'
+    : '<strong class="filing-cabinet__register-title">NO PUBLISHED FILES</strong>';
+
+  return '<div class="filing-cabinet__stage">' +
+    '<div class="filing-cabinet__shell">' +
+    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>FILING SYSTEM / 001</span><span>' +
+      count + ' OPEN FILES</span></div>' +
+    '<div class="filing-cabinet__well">' +
+    '<ol class="filing-cabinet__drawer" aria-label="Published case studies, newest first">' +
+    drawer + '</ol></div>' +
+    '<div class="filing-cabinet__register" aria-hidden="true">' +
+    '<span class="filing-cabinet__register-label">CURRENT FILE / REGISTER</span>' +
+    '<span class="filing-cabinet__register-values">' + active + '</span></div>' +
+    '</div>' +
+    '<p class="filing-cabinet__caption"><span>DESIGN SYSTEMS / SELECTED WORK</span>' +
+    '<span>' + count + ' FILES / ' + count + ' AVAILABLE TO OPEN</span></p>' +
+    '</div>';
+}
+
+export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {
   const inProgress = projects
     .filter(project => project.status === "coming-soon" && project.featured !== true)
     .sort((a, b) => Number(b.year) - Number(a.year) || a.title.localeCompare(b.title));
-  const publishedMarkup = renderEditorialIndex(
-    published.map((project) => {
-      const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
-      const study = studies?.[project.slug];
-      const decision = study?.proof?.find((item) => item.type === "decision")?.statement || project.tagline;
-      const role = study?.facts?.role || (project.tags || []).join(", ");
-      const frames = project.cover
-        ? '<span class="project-archive__preview-frame" style="--preview-order:0"><picture>' +
-          '<source type="image/avif" srcset="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.avif 540w, ' + base + "assets/images/optimized/" + safeToken(project.cover) + '-1080.avif 1080w" sizes="(max-width:48rem) calc(100vw - 2.5rem), 30vw">' +
-          '<source type="image/webp" srcset="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp 540w, ' + base + "assets/images/optimized/" + safeToken(project.cover) + '-1080.webp 1080w" sizes="(max-width:48rem) calc(100vw - 2.5rem), 30vw">' +
-          '<img src="' + base + "assets/images/optimized/" + safeToken(project.cover) + '-540.webp" alt="" width="540" height="405" loading="lazy" decoding="async"></picture></span>'
-        : "";
-      return {
-        href,
-        label: project.title + ", view project",
-        tone: project.slug,
-        className: "project-archive__item project-archive__item--" + project.slug,
-        content:
-          '<div class="project-archive__row"><div class="project-archive__identity"><p class="project-archive__meta"><span>' +
-          esc(project.category) +
-          "</span><time>" +
-          esc(project.year) +
-          '</time></p><h2 class="editorial-index__title">' +
-          esc(project.title) +
-          '</h2><div class="project-archive__evidence"><small>Governing decision</small><p class="editorial-index__description">' +
-          esc(decision) +
-          "</p><span>" +
-          esc(role) +
-          '</span></div></div><div class="project-archive__media" aria-hidden="true">' +
-          frames +
-          "</div></div>",
-      };
-    }),
-    { variant: "archive", className: "project-archive__published" },
-  );
   const progressMarkup = inProgress.length
-    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Studies still being edited into complete, evidence-led cases.</p></div><ul>' +
-      inProgress
-        .map((project) => "<li><span>" + esc(project.title) + "</span><time>" + esc(project.year) + "</time></li>")
-        .join("") +
-      "</ul></div>"
+    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Projects being prepared for publication. These are not case studies yet.</p></div><ul>' +
+      inProgress.map(project =>
+        '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join("") +
+      '</ul></div>'
     : "";
   const collectionMarkup =
     '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' +
@@ -116,7 +148,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
     'experiments.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' +
     base +
     'essays.html"><span>Essays</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
-  return publishedMarkup + progressMarkup + collectionMarkup;
+  return renderFilingCabinetMarkup(projects, studies, base) + progressMarkup + collectionMarkup;
 }
 
 function clientItem(client) {

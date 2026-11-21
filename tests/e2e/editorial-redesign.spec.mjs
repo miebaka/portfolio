@@ -53,22 +53,24 @@ test("Magazine grid is twelve columns on desktop and four on mobile",async({page
  expect(columns).toBe(isMobile?4:12);
 });
 
-test("Published Work cover images remain visible at mobile and desktop widths",async({page})=>{
+test("Published Work cabinet folders are legible at mobile and desktop widths",async({page})=>{
  for(const width of [390,768,1440]){
   await page.setViewportSize({width,height:900});
   await page.goto("/work.html");
-  const frames=await page.locator(".project-archive__media").evaluateAll(nodes=>nodes.map(node=>{
+  const bands=await page.locator(".filing-cabinet__link").evaluateAll(nodes=>nodes.map(node=>{
    const rect=node.getBoundingClientRect();
-   const frames=node.querySelectorAll(".project-archive__preview-frame");
+   const tab=node.querySelector(".filing-cabinet__tab");
+   const label=tab?.getBoundingClientRect();
    return {display:getComputedStyle(node).display,width:rect.width,height:rect.height,
-    count:frames.length,firstWidth:frames[0]?.getBoundingClientRect().width||0};
+    tabWidth:label?.width||0,title:tab?.querySelector(".filing-cabinet__tab-title")?.textContent?.trim()};
   }));
-  expect(frames).toHaveLength(3);
-  for(const frame of frames){
-   expect(frame.display).not.toBe("none");
-   expect(frame.width).toBeGreaterThan(120);
-   expect(frame.height).toBeGreaterThan(100);
-   if(frame.count===1)expect(frame.firstWidth/frame.width).toBeGreaterThan(.95);
+  expect(bands).toHaveLength(3);
+  expect(bands.map(band=>band.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
+  for(const band of bands){
+   expect(band.display).not.toBe("none");
+   expect(band.width).toBeGreaterThan(120);
+   expect(band.height).toBeGreaterThanOrEqual(44);
+   expect(band.tabWidth).toBeGreaterThan(60);
   }
  }
 });
@@ -94,7 +96,7 @@ test("What I Do has no numbers or card gradients and all UI labels are uppercase
   expect(["none","normal"]).toContain(visual.pseudo);
   expect(visual.pseudoImage).toBe("none");
  }
- for(const selector of [".site-footer__eyebrow",".home-project-list__meta",".service-stack__tag"]){
+ for(const selector of [".site-footer__eyebrow",".service-stack__tag"]){
   await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
  }
 });

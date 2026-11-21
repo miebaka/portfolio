@@ -1,0 +1,565 @@
+/* Work / The Filing Cabinet V2 — orthographic, system-led, CSS-first.
+   Page-scoped. Every visible folder is an ordinary link even without JS. */
+body[data-page="work"] .project-archive--cabinet {
+  width: min(calc(100% - 2 * var(--page)), var(--content));
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-block: clamp(7rem, 10vw, 11rem) clamp(8rem, 13vw, 14rem);
+}
+
+body[data-page="work"] .project-archive--cabinet .project-archive__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr);
+  align-items: end;
+  gap: clamp(1.75rem, 5vw, 5.5rem);
+  margin-bottom: clamp(3.5rem, 7vw, 7rem);
+}
+
+body[data-page="work"] .project-archive--cabinet .project-archive__head h1 {
+  max-width: 12ch;
+  font: var(--type-weight-semibold) var(--type-display-xxl)/var(--type-leading-display) var(--display);
+  letter-spacing: var(--type-tracking-compressed);
+  text-wrap: balance;
+}
+
+body[data-page="work"] .filing-cabinet__overline {
+  margin: 0 0 clamp(1.5rem, 2.5vw, 2.5rem);
+  color: var(--muted);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-label-wide);
+  text-transform: uppercase;
+}
+
+body[data-page="work"] .filing-cabinet__intro {
+  max-width: 31ch;
+  margin: 0 0 .15rem;
+  color: var(--muted);
+  font: var(--type-weight-regular) var(--type-body-m)/var(--type-leading-body) var(--body);
+  text-wrap: pretty;
+}
+
+body[data-page="work"] .filing-cabinet {
+  display: block;
+  min-width: 0;
+}
+
+body[data-page="work"] .filing-cabinet__stage {
+  max-width: 69rem;
+  margin-inline: auto;
+}
+
+body[data-page="work"] .filing-cabinet__shell {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(.65rem, 1.35vw, 1.25rem);
+  border: 1px solid var(--ref-neutral-30);
+  border-radius: .35rem;
+  background: linear-gradient(125deg, var(--ref-navy-10), var(--ref-midnight) 42%, var(--ref-navy-13));
+  box-shadow: 0 3px 0 var(--ref-neutral-30), 0 18px 50px rgb(0 0 0 / 15%);
+}
+
+body[data-page="work"] .filing-cabinet__shell::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(110% 44% at 50% 0, rgb(177 197 255 / 11%), transparent 76%);
+  pointer-events: none;
+  content: "";
+}
+
+body[data-page="work"] .filing-cabinet__chassis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .4rem clamp(.65rem, 1.5vw, 1.5rem) 1rem;
+  color: var(--ref-blue-80);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-label);
+  text-transform: uppercase;
+}
+
+body[data-page="work"] .filing-cabinet__well {
+  position: relative;
+  min-width: 0;
+  min-height: clamp(34rem, 55vw, 44rem);
+  padding: clamp(1rem, 2.8vw, 2.75rem) clamp(.75rem, 3.6vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  border: 1px solid rgb(177 197 255 / 15%);
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 14%), transparent 8% 91%, rgb(0 0 0 / 17%)),
+    linear-gradient(180deg, var(--ref-midnight), var(--ref-navy-13) 100%);
+  box-shadow: inset 4px 0 0 rgb(177 197 255 / 8%), inset -4px 0 0 rgb(177 197 255 / 8%);
+}
+
+body[data-page="work"] .filing-cabinet__drawer {
+  --file-step: clamp(5.45rem, 7vw, 6.25rem);
+  --folder-face: calc(var(--file-step) + 4.8rem);
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 1rem 0 clamp(3rem, 5vw, 5rem);
+  list-style: none;
+  counter-reset: none;
+}
+
+body[data-page="work"] .filing-cabinet__divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 3.625rem;
+  padding: .85rem clamp(.85rem, 2.2vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--ref-neutral-30) 32%, var(--ref-neutral-94));
+  background: linear-gradient(180deg, var(--ref-neutral-94), var(--ref-neutral-80));
+  color: var(--ref-midnight);
+  box-shadow: 0 8px 13px rgb(0 0 0 / 18%);
+}
+
+body[data-page="work"] .filing-cabinet__divider-year {
+  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-display-comfort) var(--display);
+  letter-spacing: var(--type-tracking-display);
+}
+
+body[data-page="work"] .filing-cabinet__divider-caption {
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--label);
+  letter-spacing: var(--type-tracking-label-wide);
+}
+
+body[data-page="work"] .filing-cabinet__folder {
+  --tab-left: 4%;
+  --tab-width: 40%;
+  --stock: color-mix(in srgb, var(--ref-paper) 93%, #bba687);
+  position: relative;
+  display: block;
+  height: var(--file-step);
+  min-width: 0;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-tab="b"] {
+  --tab-left: 30%;
+  --stock: color-mix(in srgb, var(--ref-paper) 88%, #bba687);
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-tab="c"] {
+  --tab-left: 56%;
+  --stock: color-mix(in srgb, var(--ref-paper) 83%, #bba687);
+}
+
+body[data-page="work"] .filing-cabinet__link {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* The link's hit rectangle is the visible band; the paper can extend
+     underneath later bands without stealing their pointer interactions. */
+  height: var(--file-step);
+  min-width: 0;
+  color: var(--ref-midnight);
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  scroll-margin-block: 7rem 12rem;
+}
+
+body[data-page="work"] .filing-cabinet__face {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--folder-face);
+  display: block;
+  background: var(--stock);
+  border: 1px solid color-mix(in srgb, var(--ref-neutral-30) 40%, var(--stock));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%), 0 6px 10px rgb(0 0 0 / 18%);
+  pointer-events: none;
+  transform: translateY(0);
+  transform-origin: 50% 0;
+  transition: transform 110ms cubic-bezier(.23, 1, .32, 1);
+}
+
+body[data-page="work"] .filing-cabinet__face::before {
+  position: absolute;
+  inset: 0;
+  border-top: 2px solid rgb(255 255 255 / 83%);
+  background: linear-gradient(180deg, rgb(255 255 255 / 33%), transparent 65%);
+  content: "";
+  pointer-events: none;
+}
+
+body[data-page="work"] .filing-cabinet__face::after {
+  position: absolute;
+  z-index: -1;
+  inset: .4rem 0 -1.5rem;
+  box-shadow: 0 12px 22px rgb(0 0 0 / 33%);
+  opacity: 0;
+  pointer-events: none;
+  content: "";
+  transition: opacity 110ms ease;
+}
+
+body[data-page="work"] .filing-cabinet__tab {
+  position: absolute;
+  top: -1.6rem;
+  left: var(--tab-left);
+  display: flex;
+  align-items: center;
+  gap: clamp(.5rem, .9vw, 1rem);
+  width: var(--tab-width);
+  min-height: 2.6rem;
+  padding: .55rem clamp(.65rem, 1vw, 1rem);
+  border: 1px solid color-mix(in srgb, var(--ref-neutral-30) 40%, var(--stock));
+  border-bottom: 0;
+  border-radius: .42rem .42rem 0 0;
+  background: var(--stock);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 92%);
+  color: var(--ref-midnight);
+  pointer-events: auto;
+  font: var(--type-weight-semibold) var(--type-label-ui)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-ui);
+  text-transform: uppercase;
+}
+
+body[data-page="work"] .filing-cabinet__number {
+  flex: 0 0 auto;
+  padding-right: clamp(.4rem, .8vw, .85rem);
+  border-right: 1px solid rgb(7 17 43 / 30%);
+  font-variant-numeric: tabular-nums;
+}
+
+body[data-page="work"] .filing-cabinet__tab-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+body[data-page="work"] .filing-cabinet__lip {
+  position: absolute;
+  top: calc(var(--file-step) - .65rem);
+  right: clamp(.8rem, 2vw, 1.8rem);
+  left: clamp(.8rem, 2vw, 1.8rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: .3rem 1.4rem;
+  padding-top: .6rem;
+  border-top: 1px solid rgb(7 17 43 / 18%);
+  opacity: 0;
+  transition: opacity 110ms ease;
+}
+
+body[data-page="work"] .filing-cabinet__lip-title {
+  grid-column: 1 / -1;
+  font: var(--type-weight-semibold) var(--type-body-lead)/var(--type-leading-heading) var(--display);
+  letter-spacing: var(--type-tracking-heading);
+}
+
+body[data-page="work"] .filing-cabinet__lip-copy {
+  max-width: 52ch;
+  font: var(--type-weight-regular) var(--type-label-l)/var(--type-leading-label) var(--body);
+}
+
+body[data-page="work"] .filing-cabinet__lip-meta {
+  align-self: end;
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-ui);
+  text-align: right;
+  text-transform: uppercase;
+}
+
+body[data-page="work"] .filing-cabinet__folder:focus-within {
+  z-index: 25;
+}
+
+body[data-page="work"] .filing-cabinet__folder:focus-within .filing-cabinet__lip {
+  opacity: 1;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-reading="true"] .filing-cabinet__number {
+  font-weight: var(--type-weight-semibold);
+}
+
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__face {
+  transform: none;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__face::after,
+body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(:focus-within) .filing-cabinet__lip {
+  opacity: 0;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ref-coral-30) 50%, var(--ref-coral-75));
+  outline-offset: 3px;
+}
+
+body[data-page="work"] .filing-cabinet__link:focus-visible .filing-cabinet__face {
+  transform: translateY(-20px);
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__link:focus-visible .filing-cabinet__face::after {
+  opacity: 1;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__register {
+  position: sticky;
+  z-index: 30;
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  display: grid;
+  gap: .55rem;
+  padding: clamp(1rem, 2vw, 2rem);
+  background: var(--ref-ultramarine);
+  color: var(--ref-paper);
+  border-top: 1px solid var(--ref-blue-80);
+  box-shadow: 0 -12px 24px rgb(0 0 0 / 22%);
+  pointer-events: none;
+}
+
+body[data-page="work"] .filing-cabinet__register-label {
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-lead) var(--label);
+  letter-spacing: var(--type-tracking-label-wide);
+}
+
+body[data-page="work"] .filing-cabinet__register-values {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: clamp(.75rem, 2.5vw, 2.5rem);
+}
+
+body[data-page="work"] .filing-cabinet__register-number,
+body[data-page="work"] .filing-cabinet__register-year {
+  font: var(--type-weight-semibold) var(--type-label-l)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-label);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+body[data-page="work"] .filing-cabinet__register-title {
+  font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-heading) var(--display);
+  letter-spacing: var(--type-tracking-display);
+  text-transform: uppercase;
+}
+
+body[data-page="work"] .filing-cabinet__caption {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .65rem 1.5rem;
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-label) var(--label);
+  letter-spacing: var(--type-tracking-label);
+  text-transform: uppercase;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover {
+    z-index: 20;
+  }
+
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__face {
+    transform: translateY(-20px);
+    transition-duration: 160ms;
+  }
+
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__face::after {
+    opacity: 1;
+  }
+
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__lip {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* Focus takes priority even while the pointer is over another tab. */
+  body[data-page="work"] .filing-cabinet__folder:focus-within .filing-cabinet__face {
+    transform: translateY(-20px);
+    transition: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) {
+    z-index: 20;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__face {
+    transform: translateY(-24px);
+    transition-duration: 160ms;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__face::after,
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__lip {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 48rem) {
+  body[data-page="work"] .project-archive--cabinet {
+    padding-block: clamp(6rem, 12vw, 7.5rem) 7rem;
+  }
+
+  body[data-page="work"] .project-archive--cabinet .project-archive__head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  body[data-page="work"] .project-archive--cabinet .project-archive__head h1 {
+    font-size: var(--type-display-l);
+  }
+
+  body[data-page="work"] .filing-cabinet__intro {
+    font-size: var(--type-body-m);
+  }
+
+  body[data-page="work"] .filing-cabinet__shell {
+    padding: .5rem;
+  }
+
+  body[data-page="work"] .filing-cabinet__well {
+    min-height: 35rem;
+    padding: 2.2rem clamp(.7rem, 3vw, 1.35rem) 4rem;
+  }
+
+  body[data-page="work"] .filing-cabinet__drawer {
+    --file-step: clamp(5.5rem, 13vw, 6.5rem);
+    --folder-face: calc(var(--file-step) + 5.6rem);
+  }
+
+  body[data-page="work"] .filing-cabinet__tab {
+    width: 57%;
+    min-height: 3.15rem;
+    top: -1.65rem;
+    padding-inline: .5rem;
+    font-size: var(--type-label-ui);
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-tab="a"] {
+    --tab-left: 1%;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-tab="b"] {
+    --tab-left: 21%;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-tab="c"] {
+    --tab-left: 42%;
+  }
+
+  body[data-page="work"] .filing-cabinet__divider {
+    min-height: 3.5rem;
+    padding-inline: .8rem;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip {
+    grid-template-columns: 1fr;
+    gap: .25rem;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip-title {
+    grid-column: 1;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip-copy {
+    display: none;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip-meta {
+    text-align: left;
+  }
+
+  body[data-page="work"] .filing-cabinet__register-values {
+    grid-template-columns: 1fr auto;
+    gap: .5rem;
+  }
+
+  body[data-page="work"] .filing-cabinet__register-title {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: var(--type-heading-s);
+  }
+
+  body[data-page="work"] .filing-cabinet__register-number {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  body[data-page="work"] .filing-cabinet__register-year {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="work"] .filing-cabinet__folder .filing-cabinet__face {
+    transform: none !important;
+    transition: none;
+  }
+
+  body[data-page="work"] .filing-cabinet__face::after {
+    transition: none;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip {
+    transition: opacity 120ms ease;
+  }
+}
+
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__folder .filing-cabinet__face {
+  transform: none !important;
+  transition: none;
+}
+
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__face::after {
+  transition: none;
+}
+
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__lip {
+  transition: opacity 120ms ease;
+}
+
+
+/* The Work document opts in only during pointer extraction, via a scoped
+   stylesheet added on demand. Keyboard/reduced-motion links remain native. */
+
+body[data-page="work"] .filing-cabinet__folder[data-extracting="true"] {
+  z-index: 48;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-extracting="true"] .filing-cabinet__face {
+  will-change: transform;
+}
+
+body[data-page="work"] .cabinet-extraction__shade,
+body[data-page="work"] .cabinet-extraction__paper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+body[data-page="work"] .cabinet-extraction__shade {
+  z-index: 9998;
+  background: rgb(7 17 43 / 35%);
+  opacity: 0;
+}
+
+body[data-page="work"] .cabinet-extraction__paper {
+  z-index: 9999;
+  background: var(--paper);
+  opacity: 0;
+  contain: paint;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .01ms;
+  }
+}
