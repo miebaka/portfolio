@@ -266,12 +266,17 @@ body[data-page="work"] .filing-cabinet__lip-meta {
   text-transform: uppercase;
 }
 
-body[data-page="work"] .filing-cabinet__folder:is(:hover, :focus-within) {
-  z-index: 20;
+body[data-page="work"] .filing-cabinet__folder:focus-within {
+  z-index: 25;
 }
 
-body[data-page="work"] .filing-cabinet__folder:is(:hover, :focus-within) .filing-cabinet__lip {
+body[data-page="work"] .filing-cabinet__folder:focus-within .filing-cabinet__lip {
   opacity: 1;
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__folder[data-reading="true"] .filing-cabinet__number {
+  font-weight: 750;
 }
 
 body[data-page="work"] .filing-cabinet__link:focus-visible {
@@ -280,7 +285,12 @@ body[data-page="work"] .filing-cabinet__link:focus-visible {
 }
 
 body[data-page="work"] .filing-cabinet__link:focus-visible .filing-cabinet__face {
-  transform: translateY(0);
+  transform: translateY(-20px);
+  transition: none;
+}
+
+body[data-page="work"] .filing-cabinet__link:focus-visible .filing-cabinet__face::after {
+  opacity: 1;
   transition: none;
 }
 
@@ -337,12 +347,43 @@ body[data-page="work"] .filing-cabinet__caption {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  body[data-page="work"] .filing-cabinet__folder:hover .filing-cabinet__face {
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover {
+    z-index: 20;
+  }
+
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__face {
     transform: translateY(-20px);
     transition-duration: 160ms;
   }
 
-  body[data-page="work"] .filing-cabinet__folder:hover .filing-cabinet__face::after {
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__face::after {
+    opacity: 1;
+  }
+
+  body[data-page="work"] .filing-cabinet:not(.is-scrolling) .filing-cabinet__folder:hover .filing-cabinet__lip {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* Focus takes priority even while the pointer is over another tab. */
+  body[data-page="work"] .filing-cabinet__folder:focus-within .filing-cabinet__face {
+    transform: translateY(-20px);
+    transition: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) {
+    z-index: 20;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__face {
+    transform: translateY(-24px);
+    transition-duration: 160ms;
+  }
+
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__face::after,
+  body[data-page="work"] .filing-cabinet__folder[data-reading="true"]:not(:focus-within) .filing-cabinet__lip {
     opacity: 1;
   }
 }
@@ -445,15 +486,29 @@ body[data-page="work"] .filing-cabinet__caption {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="work"] .filing-cabinet__face,
-  body[data-page="work"] .filing-cabinet__face::after,
-  body[data-page="work"] .filing-cabinet__lip {
+  body[data-page="work"] .filing-cabinet__folder .filing-cabinet__face {
+    transform: none !important;
     transition: none;
+  }
+
+  body[data-page="work"] .filing-cabinet__face::after {
+    transition: none;
+  }
+
+  body[data-page="work"] .filing-cabinet__lip {
+    transition: opacity 120ms ease;
   }
 }
 
-html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__face,
-html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__face::after,
-html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__lip {
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__folder .filing-cabinet__face {
+  transform: none !important;
   transition: none;
+}
+
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__face::after {
+  transition: none;
+}
+
+html[data-motion="reduced"] body[data-page="work"] .filing-cabinet__lip {
+  transition: opacity 120ms ease;
 }
