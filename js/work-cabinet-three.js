@@ -290,8 +290,8 @@ export function initWorkCabinetThree({
       if (width < 8) return;
       const group = new THREE.Group();
       // Rod ends rest close to the physical support rails (top surface ~12px).
-       // Minimal layer spacing preserves z-order without floating paper slabs.
-       const baseZ = 13.5 + index * .6;
+      // Minimal layer spacing preserves z-order without floating paper slabs.
+      const baseZ = 13.5 + index * .6;
       group.position.set(x, y, baseZ);
       sceneContents.add(group);
 
