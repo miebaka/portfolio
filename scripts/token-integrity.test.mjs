@@ -56,12 +56,12 @@ const LOCAL = new Set(`--distance --offset --position --swell --logo-scale --pre
 // Declared but intentionally not consumed by var(): contract pins, the JS-read hero colours and the complete scales.
 const KEEP = new Set(`--hero-wave-color-1 --hero-wave-color-2 --hero-wave-color-3 --motion-hover --motion-panel-in --motion-panel-out
 --ease-in-out-ui --ref-air --ref-blue-30 --ref-coral-75 --sys-color-tertiary --sys-color-focus`.split(/\s+/));
-const isScaleStep = name => /^--(type-|s\d+$|font-size-|font-display$|font-body$|font-label$|display$|body$|label$|signature$|editorial-display)/.test(name);
+const isScaleStep = name => /^--(type-(?:label|input|body|heading|display|inline-mark)|s\d+$)/.test(name);
 
 test("tokens have exactly one source file", () => {
   assert.equal(files.includes("tokens.css"), true, "typography tokens have a single authoritative source");
-  assert.ok(typeTokens.every(([name]) => /^(--type-|--font-|--display$|--body$|--label$|--signature$|--editorial-display)/.test(name)), "tokens.css only contains typography");
-  assert.ok(base.every(([name]) => !/^(--type-|--font-|--display$|--body$|--label$|--signature$|--editorial-display)/.test(name)), "foundations.css must not redeclare type");
+  assert.ok(typeTokens.every(([name]) => /^--type-/.test(name)), "tokens.css only contains typography");
+  assert.ok(base.every(([name]) => !/^--type-/.test(name)), "foundations.css must not redeclare type");
   for (const [name, css] of Object.entries(sources)) {
     if (name === "foundations.css" || name === "tokens.css") continue;
     assert.doesNotMatch(strip(css), /:root\s*\{[^}]*--[\w-]+\s*:/, `${name} declares root tokens; move them to foundations.css`);
