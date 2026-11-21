@@ -5,6 +5,7 @@ import {
   createBowedPaperGeometry,
   createSuspensionHardware,
   createTabReinforcement,
+  createExpansionScoreGeometry,
 } from "../js/three/work-cabinet-geometry.js";
 
 test("calendered paper has nonplanar physical curvature and full-size PBR UVs", () => {
@@ -45,7 +46,11 @@ test("hanging folder suspension hardware reaches rails on both sides", () => {
   const shade = new THREE.MeshStandardMaterial({ color: 0x404040 });
   for (const detail of [true, false]) {
     const group = createSuspensionHardware(950, { metal, shade, detail });
-    assert.equal(group.children.length, 4);
+    assert.equal(group.children.length, 6);
+    assert.ok(group.getObjectByName("full-width-suspension-rod"),
+      "continuous steel rod must connect the two rail notches");
+    assert.ok(group.getObjectByName("folded-suspension-hem"),
+      "paper stock must encase the rod along the top shoulder");
     assert.ok(group.getObjectByName("left-hanger"));
     assert.ok(group.getObjectByName("right-hanger"));
     group.updateMatrixWorld(true);
@@ -86,4 +91,41 @@ test("suspension hooks can meet responsive rails inside a narrow drawer", () => 
   group.traverse(node => node.geometry?.dispose());
   metal.dispose();
   shade.dispose();
+});
+
+test("continuous suspension rod spans measured support rails", () => {
+  const metal = new THREE.MeshStandardMaterial();
+  const shade = new THREE.MeshStandardMaterial();
+  const leftRailX = -8, rightRailX = 384;
+  const group = createSuspensionHardware(376, {
+    metal, shade, detail: false, leftRailX, rightRailX,
+  });
+  const rod = group.getObjectByName("full-width-suspension-rod");
+  const bounds = new THREE.Box3().setFromObject(rod);
+  assert.ok(Math.abs(bounds.min.x - leftRailX) < .2);
+  assert.ok(Math.abs(bounds.max.x - rightRailX) < .2);
+  assert.ok(group.getObjectByName("left-hanger"));
+  assert.ok(group.getObjectByName("right-hanger"));
+  assert.throws(() => createSuspensionHardware(376, {
+    metal, shade, leftRailX: 100, rightRailX: 80,
+  }), RangeError);
+  group.traverse(node => node.geometry?.dispose());
+  metal.dispose();
+  shade.dispose();
+});
+
+test("three physical expansion creases survive low mobile tessellation", () => {
+  const crease = new THREE.MeshBasicMaterial();
+  const highlight = new THREE.MeshStandardMaterial();
+  const group = createExpansionScoreGeometry(320, 104, { crease, highlight });
+  assert.equal(group.children.length, 6);
+  const rows = [1, 2, 3].map(i => group.getObjectByName("score-" + i));
+  assert.ok(rows.every(Boolean));
+  assert.ok(rows[0].position.y > rows[1].position.y &&
+    rows[1].position.y > rows[2].position.y);
+  assert.ok(rows.every(row => row.geometry.parameters.width === 304));
+  assert.throws(() => createExpansionScoreGeometry(0, 104, { crease, highlight }), RangeError);
+  group.traverse(node => node.geometry?.dispose());
+  crease.dispose();
+  highlight.dispose();
 });
