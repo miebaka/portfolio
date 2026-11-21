@@ -1,7 +1,9 @@
-/* Filing Cabinet V2 — Stage B: read, lift and return.
+/* Filing Cabinet V2 — Stages B/C: read, lift, extract and return.
    All folder navigation remains native; the register is decorative and
    never announces scrolling changes to assistive technology. */
 const RETURN_KEY = "portfolio.workCabinet.return.v2";
+const ARRIVAL_KEY = "portfolio.workCabinet.arrival.v2";
+const EXTRACTION_DEADLINE_MS = 390;
 const RETURN_MAX_AGE = 3 * 60 * 60 * 1000;
 const SCROLL_SETTLE_MS = 140;
 
@@ -33,6 +35,7 @@ export function initWorkCabinet({
   let pageHidden = false;
   let destroyed = false;
   let observerActive = false;
+  let extraction = null;
 
   // Read the actual, untransformed link bands, not the lifted paper faces.
   // If the 40%-height line sits on a divider, choose the nearest band.
@@ -103,6 +106,121 @@ export function initWorkCabinet({
     scheduleRead();
   }
 
+
+  function clearExtraction() {
+    const active = extraction;
+    if (!active) return;
+    extraction = null;
+    if (active.deadline) win.clearTimeout(active.deadline);
+    if (active.recovery) win.clearTimeout(active.recovery);
+    for (const animation of active.animations) {
+      try { animation.cancel(); } catch { /* Finished animations may be inert. */ }
+    }
+    active.paper.remove();
+    active.shade.remove();
+    delete active.folder.dataset.extracting;
+    cabinet.classList.remove("is-extracting");
+  }
+
+  function navigateToCase(active) {
+    if (extraction !== active || active.navigating) return;
+    active.navigating = true;
+    if (active.deadline) win.clearTimeout(active.deadline);
+    try {
+      win.sessionStorage?.setItem(ARRIVAL_KEY, JSON.stringify({
+        pathname: active.url.pathname, savedAt: Date.now(),
+      }));
+    } catch { /* Navigation must not depend on storage. */ }
+    try {
+      win.location.assign(active.url.href);
+    } catch {
+      try { win.location.href = active.url.href; }
+      catch { clearExtraction(); }
+    }
+    // If a navigation is blocked or interrupted, never strand the visitor
+    // behind the fixed sheet. A normal pagehide clears it sooner.
+    if (extraction === active) active.recovery = win.setTimeout(clearExtraction, 1500);
+  }
+
+  function canExtract(event, link, url) {
+    return event.detail > 0 &&
+      url.origin === win.location.origin &&
+      /^\/work\/[a-z0-9_-]+\.html$/i.test(url.pathname) &&
+      doc.documentElement.dataset.motion !== "reduced" &&
+      win.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches !== true &&
+      typeof link.querySelector(".filing-cabinet__face")?.animate === "function" &&
+      win.CSS?.supports?.("clip-path", "inset(0px round 3px)") === true;
+  }
+
+  function extract(event, link, folder) {
+    if (extraction) {
+      event.preventDefault();
+      return;
+    }
+    let url;
+    try { url = new URL(link.href, win.location.href); }
+    catch { return; }
+    if (!canExtract(event, link, url)) return;
+    event.preventDefault();
+    const face = link.querySelector(".filing-cabinet__face");
+    const bounds = face.getBoundingClientRect();
+    const width = win.innerWidth, height = win.innerHeight;
+    if (bounds.bottom <= 0 || bounds.top >= height || bounds.right <= 0 || bounds.left >= width) {
+      win.location.assign(url.href);
+      return;
+    }
+
+    const shade = doc.createElement("div");
+    shade.className = "cabinet-extraction__shade";
+    shade.setAttribute("aria-hidden", "true");
+    const paper = doc.createElement("div");
+    paper.className = "cabinet-extraction__paper";
+    paper.setAttribute("aria-hidden", "true");
+    paper.style.backgroundColor = win.getComputedStyle(doc.documentElement).backgroundColor;
+    const inset = [
+      Math.max(0, bounds.top), Math.max(0, width - bounds.right),
+      Math.max(0, height - bounds.bottom), Math.max(0, bounds.left),
+    ].map(value => Math.round(value) + "px").join(" ");
+    const start = "inset(" + inset + " round 3px)";
+    const end = "inset(0px 0px 0px 0px round 0px)";
+    paper.style.clipPath = start;
+    folder.dataset.extracting = "true";
+    cabinet.classList.add("is-extracting");
+    doc.body.append(shade, paper);
+    const active = {
+      folder, shade, paper, url, navigating: false,
+      animations: [], deadline: 0, recovery: 0,
+    };
+    extraction = active;
+
+    try {
+      const faceStart = win.getComputedStyle(face).transform;
+      const easing = "cubic-bezier(.23, 1, .32, 1)";
+      const move = face.animate([
+        { transform: faceStart },
+        { transform: "translateY(-48px) scale(1.04)" },
+      ], { duration: 160, easing, fill: "forwards" });
+      const dim = shade.animate([{ opacity: 0 }, { opacity: 1 }],
+        { duration: 160, easing, fill: "forwards" });
+      const sheet = paper.animate([
+        { clipPath: start, opacity: 0 },
+        { clipPath: end, opacity: 1 },
+      ], { duration: 240, delay: 100,
+        easing: "cubic-bezier(.77, 0, .175, 1)", fill: "both" });
+      active.animations.push(move, dim, sheet);
+      // Navigation begins around 340ms; the hard deadline is 390ms even if
+      // a browser never settles an animation.finished promise.
+      active.deadline = win.setTimeout(() => navigateToCase(active), EXTRACTION_DEADLINE_MS);
+      void sheet.finished.then(
+        () => navigateToCase(active),
+        () => navigateToCase(active),
+      );
+    } catch {
+      // WAAPI, layout or sheet failure must become native-style navigation.
+      navigateToCase(active);
+    }
+  }
+
   function rememberOpen(event) {
     const link = event.target?.closest?.(".filing-cabinet__link");
     if (!link || !cabinet.contains(link) || event.defaultPrevented ||
@@ -119,6 +237,7 @@ export function initWorkCabinet({
         savedAt: Date.now(),
       }));
     } catch { /* Blocked storage must not affect navigation. */ }
+    extract(event, link, folder);
   }
 
   function restoreReturn(event) {
@@ -158,6 +277,7 @@ export function initWorkCabinet({
 
   function onPageHide() {
     pageHidden = true;
+    clearExtraction();
     suspend();
     observer?.disconnect();
     observerActive = false;
@@ -165,6 +285,7 @@ export function initWorkCabinet({
 
   function onPageShow(event) {
     pageHidden = false;
+    clearExtraction();
     suspend();
     observe();
     scheduleRead();
