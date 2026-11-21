@@ -383,7 +383,7 @@ test("interactive controls include the approved Figma button states", async () =
   assert.match(css, /@media\s*\(hover:hover\) and \(pointer:fine\)/);
   assert.match(
     css,
-    /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:16px\}\s*select\{font-size:16px\}\s*input\{font-size:16px\}\s*\}/,
+    /@media\(hover:none\),\(pointer:coarse\)\{\s*textarea\{font-size:var\(--type-input\)\}\s*select\{font-size:var\(--type-input\)\}\s*input\{font-size:var\(--type-input\)\}\s*\}/,
   );
 });
 

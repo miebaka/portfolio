@@ -1,7 +1,11 @@
+import typographyRule, { ruleName as typographyRuleName } from "./scripts/stylelint-typography.mjs";
+
 export default {
+  plugins: [typographyRule],
   extends: ["stylelint-config-standard"],
   ignoreFiles: ["dist/**", "assets/runtime/**"],
   rules: {
+    [typographyRuleName]: true,
     "alpha-value-notation": null,
     "at-rule-empty-line-before": null,
     "block-no-empty": null,
