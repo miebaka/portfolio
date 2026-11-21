@@ -123,7 +123,12 @@ export function initWorkCabinet({
 
   function restoreReturn(event) {
     const navigation = win.performance?.getEntriesByType?.("navigation")?.[0];
-    if (!event?.persisted && navigation?.type !== "back_forward") return;
+    if (!event?.persisted && navigation?.type !== "back_forward") {
+      // A fresh visit to Work is not a return from the opened case. Discard
+      // any older pending marker so a later Back cannot steal focus.
+      try { win.sessionStorage?.removeItem(RETURN_KEY); } catch { /* storage may fail */ }
+      return;
+    }
     let saved;
     try {
       saved = JSON.parse(win.sessionStorage?.getItem(RETURN_KEY) || "null");
