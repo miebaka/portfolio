@@ -172,3 +172,37 @@ extends to that *exact* measured rail coordinate. Reinforced sleeves use
 paper-stock colour instead of black channel paint, removing the artificial
 T-shaped cap. Geometry tests cover both desktop outward reach and the
 shorter mobile reach.
+
+### Continuous suspension and die-cut anatomy (November 21, 2026)
+
+The authoritative file construction is the existing accessible DOM plus a
+decorative, optional Three.js material layer. The preceding Gemini proposal
+informed this pass, but its replacement renderer was **not** pasted into the
+repository: it would have bypassed the existing reading-axis controller,
+progressive loader, reduced-motion and WebGL-failure behavior.
+
+- The **rear leaf** carries the die-cut index tab; a shorter front leaf begins
+  below the suspension hem, leaving a physical pocket mouth.
+- Each file has one **continuous steel suspension rod** connecting its measured
+  left and right support rails, not two floating pins. Hooked ends, paper-stock
+  sleeves and the full-length rolled hem use the same DOM-derived geometry.
+- Folder depth tracks the actual support-rail height; minimal z separation
+  orders the sheets without floating them far above the cabinet hardware.
+- Three shallow **expansion score lines** are stable at desktop and mobile
+  geometry densities. They use narrow geometry rather than relying on
+  vertices coincidentally landing on a tiny crease band.
+- Desktop file spacing is compressed moderately while preserving a clear
+  hover/focus lip and the following year guide. Mobile keeps its tested year
+  clearance and uses a slightly wider, fully legible paper tab.
+- HTML tab backgrounds remain opaque for consistent contrast across light,
+  dark and WebGL failure cases. Their floating-card gradient and external drop
+  shadow are removed after WebGL is ready.
+
+**Release acceptance:** Run Node 24 build and cabinet/unit tests, all
+Playwright desktop/mobile/CSS-fallback checks, and GPU screenshots. Confirm
+that year guides never collide with lifted folders; labels do not clip;
+continuous rod hooks visibly meet the rails; focus and native links still
+work; context loss returns to the CSS cabinet; no material/geometry leaks
+appear after viewport rebuild. A passing CI suite establishes functional
+safety, not photographic quality: human desktop/mobile screenshot review
+is still required before calling the work complete.
