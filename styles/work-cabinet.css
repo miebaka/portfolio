@@ -632,8 +632,11 @@ body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__
 }
 
 body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
-  background: linear-gradient(180deg, var(--ref-neutral-94), var(--ref-neutral-80));
-  box-shadow: 0 4px 9px rgb(0 0 0 / 12%);
+  /* Native painted guides hide the raised 3D tabs at desktop widths.
+     The renderer already provides a separate physical guide underneath. */
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face::before,
