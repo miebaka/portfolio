@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import sharp from "sharp";
 
 test("Work's visual drawer has exactly three real files in true year order", async ({ page }) => {
   await page.goto("/work.html");
@@ -103,6 +104,14 @@ test("reading-axis register follows the nearest real folder, never a year divide
 
 test("scroll temporarily suppresses decorative pointer hover and clears after 140ms", async ({ page, isMobile }) => {
   test.skip(isMobile, "Pointer hover applies only to fine-pointer devices");
+  // Test the native scrolling controller in isolation. Running a separate
+  // shader compile while asserting a 140ms timer measures GPU startup, not
+  // whether the scroll state reliably settles. GPU is tested separately.
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
   await page.goto("/work.html");
   const cabinet = page.locator("[data-project-archive]");
   const link = page.locator(".filing-cabinet__link").first();
@@ -364,4 +373,240 @@ test("Back clears the extraction sheet and retains the real folder", async ({ pa
   await expect(page.locator(".cabinet-extraction__paper")).toHaveCount(0);
   await expect(page.locator(".cabinet-extraction__shade")).toHaveCount(0);
   await expect(page.locator("[data-extracting]")).toHaveCount(0);
+});
+
+
+test("physical cabinet renders without stealing labels, focus or pointer targets", async ({ page }) => {
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  const webgl2 = await page.evaluate(() => {
+    try {
+      const gl = document.createElement("canvas").getContext("webgl2");
+      if (!gl) return false;
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      return true;
+    } catch { return false; }
+  });
+  if (webgl2 && await page.evaluate(() => navigator.hardwareConcurrency > 2 && !navigator.connection?.saveData)) {
+    await expect(page.locator("[data-project-archive]")).toHaveAttribute("data-cabinet3d", "ready");
+    const canvas = well.locator(".filing-cabinet__three-canvas");
+    await expect(canvas).toHaveCount(1);
+    await expect(canvas).toHaveAttribute("aria-hidden", "true");
+    await expect(canvas).toHaveCSS("pointer-events", "none");
+  }
+  await expect(well.locator(".filing-cabinet__link")).toHaveCount(3);
+  await well.locator(".filing-cabinet__link").first().focus();
+  await expect(well.locator(".filing-cabinet__link").first()).toBeFocused();
+  await expect(well.locator(".filing-cabinet__tab-title")).toHaveText([
+    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
+  ]);
+});
+
+test("Work preserves its CSS filing cabinet when WebGL is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGLRenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  await page.locator(".filing-cabinet__well").scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-project-archive]")).not.toHaveAttribute("data-cabinet3d", "ready");
+  await expect(page.locator(".filing-cabinet__face").first()).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+});
+
+
+test("Work first paint does not download or initialise the heavy 3D scene", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/assets/runtime/work-cabinet-three.js", async route => {
+    requests++;
+    await route.continue();
+  });
+  await page.goto("/work.html");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+  // An eager viewport observer would load/compile shaders without input.
+  await page.waitForTimeout(700);
+  expect(requests).toBe(0);
+  await expect(page.locator("[data-project-archive]")).not.toHaveAttribute("data-cabinet3d", "ready");
+});
+
+
+test("reduced-motion preference keeps the physical layer disabled and labels visible", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await page.locator(".filing-cabinet__link").first().focus();
+  await page.waitForTimeout(400);
+  await expect(well.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
+  await expect(page.locator(".filing-cabinet__face").first()).toHaveCSS("transform", "none");
+  await expect(page.locator(".filing-cabinet__tab-title").first()).toBeVisible();
+});
+
+test("active WebGL cabinet produces actual physical pixels, not an empty canvas", async ({ page }, testInfo) => {
+  await page.goto("/work.html");
+  const supported = await page.evaluate(() => {
+    try {
+      const context = document.createElement("canvas").getContext("webgl2");
+      const enabled = !!context && (navigator.hardwareConcurrency ?? 4) > 2 &&
+        (navigator.deviceMemory ?? 4) > 2 && !navigator.connection?.saveData &&
+        !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+      return enabled;
+    } catch { return false; }
+  });
+  test.skip(!supported, "WebGL2 or the device quality tier is unavailable");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await well.hover();
+  await expect(page.locator("[data-project-archive]"))
+    .toHaveAttribute("data-cabinet3d", "ready", { timeout: 20_000 });
+  const canvas = well.locator(".filing-cabinet__three-canvas");
+  const png = await canvas.screenshot();
+  const { data, info } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const colors = new Set();
+  for (let i = 0; i < info.width * info.height; i += 53) {
+    const offset = i * info.channels;
+    colors.add([data[offset], data[offset + 1], data[offset + 2]].join(","));
+  }
+  expect(colors.size).toBeGreaterThan(20);
+  // Evidence for human art-direction QA, not a brittle automated golden.
+  await well.screenshot({ path: "test-results/cabinet-" + testInfo.project.name + "-webgl.png" });
+
+  await canvas.evaluate(node => {
+    node.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
+  });
+  await expect(page.locator("[data-project-archive]"))
+    .not.toHaveAttribute("data-cabinet3d", "ready");
+  await expect(canvas).toHaveCount(0);
+  await expect(page.locator(".filing-cabinet__face").first())
+    .not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+});
+
+test("cabinet visual QA records its CSS-first fallback on every configured viewport", async ({ page }, testInfo) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await expect(well.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
+  await well.screenshot({ path: "test-results/cabinet-" + testInfo.project.name + "-css.png" });
+});
+
+
+test("touch reading lift leaves the following year visible instead of covering project navigation", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "Mobile touch stacking contract");
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  const folder = page.locator('.filing-cabinet__folder[data-slug="rivo"]');
+  await folder.evaluate(node => { node.dataset.reading = "true"; });
+  await page.waitForTimeout(230);
+  const overlap = await page.evaluate(() => {
+    const face = document.querySelector('.filing-cabinet__folder[data-slug="rivo"] .filing-cabinet__face');
+    const next = document.querySelectorAll(".filing-cabinet__divider")[1];
+    return face.getBoundingClientRect().bottom - next.getBoundingClientRect().top;
+  });
+  expect(overlap, "Active folder must leave the next year completely unobstructed").toBeLessThan(-8);
+  await expect(page.locator(".filing-cabinet__divider-caption")).toHaveCount(0);
+});
+
+test("source Work cabinet has true visually-hidden accessibility names with or without WebGL", async ({ page }) => {
+  await page.goto("/work.html");
+  const hidden = page.locator(".filing-cabinet__link > .sr-only");
+  await expect(hidden).toHaveCount(3);
+  for (const node of await hidden.all()) {
+    const style = await node.evaluate(element => {
+      const css = getComputedStyle(element);
+      return { width: css.width, height: css.height, clipPath: css.clipPath };
+    });
+    expect(style.width).toBe("1px");
+    expect(style.height).toBe("1px");
+    expect(style.clipPath).toBe("inset(50%)");
+  }
+});
+
+
+test("mobile year-guide text stays clear of each following folder tab", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "Mobile text/physical tab separation");
+  await page.goto("/work.html");
+  const distances = await page.locator(".filing-cabinet__drawer").evaluate(drawer => {
+    const guides = [...drawer.querySelectorAll(".filing-cabinet__divider")];
+    return guides.map(guide => {
+      const year = guide.querySelector(".filing-cabinet__divider-year");
+      const tab = guide.nextElementSibling?.querySelector(".filing-cabinet__tab");
+      return tab.getBoundingClientRect().top - year.getBoundingClientRect().bottom;
+    });
+  });
+  expect(distances).toHaveLength(3);
+  for (const gap of distances) {
+    expect(gap, "No year number may be obscured by its following cut tab").toBeGreaterThan(3);
+  }
+});
+
+test("desktop lifted folder lip does not overpaint the next year-guide label", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Desktop hover/lip separation");
+  await page.goto("/work.html");
+  const folder = page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"]');
+  await folder.scrollIntoViewIfNeeded();
+  await folder.hover();
+  await page.waitForTimeout(220);
+  const gap = await page.evaluate(() => {
+    const folder = document.querySelector('.filing-cabinet__folder[data-slug="tedx-rsu"]');
+    const face = folder.querySelector(".filing-cabinet__face");
+    const guide = folder.nextElementSibling.querySelector(".filing-cabinet__divider-year");
+    return guide.getBoundingClientRect().top - face.getBoundingClientRect().bottom;
+  });
+  expect(gap, "The lifted paper face must finish above the next year heading").toBeGreaterThan(6);
+  const inset = await folder.evaluate(node => {
+    const face = node.querySelector(".filing-cabinet__face").getBoundingClientRect();
+    const details = node.querySelector(".filing-cabinet__lip").getBoundingClientRect();
+    return face.bottom - details.bottom;
+  });
+  expect(inset, "Title and category metadata must fit completely inside the lifted paper face")
+    .toBeGreaterThan(6);
+  await expect(page.locator(".filing-cabinet__lip-copy")).toHaveCount(0);
+});
+
+
+test("mobile paper tabs remain compact, readable and within their physical file bands", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "This contract targets the small-screen filing tabs");
+  await page.goto("/work.html");
+  const measurements = await page.locator(".filing-cabinet__folder").evaluateAll(nodes =>
+    nodes.map(node => {
+      const tab = node.querySelector(".filing-cabinet__tab");
+      const label = node.querySelector(".filing-cabinet__tab-title");
+      const parent = node.getBoundingClientRect();
+      const rect = tab.getBoundingClientRect();
+      const css = getComputedStyle(tab);
+      return {
+        label: label?.textContent?.trim(),
+        height: rect.height,
+        widthRatio: rect.width / parent.width,
+        overhang: rect.right - parent.right,
+        fontSize: parseFloat(css.fontSize),
+        clipped: label.scrollHeight > label.clientHeight + 1,
+      };
+    })
+  );
+  expect(measurements).toHaveLength(3);
+  for (const tab of measurements) {
+    expect(tab.height, tab.label + " should resemble a small paper tab, not a tall card")
+      .toBeLessThan(84);
+    expect(tab.widthRatio).toBeGreaterThan(.64);
+    expect(tab.overhang).toBeLessThan(3);
+    expect(tab.fontSize).toBeGreaterThanOrEqual(11);
+    expect(tab.clipped).toBe(false);
+  }
 });

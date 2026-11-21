@@ -33,6 +33,16 @@ jobs:
         run: npm run lint:typography && npm run test:typography
       - run: npx playwright install --with-deps chromium
       - run: npm run quality
+      # Keep visual evidence even on green builds; passing functional tests
+      # alone cannot establish convincing physical materials or tab alignment.
+      - name: Upload Work cabinet visual evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: work-cabinet-visual-review
+          path: test-results/cabinet-*.png
+          if-no-files-found: ignore
+          retention-days: 14
       # audit:shipped blocks releases; audit:dev-tools reports pinned LHCI/tooling
       # advisories without misrepresenting them as production dependencies.
       - name: Upload failure evidence

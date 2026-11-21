@@ -82,7 +82,7 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
     const divider = year !== lastYear
       ? '<li class="filing-cabinet__divider" aria-hidden="true">' +
         '<span class="filing-cabinet__divider-year">' + esc(year) + '</span>' +
-        '<span class="filing-cabinet__divider-caption">YEAR INDEX</span></li>'
+        '</li>'
       : "";
     lastYear = year;
     const index = ++folders;
@@ -91,7 +91,6 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
     const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
     const label = esc(project.title);
     const category = esc(project.category);
-    const description = esc(project.tagline);
     const encodedYear = esc(year);
     return divider +
       '<li class="filing-cabinet__folder" data-tab="' + tab +
@@ -102,7 +101,6 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
       '<span class="filing-cabinet__tab"><span class="filing-cabinet__number">' + number + '</span>' +
       '<span class="filing-cabinet__tab-title">' + label + '</span></span>' +
       '<span class="filing-cabinet__lip"><strong class="filing-cabinet__lip-title">' + label + '</strong>' +
-      '<span class="filing-cabinet__lip-copy">' + description + '</span>' +
       '<span class="filing-cabinet__lip-meta">' + category + ' / ' + encodedYear + '</span>' +
       '</span></span>' +
       '<span class="sr-only">Open ' + label + ' case study, ' + category + ', ' + encodedYear + '</span>' +
@@ -118,17 +116,16 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
 
   return '<div class="filing-cabinet__stage">' +
     '<div class="filing-cabinet__shell">' +
-    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>FILING SYSTEM / 001</span><span>' +
-      count + ' OPEN FILES</span></div>' +
+    '<div class="filing-cabinet__chassis" aria-hidden="true"><span>THE ARCHIVE</span><span>' +
+      count + ' CASE STUDIES</span></div>' +
     '<div class="filing-cabinet__well">' +
     '<ol class="filing-cabinet__drawer" aria-label="Published case studies, newest first">' +
     drawer + '</ol></div>' +
     '<div class="filing-cabinet__register" aria-hidden="true">' +
-    '<span class="filing-cabinet__register-label">CURRENT FILE / REGISTER</span>' +
+    '<span class="filing-cabinet__register-label">CURRENT FILE</span>' +
     '<span class="filing-cabinet__register-values">' + active + '</span></div>' +
     '</div>' +
-    '<p class="filing-cabinet__caption"><span>DESIGN SYSTEMS / SELECTED WORK</span>' +
-    '<span>' + count + ' FILES / ' + count + ' AVAILABLE TO OPEN</span></p>' +
+    '<p class="filing-cabinet__caption"><span>IDENTITY / ART DIRECTION / DESIGN SYSTEMS</span></p>' +
     '</div>';
 }
 

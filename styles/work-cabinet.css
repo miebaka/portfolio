@@ -22,14 +22,6 @@ body[data-page="work"] .project-archive--cabinet .project-archive__head h1 {
   text-wrap: balance;
 }
 
-body[data-page="work"] .filing-cabinet__overline {
-  margin: 0 0 clamp(1.5rem, 2.5vw, 2.5rem);
-  color: var(--muted);
-  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--label);
-  letter-spacing: var(--type-tracking-label-wide);
-  text-transform: uppercase;
-}
-
 body[data-page="work"] .filing-cabinet__intro {
   max-width: 31ch;
   margin: 0 0 .15rem;
@@ -93,7 +85,7 @@ body[data-page="work"] .filing-cabinet__well {
 
 body[data-page="work"] .filing-cabinet__drawer {
   --file-step: clamp(5.45rem, 7vw, 6.25rem);
-  --folder-face: calc(var(--file-step) + 4.8rem);
+  --folder-face: calc(var(--file-step) + 2.25rem);
 
   position: relative;
   display: block;
@@ -122,11 +114,6 @@ body[data-page="work"] .filing-cabinet__divider {
 body[data-page="work"] .filing-cabinet__divider-year {
   font: var(--type-weight-semibold) var(--type-heading-s)/var(--type-leading-display-comfort) var(--display);
   letter-spacing: var(--type-tracking-display);
-}
-
-body[data-page="work"] .filing-cabinet__divider-caption {
-  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--label);
-  letter-spacing: var(--type-tracking-label-wide);
 }
 
 body[data-page="work"] .filing-cabinet__folder {
@@ -237,11 +224,15 @@ body[data-page="work"] .filing-cabinet__tab-title {
 
 body[data-page="work"] .filing-cabinet__lip {
   position: absolute;
-  top: calc(var(--file-step) - .65rem);
+
+  /* Pin the reveal to the paper's actual bottom edge rather than deriving
+     its top from an unrelated band height. Wrapped titles remain inside. */
+  top: auto;
+  bottom: .75rem;
   right: clamp(.8rem, 2vw, 1.8rem);
   left: clamp(.8rem, 2vw, 1.8rem);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: end;
   gap: .3rem 1.4rem;
   padding-top: .6rem;
@@ -256,9 +247,12 @@ body[data-page="work"] .filing-cabinet__lip-title {
   letter-spacing: var(--type-tracking-heading);
 }
 
-body[data-page="work"] .filing-cabinet__lip-copy {
-  max-width: 52ch;
-  font: var(--type-weight-regular) var(--type-label-l)/var(--type-leading-label) var(--body);
+/* The paper lip must finish before the next indexed guide begins.
+   Physical folder overlap is reserved as space, not painted over labels. */
+@media (min-width: 48.001rem) {
+  body[data-page="work"] .filing-cabinet__folder:not(:last-child) {
+    margin-bottom: 2.5rem;
+  }
 }
 
 body[data-page="work"] .filing-cabinet__lip-meta {
@@ -432,15 +426,26 @@ body[data-page="work"] .filing-cabinet__caption {
 
   body[data-page="work"] .filing-cabinet__drawer {
     --file-step: clamp(5.5rem, 13vw, 6.5rem);
-    --folder-face: calc(var(--file-step) + 5.6rem);
+    --folder-face: calc(var(--file-step) + 1.8rem);
+  }
+
+  /* The folder's lower lip is real paper, not space inside the list item.
+     Reserve that exact overhang before the next year guide, so 2023/2022
+     remain fully readable instead of being covered by the preceding face. */
+  body[data-page="work"] .filing-cabinet__folder:not(:last-child) {
+    margin-bottom: calc(var(--folder-face) - var(--file-step) + .25rem);
   }
 
   body[data-page="work"] .filing-cabinet__tab {
-    width: 57%;
-    min-height: 3.15rem;
-    top: -1.65rem;
-    padding-inline: .5rem;
-    font-size: var(--type-label-ui);
+    /* The mobile file label is a compact reinforced tab, never a tall
+       floating card. The extra width accommodates truthful project names. */
+    width: 68%;
+    min-height: 2.65rem;
+    top: -1.5rem;
+    gap: .42rem;
+    padding: .45rem .65rem;
+    font-size: var(--type-label-m);
+    line-height: var(--type-leading-label);
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="a"] {
@@ -448,11 +453,11 @@ body[data-page="work"] .filing-cabinet__caption {
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="b"] {
-    --tab-left: 21%;
+    --tab-left: 16%;
   }
 
   body[data-page="work"] .filing-cabinet__folder[data-tab="c"] {
-    --tab-left: 42%;
+    --tab-left: 31%;
   }
 
   body[data-page="work"] .filing-cabinet__divider {
@@ -460,17 +465,22 @@ body[data-page="work"] .filing-cabinet__caption {
     padding-inline: .8rem;
   }
 
+  /* The tab rises out of the folder; give year lettering enough clearance
+     before its die-cut tab starts, including long titles wrapping to 3 lines. */
+  body[data-page="work"] .filing-cabinet__divider {
+    /* A 24px reading-axis lift must not hide the year printed above it. */
+    margin-bottom: 2.5rem;
+  }
+
   body[data-page="work"] .filing-cabinet__lip {
+    top: auto;
+    bottom: .5rem;
     grid-template-columns: 1fr;
     gap: .25rem;
   }
 
   body[data-page="work"] .filing-cabinet__lip-title {
     grid-column: 1;
-  }
-
-  body[data-page="work"] .filing-cabinet__lip-copy {
-    display: none;
   }
 
   body[data-page="work"] .filing-cabinet__lip-meta {
@@ -564,5 +574,88 @@ body[data-page="work"] .cabinet-extraction__paper {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: .01ms;
+  }
+}
+
+/* Optional Three.js physical surface. The original cabinet stays complete
+   until a frame has rendered, and returns automatically on WebGL failure. */
+body[data-page="work"] .filing-cabinet__three-canvas {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+body[data-page="work"] .filing-cabinet__drawer {
+  z-index: 1;
+}
+
+/* The case-study name stays accessible but must never paint over paper.
+   Without a visually-hidden rule it was only obscured by CSS backgrounds,
+   then became visibly exposed when the WebGL layer made faces transparent. */
+body[data-page="work"] .filing-cabinet__link > .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Render the physical paper face in WebGL, but retain opaque native tabs and
+   year-guide faces where HTML lettering needs a reliable contrast surface.
+   Transparent tab/divider backgrounds had exposed lettering beneath them. */
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab {
+  /* The browser owns readable tab typography, but its paper label should
+     catch the same oblique studio light as the extruded sheet beneath it. */
+  background:
+    linear-gradient(155deg, rgb(255 255 255 / 25%), transparent 56%),
+    linear-gradient(0deg, rgb(83 65 43 / 6%), transparent 62%),
+    var(--stock);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 76%),
+    0 1px 2px rgb(25 23 19 / 13%);
+}
+
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
+  background: linear-gradient(180deg, var(--ref-neutral-94), var(--ref-neutral-80));
+  box-shadow: 0 4px 9px rgb(0 0 0 / 12%);
+}
+
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face::before,
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face::after {
+  display: none;
+}
+
+/* Type, links, focus indication and readable lip remain native HTML.
+   The physical mesh never takes pointer or keyboard ownership. */
+body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab {
+  text-shadow: 0 1px 0 rgb(255 255 255 / 22%);
+}
+
+@media (forced-colors: active) {
+  body[data-page="work"] .filing-cabinet__three-canvas {
+    display: none;
+  }
+
+  body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__face,
+  body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__tab,
+  body[data-page="work"] .filing-cabinet[data-cabinet3d="ready"] .filing-cabinet__divider {
+    background: Canvas;
+    border-color: CanvasText;
   }
 }

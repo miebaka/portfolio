@@ -164,8 +164,16 @@ await writeFile(join(output, "styles/main.css"), await bundleCss(join(root, "sty
 await ensureCopy(join(root, "styles/work-cabinet.css"), join(output, "styles/work-cabinet.css"));
 await copyJsGraph("js/main.js");
 await copyJsGraph("js/core/work-cabinet.js"); // Page-scoped Work enhancement; not in global JS entry.
+await copyJsGraph("js/core/work-cabinet-bootstrap.js"); // Lightweight lazy WebGL entry.
 await copyJsGraph("js/core/case-arrival.js"); // Published case-study arrival; no global JS cost.
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
+// Isolated content-schema tests build a minimal fixture without optional
+// generated runtime bundles. The production build creates this first.
+try {
+  await ensureCopy(join(root, "assets/runtime/work-cabinet-three.js"), join(output, "assets/runtime/work-cabinet-three.js"));
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
 // Unit tests build intentionally minimal fixtures without optional runtime
 // bundles. Production npm run build:motion always supplies this asset.
 try {

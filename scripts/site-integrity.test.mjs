@@ -61,7 +61,11 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /class="project-archive__collections"/);
   assert.match(html, /href="experiments\.html"/);
   assert.match(html, /href="essays\.html"/);
-  assert.match(html, /A global event system given a distinct pause-and-reflect rhythm\./);
+  const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
+  assert.ok(tedx, "Published TEDx project must remain in the source data");
+  assert.equal(tedx.tagline, "A global event system given a distinct pause-and-reflect rhythm.");
+  assert.doesNotMatch(html, /A global event system given a distinct pause-and-reflect rhythm\./,
+    "Keep full project details in source content and the case study, not the constrained physical lip");
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
