@@ -133,7 +133,7 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await page.getByRole("link", { name: "TEDx Rivers State University" }).click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx Rivers State University");
-  await expect(page.locator(".case-opening__summary")).toContainText("global event system");
+  await expect(page.locator(".case-opening__summary, .case-lede, .case-index")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
 });
 
@@ -143,31 +143,25 @@ test("published case studies preserve the editorial reading order", async ({ pag
     await settle(page);
     const positions = await page.locator(".case").evaluate(caseStudy => {
       const top = selector => caseStudy.querySelector(selector)?.getBoundingClientRect().top + scrollY;
-      return [".case-opening", ".case-shot--hero", ".case-lede", ".case-chapter"].map(top);
+      return [".case-opening", ".case-shot--hero", ".case-chapter"].map(top);
     });
-    expect(positions, `${slug} proposition, hero, context and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+    expect(positions, `${slug} title, hero and narrative order`).toEqual([...positions].sort((a, b) => a - b));
   }
 });
 
-test("published case studies expose an accessible chapter scroll index on wide screens", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/work/tedx-rsu.html");
-  const index = page.getByRole("navigation", { name: "Case study progress" });
-  await expect(index).toBeVisible();
-  const ticks = index.getByRole("button");
-  await expect(ticks).toHaveCount(5);
-  await expect(ticks.first()).toHaveAttribute("aria-current", "step");
-  const decision = ticks.nth(1);
-  await decision.evaluate(element => element.click());
-  await expect.poll(() => decision.getAttribute("aria-current")).toBe("step");
-  await expect(page.locator("#decision")).toBeInViewport();
-});
-
-test("chapter rail yields to the authored mobile chapter index", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/work/tedx-rsu.html");
-  await expect(page.getByRole("navigation", { name: "Case study progress" })).toBeHidden();
-  await expect(page.locator(".case-index")).toBeVisible();
+test("every published case uses the same four chapters without an intro index or side rail", async ({ page }) => {
+  for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/work/${slug}.html`);
+    const chapters = page.locator(".case-chapter");
+    await expect(chapters).toHaveCount(4);
+    expect(await chapters.evaluateAll(items => items.map(item => item.id))).toEqual(["decision", "system", "survival", "encounter"]);
+    expect(await chapters.locator("h2").allTextContents()).toEqual(["Decision", "System", "Survival", "Encounter"]);
+    await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
+    await expect(chapters.first()).toBeVisible();
+  }
 });
 
 test("Essays inherits the Selected Work editorial-list interaction", async ({ page }) => {
