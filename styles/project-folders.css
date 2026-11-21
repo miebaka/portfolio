@@ -141,7 +141,7 @@ body[data-page="work"] .project-folder-stack__intro {
   left: 9%;
   z-index: 1;
   width: 78%;
-  height: 74%;
+  bottom: .65rem;
   padding: .4rem clamp(.65rem, 1.2vw, 1.15rem);
   border: 1px solid var(--ref-neutral-94);
   border-radius: .22rem .22rem .1rem .1rem;
