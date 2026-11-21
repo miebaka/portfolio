@@ -26,14 +26,26 @@ test("three published projects use oversized headings, one real high-resolution 
   expect(titleFont).toContain("Geist Sans");
 });
 
-test("desktop artwork is centered, large and swaps on project hover without expanding rows", async ({ page, isMobile }) => {
-  test.skip(isMobile, "On mobile every image is statically visible.");
-  await page.setViewportSize({ width: 1440, height: 900 });
+test("project artwork changes on desktop hover but stays static on touch layouts", async ({ page, isMobile }) => {
+  if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const items = rows(page);
   const initialHeights = await items.evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
   const defaultImage = items.nth(1).locator(".home-project-list__visual");
   await expect(defaultImage).toHaveCSS("opacity", "1");
+
+  if (isMobile) {
+    for (const item of await items.all()) {
+      await expect(item.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+      await expect(item.locator(".home-project-list__visual")).toHaveCSS("position", "relative");
+    }
+    await items.first().focus();
+    for (const item of await items.all())
+      await expect(item.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+    const after = await items.evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
+    after.forEach((height, index) => expect(Math.abs(height - initialHeights[index])).toBeLessThan(2));
+    return;
+  }
 
   const first = items.first();
   await first.scrollIntoViewIfNeeded();
@@ -62,8 +74,7 @@ test("All Work is a sizable, centered, keyboard-focusable link beneath the proje
   await expect(page).toHaveURL(/\/work\.html$/);
 });
 
-test("keyboard focus highlights the project without a floating arrow and Enter opens its case", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Touch links open directly.");
+test("keyboard focus and Enter open case studies on desktop and mobile", async ({ page }) => {
   await page.goto("/");
   const link = rows(page).nth(1);
   await link.focus();
@@ -73,14 +84,15 @@ test("keyboard focus highlights the project without a floating arrow and Enter o
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
 });
 
-test("touch layout displays every cover as a large static image and never overflows", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "Mobile composition assertion.");
+test("project artwork fits the viewport with device-appropriate positioning", async ({ page, isMobile }) => {
   await page.goto("/");
   for (const row of await rows(page).all()) {
     const image = row.locator(".home-project-list__visual");
     await expect(image).toBeVisible();
-    await expect(image).toHaveCSS("position", "relative");
-    await expect(image).toHaveCSS("opacity", "1");
+    await expect(image).toHaveCSS("position", isMobile ? "relative" : "absolute");
+    if (isMobile || await row.getAttribute("data-tone") === "rivo") {
+      await expect(image).toHaveCSS("opacity", "1");
+    }
     const bounds = await image.boundingBox();
     expect(bounds.width).toBeGreaterThan(200);
     expect(bounds.height).toBeGreaterThan(150);
