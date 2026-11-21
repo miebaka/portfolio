@@ -317,7 +317,6 @@ export function initWorkCabinetThree({
     light.shadow.camera.near = 1;
     light.shadow.camera.far = 1400;
     light.shadow.camera.updateProjectionMatrix();
-    lastFrame = 0;
     invalidate();
   }
 
@@ -499,7 +498,6 @@ export function initWorkCabinetThree({
 
   function pageShow() {
     hidden = false;
-    lastFrame = 0;
     invalidate();
   }
 
