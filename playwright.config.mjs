@@ -12,8 +12,10 @@ export default defineConfig({
   // WebGL assertions deterministic without weakening coverage or timeouts.
   workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI
-    ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]]
-    : [["line"], ["html", { outputFolder: "playwright-report", open: "never" }]],
+    ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }],
+      ["json", { outputFile: "test-results/e2e-test-results.json" }]]
+    : [["line"], ["html", { outputFolder: "playwright-report", open: "never" }],
+      ["json", { outputFile: "test-results/e2e-test-results.json" }]],
   expect: { timeout: 10_000 },
   use: {
     baseURL,
