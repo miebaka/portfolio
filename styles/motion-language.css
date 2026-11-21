@@ -1,6 +1,7 @@
 /* Motion language v1
    One editorial family: reveal, response, continuity, rest.
    No fonts/assets copied from inspiration libraries; static content always wins. */
+
 /* Kawai-style staggered slide/blur, applied only after JS has initialised.
    The hero remains fully legible if scripts are blocked or fail. */
 html.motion-language-ready body[data-page="home"] .home-landing h1 > span {

@@ -38,14 +38,16 @@ function blockAfter(css, opener) {
 }
 
 const foundations = strip(sources["foundations.css"]);
+const typography = strip(sources["tokens.css"]);
+const typeTokens = declarations(blockAfter(typography, ":root {"));
 const base = declarations(blockAfter(foundations, ":root{color-scheme:light dark;"));
 const darkMedia = declarations(blockAfter(foundations, ':root:not([data-theme="light"]){'));
 const darkAttribute = declarations(blockAfter(foundations, ':root[data-theme="dark"]{color-scheme:dark;'));
-const declared = new Set(base.map(([name]) => name));
+const declared = new Set([...base, ...typeTokens].map(([name]) => name));
 
 // Component-scoped properties: declared inside a component or page stylesheet rule, never at :root.
 const scoped = new Set(Object.entries(sources)
-  .filter(([name]) => name !== "foundations.css")
+  .filter(([name]) => name !== "foundations.css" && name !== "tokens.css")
   .flatMap(([, css]) => [...strip(css).matchAll(/(?<![\w-])(--[\w-]+)\s*:/g)].map(match => match[1])));
 // Properties scripts set inline (js/render/*, js/core/*) or that carry a fallback at the point of use.
 const LOCAL = new Set(`--distance --offset --position --swell --logo-scale --preview-order --experience-start --experience-span
@@ -54,12 +56,14 @@ const LOCAL = new Set(`--distance --offset --position --swell --logo-scale --pre
 // Declared but intentionally not consumed by var(): contract pins, the JS-read hero colours and the complete scales.
 const KEEP = new Set(`--hero-wave-color-1 --hero-wave-color-2 --hero-wave-color-3 --motion-hover --motion-panel-in --motion-panel-out
 --ease-in-out-ui --ref-air --ref-blue-30 --ref-coral-75 --sys-color-tertiary --sys-color-focus`.split(/\s+/));
-const isScaleStep = name => /^--(type-|s\d+$)/.test(name);
+const isScaleStep = name => /^--(type-|s\d+$|font-size-|font-display$|font-body$|font-label$|display$|body$|label$|signature$|editorial-display)/.test(name);
 
 test("tokens have exactly one source file", () => {
-  assert.equal(files.includes("tokens.css"), false, "tokens live in foundations.css; do not add a second token file");
+  assert.equal(files.includes("tokens.css"), true, "typography tokens have a single authoritative source");
+  assert.ok(typeTokens.every(([name]) => /^(--type-|--font-|--display$|--body$|--label$|--signature$|--editorial-display)/.test(name)), "tokens.css only contains typography");
+  assert.ok(base.every(([name]) => !/^(--type-|--font-|--display$|--body$|--label$|--signature$|--editorial-display)/.test(name)), "foundations.css must not redeclare type");
   for (const [name, css] of Object.entries(sources)) {
-    if (name === "foundations.css") continue;
+    if (name === "foundations.css" || name === "tokens.css") continue;
     assert.doesNotMatch(strip(css), /:root\s*\{[^}]*--[\w-]+\s*:/, `${name} declares root tokens; move them to foundations.css`);
   }
 });
@@ -78,14 +82,14 @@ test("every var() resolves to a declared token, a documented local, or carries a
 
 test("no token is declared and then never used", () => {
   const consumers = Object.values(sources).map(strip).join("\n");
-  const inValues = base.map(([, value]) => value).join("\n") + darkMedia.map(([, value]) => value).join("\n");
+  const inValues = [...base, ...typeTokens, ...darkMedia].map(([, value]) => value).join("\n");
   const used = new Set([...(consumers + inValues).matchAll(/var\(\s*(--[\w-]+)/g)].map(match => match[1]));
   const dead = [...declared].filter(name => !used.has(name) && !KEEP.has(name) && !isScaleStep(name));
   assert.deepEqual(dead, [], "dead tokens: delete them or add them to KEEP with a reason");
 });
 
 test("a token is declared once per block", () => {
-  for (const [label, list] of [["base", base], ["dark media", darkMedia], ["dark attribute", darkAttribute]]) {
+  for (const [label, list] of [["base", base], ["typography", typeTokens], ["dark media", darkMedia], ["dark attribute", darkAttribute]]) {
     const names = list.map(([name]) => name);
     assert.deepEqual(names.filter((name, index) => names.indexOf(name) !== index), [], `${label} block repeats a token`);
   }

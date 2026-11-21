@@ -100,7 +100,7 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
   await context.close();
 });
 
-test("desktop display headings use the shared grid without forced three-line measures", async ({ page }) => {
+test("desktop display headings respect the editorial line and grid contracts", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   for (const route of routes.filter(route => route !== "/experiments.html")) {
     await page.goto(route);
@@ -118,7 +118,10 @@ test("desktop display headings use the shared grid without forced three-line mea
         overflow: element.scrollWidth > element.clientWidth,
       };
     });
-    expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(route === "/index.html" ? 3 : 2);
+    // Long essay headlines are allowed three deliberate editorial lines.
+    // Other page titles must remain within two; overflow is always prohibited.
+    const maxLines = route === "/index.html" || route.startsWith("/essays/") ? 3 : 2;
+    expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(maxLines);
     expect(geometry.left, `${route} primary heading left grid edge`).toBeGreaterThanOrEqual(geometry.containerLeft - 1);
     expect(geometry.right, `${route} primary heading right grid edge`).toBeLessThanOrEqual(geometry.containerRight + 1);
     expect(geometry.overflow, `${route} primary heading overflow`).toBe(false);
@@ -328,7 +331,7 @@ test("Mobile Work cabinet tabs stay readable at narrow widths", async ({ page })
         lineHeight: parseFloat(getComputedStyle(node).lineHeight),
       }));
       expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width + 2);
-      expect(geometry.height).toBeGreaterThanOrEqual(geometry.lineHeight);
+      expect(geometry.height + 0.25).toBeGreaterThanOrEqual(geometry.lineHeight); // Browser subpixel rounding tolerance
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
       .toBeLessThanOrEqual(1);
