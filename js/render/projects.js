@@ -82,7 +82,7 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
     const divider = year !== lastYear
       ? '<li class="filing-cabinet__divider" aria-hidden="true">' +
         '<span class="filing-cabinet__divider-year">' + esc(year) + '</span>' +
-        '<span class="filing-cabinet__divider-caption">YEAR INDEX</span></li>'
+        '</li>'
       : "";
     lastYear = year;
     const index = ++folders;

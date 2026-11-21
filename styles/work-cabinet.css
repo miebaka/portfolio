@@ -116,11 +116,6 @@ body[data-page="work"] .filing-cabinet__divider-year {
   letter-spacing: var(--type-tracking-display);
 }
 
-body[data-page="work"] .filing-cabinet__divider-caption {
-  font: var(--type-weight-semibold) var(--type-label-s)/var(--type-leading-ui) var(--label);
-  letter-spacing: var(--type-tracking-label-wide);
-}
-
 body[data-page="work"] .filing-cabinet__folder {
   --tab-left: 4%;
   --tab-width: 40%;
@@ -424,7 +419,7 @@ body[data-page="work"] .filing-cabinet__caption {
 
   body[data-page="work"] .filing-cabinet__drawer {
     --file-step: clamp(5.5rem, 13vw, 6.5rem);
-    --folder-face: calc(var(--file-step) + 5.6rem);
+    --folder-face: calc(var(--file-step) + 1.8rem);
   }
 
   body[data-page="work"] .filing-cabinet__tab {
@@ -453,6 +448,7 @@ body[data-page="work"] .filing-cabinet__caption {
   }
 
   body[data-page="work"] .filing-cabinet__lip {
+    top: calc(var(--file-step) - 1.4rem);
     grid-template-columns: 1fr;
     gap: .25rem;
   }

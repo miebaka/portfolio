@@ -489,3 +489,27 @@ test("cabinet visual QA records its CSS-first fallback on every configured viewp
   await expect(well.locator(".filing-cabinet__three-canvas")).toHaveCount(0);
   await well.screenshot({ path: "test-results/cabinet-" + testInfo.project.name + "-css.png" });
 });
+
+
+test("touch reading lift leaves the following year visible instead of covering project navigation", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "Mobile touch stacking contract");
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGL2RenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  const folder = page.locator('.filing-cabinet__folder[data-slug="rivo"]');
+  await folder.evaluate(node => { node.dataset.reading = "true"; });
+  await page.waitForTimeout(230);
+  const overlap = await page.evaluate(() => {
+    const face = document.querySelector('.filing-cabinet__folder[data-slug="rivo"] .filing-cabinet__face');
+    const next = document.querySelectorAll(".filing-cabinet__divider")[1];
+    return face.getBoundingClientRect().bottom - next.getBoundingClientRect().top;
+  });
+  expect(overlap, "Active folder must not hide the next year index").toBeLessThan(14);
+  await expect(page.locator(".filing-cabinet__divider-caption")).toHaveCount(0);
+});
