@@ -1072,7 +1072,7 @@ body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .se
 }
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy {
-  grid-column: 1 / 8;
+  grid-column: 1 / 9;
 }
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
@@ -1084,7 +1084,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 }
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
-  grid-column: 8 / -1;
+  grid-column: 9 / -1;
 }
 
 @media (max-width: 60rem) {

@@ -328,7 +328,7 @@ test("Mobile Work cabinet tabs stay readable at narrow widths", async ({ page })
         lineHeight: parseFloat(getComputedStyle(node).lineHeight),
       }));
       expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width + 2);
-      expect(geometry.height).toBeGreaterThanOrEqual(geometry.lineHeight);
+      expect(geometry.height + 0.25).toBeGreaterThanOrEqual(geometry.lineHeight); // Browser subpixel rounding tolerance
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
       .toBeLessThanOrEqual(1);
