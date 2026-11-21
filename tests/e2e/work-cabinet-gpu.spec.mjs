@@ -47,9 +47,15 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
     .toBeGreaterThan(25);
   // Verify that the WebGL surface actually contributes visible pixels.
   // Merely counting colours in a screenshot can accidentally count HTML layers.
-  const visible = await well.screenshot();
+  // Element screenshots wait for a "stable" layout and can time out under
+  // continuous WebGL/scroll activity even when rendering is correct.
+  // Capture the same fixed page rectangle in both states instead.
+  const clip = await well.boundingBox();
+  expect(clip, "The drawer must occupy a measurable viewport rectangle").not.toBeNull();
+  const screenshotOptions = { clip, animations: "disabled" };
+  const visible = await page.screenshot(screenshotOptions);
   await canvas.evaluate(node => { node.style.visibility = "hidden"; });
-  const hidden = await well.screenshot();
+  const hidden = await page.screenshot(screenshotOptions);
   await canvas.evaluate(node => { node.style.visibility = ""; });
   const [on, off] = await Promise.all([visible, hidden].map(async png =>
     sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })));
@@ -75,9 +81,9 @@ test("software-backed WebGL2 visibly renders the physical cabinet and safely los
   }
   expect(changed / sampled, "Showing the 3D canvas must materially change the rendered drawer")
     .toBeGreaterThan(0.02);
-  await well.screenshot({ path: "test-results/cabinet-gpu-webgl.png" });
+  await page.screenshot({ ...screenshotOptions, path: "test-results/cabinet-gpu-webgl.png" });
   await page.evaluate(() => { document.documentElement.dataset.theme = "dark"; });
-  await well.screenshot({ path: "test-results/cabinet-gpu-dark.png" });
+  await page.screenshot({ ...screenshotOptions, path: "test-results/cabinet-gpu-dark.png" });
 
   await canvas.evaluate(element => {
     element.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
