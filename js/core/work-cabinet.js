@@ -118,6 +118,7 @@ export function initWorkCabinet({
     }
     active.paper.remove();
     active.shade.remove();
+    active.viewTransition.remove();
     delete active.folder.dataset.extracting;
     cabinet.classList.remove("is-extracting");
   }
@@ -184,11 +185,17 @@ export function initWorkCabinet({
     const start = "inset(" + inset + " round 3px)";
     const end = "inset(0px 0px 0px 0px round 0px)";
     paper.style.clipPath = start;
+    // Both documents opt in during the intended pointer interaction only.
+    // Without this rule, native links never trigger cross-document motion.
+    const viewTransition = doc.createElement("style");
+    viewTransition.dataset.cabinetViewTransition = "true";
+    viewTransition.textContent = "@view-transition { navigation: auto; }";
+    doc.head.appendChild(viewTransition);
     folder.dataset.extracting = "true";
     cabinet.classList.add("is-extracting");
     doc.body.append(shade, paper);
     const active = {
-      folder, shade, paper, url, navigating: false,
+      folder, shade, paper, viewTransition, url, navigating: false,
       animations: [], deadline: 0, recovery: 0,
     };
     extraction = active;
