@@ -1,4 +1,5 @@
 import { PROJECT_STATUS } from "../data/projects.js";
+import { CASE_STORY_STRUCTURE } from "../data/case-story-structure.js";
 
 const isRecord = value => value !== null && typeof value === "object" && !Array.isArray(value);
 const hasText = value => typeof value === "string" && value.trim().length > 0;
@@ -6,7 +7,7 @@ const isSlug = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$
 const routePath = value => typeof value === "string" ? value.replace(/^\.\//, "").split(/[?#]/)[0] : "";
 const validRoute = value => hasText(value) && /^(?:\.\/)?[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html(?:[?#][^\s]*)?$/.test(value);
 const positiveInteger = value => Number.isInteger(value) && value > 0;
-const PROOF_TYPES = ["decision", "system", "survival", "adoption"];
+const PROOF_TYPES = ["decision", "system", "survival", "adoption", "results"];
 const PROOF_STRENGTHS = ["verified", "partial"];
 const validHttpsUrl = value => {
   if (!hasText(value) || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f]/.test(value)) return false;
@@ -179,13 +180,14 @@ export function validateContent(content) {
       if (!Array.isArray(study.chapters)) add(`${path}.chapters`, "CASE_CHAPTERS_INVALID", "A published case needs its complete chapter sequence.");
       else {
         const ids = study.chapters.map(chapter => chapter?.id);
-        const wanted = ["decision", "system", "survival", "encounter"];
-        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use Decision, System, Survival, then Encounter.");
+        const wanted = CASE_STORY_STRUCTURE.map(chapter => chapter.id);
+        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use The Call, The System, What Survived, First Contact, then The Results.");
         const usedMedia = new Set([study.hero]);
         study.chapters.forEach((chapter, index) => {
           const chapterPath = `${path}.chapters[${index}]`;
           if (!isRecord(chapter)) { add(chapterPath, "CASE_CHAPTER_INVALID", "A chapter must be an object."); return; }
           if (!hasText(chapter.label)) add(`${chapterPath}.label`, "CASE_CHAPTER_LABEL_REQUIRED", "A chapter needs a usable orientation label.");
+          else if (CASE_STORY_STRUCTURE[index] && chapter.label !== CASE_STORY_STRUCTURE[index].label) add(`${chapterPath}.label`, "CASE_CHAPTER_LABEL_INVALID", `Use ${CASE_STORY_STRUCTURE[index].label} for this chapter.`);
           if (chapter.title !== undefined && !hasText(chapter.title)) add(`${chapterPath}.title`, "CASE_CHAPTER_TITLE_INVALID", "An optional chapter title must contain text.");
           if (!Array.isArray(chapter.body) || !chapter.body.length || chapter.body.some(paragraph => !hasText(paragraph))) add(`${chapterPath}.body`, "CASE_CHAPTER_BODY_INVALID", "Every chapter needs nonempty authored paragraphs.");
           if (chapter.media !== undefined) {

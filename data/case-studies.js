@@ -74,12 +74,17 @@ export const caseStudies = {
         "type": "adoption",
         "statement": "The guidelines document a potential handoff; public use or audience response has not been independently established.",
         "strength": "partial"
+      },
+      {
+        "type": "results",
+        "statement": "The documented wordmark, colour system, stationery and guidelines verify delivery of a reusable identity kit, not market adoption.",
+        "strength": "verified"
       }
     ],
     "chapters": [
       {
         "id": "decision",
-        "label": "Decision",
+        "label": "The Call",
         "title": "Soften the technical signal",
         "body": [
           "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design.",
@@ -93,7 +98,7 @@ export const caseStudies = {
       },
       {
         "id": "system",
-        "label": "System",
+        "label": "The System",
         "title": "One primary field, one signal colour",
         "body": [
           "Clar blue anchors the identity against deep navy. Signal yellow is reserved for emphasis, allowing hierarchy to come from a controlled contrast rather than a growing collection of accents. The guidelines record how the wordmark, colour and typography work together."
@@ -104,12 +109,12 @@ export const caseStudies = {
       },
       {
         "id": "survival",
-        "label": "Survival",
+        "label": "What Survived",
         "title": "Keep the identity usable across formats",
         "body": [
-          "The system was extended from a carried object to a large environmental surface. The same short proposition and yellow signal remain legible without turning every touchpoint into the same composition.",
-          "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward.",
-          "The same wordmark and restrained palette are tested across stationery, carried objects and environmental formats. These are application visualisations rather than proof that every item was produced."
+          "The same wordmark, short proposition and yellow signal were extended from stationery and a carried object to an environmental scale without repeating a fixed composition.",
+          "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward. The tote, flag and stage images are visualisations, not proof that every object was produced.",
+          "The record contains no confirmed budget figures or delivery calendar. The supported result of this stress test is consistency across scales, not a claim about money or time saved."
         ],
         "media": [
           "rivo-tote",
@@ -120,14 +125,24 @@ export const caseStudies = {
       },
       {
         "id": "encounter",
-        "label": "Encounter",
+        "label": "First Contact",
         "title": "What another designer can take forward",
         "body": [
-          "The final identity gives Rivo a recognisable wordmark, a stable blue field, one signal colour and a documented set of rules for applying them across brand materials.",
-          "The documented guidelines show how a future designer could apply the identity. The visualisations do not establish public rollout, customer adoption or measurable impact."
+          "The guidelines are the clearest documented first contact for the people who must apply the system after handoff. They explain how another designer can use the wordmark, colours and typography rather than relying on the original presentation.",
+          "The identity is also visualised on carried and environmental surfaces. Those mockups suggest how a wider audience might meet Rivo, but do not establish a public launch or customer response."
         ],
         "media": [
           "rivo-guidelines"
+        ]
+      },
+      {
+        "id": "results",
+        "label": "The Results",
+        "title": "A usable identity, with measurable adoption still unknown",
+        "body": [
+          "The final identity gives Rivo a recognisable wordmark, a stable blue field, one signal colour and a documented set of rules for applying them across brand materials.",
+          "The documented result is a complete identity kit: a recognisable Rivo wordmark, controlled Clar blue and signal-yellow palette, stationery applications and guidelines another designer can refer to. The deliverables shown here substantiate that scope.",
+          "No verified audience recognition, customer adoption or business-performance measurements accompany the project. The evidence supports a reusable identity system, not an invented impact figure."
         ]
       }
     ],
@@ -241,12 +256,17 @@ export const caseStudies = {
         "type": "adoption",
         "statement": "Event-day and campus photographs show public encounter, not audience impact.",
         "strength": "partial"
+      },
+      {
+        "type": "results",
+        "statement": "Campus and event-day photographs substantiate a public event rollout; no audience-effect metrics are documented.",
+        "strength": "verified"
       }
     ],
     "chapters": [
       {
         "id": "decision",
-        "label": "Decision",
+        "label": "The Call",
         "title": "Give the event a pause",
         "body": [
           "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable.",
@@ -261,7 +281,7 @@ export const caseStudies = {
       },
       {
         "id": "system",
-        "label": "System",
+        "label": "The System",
         "title": "Colour, type and a recurring ripple",
         "body": [
           "Porphyra, Kakhol and Red ochre form the theme palette. The colour sheet records the values and tint ramps used to carry the system across digital and print.",
@@ -274,12 +294,12 @@ export const caseStudies = {
       },
       {
         "id": "survival",
-        "label": "Survival",
+        "label": "What Survived",
         "title": "Carry the idea into the physical event",
         "body": [
-          "The pause motif moved from social promotion into programmes, merchandise, campus banners and the event stage.",
-          "The hoodie places the theme mark beside the TEDx lockup. The street banner turns the idea into a public prompt, while campus and event-day photographs show the identity in use with attendees.",
-          "The hoodie places the theme mark beside the TEDx lockup, while the street banner turns the idea into a public prompt. These applications test whether the system stays clear outside the original identity presentation."
+          "The “Pause…” motif translated from social promotion into programmes, merchandise, campus signage and the event environment without competing with the fixed TEDx identity.",
+          "The hoodie pairs the theme mark with the TEDx lockup. The street banner uses a reflective question and ripple pattern, while campus and event-day photographs show related pieces in a physical setting.",
+          "No budget figures or production timetable accompany the case. What survived was the repeatable motif across documented formats, not a measured cost or speed improvement."
         ],
         "media": [
           "tedx-rsu-merch",
@@ -288,14 +308,24 @@ export const caseStudies = {
       },
       {
         "id": "encounter",
-        "label": "Encounter",
+        "label": "First Contact",
         "title": "A public invitation, not a claimed metric",
         "body": [
-          "The final identity carried one invitation to pause and reflect, from social promotion into garments, campus signage, printed materials and the event-day environment, while keeping TEDx recognisable.",
-          "Campus and event-day photography place the identity in a public setting. The photographs document encounter, but they cannot establish audience engagement or event impact."
+          "The campus banner asked passers-by, “Would you like to pause for a minute?” and directed them to the event. On 18 February 2023, attendees encountered the theme in the event environment beside the established TEDx identity.",
+          "The campus banner and event-day photographs document genuine physical exposure. They do not tell us what attendees felt, remembered or did afterward."
         ],
         "media": [
           "tedx-rsu-event"
+        ]
+      },
+      {
+        "id": "results",
+        "label": "The Results",
+        "title": "A documented event language, not an invented metric",
+        "body": [
+          "The final identity carried one invitation to pause and reflect, from social promotion into garments, campus signage, printed materials and the event-day environment, while keeping TEDx recognisable.",
+          "The theme travelled from an authored pause mark and palette into a public campus invitation, merchandise and the event-day environment while keeping TEDx recognisable. The photographed banner and attendee setting, alongside the printed and visual applications, substantiate that rollout.",
+          "There are no accompanying attendance, engagement, recall or satisfaction measurements. What can be claimed is a delivered and publicly encountered event identity—not a quantified change in audience behaviour."
         ]
       }
     ],
@@ -409,12 +439,17 @@ export const caseStudies = {
         "type": "adoption",
         "statement": "Campaign visualisations propose a customer encounter but do not document release, sales or customer response.",
         "strength": "partial"
+      },
+      {
+        "type": "results",
+        "statement": "The brand presentation demonstrates an application-ready system; real-world rollout or sales impact remain unverified.",
+        "strength": "partial"
       }
     ],
     "chapters": [
       {
         "id": "decision",
-        "label": "Decision",
+        "label": "The Call",
         "title": "Use appetite as the filter",
         "body": [
           "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout.",
@@ -429,7 +464,7 @@ export const caseStudies = {
       },
       {
         "id": "system",
-        "label": "System",
+        "label": "The System",
         "title": "Build the identity for the box and the screen",
         "body": [
           "The full logo, wordmark and CB monogram provide different levels of recognition. Deepfry Yellow and Fireside Red carry the appetite signal, while DM Sans keeps supporting information direct and legible."
@@ -440,12 +475,12 @@ export const caseStudies = {
       },
       {
         "id": "survival",
-        "label": "Survival",
+        "label": "What Survived",
         "title": "One appetite-led voice across formats",
         "body": [
-          "Packaging, uniform, campaign and out-of-home applications show how the rounded voice and warm palette stay recognisable at very different scales.",
-          "Together, the applications establish a consistent kit for presenting food, packaging offers and direct campaign messages.",
-          "Packaging, uniform and outdoor visualisations stress-test the visual system across scale and context. They show how the kit is intended to work, not that each format was manufactured or deployed."
+          "Packaging, uniform, campaign and out-of-home applications show how the rounded voice and warm palette stay recognisable at different scales.",
+          "Together the visualisations establish a kit for presenting food, packaging offers and direct campaign messages. They do not establish that the items were manufactured or deployed.",
+          "No signed-off budget, delivery schedule or production record is available. The supported survival is design coherence in proposed uses, not a verified production or savings outcome."
         ],
         "media": [
           "chopbox-packaging",
@@ -455,14 +490,24 @@ export const caseStudies = {
       },
       {
         "id": "encounter",
-        "label": "Encounter",
+        "label": "First Contact",
         "title": "What customers might meet in the world",
         "body": [
-          "The final system connects packaging, uniform, campaign and outdoor applications through one appetite test: every part should make the food feel warm, generous and worth ordering.",
-          "The campaign presentation shows a potential customer-facing encounter. It is a visualisation, not evidence of a live rollout, sales performance or customer response."
+          "The campaign artwork shows how ChopBox was intended to meet a potential customer: food comes first, with an appetite-led graphic system that connects the offer to the identity.",
+          "This is a presentation visualisation. It demonstrates the planned customer-facing experience, but there is no evidence here that the campaign launched or that customers encountered it in market."
         ],
         "media": [
           "chopbox-campaign"
+        ]
+      },
+      {
+        "id": "results",
+        "label": "The Results",
+        "title": "A finished visual system, with commercial impact unverified",
+        "body": [
+          "The final system connects packaging, uniform, campaign and outdoor applications through one appetite test: every part should make the food feel warm, generous and worth ordering.",
+          "The demonstrable outcome is a coherent identity presentation: full logo, wordmark, CB monogram, a warm colour system and applications for packaging, uniforms, outdoor placements and campaign communication. The assembled visualisations show that the language holds together across these proposed uses.",
+          "Actual production, sales uplift, orders or customer response are not documented. The result supported by this case is a tested visual system, not a proven commercial return."
         ]
       }
     ],

@@ -1,3 +1,5 @@
+import { CASE_STORY_STRUCTURE } from "../../data/case-story-structure.js";
+
 const WIDTHS = [540, 810, 1080, 1440, 1920];
 const esc = (value) =>
   String(value ?? "").replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char]);
@@ -50,12 +52,12 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
-function chapter(id, label, heading, body, media, featured, base, nextPlate) {
+function chapter(id, label, descriptor, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length
     ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>`
     : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><h2 id="${token(id)}-title">${esc(label)}</h2><h3 class="case-chapter__heading">${esc(title)}</h3><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><h2 id="${token(id)}-title">${esc(label)}</h2><p class="case-chapter__descriptor">${esc(descriptor)}</p></div><h3 class="case-chapter__heading">${esc(title)}</h3><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -84,7 +86,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const heroMarkup = shot(hero, "hero", base, nextPlate());
   const chapters = study.chapters
     .map((item) => chapter(
-      item.id, item.label, item.title, item.body,
+      item.id, item.label, CASE_STORY_STRUCTURE.find((spec) => spec.id === item.id)?.descriptor || "", item.title, item.body,
       (item.media || []).map((src) => lookup.get(src)).filter(Boolean),
       false, base, nextPlate,
     ))

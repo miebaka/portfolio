@@ -213,8 +213,8 @@ body[data-page="services"] .discipline{min-height:11.5rem}
 .case-page .case-gallery{width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s4)}
 .case-page .case-gallery .case-shot{min-width:0;margin:0;align-self:start}
 .case-page .case-gallery .case-shot:last-child:nth-child(odd){grid-column:1/-1}
-.has-js .case-page .case-chapter :is(.case-chapter__copy h2,.case-chapter__body){opacity:.001;transform:translate3d(0,10px,0);transition:opacity 280ms var(--ease-enter),transform 280ms var(--ease-enter)}
-.has-js .case-page .case-chapter .case-chapter__copy h2{transition-delay:55ms}
+.has-js .case-page .case-chapter :is(.case-chapter__intro,.case-chapter__heading,.case-chapter__body){opacity:.001;transform:translate3d(0,10px,0);transition:opacity 280ms var(--ease-enter),transform 280ms var(--ease-enter)}
+.has-js .case-page .case-chapter .case-chapter__intro{transition-delay:55ms}
 .has-js .case-page .case-chapter .case-chapter__body{transition-delay:110ms}
 .has-js .case-page .case-chapter.is-revealed :is(.case-chapter__copy h2,.case-chapter__body){opacity:1;transform:translate3d(0,0,0)}
 .case-page .case-shot__caption{
@@ -1310,3 +1310,37 @@ body.case-page .case-chapter__heading{grid-column:3/8;max-width:20ch;font:var(--
 body.case-page .case-chapter__body{grid-column:9/-1;max-width:var(--editorial-copy);font-size:var(--type-body-l);line-height:var(--type-leading-reading)}
 @media(max-width:64rem){body.case-page .case-chapter__copy h2{grid-column:1/3}body.case-page .case-chapter__heading{grid-column:3/8}body.case-page .case-chapter__body{grid-column:8/-1}}
 @media(max-width:48rem){body.case-page .case-opening .case-facts{grid-template-columns:repeat(2,minmax(0,1fr))}body.case-page .case-chapter__copy{grid-template-columns:minmax(0,1fr);row-gap:var(--s3)}body.case-page .case-chapter__copy h2,body.case-page .case-chapter__heading,body.case-page .case-chapter__body{grid-column:1}body.case-page .case-chapter__heading{font-size:var(--type-heading-l)}}
+
+/* Five-part evidence narrative: labels are prompts, not a chapter navigation UI. */
+body.case-page .case-chapter__intro{
+  grid-column:1/4;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:var(--s2);
+  min-width:0;
+}
+body.case-page .case-chapter__intro h2{
+  grid-column:auto;
+  max-width:none;
+}
+body.case-page .case-chapter__descriptor{
+  max-width:33ch;
+  font-size:var(--type-input);
+  line-height:var(--type-leading-reading);
+  color:var(--sys-color-on-surface-variant);
+  text-wrap:pretty;
+}
+body.case-page .case-chapter__heading{grid-column:4/9;max-width:19ch}
+body.case-page .case-chapter__body{grid-column:9/-1}
+@media(max-width:64rem){
+  body.case-page .case-chapter__intro{grid-column:1/5}
+  body.case-page .case-chapter__heading{grid-column:5/9}
+  body.case-page .case-chapter__body{grid-column:9/-1}
+}
+@media(max-width:48rem){
+  body.case-page .case-chapter__intro,
+  body.case-page .case-chapter__heading,
+  body.case-page .case-chapter__body{grid-column:1}
+  body.case-page .case-chapter__descriptor{max-width:46ch}
+}
