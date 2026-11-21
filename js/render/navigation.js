@@ -5,7 +5,6 @@ import { escapeHTML as esc, safeURL, mount, basePath } from "../utilities/dom.js
 import { MOUNT } from "../core/contract.js";
 import { createIndexController } from "../core/navigation.js";
 import { createPreferencesController } from "../core/preferences.js";
-import { createThemePullCord } from "../core/theme-pull-cord.js";
 
 export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
   const destinations = navigation.index.map((route, i) =>
@@ -31,39 +30,38 @@ function setupPreferences(index, preferences) {
   return () => { choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); };
 }
 
-let activeIndex, cleanupPreferences, themeCord;
+let activeIndex, cleanupPreferences, themeButton;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
-  activeIndex?.destroy(); cleanupPreferences?.(); themeCord?.destroy(); document.getElementById("site-index")?.remove();
+  activeIndex?.destroy(); cleanupPreferences?.(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
   const order = ["work", "explorations", "about", "writing", "contact"];
   const links = order.map(key => navigation.routes.find(route => route.key === key)).filter(Boolean).map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
-  const section = navigation.routes.find(route => route.key === page)?.label || (page === "home" ? "Home" : "Portfolio");
   el.innerHTML = '<div class="site-nav__inner"><a class="site-nav__brand" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
-    '<div class="site-nav__identity" aria-hidden="true"><strong>Miebaka Joshua</strong><span>' + esc(section) + ' / Independent Design</span></div>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button>' +
     '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary" aria-hidden="true">' + links + '</nav>' +
-    '<div class="site-nav__themes"><span class="theme-cord__prompt" aria-hidden="true">Theme</span><button class="theme-cord" type="button" role="switch" aria-checked="false" aria-label="Theme: switch to Screen mode"><svg viewBox="0 0 68 58" width="68" height="58" aria-hidden="true"><path class="theme-cord__line" data-cord-line fill="none"/><path data-cord-hit fill="none" stroke="transparent" stroke-width="18"/><g class="theme-cord__bead" data-cord-bead><circle r="10" fill="transparent"/><rect x="-4" y="-1" width="8" height="13" rx="4"/></g></svg><span class="theme-cord__mode" data-cord-mode>Print</span></button></div></div>';
+    '<div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");
   const menuButton = el.querySelector(".site-nav__menu-btn");
   activeIndex = createIndexController({ root: index, trigger: menuButton });
-  const cordButton = el.querySelector(".theme-cord");
+  themeButton = el.querySelector(".theme-liquid-toggle");
   let preferences;
   const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
   preferences = createPreferencesController({
     root: document.documentElement,
     onChange: ({ theme, resolvedTheme, motion }) => {
-      themeCord?.setChecked(resolvedTheme === "dark");
+      themeButton.setAttribute("aria-checked", String(resolvedTheme === "dark"));
+      themeButton.setAttribute("aria-label", resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      themeButton.querySelector("[data-theme-mode]").textContent = resolvedTheme === "dark" ? "Dark" : "Light";
       index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme || (theme === "system" && btn.dataset.themeChoice === resolvedTheme))));
       index.querySelectorAll("[data-motion-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
       document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "oklch(35.7% 0.159 264.8)" : "oklch(98% 0.006 264.5)"));
     }
   });
-  themeCord = createThemePullCord(cordButton, { onToggle: toggleTheme });
-  themeCord.setChecked(document.documentElement.dataset.theme === "dark");
+  themeButton.addEventListener("click", toggleTheme);
   const cleanupIndexPreferences = setupPreferences(index, preferences);
   cleanupPreferences = () => {
     cleanupIndexPreferences();
