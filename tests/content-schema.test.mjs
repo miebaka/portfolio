@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { validateContent } from "../scripts/content-schema.mjs";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
+import { CASE_STORY_STRUCTURE } from "../data/case-story-structure.js";
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -182,9 +183,10 @@ test("draft case narratives remain locked despite a published project listing", 
   assert.doesNotMatch(markup, /case-index|sample-hero/);
 });
 test("published case narratives render when their project is published", () => {
-  const chapters = ["decision", "system", "survival", "encounter"].map(id => ({ id, label: id[0].toUpperCase() + id.slice(1), title: "A focused chapter", body: ["A documented design decision."] }));
+  const chapters = CASE_STORY_STRUCTURE.map(({ id, label }) => ({ id, label, title: "A focused chapter", body: ["A documented design decision."] }));
   const markup = renderCaseMarkup(fixture({ caseStudies: { sample: study({ status: "published", hero: "sample-hero", facts: { role: "Identity", delivered: "Application system" }, chapters }) } }), "sample");
-  assert.match(markup, /id="encounter"/);
+  assert.match(markup, /id="results"/);
+  assert.match(markup, /What did I decide, and what did I turn down to get there\?/);
   assert.doesNotMatch(markup, /case-index|case-lede/);
   assert.doesNotMatch(markup, /Coming soon/);
 });
