@@ -259,7 +259,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--font-display:\s*"Geist Sans"/);
   assert.match(css, /--font-body:\s*"Geist Sans"/);
   assert.match(css, /--font-label:\s*"Geist Mono"/);
-  assert.match(css, /--display:var\(--font-display\);--body:var\(--font-body\);--label:var\(--font-label\)/);
+  assert.match(css, /--display:\s*var\(--font-display\);\s*--body:\s*var\(--font-body\);\s*--label:\s*var\(--font-label\)/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /\.site-footer__signature-canvas/);
   assert.doesNotMatch(css, /#(?:d7ff64|e96843|355cff|001c12|005b44|ff75aa|f4efec)\b/i);
@@ -592,7 +592,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 11); // Canonical page styles, editorial refinements and the projects roster.
+  assert.equal((styles.match(/@import/g) || []).length, 12); // Canonical page styles, editorial refinements and the projects roster.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
