@@ -49,7 +49,10 @@ separate drawer, labelled clearly as different types of content.
 - DOM/CSS first: real `<a>` elements for every published folder, real case hrefs.
 - GSAP for focused lift / paper extraction, not for navigation correctness.
 - Lenis may smooth desktop wheel input, but mobile remains native-scroll.
-- Use `document.startViewTransition` / CSS page transition only when supported.
+- For real case-study navigation between HTML documents, opt both pages into
+  same-origin cross-document transitions with CSS `@view-transition { navigation: auto; }`
+  when supported. `document.startViewTransition()` applies to the same-document
+  prototype instead; it cannot initiate a cross-document transition.
   Do not gate route changes on experimental APIs.
 - Full keyboard support: Tab reveals folder, Enter opens, Escape closes previews.
 - Full reduced-motion support: skip extraction and navigate immediately.
