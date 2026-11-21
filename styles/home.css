@@ -112,9 +112,9 @@ body[data-page="home"] .hero-wave.is-fallback {
   opacity: 1;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 75% 60% at 20% 12%, rgb(243 254 255 / .88), transparent 80%),
-    radial-gradient(ellipse 70% 90% at 90% 82%, rgb(56 117 165 / .4), transparent 78%),
-    linear-gradient(145deg, #d7e9ed, #97cad1 53%, #6ea7be);
+    radial-gradient(ellipse 75% 60% at 20% 12%, var(--ref-water-light-glow), transparent 80%),
+    radial-gradient(ellipse 70% 90% at 90% 82%, var(--ref-water-light-depth), transparent 78%),
+    linear-gradient(145deg, var(--ref-water-light-a), var(--ref-water-light-b) 53%, var(--ref-water-light-c));
 }
 body[data-page="home"] .hero-wave.is-fallback::after {
   content: "";
@@ -122,8 +122,8 @@ body[data-page="home"] .hero-wave.is-fallback::after {
   inset: -30%;
   pointer-events: none;
   background:
-    repeating-radial-gradient(ellipse 29% 21% at 27% 39%, transparent 0 23px, rgb(255 255 255 / .48) 25px 28px, transparent 31px 69px),
-    repeating-radial-gradient(ellipse 27% 26% at 81% 53%, transparent 0 19px, rgb(255 255 255 / .4) 21px 24px, transparent 27px 66px);
+    repeating-radial-gradient(ellipse 29% 21% at 27% 39%, transparent 0 23px, var(--ref-water-ripple-a) 25px 28px, transparent 31px 69px),
+    repeating-radial-gradient(ellipse 27% 26% at 81% 53%, transparent 0 19px, var(--ref-water-ripple-b) 21px 24px, transparent 27px 66px);
   background-size: 94% 115%, 112% 96%;
   filter: blur(3px);
   opacity: .58;
@@ -131,9 +131,9 @@ body[data-page="home"] .hero-wave.is-fallback::after {
 }
 :root[data-theme="dark"] body[data-page="home"] .hero-wave.is-fallback {
   background:
-    radial-gradient(ellipse 60% 70% at 22% 22%, rgb(44 97 160 / .4), transparent 78%),
-    radial-gradient(ellipse 68% 83% at 85% 88%, rgb(10 45 118 / .52), transparent 82%),
-    linear-gradient(145deg, #10264d, #08152f 70%, #061027);
+    radial-gradient(ellipse 60% 70% at 22% 22%, var(--ref-water-dark-glow), transparent 78%),
+    radial-gradient(ellipse 68% 83% at 85% 88%, var(--ref-water-dark-depth), transparent 82%),
+    linear-gradient(145deg, var(--ref-water-dark-a), var(--ref-water-dark-b) 70%, var(--ref-water-dark-c));
 }
 :root[data-theme="dark"] body[data-page="home"] .hero-wave.is-fallback::after {
   opacity: .2;
