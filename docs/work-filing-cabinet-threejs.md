@@ -16,7 +16,7 @@ The 3D renderer is decorative and never receives pointer interactions. It observ
 
 ## Implementation layout
 
-- js/core/work-cabinet-bootstrap.js: lightweight bootstrap that checks device constraints and lazy-loads Three.js near the viewport.
+- js/core/work-cabinet-bootstrap.js: lightweight bootstrap that checks device constraints and loads Three.js only after visitor engagement; a settled visible scroll, pointer entry, or keyboard focus.
 - js/work-cabinet-three.js: Three.js scene, geometry, paper texture generation, material system, lighting, folder transforms, on-demand rendering and cleanup.
 - scripts/build-work-cabinet-three.mjs: esbuild entry for the isolated browser bundle.
 - scripts/build-site.mjs: copies that bundle when available, including when building isolated content tests without the optional runtime.
@@ -27,9 +27,9 @@ The 3D renderer is decorative and never receives pointer interactions. It observ
 
 Folder fronts and undersheets have real thickness and bevelled tab geometry. Three high-roughness paper stocks use deterministic, low-amplitude fibre variation and sRGB colour textures. Year dividers are physically modelled. The cabinet has metallic side rails, environment reflections on capable desktops, and a shadow-producing directional key positioned to keep contact shadows tight.
 
-The camera matches measured browser geometry rather than using a second independent layout. Rendering is demand-driven: animate while transforms move, redraw on resize and stop when offscreen or hidden. Pixel density is capped. Expensive environment lighting is disabled on low-tier devices.
+The camera matches measured browser geometry rather than using a second independent layout. Rendering is demand-driven: sample the native HTML face's actual transformed rectangle (including CSS and WAAPI easing) rather than interpolating a competing 3D animation; redraw during the short transition window and stop when offscreen or hidden. Pixel density is capped. Expensive environment lighting is disabled on low-tier devices.
 
-Save-Data and very low hardware-concurrency devices keep the existing CSS archive. Browser/WebGL failure, lost context and no JavaScript must never block the three existing published case-study links.
+Save-Data and very low hardware-concurrency devices keep the existing CSS archive. Browser/WebGL failure, lost context and no JavaScript must never block the three existing published case-study links. Cleanup must release geometries, materials, textures, environment maps, observers and renderer on every failure path. Reduced motion, forced colours and low-memory tiers keep CSS.
 
 ## Honest limitations
 
@@ -38,3 +38,24 @@ This first pass builds reusable procedural geometry in Three.js. It does not yet
 ## Release gate
 
 Run the Node quality suite, the production build, performance budgets and Playwright tests; then examine actual desktop/mobile screenshots in multiple browser engines and both themes. Test mouse, touch, keyboard, reduced motion, scroll suppression, native return, and unavailable WebGL. Do not merge solely on the basis of unit tests. A photographic-looking cabinet requires rendered visual acceptance.
+
+
+## Visual evidence and measurable release gate
+
+The quality workflow captures cabinet-*-css.png for mobile and desktop,
+and cabinet-gpu-webgl.png in a dedicated Chromium project running with a
+software-backed WebGL2 renderer. This is intentionally stronger than tests
+that only check for a canvas element. The GPU project must assert that the
+scene contains nonempty pixel variation, and verify real context-loss
+recovery. Download and inspect these CI artefacts before merging.
+
+- First navigation to Work: no Three.js network request or GPU allocation.
+- First physical interaction: the immediate CSS response must paint before
+  costly optional 3D compilation. Assess INP/long tasks on real hardware,
+  not only initial Lighthouse.
+- HTML tab text must line up with the physical mesh at rest, on hover/focus,
+  during extraction scaling and after resizing or late font loads.
+- Never claim actual photorealism from a green CI suite alone. Compare the
+  screenshots at 390px and 1440px across bright and dark themes.
+- Do not invent case studies to make the drawer more dense; the published
+  set and project URLs stay unchanged until real content is supplied.

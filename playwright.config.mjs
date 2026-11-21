@@ -25,8 +25,19 @@ export default defineConfig({
     video: "retain-on-failure"
   },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
-    { name: "mobile", use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } }
+    { name: "desktop", testIgnore: "**/work-cabinet-gpu.spec.mjs",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
+    { name: "mobile", testIgnore: "**/work-cabinet-gpu.spec.mjs",
+      use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } },
+    // Separately force a software WebGL2 backend in CI so the 3D cabinet
+    // *must* render rather than silently skipping all the meaningful checks.
+    { name: "cabinet-gpu", testMatch: "**/work-cabinet-gpu.spec.mjs",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 },
+        launchOptions: { args: [
+          "--use-gl=angle", "--use-angle=swiftshader",
+          "--enable-unsafe-swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"
+        ] }
+      } }
   ],
   webServer: {
     command: "npm run build && node scripts/serve-static.mjs dist 4173",

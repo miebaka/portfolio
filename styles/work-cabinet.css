@@ -22,14 +22,6 @@ body[data-page="work"] .project-archive--cabinet .project-archive__head h1 {
   text-wrap: balance;
 }
 
-body[data-page="work"] .filing-cabinet__overline {
-  margin: 0 0 clamp(1.5rem, 2.5vw, 2.5rem);
-  color: var(--muted);
-  font: 600 var(--type-label-m)/1.3 var(--label);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
 body[data-page="work"] .filing-cabinet__intro {
   max-width: 31ch;
   margin: 0 0 .15rem;
@@ -563,7 +555,6 @@ body[data-page="work"] .cabinet-extraction__paper {
     animation-duration: .01ms;
   }
 }
-
 
 /* Optional Three.js physical surface. The original cabinet stays complete
    until a frame has rendered, and returns automatically on WebGL failure. */
