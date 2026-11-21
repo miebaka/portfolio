@@ -528,3 +528,38 @@ test("source Work cabinet has true visually-hidden accessibility names with or w
     expect(style.clipPath).toBe("inset(50%)");
   }
 });
+
+
+test("mobile year-guide text stays clear of each following folder tab", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "Mobile text/physical tab separation");
+  await page.goto("/work.html");
+  const distances = await page.locator(".filing-cabinet__drawer").evaluate(drawer => {
+    const guides = [...drawer.querySelectorAll(".filing-cabinet__divider")];
+    return guides.map(guide => {
+      const year = guide.querySelector(".filing-cabinet__divider-year");
+      const tab = guide.nextElementSibling?.querySelector(".filing-cabinet__tab");
+      return tab.getBoundingClientRect().top - year.getBoundingClientRect().bottom;
+    });
+  });
+  expect(distances).toHaveLength(3);
+  for (const gap of distances) {
+    expect(gap, "No year number may be obscured by its following cut tab").toBeGreaterThan(3);
+  }
+});
+
+test("desktop lifted folder lip does not overpaint the next year-guide label", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Desktop hover/lip separation");
+  await page.goto("/work.html");
+  const folder = page.locator('.filing-cabinet__folder[data-slug="tedx-rsu"]');
+  await folder.scrollIntoViewIfNeeded();
+  await folder.hover();
+  await page.waitForTimeout(220);
+  const gap = await page.evaluate(() => {
+    const folder = document.querySelector('.filing-cabinet__folder[data-slug="tedx-rsu"]');
+    const face = folder.querySelector(".filing-cabinet__face");
+    const guide = folder.nextElementSibling.querySelector(".filing-cabinet__divider-year");
+    return guide.getBoundingClientRect().top - face.getBoundingClientRect().bottom;
+  });
+  expect(gap, "The lifted paper face must finish above the next year heading").toBeGreaterThan(6);
+  await expect(page.locator(".filing-cabinet__lip-copy")).toHaveCount(0);
+});

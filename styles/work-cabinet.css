@@ -85,7 +85,7 @@ body[data-page="work"] .filing-cabinet__well {
 
 body[data-page="work"] .filing-cabinet__drawer {
   --file-step: clamp(5.45rem, 7vw, 6.25rem);
-  --folder-face: calc(var(--file-step) + 4.8rem);
+  --folder-face: calc(var(--file-step) + 2.25rem);
 
   position: relative;
   display: block;
@@ -228,7 +228,7 @@ body[data-page="work"] .filing-cabinet__lip {
   right: clamp(.8rem, 2vw, 1.8rem);
   left: clamp(.8rem, 2vw, 1.8rem);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: end;
   gap: .3rem 1.4rem;
   padding-top: .6rem;
@@ -243,9 +243,12 @@ body[data-page="work"] .filing-cabinet__lip-title {
   letter-spacing: var(--type-tracking-heading);
 }
 
-body[data-page="work"] .filing-cabinet__lip-copy {
-  max-width: 52ch;
-  font: var(--type-weight-regular) var(--type-label-l)/var(--type-leading-label) var(--body);
+/* The paper lip must finish before the next indexed guide begins.
+   Physical folder overlap is reserved as space, not painted over labels. */
+@media (min-width: 48.001rem) {
+  body[data-page="work"] .filing-cabinet__folder:not(:last-child) {
+    margin-bottom: 2.5rem;
+  }
 }
 
 body[data-page="work"] .filing-cabinet__lip-meta {
@@ -454,6 +457,12 @@ body[data-page="work"] .filing-cabinet__caption {
     padding-inline: .8rem;
   }
 
+  /* The tab rises out of the folder; give year lettering enough clearance
+     before its die-cut tab starts, including long titles wrapping to 3 lines. */
+  body[data-page="work"] .filing-cabinet__divider {
+    margin-bottom: 1.125rem;
+  }
+
   body[data-page="work"] .filing-cabinet__lip {
     top: calc(var(--file-step) - 1.4rem);
     grid-template-columns: 1fr;
@@ -462,10 +471,6 @@ body[data-page="work"] .filing-cabinet__caption {
 
   body[data-page="work"] .filing-cabinet__lip-title {
     grid-column: 1;
-  }
-
-  body[data-page="work"] .filing-cabinet__lip-copy {
-    display: none;
   }
 
   body[data-page="work"] .filing-cabinet__lip-meta {

@@ -91,7 +91,6 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
     const href = base + (project.href || "work/" + safeToken(project.slug) + ".html");
     const label = esc(project.title);
     const category = esc(project.category);
-    const description = esc(project.tagline);
     const encodedYear = esc(year);
     return divider +
       '<li class="filing-cabinet__folder" data-tab="' + tab +
@@ -102,7 +101,6 @@ export function renderFilingCabinetMarkup(projects = SITE.projects, studies = SI
       '<span class="filing-cabinet__tab"><span class="filing-cabinet__number">' + number + '</span>' +
       '<span class="filing-cabinet__tab-title">' + label + '</span></span>' +
       '<span class="filing-cabinet__lip"><strong class="filing-cabinet__lip-title">' + label + '</strong>' +
-      '<span class="filing-cabinet__lip-copy">' + description + '</span>' +
       '<span class="filing-cabinet__lip-meta">' + category + ' / ' + encodedYear + '</span>' +
       '</span></span>' +
       '<span class="sr-only">Open ' + label + ' case study, ' + category + ', ' + encodedYear + '</span>' +
