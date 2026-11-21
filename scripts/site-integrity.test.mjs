@@ -80,7 +80,7 @@ test("built Home and Work expose truthful project states without JavaScript", as
 });
 
 test("project hit areas are full rows", async () => {
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
+  const css = await readFile(join(dist, "styles", "work-cabinet.css"), "utf8");
   assert.match(css, /\.filing-cabinet__link\s*\{[^}]*display:\s*block/);
 });
 
