@@ -1,0 +1,34 @@
+name: Typography
+
+# Fast guard (about a minute) for docs/TYPOGRAPHY-SYSTEM.md. Reads source only: no build, no browser.
+# The same gate also runs inside Quality, but that job takes 25 minutes and needs Playwright. This one answers first.
+# No `paths:` filter on purpose: a path-filtered workflow never reports on pull requests that skip it,
+# which blocks merges if it is made a required check (it should be).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: typography-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Stylelint typography rule
+        run: npm run lint:typography
+      - name: Typography contract and structure
+        run: npm run test:typography
