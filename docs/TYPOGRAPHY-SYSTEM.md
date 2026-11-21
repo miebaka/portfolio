@@ -1,76 +1,77 @@
-# Geist Unified — portfolio typography system
+# One typography system — Jacobsen-informed editorial hierarchy
 
 **Status:** Binding design and engineering contract  
-**Date:** 21 November 2026  
-**Authoritative CSS:** `styles/tokens.css`  
-**Import order:** `styles/tokens.css` before `styles/foundations.css`, followed by component and page layers.
+**Updated:** 21 November 2026  
+**Single source of typography values:** `styles/tokens.css`  
+**Families:** Geist Sans for display and body; Geist Mono for metadata and labels.
 
 ## 1. Design intent
 
-Typography is the portfolio's most prominent visual device. Oversized, image-led editorial headings are a deliberate signature, not a reason to invent new fonts and numbers for every page. The scale provides **one reusable hierarchy** with enough breadth for small UI, long-form essays, and large creative displays. Project imagery and content stay central. The large type must not impede reading or interaction.
+[Jacobsen](https://lexingtonthemes.com/viewports/jacobsen) uses calm, precise typography: short, legible section headings, generous whitespace, understated labels, and an editorial rhythm that lets the work remain central. Apply those *principles*, not its font files, color palette, or site layout. In this portfolio, **Miebaka Joshua** remains the largest visual expression, followed by section headings, project titles, supporting headings and reading copy.
 
-## 2. Families and verified face coverage
+The previous scale contained overlapping `display-s`, `display-m`, `display-l`, `display-mobile`, `display-xxl`, and `display-section` roles and multiple font-family compatibility aliases. Those are retired. Do not create competing page-local typography tokens.
 
-| Role | Family | Allowed weights | Case |
-| --- | --- | --- | --- |
-| Displays / headings / project titles | Geist Sans | 400, 600 | Author's case |
-| Body / essays / narrative / emphasis | Geist Sans | 400, 600 | Sentence case |
-| Navigation / labels / metadata / captions | Geist Mono | 400, 600 | Uppercase for UI labels |
-| Symbols (icons ONLY) | Material Symbols Outlined | 400 | Not used as prose |
+## 2. Typography tokens
 
-The currently loaded Geist Sans and Geist Mono Regular and SemiBold WOFF2 files are *static* faces. They are declared at exactly 400 and 600 with `font-display:swap`; there are no licensed, installed files for weights such as 430, 535, 550, 640, 700 or the arbitrary 600–900 range. Do not request synthetic weights or condensed `font-stretch` percentages. The icon font is a functional exception, not another text family.
+All ranges assume a 16px root font. Fluid sizes are bounded with `clamp()` so browser zoom and mobile viewports remain usable.
 
-## 3. Canonical size hierarchy
+| Purpose | Token | Size / range |
+| --- | --- | --- |
+| Caption and small label | `--type-label-s` | 13px |
+| Standard label and navigation | `--type-label-m` | 14px |
+| Important label and metadata | `--type-label-l` | 16px |
+| Input | `--type-input` | 16px |
+| Small body | `--type-body-s` | 16px |
+| Standard body | `--type-body-m` | 17px |
+| Long-form reading | `--type-body-l` | 17–20px |
+| Lead | `--type-body-lead` | 20–24px |
+| Intro | `--type-body-intro` | 20–32px |
+| Heading small | `--type-heading-s` | 24–36px |
+| Heading medium | `--type-heading-m` | 30–48px |
+| Heading large | `--type-heading-l` | 36–56px |
+| Heading XL | `--type-heading-xl` | 42–76px |
+| Compact editorial display | `--type-display-compact` | 38–76px |
+| Project titles and indexes | `--type-display-project` | 44–100px |
+| Major section display | `--type-display-section` | 48–104px |
+| Home name / intentional hero | `--type-display-hero` | 54–176px |
 
-All px figures assume 16px root size and are indicative; browser zoom preserves the underlying rem and fluid calculations. Use token names in code, never copied numbers from this table.
+The relative signature variables `--type-display-signature-vw`, `--type-display-signature-wide-vw`, and `--type-inline-mark` belong to decorative geometry; they are not alternative type scales.
 
-| Role | Tokens | Range or fixed size at 16px root | Primary placement |
-| --- | --- | --- | --- |
-| Secondary labels | `--type-label-s` / `m` / `ui` / `l` | 11 / 12 / 13 / 14px | Eyebrows, metadata, labels; 11px only when genuinely secondary |
-| Input and mobile nav | `--type-input` / `--type-nav-mobile` | 16 / 13px | Form fields, touch navigation |
-| Small & normal body | `--type-body-s` / `m` / `l` | 15 / 17 / 17–20px | Cards, case text, essays |
-| Lead and intro | `--type-body-lead` / `intro` | 18–24 / 20–38px | Ledes and restrained introductory statements |
-| Content headings | `--type-heading-s` / `m` / `l` / `xl` | 24–40 / 30–54 / 36–54 / 40–84px | Case chapters, cards and page subsections |
-| Compact editorial | `--type-display-mobile` / `s` / `m` / `l` | 37–72 / 42–64 / 48–81 / 51–120px | Responsive editorial headings |
-| Project list | `--type-display-project` | 48–118px | Selected Work and project roster |
-| Section display | `--type-display-section` | 52–160px | About Me, What I Do and archive chapters |
-| Wide editorial | `--type-display-xxl` | 68–120px | Full-width editorial moments |
-| Home name | `--type-display-hero` | 54–176px | Home hero ONLY: major point of visual impact |
-| Decorative signature | `--type-display-signature*` | Fluid / proportional | Existing signature visuals |
-| Inline mark | `--type-inline-mark` | Relative 0.35em | Arrow and minimal punctuation motifs |
+## 3. Font families and weights
 
-## 4. Weight, leading and tracking
+- `--type-family-display` — Geist Sans.
+- `--type-family-body` — Geist Sans.
+- `--type-family-label` — Geist Mono.
+- `--type-family-icon` — Material Symbols, icons only.
 
-Font weights are `--type-weight-regular:400` and `--type-weight-semibold:600`. Default body and main display copy use 400; use 600 for meaningful emphasis and for short functional labels, not to force visual hierarchy through faux-bold.
+`--type-weight-regular` is **400** and `--type-weight-semibold` is **600**. These are the only available registered static text weights. Don't synthesize unsupported intermediate weights.
 
-Leading tokens are `--type-leading-hero` (.82), `display` (.9), `display-comfort` (.96), `heading` (1.08), `lead` (1.12), `ui` (1.25), `label` (1.3), `body` (1.5), `reading` (1.65) and `loose` (1.8). The first three are for very short display lines, never paragraphs.
+## 4. Line height and letter spacing
 
-Tracking tokens are `--type-tracking-compressed` (-.08em), `display` (-.055em), `heading` (-.035em), `title` (-.02em), `normal` (0), `ui` (+.04em), `label` (+.1em), `label-wide` (+.16em) and `label-ultra` (+.24em). Labels are tracked positively; long-form prose should not acquire editorial headline tracking.
+Use `--type-leading-body` (1.5) or `--type-leading-reading` (1.6) for paragraphs; `--type-leading-heading` (1.14) for normal headlines. The tighter `--type-leading-hero` (.9), `--type-leading-display` (.98) and `--type-leading-display-comfort` (1.02) are only for short display text.
 
-## 5. Usage contract
+Compression now stops at `--type-tracking-compressed` (-.06em) rather than -.08em. Display is -.035em, heading -.025em, and normal titles -.015em. Uppercase labels are tracked +.08em, with +.12em and +.16em reserved for spaced metadata.
 
-In CSS, a component consumes a semantic family and size:
+## 5. The contract
 
 ```css
-.case-chapter__copy h2 {
-  font-family: var(--display);
-  font-size: var(--type-heading-l);
-  font-weight: var(--type-weight-regular);
-  line-height: var(--type-leading-heading);
+.case-chapter__heading {
+  font-family: var(--type-family-display);
+  font-size: var(--type-heading-xl);
+  font-weight: var(--type-weight-semibold);
+  line-height: var(--type-leading-display-comfort);
   letter-spacing: var(--type-tracking-heading);
 }
 
 .meta {
-  font: var(--type-weight-semibold) var(--type-label-ui)/var(--type-leading-label) var(--label);
+  font: var(--type-weight-semibold) var(--type-label-m)/var(--type-leading-label) var(--type-family-label);
   letter-spacing: var(--type-tracking-label);
   text-transform: uppercase;
 }
 ```
 
-Never introduce hard-coded `font-size`, numeric `font-weight`, `line-height`, `letter-spacing`, an undocumented font family, or an unsupported `font-stretch` inside page or component styles. Add a meaningful token and update this spec instead. `--font-size-*` and `--editorial-display*` remain temporary compatibility aliases only; new code uses `--type-*`.
+Never restore `--font-size-*`, `--font-display`, `--font-body`, `--font-label`, `--display`, `--body`, `--label`, `--signature`, `--editorial-display*`, or redundant display-token variants. Every `--type-*` declaration belongs in `styles/tokens.css`; component and page styles may *consume* tokens, never redefine them. Do not use raw numbers for `font-size`, `font-weight`, `line-height`, or `letter-spacing` in component styles.
 
-## 6. Compliance and CI
+## 6. Quality and QA
 
-Run `npm ci`, `npm run lint:typography`, `npm run test:typography`, `npm run test:tokens`, `npm run build` and the existing E2E/quality suite. `stylelint.config.mjs` loads `scripts/stylelint-typography.mjs`. The Quality workflow runs the typography gate before Playwright. A new raw size, weight, tracking or line-height is a blocking error; do not hide it with a lint-disable comment.
-
-**Browser review is still required before merge.** Inspect 320, 390, 768, 1024, 1440 and 1920px widths and 200% zoom. Check Home hero clipping and intentional breakpoints, Selected Work titles, menu and buttons, About and What I Do headings, Work archive, case-study chapter headings, essay reading width, contact inputs, uppercase labels and fallback font loading. Static checks are not a substitute for rendered QA.
+The custom Stylelint rule and Node tests enforce the single source, ban retired aliases, validate declared roles and protect the responsive display hierarchy at **320, 390, 768, 1440, and 1920px**. Run `npm run lint:typography`, `npm run test:typography`, `npm run test:tokens`, `npm run build`, and the E2E suite. Then inspect the homepage, Work archive, About, case studies, essays and navigation with a browser, including at 200% zoom. Check wrapping, line lengths, clipping, uppercase labels, focus targets, and text contrast.
