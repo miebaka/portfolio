@@ -81,20 +81,26 @@ export function renderProjectFolderStackMarkup(projects = SITE.projects, studies
     const href = base + safeURL(project.href || "work/" + slug + ".html");
     // These five fixed sheets mirror the five case-study sections.
     // They are decorative only; the whole folder is one ordinary link.
-    const papers = ["The Call", "The System", "What Survived", "First Contact", "The Results"]
-      .map((section, paperIndex) =>
-        '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
-        '" aria-hidden="true"><span>' + esc(section) + '</span></span>')
-      .join("");
+    const sections = ["The Call", "The System", "What Survived", "First Contact", "The Results"];
+    const papers = sections.map((section, paperIndex) =>
+      '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
+      '" aria-hidden="true"><span>' + esc(section) + '</span></span>').join("");
+    const indexRows = sections.map((section, paperIndex) =>
+      '<span class="project-folder__index-row"><b>' + String(paperIndex + 1).padStart(2, "0") +
+      '</b><span>' + esc(section) + '</span></span>').join("");
+    const number = String(index + 1).padStart(2, "0");
     return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
       '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
       '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study">' +
       '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
       '<span class="project-folder__tab-title">' + title + '</span></span></span>' +
       papers +
-      '<span class="project-folder__front"><span class="project-folder__overline">CASE STUDY / ' +
+      '<span class="project-folder__front"><span class="project-folder__spine" aria-hidden="true">FILE ' +
+      number + '</span><span class="project-folder__serial" aria-hidden="true">' + number +
+      '</span><span class="project-folder__overline">CASE STUDY / ' +
       esc(project.year) + '</span><strong class="project-folder__title">' + title +
-      '</strong><span class="project-folder__bottom"><span>' + esc(project.category) +
+      '</strong><span class="project-folder__index" aria-hidden="true">' + indexRows +
+      '</span><span class="project-folder__bottom"><span>' + esc(project.category) +
       '</span><span class="project-folder__view">View project <span aria-hidden="true">↗</span></span></span></span>' +
       '</a></li>';
   }).join("");
