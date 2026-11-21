@@ -365,3 +365,44 @@ test("Back clears the extraction sheet and retains the real folder", async ({ pa
   await expect(page.locator(".cabinet-extraction__shade")).toHaveCount(0);
   await expect(page.locator("[data-extracting]")).toHaveCount(0);
 });
+
+
+test("physical cabinet renders without stealing labels, focus or pointer targets", async ({ page }) => {
+  await page.goto("/work.html");
+  const well = page.locator(".filing-cabinet__well");
+  await well.scrollIntoViewIfNeeded();
+  const webgl2 = await page.evaluate(() => {
+    try {
+      const gl = document.createElement("canvas").getContext("webgl2");
+      if (!gl) return false;
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      return true;
+    } catch { return false; }
+  });
+  if (webgl2 && await page.evaluate(() => navigator.hardwareConcurrency > 2 && !navigator.connection?.saveData)) {
+    await expect(page.locator("[data-project-archive]")).toHaveAttribute("data-cabinet3d", "ready");
+    const canvas = well.locator(".filing-cabinet__three-canvas");
+    await expect(canvas).toHaveCount(1);
+    await expect(canvas).toHaveAttribute("aria-hidden", "true");
+    await expect(canvas).toHaveCSS("pointer-events", "none");
+  }
+  await expect(well.locator(".filing-cabinet__link")).toHaveCount(3);
+  await well.locator(".filing-cabinet__link").first().focus();
+  await expect(well.locator(".filing-cabinet__link").first()).toBeFocused();
+  await expect(well.locator(".filing-cabinet__tab-title")).toHaveText([
+    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
+  ]);
+});
+
+test("Work preserves its CSS filing cabinet when WebGL is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "WebGLRenderingContext", {
+      configurable: true, value: undefined,
+    });
+  });
+  await page.goto("/work.html");
+  await page.locator(".filing-cabinet__well").scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-project-archive]")).not.toHaveAttribute("data-cabinet3d", "ready");
+  await expect(page.locator(".filing-cabinet__face").first()).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator(".filing-cabinet__link")).toHaveCount(3);
+});
