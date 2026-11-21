@@ -53,9 +53,9 @@ body[data-page="work"] .project-folder-stack__intro {
 
   position: absolute;
   inset-inline: 0;
-  top: calc(var(--folder-index) * var(--folder-offset));
-  height: calc(100% - var(--folder-index) * var(--folder-offset));
-  z-index: calc(1 + var(--folder-index));
+  top: calc(var(--folder-index, 0) * var(--folder-offset));
+  height: calc(100% - var(--folder-index, 0) * var(--folder-offset));
+  z-index: calc(1 + var(--folder-index, 0));
   min-height: 23rem;
   border: 0;
   background: none;
@@ -68,14 +68,14 @@ body[data-page="work"] .project-folder-stack__intro {
   width: 100%;
   height: 100%;
   min-height: inherit;
-  color: var(--folder-on);
+  color: var(--folder-on, #fff);
   text-decoration: none;
   isolation: isolate;
 }
 .project-folder__back {
   position: absolute;
   inset: 3.65rem 0 0;
-  background: var(--folder-tone);
+  background: var(--folder-tone, #002080);
   border-radius: clamp(1.35rem, 2.4vw, 2.4rem);
   box-shadow: 0 .8rem 1.4rem rgb(0 0 0 / .1);
 }
@@ -90,7 +90,7 @@ body[data-page="work"] .project-folder-stack__intro {
   min-height: 3.8rem;
   padding: .7rem 1.25rem;
   border-radius: 2rem 2rem 0 0;
-  background: var(--folder-tone);
+  background: var(--folder-tone, #002080);
 }
 .project-folder__tab-title {
   display: block;
@@ -137,8 +137,8 @@ body[data-page="work"] .project-folder-stack__intro {
   justify-content: space-between;
   gap: 1.5rem;
   padding: clamp(1.5rem, 3.75vw, 4rem);
-  background: color-mix(in srgb, var(--folder-tone) 89%, white);
-  color: var(--folder-on);
+  background: color-mix(in srgb, var(--folder-tone, #002080) 89%, white);
+  color: var(--folder-on, #fff);
   border: 1px solid color-mix(in srgb, white 16%, transparent);
   border-radius: clamp(1.4rem, 2.5vw, 2.5rem);
   box-shadow: 0 -.15rem 0 color-mix(in srgb, white 25%, transparent),
