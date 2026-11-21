@@ -121,3 +121,9 @@ html[data-motion="reduced"]::view-transition-new(root) { animation-duration: .01
     animation: frame-in 1200ms var(--motion-expressive) both;
   }
 }
+
+/* Lenis preserves native document flow, fixed elements and anchor targets. */
+html.lenis, html.lenis body { height: auto; }
+html.lenis.lenis-smooth { scroll-behavior: auto !important; }
+html.lenis.lenis-stopped { overflow: hidden; }
+html.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
