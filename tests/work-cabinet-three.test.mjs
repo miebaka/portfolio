@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { cabinetQuality, initWorkCabinetThree } from "../js/work-cabinet-three.js";
+import { renderProjectArchiveMarkup } from "../js/render/projects.js";
 
 test("cabinet quality avoids costly GPU work on constrained devices", () => {
   assert.deepEqual(cabinetQuality({
@@ -73,4 +74,12 @@ test("bootstrap cancels scroll-load work when the drawer leaves the viewport", (
   assert.match(source, /if \(settleTimer\) clearTimeout\(settleTimer\)/);
   assert.match(source, /if \(inViewport\(\)\) load\(\)/);
   assert.match(source, /requestIdleCallback/);
+});
+
+test("canonical archive renderer uses concise labels without repeating file counts", () => {
+  const html = renderProjectArchiveMarkup();
+  assert.match(html, /THE ARCHIVE/);
+  assert.match(html, /CASE STUDIES/);
+  assert.match(html, /CURRENT FILE/);
+  assert.doesNotMatch(html, /FILING SYSTEM \/ 001|CURRENT FILE \/ REGISTER|AVAILABLE TO OPEN/);
 });
