@@ -289,9 +289,11 @@ export function initWorkCabinetThree({
       const width = hit.clientWidth;
       if (width < 8) return;
       const group = new THREE.Group();
-      // Rod ends rest close to the physical support rails (top surface ~12px).
-      // Minimal layer spacing preserves z-order without floating paper slabs.
-      const baseZ = 13.5 + index * .6;
+      // The rear tab is 2.05 units behind its folder's front leaf.
+      // Year-guide stock must lie behind that tab, or the 3D tab crown
+      // disappears beneath the guide even with transparent HTML styling.
+      // Keep both tiers close to the inner steel rails rather than floating.
+      const baseZ = (isFolder ? 15.4 : 8.5) + index * .6;
       group.position.set(x, y, baseZ);
       sceneContents.add(group);
 
