@@ -20,7 +20,7 @@ test("each paper folder has rear tab, two sheets, opaque front and full text", (
   for (const className of ["project-folder__back", "project-folder__tab",
     "project-folder__paper--left", "project-folder__paper--right",
     "project-folder__front", "project-folder__title", "project-folder__view"]) {
-    assert.equal((html.split('class="' + className + '"').length - 1), 3, className);
+    assert.equal((html.match(new RegExp('class="[^"]*' + className + '(?: [^"]*)?"', "g")) || []).length, 3, className);
   }
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
