@@ -125,7 +125,9 @@ export function initWorkCabinetThree({
     saveData: Boolean(win.navigator?.connection?.saveData),
     hardwareConcurrency: win.navigator?.hardwareConcurrency ?? 4,
   });
-  if (!quality.enabled || !win.WebGLRenderingContext) return { destroy() {} };
+  if (!quality.enabled || !win.WebGLRenderingContext || !win.WebGL2RenderingContext) {
+    return { destroy() {} };
+  }
 
   let started = false;
   let destroyed = false;
@@ -388,19 +390,27 @@ export function initWorkCabinetThree({
       }));
 
       if (quality.environment) {
-        pmrem = new THREE.PMREMGenerator(renderer);
         const room = new RoomEnvironment();
-        environmentTarget = pmrem.fromScene(room);
-        scene.environment = environmentTarget.texture;
-        room.dispose();
+        try {
+          pmrem = new THREE.PMREMGenerator(renderer);
+          environmentTarget = pmrem.fromScene(room);
+          scene.environment = environmentTarget.texture;
+        } catch (error) {
+          // Environment reflections are optional; keep geometry and navigation.
+          console.warn("Studio reflections unavailable; continuing without HDR lighting", error);
+        } finally {
+          room.dispose();
+        }
       }
 
       well.prepend(canvas);
       rebuild();
       renderer.render(scene, camera);
       cabinet.dataset.cabinet3d = "ready";
-      resizeObserver = new win.ResizeObserver(rebuild);
-      resizeObserver.observe(well);
+      if (typeof win.ResizeObserver === "function") {
+        resizeObserver = new win.ResizeObserver(rebuild);
+        resizeObserver.observe(well);
+      }
       mutationObserver = new win.MutationObserver(invalidate);
       mutationObserver.observe(cabinet, {
         attributes: true, subtree: true,
