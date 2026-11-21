@@ -291,7 +291,7 @@ body[data-page="work"] .filing-cabinet.is-scrolling .filing-cabinet__folder:not(
 }
 
 body[data-page="work"] .filing-cabinet__link:focus-visible {
-  outline: 2px solid var(--ref-coral-30);
+  outline: 2px solid color-mix(in srgb, var(--ref-coral-30) 50%, var(--ref-coral-75));
   outline-offset: 3px;
 }
 
