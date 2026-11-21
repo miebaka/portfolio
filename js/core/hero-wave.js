@@ -30,15 +30,12 @@ function resolvedState(root, reducedMotionQuery) {
 export async function initHeroWave({
   document: doc = globalThis.document,
   window: win = globalThis.window,
-  navigator: navigatorObject = globalThis.navigator,
   loadRenderer = () => import("../../assets/runtime/hero-wave.js"),
 } = {}) {
   const parameters = new URLSearchParams(win?.location?.search || "");
   const testOptIn = parameters.has("shader-test");
   const forceStatic = parameters.has("shader-static");
-  const automationOptIn = testOptIn || parameters.has("shader-perf");
   if (!doc?.body || !win || doc.body.dataset.page !== "home" ||
-      (navigatorObject?.webdriver === true && !automationOptIn) ||
       doc.querySelector("[data-hero-wave]")) return null;
 
   if (testOptIn) doc.documentElement.classList.add("shader-test-mode");
@@ -55,6 +52,21 @@ export async function initHeroWave({
   const landing = doc.querySelector(".home-landing");
   if (!landing) return null;
 
+  // Keep the water surface visible while WebGL loads, and when it cannot run.
+  const host = doc.createElement("div");
+  host.className = "hero-wave is-fallback";
+  host.dataset.heroWave = "";
+  host.dataset.renderer = "fallback";
+  host.setAttribute("aria-hidden", "true");
+  landing.prepend(host);
+  const keepFallback = error => {
+    if (error) console.warn("Three.js water unavailable; showing water fallback", error);
+    host.classList.add("is-fallback");
+    host.classList.remove("is-ready");
+    host.dataset.renderer = "fallback";
+    return { destroy() { host.remove(); } };
+  };
+
   // Only reject confirmed software rendering. Missing GPU-identification
   // details are normal on mobile and must not suppress a working WebGL2 device.
   // Explicit shader-test routes retain software GL for deterministic QA.
@@ -65,7 +77,7 @@ export async function initHeroWave({
       probeContext = probe.getContext("webgl2", {
         alpha: false, antialias: false, powerPreference: "high-performance",
       });
-      if (!probeContext) return null;
+      if (!probeContext) return keepFallback();
       const info = probeContext.getExtension("WEBGL_debug_renderer_info");
       const name = info
         ? probeContext.getParameter(info.UNMASKED_RENDERER_WEBGL)
@@ -74,19 +86,14 @@ export async function initHeroWave({
       // Mobile Safari and privacy-conscious browsers often report only
       // "WebKit WebGL" or "WebGL" and hide WEBGL_debug_renderer_info.
       // An unrecognized name is NOT evidence of a software renderer.
-      if (software) return null;
-    } catch {
-      return null;
+      if (software) return keepFallback();
+    } catch (error) {
+      return keepFallback(error);
     } finally {
       // Do not retain an extra GPU context after the capability probe.
       probeContext?.getExtension("WEBGL_lose_context")?.loseContext();
     }
   }
-  const host = doc.createElement("div");
-  host.className = "hero-wave";
-  host.dataset.heroWave = "";
-  host.setAttribute("aria-hidden", "true");
-  landing.prepend(host);
   const control = doc.createElement("button");
   control.type = "button";
   control.className = "hero-wave__control";
@@ -95,7 +102,7 @@ export async function initHeroWave({
   landing.append(control);
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { control.remove(); host.remove(); console.warn("Hero wave unavailable", error); return null; }
+  catch (error) { control.remove(); return keepFallback(error); }
 
   let island;
   try {
@@ -104,9 +111,7 @@ export async function initHeroWave({
   catch (error) {
     island?.destroy();
     control.remove();
-    host.remove();
-    console.warn("Hero wave unavailable", error);
-    return null;
+    return keepFallback(error);
   }
 
   let destroyed = false;
@@ -204,6 +209,8 @@ export async function initHeroWave({
     if (destroyed) return;
     if (!host.querySelector("canvas")) return;
     root.classList.add("has-hero-wave");
+    host.classList.remove("is-fallback");
+    host.dataset.renderer = "threejs";
     host.classList.add("is-ready");
   };
   void markReady();
