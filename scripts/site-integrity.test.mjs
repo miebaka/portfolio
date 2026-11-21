@@ -618,7 +618,7 @@ test("retired source systems cannot return unnoticed", async () => {
   const main = await readFile(join(root, "js", "main.js"), "utf8");
   const styles = await readFile(join(root, "styles", "main.css"), "utf8");
   assert.doesNotMatch(main, /kinetic|case-rail|motion-director/i);
-  assert.equal((styles.match(/@import/g) || []).length, 12); // The Work cabinet is a page-scoped stylesheet, not a global import.
+  assert.equal((styles.match(/@import/g) || []).length, 13); // The paper-folder archive remains page-scoped.
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
