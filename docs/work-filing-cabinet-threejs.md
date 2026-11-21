@@ -212,3 +212,13 @@ work; context loss returns to the CSS cabinet; no material/geometry leaks
 appear after viewport rebuild. A passing CI suite establishes functional
 safety, not photographic quality: human desktop/mobile screenshot review
 is still required before calling the work complete.
+
+### Coarse-pointer tab registration and first-frame stability
+
+The mobile reader's selection animation now uses a restrained positive Z
+offset in WebGL mode rather than translating HTML ink away from the rendered
+paper in screen space. The native CSS mode retains the original vertical
+selection lift. The initial WebGL frame synchronously samples computed
+HTML face rectangles before the ready flag removes the CSS background.
+This specifically prevents a selected first file's label from appearing
+suspended over an empty navy strip during the lazy-renderer transition.
