@@ -11,7 +11,7 @@ const escapeHTML = value => String(value ?? "").replace(/[&<>"]/g, character => 
 const routesFor = placement => navigation.routes.filter(route => route.includeIn.includes(placement));
 
 export function renderHeader({ base = "", page = "" } = {}) {
-  const links = routesFor("primary").map(route =>
+  const links = routesFor("index").map(route =>
     `<a class="site-nav__link" href="${base}${escapeHTML(route.href)}"${route.key === page ? ' aria-current="page"' : ""}>${escapeHTML(route.label)}</a>`
   ).join("");
   return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a><div class="site-nav__listening" data-mount="now-playing"><a class="now-playing" href="https://www.last.fm/user/${encodeURIComponent(siteConfig.lastfmUser)}" target="_blank" rel="noopener noreferrer" aria-label="Last.fm listening history">Last.fm</a></div></div><button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button><nav class="site-nav__links" id="site-nav-links" aria-label="Primary">${links}</nav><div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div></header>`;

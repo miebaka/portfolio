@@ -102,7 +102,7 @@ test("the route registry has unique destinations and supports the approved globa
   assert.equal(new Set(navigation.routes.map((route) => route.key)).size, navigation.routes.length);
   assert.deepEqual(
     navigation.index.map((route) => route.label),
-    ["Work", "Experiments", "About", "Essays", "Contact"],
+    ["Work", "Experiments", "About", "Essays", "Contact", "Process", "Accessibility"],
   );
   assert.deepEqual(
     navigation.primary.map((route) => route.label),
@@ -721,7 +721,8 @@ test("Experiments has a complete, navigable and image-rich no-JS gallery", async
   const manifest = JSON.parse(await readFile(join(root,"assets","experiments","metadata.json"),"utf8"));
   for (const directory of [root,dist]) {
     const page = await readFile(join(directory,"experiments.html"),"utf8");
-    assert.match(page, /<noscript><section class="experiments-static"/);
+    assert.match(page, /<section class="experiments-static"/);
+    assert.doesNotMatch(page, /<noscript><section class="experiments-static"/);
     for (const destination of ["work.html","about.html","essays.html","contact.html"])
       assert.match(page, new RegExp('href="' + destination + '"'));
     for (const file of Object.keys(manifest))
