@@ -90,20 +90,20 @@ body[data-page="home"] .swiss-selected {
 /* Biography: text and portrait use predictable columns, with no orphaned grid spans. */
 body[data-page="home"] .home-profile {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(2em, 6vw, 7em);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3em;
   align-items: center;}
 body[data-page="home"] .home-profile .home-profile__introduction {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: auto;
   max-width: 54em;
   min-width: 0;
   display: grid;
   gap: clamp(1.1em, 2vw, 2em);
   align-content: center;}
 body[data-page="home"] .home-profile .home-profile__media {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 1;
+  grid-row: auto;
   min-width: 0;
   align-self: center;}
 body[data-page="home"] .home-profile__introduction h2 {
@@ -143,6 +143,25 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
   max-width: 18ch;}
 body[data-page="home"] section.home-capabilities--reference .service-stack__symbol {
   opacity: .8;}
+
+/* Let the portrait join the editorial copy only above the mobile breakpoint.
+   Small viewports retain the native single-column reading order. */
+@media (min-width: 48.001em) {
+  body[data-page="home"] .home-profile {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2em, 6vw, 7em);
+  }
+
+  body[data-page="home"] .home-profile .home-profile__introduction {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  body[data-page="home"] .home-profile .home-profile__media {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
 
 /* A cohesive editorial About page: generous negative space and readable rhythm. */
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero {
@@ -261,13 +280,6 @@ body .site-footer__panel {
     gap: .1em 1em;}
 
 
-  body[data-page="home"] .home-profile {
-    grid-template-columns: 1fr;
-    gap: 3em;}
-  body[data-page="home"] .home-profile .home-profile__introduction,
-  body[data-page="home"] .home-profile .home-profile__media {
-    grid-column: 1;
-    grid-row: auto;}
   body[data-page="home"] section.home-capabilities--reference .service-stack {
     padding-inline: clamp(.75em, 2.5vw, 1.5em);}
   body[data-page="home"] section.home-capabilities--reference .service-stack__item {
