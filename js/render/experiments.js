@@ -40,7 +40,6 @@ export async function initExperimentsSpatial() {
   if (!Array.isArray(entries) || !entries.length) {
     status.textContent = "Experiments could not be loaded.";
     stage.innerHTML = '<p class="experiments-empty">The visual archive is unavailable. <a href="work.html">Explore selected work</a>.</p>';
-    root.classList.add("is-ready");
     return;
   }
 
@@ -215,6 +214,5 @@ export async function initExperimentsSpatial() {
     });
   }
   paint();
-  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-ready")));
   addEventListener("pagehide", () => { removeEventListener("popstate", onHistory); removeEventListener("hashchange", onHistory); cancelAnimationFrame(frame); }, { once: true });
 }

@@ -674,6 +674,7 @@ test("retired page prototypes and temporary motion engines are absent", async ()
   const types = await readFile(join(root, "styles", "tokens.css"), "utf8");
   const script = await readFile(join(root, "js", "main.js"), "utf8");
   assert.doesNotMatch(css, /decision-field|experiment-tunnel|disciplines-index|impeccable-motion/);
+  assert.doesNotMatch(css, /experiments-loader|overflow:hidden;background:var\(--ref-neutral-94\)/);
   assert.doesNotMatch(types, /experiment-tunnel/);
   assert.doesNotMatch(script, /scroll-experience|editorial-reveals|initMotionLanguage/);
   assert.doesNotMatch(css, /project-(?:image|copy)-enter/);

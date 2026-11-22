@@ -210,22 +210,16 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
 .case-page--chopbox .case-gallery{gap:clamp(1.5rem,3vw,3.5rem)}
 .case-page--tedx .case-chapter{border-bottom-color:color-mix(in srgb,var(--case-accent) 24%,var(--line))}
 
-/* Experiments — a spatial, pannable archive. Assets are indexed at build time. */
-body[data-page="explorations"]{overflow:hidden;background:var(--ref-neutral-94);color:var(--ref-near-black)}
-body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
-.experiments-page{height:100dvh;overflow:hidden;background:var(--ref-neutral-94);color:var(--ref-near-black)}
-.experiments-spatial{position:relative;height:100dvh;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 50% 44%,var(--ref-paper) 0,var(--ref-neutral-94) 58%,var(--ref-neutral-80) 140%)}
+/* Experiments shared controls and styles; the page-scoped layout lives in experiments-access.css. */
 .experiments-spatial::after{content:"";position:fixed;z-index:8;inset:0;pointer-events:none;box-shadow:inset 0 0 10rem color-mix(in srgb,var(--ref-black) 8%,transparent)}
 .experiments-spatial__viewport{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:pan-y pinch-zoom;overscroll-behavior-x:none;outline:none}
 .experiments-spatial__viewport.is-dragging{cursor:grabbing}
 .experiments-spatial__viewport:focus-visible{box-shadow:inset 0 0 0 2px var(--ref-near-black)}
-.experiments-spatial__stage{position:absolute;left:0;top:0;width:var(--stage-w,2500px);height:var(--stage-h,1780px);transform:translate3d(0,0,0);transform-origin:0 0}
 .experiments-spatial__hint{position:fixed;z-index:12;left:50%;bottom:max(1.5rem,var(--safe-bottom));margin:0;padding:.72rem 1rem .68rem;border:1px solid color-mix(in srgb,var(--ref-near-black) 20%,transparent);border-radius:99px;background:color-mix(in srgb,var(--ref-paper) 78%,transparent);box-shadow:0 .5rem 2rem color-mix(in srgb,var(--ref-black) 8%,transparent);pointer-events:none;transform:translateX(-50%);backdrop-filter:blur(12px);transition:opacity 280ms ease}
 .experiments-spatial.has-interacted .experiments-spatial__hint{opacity:0}
 .no-js .experiments-spatial{min-height:auto;padding:var(--section-padding) var(--page);background:var(--paper);color:var(--ink)}
 .no-js .experiments-spatial__viewport{display:none}
 .no-js .experiments-spatial__stage{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;width:auto;height:auto;transform:none}
-.no-js 
 .no-js .experiments-spatial__hint{display:none}
 .no-js .experiments-spatial__heading{position:static;margin-bottom:3rem;color:var(--ink)}
 
@@ -324,15 +318,9 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 .case-page .case-chapter__media{margin-top:clamp(3rem,5vw,5rem)}
 .case-page .case-shot img{display:block}
 
-/* Experiments: shared layout before the current poster gallery. */
-.experiments-spatial{perspective:1200px;background:var(--ref-midnight);color:var(--ref-paper)}
-.experiments-spatial::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--ref-ultramarine) 72%,transparent),transparent 62%)}
-.experiments-spatial__heading{position:fixed;z-index:20;top:calc(var(--nav-h) + 1.5rem);left:var(--grid-edge);right:var(--grid-edge);display:flex;align-items:baseline;justify-content:space-between;pointer-events:none}
-.experiments-spatial__viewport{touch-action:none}
-.experiments-spatial__stage{position:absolute;inset:0;width:100%;height:100%;transform-style:preserve-3d}
+/* Experiments poster gallery and accessible index controls. */
 
 
-.experiments-spatial__hint{color:var(--ref-paper);border-color:color-mix(in srgb,var(--ref-paper) 25%,transparent);background:color-mix(in srgb,var(--ref-midnight) 60%,transparent)}
 
 @media(max-width:48rem){
   .about-hero{grid-template-columns:1fr;min-height:0}.about-hero__copy{grid-column:1;grid-row:1;min-height:26rem;padding:2rem 0}.about-hero__media{grid-column:1;grid-row:2;min-height:0;aspect-ratio:4/5}
@@ -344,15 +332,9 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 
 @media(prefers-reduced-motion:reduce){.article-toc a::before{transition:none}}
 
-/* Experiments — reference-led 4:5 poster archive. */
-body[data-page="explorations"]>header,body[data-page="explorations"]>footer{display:none}
-body[data-page="explorations"] .experiments-page{height:100dvh;padding:0;background:var(--ref-neutral-94);color:var(--ref-near-black)}
-body[data-page="explorations"] .experiments-spatial{height:100dvh;background:var(--ref-neutral-94);color:var(--ref-near-black);perspective:none}
+/* Current 4:5 poster archive. */
 body[data-page="explorations"] .experiments-spatial::before{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--ref-paper) 35%,transparent),transparent 22% 78%,color-mix(in srgb,var(--ref-paper) 35%,transparent))}
 body[data-page="explorations"] .experiments-spatial::after{box-shadow:inset 0 0 6rem color-mix(in srgb,var(--ref-black) 4%,transparent)}
-.experiments-loader{position:fixed;z-index:100;inset:0;display:grid;place-content:start center;padding-top:.65rem;background:var(--ref-neutral-94);}
-.experiments-loader p{position:absolute;top:.65rem;left:calc(50% + 2.2rem);margin:0;}
-.experiments-spatial.is-ready .experiments-loader{animation:experiments-loader-away 440ms ease 420ms both}
 .experiments-nav{position:fixed;z-index:52;top:.6rem;left:50%;display:flex;align-items:center;gap:1.55rem;transform:translateX(-50%)}
 .experiments-nav :is(a,button){display:inline-flex;align-items:center;min-height:2.75rem;padding:0;border:0;background:none;color:var(--ref-near-black);transition:opacity 180ms ease}
 .experiments-nav button span{display:inline-block;margin-left:.12rem;transition:transform 180ms ease}.experiments-nav button[aria-expanded="true"] span{transform:rotate(180deg)}
@@ -362,7 +344,7 @@ body[data-page="explorations"] .experiments-spatial__heading h1{padding-bottom:.
 .experiments-spatial__heading dl>div{display:grid;grid-template-columns:5.2rem 1fr;gap:.5rem;padding:.25rem 0;border-bottom:1px solid color-mix(in srgb,var(--ref-black) 55%,transparent)}
 .experiments-spatial__heading dt{color:var(--muted)}
 .experiments-spatial__heading dd{justify-self:end;margin:0;}
-body[data-page="explorations"] .experiments-spatial__viewport{z-index:4;cursor:grab;touch-action:none}
+body[data-page="explorations"] .experiments-spatial__viewport{z-index:4;cursor:grab}
 body[data-page="explorations"] .experiments-spatial__stage{position:absolute;inset:0;width:100%;height:100%;transform:none}
 .experiment-poster{position:absolute;z-index:calc(20 - var(--distance));left:54%;top:50%;display:grid;width:min(38vw,31rem);margin:0;padding:0;border:0;background:transparent;color:var(--ref-near-black);transform:translate3d(calc(-50% + var(--offset) * 38vw),-50%,0) rotate(calc(var(--offset) * -5deg)) scale(calc(1 - var(--distance) * .13));opacity:calc(1 - var(--distance) * .12);transform-origin:50% 50%;transition:filter 180ms ease}
 .experiment-poster[aria-hidden="true"]{visibility:hidden}
@@ -384,12 +366,11 @@ body[data-page="explorations"] .experiments-spatial__stage{position:absolute;ins
 .experiments-index li{border-bottom:1px solid var(--ref-near-black)}
 .experiments-index li>button{display:grid;grid-template-columns:3rem minmax(0,1fr) auto;align-items:baseline;width:100%;min-height:4.5rem;padding:.75rem 0;border:0;background:none;color:var(--ref-near-black);transition:background-color 180ms ease}.experiments-index button span{color:var(--muted)}.experiments-index button i{color:var(--muted)}
 .experiments-spatial[data-index-open] :is(.experiments-spatial__heading,.experiments-spatial__viewport,.experiments-spatial__counter,.experiments-spatial__caption,.experiments-spatial__hint,.experiments-controls){visibility:hidden}
-.no-js .experiments-loader,.no-js .experiments-index,.no-js .experiments-spatial__counter{display:none}
+.no-js .experiments-index,.no-js .experiments-spatial__counter{display:none}
 .no-js body[data-page="explorations"]{overflow:auto}.no-js body[data-page="explorations"] .experiments-page,.no-js body[data-page="explorations"] .experiments-spatial{height:auto;min-height:100vh}.no-js body[data-page="explorations"] .experiments-spatial__heading{position:static;width:auto;padding:2rem var(--page)}.no-js body[data-page="explorations"] .experiments-spatial__viewport{position:static;height:auto;overflow:visible}.no-js body[data-page="explorations"] .experiments-spatial__stage{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3rem;padding:2rem var(--page) 8rem}.no-js .experiment-poster{position:static;width:auto;transform:none;opacity:1;visibility:visible}
 @media(hover:hover) and (pointer:fine){.experiments-nav :is(a,button):hover{opacity:.55}.experiments-controls button:hover,.experiments-index__head button:hover{background:var(--ref-near-black);color:var(--ref-paper)}.experiments-index li>button:hover{background:var(--ref-paper)}.experiment-poster:not([data-active]):hover{filter:brightness(.92)}}
 @media(max-width:48rem){.experiments-nav{left:auto;right:.5rem;transform:none;gap:1rem}.experiments-nav .experiments-nav__mark{display:none}body[data-page="explorations"] .experiments-spatial__heading{width:58vw;top:.35rem;left:.5rem}.experiments-spatial__heading dl>div{grid-template-columns:3.8rem 1fr}.experiment-poster{left:50%;top:52%;width:min(72vw,22rem);transform:translate3d(calc(-50% + var(--offset) * 72vw),-50%,0) rotate(calc(var(--offset) * -5deg)) scale(calc(1 - var(--distance) * .16))}.experiments-spatial__counter,.experiments-spatial__caption span{display:none}.experiments-spatial__caption p{max-width:58vw}.experiments-spatial__hint{display:none}.experiments-controls{bottom:.5rem}.experiments-index li>button{grid-template-columns:2rem minmax(0,1fr)}.experiments-index button i{display:none}.no-js body[data-page="explorations"] .experiments-spatial__stage{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){.experiments-loader{display:none}.experiment-poster,.experiment-poster__face{transition:none}}
-@keyframes experiments-loader-away{to{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.experiment-poster,.experiment-poster__face{transition:none}}
 
 body[data-page="contact"] .contact__submit .btn{width:100%;min-height:4rem;height:auto;background:var(--ref-ultramarine);color:var(--ref-paper);}
 body[data-page="contact"] .contact__submit .btn:disabled{background:color-mix(in srgb,var(--sys-color-on-surface) 12%,transparent);color:color-mix(in srgb,var(--sys-color-on-surface) 38%,transparent)}

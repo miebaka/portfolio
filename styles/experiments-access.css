@@ -1,5 +1,4 @@
-/* Experiments: the gallery is one chapter of the site, never a scroll trap.
-   Page-level rules override the retired full-screen kiosk presentation. */
+/* Experiments: a navigable page with native vertical scroll and a contained gallery. */
 body[data-page="explorations"] { overflow-x: clip; overflow-y: auto; background: var(--paper); color: var(--ink); }
 body[data-page="explorations"] > header.site-nav {
   display: block; position: sticky; inset: auto; top: 0; z-index: 100;
@@ -14,10 +13,6 @@ body[data-page="explorations"] section.experiments-spatial {
   isolation: isolate;
 }
 body[data-page="explorations"] .experiments-spatial::after { position: absolute; }
-body[data-page="explorations"] .experiments-loader {
-  position: absolute; z-index: 35; inset: 0; padding-top: 1rem;
-  pointer-events: none;
-}
 body[data-page="explorations"] .experiments-nav {
   position: absolute; top: 1rem; left: auto; right: var(--page);
   transform: none; z-index: 30; gap: clamp(.8rem, 2vw, 2rem);
