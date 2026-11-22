@@ -60,7 +60,7 @@ export function renderFolderRackMarkup(projects, base = "", variant = "work") {
       '<ol class="folder-rack__index">' + chapters + '</ol></span></span></a>';
   }).join("");
   return '<div class="folder-rack folder-rack--' + variant +
-    '" data-folder-rack aria-label="Case study folders"><div class="folder-rack__scroller" tabindex="0" aria-label="Browse case study folders horizontally"><div class="folder-rack__track">' +
+    '" data-folder-rack role="group" aria-label="Case study folders"><div class="folder-rack__scroller" role="region" tabindex="0" aria-label="Browse case study folders horizontally"><div class="folder-rack__track">' +
     folders + '</div></div><p class="folder-rack__hint">Hover to explore · Select to open</p></div>';
 }
 
