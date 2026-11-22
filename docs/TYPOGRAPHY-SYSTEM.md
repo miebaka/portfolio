@@ -26,7 +26,7 @@ No other file in `styles/` is allowed to set typography properties. The remainin
 | Navigation, metadata and labels | `--font-mono` | Geist Mono | 400, 600 |
 | Icons only | `--icon` | Material Symbols Outlined | 400 |
 
-The unreferenced Archivo, Finlandica and Host Grotesk binaries and licences were deleted in the 22 November cleanup. Text fonts are pinned WOFF2 requests to jsDelivr; only the approved Material Symbols icon subset is self-hosted.
+Unused historical font binaries and their licences were deleted in the 22 November cleanup. Text fonts are pinned WOFF2 requests to jsDelivr; only the approved Material Symbols icon subset is self-hosted.
 
 No legacy family aliases are kept. Do not reintroduce `--display`, `--body`, `--label`, `--font-display`, `--font-body` or `--font-label`.
 
