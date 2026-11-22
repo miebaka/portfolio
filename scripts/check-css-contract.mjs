@@ -64,10 +64,7 @@ for (const [name, source] of entries) for (const rule of leafRules(source)) {
   for (const declaration of rule.declarations.matchAll(/transition(?:-property|-duration)?\s*:\s*([^;]+)/gi)) {
     const value = declaration[1];
     const durations = [...value.matchAll(/(^|[\s,(])([0-9]*\.?[0-9]+)(ms|s)\b/gi)].map(match => Number(match[2]) * (match[3].toLowerCase() === "s" ? 1000 : 1));
-    // Owner-requested Proof Sheet record: its ink inversion
-    // intentionally retain the reference's 500ms timing. No other UI is exempt.
-    const isReferenceRecord = rule.selector === ".home-page .now-playing" && durations.every(duration => duration <= 500);
-    reject(!isReferenceRecord && durations.some(duration => duration > 300), `${name} has a transition longer than 300ms in ${rule.selector}: ${value}`);
+    reject(durations.some(duration => duration > 300), `${name} has a transition longer than 300ms in ${rule.selector}: ${value}`);
     if (/^transition\s*:/i.test(declaration[0])) for (const item of value.split(",")) {
       const property = item.trim().split(/\s+/)[0];
       reject(layoutProperties.test(property), `${name} transitions layout property ${property} in ${rule.selector}`);
