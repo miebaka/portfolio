@@ -1,6 +1,6 @@
 import {test,expect} from "@playwright/test";
 
-test("Home keeps the landing restrained and Selected Work as upright folders",async({page})=>{
+test("Home keeps the landing restrained and Selected Work as landscape folders",async({page})=>{
   await page.goto("/index.html");
   await expect(page.locator("body")).not.toContainText("Available for senior brand and marketing design roles");
   await expect(page.locator(".home-landing")).toHaveCSS("position","sticky");
@@ -11,6 +11,8 @@ test("Home keeps the landing restrained and Selected Work as upright folders",as
   await expect(page.locator(".home-folder-stack .project-folder")).toHaveCount(3);
   await expect(page.locator(".home-folder-stack .project-folder__paper")).toHaveCount(15);
   await expect(page.locator("#selected-work .work-view-controls")).toHaveCount(0);
+  await expect(page.locator("#selected-work .swiss-section-head")).toHaveCount(0);
+  await expect(page.locator("#selected-work")).toHaveAttribute("aria-label", "Selected work");
 });
 
 test("What I Do uses rounded inset cards and no colored section wrapper",async({page})=>{
@@ -89,4 +91,40 @@ test("What I Do stacks by scroll, ignores hover and ends with the last card", as
   await expect(last).toHaveCSS("position", "sticky");
   await expect(last).toHaveCSS("z-index", "14");
   await expect(last.locator(".service-stack__card")).toHaveCSS("transform", "none");
+});
+
+test("logo marquee animates and source logos have identical computed heights", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/index.html");
+  const marquee = page.locator(".client-marquee");
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toHaveClass(/is-running/);
+  const track = marquee.locator(".client-marquee__track");
+  await expect(track).toHaveCSS("animation-play-state", "running");
+  await expect(track).toHaveCSS("animation-name", "client-marquee");
+  const heights = await marquee.locator(".client-proof").first()
+    .locator(".marquee__item img")
+    .evaluateAll(nodes => nodes.map(node => Math.round(parseFloat(getComputedStyle(node).height))));
+  expect(new Set(heights).size).toBe(1);
+  const before = await track.evaluate(node => getComputedStyle(node).transform);
+  await page.waitForTimeout(200);
+  const after = await track.evaluate(node => getComputedStyle(node).transform);
+  expect(after).not.toBe(before);
+});
+
+test("yellow closes the service stack before the client-marquee boundary", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/index.html");
+  const section = page.locator("#what-i-do");
+  const cards = section.locator(".service-stack__item");
+  await expect(cards).toHaveCount(5);
+  const zIndices = await cards.evaluateAll(nodes => nodes.map(node => Number(getComputedStyle(node).zIndex)));
+  expect(zIndices[4]).toBeGreaterThan(zIndices[3]);
+  const spacer = await section.locator(".service-stack").evaluate(el => getComputedStyle(el, "::after").height);
+  expect(parseFloat(spacer)).toBeGreaterThan(300);
+  const boundary = await page.evaluate(() => ({
+    sectionBottom: document.querySelector("#what-i-do").getBoundingClientRect().bottom,
+    logosTop: document.querySelector(".journey").getBoundingClientRect().top
+  }));
+  expect(boundary.logosTop).toBeGreaterThanOrEqual(boundary.sectionBottom - 2);
 });

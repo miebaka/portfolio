@@ -1,6 +1,6 @@
 /* The Home rack deliberately uses the same landscape folders and vertical
    opening interaction as Work. Only the section's screen-height framing differs. */
-body[data-page="home"] section.swiss-selected {
+body[data-page="home"] .home-content section.swiss-selected {
   display: flex;
   flex-direction: column;
   justify-content: center;

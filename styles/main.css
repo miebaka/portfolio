@@ -17,6 +17,7 @@
 @import url("project-folders.css") layer(pages);
 @import url("home-folders.css") layer(pages);
 @import url("folder-interactions.css") layer(pages);
+@import url("home-experience.css") layer(pages);
 @import url("footer-layout.css") layer(pages);
 
 /* Typography has a single source, applied after layout and components. */

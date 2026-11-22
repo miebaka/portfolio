@@ -94,9 +94,8 @@ test("critical mobile proof remains readable without JavaScript or motion", asyn
     expect(box?.x ?? -1, text).toBeGreaterThanOrEqual(0);
     expect((box?.x ?? 0) + (box?.width ?? 999), text).toBeLessThanOrEqual(391);
   }
-  // Section names remain accessible headings without reintroducing visual micro-labels.
-  await expect(page.locator("#selected-title")).toHaveText("Selected work");
-  await expect(page.locator(".swiss-selected .swiss-section-head")).toHaveCSS("clip-path", "inset(50%)");
+  await expect(page.locator("#selected-work")).toHaveAttribute("aria-label", "Selected work");
+  await expect(page.locator("#selected-title")).toHaveCount(0);
   await context.close();
 });
 

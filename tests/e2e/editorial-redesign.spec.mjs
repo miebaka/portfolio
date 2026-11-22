@@ -31,9 +31,15 @@ test("One original interactive dot-matrix footer is present and theme-aware on k
  for(const route of ["/index.html","/work.html","/about.html","/essays.html","/contact.html"]){
   await page.goto(route);
   const footer=page.locator(".site-footer");
-  await expect(footer.locator(".site-footer__statement")).toContainText("Ideas made unmistakable");
+  await expect(footer.locator(".site-footer__eyebrow")).toHaveText("Inquiries");
+  await expect(footer.locator(".site-footer__links a")).toHaveCount(10);
   await expect(footer.locator(".site-footer__start")).toHaveAttribute("href",/mailto:/);
   await expect(footer.locator(".site-footer__signature")).toHaveCount(1);
+  const bounds = await footer.evaluate(node => ({
+    linksBottom: node.querySelector(".site-footer__panel").getBoundingClientRect().bottom,
+    markTop: node.querySelector(".site-footer__signature").getBoundingClientRect().top
+  }));
+  expect(bounds.linksBottom).toBeLessThanOrEqual(bounds.markTop + 2);
   const mask=await footer.locator(".site-footer__signature").evaluate(node=>getComputedStyle(node,"::before").maskImage);
   expect(mask).toContain("miebaka-joshua-script-name.svg");
   const getColors=()=>page.evaluate(()=>{
@@ -99,7 +105,7 @@ test("What I Do has no numbers or card gradients and all UI labels are uppercase
   expect(["none","normal"]).toContain(visual.pseudo);
   expect(visual.pseudoImage).toBe("none");
  }
- await expect(page.locator(".site-footer__eyebrow,.site-footer__bottom")).toHaveCount(0);
+ await expect(page.locator(".site-footer__eyebrow,.site-footer__bottom")).toHaveCount(2);
  for(const selector of [".service-stack__tag"]){
   await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
  }

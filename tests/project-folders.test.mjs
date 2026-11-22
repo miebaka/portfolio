@@ -74,12 +74,12 @@ test("folder surface keeps one target per case and static, non-intercepting pape
   assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
 });
 
-test("Home keeps the landscape Work folder material but stands the folders up", () => {
+test("Home matches the Work landscape folder construction", () => {
   const html = renderHomeProjectList(SITE.projects, SITE.caseStudies);
   assert.match(html, /home-folder-stack__cards/);
   assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
     ["tedx-rsu.html", "rivo.html", "chopbox.html"]);
-  assert.equal((html.match(/class="project-folder__spine"/g) || []).length, 3);
+  assert.doesNotMatch(html, /project-folder__spine/);
   assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });

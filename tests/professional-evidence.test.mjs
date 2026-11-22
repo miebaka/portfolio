@@ -139,7 +139,7 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
   assert.doesNotMatch(markup, /<details|card/i);
 });
 
-test("the homepage uses standing Work-material folders for published cases only", () => {
+test("the homepage uses matching landscape folders for published cases only", () => {
   const markup = renderHomeProjectList(CONTENT.projects, CONTENT.caseStudies);
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
     const project = CONTENT.projects.find(item => item.slug === slug);
