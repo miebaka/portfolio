@@ -79,7 +79,7 @@ test("Home retains the fixed file-cabinet stack depth and bounded rise", () => {
   const controller = readFileSync(resolve("js/core/project-folder-interactions.js"), "utf8");
   assert.match(css, /z-index:\s*calc\(var\(--folder-index, 0\) \+ 1\)/);
   assert.match(css, /home-folder-stack__cards\.is-folder-interactive\.has-active/);
-  assert.match(controller, /homeRise = \(\) => Math\.min\(152, size \* \.29\)/);
+  assert.match(controller, /homeRise = \(\) => Math\.min\(9\.5 \* em\(\), size \* \.29\)/);
 });
 
 test("folder reveal only animates compositor-friendly transform and opacity", () => {
