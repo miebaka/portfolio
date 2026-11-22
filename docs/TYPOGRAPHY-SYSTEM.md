@@ -65,3 +65,16 @@ The lint rule `scripts/stylelint-typography.mjs`, both typography tests and toke
 ## Relative sizing migration — November 2026
 
 `em` replaced `rem` in the authored CSS typography bounds. Unlike root-relative `rem`, `em` participates in the containing component's font-size context; nested type scales can therefore compound. Use the nearest intended parent as the point of reference, and avoid stacking multiple font-size multipliers. Spacing and breakpoint geometry should scale with the design's typography rather than fight it. Mobile-first grid and gutter defaults live outside this typography-only stylesheet, in `styles/layout.css` and `styles/foundations.css`. Validate computed geometry on phones and at enlarged text sizes, not just source declarations.
+
+
+## Mobile-first rebuild contract
+
+The responsive layouts use the four-column phone grid as the base. Editorial pages expand to eight columns at `48em` and twelve at `62.001em`. The generic shared grid switches to twelve tracks above `48.001em`. Layout files now use upward `min-width` queries in the homepage, editorial pages, footer, services, and Index.
+
+Home stays a natural document on mobile: its hero water remains interactive when WebGL2 is available, Selected Work keeps the physical file stack, What I Do is a readable nonsticky list, and the logo marquee respects reduced motion. The sticky service-card stack is a desktop enhancement, not a phone requirement.
+
+About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information above `52.001em`.
+
+Keep `em` for typography, spacing, breakpoints and component dimensions. Fixed one-pixel material edges, outlines, the accessibility-required 44px control targets, native viewport units and WebGL canvas pixel coordinates are documented exceptions. The folder controller measures native browser rectangles in CSS pixels but writes responsive dimensions back as `em`.
+
+Run `npm run test:relative` and `npm run test:e2e`. The browser suite includes the main public routes at widths 320, 390, 768, 1024 and 1440 pixels, as well as 200% enlarged-text checks. Do not accept a stylesheet-only pass as visual sign-off.
