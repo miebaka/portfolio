@@ -73,13 +73,22 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
   max-width: min(40em, 90%);
 }
 
-@media (max-width: 48em) {
+/* Phone folders keep their decision labels exposed without crowding the flap. */
   body[data-page="home"] .home-folder-stack .project-folder__outcome {
     display: none;
   }
 
   body[data-page="home"] .home-folder-stack .project-folder__copy {
     gap: .5em;
+  }
+
+@media (min-width: 48.001em) {
+  body[data-page="home"] .home-folder-stack .project-folder__outcome {
+    display: initial;
+  }
+
+  body[data-page="home"] .home-folder-stack .project-folder__copy {
+    gap: clamp(.3em, .7vw, .75em);
   }
 }
 
