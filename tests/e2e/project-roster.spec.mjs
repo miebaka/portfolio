@@ -1,118 +1,120 @@
 import { test, expect } from "@playwright/test";
 
-const rows = page => page.locator(".home-project-list .project-roster__row");
+const homeFolders = page => page.locator(".home-folder-stack__cards .project-folder");
+const track = page => page.locator(".home-folder-stack__cards");
 
-test("three published projects use oversized headings, one real high-resolution image and direct case links", async ({ page }) => {
+test("Home uses three standing versions of the real landscape Work folders", async ({ page }) => {
   await page.goto("/");
-  const items = rows(page);
-  await expect(items).toHaveCount(3);
-
-  for (const [index, name, slug, year] of [
-    [0, "TEDx Rivers State University", "tedx-rsu", "2023"],
-    [1, "Rivo Studio", "rivo", "2024"],
-    [2, "ChopBox", "chopbox", "2022"],
-  ]) {
-    const link = items.nth(index);
-    await expect(link).toHaveAttribute("href", "work/" + slug + ".html");
-    await expect(link).toHaveAttribute("aria-label", new RegExp(year + ", view case study"));
-    await expect(link.locator(".home-project-list__title")).toHaveText(name);
-    await expect(link.locator(".home-project-list__visual img")).toHaveCount(1);
-    await expect(link.locator(".home-project-list__visual img")).toHaveAttribute("src", /assets\/images\/optimized\/.+-810\.webp/);
-    await expect(link.locator(".home-project-list__visual source")).toHaveCount(2);
+  await expect(track(page)).toHaveClass(/is-folder-interactive/);
+  await expect(homeFolders(page)).toHaveCount(3);
+  await expect(page.locator(".home-folder-stack .project-folder__paper")).toHaveCount(15);
+  const expected = [
+    ["tedx-rsu", "TEDx Rivers State University"],
+    ["rivo", "Rivo Studio"],
+    ["chopbox", "ChopBox"]
+  ];
+  for (const [i, [slug, title]] of expected.entries()) {
+    const folder = homeFolders(page).nth(i);
+    await expect(folder.locator(".project-folder__link"))
+      .toHaveAttribute("href", "work/" + slug + ".html");
+    await expect(folder.locator(".project-folder__title")).toHaveText(title);
+    await expect(folder.locator(".project-folder__spine")).toHaveText(title);
+    await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
+    const ratio = await folder.evaluate(el => el.offsetWidth / el.offsetHeight);
+    expect(ratio, "Home folder is physically upright").toBeCloseTo(.66, 1);
   }
-
-  await expect(page.locator(".home-project-list__meta,.home-project-list__arrow,.project-roster__tags,.project-roster__tag")).toHaveCount(0);
-  const titleFont = await items.nth(1).locator(".home-project-list__title").evaluate(el => getComputedStyle(el).fontFamily);
-  expect(titleFont).toContain("Geist Sans");
+  await expect(page.locator(".home-project-list .project-roster__row")).toHaveCount(0);
 });
 
-test("project artwork changes on desktop hover but stays static on touch layouts", async ({ page, isMobile }) => {
-  if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
+test("Home and Work share paper surfaces but not folder orientation", async ({ page }) => {
   await page.goto("/");
-  const items = rows(page);
-  const initialHeights = await items.evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
-  const defaultImage = items.nth(1).locator(".home-project-list__visual");
-  await expect(defaultImage).toHaveCSS("opacity", "1");
-
-  if (isMobile) {
-    for (const item of await items.all()) {
-      await expect(item.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
-      await expect(item.locator(".home-project-list__visual")).toHaveCSS("position", "relative");
-    }
-    await items.first().focus();
-    for (const item of await items.all())
-      await expect(item.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
-    // Mobile rows are in normal document flow; late font metric changes may
-    // legitimately change their height. The real contract is that focus
-    // cannot hide the static artwork or introduce horizontal overflow.
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-    expect(overflow).toBeLessThanOrEqual(2);
-    return;
-  }
-
-  const first = items.first();
-  await first.scrollIntoViewIfNeeded();
-  await first.hover();
-  await expect(first.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
-  await expect(defaultImage).toHaveCSS("opacity", "0");
-  const box = await first.locator(".home-project-list__visual").boundingBox();
-  expect(box.width).toBeGreaterThan(350);
-  expect(box.height).toBeGreaterThan(450);
-  expect(Math.abs(box.x + box.width / 2 - 720)).toBeLessThan(40);
-  const finalHeights = await items.evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
-  finalHeights.forEach((height, index) => expect(Math.abs(height - initialHeights[index])).toBeLessThan(2));
+  const homeRatio = await homeFolders(page).first().evaluate(el => el.offsetWidth / el.offsetHeight);
+  await page.goto("/work.html");
+  const workRatio = await page.locator(".project-folder").first()
+    .evaluate(el => el.offsetWidth / el.offsetHeight);
+  expect(homeRatio).toBeLessThan(.8);
+  expect(workRatio).toBeCloseTo(47 / 38, 2);
+  await expect(page.locator(".project-folder__paper")).toHaveCount(15);
+  await expect(page.locator(".project-folder__spine")).toHaveCount(0);
 });
 
-test("All Work is a sizable, centered, keyboard-focusable link beneath the project list", async ({ page }) => {
+test("hover logically opens the correct standing folder and moves siblings aside", async ({ page, isMobile }) => {
+  test.skip(isMobile, "Touch interaction has a separate first-tap preview contract");
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  const link = page.getByRole("link", { name: /all work/i }).first();
-  await expect(link).toHaveAttribute("href", "work.html");
-  await link.scrollIntoViewIfNeeded();
-  const box = await link.boundingBox();
-  const viewportWidth = page.viewportSize().width;
-  expect(box.width).toBeGreaterThanOrEqual(240);
-  expect(box.height).toBeGreaterThanOrEqual(68);
-  expect(Math.abs(box.x + box.width / 2 - viewportWidth / 2)).toBeLessThan(10);
-  await link.click();
-  await expect(page).toHaveURL(/\/work\.html$/);
+  const folders = homeFolders(page);
+  const list = track(page);
+  const first = await folders.first().boundingBox();
+  await page.mouse.move(first.x + 20, first.y + first.height * .6);
+  await expect(list).toHaveAttribute("data-active-index", "0");
+  const later = await folders.nth(1).boundingBox();
+  expect(later.x).toBeGreaterThan(first.x + first.width - 20);
+  await page.mouse.move(later.x + 18, later.y + later.height * .6);
+  await expect(list).toHaveAttribute("data-active-index", "1");
+  await expect(folders.nth(1)).toHaveClass(/is-active/);
 });
 
-test("keyboard focus and Enter open case studies on desktop and mobile", async ({ page }) => {
+test("first touch previews, second touch opens the selected case", async ({ page }) => {
   await page.goto("/");
-  const link = rows(page).nth(1);
+  const folder = homeFolders(page).first();
+  await folder.scrollIntoViewIfNeeded();
+  const box = await folder.boundingBox();
+  const x = box.x + Math.min(25, box.width * .2);
+  const y = box.y + box.height * .5;
+  const tap = async () => {
+    await page.evaluate(({ x, y }) => {
+      const list = document.querySelector(".home-folder-stack__cards");
+      list.dispatchEvent(new PointerEvent("pointerdown", {
+        bubbles: true, pointerType: "touch", clientX: x, clientY: y
+      }));
+      list.dispatchEvent(new MouseEvent("click", {
+        bubbles: true, cancelable: true, detail: 1, clientX: x, clientY: y
+      }));
+    }, { x, y });
+  };
+  await tap();
+  await expect(track(page)).toHaveAttribute("data-active-index", "0");
+  await expect(page).toHaveURL(/\/(?:index\.html)?$/);
+  await tap();
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+});
+
+test("keyboard focus and Enter navigate to the focused standing folder", async ({ page }) => {
+  await page.goto("/");
+  const link = homeFolders(page).nth(1).locator(".project-folder__link");
   await link.focus();
   await expect(link).toBeFocused();
-  await expect(link.locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
+  await expect(track(page)).toHaveAttribute("data-active-index", "1");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
 });
 
-test("project artwork fits the viewport with device-appropriate positioning", async ({ page, isMobile }) => {
+test("All Work remains a large centered accessible link below the Home folders", async ({ page }) => {
   await page.goto("/");
-  for (const row of await rows(page).all()) {
-    const image = row.locator(".home-project-list__visual");
-    await expect(image).toBeVisible();
-    await expect(image).toHaveCSS("position", isMobile ? "relative" : "absolute");
-    if (isMobile) await expect(image).toHaveCSS("opacity", "1");
-    const bounds = await image.boundingBox();
-    expect(bounds.width).toBeGreaterThan(200);
-    expect(bounds.height).toBeGreaterThan(150);
-  }
-  if (!isMobile) {
-    await expect(rows(page).nth(1).locator(".home-project-list__visual")).toHaveCSS("opacity", "1");
-  }
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-  expect(overflow).toBeLessThanOrEqual(2);
+  const link = page.getByRole("link", { name: /all work/i }).first();
+  await expect(link).toHaveAttribute("href", "work.html");
+  await link.scrollIntoViewIfNeeded();
+  const rect = await link.boundingBox();
+  expect(rect.width).toBeGreaterThanOrEqual(240);
+  expect(Math.abs(rect.x + rect.width / 2 - page.viewportSize().width / 2)).toBeLessThan(10);
 });
 
-test("reduced motion keeps static images correctly centered and all links operational", async ({ page }) => {
+test("standing folders avoid document overflow and respect reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await expect(homeFolders(page)).toHaveCount(3);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    expect(overflow, "no document-level horizontal overflow").toBeLessThanOrEqual(2);
+    await expect(homeFolders(page).first()).toHaveCSS("transition-duration", "0s");
+  }
+});
+
+test("no-JavaScript Home still shows each real folder as a native case link", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
   await page.goto("/");
-  const defaultImage = rows(page).nth(1).locator(".home-project-list__visual");
-  await expect(defaultImage).toHaveCSS("opacity", "1");
-  await expect(defaultImage).toHaveCSS("transition-duration", "0s");
-  const transform = await defaultImage.evaluate(element => getComputedStyle(element).transform);
-  if (page.viewportSize().width <= 768) expect(transform).toBe("none");
-  else expect(transform).not.toBe("none");
-  await expect(rows(page).first().locator(".home-project-list__title")).toBeVisible();
+  await expect(page.locator(".home-folder-stack__cards .project-folder__link")).toHaveCount(3);
+  await context.close();
 });

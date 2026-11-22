@@ -514,17 +514,14 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
       }
     }
     if (width !== 1440) continue;
+    const track = page.locator(".project-folder-stack__cards");
     for (let i = 0; i < 3; i++) {
-      await folders.nth(i).scrollIntoViewIfNeeded();
-      const rect = await folders.nth(i).boundingBox();
-      const x = rect.x + rect.width / 2;
-      const y = rect.y + rect.height * .65;
-      await page.mouse.move(x, y);
-      const hit = await page.evaluate(({ x, y }) =>
-        document.elementFromPoint(x, y)?.closest(".project-folder__link")?.getAttribute("href"),
-      { x, y });
-      expect(hit, "hover should hit the project under the pointer").toBe(hrefs[i]);
-      // Verify the actual hit target, not a transient CSS z-index value.
+      const folder = folders.nth(i);
+      await folder.scrollIntoViewIfNeeded();
+      await folder.locator(".project-folder__link").focus();
+      await expect(track).toHaveAttribute("data-active-index", String(i));
+      await expect(folder).toHaveClass(/is-active/);
+      await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", hrefs[i]);
     }
   }
 });

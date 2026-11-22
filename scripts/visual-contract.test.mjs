@@ -33,7 +33,7 @@ function visibleText(html) {
 test("approved visual contract remains intact", async () => {
   assert.equal(contract.baselineCommit, "54dcc41");
   const cssFiles = (await readdir(join(dist, "styles"))).filter(file => file.endsWith(".css"));
-  assert.deepEqual(cssFiles, ["main.css", "project-folders.css"], "Work-only CSS must stay separate from the bundled site CSS");
+  assert.deepEqual(cssFiles, ["main.css"], "Work-only CSS must stay separate from the bundled site CSS");
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   const compactCss = css.replace(/\s+/g, "").toLowerCase();
   assert.doesNotMatch(css, /@import\b/i);
@@ -68,12 +68,8 @@ test("approved visual contract remains intact", async () => {
       assert.ok(!text.toLowerCase().includes(phrase.toLowerCase()), `${path}: forbidden copy: ${phrase}`);
     }
     const stylesheets = [...html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi)];
-    const folderPage = path.endsWith("/work.html");
-    assert.equal(stylesheets.length, folderPage ? 2 : 1,
-      `${path}: only Work may use a second page-scoped stylesheet`);
+    assert.equal(stylesheets.length, 1, `${path}: use the single bundled stylesheet`);
     assert.match(stylesheets[0][0], /href=["'](?:\/|\.\.\/)?styles\/main\.css["']/i, path);
-    if (folderPage)
-      assert.match(stylesheets[1][0], /href=["']styles\/project-folders\.css["']/i, path);
   }
   // Assert exact authored footer selectors before build minification normalizes syntax.
   const mainSource = await readFile(join(root, "styles", "main.css"), "utf8");

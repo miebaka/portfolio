@@ -14,6 +14,9 @@
 @import url("experiments-access.css") layer(pages);
 @import url("optical-lens.css") layer(pages);
 @import url("case-transitions.css") layer(pages);
+@import url("project-folders.css") layer(pages);
+@import url("home-folders.css") layer(pages);
+@import url("folder-interactions.css") layer(pages);
 
 /* Typography has a single source, applied after layout and components. */
 @import url("tokens.css") layer(typography);

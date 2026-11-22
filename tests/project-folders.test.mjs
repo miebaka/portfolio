@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { SITE } from "../data/site.js";
-import { renderProjectFolderStackMarkup, renderProjectArchiveMarkup } from "../js/render/projects.js";
+import { renderProjectFolderStackMarkup, renderProjectArchiveMarkup, renderHomeProjectList } from "../js/render/projects.js";
 
 test("archive publishes exactly three honest brand-specific native folder links", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
@@ -72,4 +72,14 @@ test("folder surface keeps one target per case and static, non-intercepting pape
   assert.match(css, /\.project-folder-stack__cards\s*\{[\s\S]*?display:\s*flex/);
   assert.match(css, /\.project-folder \+ \.project-folder\s*\{\s*margin-block-start:\s*calc\(-1 \* var\(--folder-overlap\)\)/);
   assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
+});
+
+test("Home keeps the landscape Work folder material but stands the folders up", () => {
+  const html = renderHomeProjectList(SITE.projects, SITE.caseStudies);
+  assert.match(html, /home-folder-stack__cards/);
+  assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
+    ["tedx-rsu.html", "rivo.html", "chopbox.html"]);
+  assert.equal((html.match(/class="project-folder__spine"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
+  assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });

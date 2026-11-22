@@ -139,14 +139,16 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
   assert.doesNotMatch(markup, /<details|card/i);
 });
 
-test("the homepage keeps selected work concise and image-led", () => {
+test("the homepage uses standing Work-material folders for published cases only", () => {
   const markup = renderHomeProjectList(CONTENT.projects, CONTENT.caseStudies);
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
-    const project = CONTENT.projects.find((item) => item.slug === slug);
+    const project = CONTENT.projects.find(item => item.slug === slug);
     assert.ok(markup.includes(project.title), `${slug} title appears on Home`);
   }
-  assert.doesNotMatch(markup, /Governing decision|home-project-list__decision/);
-  assert.equal((markup.match(/home-project-list__visual/g) || []).length, 3);
+  assert.match(markup, /home-folder-stack__cards/);
+  assert.equal((markup.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.equal((markup.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
+  assert.doesNotMatch(markup, /Governing decision|home-project-list__decision|project-roster__row/);
 });
 
 test("public service names are concrete disciplines backed by real published chapter anchors", async () => {

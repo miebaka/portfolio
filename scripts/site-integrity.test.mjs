@@ -92,7 +92,7 @@ test("built Home and Work expose truthful project states without JavaScript", as
 });
 
 test("project folders are full native links", async () => {
-  const css = await readFile(join(dist, "styles", "project-folders.css"), "utf8");
+  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
   assert.match(css, /\.project-folder__link\s*\{[^}]*display:\s*block/);
 });
 
@@ -242,12 +242,9 @@ test("unfinished case studies explain their state before JavaScript runs", async
 
 test("production CSS is bundled and dead runtime modules are absent", async () => {
   const cssFiles = await walk(join(dist, "styles"), ".css");
-  assert.deepEqual(cssFiles, [
-    join(dist, "styles", "main.css"),
-    join(dist, "styles", "project-folders.css"),
-  ]);
+  assert.deepEqual(cssFiles, [join(dist, "styles", "main.css")]);
   const workPage = await readFile(join(dist, "work.html"), "utf8");
-  assert.match(workPage, /href="styles\/project-folders\.css"/);
+  assert.match(workPage, /href="styles\/main\.css"/);
   assert.match(workPage, /class="project-folder-stack"/);
   assert.doesNotMatch(workPage, /work-cabinet|filing-cabinet/);
   await assert.rejects(access(join(dist, "js", "core", "work-cabinet.js")));
@@ -258,7 +255,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     assert.doesNotMatch(html, /case-arrival\.js/);
   }
   const homePage = await readFile(join(dist, "index.html"), "utf8");
-  assert.doesNotMatch(homePage, /project-folders\.css/);
+  assert.match(homePage, /class="home-folder-stack"/);
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
@@ -664,7 +661,7 @@ test("retired source systems cannot return unnoticed", async () => {
   // compatibility or override file can silently ship.
   const imports = [...styles.matchAll(/@import url\("([^"]+)"\)/g)].map(match => match[1]);
   const available = (await readdir(join(root, "styles"))).filter(name => name.endsWith(".css")).sort();
-  assert.deepEqual(available, [...imports, "main.css", "project-folders.css"].sort());
+  assert.deepEqual(available, [...imports, "main.css"].sort());
   assert.doesNotMatch(styles, /reference-overrides\.css/);
   const css = (await Promise.all(imports.map(name => readFile(join(root, "styles", name), "utf8")))).join("\n");
   const source = css.replace(/\/\*[\s\S]*?\*\//g, "");

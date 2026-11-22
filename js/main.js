@@ -16,6 +16,7 @@ import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
 import { initHomeOpticalLens } from "./core/optical-lens.js";
+import { initProjectFolderInteractions } from "./core/project-folder-interactions.js";
 import { initCaseRouteTransitions } from "./core/case-route-transition.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
@@ -52,6 +53,7 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
+run("project-folder interaction", initProjectFolderInteractions);
 run("case-study route transitions", initCaseRouteTransitions);
 run("footer signature", initFooterSignature);
 run("hero wave", () => { void initHeroWave(); });

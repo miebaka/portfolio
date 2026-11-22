@@ -1,0 +1,99 @@
+/* The demo's 'active folder opens; following folders step aside' behavior.
+   Geometry comes from one JS controller; CSS preserves both silhouettes. */
+.project-folder-stack__cards.is-folder-interactive {
+  position: relative;
+  display: block;
+  gap: 0;
+  isolation: isolate;
+}
+
+.project-folder-stack__cards.is-folder-interactive .project-folder,
+.project-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  transform: translate3d(0, calc(var(--folder-y, 0px) + var(--folder-lift, 0px)), 0);
+  transition: transform 550ms cubic-bezier(.2, .8, .2, 1),
+    filter 400ms ease, opacity 400ms ease;
+}
+
+.project-folder-stack__cards.is-folder-interactive .project-folder.is-active {
+  --folder-lift: -14px;
+  z-index: 10;
+  filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .13));
+}
+
+.project-folder-stack__cards.is-folder-interactive .project-folder.is-going {
+  --folder-lift: -26px;
+}
+
+.project-folder-stack__cards.is-folder-interactive.has-active .project-folder:not(.is-active) {
+  filter: brightness(.9);
+}
+
+.project-folder-stack__cards.is-folder-interactive.is-opening .project-folder:not(.is-going) {
+  opacity: .25;
+}
+
+.project-folder-stack__cards.is-folder-interactive .project-folder__tab::before {
+  position: absolute;
+  top: 50%;
+  right: .9rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff6b4a;
+  content: "";
+  opacity: 0;
+  transform: translateY(-50%) scale(.5);
+  transition: opacity 200ms ease, transform 250ms ease;
+}
+
+.project-folder-stack__cards.is-folder-interactive .project-folder.is-active .project-folder__tab::before {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* The Work page retains its wide 47:38 sheets and full-length stacking.
+   Only the spacing calculation becomes interactive. */
+body[data-page="work"] .project-folder-stack__cards.is-folder-interactive {
+  min-height: 0;
+}
+
+body[data-page="work"] .project-folder-stack__cards.is-folder-interactive .project-folder,
+body[data-page="work"] .project-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  aspect-ratio: 47 / 38;
+}
+
+/* The same controller runs on Home, but the folders are standing,
+   with a horizontal logical pitch instead of Work's vertical pitch. */
+.home-folder-stack__cards.is-folder-interactive .project-folder,
+.home-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
+  top: auto;
+  right: auto;
+  bottom: 0;
+  width: auto;
+  height: calc(100% - .75rem);
+  aspect-ratio: .66;
+  transform: translate3d(var(--folder-x, 0px), var(--folder-lift, 0px), 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .project-folder-stack__cards.is-folder-interactive .project-folder,
+  html:not([data-motion="full"]) .project-folder-stack__cards.is-folder-interactive .project-folder__tab::before {
+    transition: none;
+  }
+}
+
+html[data-motion="reduced"] .project-folder-stack__cards.is-folder-interactive .project-folder,
+html[data-motion="reduced"] .project-folder-stack__cards.is-folder-interactive .project-folder__tab::before {
+  transition: none;
+}

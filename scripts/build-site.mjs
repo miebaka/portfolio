@@ -164,7 +164,7 @@ const cssBundle = await bundleCss(join(root, "styles/main.css"));
 const { transform } = await import("esbuild");
 const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify: true, legalComments: "inline" });
 await writeFile(join(output, "styles/main.css"), minifiedCss);
-await ensureCopy(join(root, "styles/project-folders.css"), join(output, "styles/project-folders.css"));
+/* The Work folder surface is imported into main.css for both pages. */
 await copyJsGraph("js/main.js");
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
 
