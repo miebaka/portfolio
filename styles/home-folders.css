@@ -73,7 +73,15 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
 
 @media (max-width: 48rem) {
   body[data-page="home"] .home-content section.swiss-selected {
-    padding-block-start: clamp(3rem, 8svh, 6rem);
+    padding-block-start: clamp(3.5rem, 9svh, 6rem);
+  }
+
+  body[data-page="home"] .home-folder-stack .project-folder__outcome {
+    display: none;
+  }
+
+  body[data-page="home"] .home-folder-stack .project-folder__copy {
+    gap: .5rem;
   }
 }
 

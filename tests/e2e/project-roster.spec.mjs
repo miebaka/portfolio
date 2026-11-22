@@ -46,7 +46,7 @@ test("Selected Work rests at the bottom of its section with a clear gap after th
   }
 });
 
-test("Home folders match What I Do card heights while Work stays compact", async ({ page }) => {
+test("Desktop files match service card heights; mobile uses compact readable sections", async ({ page }) => {
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     await page.goto("/");
@@ -63,10 +63,16 @@ test("Home folders match What I Do card heights while Work stays compact", async
     });
     expect(comparison.services).toHaveLength(5);
     expect(comparison.heights).toHaveLength(3);
-    for (const folderHeight of comparison.heights) {
-      for (const cardHeight of comparison.services) {
-        expect(Math.abs(folderHeight - cardHeight)).toBeLessThanOrEqual(2);
+    if (viewport.width >= 768) {
+      for (const folderHeight of comparison.heights) {
+        for (const cardHeight of comparison.services) {
+          expect(Math.abs(folderHeight - cardHeight)).toBeLessThanOrEqual(2);
+        }
       }
+    } else {
+      expect(Math.max(...comparison.heights)).toBeLessThanOrEqual(337);
+      await expect(page.locator("#what-i-do .service-stack__item").first()).toHaveCSS("position", "relative");
+      await expect(page.locator("#what-i-do .service-stack__tags").first()).toBeHidden();
     }
     expect(comparison.pitches[1]).toBeGreaterThan(comparison.pitches[0]);
     expect(comparison.pitches[1]).toBeLessThan(comparison.pitches[0] + comparison.heights[0]);

@@ -46,3 +46,26 @@ test("reduced motion preserves readable non-sticky service cards", async ({ page
     await expect(link).toHaveAttribute("href", /work\/.*\.html#/);
   }
 });
+
+test("mobile capability proof reads as a calm nonsticky list with no empty scroll runway", async ({ page }) => {
+  for (const width of [320, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/index.html");
+    const section = page.locator("#what-i-do");
+    await expect(section.locator(".service-stack__item")).toHaveCount(5);
+    for (const item of await section.locator(".service-stack__item").all()) {
+      await expect(item).toHaveCSS("position", "relative");
+      await expect(item.locator(".service-stack__tags")).toBeHidden();
+      await expect(item.locator(".service-stack__symbol")).toBeHidden();
+      await expect(item.locator(".service-stack__evidence")).toBeVisible();
+    }
+    const mobile = await page.evaluate(() => ({
+      runway: getComputedStyle(document.querySelector("#what-i-do .service-stack"), "::after").display,
+      heroMeta: getComputedStyle(document.querySelector(".home-landing__meta p:nth-child(2)")).display,
+      overscroll: document.documentElement.scrollWidth - innerWidth
+    }));
+    expect(mobile.runway).toBe("none");
+    expect(mobile.heroMeta).toBe("none");
+    expect(mobile.overscroll).toBeLessThanOrEqual(2);
+  }
+});
