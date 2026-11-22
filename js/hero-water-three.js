@@ -1,7 +1,7 @@
 /* Persistent GPU shallow-water fluid with incompressible 2D Navier-Stokes
    projection, Jacobi pressure solver, semi-Lagrangian advection, wave integration,
    and air-to-water refraction caustic projection. Not a volumetric 3D simulation. */
-import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
+import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,Vector4,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
 const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
 const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;uniform vec2 brushRadius;uniform float swirl;uniform float ringCount;uniform float rippleStrength;";
 const advect=prefix+[
@@ -129,7 +129,8 @@ void main() {
   float sourceArea = abs(sx.x * sy.y - sx.y * sy.x);
   float arrivalArea = abs(ax.x * ay.y - ax.y * ay.x);
   float focus = min(sourceArea / max(arrivalArea, 0.00000001), 10.0);
-  float light = pow(max(focus - .72, 0.0), 1.25) * .29 * vIrradiance;
+  // Sunlight folds into crisp seams, while the valleys retain their depth.
+  float light = pow(max(focus - .80, 0.0), 1.32) * .37 * vIrradiance;
   gl_FragColor = vec4(vec3(min(light, 5.0)), 1.0);
 }
 `;
@@ -137,8 +138,10 @@ const shade=String.raw`
 precision highp float;
 varying vec2 vUv;
 uniform sampler2D caustics;
-uniform float transmission, nightFactor;
+uniform float transmission, nightFactor, aspectRatio;
 uniform vec3 floorColor, deepColor, lightColor, lightDirection, skyColor;
+// Four short-lived caustic disturbances supplement the existing fluid field.
+uniform vec4 rippleEvents[4];
 `+waterField+String.raw`
 float grain(vec2 p) {
   return fract(sin(dot(floor(p * vec2(480.0, 510.0)),
@@ -150,27 +153,55 @@ void main() {
   vec3 viewDirection = normalize(vec3(.035, .025, 1.0));
   vec3 toLight = normalize(-lightDirection);
 
+  // Short-lived pointer/touch impulses bend the projected lightfront.
+  // Aspect correction keeps the wave rings circular on any viewport.
+  vec2 rippleBend = vec2(0.0);
+  float rippleGlint = 0.0;
+  for (int i = 0; i < 4; i++) {
+    vec4 eventWave = rippleEvents[i];
+    float age = time - eventWave.z;
+    if (eventWave.w <= 0.0 || age < 0.0 || age >= 2.8) continue;
+    vec2 offset = p - eventWave.xy;
+    float distanceToTouch = length(vec2(offset.x * aspectRatio, offset.y));
+    float front = distanceToTouch - age * 0.245;
+    float envelope = exp(-front * front * 460.0) * exp(-age * 0.82);
+    float crest = cos(front * 92.0);
+    rippleBend += offset / max(distanceToTouch, 0.001) *
+      (crest * envelope * eventWave.w * 0.0065);
+    rippleGlint += max(crest, 0.0) * envelope * eventWave.w;
+  }
+  vec2 litUV = clamp(p + rippleBend, texel * 2.0, 1.0 - texel * 2.0);
+
   // The caustic texture is light energy on the floor, not a scrolling
   // pattern. Tiny spectral separation imitates real water dispersion.
-  vec2 dispersion = vec2(.0011, -.0007);
+  vec2 dispersion = vec2(.0017, -.0010);
   vec3 focused = vec3(
-    texture2D(caustics, clamp(p + dispersion, 0.0, 1.0)).r,
-    texture2D(caustics, p).r,
-    texture2D(caustics, clamp(p - dispersion, 0.0, 1.0)).r
+    texture2D(caustics, clamp(litUV + dispersion, 0.0, 1.0)).r,
+    texture2D(caustics, litUV).r,
+    texture2D(caustics, clamp(litUV - dispersion, 0.0, 1.0)).r
   );
-  focused = min(focused, vec3(4.0));
+  focused = pow(min(focused, vec3(4.0)), vec3(1.15));
 
   // Subtle limestone/sand variation stays visible through clear water.
   float stone = .95 + .035 * sin(p.x * 31.0 + sin(p.y * 11.0) * 1.7)
     + .025 * sin(p.y * 27.0 + sin(p.x * 12.0));
   stone += (grain(p) - .5) * .028;
   float shallowDepth = clamp(.36 + .08 * waterHeight(p), 0.0, 1.0);
-  vec3 bed = mix(floorColor, deepColor, shallowDepth) * stone;
+  // A restrained sunward gradient and refracted limestone joints establish
+  // water depth without introducing a second painted water texture.
+  float sunward = 0.86 + 0.24 * smoothstep(0.08, 0.95, p.x * 0.58 + p.y * 0.42);
+  vec2 floorUV = p + normal.xz * 0.011 + rippleBend * 0.45;
+  vec2 tile = abs(fract(floorUV * vec2(12.0, 9.0)) - 0.5);
+  float grout = smoothstep(0.478, 0.499, max(tile.x, tile.y));
+  vec3 bed = mix(floorColor, deepColor, shallowDepth) * stone
+    * mix(1.0, sunward, 1.0 - nightFactor);
+  bed *= 1.0 - grout * 0.034;
   // Shallow Beer-Lambert attenuation, keeping the bed legible.
   vec3 clearWater = mix(bed, bed * skyColor, .075 + nightFactor * .035);
   float incidence = max(dot(normal, toLight), 0.0);
   vec3 transmitted = clearWater
-    + focused * lightColor * transmission * (.75 + .25 * incidence);
+    + focused * lightColor * transmission * (.69 + .31 * incidence)
+      * mix(0.89, sunward, 1.0 - nightFactor);
 
   // A top-down camera has only a small Fresnel reflection at normal incidence.
   // Separate highlights on the surface from refraction caustics on the floor.
@@ -182,6 +213,7 @@ void main() {
   float specular = pow(max(dot(normal, halfVector), 0.0),
     mix(220.0, 320.0, nightFactor));
   reflected += lightColor * specular * mix(.26, .15, nightFactor);
+  reflected += lightColor * rippleGlint * mix(.105, .045, nightFactor);
   gl_FragColor = vec4(1.0 - exp(-max(reflected, vec3(0.0))), 1.0);
 }
 `;
@@ -219,12 +251,15 @@ export function mountHeroWave(host,initialState){
  causticsScene.add(causticsMesh);
  const makePass=fragmentShader=>new ShaderMaterial({vertexShader:vertex,fragmentShader,depthTest:false,depthWrite:false,uniforms:{texel:{value:texel},dt:{value:1/30},cursor:{value:cursor},impulse:{value:0},velocity:{value:null},pressure:{value:null},divergence:{value:null},surface:{value:null},brushRadius:{value:brushRadius},swirl:{value:1},ringCount:{value:4},rippleStrength:{value:.2}}});
  const ad=makePass(advect),dv=makePass(divergence),jac=makePass(jacobi),proj=makePass(project),wav=makePass(wave),screen=mesh.material;
+ const rippleEvents=Array.from({length:4},()=>new Vector4(-2,-2,-10,0));
  screen.uniforms={surface:{value:height.read.texture},caustics:{value:causticsTarget.texture},
   texel:{value:texel},time:{value:0},transmission:{value:1},
+  rippleEvents:{value:rippleEvents},aspectRatio:{value:1},
   floorColor:{value:new Vector3()},deepColor:{value:new Vector3()},
   lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.025,.035,-1)},
   skyColor:{value:new Vector3()},nightFactor:{value:0}};
- let state={...initialState},destroyed=false,visible=true,frame=0,last=0,time=0,impulse=.7,steps=0,lastPointerAt=0;
+ let state={...initialState},destroyed=false,visible=true,frame=0,last=0,time=0,impulse=.48,steps=0,lastPointerAt=0;
+ let pointerWaveCount=0,lastLightRippleAt=-100;
  // One resolved motion preference controls the shader. Explicit Full must
  // override OS Reduce instead of being blocked by a second matchMedia check.
  const running=()=>Boolean(state.animate)&&visible&&!document.hidden;
@@ -247,9 +282,9 @@ export function mountHeroWave(host,initialState){
  function step(){
   // Natural low-amplitude disturbances keep the surface alive without input.
   steps++;
-  if(steps%38===0&&performance.now()-lastPointerAt>1400){
+  if(steps%64===0&&performance.now()-lastPointerAt>1600){
    cursor.set(.18+.64*(.5+.5*Math.sin(steps*.719)),.18+.64*(.5+.5*Math.cos(steps*.453)));
-   impulse=.22;
+   impulse=.14;
   }
   pass(ad,vel.write,{velocity:vel.read.texture});vel.swap();
   pass(dv,div,{velocity:vel.read.texture});
@@ -264,6 +299,7 @@ export function mountHeroWave(host,initialState){
   const limit=window.innerWidth<700?720:1152;
   const scale=Math.min(window.devicePixelRatio||1,1.25,limit/Math.max(host.clientWidth,host.clientHeight,1));
   renderer.setSize(Math.max(1,Math.round(host.clientWidth*scale)),Math.max(1,Math.round(host.clientHeight*scale)),false);
+  screen.uniforms.aspectRatio.value=Math.max(.35,Math.min(4,host.clientWidth/Math.max(host.clientHeight,1)));
   // A 150px brush is circular on screen, even on very wide hero viewports.
   brushRadius.set(Math.min(.25,75/Math.max(host.clientWidth,1)),Math.min(.25,75/Math.max(host.clientHeight,1)));
   draw();
@@ -290,6 +326,9 @@ export function mountHeroWave(host,initialState){
   screen.uniforms.skyColor.value.set(dark?.095:.54,dark?.15:.84,dark?.28:.92);
   screen.uniforms.nightFactor.value=dark?1:0;
   host.dataset.simulation="gpu-fluid-heightfield";
+  host.dataset.lighting="sunward-caustics";
+  host.dataset.pointerLight="refracted-impulses";
+  host.dataset.pointerWaveCount=String(Math.min(pointerWaveCount,4));
   host.dataset.caustics="refracted-lightfront";
   host.dataset.lightSource=dark?"moon":"sun";
   host.dataset.waterTheme=dark?"dark":"light";
@@ -303,8 +342,18 @@ export function mountHeroWave(host,initialState){
   const nx=Math.max(.01,Math.min(.99,(x+1)*.5)),ny=Math.max(.01,Math.min(.99,1-(y+1)*.5));
   const distance=Math.hypot(nx-cursor.x,ny-cursor.y);cursor.set(nx,ny);
   if(!quiet&&(distance>.004||force>0))lastPointerAt=performance.now();
-  if(!quiet&&running()&&(force>0||(distance>.004&&distance<.7)))
+  if(!quiet&&running()&&(force>0||(distance>.004&&distance<.7))){
    impulse=Math.max(impulse,Math.min(.92,Math.max(force,distance*2.6)));
+   // Shader uniforms are reused; no render targets or materials are created
+   // on movement. Keep the four freshest lightfront impulses.
+   if(force>0||(distance>.018&&time-lastLightRippleAt>.16)){
+    const strength=Math.min(1,Math.max(.35,force+.32));
+    rippleEvents[pointerWaveCount%4].set(nx,ny,time,strength);
+    pointerWaveCount++;
+    lastLightRippleAt=time;
+    host.dataset.pointerWaveCount=String(Math.min(pointerWaveCount,4));
+   }
+  }
   request();
  }
  const onVisibility=()=>{if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0;}else request();};
