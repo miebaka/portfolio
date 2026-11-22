@@ -1,5 +1,7 @@
 # EDITORIAL DESIGN SYSTEM — NOVEMBER 2026
 
+> **Status (22 November):** Reference and grid research. Current implementation is governed by the latest decisions in [DESIGN.md](DESIGN.md), [engineering-specification.md](engineering-specification.md), and [docs/TYPOGRAPHY-SYSTEM.md](docs/TYPOGRAPHY-SYSTEM.md). The historical embossed signature and centered nav have been replaced by the interactive dot matrix and centered Index.
+
 ## Source study
 
 For Living: https://www.for-living.it/ (inspected with Firecrawl, live DOM and computed styles on November 20, 2026).
@@ -16,7 +18,7 @@ Measured from a ~1905px desktop viewport (these are *reference measurements*, no
 
 Reference centered nav measured 771.02 × 63px on a 1905px viewport; its centered inner group sits 18px from the top. That is a proportional reference—not a reason to hard-code a 771px pill on a 390px phone.
 
-The original reference footer is about 742px tall on the measured desktop and uses a large embossed SVG (directional drop shadows and opposing inner highlights). We reproduce the *arrangement, visual depth, and typography hierarchy* using Miebaka's own signature, links, and brand content, not the other company's artwork.
+The original reference footer is about 742px tall on the measured desktop and uses a large embossed SVG (directional drop shadows and opposing inner highlights). This remains reference evidence, **not** a current footer instruction: the portfolio uses its original script SVG as an interactive, accessible dot matrix with a static dotted fallback, rather than an embossed surface.
 
 ## Type roles
 
@@ -40,10 +42,10 @@ An authored **12-column, 24px baseline editorial grid** (an 8px micro-row system
 Composition archetypes:
 1. **Lead spread** — large sans-serif headline and quiet mono location labels. Centered headline when appropriate, not uniformly center-aligned prose.
 2. **Asymmetric portrait editorial** — copy occupying 6/12 columns and portrait 4/12, with a planned one-column negative space interval.
-3. **Work index** — strong typographic row and controlled photo preview. Identity is at the center while the sequence number remains in the margin.
+3. **Work and project indices** — Home keeps typographic project rows with image treatment. The separate Work archive uses full-width physical folders, number-only third-cut tabs, five blank sheets, and title-only front covers.
 4. **Case-study gallery** — alternating 7+5, 6+6, and full-span image modules, preserving reading order and author-supplied image aspect ratios.
 5. **Long-form** — 7-column readable 60–68ch measure, supporting a 3-column sticky chapter index on desktop; no cramped sidebar on phone.
-6. **Footer** — 7/5 statement/navigation spread above the large embossed handwritten signature. Contrast and spacing remain tied to `--paper` and `--ink`.
+6. **Footer** — 7/5 statement/navigation spread above the original script rendered as an interactive dot matrix, with a static dotted no-JavaScript fallback. Contrast and spacing remain tied to `--paper` and `--ink`.
 
 References examined: Clemson University magazine grid guidance, Design Instruction's editorial baseline/grid system, Affinity's grid guidance, and contemporary editorial spread patterns. The goal is disciplined asymmetry rather than decorative complexity.
 
@@ -59,8 +61,8 @@ The GPU solver remains a persistent *2.5D water-surface simulation*; it is not i
 ## Acceptance checks
 
 - Confirm all page headings use Geist Sans, bodies use Geist Sans, labels use Geist Mono; ensure external font files actually resolve, or system fallbacks are clearly disclosed.
-- Check centered desktop navigation and responsive Index fallback without overflow or loss of the lamp-pull theme switch.
-- Compare light/dark footer colors, SVG emboss and pointer/touch/keyboard ripple; ensure the footer matches across every HTML route.
+- Check the logo-left, mathematically centered Index and right-side liquid theme toggle without overflow; verify fullscreen Index, keyboard Escape and no-JavaScript navigation.
+- Compare light/dark footer colors, dotted SVG fallback and pointer/touch/keyboard ripples; verify every HTML route preserves working footer links.
 - Validate work/case/writing/contact layouts across mobile 390px, tablet 768px and desktop 1440px, including keyboard focus and 200% zoom.
 - Run Node.js 24 quality workflow, browser tests, accessibility and Lighthouse performance before release.
 

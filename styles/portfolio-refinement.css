@@ -232,9 +232,6 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature::befor
   -webkit-mask: url("../assets/images/miebaka-joshua-script-name.svg") center / contain no-repeat;
   mask: url("../assets/images/miebaka-joshua-script-name.svg") center / contain no-repeat;
   filter: none;}
-body .site-footer__signature::after {
-  content: none;
-  display: none;}
 body .site-footer__signature.is-enhanced::before,
 body[data-page="home"]:not(.site-system-disabled) .site-footer__signature.is-enhanced::before {
   opacity: 0;
@@ -250,9 +247,6 @@ body .site-footer__signature .site-footer__signature-canvas {
   mix-blend-mode: normal;
   pointer-events: none;
   touch-action: pan-y;}
-:root[data-theme="dark"] body .site-footer__signature .site-footer__signature-canvas {
-  mix-blend-mode: normal;
-  opacity: 1;}
 body .site-footer__panel {
   position: relative;
   z-index: 2;}

@@ -1,4 +1,4 @@
-> **Historical companion study (superseded typeface choice).** This document records the alternative exploration from PR #26. The deployed system of record is [EDITORIAL-SYSTEM-2026.md](EDITORIAL-SYSTEM-2026.md) (PR #27). Where values or implementation approaches differ, the latter governs. As of November 20, 2026, the current headline/display typeface is **Geist Sans**, not Geist Sans. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
+> **Historical companion study (superseded typeface choice).** This document records the alternative exploration from PR #26. The live system of record is [docs/TYPOGRAPHY-SYSTEM.md](docs/TYPOGRAPHY-SYSTEM.md), with the newest approved [DESIGN.md](DESIGN.md) decisions taking precedence over this historical study. As of 22 November 2026, the current headline/display typeface is **Geist Sans**, not the earlier Geist Serif. Non-conflicting chapter layout refinements from this study were integrated during PR #26 reconciliation.
 
 # Editorial design system — For Living study (20 November 2026)
 
@@ -11,11 +11,11 @@ The source's descriptive typography classes include `heading-style-h2_custom`, `
 ## Fonts — licensed, pinned, and traceable
 
 User-chosen fonts, not copied from For Living:
-- **Display (historical decision, now superseded):** Vercel Geist Sans variable, 100–900, `GeistSerifVF.woff2`. Current production display uses **Geist Sans**.
+- **Display (historical decision, now superseded):** Geist Serif was explored (including a `GeistSerifVF.woff2` file). Current display uses **Geist Sans**, with supported regular and semibold font faces.
 - **Body:** Vercel Geist Sans variable, 100–900, `Geist-Variable.woff2`.
 - **Labels:** Vercel Geist Mono variable, 100–900, `GeistMono-Variable.woff2`.
 
-The historically evaluated three families were pinned to the Vercel `geist@1.9.2` npm distribution and delivered through jsDelivr WOFF2. The original portfolio font files remain as inactive legacy assets until a separate archive cleanup. The Vercel family uses SIL Open Font License 1.1. The script-name SVG is the original artwork owned by this portfolio and has not been replaced.
+The historically evaluated three families were pinned to the Vercel `geist@1.9.2` npm distribution and delivered through jsDelivr WOFF2. The unused legacy Archivo, Finlandica and Host Grotesk font assets were removed during the 22 November cleanup; this historical alternative scale is **not** shipped. The Vercel family uses SIL Open Font License 1.1. The script-name SVG is the original artwork owned by this portfolio and has not been replaced.
 
 ## Type scale
 

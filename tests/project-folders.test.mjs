@@ -11,24 +11,24 @@ test("archive publishes exactly three honest brand-specific native folder links"
   assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
     ["rivo.html", "tedx-rsu.html", "chopbox.html"]);
   for (const color of ["#000041", "#6e2962", "#c2531c"]) assert.ok(html.includes(color), color);
-  for (const year of [2024, 2023, 2022]) assert.match(html, new RegExp("CASE STUDY / " + year));
   assert.doesNotMatch(html, /filing-cabinet|drawer|webgl|canvas/i);
 });
 
-test("each folder has a rear tab, five fixed case-section sheets, and opaque front", () => {
+test("each landscape folder shows only the project name on its face and a number on the tab", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   for (const className of ["project-folder__back", "project-folder__tab",
+    "project-folder__tab-number", "project-folder__front", "project-folder__title",
     "project-folder__paper--1", "project-folder__paper--2", "project-folder__paper--3",
-    "project-folder__paper--4", "project-folder__paper--5",
-    "project-folder__front", "project-folder__title", "project-folder__view"]) {
+    "project-folder__paper--4", "project-folder__paper--5"]) {
     assert.equal((html.match(new RegExp('class="[^"]*' + className + '(?: [^"]*)?"', "g")) || []).length, 3, className);
   }
-  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
-  for (const section of ["The Call", "The System", "What Survived", "First Contact", "The Results"]) {
-    assert.equal((html.match(new RegExp(">" + section + "<", "g")) || []).length, 3, section);
-  }
+  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
+  assert.deepEqual([...html.matchAll(/class="project-folder__tab-number">(\d\d)</g)].map(match => match[1]), ["01", "02", "03"]);
+  assert.doesNotMatch(html, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
+  assert.doesNotMatch(html, /The Call|The System|What Survived|First Contact|The Results|FILE 0/);
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
+    assert.match(html, new RegExp('class="project-folder__title">' + name + '</strong>'));
   }
 });
 
@@ -47,4 +47,28 @@ test("Work page never loads retired drawer or WebGL components", () => {
   assert.match(css, /\.project-folder:focus-within/);
   assert.match(css, /prefers-reduced-motion: reduce/);
   assert.match(css, /pointer: coarse/);
+});
+
+test("static Work markup matches the horizontal folders and removes filler copy", () => {
+  const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
+  const fallback = readFileSync(resolve("work.html"), "utf8");
+  for (const markup of [html, fallback]) {
+    assert.equal((markup.match(/class="project-folder__tab-number"/g) || []).length, 3);
+    assert.equal((markup.match(/class="project-folder__title"/g) || []).length, 3);
+    assert.equal((markup.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
+    assert.doesNotMatch(markup, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
+    assert.doesNotMatch(markup, /demo.*would open|TEDx RSU.*Rise.*Hisa Nigeria/i);
+  }
+  assert.doesNotMatch(fallback, /The archive \/ 2022 to 2024|Three different challenges\. Three identities/);
+  assert.match(fallback, /id="archive-title">Selected work<\/h1>/);
+});
+
+test("folder surface keeps one target per case and static, non-intercepting papers", () => {
+  const css = readFileSync(resolve("styles/project-folders.css"), "utf8");
+  assert.match(css, /\.project-folder__paper\s*\{/);
+  assert.match(css, /pointer-events:\s*none/);
+  assert.match(css, /\.project-folder__link:focus-visible/);
+  assert.match(css, /\.project-folder:focus-within/);
+  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
 });

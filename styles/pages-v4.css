@@ -200,9 +200,6 @@ body .site-nav__themes{justify-self:end;display:flex;align-items:center;gap:.15r
   .editorial-index__row[href]:is(:hover,:focus-visible) .editorial-index__title{transform:translateX(3vw)}
 }
 .editorial-index__row[href]:focus-visible .editorial-index__title{transform:translateX(3vw)}
-@keyframes now-playing-spin{to{transform:rotate(360deg)}}
-.now-playing__vinyl{animation:now-playing-spin 3.2s linear infinite}
-.now-playing[data-live="false"] .now-playing__vinyl{animation-play-state:paused}
 
 /* Essays carries the same editorial index behavior as Selected Work. */
 body[data-page="writing"] .hero{min-height:0;padding-block:clamp(8rem,12vw,12rem) clamp(5rem,8vw,8rem);display:block}
@@ -292,7 +289,7 @@ body[data-page="explorations"] .site-nav{position:fixed;inset:0 0 auto}
   body .site-footer{min-height:34rem}body .site-footer__groups{grid-template-columns:1fr;padding-top:14rem;gap:2rem}body .site-footer__explore,body .site-footer__socials{grid-column:1}body .site-footer__signature{top:1.5rem;height:14rem}body .site-footer__panel{padding-bottom:3rem}body .site-footer__links{display:flex;flex-wrap:wrap}
 }
 
-/* Hedvig/Finlandica editorial expansion. The hero mark floats as the dark
+/* Case-study editorial expansion. The hero mark floats as the dark
    opening recedes, then the project document takes over in a single light
    field. Scroll-linked effects are progressive enhancement only. */
 

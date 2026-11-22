@@ -25,7 +25,6 @@ export const MOUNT = {
   CAPABILITIES:"capabilities",
   WRITING:     "writing",
   CASE:        "case",
-  NOW_PLAYING: "now-playing",
   EXPERIENCE:  "experience",
   CV:          "cv",
 };
@@ -33,7 +32,7 @@ export const MOUNT = {
 /* Mounts that are page-specific rather than sitewide. */
 const OPTIONAL = new Set([
   MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
-  MOUNT.WRITING, MOUNT.CASE, MOUNT.NOW_PLAYING, MOUNT.EXPERIENCE, MOUNT.CV,
+  MOUNT.WRITING, MOUNT.CASE, MOUNT.EXPERIENCE, MOUNT.CV,
 ]);
 
 const KNOWN = new Set(Object.values(MOUNT));

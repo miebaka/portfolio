@@ -1,5 +1,7 @@
 # Figma portfolio — fidelity and continuation specification
-_Date: November 20, 2026 · implementation branch: `design/geist-sans-headlines-figma-system`_
+_Figma snapshot: 20 November 2026 · original design branch: `design/geist-sans-headlines-figma-system` · implementation reconciliation: 22 November 2026_
+
+> **Status:** Historical Figma handoff, not the current website specification. The original 30 Figma frames and Starter-plan limitations are preserved as historical evidence. For new design decisions, use the latest appendix in [DESIGN.md](DESIGN.md), the real [typography contract](docs/TYPOGRAPHY-SYSTEM.md), and the actual PR #48 code. Do not recreate the rejected centered capsule navigation, embossed footer, pull cord or 3D filing cabinet.
 
 ## Deliverable and current state
 
@@ -15,9 +17,9 @@ _Date: November 20, 2026 · implementation branch: `design/geist-sans-headlines-
 
 - Site: https://miebaka-portfolio.vercel.app/
 - Repo: https://github.com/miebaka/portfolio/
-- `styles/foundations.css` is the source of raw and semantic colour tokens, typography, spacing and grid.
+- `styles/foundations.css` owns raw/semantic colour, motion and spacing tokens. **All typography belongs in `styles/tokens.css`** (including font faces, sizes, text selectors and responsive type).
 - `styles/forliving-editorial.css`, `styles/pages-v4.css`, `styles/home.css` layer specific visual decisions.
-- **Headlines**: Geist Sans (Figma local family `Geist`); **body**: Geist Sans; **labels/nav/meta**: Geist Mono. Current deployed live site may still display Geist Serif until PR #30 is merged. Do not use that deployed serif face in the updated Figma artboards.
+- **Headlines**: Geist Sans (Figma local family `Geist`); **body**: Geist Sans; **labels/nav/meta**: Geist Mono. The historical PR #30 deployment note is not a current check. Design frames use Geist Sans/Mono, and the actual deployed revision must be confirmed by matching its Git SHA.
 - Existing major display sizes: 112px case-title at wide desktop, 60.8px section headings in the live case pages; body 17px / 25.5px; desktop nav 12px mono. Adjust line wraps after Sans substitution; don't blindly copy serif line breaks.
 - Responsive reference: 12 desktop columns, 8 tablet, 4 mobile. Desktop max content width 1600px; side margins clamp(20px,4.667vw,84px); gutter clamp(14px,1.5vw,24px). Long-form copy 60–68ch.
 - Light background `#F8F9FC`, primary ink `#07112B`, ultramarine `#002080`; dark background `#07112B`, text approx `#C3C6CF`, interactive blue `#B1C5FF`. All colours should bind to semantic modes rather than hardcoded swatches.
@@ -249,15 +251,16 @@ Include labelled state frames `Day / Rest`, `Day / Pointer disturbance`, `Night 
 
 | Component | State set | Source / timing |
 |---|---|---|
-| Floating desktop nav capsule | resting, active page, hover, keyboard focus | `styles/forliving-editorial.css`, `js/core/navigation.js`: centered dark pill, light mono text, responsive fallback; response 220ms cubic-bezier(.25,1,.5,1) |
+| Current shared masthead | logo, mathematically centered Index, accessible light/dark toggle, focus states | `styles/editorial-index.css`, `styles/portfolio-refinement.css`, `js/core/navigation.js`: no floating dark capsule; fullscreen Index remains keyboard accessible |
 | Mobile index | closed, open, menu item stagger, Escape close, focus return | `js/core/navigation.js`, `styles/motion-language.css`: accessible trap, lock body scroll and restore; stagger 35ms increments with 460ms entrance |
-| Theme pull cord | light, dark, dragged, released, keyboard toggle | `js/core/theme-pull-cord.js`: semantic Print/Screen switch and pointer capture; preserve accessible switch label |
+| Liquid theme toggle | light, dark, focus, keyboard and pointer toggle | `js/render/navigation.js` and `js/core/navigation.js`: accessible switch and persistent preference, not a retired pull cord |
 | Hero shader | day/night; idle/disturbed; GPU unavailable; reduced motion | `js/hero-water-three.js`: continuous WebGL2 heightfield if supported; fallback must retain legibility |
 | Home entrance | headline lines, statement, metadata | `styles/motion-language.css`: 800ms headline enter, 680ms copy with 240ms delay, 640ms metadata with 420ms starting delay; ease cubic-bezier(.16,1,.3,1) |
-| Selected work list | normal, hover-preview, keyboard focus, pointer-tracking | `js/core/motion-language.js`: image preview follows pointer within maximum ±28px X and ±16px Y; on keyboard focus preview remains available without pointer |
-| Services | rest, pointer spotlight, hover/focus, motion-off | `styles/motion-language.css`: 350px radial spotlight and 220ms response, hidden in reduced motion |
+| Home selected work | row, hover/focus image preview, native link and mobile visual | `js/render/projects.js`, `styles/project-roster.css`: one visible project list, no pointer-tracking requirement |
+| Services | sticky cards, keyboard focus, touch links, motion-off | `styles/services-stack.css`, `styles/portfolio-refinement.css`: five unnumbered cards; no radial spotlight or unwanted gradient |
 | Article table of contents | idle, hover, active section, keyboard focus | `styles/pages-v4.css`: highlighted chapter index and progress line (2px) |
-| Footer signature | embossed still, pointer hover, tap ripple, Enter ripple, reduced motion | `js/core/footer-signature.js`, `styles/forliving-editorial.css`: original SVG plus controlled dot matrix, never flatten the SVG |
+| Footer signature | dotted no-JS fallback, pointer hover, tap ripple, Enter ripple, reduced motion | `js/core/footer-signature.js`, `styles/portfolio-refinement.css`: original SVG sampled into the interactive dot matrix; embossed layers are retired |
+| Work folder archive | 47:38 full-width paper folders, blank five-sheet stack, tab numbers only, title-only covers | `styles/project-folders.css`, `js/render/projects.js`: native anchors with reliable hover, keyboard, touch and static fallbacks |
 | Case index | idle, hover/focus, active pressed | `styles/pages-v4.css`: small 97% press scale where active, parent background/foreground contrast |
 | Contact form | idle, focused, invalid, validation, sending, success/error | `contact.html`, `js/core/form.js`; review against live for exact messaging |
 
@@ -268,9 +271,9 @@ Include labelled state frames `Day / Rest`, `Day / Pointer disturbance`, `Night 
 - Figma's Starter-plan MCP rate limit prevented fully rebuilding and positioning the 30 screen frames in this session.
 - Image uploads succeeded but are stand-alone imported layers, not placed within individual screen hierarchies.
 - Audit the site at 390px, 768px, 1440px and 1905px (light, dark, keyboard focus and reduced-motion); compare live screenshots with Figma frames.
-- Validate all 15 routes for precise image crops, captions, responsive typography/line breaks, section padding, footer placement and fixed/capsule nav.
+- Validate all 15 authored routes for precise image crops, captions, responsive type, section padding, footer placement and current centered-Index masthead.
 - Do not claim full pixel fidelity until the above checks pass.
-- Node.js 24 CI/build and Vercel deploy must pass separately; PR #30 is currently unmerged and Vercel reported build-rate-limit failure.
+- Node.js 24 CI and Vercel deployment remain separate gates. The old PR #30/rate-limit observation is a dated snapshot; confirm a READY deployment for the exact latest PR SHA instead of treating this historical note as current status.
 
 ## Proposed acceptance gates
 

@@ -322,7 +322,7 @@ test("Mobile Work folders are readable without horizontal overflow", async ({ pa
   for (const width of [320, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/work.html");
-    const titles = page.locator(".project-folder__tab-title");
+    const titles = page.locator(".project-folder__title");
     await expect(titles).toHaveCount(3);
     for (const element of await titles.all()) {
       const geometry = await element.evaluate(node => ({
@@ -345,7 +345,7 @@ test("Work folders separate published cases from unfinished projects", async ({ 
   await expect(links.nth(0)).toHaveAttribute("href", "work/rivo.html");
   await expect(links.nth(1)).toHaveAttribute("href", "work/tedx-rsu.html");
   await expect(links.nth(2)).toHaveAttribute("href", "work/chopbox.html");
-  await expect(page.locator(".project-folder__tab-title")).toHaveText([
+  await expect(page.locator(".project-folder__title")).toHaveText([
     "Rivo Studio", "TEDx Rivers State University", "ChopBox",
   ]);
   await expect(page.locator(".project-archive__progress li")).toHaveText([
@@ -491,7 +491,7 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         ratio: rect.width / rect.height };
     }));
     for (const rect of bounds) {
-      expect(rect.ratio, "folder must be tall like a physical file").toBeCloseTo(.75, 1);
+      expect(rect.ratio, "folder must keep authentic letter-size proportions").toBeCloseTo(11.75 / 9.5, 2);
     }
     for (let i = 0; i < bounds.length; i++) {
       for (let j = i + 1; j < bounds.length; j++) {
@@ -529,7 +529,7 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
       // Touch browsers have coarse pointers even at wide viewport sizes.
       // Their folders remain interactive without the hover-only elevation.
       if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches))
-        await expect(folders.nth(i)).toHaveCSS("z-index", "1");
+        await expect(folders.nth(i)).toHaveCSS("z-index", "2");
     }
   }
 });

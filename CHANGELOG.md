@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-11-22 — PR #48, folder realism and verified cleanup
+
+### Changed
+- Rebuilt Work as full-width, physical letter-file folders (47:38), with third-cut numbered tabs, five blank paper layers, real cardstock edges and more restrained surface shading; preserved native links, dark/light themes and no-JavaScript fallbacks.
+- Reconciled the README, engineering contract and active design studies with the current code, build budgets, privacy disclosures and release requirements.
+- Corrected the documented `CONTACT_ALLOWED_ORIGINS` example to the canonical Vercel host.
+
+### Removed
+- Deleted an unreachable Last.fm browser widget, serverless route and its styles/configuration; removed dead dependent color tokens.
+- Deleted unused Archivo, Finlandica and Host Grotesk font binaries/licences, superseded 3D cabinet research notes, obsolete navigation/embossed-footer CSS, and a redundant mail wrapper.
+
+### Verification
+- On cleanup baseline commit `11c02137`: typography and quality checks succeeded; **240 Playwright executions passed with zero skips**, CSS budgets passed, Lighthouse completed and the shipped dependency audit found zero vulnerabilities.
+- A final SHA-matched Vercel preview, real-device accessibility/performance review and live contact delivery remain release checks, not implied by CI.
+
 ## 2026-11-18
 
 - Consolidated design tokens into `styles/foundations.css` and retired `styles/tokens.css`; 22 of its 30 tokens had no consumers.

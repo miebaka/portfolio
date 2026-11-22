@@ -32,7 +32,7 @@
 
   /* Reference palette: raw values, the only place hex lives */
   --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;--ref-blue-30:#1c3da4;
-  --ref-blue-80:#b1c5ff;--ref-navy-10:#111b33;--ref-navy-13:#172138;--ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;
+  --ref-blue-80:#b1c5ff;--ref-navy-13:#172138;--ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;
   --ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;--ref-coral-30:#83251d;
   --ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-on-blue:#032485;--ref-near-black:#111;
   --ref-black:#000;--ref-rivo:#0000a8;--ref-rivo-light:#b1c5ff;--ref-chopbox:#b84314;--ref-chopbox-light:#ffcf2f;
@@ -57,7 +57,7 @@
 
   /* System roles: what a colour is for, remapped in dark */
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);
-  --sys-color-surface-container:var(--ref-neutral-94);--sys-color-surface-container-high:var(--ref-neutral-96);
+  --sys-color-surface-container-high:var(--ref-neutral-96);
   --sys-color-on-surface:var(--ref-midnight);--sys-color-on-surface-variant:var(--ref-neutral-30);
   --sys-color-primary:var(--ref-ultramarine);--sys-color-primary-container:var(--ref-air);
   --sys-color-on-primary-container:var(--ref-ultramarine);--sys-color-secondary:var(--ref-blue-30);
@@ -89,7 +89,7 @@
    scripts/token-integrity.test.mjs enforces it. The media block serves no-JS visitors. */
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;
-  --sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);
+  --sys-color-surface-container-high:var(--ref-navy-13);
   --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:#9ca3b5;
   --sys-color-primary:var(--ref-blue-80);--sys-color-primary-container:var(--ref-ultramarine);
   --sys-color-on-primary-container:var(--ref-air);--sys-color-secondary:var(--ref-blue-80);
@@ -102,7 +102,7 @@
 }}
 :root[data-theme="dark"]{color-scheme:dark;
   --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;
-  --sys-color-surface-container:var(--ref-navy-10);--sys-color-surface-container-high:var(--ref-navy-13);
+  --sys-color-surface-container-high:var(--ref-navy-13);
   --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:#9ca3b5;
   --sys-color-primary:var(--ref-blue-80);--sys-color-primary-container:var(--ref-ultramarine);
   --sys-color-on-primary-container:var(--ref-air);--sys-color-secondary:var(--ref-blue-80);

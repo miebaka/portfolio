@@ -1,5 +1,3 @@
-import { assertMailService } from "./mail-service.js";
-
 const escapeHtml = (value) => String(value).replace(/[&<>"']/gu, (character) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
 })[character]);
@@ -38,7 +36,7 @@ export function createResendMailService({
       return { providerId: result.id };
     }
   };
-  return assertMailService(service);
+  return service;
 }
 
 export { escapeHtml };

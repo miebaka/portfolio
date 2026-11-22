@@ -29,6 +29,8 @@ jobs:
       - name: Verify Node.js runtime
         run: node --version && node -e 'if (process.versions.node.split(".")[0] !== "24") process.exit(1)'
       - run: npm ci
+      - name: Lint authored HTML
+        run: npm run lint:html
       - name: Enforce Geist Unified typography (Stylelint + contract)
         run: npm run lint:typography && npm run test:typography
       - run: npx playwright install --with-deps chromium

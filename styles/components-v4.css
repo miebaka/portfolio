@@ -108,20 +108,6 @@ a[href]:hover{color:var(--accent-interactive);}
 .case-view button:hover{background:var(--sys-color-surface-container-high);color:var(--sys-color-on-surface)}
 .case-view button[aria-pressed="true"]{background:var(--inverse);color:var(--inverse-ink)}
 .case-view button:active{transform:scale(.97)}
-.now-playing{min-width:0;min-height:2.75rem;display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:.65rem;padding:.65rem .85rem;background:var(--sys-color-surface-container);color:var(--sys-color-on-surface);border:1px solid var(--sys-color-outline);transition:transform var(--dur-fast) var(--ease-enter),background-color var(--dur-ui) var(--ease-standard),color var(--dur-ui) var(--ease-standard)}
-.now-playing:hover{background:var(--sys-color-primary-container);color:var(--sys-color-on-primary-container)}
-.now-playing:active{transform:scale(.98)}
-.now-playing[hidden]{display:none}
-.now-playing__dot{width:.45rem;height:.45rem;border-radius:50%;background:var(--sys-color-tertiary);animation:now-listening-pulse 1.8s steps(1,end) infinite}
-.now-playing[data-live="false"] .now-playing__dot{animation:none;opacity:.55}
-.now-playing__track{min-width:0;overflow:hidden;color:var(--sys-color-on-surface-variant);}
-.now-playing:hover .now-playing__track{color:inherit}
-@keyframes now-listening-pulse{100%{opacity:1}
-44%{opacity:1}
-0%{opacity:1}
-88%{opacity:.28}
-50%{opacity:.28}
-}
 .site-footer__groups{display:grid;grid-template-columns:minmax(0,2fr) minmax(10rem,.7fr) minmax(16rem,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:start}
 .site-footer__group{display:grid;align-content:start;gap:.6rem;min-width:0}
 .site-footer__location .site-footer__links{color:var(--muted)}
@@ -130,8 +116,6 @@ a[href]:hover{color:var(--accent-interactive);}
 .site-footer__location{grid-column:1}
 .site-footer__explore{grid-column:1}
 .site-footer__socials .site-footer__links{grid-template-columns:1fr}
-.now-playing{grid-template-columns:auto 1fr auto}
-.now-playing__track{grid-column:1/-1;grid-row:2}
 .site-nav__links{left:max(.75rem,var(--safe-left));right:max(.75rem,var(--safe-right))}
 }
 .btn:focus-visible{outline:3px solid var(--ref-coral-75);outline-offset:2px;box-shadow:none}

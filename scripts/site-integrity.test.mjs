@@ -61,8 +61,9 @@ test("Work archive separates published cases from work in progress", () => {
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
   assert.match(html, /class="project-folder-stack__cards"/);
-  assert.ok(html.indexOf("CASE STUDY / 2024") < html.indexOf("CASE STUDY / 2023"));
-  assert.ok(html.indexOf("CASE STUDY / 2023") < html.indexOf("CASE STUDY / 2022"));
+  assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="tedx-rsu"'));
+  assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="chopbox"'));
+  assert.doesNotMatch(html, /CASE STUDY \/ 20\d\d/, "folder fronts only carry their project names");
   assert.doesNotMatch(html, /filing-cabinet|drawer|folder--sealed/);
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
@@ -348,7 +349,6 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
-  const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
   const css = await readAuthoredCss();
 
@@ -388,7 +388,6 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   );
   assert.doesNotMatch(html, /\b0[1-9] \/ (?:Work|About me|Practice|Selected clients|Let(?:&rsquo;|')s work)\b/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
-  assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-liquid-toggle"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-theme-mode>Light/);
   assert.match(navigation, /themeButton\.addEventListener\("click", toggleTheme\)/);
@@ -600,16 +599,45 @@ test("production build excludes source and review directories", async () => {
   }
 });
 
-test("listening status uses the private server boundary and privacy copy matches network behavior", async () => {
-  const renderer = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
+test("dead listening integration stays removed and privacy copy matches browser traffic", async () => {
+  const site = await readFile(join(dist, "js", "main.js"), "utf8");
   const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
   const privacy = await readFile(join(dist, "privacy.html"), "utf8");
-  assert.match(renderer, /fetch\("\/api\/now-playing"/);
-  assert.doesNotMatch(renderer, /api_key|audioscrobbler/i);
-  assert.doesNotMatch(config, /lastfmKey|127872bcf2ccc619e4fb52bb4b81805f/);
-  assert.match(renderer, /https:\/\/www\.last\.fm\/user\//);
-  assert.match(privacy, /server asks Last\.fm for the latest track/i);
-  assert.match(privacy, /browser does not receive the Last\.fm API key/i);
+  await assert.rejects(access(join(dist, "js", "render", "now-playing.js")));
+  await assert.rejects(access(join(root, "api", "now-playing.js")));
+  assert.doesNotMatch(site, /initNowPlaying|now-playing/);
+  assert.doesNotMatch(config, /lastfmUser|lastfmKey/);
+  assert.doesNotMatch(privacy, /Last\.fm|latest listening status|All fonts and images are served from this domain/i);
+  assert.match(privacy, /Geist text fonts load from jsDelivr/);
+  assert.match(privacy, /colour-theme and motion preferences/);
+  for (const unused of [
+    "assets/fonts/Archivo-Variable.woff2",
+    "assets/fonts/FinlandicaText-Variable.woff2",
+    "assets/fonts/HostGrotesk-Variable.woff2",
+    "api/lib/mail-service.js",
+    "docs/work-filing-cabinet-threejs.md",
+  ]) await assert.rejects(access(join(root, unused)), unused);
+});
+
+test("documentation and example contact origins follow active code, not retired systems", async () => {
+  const readme = await readFile(join(root, "README.md"), "utf8");
+  const engineering = await readFile(join(root, "engineering-specification.md"), "utf8");
+  const env = await readFile(join(root, ".env.example"), "utf8");
+  const config = await readFile(join(root, "data", "site-config.js"), "utf8");
+  const docs = await readFile(join(root, "docs", "TYPOGRAPHY-SYSTEM.md"), "utf8");
+  const allowedOrigin = env.match(/^CONTACT_ALLOWED_ORIGINS=(.+)$/m)?.[1];
+  assert.equal(new URL(allowedOrigin).origin, new URL(SITE.canonicalUrl).origin,
+    "sample contact origin must match the actual canonical host");
+  for (const module of ["data/projects.js", "data/case-studies.js", "styles/tokens.css", "styles/project-folders.css"]) {
+    assert.ok(readme.includes(module), `README must name the actual source: ${module}`);
+  }
+  assert.ok(readme.includes("jsDelivr"));
+  assert.ok(engineering.includes("api/contact.js"));
+  for (const retired of ["api/now-playing.js", "analytics and Last.fm functionality"]) {
+    assert.equal(engineering.includes(retired), false, `retired integration must not appear as active: ${retired}`);
+  }
+  assert.ok(docs.includes("Material Symbols Outlined"));
+  assert.equal(config.includes("lastfmUser"), false);
 });
 
 test("retired source systems cannot return unnoticed", async () => {

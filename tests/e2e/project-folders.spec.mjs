@@ -22,19 +22,27 @@ test("keyboard links move to their correct case studies", async ({ page }) => {
   await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
 });
 
-test("Work folder labels survive small screens and 200% zoom", async ({ page }) => {
+test("landscape folder titles remain fully visible at narrow widths", async ({ page }) => {
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/work.html");
-    const geometry = await page.locator(".project-folder__tab-title").evaluateAll(nodes =>
-      nodes.map(node => ({ width: node.clientWidth, scrollWidth: node.scrollWidth,
-        height: node.getBoundingClientRect().height })));
+    const geometry = await page.locator(".project-folder__title").evaluateAll(nodes =>
+      nodes.map(node => {
+        const title = node.getBoundingClientRect();
+        const face = node.closest(".project-folder__front").getBoundingClientRect();
+        return { width: node.clientWidth, scrollWidth: node.scrollWidth,
+          titleBottom: title.bottom, faceBottom: face.bottom,
+          titleTop: title.top, faceTop: face.top };
+      }));
     expect(geometry).toHaveLength(3);
     for (const rect of geometry) {
       expect(rect.width).toBeGreaterThan(60);
       expect(rect.scrollWidth).toBeLessThanOrEqual(rect.width + 2);
-      expect(rect.height).toBeGreaterThan(18);
+      expect(rect.titleTop).toBeGreaterThanOrEqual(rect.faceTop - 1);
+      expect(rect.titleBottom).toBeLessThanOrEqual(rect.faceBottom + 1);
     }
+    await expect(page.locator(".project-folder__tab-number")).toHaveText(["01", "02", "03"]);
+    await expect(page.locator(".project-folder__paper")).toHaveText(Array(15).fill(""));
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
       .toBeLessThanOrEqual(1);
   }
