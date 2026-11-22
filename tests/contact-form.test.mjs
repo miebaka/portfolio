@@ -29,7 +29,7 @@ class FakeNode {
 function fixture(overrides = {}) {
   const fields = Object.fromEntries([
     ["name", "Ada"], ["email", "ada@example.com"], ["interest", "brand-identity"],
-    ["message", "A considered project enquiry."], ["website", ""], ["startedAt", "1000"]
+    ["message", "A considered project enquiry."], ["website", ""]
   ].map(([name, value]) => [name, new FakeNode({ name, value, type: name === "email" ? "email" : "text" })]));
   Object.entries(overrides).forEach(([name, value]) => { fields[name].value = value; });
   const errors = Object.fromEntries(["name", "email", "interest", "message"].map((name) => [name, new FakeNode({ id: `${name}-error` })]));
@@ -82,7 +82,7 @@ test("HTML keeps a complete native email fallback when JavaScript is disabled", 
   const html = await readFile(new URL("../contact.html", import.meta.url), "utf8");
   assert.match(html, /<form[^>]+action="mailto:miebakakiki@gmail\.com"[^>]+method="post"[^>]+enctype="text\/plain"/u);
   assert.doesNotMatch(html.match(/<form[^>]+>/u)?.[0] || "", /novalidate/u);
-  for (const field of ["name", "email", "interest", "message", "website", "startedAt"]) assert.match(html, new RegExp(`name="${field}"`, "u"));
+  for (const field of ["name", "email", "interest", "message", "website"]) assert.match(html, new RegExp(`name="${field}"`, "u"));
   assert.match(html, /<textarea[^>]+name="message"[^>]+required/u);
   assert.match(html, /<noscript>[\s\S]+mailto:miebakakiki@gmail\.com/u);
 });

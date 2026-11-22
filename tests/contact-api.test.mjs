@@ -13,7 +13,6 @@ const validContact = (overrides = {}) => ({
   name: "Ada Okafor",
   email: "ada@example.com",
   message: "I would like to discuss a brand system.\nCould we speak next week?",
-  startedAt: 1_000,
   ...overrides
 });
 
@@ -75,8 +74,7 @@ test("validates and normalises contact fields without flattening message lines",
       email: "ada@example.com",
       message: "First line\nSecond line",
       interest: "brand-identity",
-      website: "",
-      startedAt: 1_000
+      website: ""
     }
   });
 });
@@ -92,15 +90,14 @@ test("rejects blank and oversized fields without echoing submitted values", () =
   assert.equal(JSON.stringify(result).includes(secret), false);
 });
 
-test("rejects malformed email, unknown interest, control characters and invalid timing", () => {
+test("rejects malformed email, unknown interest and control characters", () => {
   const result = validateContact(validContact({
     email: "not-an-email",
     interest: "secret-option",
-    name: "Ada\u0000",
-    startedAt: "yesterday"
+    name: "Ada\u0000"
   }));
   assert.equal(result.ok, false);
-  assert.deepEqual(Object.keys(result.fieldErrors).sort(), ["email", "interest", "name", "startedAt"]);
+  assert.deepEqual(Object.keys(result.fieldErrors).sort(), ["email", "interest", "name"]);
 });
 
 test("rejects a non-object body", () => {
@@ -155,11 +152,10 @@ test("silently accepts a honeypot submission without sending", async () => {
   assert.equal(sent, false);
 });
 
-test("rejects submissions completed faster than three seconds", async () => {
+test("unexpected abuse guard refusal fails closed without blaming a person for submitting too fast", async () => {
   const res = await invoke(request(), dependencies({ guard: async () => ({ ok: false, silent: false }) }));
-  assert.equal(res.statusCode, 422);
-  assert.equal(res.payload.code, "INVALID_REQUEST");
-  assert.deepEqual(res.payload.fieldErrors, { form: "Please wait a moment and try again." });
+  assert.equal(res.statusCode, 503);
+  assert.equal(res.payload.code, "PROVIDER_UNAVAILABLE");
 });
 
 test("returns 429 and Retry-After when the shared limiter rejects", async () => {
@@ -222,12 +218,16 @@ test("the production origin check accepts configured or true same-origin request
   assert.equal(isSameOriginRequest({ ...req, headers: { ...req.headers, origin: "not a URL" } }, []), false);
 });
 
-test("the abuse guard short-circuits traps and minimum-fill time before rate limiting", async () => {
+test("the abuse guard uses server-side traps and rate limits, not untrusted browser clocks", async () => {
   let limiterCalls = 0;
-  const guard = createAbuseGuard({ rateLimiter: async () => { limiterCalls += 1; return { allowed: true }; } });
+  const guard = createAbuseGuard({ rateLimiter: async () => {
+    limiterCalls += 1;
+    return { allowed: true };
+  } });
   assert.deepEqual(await guard({ contact: validContact({ website: "bot" }), now: 5_000 }), { ok: false, silent: true });
-  assert.deepEqual(await guard({ contact: validContact({ startedAt: 4_000 }), now: 5_000 }), { ok: false, silent: false });
   assert.equal(limiterCalls, 0);
+  assert.deepEqual(await guard({ contact: validContact({ startedAt: 9_999_999_999 }), now: 5_000 }), { ok: true });
+  assert.equal(limiterCalls, 1);
 });
 
 test("the Upstash request uses only a keyed address hash", async () => {

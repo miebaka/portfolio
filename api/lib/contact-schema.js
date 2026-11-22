@@ -22,7 +22,6 @@ export function validateContact(input) {
   const message = cleanMessage(input.message);
   const interest = cleanSingleLine(input.interest);
   const website = cleanSingleLine(input.website);
-  const startedAt = input.startedAt;
   const fieldErrors = {};
 
   if (!name) fieldErrors.name = "Add your name.";
@@ -41,12 +40,9 @@ export function validateContact(input) {
   if (interest && (interest.length > LIMITS.interest || !ALLOWED_INTERESTS.has(interest))) {
     fieldErrors.interest = "Choose a listed area of interest.";
   }
-  if (typeof startedAt !== "number" || !Number.isFinite(startedAt) || startedAt <= 0) {
-    fieldErrors.startedAt = "Refresh the page and try again.";
-  }
 
   if (Object.keys(fieldErrors).length) return { ok: false, fieldErrors };
-  return { ok: true, value: { name, email, message, interest, website, startedAt } };
+  return { ok: true, value: { name, email, message, interest, website } };
 }
 
 export { ALLOWED_INTERESTS, LIMITS };

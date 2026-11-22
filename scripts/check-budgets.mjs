@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { gzipSync } from "node:zlib";
-import { resolve, dirname } from "node:path";
+import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,6 +15,34 @@ const unique = values => [...new Set(values.map(value => value.replace(/^\.\//u,
 const gzipBytes = files => gzipSync(Buffer.concat(files.map(file => readFileSync(resolve(dist, file))))).byteLength;
 const css = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu));
 const js = unique(refs(/<script[^>]+src=["']([^"']+\.js)["']/giu));
+
+/* An ES-module script tag is only the graph's entrypoint. Measure every
+   statically imported module and count separate transfer compression, not
+   just the 1 KiB entry that previously made this budget meaningless. */
+function reachableJavaScript(entries) {
+  const seen = new Set();
+  const queue = [...entries];
+  while (queue.length) {
+    const file = queue.pop();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    const path = resolve(dist, file);
+    assert.ok(existsSync(path), `Missing shipped JavaScript module: ${file}`);
+    const source = readFileSync(path, "utf8");
+    for (const match of source.matchAll(/(?:import|export)\s+(?:[^"']*?\s+from\s+)?["'](\.[^"']+)["']/g)) {
+      const dependency = resolve(dirname(path), match[1]);
+      const next = relative(dist, dependency.endsWith(".js") ? dependency : dependency + ".js")
+        .replaceAll("\\", "/");
+      assert.ok(!next.startsWith("../"), `Module escapes dist: ${next}`);
+      queue.push(next);
+    }
+  }
+  return [...seen].sort();
+}
+const jsGraph = reachableJavaScript(js);
+const jsGraphGzipBytes = jsGraph.reduce((size, file) =>
+  size + gzipSync(readFileSync(resolve(dist, file))).byteLength, 0);
+console.log(`Initial module graph: ${jsGraph.length} network requests, ${jsGraphGzipBytes} gzip bytes`);
 const initialImages = [...html.matchAll(/<img\b([^>]*)>/giu)]
   .filter(([, attrs]) => !/\bloading=["']lazy["']/iu.test(attrs))
   .map(([, attrs]) => attrs.match(/\bsrc=["']([^"']+)["']/iu)?.[1])
@@ -52,9 +80,9 @@ function assertBudget(label, actual, budget) {
 assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 const workHtml = readFileSync(resolve(dist, "work.html"), "utf8");
 const workCss = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu, workHtml));
-assertBudget("Work folder stack CSS", gzipBytes(["styles/project-folders.css"]), 6 * 1024);
+assertBudget("Work folder source CSS", gzipSync(readFileSync(resolve(root, "styles/project-folders.css"))).byteLength, 6 * 1024);
 assertBudget("total Work CSS (main + folders)", gzipBytes(workCss), 53 * 1024);
-assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
+assertBudget("initial JavaScript module graph", jsGraphGzipBytes, 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
 assertBudget("display font", displayFont, 100 * 1024);

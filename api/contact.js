@@ -114,8 +114,8 @@ export function createContactHandler({ now = Date.now, createRequestId = request
           log("info", 429, "rate_limited");
           return sendJson(res, 429, { ok: false, code: "RATE_LIMITED", requestId, retryAfter });
         }
-        log("info", 422, "minimum_fill_time");
-        return invalid(res, 422, requestId, { form: "Please wait a moment and try again." });
+        log("error", 503, "abuse_guard_unavailable");
+        return sendJson(res, 503, { ok: false, code: "PROVIDER_UNAVAILABLE", requestId });
       }
 
       try {

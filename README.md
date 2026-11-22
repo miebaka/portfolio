@@ -48,19 +48,19 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Server-rendered navigation/footer fallback | `scripts/render-partials.mjs` |
 | Interactive dot-matrix footer | `js/core/footer-signature.js` |
 | Three.js hero and fallback | `js/hero-water-three.js`, `js/core/hero-wave.js` |
-| Desktop-only optional Lenis/GSAP scroll engine | `js/motion-experience.js`, `js/core/scroll-experience.js` |
+| Native service-card scrolling | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |
 | Public listening-status feed and navbar pill | `api/now-playing.js`, `js/render/now-playing.js`, `data/site-config.js` |
 | Deployment redirects, headers, CSP | `vercel.json` |
 | Content validation and production bundle | `scripts/validate-content.mjs`, `scripts/build-site.mjs` |
 
-The CSS bundle uses the imports in `styles/main.css`, with the `typography` layer applied last. The Work page also loads the intentionally page-scoped `styles/project-folders.css`. Adding a conflicting typography declaration elsewhere is a regression.
+The CSS bundle uses the imports in `styles/main.css`, with the `typography` layer applied last. Both Home and Work use `project-folders.css` through the single `main.css` bundle. Adding a conflicting typography declaration elsewhere is a regression.
 
 Geist Sans and Geist Mono are pinned to `geist@1.9.2` WOFF2 files on **jsDelivr**; the Material Symbols icon subset is local. The legacy Archivo, Finlandica and Host Grotesk files are removed. Fonts use `font-display: swap` and fallback families. Do not claim that every font is self-hosted.
 
 ## Work and published case studies
 
-The Work index uses three full-width, real-world-proportioned folders: each has a numbered third-cut tab, five decorative **blank** sheets, and only the project title on its front. Folders remain native links in light/dark themes, on touch and keyboard, and without JavaScript.
+The Work index uses three compact, full-width landscape folders sized to fit within one screen: each has a numbered third-cut tab, five decorative **blank** sheets, and only the project title on its front. Folders remain native links in light/dark themes, on touch and keyboard, and without JavaScript.
 
 To add a case study:
 
@@ -80,18 +80,18 @@ For changed case-study or profile images, run `npm run optimize:images`. The bui
 ## Motion and accessibility
 
 - The hero uses a lazy Three.js/WebGL island with a static, usable fallback.
-- Lenis and GSAP load **only as a desktop progressive enhancement**; Work, touch-first devices, reduced-motion users and unsupported environments keep native scrolling.
+- What I Do uses native CSS sticky scrolling without an external scroll engine; reduced-motion users see a static sequence.
 - The Index overlay, theme toggle and footer signature have keyboard/touch paths; the underlying document and contact links remain available without JavaScript.
 - `System`, `Reduce` and `Full` motion preferences are persisted independently of the colour theme.
 - Essential content must not depend on decorative animation, GPU capability or hover.
 
 ## Last.fm Now Playing
 
-The masthead displays a small vinyl pill directly after the logo. When a Last.fm API key is configured, it reports genuinely recent or currently playing tracks from the public account in `data/site-config.js`; when the key or upstream is unavailable it simply links to the public listening profile, **never displays a fabricated song**, and pauses polling in background tabs. The API key stays in the Vercel server environment as `LASTFM_API_KEY` (see `.env.example`). No key is included in client code or Git.
+The masthead displays a small vinyl pill directly after the logo. When a Last.fm API key is configured, it reports currently playing tracks or scrobbles from the past 24 hours from the public account in `data/site-config.js`; when the key or upstream is unavailable it simply links to the public listening profile, **never displays a fabricated song**, and pauses polling in background tabs. Successful responses can be edge-cached for 60 seconds. The API key stays in the Vercel server environment as `LASTFM_API_KEY` (see `.env.example`). No key is included in client code or Git.
 
 ## Contact, privacy and deployment
 
-`POST /api/contact` validates JSON, checks origin, rejects spam, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback.
+`POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback.
 
 The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` intentionally blocks indexing until launch approval. Privacy claims must match the actual browser requests, including the remote Geist fonts.
 
@@ -105,6 +105,6 @@ npm run test:tokens
 npm run quality
 ```
 
-`npm run quality` builds the site, runs unit/integrity tests, the full Chromium/Playwright browser matrix (no skipped tests), CSS/JavaScript/font/image budgets, desktop Lighthouse and dependency audits. CI uses Node.js 24. The font and CSS contracts are checked separately in the fast Typography workflow.
+`npm run quality` builds the site, runs unit/integrity tests, the full Chromium/Playwright browser matrix (no skipped tests), CSS/JavaScript/font/image budgets, desktop Lighthouse and dependency audits. The JavaScript budget now measures the complete static module graph; module bundling and immutable caching remain open performance work. CI uses Node.js 24. The font and CSS contracts are checked separately in the fast Typography workflow.
 
 **Automated green is necessary, not a live-release sign-off.** Before merge or production promotion, confirm a Vercel preview was built from the **exact PR head SHA**, then check actual Home, Work, case-study, Essays, Experiments, About and Contact routes. Do keyboard and screen-reader sampling, 200% zoom, light/dark and reduced-motion checks, a real touch/GPU pass, and an end-to-end contact delivery test with properly configured credentials. Verify external links and metadata, plus the ability to roll back to the last known-good deployment. The release checklist in [`engineering-specification.md`](engineering-specification.md) records what is automated versus still manual.

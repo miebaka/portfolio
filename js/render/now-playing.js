@@ -6,11 +6,20 @@ import { MOUNT } from "../core/contract.js";
 
 const POLL_MS = 60_000;
 const MAX_BACKOFF_MS = 8 * POLL_MS;
+const RECENT_MS = 24 * 60 * 60 * 1000;
+
+export function isFreshLastFmTrack(data, nowMs = Date.now()) {
+  if (data?.nowPlaying === true) return true;
+  const playedAt = data?.playedAt;
+  if (!Number.isSafeInteger(playedAt) || playedAt <= 0) return false;
+  const age = nowMs - playedAt * 1000;
+  return age >= 0 && age <= RECENT_MS;
+}
 
 export function initNowPlaying({
   document: doc = globalThis.document,
   window: win = globalThis.window,
-  fetchStatus = () => fetch("/api/now-playing", { cache: "no-store", headers: { accept: "application/json" } }),
+  fetchStatus = () => fetch("/api/now-playing", { headers: { accept: "application/json" } }),
 } = {}) {
   const mount = doc?.querySelector('[data-mount="' + MOUNT.NOW_PLAYING + '"]');
   if (!mount || !SITE.lastfmUser) return null;
@@ -51,7 +60,7 @@ export function initNowPlaying({
       }
     } catch { /* Keep the honest profile link during upstream outages. */ }
     if (destroyed) return;
-    if (data) {
+    if (data && isFreshLastFmTrack(data)) {
       const isLive = data.nowPlaying === true;
       const status = isLive ? "Now playing" : "Recently played";
       const title = data.track + " — " + data.artist;
@@ -69,7 +78,7 @@ export function initNowPlaying({
       pill.href = profile;
       pill.setAttribute("aria-label", "Open listening history on Last.fm");
     }
-    backoff = data ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
+    backoff = data && isFreshLastFmTrack(data) ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
     schedule(backoff);
   }
   // The static local development server does not run Vercel Functions.

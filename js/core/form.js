@@ -23,12 +23,12 @@ const words = (value) => String(value || "").trim();
 const describedByWithoutError = (input) => words(input?.getAttribute("aria-describedby"))
   .split(/\s+/u).filter((id) => id && !id.endsWith("-error"));
 
-export function createContactForm(form, { submitContact: send = submitContact, now = Date.now, timeoutMs = 10_000 } = {}) {
+export function createContactForm(form, { submitContact: send = submitContact, timeoutMs = 10_000 } = {}) {
   if (!form) throw new TypeError("form is required");
   /* Native constraint validation remains available when JavaScript is off;
      once enhanced, the stable inline errors below own the experience. */
   form.noValidate = true;
-  const fields = Object.fromEntries([...FIELD_NAMES, "website", "startedAt"].map((name) => [name, form.querySelector(`[name="${name}"]`)]));
+  const fields = Object.fromEntries([...FIELD_NAMES, "website"].map((name) => [name, form.querySelector(`[name="${name}"]`)]));
   const errors = Object.fromEntries(FIELD_NAMES.map((name) => [name, form.querySelector(`#${name}-error`)]));
   const status = form.querySelector("#form-status");
   const button = form.querySelector('[type="submit"]');
@@ -37,7 +37,6 @@ export function createContactForm(form, { submitContact: send = submitContact, n
   let state = "idle";
   let activeController = null;
   let destroyed = false;
-  if (fields.startedAt && !words(fields.startedAt.value)) fields.startedAt.value = String(now());
 
   function transition(next, message = "") {
     state = next;
@@ -75,7 +74,7 @@ export function createContactForm(form, { submitContact: send = submitContact, n
   }
   const payload = () => ({
     name: words(fields.name?.value), email: words(fields.email?.value), interest: words(fields.interest?.value),
-    message: words(fields.message?.value), website: words(fields.website?.value), startedAt: Number(fields.startedAt?.value)
+    message: words(fields.message?.value), website: words(fields.website?.value)
   });
   async function onSubmit(event) {
     event.preventDefault();
@@ -89,7 +88,7 @@ export function createContactForm(form, { submitContact: send = submitContact, n
       const response = await send(payload(), { signal: activeController.signal });
       if (destroyed) return;
       if (response.status === 202 && response.ok === true) {
-        form.reset(); if (fields.startedAt) fields.startedAt.value = String(now()); transition("success", "Message sent. I’ll reply by email.");
+        form.reset(); transition("success", "Message sent. I’ll reply by email.");
       } else if (response.status === 422 && response.fieldErrors) {
         showErrors(response.fieldErrors); transition("validation-error", response.fieldErrors.form || "Check the highlighted fields.");
       } else if (response.status === 429 || response.code === "RATE_LIMITED") {

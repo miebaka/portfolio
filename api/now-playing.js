@@ -30,9 +30,12 @@ export default async function handler(request, response) {
     const profile = "https://www.last.fm/user/" + encodeURIComponent(user);
     const url = typeof item.url === "string" && item.url.startsWith("https://www.last.fm/")
       ? item.url : profile;
-    return response.status(200).json({
-      track, artist, nowPlaying: item?.["@attr"]?.nowplaying === "true", url,
-    });
+    const nowPlaying = item?.["@attr"]?.nowplaying === "true";
+    const timestamp = Number(item?.date?.uts);
+    const playedAt = !nowPlaying && Number.isSafeInteger(timestamp) && timestamp > 0
+      ? timestamp : null;
+    response.setHeader("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=30");
+    return response.status(200).json({ track, artist, nowPlaying, playedAt, url });
   } catch {
     return response.status(502).json({ error: "Listening status unavailable" });
   }

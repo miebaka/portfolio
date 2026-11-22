@@ -58,10 +58,10 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 - `data/site.js` composes separate content modules rather than duplicating authored content.
 - `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in an optional shader, scroll enhancement or visual widget MUST NOT take down navigation or primary content.
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
-- `styles/main.css` is the single bundled CSS entry. Its ordered imports are `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, `home.css`, `services-stack.css`, `forliving-editorial.css`, `motion-language.css`, `editorial-index.css`, `project-roster.css`, `portfolio-refinement.css`, and last `tokens.css` in the typography layer. The Work route also loads `project-folders.css` separately.
+- `styles/main.css` is the single bundled CSS entry. Its ordered imports are `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, `home.css`, `services-stack.css`, `forliving-editorial.css`, `motion-language.css`, `editorial-index.css`, `project-roster.css`, `portfolio-refinement.css`, and last `tokens.css` in the typography layer. Home and Work use `project-folders.css` through the same `main.css` bundle.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
 - `api/contact.js` and `api/now-playing.js` are the two current server-side endpoints. Last.fm recent-track data is requested server-side using `LASTFM_API_KEY`; the client sees only a short public track/artist/status object and degrades to an honest profile link on failure. Adding further endpoints requires a documented need and security review.
-- Keep ESM dependencies intentional. Three.js hero water and optional Lenis/GSAP desktop scroll motion already exist as lazy bundles with native/static fallbacks and size budgets. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
+- Keep ESM dependencies intentional. The Three.js water is a lazy bundle with a static fallback; What I Do uses native sticky scrolling without Lenis or GSAP. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
 
 **Progressive enhancement rule:** Content and navigation work without JavaScript. Video, shader, canvas, cursor response, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
 
@@ -83,9 +83,9 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Global layout | `styles/layout.css` |
 | Shared navigation/forms/footer/components | `styles/components-v4.css` |
 | Cross-page layouts and articles | `styles/pages-v4.css` |
-| Real-world-proportioned Work folders | `styles/project-folders.css`, `js/render/projects.js`, `work.html` |
+| Compact landscape Work folders and standing Home folders | `styles/project-folders.css`, `styles/home-folders.css`, `js/render/projects.js`, `work.html` |
 | Approved current cross-page visual refinement | `styles/portfolio-refinement.css` |
-| Optional desktop scrolling | `js/core/scroll-experience.js`, `js/motion-experience.js` |
+| Native scroll-driven services | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Seven homepage sections and scoped behavior | `styles/home.css` |
 | Work/index/marquee rendering | `js/render/projects.js` |
 | Capabilities and experience | `js/render/sections.js` |
@@ -173,7 +173,7 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 1. Validate the structured public content and local references.
 2. Rebuild the Experiments manifest.
 3. Bundle the Three.js/WebGL hero-water island from `js/hero-water-three.js`.
-4. Bundle the optional Lenis/GSAP motion engine from `js/motion-experience.js`.
+4. Preserve native sticky scrolling for the five What I Do cards.
 5. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
 6. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
 
@@ -208,12 +208,10 @@ Do not claim `npm run quality` succeeds without executing it. Use CI artifacts a
 | Resource | Maximum (gzip unless stated) |
 | --- | --- |
 | Initial CSS | 45 KiB |
-| Work folder stylesheet | 6 KiB |
+| Work folder CSS source (before shared bundling) | 6 KiB |
 | All Work CSS | 53 KiB |
-| Initial JavaScript | 75 KiB |
-| Page-scoped case-arrival JavaScript | 2 KiB |
+| Initial static JavaScript module graph (sum of compressed responses) | 75 KiB |
 | Lazy Three.js hero-water bundle | 145 KiB |
-| Lazy Lenis/GSAP motion bundle | 110 KiB |
 | Eager homepage images | 1.5 MiB (raw transfer) |
 | Geist Sans Regular display font | 100 KiB |
 | All delivered text/icon fonts | 420 KiB |
