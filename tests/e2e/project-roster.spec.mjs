@@ -19,18 +19,19 @@ test("Home renders the landscape folder material from Work, not standing version
     await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
     const bounds = await folder.boundingBox();
     expect(bounds.width).toBeGreaterThan(bounds.height);
-    expect(bounds.height).toBeLessThanOrEqual(310);
+    expect(bounds.height, "Home folders must be twice the old compact height").toBeGreaterThan(310);
   }
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
 });
 
-test("Home and Work use the same compact folder heights and blank sheets", async ({ page }) => {
+test("Home folders are approximately twice as tall as the compact Work folders", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const homeHeight = await homeFolders(page).first().evaluate(el => el.offsetHeight);
   await page.goto("/work.html");
   const workHeight = await page.locator(".project-folder").first().evaluate(el => el.offsetHeight);
-  expect(Math.abs(homeHeight - workHeight)).toBeLessThan(85);
+  expect(homeHeight).toBeGreaterThan(workHeight * 1.7);
+  expect(homeHeight).toBeLessThan(workHeight * 2.8);
   await expect(page.locator(".project-folder__paper")).toHaveCount(15);
   await expect(page.locator(".project-folder__spine")).toHaveCount(0);
 });
@@ -49,7 +50,13 @@ test("hover opens the right Home landscape folder and moves subsequent folders d
   const first = await folders.first().boundingBox();
   await page.mouse.move(first.x + 25, first.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "0");
+  const activeFirst = await folders.first().boundingBox();
   const second = await folders.nth(1).boundingBox();
+  const layering = await folders.evaluateAll(nodes => nodes.map(el => Number(getComputedStyle(el).zIndex)));
+  expect(layering[1], "following folder must paint above the hovered folder").toBeGreaterThan(layering[0]);
+  expect(second.y, "next folder is still below the hovered folder's top").toBeGreaterThan(activeFirst.y);
+  expect(second.y, "next folder still hides the lower portion of the hovered folder")
+    .toBeLessThan(activeFirst.y + activeFirst.height * .75);
   await page.mouse.move(second.x + 25, second.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "1");
   await expect(folders.nth(1)).toHaveClass(/is-active/);
@@ -119,4 +126,33 @@ test("Home keeps native case-study links when JavaScript is off", async ({ brows
   await page.goto("/");
   await expect(page.locator(".home-folder-stack__cards .project-folder__link")).toHaveCount(3);
   await context.close();
+});
+
+test("Selected Work folders and What I Do cards match the water rectangle's horizontal edges", async ({ page }) => {
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/index.html");
+    await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
+    await expect(page.locator("#what-i-do .service-stack__card")).toHaveCount(5);
+    const edges = await page.evaluate(() => {
+      const box = selector => {
+        const rect = document.querySelector(selector).getBoundingClientRect();
+        return { left: rect.left, right: rect.right, width: rect.width };
+      };
+      return {
+        water: box(".home-landing"),
+        selected: box("#selected-work"),
+        folder: box(".home-folder-stack__cards .project-folder"),
+        service: box("#what-i-do .service-stack__card"),
+      };
+    });
+    for (const target of ["selected", "folder", "service"]) {
+      expect(Math.abs(edges[target].left - edges.water.left),
+        target + " left edge at " + width).toBeLessThanOrEqual(2);
+      expect(Math.abs(edges[target].right - edges.water.right),
+        target + " right edge at " + width).toBeLessThanOrEqual(2);
+    }
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    expect(overflow).toBeLessThanOrEqual(2);
+  }
 });

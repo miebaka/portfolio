@@ -84,3 +84,13 @@ html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
     height: 2.25rem;
   }
 }
+
+/* The service cards align exactly with the Three.js water rectangle,
+   regardless of the full-bleed section and older !important width rules. */
+body[data-page="home"] section.home-capabilities--reference .process-sequence .service-stack {
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--hf)) !important;
+  max-width: none !important;
+  margin-inline: var(--hf) !important;
+  padding-inline: 0 !important;
+}

@@ -29,3 +29,25 @@ body[data-page="home"] .home-folder-stack .project-folder-stack__stage {
 body[data-page="home"] .home-folder-stack__cards {
   width: 100%;
 }
+
+/* The Three.js water frame is inset by --hf. Use its exact outer edges for
+   Home's folder stack; the Work page retains its own content width. */
+body[data-page="home"] #selected-work {
+  box-sizing: border-box;
+  width: calc(100% - 2 * var(--hf));
+  max-width: none;
+  margin-inline: var(--hf);
+  padding-inline: 0;
+}
+
+/* Twice the compact Work-folder height, also when JavaScript is disabled. */
+body[data-page="home"] .home-folder-stack__cards {
+  --work-folder-height: clamp(16rem, calc((100svh - var(--nav-h) - 13rem) / 1.2), 38rem);
+  --folder-overlap: calc(var(--work-folder-height) * .74);
+}
+
+/* Keep physical stacking order on hover/focus: a file behind the next one
+   remains partly hidden, instead of popping fully above the whole pile. */
+body[data-page="home"] .home-folder-stack__cards.is-folder-interactive .project-folder:is(.is-active, :hover, :focus-within) {
+  z-index: calc(var(--folder-index, 0) + 1);
+}
