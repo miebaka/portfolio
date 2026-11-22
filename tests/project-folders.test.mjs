@@ -43,7 +43,7 @@ test("Work page never loads retired drawer or WebGL components", () => {
   const work = readFileSync(resolve("work.html"), "utf8");
   const css = readFileSync(resolve("styles/project-folders.css"), "utf8");
   assert.doesNotMatch(work, /filing-cabinet|work-cabinet|work-cabinet-three/i);
-  assert.match(work, /styles\/project-folders\.css/);
+  assert.match(work, /styles\/main\.css/);
   assert.match(css, /\.project-folder:focus-within/);
   assert.match(css, /prefers-reduced-motion: reduce/);
   assert.match(css, /pointer: coarse/);
