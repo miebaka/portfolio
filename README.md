@@ -1,190 +1,105 @@
 # Miebaka Joshua — Portfolio
 
-A fast, scalable portfolio site built from static HTML, CSS and vanilla ES
-modules. A small Node build validates content, generates the Experiments index,
-bundles production CSS and emits the deployable site. Direction: a warm editorial frame that stays neutral so the work
-supplies the colour. [`engineering-specification.md`](engineering-specification.md)
-is the single governing document, covering positioning, art direction and voice
-as well as the engineering contract.
+A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; Three.js water, scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory and the contact endpoint.
 
-## Run it
+- **Visual direction and current approved behavior:** [`DESIGN.md`](DESIGN.md) (latest decision appendix takes precedence over historical proposals).
+- **Engineering, security and release requirements:** [`engineering-specification.md`](engineering-specification.md).
+- **Typography:** [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md), enforced by `styles/tokens.css`.
 
-**Runtime:** Node.js **24 LTS** (`.nvmrc`, `package.json` engines and GitHub Actions share the same major). Run `nvm use` before `npm ci`. Vercel currently uses Node.js 24.x for builds and functions. A runtime upgrade does not replace accessibility, security or performance checks.
+## Run locally
 
-Install dependencies once, then use the project development command:
+Use Node.js **24** (`.nvmrc`, `.node-version` and `package.json` agree).
 
-```bash
-npm install
+```sh
+nvm use
+npm ci
 npm run dev
-# then visit http://localhost:4000
+# Open http://localhost:4000
 ```
 
-`npm run dev` refreshes the generated Experiments manifest and shader bundle
-before serving the site with development-safe caching.
+Development serves the authored source pages and rebuilds the experiments manifest and hero shader. To inspect what Vercel actually deploys, build and serve the generated output:
 
-## Structure
-
-```
-Portfolio/
-├── index.html              # Home: hero → proof marquee → work → capabilities → about → contact
-├── work.html               # Full work index
-├── about.html              # About page
-├── experiments.html       # Experiments: draggable spatial archive
-├── essays.html         # Essays index
-├── contact.html            # Contact page
-├── 404.html                # Styled not-found page (noindex)
-├── robots.txt · sitemap.xml
-├── work/                   # Case studies — thin shells, body rendered from data
-│   ├── rivo.html · chopbox.html · tedx-rsu.html · christian-poster-a-week.html
-├── styles/                 # Layered CSS (see below). Single entry: main.css
-│   ├── main.css            # @imports everything in cascade order
-│   ├── foundations.css     # Tokens, reset, type, layout primitives, platform baseline
-│   ├── components-v4.css   # Navigation, controls, footer and shared components
-│   └── pages-v4.css        # Page and section composition
-├── data/
-│   └── site.js             # Single source of truth (ESM export): profile, projects, case studies…
-├── js/                     # ES modules, one entry per page: <script type="module" src="js/main.js">
-│   ├── main.js             # Entry — renders from data, then wires behaviour
-│   ├── render/             # navigation · experiments · projects · sections · case-study · footer
-│   ├── core/               # scroll · navigation · menu · year · form
-│   └── utilities/dom.js    # escapeHTML · mount · basePath
-└── assets/
-    ├── experiments/        # Dedicated image/video source folder + generated manifest
-    ├── fonts/              # Self-hosted files (2 authored type families)
-    └── images/             # Portrait, logo (SVG), client logos
+```sh
+npm run build
+node scripts/serve-static.mjs dist 4000
 ```
 
-## Architecture
+Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 
-- **CSS cascade layers** are imported by `styles/main.css`: foundations →
-  components → pages. Rules: semantic tokens, shallow selectors, no inline styles.
-- **Design tokens** live in one place: the `:root` block at the top of
-  `styles/foundations.css`. It is layered: `--ref-*` raw palette → `--sys-color-*`
-  roles (remapped for dark) → short aliases such as `--paper`, `--ink`, `--muted`,
-  `--line`, `--accent` → `--comp-*` component tokens. Spacing is the `--s1…--s12`
-  scale only. Components consume aliases; hex values exist only in `--ref-*`.
-  `scripts/token-integrity.test.mjs` fails on an undefined `var()`, a dead token,
-  a repeated token, a second token file, or the two dark-theme blocks drifting apart.
-- **Data-driven rendering.** `data/site.js` exports `SITE`. On load, `js/main.js`
-  renders markup into `[data-mount="…"]` points, then attaches behaviour. The nav,
-  menu, work grid, capabilities, testimonial, footer, and case-study bodies are all
-  built from data.
-- **Motion.** Shared timing comes from the duration and easing roles in
-  `styles/foundations.css`; interface motion is part of the authored presentation.
-- **Navigation.** The shared route registry exposes Work, About, Experiments,
-  Essays and Contact. Mobile adds a persistent five-destination bottom bar and a
-  focus-trapped full-screen Index.
-- **Experiments.** `scripts/build-experiments.mjs` turns media placed in
-  `assets/experiments/` into a deterministic spatial archive. Drag, wheel,
-  arrow-key and tab navigation all reach the same work.
+## Where changes belong
 
-## Add an experiment
+| What you need to change | Source of truth |
+| --- | --- |
+| Profile, role, email, socials, experience | `data/site-config.js` |
+| Projects, publication state, featured order | `data/projects.js` |
+| Case narratives and evidence | `data/case-studies.js` |
+| Five chapter names and descriptors | `data/case-story-structure.js` |
+| Service cards and links | `data/services.js` |
+| Route names, navigation, build/sitemap inclusion | `data/navigation.js` |
+| Essays and experiments | `data/writing.js` and `assets/experiments/` |
+| Composition of public data for renderers | `data/site.js` (facade; do **not** duplicate or author content here) |
+| Typography, including every font/size/text declaration | `styles/tokens.css` |
+| Colour, spacing, motion and layout tokens | `styles/foundations.css` |
+| Base layouts, shared UI and page layout | `styles/layout.css`, `styles/components-v4.css`, `styles/pages-v4.css` |
+| Global CSS ordering | `styles/main.css` |
+| Physical Work folders | `styles/project-folders.css`, `js/render/projects.js`, `work.html` |
+| Homepage, services and current visual refinements | `styles/home.css`, `styles/services-stack.css`, `styles/portfolio-refinement.css` |
+| Navigation, index overlay and theme | `js/render/navigation.js`, `js/core/navigation.js`, `js/core/preferences.js` |
+| Server-rendered navigation/footer fallback | `scripts/render-partials.mjs` |
+| Interactive dot-matrix footer | `js/core/footer-signature.js` |
+| Three.js hero and fallback | `js/hero-water-three.js`, `js/core/hero-wave.js` |
+| Desktop-only optional Lenis/GSAP scroll engine | `js/motion-experience.js`, `js/core/scroll-experience.js` |
+| Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |
+| Deployment redirects, headers, CSP | `vercel.json` |
+| Content validation and production bundle | `scripts/validate-content.mjs`, `scripts/build-site.mjs` |
 
-1. Place an image or video in `assets/experiments/`.
-2. Run `npm run build:experiments`, `npm run dev`, or `npm run build`.
-3. Optionally add `assets/experiments/metadata.json` to override the generated
-   title, category, alternative text, link, position or width.
+The CSS bundle uses the imports in `styles/main.css`, with the `typography` layer applied last. The Work page also loads the intentionally page-scoped `styles/project-folders.css`. Adding a conflicting typography declaration elsewhere is a regression.
 
-See [`assets/experiments/README.md`](assets/experiments/README.md) for the
-supported formats and metadata shape.
+Geist Sans and Geist Mono are pinned to `geist@1.9.2` WOFF2 files on **jsDelivr**; the Material Symbols icon subset is local. The legacy Archivo, Finlandica and Host Grotesk files are removed. Fonts use `font-display: swap` and fallback families. Do not claim that every font is self-hosted.
 
-## Progressive enhancements
+## Work and published case studies
 
-All opt-in and degrade gracefully — the editorial base never depends on them:
+The Work index uses three full-width, real-world-proportioned folders: each has a numbered third-cut tab, five decorative **blank** sheets, and only the project title on its front. Folders remain native links in light/dark themes, on touch and keyboard, and without JavaScript.
 
-- **Theme transitions** — the navigation renderer uses the browser View Transition
-  API when available. Unsupported browsers switch immediately.
-- **Container queries** — the work grid responds to its container's width, not the
-  viewport (`#work` is the query container). Falls back to a single column where
-  `@container` is unsupported.
-- **Theme** — `color-scheme: light` by default, `dark` on case pages, so native UI
-  (scrollbars, controls) matches. Re-theme by editing the role tokens in
-  `styles/foundations.css`; the whole palette flows from a few role values.
-- **Film grain** — a faint, non-interactive `soft-light` texture over the dark
-  hero and case pages.
+To add a case study:
 
-## How to add a project
+1. Create or update the project in `data/projects.js`. Use `status: "published"` only when its case and evidence are ready; set `featuredOrder` explicitly when needed.
+2. Author the matching `caseStudies[slug]` record in `data/case-studies.js`. Do not invent outcomes. Follow the actual content schema and `data/case-story-structure.js`; the five public chapters are **The Call, The System, What Survived, First Contact, The Results**.
+3. Create/update the corresponding `work/<slug>.html` shell, including correct SEO metadata and `data-case`; use `npm run sync:fallbacks` for static case fallbacks, then `npm run validate:content` and `npm run build`.
+4. Test native navigation, keyboard focus, images, mobile and no-JavaScript fallbacks. Check the generated sitemap and canonical URLs.
 
-1. Add an entry to `projects` in [`data/site.js`](data/site.js) — this drives the
-   home/work grids:
+Do not edit `data/site.js` as though it were the source project database, or revive obsolete 3D cabinet documents.
 
-   ```js
-   {
-     slug: "new-project",          // must match work/new-project.html
-     title: "New Project",
-     category: "Fintech",
-     tags: ["Brand identity"],
-     year: "2025",
-     tone: "#1f4d3a",              // tile colour until a cover image exists
-     featured: true
-   }
-   ```
+## Experiments and media
 
-2. Add a matching entry to `caseStudies` in the same file, following the shared
-   narrative shape: `overview` (question + body), `challenge`, `process`,
-   `solution`, `outcome` (body + metrics + optional note), three `media` bands,
-   and `next`.
+Put supported artwork in `assets/experiments/`, optionally update `metadata.json`, then run `npm run build:experiments`. See [`assets/experiments/README.md`](assets/experiments/README.md).
 
-3. Copy any `work/*.html` to `work/new-project.html` and update only the static
-   `<head>` (title, description, canonical/OG/Twitter, JSON-LD) and the body's
-   `data-case="new-project"` + accent class `case-page--new-project`
-   (define any project-specific presentation in `styles/pages-v4.css`). The
-   `<article data-mount="case">` is filled automatically from the data.
+For changed case-study or profile images, run `npm run optimize:images`. The builder copies referenced optimized AVIF/WebP/JPG variants instead of publishing the whole original image library.
 
-## Customise
+## Motion and accessibility
 
-- **Typography:** all font faces, families, type sizes and text styling live exclusively in `styles/tokens.css`.
-- **Colour, spacing, motion and layout tokens:** `styles/foundations.css`.
-- **Name, email, socials, availability, projects, case studies:** `data/site.js`.
+- The hero uses a lazy Three.js/WebGL island with a static, usable fallback.
+- Lenis and GSAP load **only as a desktop progressive enhancement**; Work, touch-first devices, reduced-motion users and unsupported environments keep native scrolling.
+- The Index overlay, theme toggle and footer signature have keyboard/touch paths; the underlying document and contact links remain available without JavaScript.
+- `System`, `Reduce` and `Full` motion preferences are persisted independently of the colour theme.
+- Essential content must not depend on decorative animation, GPU capability or hover.
 
-## Contact form
+## Contact, privacy and deployment
 
-JavaScript submits JSON to `/api/contact`; the Vercel function validates input,
-applies abuse controls and sends through Resend. Configure the environment
-variables documented in [`.env.example`](.env.example). The authored HTML keeps
-a `mailto:` action and direct email link as the no-JavaScript fallback.
+`POST /api/contact` validates JSON, checks origin, rejects spam, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback.
 
-## SEO & deploy
+The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` intentionally blocks indexing until launch approval. Privacy claims must match the actual browser requests, including the remote Geist fonts.
 
-- Every page has a unique title/description, canonical, Open Graph, Twitter Card,
-  and JSON-LD (`Person` + `WebSite` on home, `BreadcrumbList` everywhere,
-  `CreativeWork` on case studies). Plus `robots.txt`, `sitemap.xml`, SVG favicon.
-- **Canonical host:** `https://miebaka-portfolio.vercel.app`. Preview deployments remain
-  `noindex,nofollow` where configured. The root `robots.txt` currently disallows crawlers; this is an explicit launch decision to revisit when public indexing is approved, not a design side effect.
+## Quality and release
 
-## Shared shell and components
-
-`scripts/render-partials.mjs` is the single source for the document head, header
-and footer. The build renders those partials into every static page, so the
-shipped site remains readable and navigable with JavaScript disabled. Component
-styles live in `styles/components-v4.css`; page-specific composition lives in
-`styles/pages-v4.css`. Classes follow a BEM-style block, element and modifier
-convention.
-
-To add a case study, create the project and narrative records in `data/site.js`,
-reuse the required Problem, Decision, System, Applications and Outcome chapter
-sequence, add the shell under `work/`, then run `npm run sync:fallbacks`. Keep
-collaborator credits as separate authored records and do not publish outcomes
-that are not supported by an artefact, quote or verified measure.
-
-## Accessibility & performance
-
-- Semantic landmarks, skip link, single `<h1>` per page, visible focus rings,
-  labelled form with `aria-describedby`, focus-trapped overlay menu, ≥44px touch
-  targets, consistent motion, and content usable with JS off.
-- Self-hosted fonts with `font-display: swap` and preloaded critical faces;
-  images carry explicit dimensions + `decoding`.
-
-## Image optimization
-
-The production build uses Node. When a project master changes, regenerate its
-responsive AVIF/WebP/JPG variants:
-
-```bash
-npm install            # once — pulls in sharp
-npm run optimize:images
+```sh
+npm run lint:html
+npm run lint:typography
+npm run test:typography
+npm run test:tokens
+npm run quality
 ```
 
-This writes the responsive variants into `assets/images/optimized/` (see
-[`scripts/optimize-images.mjs`](scripts/optimize-images.mjs)). The production
-builder copies only variants referenced by published pages.
+`npm run quality` builds the site, runs unit/integrity tests, the full Chromium/Playwright browser matrix (no skipped tests), CSS/JavaScript/font/image budgets, desktop Lighthouse and dependency audits. CI uses Node.js 24. The font and CSS contracts are checked separately in the fast Typography workflow.
+
+**Automated green is necessary, not a live-release sign-off.** Before merge or production promotion, confirm a Vercel preview was built from the **exact PR head SHA**, then check actual Home, Work, case-study, Essays, Experiments, About and Contact routes. Do keyboard and screen-reader sampling, 200% zoom, light/dark and reduced-motion checks, a real touch/GPU pass, and an end-to-end contact delivery test with properly configured credentials. Verify external links and metadata, plus the ability to roll back to the last known-good deployment. The release checklist in [`engineering-specification.md`](engineering-specification.md) records what is automated versus still manual.

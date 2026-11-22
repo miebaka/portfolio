@@ -1,5 +1,7 @@
 # PORTFOLIO UX AUDIT — 2026-11-20
 
+> **Reviewed against PR #48 on 22 November 2026.** This is a decision and verification ledger, not a claim that the live deployment, screen-reader testing or real-user study has passed. The current Work archive uses physical folders, and the service cards are unnumbered.
+
 **Reference:** https://lawsofux.com/laws/ (reviewed 2026-11-20).
 **Scope:** Home, Work, About, Essays, Experiments, Contact, footer, themes, and interactive visual systems.
 
@@ -21,7 +23,7 @@ A law is **implemented** when a concrete product decision addresses it, **partia
 | Doherty Threshold | Keep response fast and avoid CPU-bound fluid simulation on software GPUs | Lighthouse performance and blocking-time budgets |
 | Fitts's Law | Keep target hit areas at least 44 CSS pixels | Touch/keyboard checks on links, controls and footer canvas |
 | Flow | Continuous section sequence and non-blocking transitions | No forced scroll-jacking; users can navigate backwards |
-| Goal-Gradient Effect | Clear progress through five services and short paths to cases | Service numbering and links to evidence |
+| Goal-Gradient Effect | Clear progress through five services and short paths to cases | Five unnumbered service cards and direct links to evidence |
 | Hick's Law | One Selected Work list; focused destinations | View toggle removed; quick navigation |
 | Jakob's Law | Semantic links, nav, contact form, familiar affordances | Native keyboard behavior and direct case links |
 | Law of Common Region | Service card boundaries and work rows | Consistent grouping without unrelated decoration |
@@ -29,9 +31,9 @@ A law is **implemented** when a concrete product decision addresses it, **partia
 | Law of Prägnanz | Simplify visual treatment and hierarchy | One page surface per theme, restrained interaction |
 | Law of Similarity | Apply shared label / card / button patterns | Common type scale and interaction states |
 | Law of Uniform Connectedness | Real links connect each service to an evidence chapter | Every link resolves to a published chapter |
-| Mental Model | Light and dark modes behave conventionally | Lamp pull changes actual page colors and stays persistent |
+| Mental Model | Light and dark modes behave conventionally | Liquid light/dark control changes actual page colors and persists |
 | Miller's Law | Break down material rather than present a long undifferentiated grid | Three featured cases and five service cards |
-| Occam's Razor | Prefer sticky CSS to custom scroll choreography | No scroll library required for Jacobsen-style overlap |
+| Occam's Razor | Prefer sticky CSS to custom scroll choreography | Native scrolling is the baseline; optional Lenis/GSAP on capable desktop must not interfere with sticky content, reduced motion or Work |
 | Paradox of the Active User | Interactive controls should explain themselves | Keyboard-exposed footer dot matrix with label |
 | Pareto Principle | Prioritize work, contact and service evidence | Core journeys surfaced; supporting sections secondary |
 | Parkinson's Law | Avoid overlong interaction and cumbersome forms | Clear contact prompt and concise field set |

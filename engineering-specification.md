@@ -1,28 +1,28 @@
 # Engineering Specification — Miebaka Joshua Portfolio
 
-> **Status:** Authoritative engineering implementation contract, aligned to the 19 November 2026 redesign mandate.  
-> **Version:** 2.0.0  
-> **Updated:** 19 November 2026  
+> **Status:** Authoritative engineering implementation contract for the approved 22 November 2026 portfolio.  
+> **Version:** 2.3.0  
+> **Updated:** 22 November 2026  
 > **Repository:** https://github.com/miebaka/portfolio  
 > **Canonical production host:** https://miebaka-portfolio.vercel.app/  
 > **Scope:** Every public page, browser interaction, asset, content pipeline, API, build artifact, automated test, and deployment.
 
 ## 0. Purpose, authority, and interpretation
 
-This document defines **how** the portfolio must be built, verified, secured, and shipped. `DESIGN.md` defines **what the experience must communicate and look/feel like**. This engineering specification preserves existing static-first infrastructure and converts the 19 November 2026 redesign direction into implementable constraints. A design reference is never an excuse to break production functionality.
+This document defines **how** the portfolio must be built, verified, secured, and shipped. `DESIGN.md` defines **what the experience must communicate and look/feel like**. This engineering specification preserves verified static-first infrastructure and reflects the current approved Work folders, interactive footer, and single typography source. A design reference is never an excuse to break production functionality.
 
 **Authority order:**
 
 1. Security, privacy, truthful content, accessibility, and working functionality are mandatory.
 2. This file governs build, system architecture, interfaces, data integrity, performance budgets, APIs, automated verification, and deployment.
-3. The redesigned `DESIGN.md` version 2.1.0 (19 November 2026) governs editorial, visual, content hierarchy, page and motion requirements **as committed in the feature branch**. That document defines the target experience, not proof that all visual work has shipped.
+3. The latest decisions in `DESIGN.md` (version 2.3.0, 22 November 2026) govern editorial, visual, content hierarchy, page and motion requirements **as committed in the feature branch**. That document defines the target experience, not proof that all visual work has shipped.
 4. The current `styles/foundations.css` defines shipped token values pending an explicitly tested migration.
 5. `data/` remains the factual source for projects, biography, employer/client relationships, case-study evidence, and writing.
 6. External websites and ZeroSlop `DESIGN.md` captures are reference material, **not verified interaction specifications, licensed assets, approved token migrations, or evidence of accessibility**.
 
 Use **MUST/MUST NOT** for release-blocking requirements, **SHOULD** for strong defaults (document deviations), and **MAY** for optional improvements. Distinguish **current behavior**, **approved target**, and **proposed change** in reviews and pull requests. Do not claim tests have passed unless they ran.
 
-**Migration note:** The new 19 November design constitution was authored separately from the repository. Updating this engineering file alone does not install that new `DESIGN.md`, change the homepage, or assert that target interactions exist. Merge the new `DESIGN.md` deliberately as the visual-specification step of implementation.
+**Current-specification note:** The approved 22 November decisions at the end of `DESIGN.md` supersede contradictory historical reference instructions. A documentation edit or an automated green check does not prove a current Vercel preview has deployed.
 
 ## 1. Product and routes
 
@@ -56,12 +56,12 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 
 - HTML contains meaningful first-render content, title/description/canonical/Open Graph metadata, landmarks, a single `h1`, skip link, navigation fallback and useful core page copy.
 - `data/site.js` composes separate content modules rather than duplicating authored content.
-- `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in optional motion, Last.fm, or a visual widget MUST NOT take down navigation or primary content.
+- `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in an optional shader, scroll enhancement or visual widget MUST NOT take down navigation or primary content.
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
-- `styles/main.css` is the single CSS entry. Its **current** layer order is `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, and **`home.css`**. Do not omit or bypass the last import in architectural documents.
+- `styles/main.css` is the single bundled CSS entry. Its ordered imports are `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, `home.css`, `services-stack.css`, `forliving-editorial.css`, `motion-language.css`, `editorial-index.css`, `project-roster.css`, `portfolio-refinement.css`, and last `tokens.css` in the typography layer. The Work route also loads `project-folders.css` separately.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
-- `api/contact.js` and `api/now-playing.js` are the only existing server-side boundaries. Adding another requires a documented need and security review.
-- Keep ESM dependencies intentional; do not introduce GSAP, an animation framework, a router, a UI framework, or a second CSS system just because a reference site uses one. If justified, document bundle impact, fallback, owner and tests.
+- `api/contact.js` is the only current server-side endpoint. The unreachable Last.fm integration was removed. Adding endpoints requires a documented need, abuse controls and security review.
+- Keep ESM dependencies intentional. Three.js hero water and optional Lenis/GSAP desktop scroll motion already exist as lazy bundles with native/static fallbacks and size budgets. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
 
 **Progressive enhancement rule:** Content and navigation work without JavaScript. Video, shader, canvas, cursor response, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
 
@@ -78,10 +78,14 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Employers, clients and collaborators represented as logos | `data/clients.js` plus accurately labelled presentation |
 | Routes | `data/navigation.js` |
 | Content facade | `data/site.js` |
-| Fonts, semantic design tokens, motion roles | `styles/foundations.css` |
+| Colour, spacing, semantic design tokens, motion roles | `styles/foundations.css` |
+| Font faces, typography selectors and type scales | `styles/tokens.css`, `docs/TYPOGRAPHY-SYSTEM.md` |
 | Global layout | `styles/layout.css` |
 | Shared navigation/forms/footer/components | `styles/components-v4.css` |
 | Cross-page layouts and articles | `styles/pages-v4.css` |
+| Real-world-proportioned Work folders | `styles/project-folders.css`, `js/render/projects.js`, `work.html` |
+| Approved current cross-page visual refinement | `styles/portfolio-refinement.css` |
+| Optional desktop scrolling | `js/core/scroll-experience.js`, `js/motion-experience.js` |
 | Seven homepage sections and scoped behavior | `styles/home.css` |
 | Work/index/marquee rendering | `js/render/projects.js` |
 | Capabilities and experience | `js/render/sections.js` |
@@ -165,18 +169,21 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 
 `npm run build` MUST preserve this sequence:
 
-1. Validate structured public content and local references.
+1. Validate the structured public content and local references.
 2. Rebuild the Experiments manifest.
-3. Build the lightweight native WebGL hero-wave island; do not add a scene-graph dependency unless a verified design requirement demands it.
-4. Generate `dist/` from the production allow-list.
-5. Prevent private documents, original working files, source maps and review artifacts from leaking into output.
+3. Bundle the Three.js/WebGL hero-water island from `js/hero-water-three.js`.
+4. Bundle the optional Lenis/GSAP motion engine from `js/motion-experience.js`.
+5. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
+6. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
 
-Deployable output has complete page HTML, one bundled CSS entry, only reachable JS modules, only referenced image derivatives and required self-hosted fonts. Do not commit generated `dist/` or `assets/runtime/` files where the build intends to generate them.
+Text fonts are version-pinned Geist WOFF2 requests to jsDelivr, **not** self-hosted legacy font binaries. Material Symbols Outlined remains a locally served subset. Do not commit generated `dist/` or `assets/runtime/` files.
 
 Build and test commands (as defined in `package.json`):
 
 ```bash
 npm ci
+npm run lint:html
+npm run lint:typography
 npm run build
 npm test
 npm run test:e2e
@@ -195,14 +202,20 @@ Do not claim `npm run quality` succeeds without executing it. Use CI artifacts a
 
 ## 8. Performance budgets and measurable targets
 
-**Repository production budgets, maintained unless changed through measurement and review:**
+**Production size budgets** are enforced by `scripts/check-budgets.mjs`; do not change them without a measured reason and an approved review:
 
-| Resource | Maximum |
+| Resource | Maximum (gzip unless stated) |
 | --- | --- |
-| Initial CSS | 45 KiB gzip |
-| Initial JavaScript | 75 KiB gzip |
-| Lazy shader island | 375 KiB gzip |
-| Eager homepage media | 1.5 MiB |
+| Initial CSS | 45 KiB |
+| Work folder stylesheet | 6 KiB |
+| All Work CSS | 53 KiB |
+| Initial JavaScript | 75 KiB |
+| Page-scoped case-arrival JavaScript | 2 KiB |
+| Lazy Three.js hero-water bundle | 145 KiB |
+| Lazy Lenis/GSAP motion bundle | 110 KiB |
+| Eager homepage images | 1.5 MiB (raw transfer) |
+| Geist Sans Regular display font | 100 KiB |
+| All delivered text/icon fonts | 420 KiB |
 
 The current `lighthouserc.cjs` asserts desktop median **performance ≥0.90**, **accessibility ≥0.95**, **LCP ≤2,500ms**, **CLS ≤0.05** and **TBT ≤200ms** across configured routes. These are *existing configured CI thresholds*, not independently measured passing scores.
 
@@ -236,7 +249,7 @@ Automated axe audits are necessary but not sufficient. Run manual keyboard, Voic
 
 Existing `api/contact.js` uses server-side schema, origin/abuse controls, rate limits and mail integration. Preserve these rather than substituting a third-party frontend-only form. Validate and normalize user input on the server, restrict lengths and accepted content types, prevent header injection, use safe structured logging and return non-leaking error responses. Do not assert perfect abuse resistance based solely on an in-memory limiter.
 
-Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with actually active email, analytics and Last.fm functionality.
+Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with the contact endpoint, local theme/motion preferences, and remote Geist font requests; do not describe the removed Last.fm endpoint as active.
 
 `vercel.json` owns production CSP/security headers, redirects and caching. Any change to inline executable scripts, imported modules, external origins or API endpoints MUST be checked against the CSP and related integrity tests. External new-tab links must include `rel="noopener noreferrer"`.
 
@@ -297,32 +310,38 @@ A valid exception log records: **decision, owner, rationale, impacted pages, aff
 
 ---
 
-## Appendix A — Known existing issues, not yet automatically fixed
+## Appendix A — Verification still required before release
 
-1. `data/site-config.js` contains `canonicalUrl: "https://miebaka-portfolio.vercel.app/"` while the engineering host and homepage HTML use Vercel. Correct the data and generated metadata consistently; this document does not itself change runtime config.
-2. Featured projects use `featuredOrder` in data; reject any regression to hard-coded renderer selection.
-3. Mobile Selected Work previews are visible; keep them accessible and meaningful.
-4. Footer host owns pointer handlers and the canvas is non-interactive; keep reduced-motion, idle and lifecycle tests.
-5. Homepage CSS and 800–1,200ms entrance animation need reconciliation with the earlier generic microinteraction duration guidance. Differentiate cinematic entrance vs routine feedback.
-6. `README.md` and checked-in `DESIGN.md` are not yet aligned to the new 19 November design constitution.
-7. The site-motion preference needs verification across CSS-only animation, marquee, shader and signature—system reduced motion and in-site preference must converge.
+The 22 November 2026 cleanup baseline passed the repository's two GitHub checks: 240 Chromium/Playwright browser executions, zero skips; CSS/font/image budgets and Lighthouse; production dependency audit with zero vulnerabilities. **Recheck these against the latest commit SHA after any edit.** CI is not proof that Vercel has published the same commit.
 
-These are **audit findings**, not claims that the present branch is broken in all browsing conditions. Each is closed only after an implemented change and verifying test.
+**Independent release checks not established by a green GitHub Actions run:**
 
-## Appendix B — Release checklist
+1. **Exact-SHA Vercel preview:** obtain a `READY` preview build linked to the latest PR head, not an earlier commit. The latest connected deployment record checked on 22 November was an older cancelled build; a current green preview was not confirmed.
+2. **Deployed smoke test:** navigate Home, Work, one published case, About, Essays, Experiments and Contact on the preview; confirm HTTP responses, navigation, theme toggle, metadata, fonts and image requests.
+3. **Real accessibility sampling:** VoiceOver or another screen reader, keyboard-only navigation, 200% browser zoom, focus restoration, high/forced contrast and actual touch interaction. Automated axe and emulated mobile are not substitutes.
+4. **Real-device shader/performance:** at least one mobile GPU and a lower-powered desktop; reduced motion and software WebGL fallback, long-session scroll, network throttling and field/Core Web Vitals when available. CI Lighthouse is desktop-only.
+5. **Contact delivery:** with properly configured preview/environment variables and a controlled recipient, verify origin rejection, anti-abuse, one actual Resend delivery, success response and safe error messages. Unit mocks cannot prove provider configuration.
+6. **Publication and operations:** check external links, robots/indexing decision, canonical/OG URLs, real Vercel deployment behavior and availability of the prior production deployment for rollback.
 
-- [ ] Updated `DESIGN.md` v2.1.0 is committed and matches the implementation target.
-- [ ] Canonical/OG/JSON-LD/sitemap are consistent with the verified host.
-- [ ] All seven homepage sections render in required order with JS enabled and disabled.
-- [ ] All published project links, project images and evidence links resolve correctly.
-- [ ] No misleading claims, placeholder client relationships or invented case-study metrics.
-- [ ] Reduced-motion behavior works for CSS, JS, marquees, shader and footer.
-- [ ] Site is usable by keyboard, touch, screen reader and at 200% zoom.
-- [ ] Responsive screenshots are reviewed at required breakpoints in light/dark themes.
-- [ ] Images are correctly cropped, captioned and optimized.
-- [ ] Contact validation and rate-limiting tests pass.
-- [ ] No secret or unwanted artifact enters `dist/`.
-- [ ] Production size, Lighthouse and accessibility gates pass.
-- [ ] CI passes, live smoke check passes and rollback is known.
+If these cannot be performed, mark them unverified rather than claiming the PR is production-ready.
+
+## Appendix B — Release sign-off checklist
+
+**Automated (must be green at the exact PR head):**
+
+- [ ] Node.js 24 install, content/schema tests, HTML and typography lint.
+- [ ] No skipped Playwright tests; routes, folders, keyboard/touch emulation, theme and no-JavaScript behavior pass.
+- [ ] CSS/token/typography contracts, size budgets and desktop Lighthouse pass.
+- [ ] Shipped dependency audit passes; build contains no drafts/private files.
+
+**Manual or deployed (must be evidenced separately):**
+
+- [ ] Vercel preview for the **exact** PR SHA is `READY` and routes/assets work.
+- [ ] Screen reader, real device/touch, 200% zoom and reduced-motion behaviors are reviewed.
+- [ ] Contact API sends a controlled real message with correct production-like configuration.
+- [ ] External links, metadata, indexing and rollback are verified.
+- [ ] Human review confirms the folder proportions, five blank sheets, number-only tabs and dot-matrix footer.
+
+The authority for design is the latest approved appendix in `DESIGN.md`; earlier Figma/editorial studies are research records, not a reason to restore old layouts.
 
 **Final rule:** Attractive output is not finished output. A design decision is complete only when it is truthful, accessible, performant, consistent with the governing documents, implemented in the right source, and verified on real page behavior.

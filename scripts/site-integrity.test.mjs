@@ -619,6 +619,27 @@ test("dead listening integration stays removed and privacy copy matches browser 
   ]) await assert.rejects(access(join(root, unused)), unused);
 });
 
+test("documentation and example contact origins follow active code, not retired systems", async () => {
+  const readme = await readFile(join(root, "README.md"), "utf8");
+  const engineering = await readFile(join(root, "engineering-specification.md"), "utf8");
+  const env = await readFile(join(root, ".env.example"), "utf8");
+  const config = await readFile(join(root, "data", "site-config.js"), "utf8");
+  const docs = await readFile(join(root, "docs", "TYPOGRAPHY-SYSTEM.md"), "utf8");
+  const allowedOrigin = env.match(/^CONTACT_ALLOWED_ORIGINS=(.+)$/m)?.[1];
+  assert.equal(new URL(allowedOrigin).origin, new URL(SITE.canonicalUrl).origin,
+    "sample contact origin must match the actual canonical host");
+  for (const module of ["data/projects.js", "data/case-studies.js", "styles/tokens.css", "styles/project-folders.css"]) {
+    assert.ok(readme.includes(module), `README must name the actual source: ${module}`);
+  }
+  assert.ok(readme.includes("jsDelivr"));
+  assert.ok(engineering.includes("api/contact.js"));
+  for (const retired of ["api/now-playing.js", "analytics and Last.fm functionality"]) {
+    assert.equal(engineering.includes(retired), false, `retired integration must not appear as active: ${retired}`);
+  }
+  assert.ok(docs.includes("Material Symbols Outlined"));
+  assert.equal(config.includes("lastfmUser"), false);
+});
+
 test("retired source systems cannot return unnoticed", async () => {
   for (const path of [
     "styles/cohesion.css",

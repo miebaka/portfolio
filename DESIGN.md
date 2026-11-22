@@ -1,9 +1,9 @@
 # MIEBAKA JOSHUA — PORTFOLIO DESIGN & EXPERIENCE CONSTITUTION
 
-> **Status:** Authoritative target specification for the next portfolio redesign.  
-> **Version:** 2.2.0 — approved layered project-folder direction and dot-matrix restoration  
-> **Date:** 21 November 2026  
-> **Repository:** <https://github.com/miebaka/portfolio> (`main` at time of audit)  
+> **Status:** Authoritative design and interaction contract. The most recent approved decisions below override historical reference proposals.  
+> **Version:** 2.3.0 — physically accurate Work folders, dot-matrix footer and cleaned production code  
+> **Date:** 22 November 2026  
+> **Repository:** <https://github.com/miebaka/portfolio> (changes reviewed in PR #48 before merging to `main`)  
 > **Public canonical host:** <https://miebaka-portfolio.vercel.app/>  
 > **Scope:** Every public page, template, interactive system, content module, motion effect, and delivery pipeline.  
 > **Purpose:** Define *what to build*, *why*, *how it must behave*, *what not to build*, and *how to prove it meets the standard*.
@@ -1300,7 +1300,7 @@ The following observations are from the `main` branch reviewed on 19 November 20
 
 This is the current design contract when older sections above or historical Work handoff files conflict:
 
-1. **Navigation:** no written identity or “Home / Independent Design” line in the masthead. Keep the logo at the left and the **Index** control mathematically centered, with an accessible, animated light/dark liquid toggle at the right. Keep the fullscreen Index, live status, focus trap and preference persistence.
+1. **Navigation:** no written identity or “Home / Independent Design” line in the masthead. Keep the logo at the left and the **Index** control mathematically centered, with an accessible, animated light/dark liquid toggle at the right. Keep the fullscreen Index, focus trap and preference persistence. The unused Last.fm listening-status widget and endpoint have been retired.
 2. **Landing hierarchy:** “Miebaka Joshua” gets the largest sanctioned display token; the creative-partner statement drops to a supporting heading token. No invented sizes outside `styles/tokens.css`.
 3. **Selected Work:** on the shared page surface with no isolated tinted background; large headings, no rows touching, generous space, real case-study links and no decorative labels competing for attention.
 4. **About:** use a robust editorial text/portrait split on large screens and readable single-column text/portrait order on mobile. The complete About page follows the same typographic rhythm and retains verified biography, roles and proof.
@@ -1310,4 +1310,4 @@ This is the current design contract when older sections above or historical Work
 
 **Implementation ownership:** `styles/portfolio-refinement.css` owns the current global refinements; `styles/project-folders.css` and `js/render/projects.js` own the new Work archive; `js/render/navigation.js` and `scripts/render-partials.mjs` own the masthead. The retired 3D cabinet prototype, its superseded research notes, scripts and source CSS have been removed. Do not restore the drawer implementation; the physical full-width folder stack is the supported Work archive.
 
-**Acceptance:** npm validation, typography lint, project and navigation unit tests, complete Playwright coverage at desktop and mobile (zero skipped), reduced-motion/keyboard/no-JS checks, bundle budgets, and lighthouse must pass before releasing to main.
+**Acceptance:** npm validation, HTML/typography lint, content and interaction tests, complete Playwright coverage at desktop and emulated mobile (zero skipped), reduced-motion/keyboard/no-JS checks, bundle budgets and Lighthouse must pass before release. In addition, verify a READY preview at the exact PR head, live routes, real touch/zoom/screen-reader sampling, and contact delivery before production promotion. CI passing is not proof of live deployment.
