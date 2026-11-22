@@ -29,3 +29,11 @@ test("the core grid and spacing start mobile-first", async () => {
   assert.match(foundations, /--grid-outer:1\.25em/);
   assert.match(typography, /--type-heading-lg:\s*clamp\(2em,\s*1\.55em \+ 1\.7vw,\s*3em\)/);
 });
+
+test("interactive folder dimensions scale with text rather than using fixed-pixel CSS sizes", async () => {
+  const controller = await readFile(resolve("js/core/project-folder-interactions.js"), "utf8");
+  assert.match(controller, /const relativeLength = \(element, pixels\)/);
+  assert.match(controller, /style\.minHeight = relativeLength\(card, height\)/);
+  assert.match(controller, /setProperty\("--work-folder-height", relativeLength\(list, height\)\)/);
+  assert.doesNotMatch(controller, /(?:style\.minHeight|--work-folder-height"\s*,)[^;\n]*toFixed\(2\) \+ "px"/);
+});
