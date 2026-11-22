@@ -346,3 +346,100 @@ body[data-page] .theme-liquid-toggle__track {
   body[data-page] .theme-liquid-toggle:hover .theme-liquid-toggle__thumb {
     box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 35%, transparent);}
 }
+
+/* A balanced four-element masthead: logo + Last.fm on the left, Index centered,
+   theme toggle right. Symmetric flexible columns keep Index at 50% of the nav. */
+body[data-page]:not(.site-system-disabled) .site-nav__inner {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+body[data-page] .site-nav__leading {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  min-width: 0;
+  max-width: 100%;
+  gap: clamp(.35rem, 1.2vw, .8rem);
+}
+body[data-page] .site-nav__listening {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(31vw, 18rem);
+}
+body[data-page]:not(.site-system-disabled) .site-nav__menu-btn {
+  grid-column: 2;
+  justify-self: center;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+body[data-page]:not(.site-system-disabled) .site-nav__menu-btn:is(:hover, :focus-visible, [aria-expanded="true"]) {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+body[data-page] .now-playing {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .45rem .7rem;
+  background: var(--surface);
+  color: var(--ink);
+  transition: background-color 180ms var(--ease-standard), border-color 180ms var(--ease-standard);
+}
+body[data-page] .now-playing:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+body[data-page] .now-playing:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+body[data-page] .now-playing__vinyl {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--ink) 0 2px, var(--muted) 2.5px 3px, var(--ink) 3.5px 4.5px);
+  animation: listening-vinyl-turn 3.5s linear infinite;
+}
+body[data-page] .now-playing__vinyl::after {
+  content: "";
+  width: .35rem;
+  height: .35rem;
+  border-radius: 50%;
+  background: var(--paper);
+}
+body[data-page] .now-playing[data-live="false"] .now-playing__vinyl {
+  animation-play-state: paused;
+}
+body[data-page] .now-playing__copy {
+  min-width: 0;
+}
+@keyframes listening-vinyl-turn {
+  to { transform: rotate(360deg); }
+}
+@media (max-width: 52rem) {
+  body[data-page] .site-nav__leading { gap: .3rem; }
+  body[data-page] .site-nav__listening { max-width: 2.7rem; flex: none; }
+  body[data-page] .now-playing {
+    padding: .4rem;
+    width: 2.7rem;
+    justify-content: center;
+  }
+  body[data-page] .now-playing__copy { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page] .now-playing__vinyl { animation: none; }
+}
+html[data-motion="reduced"] body[data-page] .now-playing__vinyl { animation: none; }

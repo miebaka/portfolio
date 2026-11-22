@@ -20,6 +20,7 @@
 export const MOUNT = {
   NAV:         "nav",
   FOOTER:      "footer",
+  NOW_PLAYING: "now-playing",
   WORK_GRID:   "work-grid",
   CLIENTS:     "clients",
   CAPABILITIES:"capabilities",
@@ -31,7 +32,7 @@ export const MOUNT = {
 
 /* Mounts that are page-specific rather than sitewide. */
 const OPTIONAL = new Set([
-  MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
+  MOUNT.NOW_PLAYING, MOUNT.WORK_GRID, MOUNT.CLIENTS, MOUNT.CAPABILITIES,
   MOUNT.WRITING, MOUNT.CASE, MOUNT.EXPERIENCE, MOUNT.CV,
 ]);
 
