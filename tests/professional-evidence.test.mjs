@@ -85,7 +85,7 @@ test("the homepage makes the hiring proposition and proof available before biogr
 test("the closing invitation has a direct contact action without surplus availability copy", async () => {
   const html = await page("index.html");
   assert.match(html, /Have something worth making unmistakable\?/);
-  assert.match(html, /href="mailto:miebakakiki@gmail\.com"/);
+  assert.match(html, /class="home-close__email" href="contact\.html"/);
   assert.doesNotMatch(html, /Available for senior brand and marketing design roles/);
 });
 
