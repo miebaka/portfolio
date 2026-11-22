@@ -42,10 +42,8 @@ body[data-page="home"] #selected-work {
   padding-inline: 0;
 }
 
-/* Home uses a full-height folder to match What I Do, while Work stays compact.
-   On non-JS pages, the same responsive panel token supplies both heights. */
-/* Expose the folder title inside the flap visible above the next folder.
-   The five paper sheets, colour and folder shape stay unchanged. */
+/* The Home folder matches the service panel's height, while Work stays compact.
+   Place the name in the exposed upper flap; preserve the five paper sheets. */
 body[data-page="home"] .home-folder-stack .project-folder__front {
   inset-block-start: 15%;
   align-items: flex-start;
