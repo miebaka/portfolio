@@ -56,3 +56,19 @@ test("no-JS visitors see complete project folders", async ({ browser }) => {
   await expect(page.locator(".project-archive__progress li")).toHaveCount(3);
   await context.close();
 });
+
+test("overlapping folders follow painted hit areas rather than displaced click boxes", async ({ page }) => {
+  await page.goto("/work.html");
+  const folders = page.locator(".project-folder");
+  const positions = await folders.evaluateAll(items => items.map(el => {
+    const box = el.getBoundingClientRect();
+    return { top: box.top, bottom: box.bottom, width: box.width };
+  }));
+  expect(positions[1].top).toBeLessThan(positions[0].bottom);
+  expect(positions[2].top).toBeLessThan(positions[1].bottom);
+  expect(positions[1].top).toBeGreaterThan(positions[0].top);
+  const target = folders.nth(1).locator(".project-folder__link");
+  await target.focus();
+  await expect(target).toBeFocused();
+  await expect(folders.nth(1)).toHaveCSS("z-index", "10");
+});

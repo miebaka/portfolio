@@ -97,3 +97,14 @@ test("privacy-restricted mobile renderer works without the shader-test bypass", 
   await expect(wave.locator("canvas")).toHaveCount(1);
   await expect(wave).toHaveAttribute("data-caustics", "refracted-lightfront");
 });
+
+test("a lost Three.js context shows water fallback instead of a blank canvas", async ({ page }) => {
+  await page.goto("/?shader-test=1&shader-static=1");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveAttribute("data-renderer", "threejs");
+  await wave.locator("canvas").evaluate(canvas => {
+    canvas.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
+  });
+  await expect(wave).toHaveClass(/is-fallback/);
+  await expect(wave).toHaveAttribute("data-renderer", "fallback");
+});
