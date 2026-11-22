@@ -7,7 +7,7 @@ export function createFolderRackController(root) {
   const n = folders.length;
   if (!n) return { destroy() {} };
 
-  let active = -1, pitch = 72, width = 400, pointerType = "mouse";
+  let active = -1, pitch = 72, width = 400, origin = 0, pointerType = "mouse";
   let frame = 0, pointerX = 0, opening = false;
   const reduced = () => document.documentElement.dataset.motion === "reduced" ||
     (document.documentElement.dataset.motion !== "full" &&
@@ -20,20 +20,24 @@ export function createFolderRackController(root) {
     pitch = n > 2
       ? Math.max(44, Math.min(84, (available - 2 * width) / (n - 2)))
       : 72;
+    const occupied = Math.max(0, n - 2) * pitch + 2 * width + 8;
+    origin = Math.max(0, (available - occupied) / 2);
     track.style.setProperty("--rack-pitch", pitch + "px");
-    track.style.width = Math.max(available, (Math.max(0, n - 2) * pitch + 2 * width + 8)) + "px";
+    track.style.setProperty("--rack-origin", origin + "px");
+    track.style.width = Math.max(available, occupied + 2 * origin) + "px";
   }
   function layout(index) {
     if (opening) return;
     active = index;
     const reveal = width - pitch;
     folders.forEach((folder, i) => {
-      folder.style.setProperty("--rack-x", (i * pitch + (index >= 0 && i > index ? reveal : 0)) + "px");
+      folder.style.setProperty("--rack-x", (origin + i * pitch + (index >= 0 && i > index ? reveal : 0)) + "px");
       folder.classList.toggle("is-active", i === index);
     });
     track.classList.toggle("has-active", index >= 0);
   }
   function indexAt(x) {
+    x -= origin;
     if (x < 0) return -1;
     const lastLeft = (n - 1) * pitch + (active >= 0 && active < n - 1 ? width - pitch : 0);
     if (active < 0) {
@@ -95,7 +99,7 @@ export function createFolderRackController(root) {
     const target = Math.min(n - 1, Math.max(0, active + (event.key === "ArrowRight" ? 1 : -1)));
     folders[target].focus({ preventScroll: true });
     layout(target);
-    const left = target * pitch;
+    const left = origin + target * pitch;
     scroller.scrollTo({ left: Math.max(0, left - pitch), behavior: reduced() ? "instant" : "smooth" });
   };
   const onNativeClick = folders.map((folder, index) => {
@@ -114,6 +118,7 @@ export function createFolderRackController(root) {
   scroller.addEventListener("focusin", onFocusIn);
   scroller.addEventListener("focusout", onFocusOut);
   scroller.addEventListener("keydown", onKey);
+  root.dataset.rackReady = "true";
   measure(); layout(-1);
   const resize = typeof ResizeObserver === "function"
     ? new ResizeObserver(() => { measure(); layout(active); })

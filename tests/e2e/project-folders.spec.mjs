@@ -33,10 +33,12 @@ test("logical hit testing selects the correct folder while transforms animate", 
   const rect = await scroller.boundingBox();
   const pitch = await page.locator(".folder-rack__track").evaluate(el =>
     parseFloat(getComputedStyle(el).getPropertyValue("--rack-pitch")));
-  await page.mouse.move(rect.x + pitch * 1.5, rect.y + rect.height - 100);
+  const origin = await page.locator(".folder-rack__track").evaluate(el =>
+    parseFloat(getComputedStyle(el).getPropertyValue("--rack-origin")));
+  await page.mouse.move(rect.x + origin + pitch * 1.5, rect.y + rect.height - 100);
   await expect(page.locator(".folder-rack__folder").nth(1)).toHaveClass(/is-active/);
   const width = await page.locator(".folder-rack__folder").first().evaluate(el => el.offsetWidth);
-  await page.mouse.move(rect.x + width + pitch * 2, rect.y + rect.height - 100);
+  await page.mouse.move(rect.x + origin + width + pitch * 2, rect.y + rect.height - 100);
   await expect(page.locator(".folder-rack__folder").nth(2)).toHaveClass(/is-active/);
 });
 
@@ -47,7 +49,9 @@ test("touch needs one tap to open and another tap to enter", async ({ browser })
   const rect = await page.locator(".folder-rack__scroller").boundingBox();
   const pitch = await page.locator(".folder-rack__track").evaluate(el =>
     parseFloat(getComputedStyle(el).getPropertyValue("--rack-pitch")));
-  const x = rect.x + pitch * 1.35, y = rect.y + rect.height / 2;
+  const origin = await page.locator(".folder-rack__track").evaluate(el =>
+    parseFloat(getComputedStyle(el).getPropertyValue("--rack-origin")));
+  const x = rect.x + origin + pitch * 1.35, y = rect.y + rect.height / 2;
   await page.touchscreen.tap(x, y);
   await expect(page.locator(".folder-rack__folder").nth(1)).toHaveClass(/is-active/);
   await expect(page).toHaveURL(/\/work\.html$/);
@@ -62,5 +66,6 @@ test("no-JS Work still contains native case links and in-progress items", async 
   await page.goto("/work.html");
   await expect(page.locator(".folder-rack__folder")).toHaveCount(3);
   await expect(page.locator(".project-archive__progress li")).toHaveCount(3);
+  await expect(page.locator(".folder-rack__folder").first()).toHaveCSS("pointer-events", "auto");
   await context.close();
 });

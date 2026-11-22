@@ -80,11 +80,12 @@ body[data-page="work"] .project-folder-stack__stage {
   max-width: calc(100vw - 120px);
   aspect-ratio: .66;
   color: #1a1710;
-  pointer-events: none;
+  pointer-events: auto;
   outline: none;
   transform: translate(var(--rack-x,0),var(--rack-y,0));
   transition: transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s,filter .4s;
 }
+.folder-rack[data-rack-ready="true"] .folder-rack__folder { pointer-events: none; }
 .folder-rack__folder > span { position: absolute; display: block; }
 .folder-rack__track.has-active .folder-rack__folder:not(.is-active) { filter: brightness(.86); }
 .folder-rack__folder.is-active { --rack-y: -14px; }

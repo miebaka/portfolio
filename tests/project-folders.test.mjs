@@ -73,6 +73,8 @@ test("folder animation uses logical hit-testing, keyboard focus and motion prefe
   assert.match(js, /requestAnimationFrame/);
   assert.match(js, /pointerType === "touch"/);
   assert.match(js, /ResizeObserver/);
+  assert.match(js, /root\.dataset\.rackReady = "true"/);
+  assert.match(js, /origin = Math\.max/);
   assert.match(js, /function enter\(index\)/);
   assert.doesNotMatch(js, /DEMO|toast|return false/);
 });
