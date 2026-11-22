@@ -59,7 +59,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 .project-folder__back {
   position: absolute;
   inset: var(--folder-back-top) 0 0;
-  border: 1px solid color-mix(in srgb, var(--folder-tone) 76%, black);
+  border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 76%, black);
   border-radius: .2rem .42rem .28rem .28rem;
   background:
     linear-gradient(90deg, rgb(0 0 0 / .12), transparent 3%, transparent 97%, rgb(0 0 0 / .07)),
@@ -79,7 +79,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   width: clamp(6rem, 28%, 23rem);
   height: var(--folder-back-top);
   padding-inline: clamp(.85rem, 2vw, 1.7rem);
-  border: 1px solid color-mix(in srgb, var(--folder-tone) 72%, black);
+  border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 72%, black);
   border-bottom: 0;
   border-radius: .55rem .55rem 0 0;
   background:
@@ -193,7 +193,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   min-width: 0;
   padding: clamp(1.5rem, 5vw, 5rem);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--folder-tone) 79%, black);
+  border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 79%, black);
   border-radius: .26rem .52rem .3rem .3rem;
   background:
     linear-gradient(to bottom, rgb(255 255 255 / .27) 0, rgb(255 255 255 / .045) 2px, transparent 9px),
