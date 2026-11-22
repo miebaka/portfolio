@@ -25,3 +25,5 @@ CSS media queries cannot currently consume ordinary CSS custom properties, so th
 Painting primitives, hairline strokes and WebGL raster pixels are not layout scales. They retain device-level syntax to preserve fidelity and input accessibility.
 
 All browser-side layout decisions use `js/core/responsive.js`; the Three.js water performance tier and the physical folder interaction both consume its compact predicate instead of inventing independent pixel thresholds.
+
+The 44px minimum interactive target is defined once as `--control-target: max(44px, 2.75em)` in the foundation and consumed through `var(--control-target)`. Raw 44px literals in components are prohibited. JavaScript has one imported breakpoint helper (`js/core/responsive.js`) and a test rejects any second viewport-width threshold in browser scripts.

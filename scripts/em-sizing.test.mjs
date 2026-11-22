@@ -14,7 +14,7 @@ test("authored font and spacing sizes use em rather than root-fixed rem", () => 
     assert.doesNotMatch(code, /(?<![\w])\d*\.?\d+rem\b/, name + " uses a fixed root-relative unit");
     const fixed = [...code.matchAll(/(?<![\w])(-?\d*\.?\d+)px\b/g)]
       .map(x => Number(x[1]))
-      .filter(v => Math.abs(v) > 7 && Math.abs(v) !== 44);
+      .filter(v => Math.abs(v) > 7 && !(name === "foundations.css" && Math.abs(v) === 44));
     assert.deepEqual(fixed, [], name + " includes a fixed-length layout dimension");
   }
 });

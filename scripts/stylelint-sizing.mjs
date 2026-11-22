@@ -48,6 +48,9 @@ export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
     if (!ownsFoundations && (outsideRoot.has(prop) || /^--s\d+$/.test(prop))) {
       report(decl, `Only foundations.css may define shared sizing token ${prop}`);
     }
+    if (!ownsFoundations && /(^|[^\\d])44px\\b/.test(value)) {
+      report(decl, "Use var(--control-target) rather than a raw 44px control size");
+    }
     if (isSpacing.test(prop) && rawLength.test(value)) {
       report(decl, `${prop} must consume the shared spacing scale, not a literal length: ${value}`);
     }

@@ -8,7 +8,7 @@
   --grid-gap:var(--grid-gutter);--section-padding-tight:clamp(2em,5vw,4em);--nav-h:4.5em;
   --list-item-inline:clamp(1em,2vw,1.5em);--safe-top:env(safe-area-inset-top,0px);
   --safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
-  --safe-left:env(safe-area-inset-left,0px);--spacing-unit:.125em;--s1:.5em;--s2:1em;--s3:1.5em;--s4:2em;--s5:2.5em;
+  --safe-left:env(safe-area-inset-left,0px);--spacing-unit:.125em;--control-target:max(44px,2.75em);--s1:.5em;--s2:1em;--s3:1.5em;--s4:2em;--s5:2.5em;
   --s6:3em;--s7:3.5em;--s8:4em;--s9:4.5em;--s10:5em;--s11:5.5em;--s12:6em;
 
   /* Living Editorial semantic roles: a single authored token vocabulary. */
