@@ -72,11 +72,17 @@ export function initNowPlaying({
     backoff = data ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
     schedule(backoff);
   }
+  // The static local development server does not run Vercel Functions.
+  // Allow explicit browser-test opt-in without adding a 404 to every page's
+  // existing no-console-errors / no-failed-resources contract.
+  const localStaticServer = ["localhost", "127.0.0.1"].includes(win.location?.hostname);
+  const testOptIn = new URLSearchParams(win.location?.search || "").has("now-playing-test");
+  const canPoll = !localStaticServer || testOptIn;
   const onVisibility = () => {
     if (doc.hidden) {
       win.clearTimeout(timer);
       timer = 0;
-    } else if (!timer) {
+    } else if (canPoll && !timer) {
       backoff = POLL_MS;
       schedule(0);
     }
@@ -89,8 +95,6 @@ export function initNowPlaying({
   };
   doc.addEventListener("visibilitychange", onVisibility);
   win.addEventListener("pagehide", destroy, { once: true });
-  // Poll on every host, including local development and browser-test servers.
-  // A missing endpoint safely leaves the original profile link in place.
-  schedule(0);
+  if (canPoll) schedule(0);
   return { destroy };
 }

@@ -8,7 +8,7 @@ test("Last.fm pill follows the logo, reflects real status, and Index inverts wit
       url: "https://www.last.fm/music/Test+artist/_/Test+track"
     })
   }));
-  await page.goto("/index.html");
+  await page.goto("/index.html?now-playing-test=1");
   const pill = page.locator(".site-nav__listening .now-playing");
   await expect(pill).toContainText("Now playing");
   await expect(pill).toContainText("Test track — Test artist");
@@ -46,7 +46,7 @@ test("Now Playing stays a truthful accessible profile link when Last.fm is unava
   await page.route("**/api/now-playing", route => route.fulfill({
     status: 503, contentType: "application/json", body: '{"error":"Listening status unavailable"}'
   }));
-  await page.goto("/index.html");
+  await page.goto("/index.html?now-playing-test=1");
   const pill = page.locator(".now-playing");
   await expect(pill).toHaveAttribute("href", "https://www.last.fm/user/sheikmoujabaa");
   await expect(pill).toHaveAttribute("data-live", "false");
