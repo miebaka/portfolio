@@ -94,10 +94,7 @@ a[href]:hover{color:var(--accent-interactive);}
 .site-index__themes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .site-index__themes button span{opacity:.7}
 .no-js .site-nav__menu-btn{display:none}
-@media(max-width:39.999em){.site-index__aside{grid-template-columns:1fr}
-.site-index__link{grid-template-columns:2.3em 1fr}
-.site-index__body{padding-block:var(--s3)}
-}
+
 .site-nav__menu-btn:focus-visible{background:var(--sys-color-surface-container-high);color:var(--sys-color-tertiary)}
 .site-footer__groups{display:grid;grid-template-columns:minmax(0,2fr) minmax(10em,.7fr) minmax(16em,1fr);gap:clamp(var(--s3),4vw,var(--s8));align-items:start}
 .site-footer__group{display:grid;align-content:start;gap:calc(var(--spacing-unit) * 5);min-width:0}
@@ -152,8 +149,8 @@ a[href]:hover{color:var(--accent-interactive);}
 .site-nav:not(.is-menu-open) .site-nav__links{pointer-events:none}
 .site-nav__inner{display:flex;gap:calc(var(--spacing-unit) * 3)}
 .site-nav.is-menu-open .site-nav__links{opacity:1;visibility:visible;transform:none;transition-delay:0s;display:grid}
-.site-index__body{grid-template-columns:1fr;align-self:start;gap:var(--s4)}
-.site-index__link{min-height:3.6em}
+.site-index__body{grid-template-columns:1fr;align-self:start;gap:var(--s4);padding-block:var(--s3)}
+.site-index__link{grid-template-columns:2.3em 1fr;min-height:3.6em}
 .site-index__aside{grid-template-columns:1fr 1fr;align-self:start}
 .site-nav__links{position:fixed;inset:var(--nav-h) max(var(--page),var(--safe-right)) auto auto;width:min(18em,calc(100vw - 2 * var(--page)));display:none;padding:var(--s1);background:var(--comp-nav-bg);border:1px solid color-mix(in srgb,var(--comp-nav-ink) 18%,transparent);opacity:0;visibility:hidden;transition:opacity var(--dur-fast),transform var(--dur-ui),visibility 0s linear var(--dur-ui);transform-origin:top right;transform:translateY(-.35em) scale(.98);max-height:calc(100dvh - var(--nav-h) - var(--safe-bottom) - 1em);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 1em 2em color-mix(in srgb,var(--ref-black) 18%,transparent)}
 .writing-item__link{grid-template-columns:8em 1fr 1.5em}

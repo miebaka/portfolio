@@ -16,7 +16,9 @@ const rawLength = /(^|[^\w-])-?(?:\d*\.)?\d+(?:em|rem|px)\b/i;
 export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
   if (!enabled) return;
   const file = root.source.input.file || "";
-  const ownsFoundations = /(?:^|[/\\])foundations\.css$/.test(file);
+  const ownsFoundations = /(?:^|[/\\])foundations\\.css$/.test(String(file).trim()) ||
+    root.nodes.some(node => node.type === "rule" && node.selector === ":root" &&
+      node.nodes.some(decl => decl.prop === "--grid-max"));
   const report = (node, message) => stylelint.utils.report({
     ruleName, result, node, message: messages.rejected(message),
   });
