@@ -601,15 +601,18 @@ test("production build excludes source and review directories", async () => {
   }
 });
 
-test("dead listening integration stays removed and privacy copy matches browser traffic", async () => {
+test("Last.fm listening is restored through a server-only key and truthful privacy copy", async () => {
   const site = await readFile(join(dist, "js", "main.js"), "utf8");
+  const client = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
+  const server = await readFile(join(root, "api", "now-playing.js"), "utf8");
   const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
   const privacy = await readFile(join(dist, "privacy.html"), "utf8");
-  await assert.rejects(access(join(dist, "js", "render", "now-playing.js")));
-  await assert.rejects(access(join(root, "api", "now-playing.js")));
-  assert.doesNotMatch(site, /initNowPlaying|now-playing/);
-  assert.doesNotMatch(config, /lastfmUser|lastfmKey/);
-  assert.doesNotMatch(privacy, /Last\.fm|latest listening status|All fonts and images are served from this domain/i);
+  assert.match(site, /initNowPlaying/);
+  assert.match(client, /\/api\/now-playing/);
+  assert.doesNotMatch(client, /LASTFM_API_KEY|ws\.audioscrobbler\.com/);
+  assert.match(server, /process\.env\.LASTFM_API_KEY/);
+  assert.match(config, /lastfmUser/);
+  assert.match(privacy, /Last\.fm/);
   assert.match(privacy, /Geist text fonts load from jsDelivr/);
   assert.match(privacy, /colour-theme and motion preferences/);
   for (const unused of [
@@ -635,11 +638,9 @@ test("documentation and example contact origins follow active code, not retired 
   }
   assert.ok(readme.includes("jsDelivr"));
   assert.ok(engineering.includes("api/contact.js"));
-  for (const retired of ["api/now-playing.js", "analytics and Last.fm functionality"]) {
-    assert.equal(engineering.includes(retired), false, `retired integration must not appear as active: ${retired}`);
-  }
+  assert.ok(engineering.includes("api/now-playing.js"), "active Last.fm boundary must be documented");
   assert.ok(docs.includes("Material Symbols Outlined"));
-  assert.equal(config.includes("lastfmUser"), false);
+  assert.ok(config.includes("lastfmUser"), "active profile must have one owner");
 });
 
 test("retired source systems cannot return unnoticed", async () => {

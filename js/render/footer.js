@@ -22,7 +22,6 @@ export function renderFooter() {
   el.className = "site-footer";
   el.innerHTML =
     '<div class="site-footer__top">' +
-      '<p class="site-footer__eyebrow">Lagos, Nigeria · Working worldwide</p>' +
       '<a class="site-footer__start" href="' + safeURL('mailto:' + SITE.email + '?subject=Let%27s%20work%20together') + '">Start a project <span aria-hidden="true">↗</span></a>' +
     '</div>' +
     '<div class="site-footer__panel">' +
@@ -32,7 +31,6 @@ export function renderFooter() {
         group('site-footer__socials', 'Social', socials) +
       '</nav>' +
     '</div>' +
-    '<div class="site-footer__signature" aria-hidden="true"></div>' +
-    '<div class="site-footer__bottom"><span>Miebaka Joshua</span><span>Independent creative practice</span></div>';
+    '<div class="site-footer__signature" aria-hidden="true"></div>';
 
 }

@@ -99,7 +99,8 @@ test("What I Do has no numbers or card gradients and all UI labels are uppercase
   expect(["none","normal"]).toContain(visual.pseudo);
   expect(visual.pseudoImage).toBe("none");
  }
- for(const selector of [".site-footer__eyebrow",".service-stack__tag"]){
+ await expect(page.locator(".site-footer__eyebrow,.site-footer__bottom")).toHaveCount(0);
+ for(const selector of [".service-stack__tag"]){
   await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
  }
 });

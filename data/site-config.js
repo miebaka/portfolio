@@ -2,6 +2,7 @@
 export const siteConfig = {
   "name": "Miebaka Joshua",
   "canonicalUrl": "https://miebaka-portfolio.vercel.app/",
+  "lastfmUser": "sheikmoujabaa",
   "role": "Brand & visual designer",
   "positioning": "I design brands, build useful things & ask a lot of questions.",
   "availability": "Available for select freelance and collaborative projects",

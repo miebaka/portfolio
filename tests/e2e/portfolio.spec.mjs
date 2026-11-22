@@ -374,7 +374,7 @@ test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) =>
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
   await expect(page.locator(".experiment-poster__face").first()).toHaveCSS("aspect-ratio", "4 / 5");
   await expect(page.getByRole("navigation", { name: "Experiments navigation" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Index/ })).toBeVisible();
+  await expect(page.locator("[data-experiments-index]")).toBeVisible();
   await expect(page.locator("[data-experiment-title]")).toContainText("Wada Sanzō");
 });
 
@@ -493,6 +493,12 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
     for (const rect of bounds) {
       expect(rect.ratio, "folder must keep authentic letter-size proportions").toBeCloseTo(11.75 / 9.5, 2);
     }
+    // Physical folders deliberately overlap. Confirm the intended stack order,
+    // then test actual hit targets below instead of rejecting overlapping boxes.
+    for (let i = 1; i < bounds.length; i++) {
+      expect(bounds[i].top, "folders stack in document order").toBeGreaterThan(bounds[i - 1].top);
+      expect(bounds[i].top, "adjacent folders overlap").toBeLessThan(bounds[i - 1].bottom);
+    }
     for (let i = 0; i < 3; i++) {
       const folder = folders.nth(i);
       await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
@@ -518,8 +524,10 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         document.elementFromPoint(x, y)?.closest(".project-folder__link")?.getAttribute("href"),
       { x, y });
       expect(hit, "hover should hit the project under the pointer").toBe(hrefs[i]);
-      // Overlap and elevation are presentation details; the correct link
-      // must remain the pointer target regardless of the stacking strategy.
+      // Touch browsers have coarse pointers even at wide viewport sizes.
+      // Their folders remain interactive without the hover-only elevation.
+      if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches))
+        await expect(folders.nth(i)).toHaveCSS("z-index", "10");
     }
   }
 });

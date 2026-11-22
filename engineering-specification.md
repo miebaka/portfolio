@@ -60,7 +60,7 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
 - `styles/main.css` is the single bundled CSS entry. Its ordered imports are `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, `home.css`, `services-stack.css`, `forliving-editorial.css`, `motion-language.css`, `editorial-index.css`, `project-roster.css`, `portfolio-refinement.css`, and last `tokens.css` in the typography layer. The Work route also loads `project-folders.css` separately.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
-- `api/contact.js` is the only current server-side endpoint. The unreachable Last.fm integration was removed. Adding endpoints requires a documented need, abuse controls and security review.
+- `api/contact.js` and `api/now-playing.js` are the two current server-side endpoints. Last.fm recent-track data is requested server-side using `LASTFM_API_KEY`; the client sees only a short public track/artist/status object and degrades to an honest profile link on failure. Adding further endpoints requires a documented need and security review.
 - Keep ESM dependencies intentional. Three.js hero water and optional Lenis/GSAP desktop scroll motion already exist as lazy bundles with native/static fallbacks and size budgets. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
 
 **Progressive enhancement rule:** Content and navigation work without JavaScript. Video, shader, canvas, cursor response, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
@@ -94,6 +94,7 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Shader lifecycle | `js/core/hero-wave.js`, generated `assets/runtime/hero-wave.js` |
 | Experiment manifest | `scripts/build-experiments.mjs`, `assets/experiments/` |
 | Hosting / CSP / redirects | `vercel.json` |
+| Last.fm listening-status pill and server endpoint | `js/render/now-playing.js`, `api/now-playing.js`, `data/site-config.js` |
 | Browser contracts and regression | `tests/e2e/`, `scripts/*test*.mjs`, `lighthouserc.cjs` |
 
 Avoid new duplicate content definitions, theme overrides, inline color literals, arbitrary z-index values or page-specific copies of shared navigation. Build artifacts, temporary screenshots, reference downloads, source maps, private files and generated review outputs should not be committed or published unless deliberately required.
@@ -249,7 +250,7 @@ Automated axe audits are necessary but not sufficient. Run manual keyboard, Voic
 
 Existing `api/contact.js` uses server-side schema, origin/abuse controls, rate limits and mail integration. Preserve these rather than substituting a third-party frontend-only form. Validate and normalize user input on the server, restrict lengths and accepted content types, prevent header injection, use safe structured logging and return non-leaking error responses. Do not assert perfect abuse resistance based solely on an in-memory limiter.
 
-Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with the contact endpoint, local theme/motion preferences, and remote Geist font requests; do not describe the removed Last.fm endpoint as active.
+Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with the contact endpoint, restored server-backed Last.fm status, local theme/motion preferences, and remote Geist font requests. Keep Last.fm credentials server-only and preserve the profile-link fallback when upstream data or credentials are unavailable.
 
 `vercel.json` owns production CSP/security headers, redirects and caching. Any change to inline executable scripts, imported modules, external origins or API endpoints MUST be checked against the CSP and related integrity tests. External new-tab links must include `rel="noopener noreferrer"`.
 

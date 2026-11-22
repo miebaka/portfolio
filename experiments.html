@@ -43,30 +43,29 @@
 </head>
 <body data-page="explorations">
   <a class="skip-link" href="#main">Skip to content</a>
-  <header data-mount="nav"></header>
+  <header data-mount="nav"><nav class="nav-fallback" aria-label="Primary"><a href="index.html">Home</a><a href="work.html">Work</a><a href="about.html">About</a><a href="essays.html">Essays</a><a href="contact.html">Contact</a></nav></header>
   <main id="main" class="experiments-page">
     <section class="experiments-spatial" data-experiments-spatial aria-labelledby="experiments-title">
       <div class="experiments-loader" aria-hidden="true"><span>M/J</span><p>Projecting</p></div>
       <nav class="experiments-nav" aria-label="Experiments navigation">
-        <a class="experiments-nav__mark" href="index.html" aria-label="Miebaka Joshua, home">M/J</a>
-        <a href="experiments.html" aria-current="page">Experiments</a>
+        <a class="experiments-nav__back" href="work.html">← Back to Work</a>
         <button type="button" data-experiments-index aria-expanded="false">Index <span aria-hidden="true">⌄</span></button>
       </nav>
       <div class="experiments-spatial__heading" data-experiments-copy>
         <h1 id="experiments-title">Experiments</h1>
         <dl><div><dt>Study</dt><dd data-experiment-title>Wada Sanzō, Study 264</dd></div><div><dt>Medium</dt><dd>Image + type</dd></div><div><dt>Archive</dt><dd>Self-initiated</dd></div></dl>
       </div>
-      <div class="experiments-spatial__viewport" data-experiments-viewport tabindex="0" role="region" aria-label="Experiment poster gallery. Scroll, drag or use the left and right arrow keys.">
+      <div class="experiments-spatial__viewport" data-experiments-viewport tabindex="0" role="region" aria-label="Experiment poster gallery. Swipe sideways, drag, or use arrow keys to change artwork. Scroll down for more pages.">
         <div class="experiments-spatial__stage" data-experiments-stage></div>
       </div>
       <p class="experiments-spatial__counter" data-experiments-counter aria-hidden="true">01 / 07</p>
       <div class="experiments-spatial__caption" aria-hidden="true"><p data-experiment-caption>Wada Sanzō, Study 264</p><span>Selected experiments</span></div>
-      <p class="experiments-spatial__hint" data-experiments-hint>Drag or scroll to explore</p>
+      <p class="experiments-spatial__hint" data-experiments-hint>Drag sideways · Shift + scroll · Arrow keys</p>
       <div class="experiments-controls" aria-label="Browse experiments">
         <button type="button" data-experiments-previous aria-label="Previous experiment"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H4m5-5-5 5 5 5"/></svg></button>
         <button type="button" data-experiments-next aria-label="Next experiment"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button>
       </div>
-      <div class="experiments-index" data-experiments-list role="dialog" aria-modal="true" aria-labelledby="experiments-index-title" hidden>
+      <div class="experiments-index" data-experiments-list role="dialog" aria-modal="false" aria-labelledby="experiments-index-title" hidden>
         <div class="experiments-index__head"><h2 id="experiments-index-title">Experiment index</h2><button type="button" data-experiments-close aria-label="Close experiment index"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16"/></svg></button></div>
         <ol></ol>
       </div>
@@ -78,8 +77,9 @@
       </section></noscript>
       <p class="sr-only" data-experiments-status aria-live="polite"></p>
     </section>
+    <section class="experiments-next container" id="experiments-after" aria-label="Continue exploring"><div><p>ENDLESS STUDIES. A FINITE PAGE.</p><h2>There is more to explore.</h2></div><nav aria-label="After experiments"><a href="work.html">Selected work <span aria-hidden="true">↗</span></a><a href="essays.html">Essays <span aria-hidden="true">↗</span></a><a href="about.html">About <span aria-hidden="true">↗</span></a></nav></section>
   </main>
-  <footer data-mount="footer"></footer>
+  <footer data-mount="footer"><nav class="nav-fallback" aria-label="Footer"><a href="index.html">Home</a><a href="work.html">Work</a><a href="essays.html">Essays</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav></footer>
 
   <script type="module" src="js/main.js"></script>
 </body>

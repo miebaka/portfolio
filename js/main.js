@@ -10,10 +10,12 @@ import { renderCapabilities, renderProfessionalEvidence, fillSlots } from "./ren
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
+import { initNowPlaying } from "./render/now-playing.js";
 import { initNavigation } from "./core/navigation.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
+import { initHomeOpticalLens } from "./core/optical-lens.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
@@ -33,6 +35,7 @@ run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
+run("Last.fm listening status", initNowPlaying);
 if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);
@@ -50,4 +53,5 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 run("navigation behaviour", initNavigation);
 run("footer signature", initFooterSignature);
 run("hero wave", () => { void initHeroWave(); });
+if (page === "home") run("optical project lens", initHomeOpticalLens);
 if (page === "contact") run("contact form", initForm);
