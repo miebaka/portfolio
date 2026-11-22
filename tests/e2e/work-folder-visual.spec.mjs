@@ -1,69 +1,74 @@
 import { test, expect } from "@playwright/test";
 
-test("Work folder rack survives mobile, tablet and desktop without clipping or pointer traps", async ({ page }, testInfo) => {
+test("wide Work folders retain five blank sheets and readable titles across viewports", async ({ page }, testInfo) => {
+  const expected = [
+    { href: "work/rivo.html", title: "Rivo Studio", number: "01" },
+    { href: "work/tedx-rsu.html", title: "TEDx Rivers State University", number: "02" },
+    { href: "work/chopbox.html", title: "ChopBox", number: "03" }
+  ];
+
   for (const width of [320, 390, 900, 1440, 1920]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/work.html");
     await page.evaluate(async () => { await document.fonts.ready; });
+
     const folders = page.locator(".project-folder");
-    await expect(folders).toHaveCount(3);
+    await expect(folders).toHaveCount(expected.length);
+    await expect(page.locator(".project-folder__paper")).toHaveCount(15);
+    await expect(page.locator(".project-folder__tab-number")).toHaveText(expected.map(item => item.number));
+    await expect(page.locator(".project-folder__title")).toHaveText(expected.map(item => item.title));
+    await expect(page.locator(".project-folder__paper")).toHaveText(Array(15).fill(""));
+    await expect(page.locator(".project-folder__front > :not(.project-folder__title)")).toHaveCount(0);
+    await expect(page.locator(".project-folder__tab > :not(.project-folder__tab-number)")).toHaveCount(0);
+
     const measurements = await folders.evaluateAll(items => items.map(folder => {
-      const rect = element => {
-        const r = element.getBoundingClientRect();
-        return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, width: r.width, height: r.height };
-      };
-      const front = folder.querySelector(".project-folder__front");
+      const rect = node => node.getBoundingClientRect();
       const link = folder.querySelector(".project-folder__link");
-      const title = folder.querySelector(".project-folder__title");
-      const bottom = folder.querySelector(".project-folder__bottom");
-      const tab = folder.querySelector(".project-folder__tab-title");
+      const face = rect(folder.querySelector(".project-folder__front"));
+      const title = rect(folder.querySelector(".project-folder__title"));
       const papers = [...folder.querySelectorAll(".project-folder__paper")];
+      const stage = folder.closest(".project-folder-stack__stage");
       return {
         href: link.getAttribute("href"),
-        folder: rect(folder),
-        front: rect(front),
-        title: rect(title),
-        bottom: rect(bottom),
-        tab: { scrollWidth: tab.scrollWidth, clientWidth: tab.clientWidth },
+        bounds: rect(folder).toJSON(),
+        face: face.toJSON(),
+        title: title.toJSON(),
+        stageBackground: getComputedStyle(stage).backgroundColor,
+        stageImage: getComputedStyle(stage).backgroundImage,
         paperCount: papers.length,
-        paperBottoms: papers.map(paper => rect(paper).bottom),
-        visiblePaperHeads: papers.map((paper, index) => ({
-          labelBottom: rect(paper.querySelector("span")).bottom,
-          nextTop: index < papers.length - 1 ? rect(papers[index + 1]).top : rect(front).top
-        })),
-        paperInteractions: papers.map(paper => ({
+        papers: papers.map(paper => ({
+          bottom: rect(paper).bottom,
           pointerEvents: getComputedStyle(paper).pointerEvents,
-          transitionDuration: getComputedStyle(paper).transitionDuration
+          transition: getComputedStyle(paper).transitionDuration,
+          background: getComputedStyle(paper).backgroundImage
         }))
       };
     }));
-    expect(measurements.map(item => item.href)).toEqual([
-      "work/rivo.html", "work/tedx-rsu.html", "work/chopbox.html"
-    ]);
+
+    expect(measurements.map(item => item.href)).toEqual(expected.map(item => item.href));
     for (const item of measurements) {
-      expect(item.folder.width / item.folder.height).toBeCloseTo(.75, 1);
+      const ratio = item.bounds.width / item.bounds.height;
+      expect(ratio, "folders must be wider than they are tall").toBeGreaterThan(1.3);
+      expect(item.bounds.width, "each folder must occupy most of the page width").toBeGreaterThan(width * .75);
+      expect(item.bounds.right).toBeLessThanOrEqual(width + 1);
+      expect(item.stageBackground).toBe("rgba(0, 0, 0, 0)");
+      expect(item.stageImage).toBe("none");
       expect(item.paperCount).toBe(5);
-      for (const bottom of item.paperBottoms) {
-        expect(bottom, "every sheet must stay inside its file pocket").toBeLessThanOrEqual(item.folder.bottom + 1);
-      }
-      for (const head of item.visiblePaperHeads) {
-        expect(head.labelBottom, "each printed section name must clear the next paper").toBeLessThanOrEqual(head.nextTop + 3);
-      }
-      expect(item.tab.scrollWidth).toBeLessThanOrEqual(item.tab.clientWidth + 2);
-      for (const paper of item.paperInteractions) {
+      for (const paper of item.papers) {
+        expect(paper.bottom, "papers must stay in the physical folder").toBeLessThanOrEqual(item.bounds.bottom + 1);
         expect(paper.pointerEvents).toBe("none");
-        expect(paper.transitionDuration).toBe("0s");
+        expect(paper.transition).toBe("0s");
+        expect(paper.background).toContain("repeating-linear-gradient");
       }
-      expect(item.title.left).toBeGreaterThanOrEqual(item.front.left - 1);
-      expect(item.title.right).toBeLessThanOrEqual(item.front.right + 1);
-      expect(item.bottom.bottom, "case category/CTA must not clip outside pocket").toBeLessThanOrEqual(item.front.bottom + 2);
+      expect(item.title.top).toBeGreaterThanOrEqual(item.face.top - 1);
+      expect(item.title.bottom, "project name must fit the front pocket").toBeLessThanOrEqual(item.face.bottom + 1);
+      expect(item.title.left).toBeGreaterThanOrEqual(item.face.left - 1);
+      expect(item.title.right).toBeLessThanOrEqual(item.face.right + 1);
     }
+
     const overflow = await page.evaluate(() =>
       document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
-
-    // The archive stage is the visual review artifact; tests assert structure, but
-    // humans must inspect these screenshots before a production merge.
     await page.locator(".project-folder-stack__stage").screenshot({
       path: `test-results/cabinet-${width}-${testInfo.project.name}.png`,
       animations: "disabled"
