@@ -67,8 +67,6 @@
 .article-figure figcaption{display:block;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--line);color:var(--muted);}
 .article-footer{margin-top:var(--s8);padding-top:var(--s3);border:0}
 .article-footer__back{display:inline-flex;align-items:center;min-height:2.75rem}
-.case[data-view="brief"]>.case-shot--hero{height:min(52vh,38rem)}
-.case[data-view="brief"] .case-chapter{display:none}
 .hero--404{position:relative;min-height:calc(100svh - var(--nav-h));grid-template-columns:minmax(0,1fr) minmax(20rem,.8fr);align-items:center;overflow:hidden}
 .hero--404__copy{position:relative;z-index:2;display:grid;gap:var(--s3)}
 

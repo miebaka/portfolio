@@ -269,7 +269,7 @@ body[data-page="home"] .client-marquee {
 body[data-page="home"] .client-marquee__track {
   display: flex;
   width: max-content;
-  animation: logo-run 34s linear infinite;}
+}
 body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
   animation-play-state: paused;}
 body[data-page="home"] .client-proof {
@@ -289,11 +289,6 @@ body[data-page="home"] .marquee__item img {
   filter: brightness(0) invert(1);
   opacity: 0.8;
   transform: scale(var(--logo-scale, 1));}
-@keyframes logo-run {
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 body[data-page="home"] .home-close {
   display: grid;
