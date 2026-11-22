@@ -64,9 +64,6 @@ body[data-page="explorations"] .experiment-poster[data-active] .experiment-poste
 body[data-page="explorations"] .experiment-poster:focus-visible .experiment-poster__face {
   clip-path: polygon(0 0,100% 0,100% 25%,100% 50%,100% 75%,100% 100%,0 100%,0 75%,0 50%,0 25%);
 }
-body[data-page="explorations"] .experiment-poster:not([data-active]) {
-  filter: saturate(.82) brightness(.93);
-}
 body[data-page="explorations"] .experiments-empty {
   position: absolute; top: 50%; left: 50%; max-width: 28rem;
   transform: translate(-50%, -50%);
