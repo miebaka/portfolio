@@ -166,14 +166,14 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__symb
 /* A cohesive editorial About page: generous negative space and readable rhythm. */
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero {
   display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-  gap: clamp(2em, 5vw, 6em);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2em;
   align-items: center;
-  min-height: min(52em, calc(100svh - var(--nav-h)));
-  padding-block: clamp(3em, 6vw, 7em);}
+  min-height: 0;
+  padding-block: 3em 5em;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: auto;
   align-self: center;
   justify-content: center;
   padding: 0;
@@ -181,8 +181,8 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
   max-width: none;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 1;
+  grid-row: auto;
   min-height: 0;
   aspect-ratio: 4 / 5;
   border-radius: clamp(1em, 2vw, 2em);
@@ -196,8 +196,8 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience {
   display: grid;
-  grid-template-columns: minmax(10em, 3fr) minmax(0, 7fr) minmax(8em, 2fr);
-  gap: clamp(1.5em, 3vw, 3.5em);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2em;
   padding-block: clamp(4em, 8vw, 9em);}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > h2,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > h2,
@@ -205,17 +205,17 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   grid-column: 1;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__copy,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > .about-editorial__copy {
-  grid-column: 2;
+  grid-column: 1;
   max-width: 64ch;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__facts {
-  grid-column: 3;
-  grid-row: 1;
+  grid-column: 1;
+  grid-row: auto;
   align-self: start;
   gap: 1.75em;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > [data-mount="experience"],
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-principles,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > [data-mount="capabilities"] {
-  grid-column: 2 / -1;
+  grid-column: 1;
   min-width: 0;}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-principles li {
   grid-template-columns: 2.5em minmax(0, 1fr);
@@ -223,6 +223,49 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-principles li p {
   grid-column: 2;}
 
+
+/* Progressive editorial grid: only wide screens lay out copy, portrait and facts
+   side by side. The DOM order remains unchanged for small screens. */
+@media (min-width: 48.001em) {
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(2em, 5vw, 6em);
+    min-height: min(52em, calc(100svh - var(--nav-h)));
+    padding-block: clamp(3em, 6vw, 7em);
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy {
+    grid-row: 1;
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro,
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience {
+    grid-template-columns: minmax(10em, 3fr) minmax(0, 7fr) minmax(8em, 2fr);
+    gap: clamp(1.5em, 3vw, 3.5em);
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__copy,
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > .about-editorial__copy {
+    grid-column: 2;
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__facts {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > [data-mount="experience"],
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-principles,
+  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > [data-mount="capabilities"] {
+    grid-column: 2 / -1;
+  }
+}
 /* Completely replace the embossed styling with legible interactive dots.
    Pseudo-element is a dotted SVG-masked fallback for no-JS/reduced-motion. */
 body[data-page]:not(.site-system-disabled) .site-footer__signature,
@@ -289,28 +332,6 @@ body .site-footer__panel {
     min-height: clamp(25em, 58svh, 36em);
     padding: clamp(1.4em, 4vw, 2.2em);
     padding-bottom: calc(clamp(1.4em, 4vw, 2.2em) + clamp(2em, 7svh, 4em));}
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2em;}
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero {
-    min-height: 0;
-    padding-block: 3em 5em;}
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__media,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > h2,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__copy,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__facts,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > h2,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > .about-editorial__copy,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > h2,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > [data-mount="experience"],
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-principles,
-  body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > [data-mount="capabilities"] {
-    grid-column: 1;
-    grid-row: auto;}
   body .site-footer__signature,
   body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
     height: clamp(14em, 50vw, 24em);}
