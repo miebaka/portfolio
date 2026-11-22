@@ -61,8 +61,9 @@ test("Work archive separates published cases from work in progress", () => {
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
   assert.match(html, /class="project-folder-stack__cards"/);
-  assert.ok(html.indexOf("CASE STUDY / 2024") < html.indexOf("CASE STUDY / 2023"));
-  assert.ok(html.indexOf("CASE STUDY / 2023") < html.indexOf("CASE STUDY / 2022"));
+  assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="tedx-rsu"'));
+  assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="chopbox"'));
+  assert.doesNotMatch(html, /CASE STUDY \/ 20\d\d/, "folder fronts only carry their project names");
   assert.doesNotMatch(html, /filing-cabinet|drawer|folder--sealed/);
   assert.match(html, /class="project-archive__progress"/);
   assert.match(html, /class="project-archive__collections"/);
