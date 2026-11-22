@@ -1309,3 +1309,8 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
     font-size: var(--type-heading-sm);
   }
 }
+
+/* Optical Experiments gallery: typography remains in the central type system. */
+body[data-page="explorations"] .experiments-empty { text-align: center; }
+body[data-page="explorations"] .experiments-empty a { text-decoration: underline; }
+body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }
