@@ -59,16 +59,20 @@ test("Published project folders are readable at mobile and desktop widths", asyn
     await page.goto("/work.html");
     const bands = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(node => {
       const rect = node.getBoundingClientRect();
-      const tab = node.querySelector(".project-folder__tab-title");
+      const tab = node.querySelector(".project-folder__tab");
+      const title = node.querySelector(".project-folder__title");
       return {display: getComputedStyle(node).display, width: rect.width, height: rect.height,
-        title: tab?.textContent?.trim(), tabWidth: tab?.getBoundingClientRect().width || 0};
+        title: title?.textContent?.trim(),
+        number: tab?.textContent?.trim(),
+        tabWidth: tab?.getBoundingClientRect().width || 0};
     }));
     expect(bands).toHaveLength(3);
     expect(bands.map(b => b.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
+    expect(bands.map(b => b.number)).toEqual(["01","02","03"]);
     for (const band of bands) {
       expect(band.display).not.toBe("none");
+      expect(band.width / band.height).toBeGreaterThan(1.3);
       expect(band.width).toBeGreaterThan(120);
-      expect(band.height).toBeGreaterThanOrEqual(44);
       expect(band.tabWidth).toBeGreaterThan(60);
     }
   }
