@@ -308,7 +308,7 @@ test("hero water ships a bounded Three.js GPU fluid simulation with graceful fal
   const runtime = await readFile(join(dist, "assets", "runtime", "hero-wave.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
   // A shader's actual WebGL uniforms, not unused stylesheet tokens, own its palette.
-  assert.match(source, /assets\\/runtime\\/hero-wave\\.js\\?rev=/);
+  assert.match(source, /assets\/runtime\/hero-wave\.js\?rev=/);
   for (const contract of [
     /WebGLRenderer/, /WebGLRenderTarget/, /HalfFloatType/,
     /const advect=/, /const divergence=/, /const jacobi=/, /const project=/,
