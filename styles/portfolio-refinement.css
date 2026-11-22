@@ -478,3 +478,26 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__item
 body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
   scroll-margin-top: calc(var(--nav-h) + 2rem);
 }
+
+
+/* Accessibility of the restored masthead under high browser zoom.
+   Container queries react to the actual available nav width, unlike viewport
+   breakpoints, and keep the brand and Index reachable at 200% zoom. */
+body[data-page] .site-nav {
+  container-type: inline-size;
+}
+@container (max-width: 16rem) {
+  body[data-page] .site-nav__listening,
+  body[data-page] .site-nav__themes {
+    display: none;
+  }
+  body[data-page] .site-nav__leading {
+    flex-shrink: 0;
+  }
+}
+
+/* A keyboard-focused proof CTA must paint above the next sticky card.
+   The physical stack order remains unchanged during normal scrolling. */
+body[data-page="home"] section.home-capabilities--reference .service-stack__item:focus-within {
+  z-index: 30;
+}
