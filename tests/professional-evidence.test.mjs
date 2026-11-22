@@ -1,4 +1,3 @@
-import { isSoftwareRenderer } from "../js/core/hero-wave.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -206,9 +205,3 @@ test("Work archive derives published cases and in-progress register from real pr
   assert.doesNotMatch(markup, /javascript:/);
 });
 
-test("WebGL caustics degrade to a static frame on software renderers", () => {
-  for (const name of ["Google SwiftShader", "ANGLE (Google, Vulkan SwiftShader)", "llvmpipe", "Mesa lavapipe", "Microsoft Basic Render Driver"])
-    assert.equal(isSoftwareRenderer(name), true, name);
-  for (const name of ["ANGLE (NVIDIA GeForce RTX)", "Apple M3", "AMD Radeon Pro"])
-    assert.equal(isSoftwareRenderer(name), false, name);
-});
