@@ -57,7 +57,7 @@ export async function initExperimentsSpatial() {
     (document.documentElement.dataset.motion !== "full" && matchMedia("(prefers-reduced-motion: reduce)").matches);
   const wrap = value => (value % cards.length + cards.length) % cards.length;
   const readHash = () => {
-    const match = location.hash.match(/^#study-(\\d{2})$/);
+    const match = location.hash.match(/^#study-(\d{2})$/);
     const number = match ? Number(match[1]) : 1;
     return Number.isInteger(number) && number >= 1 && number <= cards.length ? number - 1 : 0;
   };
