@@ -160,6 +160,10 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     max-width: 32ch;
   }
 
+  body[data-page="home"] .home-profile__leadership {
+    display: none;
+  }
+
   body[data-page="home"] .home-profile__portrait {
     max-width: 23rem;
     margin-inline: auto;
