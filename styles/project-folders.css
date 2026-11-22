@@ -154,6 +154,10 @@ body[data-page="work"] .project-folder-stack__intro {
   pointer-events: none;
 }
 
+.project-folder__paper span {
+  display: block;
+}
+
 .project-folder__paper::after {
   position: absolute;
   inset: auto 0 0;
