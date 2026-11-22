@@ -45,8 +45,10 @@ body[data-page="home"] .home-landing__statement {
   align-self: center;}
 body[data-page="home"] .home-landing h1 {
   grid-column: 1/-1;
-  display: grid;
-  gap: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.125em 1em;
   color: var(--ref-paper);
   align-self: end;}
 body[data-page="home"] .home-landing__meta {
