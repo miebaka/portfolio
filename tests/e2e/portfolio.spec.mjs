@@ -237,14 +237,14 @@ test("Home content preserves the unblurred hero field", async ({ page }) => {
   }
 });
 
-test("Global navigation uses the five approved destinations", async ({ page }) => {
+test("Global Index includes five core destinations and two supporting resources", async ({ page }) => {
   await page.goto("/index.html");
   const menu = page.getByRole("button", { name: "Index", exact: true });
   await expect(menu).toBeVisible();
   await menu.click();
   const navigation = page.getByRole("navigation", { name: "All destinations" });
   const labels = await navigation.locator(".site-index__link > span:last-child").allTextContents();
-  expect(labels).toEqual(["Work", "Experiments", "About", "Essays", "Contact"]);
+  expect(labels).toEqual(["Work", "Experiments", "About", "Essays", "Contact", "Process", "Accessibility"]);
 });
 
 test("Index navigation rows have deliberate inner padding and clear hit areas", async ({ page }) => {
@@ -255,7 +255,7 @@ test("Index navigation rows have deliberate inner padding and clear hit areas", 
     if (!(await menu.isVisible())) continue;
     await menu.click();
     const rows = page.locator(".site-index__destinations .site-index__link");
-    await expect(rows).toHaveCount(5);
+    await expect(rows).toHaveCount(7);
     const dimensions = await rows.evaluateAll(items => items.map(item => {
       const style = getComputedStyle(item);
       const rect = item.getBoundingClientRect();
