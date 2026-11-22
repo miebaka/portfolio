@@ -72,8 +72,7 @@
 .hero--404{position:relative;min-height:calc(100svh - var(--nav-h));grid-template-columns:minmax(0,1fr) minmax(20rem,.8fr);align-items:center;overflow:hidden}
 .hero--404__copy{position:relative;z-index:2;display:grid;gap:var(--s3)}
 
-@media(prefers-reduced-motion:reduce){html:not([data-motion="full"]){scroll-behavior:auto}html:not([data-motion="full"]) body::after{display:none}}
-html[data-motion="reduced"]{scroll-behavior:auto}html[data-motion="reduced"] body::after{display:none}
+
 .article-body :is(p,h2,h3,ul,ol,blockquote){margin-inline:0;}
 .article-hero__summary{margin-inline:0;max-width:40rem;margin-top:var(--s3);color:var(--muted);}
 .about-cv{margin-top:var(--s4);gap:1rem}

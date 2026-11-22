@@ -146,7 +146,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 }
 @view-transition{navigation:auto}
 ::view-transition-group(project-tedx-rsu),::view-transition-group(project-rivo),::view-transition-group(project-chopbox){animation-duration:420ms;animation-timing-function:var(--ease-in-out-ui)}
-@media(prefers-reduced-motion:reduce){:root:not([data-motion-preference="full"]){scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){:root:not([data-motion="full"]){scroll-behavior:auto}}
 html[data-motion="reduced"]{scroll-behavior:auto}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn){user-select:none;-webkit-user-select:none}
