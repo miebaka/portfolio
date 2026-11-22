@@ -48,7 +48,7 @@ The authoritative route registry is `data/navigation.js`:
 
 Navigation, sitemap placement, static publishing and footer destinations MUST derive from the same registry. Do not duplicate route lists in new modules. The identity mark leads Home. The shared modal Index must trap focus, close with Escape, restore trigger focus and keep the current-page state accurate. If a design calls for fewer visible desktop links, keep routes accessible through the Index.
 
-Home has exactly this editorial order: **Landing → Selected Work → About Me → What I Do → Brands Worked With → CTA → existing dot-matrix Footer**. The footer is a shared global component but the home treatment may differ visually. Do not reorder sections merely to match an external screenshot.
+Home has exactly this editorial order: **Landing → Selected Work → About Me → What I Do → Brands Worked With → existing dot-matrix Footer**. The footer is a shared global component but the home treatment may differ visually. Do not reorder sections merely to match an external screenshot.
 
 ## 2. Architecture: preserve the static-first system
 
@@ -58,10 +58,10 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 - `data/site.js` composes separate content modules rather than duplicating authored content.
 - `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in an optional shader, scroll enhancement or visual widget MUST NOT take down navigation or primary content.
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
-- `styles/main.css` is the single bundled CSS entry. Its ordered imports are `foundations.css`, `layout.css`, `components-v4.css`, `pages-v4.css`, `home.css`, `services-stack.css`, `forliving-editorial.css`, `motion-language.css`, `editorial-index.css`, `project-roster.css`, `portfolio-refinement.css`, and last `tokens.css` in the typography layer. Home and Work use `project-folders.css` through the same `main.css` bundle.
+- `styles/main.css` is the single bundled CSS entry. All structural imports must match the actual source order checked by `scripts/check-css-contract.mjs`. `styles/tokens.css` is the only typography layer, imported last. Shared folder styling lives in `project-folders.css`; Home layout in `home-folders.css` and `home-experience.css`; interaction in `folder-interactions.css`. Do not restore the removed `project-roster.css` or `optical-lens.css`.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
 - `api/contact.js` and `api/now-playing.js` are the two current server-side endpoints. Last.fm recent-track data is requested server-side using `LASTFM_API_KEY`; the client sees only a short public track/artist/status object and degrades to an honest profile link on failure. Adding further endpoints requires a documented need and security review.
-- Keep ESM dependencies intentional. The Three.js water is a lazy bundle with a static fallback; What I Do uses native sticky scrolling without Lenis or GSAP. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
+- Keep ESM dependencies intentional. The Three.js water is a lazy bundle with a static fallback; What I Do uses native sticky scrolling on desktop and an ordinary document list on phones, without Lenis or GSAP. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
 
 **Progressive enhancement rule:** Content and navigation work without JavaScript. Video, shader, canvas, cursor response, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
 
@@ -113,11 +113,11 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 **Landing:** Keep the semantic HTML hero independent of the shader. The framed opening MAY use scale/opacity animation; avoid animating layout sizes each frame. Maintain a fully legible static state while shader imports or WebGL initialization fail. A one-time reveal is not the same as scroll-driven expansion: document the desired trigger, start/end states, returning-visitor behavior and interruption rules before implementing. The hero must not delay LCP unnecessarily.
 
-**Selected Work:** `renderHomeProjectList` uses `featuredOrder` from `data/projects.js`, filtering for complete published case studies. Do not regress to hard-coded slugs or broken links. Mobile and touch screens MUST retain visible project imagery; hover is enhancement, not the only way to see work.
+**Selected Work:** `renderHomeProjectList` uses `featuredOrder` from `data/projects.js`, filtering for complete published case studies. Do not regress to hard-coded slugs or broken links. Mobile and touch screens MUST retain visible project names and true case-study links; the Work and Home racks are physical folder objects, not image rows. The actual case-study imagery lives in the destination chapters. Hover is enhancement, not the only path to the project.
 
 **About:** Use the optimized authored portrait, ensure correct dimensions/alt/crop and maintain readable biography with a working About link. Do not invent years of practice or achievements.
 
-**What I Do:** Use `data/services.js` for accurate service categories, descriptions, outputs and evidence links. Five discipline labels and published case-study chapter destinations are implemented; preserve their accurate, verifiable links and distinguish evidence from process explanations. Large photographic cards require accessible links, obvious scroll affordances, keyboard access and a layout that does not trap narrow-screen users in horizontal-only browsing.
+**What I Do:** Use `data/services.js` for accurate service categories, descriptions, outputs and evidence links. Five discipline labels and published case-study chapter destinations are implemented; preserve their accurate, verifiable links and distinguish evidence from process explanations. Desktop service cards overlap with native sticky scrolling, while mobile shows compact, neutral, non-sticky rows with a title, description and accessible evidence link. Do not reintroduce scroll runways or hidden hover-only proof on phones.
 
 **Brands:** Existing `renderClients` duplicates the list for seamless marquee looping, preserves intrinsic SVG proportions at a shared display height, and pauses when hidden. Preserve the semantics, deduplicate visible accessibility announcements (`aria-hidden` on the duplicate), and verify real SVG geometry. Apply accurate labelling of client, employer and collaborator relationships; do not imply that every employment relationship was an agency client contract. Pause when `prefers-reduced-motion` or the site motion preference reduces motion, and account for focus/visibility.
 
@@ -173,7 +173,7 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 1. Validate the structured public content and local references.
 2. Rebuild the Experiments manifest.
 3. Bundle the Three.js/WebGL hero-water island from `js/hero-water-three.js`.
-4. Preserve native sticky scrolling for the five What I Do cards.
+4. Preserve native desktop stacking for What I Do, with a static, natural-height mobile reading list.
 5. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
 6. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
 
@@ -260,8 +260,8 @@ The existing test suite checks document contracts, content schema, navigation, c
 | --- | --- |
 | All routes | HTTP success, no console errors, correct title/canonical/landmarks and no broken resources |
 | Hero | Static readable first paint, full/reduced motion, shader failure fallback, no major LCP regression |
-| Selected Work | Featured ordering, valid published links, project image visible at 320/390/430px, keyboard focus |
-| Services | Working evidence links, responsive cards, no scroll trap, focus-visible behavior |
+| Selected Work | Featured ordering, published native links, legible folder labels at 320/390/430px, unchanged file-cabinet z-order on hover/focus/touch |
+| Services | Working evidence links, desktop sticky stack, mobile non-sticky reading list, no scroll trap, focus-visible behavior |
 | Marquee | Equal visible logo height, preserved SVG proportions, animated running state, hidden duplicate accessibility, reduced motion, visibility pause |
 | Footer | Host pointer interaction actually works, no blocked links, static fallback, cleanup on navigation |
 | Navigation | Open/close keyboard contract, Escape and focus restoration, theme/motion preference updates |

@@ -51,7 +51,7 @@ The retired tokens `--type-display`, `--type-hero`, `--type-leading-display`, `-
 
 ## Interaction with project folders
 
-The Home Selected Work rack uses the same visual folder component as Work but sizes its physical folders to the **actual rendered height** of the five What I Do service cards. The shared folder controller recalculates after resizing or font loading. It places the project name at the top of the exposed front flap so the title survives overlap and hover.
+The Home Selected Work rack uses the same visual folder component as Work. On desktop, its folders match the **actual rendered height** of the five What I Do service cards; at phone widths it uses a compact independent file size because service cards become natural-height text rows. The controller recalculates on resize and font loading. A bounded lift reveals the name in the exposed flap **without changing the folder's paint-order depth**: later files still overlap and hide the lower part.
 
 The Work archive retains its compact folder sizes. No typographic changes are required inside the structural folder CSS; text always comes from `styles/tokens.css`.
 

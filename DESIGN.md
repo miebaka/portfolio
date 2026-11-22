@@ -1332,16 +1332,23 @@ Home "Selected work" heading, an inert client marquee or footer links beneath
 the oversized signature. Preserve the existing hero-water, native navigation,
 case-study chapters, truthfulness and accessible interaction.
 
-- **Selected Work on Home:** the same compact landscape cardstock construction
-  as `work.html`: project colour, alternating number-only tabs, five static blank
-  papers and native links. The horizontal portrait rack and spine labels are retired.
-  The section retains `aria-label="Selected work"` but has no visible heading or
-  "All Work" CTA. The vertical folder-opening interaction is shared by both routes.
-- **What I Do:** native CSS sticky stacking in existing service order, ending on
-  yellow above purple. No hover-dependent choreography. Reserve a runway inside
-  the service stack so the final yellow panel actually covers earlier panels
-  before the independent client logo marquee begins; reduced-motion readers get
-  the static non-sticky sequence.
+- **Selected Work on Home:** use the Work page's physical landscape cardstock
+  silhouette, published project colors, number-only tabs, five blank paper sheets and
+  real links. The desktop Home files match the height of the rendered What I Do panels;
+  on phones they are deliberately shorter. Keep a clear landing-to-work interval with
+  the resting rack near the bottom of its section. Hover/focus raises only the chosen
+  file **inside the cabinet's original stacking order**: every subsequent file
+  continues to cover its lower portion. Never promote the active Home folder to the
+  foreground. The exposed upper cover shows the project's name and concise preview.
+  Work archive files remain compact and title-only. Selected Work retains
+  `aria-label="Selected work"` without a visible heading or duplicate "All Work" CTA.
+- **What I Do:** the five unnumbered colored cards form a native sticky stack
+  on desktop, ending with yellow above purple; a contained runway completes the
+  sequence before the client marquee. At widths up to 48rem, replace the immersive
+  stack with a restrained non-sticky, neutral reading list. Keep the service title,
+  description and accessible chapter-proof link, but omit decorative marks, repeated
+  deliverable badges and the empty scroll runway. This simpler view must remain
+  legible on 320px screens and with reduced motion.
 - **Brands / marquee:** two identical tracks for seamless movement. While visible,
   and unless motion is reduced, the rail travels continuously. Logos retain SVG
   aspect ratios but share one rendered height; duplicates are aria-hidden.
@@ -1357,3 +1364,9 @@ case-study chapters, truthfulness and accessible interaction.
 `js/render/footer.js`, `styles/footer-layout.css`,
 `js/core/footer-signature.js`. Typography remains centralized in
 `styles/tokens.css`. Visual and automated contracts must be kept in sync.
+
+### Mobile-first file cabinet and visual-debt cleanup — 22 November 2026
+
+The hero water and physical Work files remain distinctive signature elements; mobile should not repeat every desktop flourish. The Home folder controller uses a capped upward motion with the **natural later-folder paint depth unchanged**. The smaller mobile files do not force the five service cards to match their height. The profile is concise, the marquee renders smaller balanced marks and the footer owns the only final inquiry action. Touch previews a folder on first tap, opens the project on second tap; keyboard activation stays a native link.
+
+Removed as dead visual code: `styles/project-roster.css`, `styles/optical-lens.css`, `js/core/optical-lens.js` and retired Home editorial-row, oversized CTA and image-lens declarations previously scattered across shared styles. The editorial index **remains** for the Essays archive and the navigation system. Do not add a second CSS/JS presentation of Selected Work without retiring the existing one first. Verify mobile reading order, horizontal overflow, touch accessibility and cabinet layer order before describing the update as released; passing source lint is not equivalent to deployment approval.
