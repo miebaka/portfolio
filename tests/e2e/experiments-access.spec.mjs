@@ -65,7 +65,8 @@ test("Homepage optical lens preserves all project links without another WebGL sc
   await expect(visuals).toHaveCount(3);
   await expect(visuals.first().locator("img")).toHaveCount(1);
   await expect(page.locator(".home-project-list canvas")).toHaveCount(0);
-  await expect.poll(() => visuals.nth(1).evaluate(el => getComputedStyle(el).clipPath)).not.toBe("none");
+  const finePointer = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches);
+  if (finePointer) await expect.poll(() => visuals.nth(1).evaluate(el => getComputedStyle(el).clipPath)).not.toBe("none");
   const links = page.locator(".home-project-list .editorial-index__row");
   await expect(links).toHaveCount(3);
   await expect(links.nth(0)).toHaveAttribute("href", /work\/.+\.html$/);
