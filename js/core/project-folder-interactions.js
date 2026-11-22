@@ -39,10 +39,9 @@ function enhance(list) {
     return value < lastLeft + size ? n - 1 : -1;
   }
 
-  // Work opens downward as before. On Home, keep the resting folders at
-  // the very bottom of the allocated area and lift only the chosen folder
-  // into the empty runway above the stack.
-  const homeRise = () => size * .62;
+  // File-cabinet physics: lift a folder by a bounded amount but leave it
+  // behind every folder in front of it. Never promote its paint-order depth.
+  const homeRise = () => Math.min(152, size * .29);
   const homeBase = () => homeRise() + 8;
 
   function homeIndexAt(value) {

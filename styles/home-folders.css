@@ -76,3 +76,9 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
     padding-block-start: clamp(3rem, 8svh, 6rem);
   }
 }
+
+/* The lifted folder remains a file *behind* every later folder, not a card
+   floating above the whole rack. Leave the original paper edge shadow. */
+body[data-page="home"] .home-folder-stack .project-folder:is(.is-active, :focus-within) .project-folder__front {
+  box-shadow: inset 0 1px rgb(255 255 255 / .32), inset -1px 0 rgb(0 0 0 / .075);
+}

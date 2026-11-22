@@ -90,21 +90,24 @@ test("hover lifts the right Home folder into reserved space without moving the o
   const first = await folders.first().boundingBox();
   await page.mouse.move(first.x + 25, first.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "0");
-  // Home rises upward by a little less than its original overlap while
-  // its following folders remain anchored at the section bottom.
+  // The selected file slides upward *behind* those with a later index.
+  // The next folder still covers the lower part of the raised folder.
   await expect.poll(async () => {
     const firstBox = await folders.first().boundingBox();
     return Math.round(first.y - firstBox.y);
-  }).toBeGreaterThan(90);
+  }).toBeGreaterThan(70);
   const activeFirst = await folders.first().boundingBox();
   const second = await folders.nth(1).boundingBox();
   const layering = await folders.evaluateAll(nodes => nodes.map(el => Number(getComputedStyle(el).zIndex)));
-  expect(layering[0], "active Home folder should lift above its neighbors").toBeGreaterThan(layering[1]);
+  expect(layering[0], "active Home folder must remain behind the next folder").toBeLessThan(layering[1]);
+  expect(layering[1], "last folder remains at the front of the file cabinet").toBeLessThan(layering[2]);
   expect(second.y, "next folder remains anchored while the first rises").toBeGreaterThan(first.y);
   const title = await folders.first().locator(".project-folder__title").boundingBox();
   expect(title.y, "project name stays in the raised exposed flap").toBeGreaterThan(activeFirst.y);
-  expect(title.y + title.height, "hovered title must remain above the next folder")
+  expect(title.y + title.height, "raised name must be readable above the next file")
     .toBeLessThan(second.y - 6);
+  expect(activeFirst.y + activeFirst.height, "front folder still hides the lower part of the raised file")
+    .toBeGreaterThan(second.y + 20);
   // The active file still covers the next file's top paper edge.
   // Hover the exposed folder body, not the intentionally overlapping lip.
   await page.mouse.move(second.x + 25, second.y + Math.max(48, second.height * .12));
