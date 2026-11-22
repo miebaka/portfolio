@@ -91,5 +91,5 @@ export function renderCaseMarkup(site, slug, base = "../") {
       false, base, nextPlate,
     ))
     .join("");
-  return `<header class="case-opening container"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1>${factsBlock(study, project)}</header>${heroMarkup}${chapters}${nextBlock(site, study, base)}`;
+  return `<header class="case-opening container" id="case-top"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__statement">${esc(study.tagline || project?.tagline || "")}</p></header>${heroMarkup}<div class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</div>${chapters}${nextBlock(site, study, base)}<nav class="case-end-actions container" aria-label="Case study navigation"><a href="#case-top">Back to top ↑</a><a href="${base}work.html">All work ↗</a></nav>`;
 }

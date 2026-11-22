@@ -7,6 +7,8 @@ const routes = [
   { key: "writing", label: "Essays", href: "essays.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "contact", label: "Contact", href: "contact.html", includeIn: ["primary", "index", "footer", "build", "sitemap"] },
   { key: "experiments-legacy", label: "Experiments", href: "community.html", canonicalHref: "experiments.html", includeIn: ["build"] },
+  { key: "process", label: "Process", href: "process.html", includeIn: ["index", "footer", "build", "sitemap"] },
+  { key: "accessibility", label: "Accessibility", href: "accessibility.html", includeIn: ["index", "footer", "build", "sitemap"] },
   { key: "privacy", label: "Privacy", href: "privacy.html", includeIn: ["footer", "build", "sitemap"] },
   { key: "not-found", label: "Page not found", href: "404.html", includeIn: ["build"] }
 ];

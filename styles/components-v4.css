@@ -270,3 +270,12 @@ body:not([data-page="explorations"]) .site-nav{
 .site-index .site-index__link > span:last-child{
   transition: none;}
 }
+
+/* Keep visual work at the start, with at-a-glance project facts after the hero. */
+.case-facts-wrap { padding-block: clamp(1rem, 3vw, 3rem); }
+.case-opening__statement { max-width: 68ch; }
+.case-end-actions { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-block: clamp(2rem, 5vw, 4rem); border-top: 1px solid var(--line); }
+.case-end-actions a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+.case-end-actions a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+#case-top, #selected-work, #experiments-static-title { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
+@media (prefers-reduced-motion: no-preference) { html:not([data-motion="reduced"]) { scroll-behavior: smooth; } }

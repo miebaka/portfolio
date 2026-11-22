@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 export const routes = [
   "/index.html", "/work.html", "/experiments.html", "/about.html",
-  "/essays.html", "/contact.html", "/privacy.html", "/404.html",
+  "/essays.html", "/contact.html", "/process.html", "/accessibility.html", "/privacy.html", "/404.html",
   "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
   "/essays/designing-for-disability-in-nigeria.html", "/essays/when-the-swoosh-lost-its-soul.html"
 ];

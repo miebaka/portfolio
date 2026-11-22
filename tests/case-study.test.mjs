@@ -70,7 +70,9 @@ test("TEDx opens with its title, hero and supported project facts", () => {
   const opening = html.indexOf('class="case-opening container"');
   const hero = html.indexOf('case-shot--hero');
   const facts = html.indexOf('<dl class="case-facts">');
-  assert.ok(opening >= 0 && opening < facts && facts < hero);
+  assert.ok(opening >= 0 && opening < hero && hero < facts);
+  assert.match(html, /case-opening__statement/);
+  assert.match(html, /aria-label="Case study navigation"/);
   assert.doesNotMatch(html, /case-opening__summary|case-lede|case-index|case-proof|case-scroll-index/);
   assert.match(html, /tedx-rsu-campus-banner-1080\.jpg/);
   assert.match(html, /<dt>Role<\/dt><dd>Identity design, creative direction and print<\/dd>/);
