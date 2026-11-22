@@ -1310,7 +1310,30 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   }
 }
 
-/* Optical Experiments gallery: typography remains in the central type system. */
+/* Now Playing: all typographic declarations remain in the sole type source. */
+body[data-page] .now-playing {
+  text-decoration: none;
+  font: var(--type-weight-regular) var(--type-label) / var(--type-leading-ui) var(--font-mono);
+}
+body[data-page] .now-playing__copy {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+body[data-page] .now-playing__label {
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--type-tracking-label);
+}
+body[data-page] .now-playing__track {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--type-caption);
+}
+
+/* Experiments: typography remains in the central type system. */
 body[data-page="explorations"] .experiments-empty { text-align: center; }
 body[data-page="explorations"] .experiments-empty a { text-decoration: underline; }
 body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-22 — PR #49, regression repair (in review)
+
+- Preserve the approved Three.js water renderer while avoiding forced probe context loss; recover a visible fallback after GPU context loss.
+- Overlap letter-file Work folders and homepage service cards with native links and sticky scrolling.
+- Reintroduce a genuine server-backed Last.fm listening pill after the logo; invert the central Index button against the page theme; no hard-coded song or exposed API key.
+- Remove three unwanted footer phrases and enlarge the interactive dot matrix.
+- Fix the previously invisible PR #46 case-study headings and descriptors and repair old fallback chapter fragments.
+- Add targeted unit and browser regressions; verify on the PR rather than merging untested changes.
+
 ## 2026-11-22 — PR #48, folder realism and verified cleanup
 
 ### Changed

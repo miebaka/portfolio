@@ -52,8 +52,8 @@ test("Experiment gallery supports keyboard navigation and a usable no-JS fallbac
   const context = await browser.newContext({ javaScriptEnabled: false });
   const noJS = await context.newPage();
   await noJS.goto("/experiments.html");
-  await expect(noJS.locator("header .nav-fallback a")).toHaveCount(5);
-  await expect(noJS.locator("footer .nav-fallback a")).toHaveCount(5);
+  await expect(noJS.locator(".experiments-static__nav a")).toHaveCount(4);
+  await expect(noJS.locator("#experiments-after a")).toHaveCount(3);
   await expect(noJS.locator(".experiments-static__grid a")).toHaveCount(7);
   await context.close();
 });

@@ -71,11 +71,12 @@ export async function initHeroWave({
   // details are normal on mobile and must not suppress a working WebGL2 device.
   // Explicit shader-test routes retain software GL for deterministic QA.
   if (!testOptIn) {
-    let probeContext;
     try {
       const probe = doc.createElement("canvas");
-      probeContext = probe.getContext("webgl2", {
-        alpha: false, antialias: false, powerPreference: "high-performance",
+      // Prefer default GPU selection: forcing high-performance can fail on
+      // battery/energy-saving browsers that still support the full shader.
+      const probeContext = probe.getContext("webgl2", {
+        alpha: false, antialias: false,
       });
       if (!probeContext) return keepFallback();
       const info = probeContext.getExtension("WEBGL_debug_renderer_info");
@@ -89,10 +90,10 @@ export async function initHeroWave({
       if (software) return keepFallback();
     } catch (error) {
       return keepFallback(error);
-    } finally {
-      // Do not retain an extra GPU context after the capability probe.
-      probeContext?.getExtension("WEBGL_lose_context")?.loseContext();
     }
+    // Do not explicitly lose the probe context. Safari/ANGLE can propagate a
+    // forced context loss to a newly created canvas, leaving a blank hero.
+    // The off-DOM probe is released by the browser after this function.
   }
   const control = doc.createElement("button");
   control.type = "button";
@@ -204,15 +205,28 @@ export async function initHeroWave({
   landing.addEventListener("pointerdown", onPointerDown, { passive: true });
   landing.addEventListener("pointerleave", onPointerLeave, { passive: true });
   win.addEventListener("blur", resetPointer);
+  const canvas = host.querySelector("canvas");
   const markReady = async () => {
     await island?.ready;
-    if (destroyed) return;
-    if (!host.querySelector("canvas")) return;
+    if (destroyed || !canvas?.isConnected) return;
     root.classList.add("has-hero-wave");
     host.classList.remove("is-fallback");
     host.dataset.renderer = "threejs";
     host.classList.add("is-ready");
   };
+  const onContextLost = () => {
+    // A lost GPU context must never leave an invisible or black hero.
+    host.classList.add("is-fallback");
+    host.classList.remove("is-ready");
+    host.dataset.renderer = "fallback";
+  };
+  const onContextRestored = () => {
+    if (destroyed) return;
+    island.update(getState());
+    void markReady();
+  };
+  canvas?.addEventListener("webglcontextlost", onContextLost);
+  canvas?.addEventListener("webglcontextrestored", onContextRestored);
   void markReady();
 
   const destroy = () => {
@@ -230,6 +244,8 @@ export async function initHeroWave({
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     if (touchReleaseFrame) win.cancelAnimationFrame(touchReleaseFrame);
     win.removeEventListener("pagehide", destroy);
+    canvas?.removeEventListener("webglcontextlost", onContextLost);
+    canvas?.removeEventListener("webglcontextrestored", onContextRestored);
     island.destroy();
     host.remove();
     root.classList.remove("has-hero-wave");

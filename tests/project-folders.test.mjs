@@ -69,6 +69,7 @@ test("folder surface keeps one target per case and static, non-intercepting pape
   assert.match(css, /pointer-events:\s*none/);
   assert.match(css, /\.project-folder__link:focus-visible/);
   assert.match(css, /\.project-folder:focus-within/);
-  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(css, /\.project-folder-stack__cards\s*\{[\s\S]*?display:\s*flex/);
+  assert.match(css, /\.project-folder \+ \.project-folder\s*\{\s*margin-block-start:\s*calc\(-1 \* var\(--folder-overlap\)\)/);
   assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
 });

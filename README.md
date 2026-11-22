@@ -1,6 +1,6 @@
 # Miebaka Joshua — Portfolio
 
-A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; Three.js water, scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory and the contact endpoint.
+A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; Three.js water, scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory, the contact endpoint and the server-side Last.fm listening-status endpoint.
 
 - **Visual direction and current approved behavior:** [`DESIGN.md`](DESIGN.md) (latest decision appendix takes precedence over historical proposals).
 - **Engineering, security and release requirements:** [`engineering-specification.md`](engineering-specification.md).
@@ -50,6 +50,7 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Three.js hero and fallback | `js/hero-water-three.js`, `js/core/hero-wave.js` |
 | Desktop-only optional Lenis/GSAP scroll engine | `js/motion-experience.js`, `js/core/scroll-experience.js` |
 | Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |
+| Public listening-status feed and navbar pill | `api/now-playing.js`, `js/render/now-playing.js`, `data/site-config.js` |
 | Deployment redirects, headers, CSP | `vercel.json` |
 | Content validation and production bundle | `scripts/validate-content.mjs`, `scripts/build-site.mjs` |
 
@@ -83,6 +84,10 @@ For changed case-study or profile images, run `npm run optimize:images`. The bui
 - The Index overlay, theme toggle and footer signature have keyboard/touch paths; the underlying document and contact links remain available without JavaScript.
 - `System`, `Reduce` and `Full` motion preferences are persisted independently of the colour theme.
 - Essential content must not depend on decorative animation, GPU capability or hover.
+
+## Last.fm Now Playing
+
+The masthead displays a small vinyl pill directly after the logo. When a Last.fm API key is configured, it reports genuinely recent or currently playing tracks from the public account in `data/site-config.js`; when the key or upstream is unavailable it simply links to the public listening profile, **never displays a fabricated song**, and pauses polling in background tabs. The API key stays in the Vercel server environment as `LASTFM_API_KEY` (see `.env.example`). No key is included in client code or Git.
 
 ## Contact, privacy and deployment
 

@@ -25,9 +25,11 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 }
 
 .project-folder-stack__cards {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.75rem, 4vw, 4rem);
+  --folder-overlap: clamp(3.5rem, 17vw, 16rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -37,13 +39,20 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   --folder-back-top: clamp(2.25rem, 3.6vw, 3.25rem);
 
   position: relative;
-  z-index: 0;
+  z-index: calc(var(--folder-index, 0) + 1);
   width: 100%;
   min-width: 0;
   aspect-ratio: 47 / 38;
   isolation: isolate;
   transform: translate3d(0, 0, 0);
   transition: transform 360ms var(--editorial-ease), filter 360ms var(--editorial-ease);
+}
+
+/* A small, proportional overlap keeps each physical folder recognisable.
+   Native paint-order hit-testing follows the visible topmost folder, without
+   transformed-position guesses or click interception from the reference demo. */
+.project-folder + .project-folder {
+  margin-block-start: calc(-1 * var(--folder-overlap));
 }
 
 .project-folder__link {
@@ -249,15 +258,15 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 @media (hover: hover) and (pointer: fine) {
   .project-folder:hover {
-    z-index: 2;
-    transform: translate3d(0, -.55rem, 0);
+    z-index: 10;
+    transform: translate3d(0, -.8rem, 0);
     filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .11));
   }
 }
 
 .project-folder:focus-within {
-  z-index: 2;
-  transform: translate3d(0, -.55rem, 0);
+  z-index: 10;
+  transform: translate3d(0, -.8rem, 0);
   filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .11));
 }
 
@@ -268,7 +277,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 @media (max-width: 48rem), (pointer: coarse) {
   .project-folder-stack__cards {
-    gap: clamp(1.5rem, 5vw, 2.5rem);
+    --folder-overlap: clamp(3.5rem, 17vw, 6rem);
   }
 
   .project-folder__front {

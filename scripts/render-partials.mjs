@@ -14,7 +14,7 @@ export function renderHeader({ base = "", page = "" } = {}) {
   const links = routesFor("primary").map(route =>
     `<a class="site-nav__link" href="${base}${escapeHTML(route.href)}"${route.key === page ? ' aria-current="page"' : ""}>${escapeHTML(route.label)}</a>`
   ).join("");
-  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a><button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button><nav class="site-nav__links" id="site-nav-links" aria-label="Primary">${links}</nav><div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div></header>`;
+  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a><div class="site-nav__listening" data-mount="now-playing"><a class="now-playing" href="https://www.last.fm/user/${encodeURIComponent(siteConfig.lastfmUser)}" target="_blank" rel="noopener noreferrer" aria-label="Last.fm listening history">Last.fm</a></div></div><button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index">Index</button><nav class="site-nav__links" id="site-nav-links" aria-label="Primary">${links}</nav><div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div></header>`;
 }
 
 export function renderFooter({ base = "" } = {}) {
@@ -24,7 +24,7 @@ export function renderFooter({ base = "" } = {}) {
   ).join("");
   const subject = "mailto:" + siteConfig.email + "?subject=Let%27s%20work%20together";
   return `<footer class="site-footer" data-mount="footer">
-    <div class="site-footer__top"><p class="site-footer__eyebrow">Lagos, Nigeria · Working worldwide</p><a class="site-footer__start" href="${escapeHTML(subject)}">Start a project <span aria-hidden="true">↗</span></a></div>
+    <div class="site-footer__top"><a class="site-footer__start" href="${escapeHTML(subject)}">Start a project <span aria-hidden="true">↗</span></a></div>
     <div class="site-footer__panel">
       <p class="site-footer__statement">Ideas made unmistakable.<span>Design made to last.</span></p>
       <nav class="site-footer__groups" aria-label="Footer">
@@ -33,7 +33,6 @@ export function renderFooter({ base = "" } = {}) {
       </nav>
     </div>
     <div class="site-footer__signature" aria-hidden="true"></div>
-    <div class="site-footer__bottom"><span>Miebaka Joshua</span><span>Independent creative practice</span></div>
   </footer>`;
 }
 
