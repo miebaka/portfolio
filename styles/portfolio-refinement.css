@@ -313,30 +313,7 @@ body .site-footer__signature .site-footer__signature-canvas {
 body .site-footer__panel {
   position: relative;
   z-index: 2;}
-@media (max-width: 48em) {
-  body[data-page] .theme-liquid-toggle__mode {
-    display: none;}
-  body[data-page="home"] .home-landing__statement {
-    max-width: 29ch;
-    grid-column: 2 / 12;}
-  body[data-page="home"] .home-landing h1 {
-    flex-wrap: wrap;
-    gap: .1em 1em;}
 
-
-  body[data-page="home"] section.home-capabilities--reference .service-stack {
-    padding-inline: clamp(.75em, 2.5vw, 1.5em);}
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
-    top: calc(var(--nav-h) + .35em + var(--stack-index, 0) * .2em);
-    margin-bottom: calc(-1 * clamp(2em, 7svh, 4em));}
-  body[data-page="home"] section.home-capabilities--reference .service-stack__card {
-    min-height: clamp(25em, 58svh, 36em);
-    padding: clamp(1.4em, 4vw, 2.2em);
-    padding-bottom: calc(clamp(1.4em, 4vw, 2.2em) + clamp(2em, 7svh, 4em));}
-  body .site-footer__signature,
-  body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
-    height: clamp(14em, 50vw, 24em);}
-}
 @media (prefers-reduced-motion: reduce) {
   body[data-page] .theme-liquid-toggle__thumb {
     transition: none;}
@@ -453,21 +430,39 @@ body[data-page] .now-playing__copy {
 @keyframes listening-vinyl-turn {
   to { transform: rotate(360deg); }
 }
-@media (max-width: 52em) {
-  body[data-page] .site-nav__leading { gap: .3em; }
-  body[data-page] .site-nav__listening { max-width: 2.7em; flex: none; }
-  body[data-page] .now-playing {
-    padding: .4em;
-    width: 2.7em;
-    justify-content: center;
-  }
-  body[data-page] .now-playing__copy { display: none; }
-}
+
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) body[data-page] .now-playing__vinyl { animation: none; }
 }
 html[data-motion="reduced"] body[data-page] .now-playing__vinyl { animation: none; }
 
+
+/* Phone defaults: compact listening pill, legible Index and no nav overflow.
+   The full track and theme label are added only when the masthead has room. */
+body[data-page] .theme-liquid-toggle__mode{display:none}
+body[data-page] .site-nav__leading{gap:.3em}
+body[data-page] .site-nav__listening{flex:none;width:2.7em;max-width:2.7em}
+body[data-page] .now-playing{
+  justify-content:center;
+  width:2.7em;
+  padding:.4em;
+}
+body[data-page] .now-playing__copy{display:none}
+@media(min-width:52.001em){
+  body[data-page] .theme-liquid-toggle__mode{display:inline}
+  body[data-page] .site-nav__leading{gap:clamp(.35em,1.2vw,.8em)}
+  body[data-page] .site-nav__listening{
+    flex:0 1 auto;
+    width:auto;
+    max-width:min(31vw,18em);
+  }
+  body[data-page] .now-playing{
+    justify-content:flex-start;
+    width:100%;
+    padding:.45em .7em;
+  }
+  body[data-page] .now-playing__copy{display:block}
+}
 /* At extreme zoom the usable nav width shrinks independently of breakpoint
    media queries. Preserve the logo and Index, with theme inside the Index. */
 body .site-nav {
@@ -520,9 +515,7 @@ body[data-page] .site-nav__listening {
   width: clamp(12em,22vw,21em);
   max-width: min(35vw,21em);
 }
-@media(max-width: 52em) {
-  body[data-page] .site-nav__listening { width: 2.7em; max-width: 2.7em; flex: none; }
-}
+
 
 /* What I Do: scroll-driven stacking, never a mouse-hover-triggered lift.
    The last card is the final layer; the sequence ends when it arrives. */
