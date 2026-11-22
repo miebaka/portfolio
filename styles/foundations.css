@@ -79,8 +79,7 @@
   --grid-outer:1.25em;
   --grid-gutter:.875em;
   --baseline:1.5em;
-  --grid-row:calc(var(--baseline)/3);
-  --grid-column:calc((min(100vw - 2 * var(--grid-outer),var(--grid-max)) - 11 * var(--grid-gutter))/12);}
+  --grid-row:calc(var(--baseline)/3);}
 
 /* The two dark blocks are generated from one list and must stay identical:
    scripts/token-integrity.test.mjs enforces it. The media block serves no-JS visitors. */
