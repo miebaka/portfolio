@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import stylelint from "stylelint";
 import sizingRule, { breakpointSizes, ruleName } from "./stylelint-sizing.mjs";
+import { viewportQueries } from "../js/core/responsive.js";
 
 test("exactly one responsive scale has five ascending breakpoints", () => {
   assert.deepEqual(breakpointSizes.min, ["25em", "40em", "48em", "62em", "72em"]);
@@ -32,4 +33,12 @@ test("sizing lint refuses unsupported spacing, arbitrary breakpoints and paralle
   });
   const warnings = output.results[0].warnings.filter(item => item.rule === ruleName);
   assert.equal(warnings.length, invalid.length, JSON.stringify(warnings));
+});
+
+
+test("browser interaction breakpoints match the CSS contract", () => {
+  assert.equal(viewportQueries.compact, "(max-width: " + breakpointSizes.max[2] + ")");
+  assert.equal(viewportQueries.tablet, "(min-width: " + breakpointSizes.min[2] + ")");
+  assert.equal(viewportQueries.desktop, "(min-width: " + breakpointSizes.min[3] + ")");
+  assert.equal(viewportQueries.wide, "(min-width: " + breakpointSizes.min[4] + ")");
 });

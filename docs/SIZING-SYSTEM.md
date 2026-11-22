@@ -23,3 +23,5 @@ CSS media queries cannot currently consume ordinary CSS custom properties, so th
 `npm run lint:css` enforces the entire sizing contract through Stylelint. `npm run test:sizing` checks that the rule rejects deliberate violations; `npm run test:relative` guards the mobile-first four/twelve grid and font-relative behavior; the Playwright suite checks rendered geometry at 320, 390, 768, 1024 and 1440 pixels and enlarged text.
 
 Painting primitives, hairline strokes and WebGL raster pixels are not layout scales. They retain device-level syntax to preserve fidelity and input accessibility.
+
+All browser-side layout decisions use `js/core/responsive.js`; the Three.js water performance tier and the physical folder interaction both consume its compact predicate instead of inventing independent pixel thresholds.

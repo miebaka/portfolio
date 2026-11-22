@@ -2,6 +2,7 @@
    Logical hit-testing keeps the overlapped native links reachable as folders
    slide into view. Touch previews once, then navigates on the second tap. */
 import { navigateToCase } from "./case-route-transition.js";
+import { isCompactViewport } from "./responsive.js";
 
 function enhance(list) {
   const folders = [...list.children].filter(el => el.matches(".project-folder"));
@@ -89,7 +90,7 @@ function enhance(list) {
     const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 4.5 * unit;
     const reserved = navHeight + Math.min(8 * unit, Math.max(5 * unit, window.innerHeight * .12));
     const available = Math.max(13.125 * unit, window.innerHeight - reserved - 1.375 * unit);
-    const mobileHome = isHome && matchMedia("(max-width: 48em)").matches;
+    const mobileHome = isHome && isCompactViewport();
     const serviceCards = isHome
       ? [...document.querySelectorAll("#what-i-do .service-stack__card")]
       : [];

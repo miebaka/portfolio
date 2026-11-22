@@ -2,6 +2,7 @@
    projection, Jacobi pressure solver, semi-Lagrangian advection, wave integration,
    and air-to-water refraction caustic projection. Not a volumetric 3D simulation. */
 import {WebGLRenderer,WebGLRenderTarget,Scene,OrthographicCamera,Mesh,PlaneGeometry,ShaderMaterial,Vector2,Vector3,Vector4,HalfFloatType,NearestFilter,LinearFilter,ClampToEdgeWrapping,NoToneMapping,AdditiveBlending,DoubleSide} from "three";
+import { isCompactViewport } from "./core/responsive.js";
 const vertex="varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}";
 const prefix="precision highp float;varying vec2 vUv;uniform vec2 texel;uniform float dt;uniform vec2 cursor;uniform float impulse;uniform vec2 brushRadius;uniform float swirl;uniform float ringCount;uniform float rippleStrength;";
 const advect=prefix+[
@@ -230,7 +231,7 @@ export function mountHeroWave(host,initialState){
  renderer.setPixelRatio(1);renderer.toneMapping=NoToneMapping;host.append(canvas);
  const scene=new Scene(),camera=new OrthographicCamera(-1,1,1,-1,0,1),geometry=new PlaneGeometry(2,2);
  const mesh=new Mesh(geometry,new ShaderMaterial({vertexShader:vertex,fragmentShader:shade,depthTest:false,depthWrite:false}));mesh.frustumCulled=false;scene.add(mesh);
- const side=window.innerWidth<700?112:SIZE,texel=new Vector2(1/side,1/side),cursor=new Vector2(.55,.5),brushRadius=new Vector2(.075,.075);
+ const side=isCompactViewport()?112:SIZE,texel=new Vector2(1/side,1/side),cursor=new Vector2(.55,.5),brushRadius=new Vector2(.075,.075);
  const makeTarget=()=>new WebGLRenderTarget(side,side,{type:HalfFloatType,minFilter:NearestFilter,magFilter:NearestFilter,wrapS:ClampToEdgeWrapping,wrapT:ClampToEdgeWrapping,depthBuffer:false,stencilBuffer:false});
  const pair=()=>({read:makeTarget(),write:makeTarget(),swap(){const a=this.read;this.read=this.write;this.write=a;},dispose(){this.read.dispose();this.write.dispose();}});
  const vel=pair(),press=pair(),height=pair(),div=makeTarget();
@@ -296,7 +297,7 @@ export function mountHeroWave(host,initialState){
  }
  function resize(){
   if(destroyed)return;
-  const limit=window.innerWidth<700?720:1152;
+  const limit=isCompactViewport()?720:1152;
   const scale=Math.min(window.devicePixelRatio||1,1.25,limit/Math.max(host.clientWidth,host.clientHeight,1));
   renderer.setSize(Math.max(1,Math.round(host.clientWidth*scale)),Math.max(1,Math.round(host.clientHeight*scale)),false);
   screen.uniforms.aspectRatio.value=Math.max(.35,Math.min(4,host.clientWidth/Math.max(host.clientHeight,1)));
