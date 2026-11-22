@@ -1,0 +1,138 @@
+/* Reference-led case study: the cover fills the viewport, not a page column. */
+body.case-page .case {
+  display: flex;
+  flex-direction: column;
+}
+body.case-page .case > .case-shot--hero { order: 0; }
+body.case-page .case > .case-opening { order: 1; }
+body.case-page .case > .case-chapter,body.case-page .case > .case-next { order: 2; }
+body.case-page .case .case-shot--hero {
+  position: relative;
+  display: block;
+  width: 100vw;
+  max-width: none;
+  height: calc(100svh - var(--nav-h));
+  min-height: 28rem;
+  max-height: 70rem;
+  margin: 0;
+  overflow: hidden;
+  background: var(--surface);
+  animation: case-cover-reveal 900ms cubic-bezier(.16,1,.3,1) both;
+}
+body.case-page .case .case-shot--hero picture,
+body.case-page .case .case-shot--hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+}
+body.case-page .case .case-opening {
+  min-height: auto;
+  padding-block: clamp(2rem,5vw,5rem) clamp(3rem,6vw,6rem);
+  animation: case-copy-reveal 650ms 250ms both;
+}
+body.case-page .case .case-back { margin-bottom: clamp(2rem,4vw,4rem); }
+@keyframes case-cover-reveal {
+  0% { clip-path: inset(0 0 100% 0); transform: scale(1.02); opacity: .85; }
+  100% { clip-path: inset(0); transform: scale(1); opacity: 1; }
+}
+@keyframes case-copy-reveal {
+  0% { opacity: 0; transform: translateY(2.5rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes case-page-wipe {
+  0% { clip-path: inset(0 0 100%); opacity: .85; }
+  100% { clip-path: inset(0); opacity: 1; }
+}
+@keyframes case-page-out {
+  100% { opacity: 0; transform: translateY(-1.5rem) scale(.985); }
+}
+
+/* A native multi-page view transition handles outgoing pages. The case cover
+   handles the arrival; browsers without View Transitions use the same entry motion. */
+:root:has(body.case-page)::view-transition-old(root) {
+  animation: case-page-out 350ms cubic-bezier(.5,0,.5,1) both;
+}
+:root:has(body.case-page)::view-transition-new(root) {
+  animation: case-page-wipe 800ms cubic-bezier(.16,1,.3,1) both;
+}
+@media(prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body.case-page .case .case-shot--hero,
+  html:not([data-motion="full"]) body.case-page .case .case-opening,
+  html:not([data-motion="full"])::view-transition-old(root),
+  html:not([data-motion="full"])::view-transition-new(root) { animation: none; }
+}
+html[data-motion="reduced"] body.case-page .case .case-shot--hero,
+html[data-motion="reduced"] body.case-page .case .case-opening,
+html[data-motion="reduced"]::view-transition-old(root),
+html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
+
+/* The reference uses a full-screen transitional plane and a centrally
+   scaled brand mark. Recreate that rhythm with our own identity rather
+   than copying the original site's logo or proprietary source code. */
+.case-route-transition {
+  position: fixed;
+  z-index: 9000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  pointer-events: none;
+  animation: case-route-curtain 450ms cubic-bezier(.5,0,.5,1) both;
+}
+.case-route-transition__mark {
+  display: block;
+  width: clamp(4.5rem,7vw,7rem);
+  aspect-ratio: 1;
+  background: var(--ink);
+  mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
+  animation: case-route-mark 450ms cubic-bezier(.2,.8,.2,1) both;
+}
+body.case-page .case::before {
+  content: "";
+  position: fixed;
+  z-index: 8500;
+  inset: 0;
+  background: var(--paper);
+  pointer-events: none;
+  animation: case-arrival-curtain 760ms cubic-bezier(.5,0,.5,1) both;
+}
+body.case-page .case::after {
+  content: "";
+  position: fixed;
+  z-index: 8501;
+  top: 50%;
+  left: 50%;
+  width: clamp(4.5rem,7vw,7rem);
+  aspect-ratio: 1;
+  background: var(--ink);
+  mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
+  pointer-events: none;
+  animation: case-arrival-mark 760ms cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes case-route-curtain {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes case-route-mark {
+  0% { opacity: 0; transform: scale(.7); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes case-arrival-curtain {
+  0%,30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes case-arrival-mark {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.7); }
+  30%,65% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.07); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .case-route-transition,
+  html:not([data-motion="full"]) body.case-page .case::before,
+  html:not([data-motion="full"]) body.case-page .case::after { display: none; animation: none; }
+}
+html[data-motion="reduced"] .case-route-transition,
+html[data-motion="reduced"] body.case-page .case::before,
+html[data-motion="reduced"] body.case-page .case::after { display: none; animation: none; }

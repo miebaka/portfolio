@@ -1340,30 +1340,3 @@ body[data-page="home"] .swiss-selected .swiss-section-head h2 {
   letter-spacing: var(--type-tracking-heading);
   text-transform: none;
 }
-body[data-page] .folder-rack__tab,
-body[data-page] .folder-rack__lip,
-body[data-page] .folder-rack__vertical-name,
-body[data-page] .folder-rack__index,
-body[data-page] .folder-rack__hint {
-  font: var(--type-weight-regular) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: -.005em;
-  text-transform: uppercase;
-}
-body[data-page] .folder-rack__tab,
-body[data-page] .folder-rack__lip,
-body[data-page] .folder-rack__index { font-size: .6875rem; }
-body[data-page] .folder-rack__vertical-name { font-size: .75rem; letter-spacing: .1em; }
-body[data-page] .folder-rack__hint { font-size: .6875rem; }
-body[data-page] .folder-rack__number {
-  font: 300 clamp(2.75rem, 6.5vh, 4.25rem)/1 var(--font-sans);
-  letter-spacing: -.04em;
-}
-body[data-page] .folder-rack__name {
-  font: var(--type-weight-semibold) clamp(1.125rem,2.6vh,1.5rem)/1.15 var(--font-sans);
-  letter-spacing: -.02em;
-  overflow-wrap: anywhere;
-}
-
-/* Rack text belongs to the one authoritative typography file. */
-body[data-page] .folder-rack__folder { text-decoration: none; }
-body[data-page] .folder-rack__vertical-name { white-space: nowrap; }

@@ -57,10 +57,10 @@ test("Published project folders are readable at mobile and desktop widths", asyn
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({width, height: 900});
     await page.goto("/work.html");
-    const bands = await page.locator(".folder-rack__folder").evaluateAll(nodes => nodes.map(node => {
+    const bands = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(node => {
       const rect = node.getBoundingClientRect();
-      const tab = node.querySelector(".folder-rack__tab");
-      const title = node.querySelector(".folder-rack__name");
+      const tab = node.querySelector(".project-folder__tab");
+      const title = node.querySelector(".project-folder__title");
       return {display: getComputedStyle(node).display, width: rect.width, height: rect.height,
         title: title?.textContent?.trim(),
         number: tab?.textContent?.trim(),
@@ -71,9 +71,9 @@ test("Published project folders are readable at mobile and desktop widths", asyn
     expect(bands.map(b => b.number)).toEqual(["01","02","03"]);
     for (const band of bands) {
       expect(band.display).not.toBe("none");
-      expect(band.height).toBeGreaterThan(band.width);
+      expect(band.width / band.height).toBeCloseTo(11.75 / 9.5, 2);
       expect(band.width).toBeGreaterThan(120);
-      expect(band.tabWidth).toBeGreaterThan(25);
+      expect(band.tabWidth).toBeGreaterThan(60);
     }
   }
 });

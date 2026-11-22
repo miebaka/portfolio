@@ -2,72 +2,54 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
+import { renderEditorialIndex } from "./editorial-index.js";
 
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   el.className = "home-project-list";
-  el.dataset.workView = "rack";
-  if (el.dataset.prerendered !== "true")
-    el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath());
-}
-
-const SECTIONS = ["The Call", "The System", "What Survived", "First Contact", "The Results"];
-const ROMAN = ["I", "II", "III", "IV", "V"];
-const PAPER_TOPS = [38, 50, 62, 74, 86];
-const PAPER_ROTATIONS = [-.35, .25, -.15, .4, -.25];
-const PAPER_TONES = ["#f3f1e8", "#fbfaf5", "#f6f4ec", "#fbfaf5", "#fdfcf8"];
-const FOLDER_TONES = ["#d9c49a", "#cdb68a", "#e0cfa6", "#d3bd91"];
-
-function publishedProjects(projects, studies, featuredOnly) {
-  return projects.filter(project =>
-    project.status === "published" &&
-    studies?.[project.slug]?.status === "published" &&
-    project.cover && !(project.href || "").startsWith("essays/") &&
-    (!featuredOnly || project.featured === true)
-  ).sort((a, b) => featuredOnly
-    ? (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99)
-    : Number(b.year) - Number(a.year) ||
-      (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99) ||
-      a.title.localeCompare(b.title));
-}
-
-/* One physical rack serves both Home and Work. The same source data gives
-   truthful routes, five still sheets and the five actual case chapters. */
-export function renderFolderRackMarkup(projects, base = "", variant = "work") {
-  const folders = projects.map((project, index) => {
-    const slug = safeToken(project.slug);
-    const title = esc(project.title);
-    const href = base + safeURL(project.href || "work/" + slug + ".html");
-    const number = String(index + 1).padStart(2, "0");
-    const sheets = PAPER_TOPS.map((top, i) =>
-      '<span class="folder-rack__sheet" style="--sheet-top:' + top +
-      'px;--sheet-rotation:' + PAPER_ROTATIONS[i] +
-      'deg;--sheet-tone:' + PAPER_TONES[i] + '" aria-hidden="true"></span>').join("");
-    const chapters = SECTIONS.map((section, i) =>
-      '<li><b>' + ROMAN[i] + '</b>' + section + '</li>').join("");
-    return '<a class="folder-rack__folder" href="' + href + '" data-slug="' + slug +
-      '" style="--folder-tone:' + FOLDER_TONES[index % FOLDER_TONES.length] +
-      ';--folder-order:' + (index + 1) + '" aria-label="View ' + title + ' case study">' +
-      '<span class="folder-rack__back" aria-hidden="true"></span>' +
-      '<span class="folder-rack__tab" aria-hidden="true">' + number + '</span>' +
-      sheets +
-      '<span class="folder-rack__front"><span class="folder-rack__lip">' + esc(project.category) +
-      '</span><span class="folder-rack__fold"></span>' +
-      '<span class="folder-rack__vertical-name">' + title + '</span>' +
-      '<span class="folder-rack__face"><span class="folder-rack__number">' + number +
-      '</span><strong class="folder-rack__name">' + title + '</strong>' +
-      '<ol class="folder-rack__index">' + chapters + '</ol></span></span></a>';
-  }).join("");
-  return '<div class="folder-rack folder-rack--' + variant +
-    '" data-folder-rack role="group" aria-label="Case study folders"><div class="folder-rack__scroller" role="region" tabindex="0" aria-label="Browse case study folders horizontally"><div class="folder-rack__track">' +
-    folders + '</div></div><p class="folder-rack__hint">Hover to explore · Select to open</p></div>';
+  el.dataset.workView = "list";
+  el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath()) +
+    '<div class="work-view-controls"><a href="' + basePath() +
+    'work.html">All work <span aria-hidden="true">↗</span></a></div>';
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
-  const selected = publishedProjects(projects, studies, true);
-  return renderFolderRackMarkup(selected, base, "home") +
-    '<div class="work-view-controls"><a href="' + base + 'work.html">All work <span aria-hidden="true">↗</span></a></div>';
+  const selected = projects
+    .filter(project =>
+      project.featured === true &&
+      project.status === "published" &&
+      project.cover &&
+      studies?.[project.slug]?.status === "published"
+    )
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
+
+  // One substantial, real project image per case. No floating tags, metadata
+  // capsules or redundant arrow controls; the entire title/visual is the link.
+  const items = selected.map(project => {
+    const image = base + "assets/images/optimized/" + safeToken(project.cover);
+    const title = esc(project.title);
+    const content =
+      '<div class="home-project-list__identity"><h3 class="home-project-list__title editorial-index__title">' +
+      title + '</h3></div>' +
+      '<span class="home-project-list__visual" aria-hidden="true"><picture>' +
+      '<source type="image/avif" srcset="' + image + '-540.avif 540w, ' +
+      image + '-810.avif 810w, ' + image + '-1080.avif 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<source type="image/webp" srcset="' + image + '-540.webp 540w, ' +
+      image + '-810.webp 810w, ' + image + '-1080.webp 1080w" sizes="(max-width: 48rem) 100vw, 33vw">' +
+      '<img src="' + image + '-810.webp" alt="" width="1080" height="810" loading="lazy" decoding="async">' +
+      '</picture></span>';
+
+    return {
+      href: base + "work/" + safeToken(project.slug) + ".html",
+      label: project.title + ", " + project.category + ", " + project.year + ", view case study",
+      tone: project.slug,
+      className: "project-roster__row",
+      content,
+    };
+  });
+
+  return renderEditorialIndex(items, { variant: "work", ordered: true });
 }
 
 export function renderProjectArchive() {
@@ -78,10 +60,44 @@ export function renderProjectArchive() {
     el.innerHTML = renderProjectArchiveMarkup(SITE.projects, basePath(), SITE.caseStudies);
 }
 
+/* Filing Cabinet V2: the source data determines the filing order and truthful
+   divider dates; case studies stay ordinary links even if JS fails entirely. */
+/* Published projects become layered, native-link paper folders.
+   The design works without WebGL or any hover-specific JavaScript. */
 export function renderProjectFolderStackMarkup(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
-  return '<div class="project-folder-stack__stage">' +
-    renderFolderRackMarkup(publishedProjects(projects, studies, false), base, "work") +
-    '</div>';
+  const published = projects
+    .filter(project => project.status === "published" &&
+      studies?.[project.slug]?.status === "published" &&
+      project.cover && !(project.href || "").startsWith("essays/"))
+    .sort((a, b) => Number(b.year) - Number(a.year) ||
+      (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) ||
+      a.title.localeCompare(b.title));
+
+  const folders = published.map((project, index) => {
+    const slug = safeToken(project.slug);
+    const title = esc(project.title);
+    const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
+    const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
+    const href = base + safeURL(project.href || "work/" + slug + ".html");
+    const number = String(index + 1).padStart(2, "0");
+    // Physical construction follows the supplied rack: five blank, ruled
+    // sheets, a rear tab with the file number, and one titled front pocket.
+    // Native anchors preserve exact link targets on touch and without JS.
+    const papers = Array.from({ length: 5 }, (_, paperIndex) =>
+      '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
+      '" aria-hidden="true"></span>').join("");
+
+    return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
+      '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
+      '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study">' +
+      '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
+      '<span class="project-folder__tab-number">' + number + '</span></span></span>' + papers +
+      '<span class="project-folder__front"><strong class="project-folder__title">' +
+      title + '</strong></span></a></li>';
+  }).join("");
+
+  return '<div class="project-folder-stack__stage"><ol class="project-folder-stack__cards" aria-label="Published case studies">' +
+    folders + '</ol></div>';
 }
 
 export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {

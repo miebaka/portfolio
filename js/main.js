@@ -16,7 +16,7 @@ import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
 import { initHomeOpticalLens } from "./core/optical-lens.js";
-import { initFolderRacks } from "./core/folder-rack.js";
+import { initCaseRouteTransitions } from "./core/case-route-transition.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
@@ -52,8 +52,8 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
 run("navigation behaviour", initNavigation);
-if (has("[data-folder-rack]")) run("folder rack interaction", initFolderRacks);
+run("case-study route transitions", initCaseRouteTransitions);
 run("footer signature", initFooterSignature);
 run("hero wave", () => { void initHeroWave(); });
-if (page === "home" && has(".project-roster__row")) run("optical project lens", initHomeOpticalLens);
+if (page === "home") run("optical project lens", initHomeOpticalLens);
 if (page === "contact") run("contact form", initForm);

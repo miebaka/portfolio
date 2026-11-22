@@ -59,8 +59,8 @@ test("Work archive separates published cases from work in progress", () => {
     assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|When the Swoosh Lost Its Soul|<details|<summary/);
   assert.equal((html.match(/<a\b/g) || []).length, 5);
-  assert.equal((html.match(/class="folder-rack__folder"/g) || []).length, 3);
-  assert.match(html, /class="folder-rack__track"/);
+  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.match(html, /class="project-folder-stack__cards"/);
   assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="tedx-rsu"'));
   assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="chopbox"'));
   assert.doesNotMatch(html, /CASE STUDY \/ 20\d\d/, "folder fronts only carry their project names");
@@ -84,7 +84,7 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
   assert.doesNotMatch(home, /Case study in progress|Detour|Out Of Office/);
   assert.match(work, /<h2 id="in-progress-title">In progress<\/h2>/);
-  assert.equal((work.match(/class="folder-rack__folder"/g) || []).length, 3);
+  assert.equal((work.match(/class="project-folder__link"/g) || []).length, 3);
   assert.doesNotMatch(work, /filing-cabinet|work-cabinet/);
   assert.doesNotMatch(work, /class="editorial-index--archive"/);
   for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
@@ -92,8 +92,8 @@ test("built Home and Work expose truthful project states without JavaScript", as
 });
 
 test("project folders are full native links", async () => {
-  const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /\.folder-rack__folder/);
+  const css = await readFile(join(dist, "styles", "project-folders.css"), "utf8");
+  assert.match(css, /\.project-folder__link\s*\{[^}]*display:\s*block/);
 });
 
 test("the route registry has unique destinations and supports the approved global masthead", () => {
@@ -244,10 +244,10 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   const cssFiles = await walk(join(dist, "styles"), ".css");
   assert.deepEqual(cssFiles, [
     join(dist, "styles", "main.css"),
+    join(dist, "styles", "project-folders.css"),
   ]);
   const workPage = await readFile(join(dist, "work.html"), "utf8");
-  assert.doesNotMatch(workPage, /href="styles\/project-folders\.css"/);
-  assert.match(workPage, /class="folder-rack folder-rack--work"/);
+  assert.match(workPage, /href="styles\/project-folders\.css"/);
   assert.match(workPage, /class="project-folder-stack"/);
   assert.doesNotMatch(workPage, /work-cabinet|filing-cabinet/);
   await assert.rejects(access(join(dist, "js", "core", "work-cabinet.js")));
@@ -524,7 +524,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /function publishedProjects\(projects, studies, featuredOnly\)/);
+  assert.match(projects, /const published = projects/);
   assert.match(projects, /const inProgress = projects/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);
