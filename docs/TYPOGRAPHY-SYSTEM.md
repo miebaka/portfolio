@@ -60,3 +60,8 @@ The Work archive retains its compact folder sizes. No typographic changes are re
 Run `npm run lint:typography`, `npm run test:typography`, `npm run test:tokens`, `npm test` and `npm run test:e2e`. Check home, Work, case, About, Essays and Contact at 320, 390, 768, 1024, 1440 and 1920px as well as 200% browser zoom. Confirm long project names, line wrapping, 13px labels, focus states, native scroll and reduced motion.
 
 The lint rule `scripts/stylelint-typography.mjs`, both typography tests and token-integrity tests enforce these decisions. Update this file and the tests when changing the scale.
+
+
+## Relative sizing migration — November 2026
+
+`em` replaced `rem` in the authored CSS typography bounds. Unlike root-relative `rem`, `em` participates in the containing component's font-size context; nested type scales can therefore compound. Use the nearest intended parent as the point of reference, and avoid stacking multiple font-size multipliers. Spacing and breakpoint geometry should scale with the design's typography rather than fight it. Mobile-first grid and gutter defaults live outside this typography-only stylesheet, in `styles/layout.css` and `styles/foundations.css`. Validate computed geometry on phones and at enlarged text sizes, not just source declarations.

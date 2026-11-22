@@ -344,3 +344,10 @@ If these cannot be performed, mark them unverified rather than claiming the PR i
 The authority for design is the latest approved appendix in `DESIGN.md`; earlier Figma/editorial studies are research records, not a reason to restore old layouts.
 
 **Final rule:** Attractive output is not finished output. A design decision is complete only when it is truthful, accessible, performant, consistent with the governing documents, implemented in the right source, and verified on real page behavior.
+
+
+### Relative sizing and mobile-first enforcement — 22 November 2026
+
+Use `em` for type-size tokens, component spacing, gutters and authored layout lengths. `styles/layout.css` provides the mobile four-column default and expands at `min-width:48.001em`; root grid/nav spacing lives in `styles/foundations.css`. `styles/tokens.css` remains the only source of typography declarations. `npm run test:relative` rejects reintroduced `rem` values and layout dimensions above the small-pixel threshold, except reviewed 44px minimum touch targets.
+
+Preserve 1px borders, focus ring raster widths and canvas/client-coordinate measurements in pixels; do not attempt to convert actual WebGL drawing buffer or PointerEvent coordinates. CSS breakpoint `em` values are evaluated using the initial font size. Browser default text-size adjustment, 200–400% zoom, and nested text layouts are mandatory manual/reflow checks. The static conversion is not by itself a visual sign-off.
