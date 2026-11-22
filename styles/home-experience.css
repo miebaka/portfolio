@@ -9,7 +9,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
 }
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
-@media (min-width: 48.001em) {
+@media (min-width:48em) {
   body[data-page="home"] {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
@@ -21,7 +21,7 @@ body[data-page="home"] section.home-capabilities--reference {
   position: relative;
   isolation: isolate;
   z-index: 2;
-  padding-bottom: clamp(2.5em, 5svh, 4em);
+  padding-bottom: clamp(var(--s5), 5svh, var(--s8));
 }
 
 body[data-page="home"] section.home-capabilities--reference .service-stack::after {
@@ -91,7 +91,7 @@ html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
   animation: none;
 }
 
-@media (min-width: 48.001em) {
+@media (min-width:48em) {
   body[data-page="home"] .marquee__item {
     width: clamp(18em, 27vw, 27em);
     height: clamp(6em, 9vw, 8em);
@@ -124,7 +124,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: .75em 1.25em;
+    gap: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 10);
   }
 
   body[data-page="home"] .home-landing__meta p:first-child,
@@ -144,7 +144,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     justify-content: space-between;
     min-height: 2.75em;
     width: auto;
-    padding: .5em 0;
+    padding: var(--s1) 0;
   }
 
   body[data-page="home"] .home-landing__statement {
@@ -152,12 +152,12 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   }
 
   body[data-page="home"] .home-profile {
-    gap: clamp(1.5em, 5vw, 2em);
-    padding-block: clamp(3.5em, 8svh, 5em);
+    gap: clamp(var(--s3), 5vw, var(--s4));
+    padding-block: clamp(var(--s7), 8svh, var(--s10));
   }
 
   body[data-page="home"] .home-profile .home-profile__introduction {
-    gap: .875em;
+    gap: calc(var(--spacing-unit) * 7);
   }
 
   body[data-page="home"] .home-profile__lead {
@@ -174,14 +174,14 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   }
 
   body[data-page="home"] section.home-capabilities--reference {
-    padding-block: clamp(3.5em, 8svh, 5em);
+    padding-block: clamp(var(--s7), 8svh, var(--s10));
     background: var(--paper);
     color: var(--ink);
   }
 
   body[data-page="home"] section.home-capabilities--reference .disciplines-heading {
     padding-inline: var(--page);
-    margin-bottom: clamp(1.25em, 4vw, 2em);
+    margin-bottom: clamp(calc(var(--spacing-unit) * 10), 4vw, var(--s4));
   }
 
   body[data-page="home"] section.home-capabilities--reference .disciplines-heading h2 {
@@ -203,9 +203,9 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   body[data-page="home"] section.home-capabilities--reference .service-stack__item .service-stack__card {
     display: grid;
     min-height: 0;
-    gap: clamp(1em, 4vw, 1.5em);
-    padding: clamp(1.4em, 5vw, 2em) var(--page);
-    padding-bottom: clamp(1.4em, 5vw, 2em);
+    gap: clamp(var(--s2), 4vw, var(--s3));
+    padding: clamp(calc(var(--spacing-unit) * 11), 5vw, var(--s4)) var(--page);
+    padding-bottom: clamp(calc(var(--spacing-unit) * 11), 5vw, var(--s4));
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
@@ -227,7 +227,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   }
 
   body[data-page="home"] section.home-capabilities--reference .service-stack__description {
-    gap: .875em;
+    gap: calc(var(--spacing-unit) * 7);
   }
 
   body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
@@ -236,16 +236,16 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   }
 
   body[data-page="home"] .journey {
-    padding-block: clamp(2em, 6vw, 3em);
+    padding-block: clamp(var(--s4), 6vw, var(--s6));
   }
 
   body[data-page="home"] .client-proof {
-    gap: clamp(1.25em, 6vw, 3em);
+    gap: clamp(calc(var(--spacing-unit) * 10), 6vw, var(--s6));
   }
 
 
 /* Sticky physical card layers are deliberately desktop-only. */
-@media (min-width: 48.001em) {
+@media (min-width:48em) {
   body[data-page="home"] .home-landing__meta {
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
@@ -261,15 +261,15 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     display:inline-flex;
     justify-content:initial;
     min-height:2.75em;
-    padding-block:0 .6em;
+    padding-block:0 calc(var(--spacing-unit) * 5);
   }
   body[data-page="home"] .home-landing__statement{max-width:26ch}
   body[data-page="home"] .home-profile{
-    gap:clamp(2em,6vw,7em);
-    padding-block:clamp(6.5em,12vw,12.5em);
+    gap:clamp(var(--s4),6vw,calc(var(--spacing-unit) * 56));
+    padding-block:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
   }
   body[data-page="home"] .home-profile .home-profile__introduction{
-    gap:clamp(1.1em,2vw,2em);
+    gap:clamp(calc(var(--spacing-unit) * 9),2vw,var(--s4));
   }
   body[data-page="home"] .home-profile__lead{max-width:24ch}
   body[data-page="home"] .home-profile__leadership{display:block}
@@ -278,10 +278,10 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     margin:0;
   }
   body[data-page="home"] section.home-capabilities--reference{
-    padding-block:clamp(6.5em,12vw,12.5em);
+    padding-block:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
   }
   body[data-page="home"] section.home-capabilities--reference .disciplines-heading{
-    margin-bottom:clamp(3em,6vw,6em);
+    margin-bottom:clamp(var(--s6),6vw,var(--s12));
   }
   body[data-page="home"] section.home-capabilities--reference .service-stack::after{
     display:block;
@@ -290,7 +290,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     position:sticky;
     top:calc(var(--nav-h) + 1em + var(--stack-index,0)*.6em);
     z-index:calc(10 + var(--stack-index,0));
-    margin-bottom:calc(-1 * clamp(2.5em,11svh,6.5em));
+    margin-bottom:calc(-1 * clamp(var(--s5),11svh,calc(var(--spacing-unit) * 52)));
   }
   body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child{
     margin-bottom:0;
@@ -303,9 +303,9 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     flex-direction:column;
     justify-content:space-between;
     min-height:var(--home-panel-height);
-    gap:1em;
-    padding:clamp(2em,4.5vw,5em);
-    padding-bottom:calc(clamp(2em,4.5vw,5em) + clamp(2.5em,11svh,6.5em));
+    gap:var(--s2);
+    padding:clamp(var(--s4),4.5vw,var(--s10));
+    padding-bottom:calc(clamp(var(--s4),4.5vw,var(--s10)) + clamp(var(--s5),11svh,calc(var(--spacing-unit) * 52)));
     border:0;
     border-radius:clamp(1em,2vw,2em);
     background:var(--ref-blue-80);
@@ -337,14 +337,14 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   body[data-page="home"] section.home-capabilities--reference .service-stack__bottom{
     display:grid;
     grid-template-columns:minmax(0,1.4fr) minmax(10em,.6fr);
-    gap:clamp(2em,7vw,7em);
+    gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 56));
     align-items:end;
   }
   body[data-page="home"] section.home-capabilities--reference .service-stack__description{
-    gap:1.25em;
+    gap:calc(var(--spacing-unit) * 10);
   }
-  body[data-page="home"] .journey{padding-block:clamp(3em,5vw,6em)}
-  body[data-page="home"] .client-proof{gap:clamp(5em,9vw,10em)}
+  body[data-page="home"] .journey{padding-block:clamp(var(--s6),5vw,var(--s12))}
+  body[data-page="home"] .client-proof{gap:clamp(var(--s10),9vw,calc(var(--spacing-unit) * 80))}
 }
 
 
@@ -353,12 +353,12 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     position: relative;
     top: auto;
-    margin-bottom: 1em;
+    margin-bottom: var(--s2);
   }
 }
 
 html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
   position: relative;
   top: auto;
-  margin-bottom: 1em;
+  margin-bottom: var(--s2);
 }
