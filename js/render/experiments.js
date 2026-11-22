@@ -124,9 +124,10 @@ export async function initExperimentsSpatial() {
   viewport.addEventListener("wheel", event => {
     // Only horizontal trackpad gestures browse art. Vertical wheel input
     // remains native so the visitor can reach the next section and footer.
-    if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+    const sideways = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+    if (event.ctrlKey || (!sideways && !event.shiftKey)) return;
     event.preventDefault();
-    wheelTotal += event.deltaX;
+    wheelTotal += sideways ? event.deltaX : event.deltaY;
     clearTimeout(wheelTimer);
     if (Math.abs(wheelTotal) >= 36) {
       go(Math.sign(wheelTotal));
@@ -167,6 +168,9 @@ export async function initExperimentsSpatial() {
     if (!dragging) return;
     if (dragging.moved) {
       blockClick = true;
+      // A completed drag may suppress the synthetic click entirely. Do not
+      // make the next independent click a dead interaction.
+      setTimeout(() => { blockClick = false; }, 180);
       const velocity = reducedMotion() ? 0 : dragging.velocity * 1.8;
       moveTo(Math.round(target + velocity));
     }
