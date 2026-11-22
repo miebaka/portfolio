@@ -18,8 +18,8 @@ test("styles/tokens.css is imported once and after all layout styles", () => {
   assert.equal((imports.match(/url\("tokens\.css"\)/g) || []).length, 1);
   assert.ok(imports.indexOf('url("tokens.css")') > imports.indexOf('url("portfolio-refinement.css")'));
   assert.match(imports, /url\("tokens\.css"\) layer\(typography\)/);
-  assert.match(tokens, /--type-hero: clamp\(3\.5rem, 2\.2rem \+ 7vw, 10rem\)/);
-  assert.match(tokens, /--type-display: clamp\(3\.25rem, 2\.25rem \+ 4\.2vw, 6rem\)/);
+  assert.match(tokens, /--type-heading-lg: clamp\(2rem, 1\.55rem \+ 1\.7vw, 3rem\)/);
+  assert.doesNotMatch(tokens, /--type-(?:hero|display|leading-display|leading-hero|tracking-display)\b/);
 });
 
 test("Geist Sans / Mono and icon font faces are registered only in the canonical file", () => {
@@ -42,7 +42,7 @@ test("there is zero typography CSS outside styles/tokens.css", () => {
 
 test("stylelint rejects typography even when it references a valid token", async () => {
   const rejected = [
-    "h1{font-size:var(--type-display)}",
+    "h1{font-size:var(--type-heading-lg)}",
     "p{font-size:17px}",
     "h2{font-family:var(--font-sans)}",
     "span{font-weight:var(--type-weight-semibold)}",
