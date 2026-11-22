@@ -434,7 +434,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
     css,
     /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/,
   );
-  assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
+  assert.match(css, /\.case-page \.case-chapter__body\{[^}]*max-width:/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title"><span>Miebaka<\/span> <span>Joshua<\/span><\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
