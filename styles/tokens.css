@@ -1332,3 +1332,8 @@ body[data-page] .now-playing__track {
   white-space: nowrap;
   font-size: var(--type-caption);
 }
+
+/* Experiments: typography remains in the central type system. */
+body[data-page="explorations"] .experiments-empty { text-align: center; }
+body[data-page="explorations"] .experiments-empty a { text-decoration: underline; }
+body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }

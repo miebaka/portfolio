@@ -15,6 +15,7 @@ import { initNavigation } from "./core/navigation.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
+import { initHomeOpticalLens } from "./core/optical-lens.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initEditorialReveals } from "./core/editorial-reveals.js";
 import { initMotionLanguage } from "./core/motion-language.js";
@@ -58,4 +59,5 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 run("navigation behaviour", initNavigation);
 run("footer signature", initFooterSignature);
 run("hero wave", () => { void initHeroWave(); });
+if (page === "home") run("optical project lens", initHomeOpticalLens);
 if (page === "contact") run("contact form", initForm);

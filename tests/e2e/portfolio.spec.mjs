@@ -374,7 +374,7 @@ test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) =>
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
   await expect(page.locator(".experiment-poster__face").first()).toHaveCSS("aspect-ratio", "4 / 5");
   await expect(page.getByRole("navigation", { name: "Experiments navigation" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Index/ })).toBeVisible();
+  await expect(page.locator("[data-experiments-index]")).toBeVisible();
   await expect(page.locator("[data-experiment-title]")).toContainText("Wada Sanzō");
 });
 

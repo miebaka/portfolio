@@ -1,0 +1,113 @@
+/* Experiments: the gallery is one chapter of the site, never a scroll trap.
+   Page-level rules override the retired full-screen kiosk presentation. */
+body[data-page="explorations"] { overflow-x: clip; overflow-y: auto; background: var(--paper); color: var(--ink); }
+body[data-page="explorations"] > header.site-nav {
+  display: block; position: sticky; inset: auto; top: 0; z-index: 100;
+}
+body[data-page="explorations"] > footer.site-footer { display: block; position: relative; }
+body[data-page="explorations"] main.experiments-page {
+  height: auto; min-height: 0; overflow: visible; padding: 0; background: var(--paper); color: var(--ink);
+}
+body[data-page="explorations"] section.experiments-spatial {
+  position: relative; height: clamp(34rem, 78svh, 58rem); min-height: 0;
+  overflow: clip; background: var(--ref-neutral-94); color: var(--ref-near-black);
+  isolation: isolate;
+}
+body[data-page="explorations"] .experiments-spatial::after { position: absolute; }
+body[data-page="explorations"] .experiments-loader {
+  position: absolute; z-index: 35; inset: 0; padding-top: 1rem;
+  pointer-events: none;
+}
+body[data-page="explorations"] .experiments-nav {
+  position: absolute; top: 1rem; left: auto; right: var(--page);
+  transform: none; z-index: 30; gap: clamp(.8rem, 2vw, 2rem);
+}
+body[data-page="explorations"] .experiments-nav :is(a,button) {
+  min-height: 2.75rem; padding: .2rem .45rem; color: var(--ref-near-black);
+}
+body[data-page="explorations"] .experiments-spatial__heading {
+  position: absolute; z-index: 20; top: clamp(4.5rem, 10vh, 7rem);
+  left: var(--page); width: min(24rem, 29vw); color: var(--ref-near-black);
+}
+body[data-page="explorations"] .experiments-spatial__viewport {
+  position: absolute; inset: 0; z-index: 4; touch-action: pan-y pinch-zoom;
+  overscroll-behavior: auto;
+}
+body[data-page="explorations"] .experiments-spatial__counter {
+  position: absolute; top: 52%; right: var(--page);
+}
+body[data-page="explorations"] .experiments-spatial__caption {
+  position: absolute; bottom: 1.25rem; left: var(--page); right: var(--page);
+}
+body[data-page="explorations"] .experiments-spatial__hint {
+  position: absolute; bottom: 1rem; left: 50%;
+}
+body[data-page="explorations"] .experiments-controls {
+  position: absolute; right: var(--page); bottom: 3.5rem; z-index: 26;
+}
+body[data-page="explorations"] .experiments-index {
+  position: absolute; z-index: 48; inset: 0;
+  padding: clamp(1rem, 3vw, 3rem); overflow-y: auto; overscroll-behavior: contain;
+}
+body[data-page="explorations"] .experiment-poster {
+  left: 52%; top: 53%;
+  width: min(37vw, 26rem, 43svh);
+  cursor: pointer;
+}
+body[data-page="explorations"] .experiment-poster__face {
+  /* Subtle curvature borrowed from Kexsio's vertical optical lens.
+     Native media remains semantic, selectable, and free of a second WebGL context. */
+  clip-path: polygon(0 0,100% 0,98% 25%,95% 50%,98% 75%,100% 100%,0 100%,2% 75%,5% 50%,2% 25%);
+  transition: clip-path 420ms cubic-bezier(.2,.8,.2,1), box-shadow 280ms ease;
+}
+body[data-page="explorations"] .experiment-poster[data-active] .experiment-poster__face,
+body[data-page="explorations"] .experiment-poster:focus-visible .experiment-poster__face {
+  clip-path: polygon(0 0,100% 0,100% 25%,100% 50%,100% 75%,100% 100%,0 100%,0 75%,0 50%,0 25%);
+}
+body[data-page="explorations"] .experiments-empty {
+  position: absolute; top: 50%; left: 50%; max-width: 28rem;
+  transform: translate(-50%, -50%);
+}
+body[data-page="explorations"] .experiments-next {
+  width: min(calc(100% - 2 * var(--page)),var(--content));
+  margin: 0 auto; padding-block: clamp(4rem, 8vw, 9rem);
+  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 7rem);
+}
+body[data-page="explorations"] .experiments-next p {
+  margin-bottom: 1.2rem; color: var(--muted);
+}
+body[data-page="explorations"] .experiments-next h2 { max-width: 16ch; }
+body[data-page="explorations"] .experiments-next nav {
+  display: grid; align-content: start; border-top: 1px solid var(--line);
+}
+body[data-page="explorations"] .experiments-next nav a {
+  display: flex; justify-content: space-between; align-items: center;
+  min-height: 3.5rem; padding-block: 1rem; border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+body[data-page="explorations"] .experiments-next nav a:focus-visible {
+  outline: 3px solid var(--focus); outline-offset: 3px;
+}
+@media (max-width: 48rem) {
+  body[data-page="explorations"] .experiments-spatial__heading {
+    top: 4.6rem; left: var(--page); width: min(59vw, 17rem);
+  }
+  body[data-page="explorations"] .experiments-nav {
+    top: .5rem; right: var(--page); left: auto; gap: .4rem;
+  }
+  body[data-page="explorations"] .experiments-nav__back { display: inline-flex; }
+  body[data-page="explorations"] .experiment-poster {
+    left: 50%; top: 54%; width: min(65vw, 19rem, 36svh);
+  }
+  body[data-page="explorations"] .experiments-controls { bottom: 3.2rem; }
+  body[data-page="explorations"] .experiments-next { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page="explorations"] .experiment-poster__face {
+    transition: none; clip-path: none;
+  }
+}
+html[data-motion="reduced"] body[data-page="explorations"] .experiment-poster__face {
+  transition: none; clip-path: none;
+}
