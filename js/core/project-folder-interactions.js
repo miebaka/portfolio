@@ -41,8 +41,15 @@ function enhance(list) {
 
   // File-cabinet physics: lift a folder by a bounded amount but leave it
   // behind every folder in front of it. Never promote its paint-order depth.
-  const homeRise = () => Math.min(152, size * .29);
-  const homeBase = () => homeRise() + 8;
+  // Measured hit areas and transforms use CSS pixels; authored dimensions
+  // are converted back into em so browser text scaling remains effective.
+  const em = () => Number.parseFloat(getComputedStyle(list).fontSize) || 16;
+  const relativeLength = (element, pixels) => {
+    const fontSize = Number.parseFloat(getComputedStyle(element).fontSize) || em();
+    return (pixels / fontSize).toFixed(4) + "em";
+  };
+  const homeRise = () => Math.min(9.5 * em(), size * .29);
+  const homeBase = () => homeRise() + .5 * em();
 
   function homeIndexAt(value) {
     if (!size) return -1;
@@ -78,9 +85,10 @@ function enhance(list) {
   function measure() {
     // Work stays compact. Home measures the actual What I Do cards rather
     // than assuming a viewport-based size or breaking the native scroll.
-    const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72;
-    const reserved = navHeight + Math.min(128, Math.max(80, window.innerHeight * .12));
-    const available = Math.max(210, window.innerHeight - reserved - 22);
+    const unit = em();
+    const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 4.5 * unit;
+    const reserved = navHeight + Math.min(8 * unit, Math.max(5 * unit, window.innerHeight * .12));
+    const available = Math.max(13.125 * unit, window.innerHeight - reserved - 1.375 * unit);
     const mobileHome = isHome && matchMedia("(max-width: 48em)").matches;
     const serviceCards = isHome
       ? [...document.querySelectorAll("#what-i-do .service-stack__card")]
@@ -92,23 +100,23 @@ function enhance(list) {
     // proof is a natural-height reading list; folders become compact files
     // instead of forcing five oversized sticky cards back into the layout.
     const height = mobileHome
-      ? Math.max(272, Math.min(336, window.innerHeight * .38))
+      ? Math.max(17 * unit, Math.min(21 * unit, window.innerHeight * .38))
       : serviceCards.length
         ? Math.max(...serviceCards.map(card => card.getBoundingClientRect().height))
-        : Math.min(300, Math.max(92, (available - 20) / 2.4));
+        : Math.min(18.75 * unit, Math.max(5.75 * unit, (available - 1.25 * unit) / 2.4));
     if (serviceCards.length && !mobileHome) {
-      serviceCards.forEach(card => card.style.minHeight = height.toFixed(2) + "px");
+      serviceCards.forEach(card => { card.style.minHeight = relativeLength(card, height); });
     }
-    list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
+    list.style.setProperty("--work-folder-height", relativeLength(list, height));
     size = folders[0].offsetHeight;
     if (!size) return;
     const count = folders.length;
-    const free = Math.max(0, available - 2 * size - 12);
+    const free = Math.max(0, available - 2 * size - .75 * unit);
     pitch = isHome
       ? size * .34
       : count > 2
-        ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
-        : Math.min(90, size * .34);
+        ? Math.max(1.125 * unit, Math.min(5.625 * unit, size * .34, free / (count - 2)))
+        : Math.min(5.625 * unit, size * .34);
     const expanded = count === 1 ? size : 2 * size + (count - 2) * pitch;
     // The Home list reserves opening space above the rest position, not
     // below it. The final folder's bottom therefore meets the section foot.
