@@ -5,6 +5,7 @@ body[data-page="home"] .swiss-selected {
   --roster-bg: var(--paper);
   --roster-ink: var(--ink);
   --roster-muted: var(--muted);
+
   background: var(--paper);
   color: var(--ink);
   padding-block: clamp(3.5rem, 7vw, 6.5rem);
@@ -34,6 +35,7 @@ body[data-page="work"] .project-folder-stack__stage {
 }
 .folder-rack {
   --rack-pitch: 72px;
+
   position: relative;
   height: clamp(29rem, 76svh, 47rem);
   padding: clamp(.75rem,1.5vw,1.25rem) clamp(.75rem,1.5vw,1.25rem) 0;
@@ -78,10 +80,9 @@ body[data-page="work"] .project-folder-stack__stage {
   max-width: calc(100vw - 120px);
   aspect-ratio: .66;
   color: #1a1710;
-  text-decoration: none;
   pointer-events: none;
   outline: none;
-  transform: translate(var(--rack-x,0px),var(--rack-y,0px));
+  transform: translate(var(--rack-x,0),var(--rack-y,0));
   transition: transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s,filter .4s;
 }
 .folder-rack__folder > span { position: absolute; display: block; }
@@ -124,7 +125,7 @@ body[data-page="work"] .project-folder-stack__stage {
   top: var(--sheet-top);
   bottom: 8px;
   border-radius: 2px 2px 0 0;
-  background: repeating-linear-gradient(to bottom,transparent 0 23px,rgba(0,32,128,.16) 23px 24px) 0 34px/100% 100% no-repeat,var(--sheet-tone);
+  background: repeating-linear-gradient(to bottom,transparent 0 23px,rgb(0 32 128 / .16) 23px 24px) 0 34px/100% 100% no-repeat,var(--sheet-tone);
   box-shadow: 0 0 0 1px rgb(0 0 0 / .07),0 -1px 3px rgb(0 0 0 / .12);
   transform: rotate(var(--sheet-rotation));
   transform-origin: 50% 100%;
@@ -173,7 +174,6 @@ body[data-page="work"] .project-folder-stack__stage {
   justify-content: center;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  white-space: nowrap;
 }
 .folder-rack__face {
   position: absolute;
@@ -225,7 +225,7 @@ body[data-page="work"] .project-folder-stack__stage {
 }
 @media(prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) .folder-rack__folder,
-  html:not([data-motion="full"]) .folder-rack__folder :is(.folder-rack__face,.folder-rack__lip,.folder-rack__tab::after) {
+  html:not([data-motion="full"]) .folder-rack__folder :is(.folder-rack__face,.folder-rack__lip) {
     transition: none;
   }
 }
@@ -282,6 +282,7 @@ body.case-page .case .case-back { margin-bottom: clamp(2rem,4vw,4rem); }
 @keyframes case-page-out {
   to { opacity: 0; transform: translateY(-1.5rem) scale(.985); }
 }
+
 /* A native multi-page view transition handles outgoing pages. The case cover
    handles the arrival; browsers without View Transitions use the same entry motion. */
 :root:has(body.case-page)::view-transition-old(root) {
