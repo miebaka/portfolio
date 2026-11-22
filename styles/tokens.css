@@ -1336,7 +1336,7 @@ body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-
    16px/1.35 project text, 32px/1 section and 32px/1.35 feature lead.
    These are mapped to Geist's existing roles, not copied font assets. */
 body[data-page="home"] .swiss-selected .swiss-section-head h2 {
-  font: var(--type-weight-regular) var(--type-heading-md)/var(--type-leading-display) var(--font-sans);
+  font: var(--type-weight-regular) var(--type-heading-sm)/var(--type-leading-display) var(--font-sans);
   letter-spacing: var(--type-tracking-heading);
   text-transform: none;
 }
@@ -1363,3 +1363,7 @@ body[data-page] .folder-rack__name {
   letter-spacing: -.02em;
   overflow-wrap: anywhere;
 }
+
+/* Rack text belongs to the one authoritative typography file. */
+body[data-page] .folder-rack__folder { text-decoration: none; }
+body[data-page] .folder-rack__vertical-name { white-space: nowrap; }
