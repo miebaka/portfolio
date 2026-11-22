@@ -472,8 +472,9 @@ body .site-nav {
   }
 }
 
-/* Stacked service cards retain clickable proof links when layers overlap. */
-body[data-page="home"] section.home-capabilities--reference .service-stack__item:is(:hover, :focus-within) {
+/* Scroll order alone controls which card covers the previous one.
+   Focus can still bring a proof link forward for keyboard users. */
+body[data-page="home"] section.home-capabilities--reference .service-stack__item:focus-within {
   z-index: 50;
 }
 body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
@@ -500,4 +501,41 @@ body[data-page] .site-nav__listening {
 }
 @media(max-width: 52rem) {
   body[data-page] .site-nav__listening { width: 2.7rem; max-width: 2.7rem; flex: none; }
+}
+
+/* What I Do: scroll-driven stacking, never a mouse-hover-triggered lift.
+   The last card is the final layer; the sequence ends when it arrives. */
+body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  position: sticky;
+  top: calc(var(--nav-h) + .75rem);
+  z-index: calc(10 + var(--stack-index, 0));
+  transform: none;
+  transition: none;
+}
+
+body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child {
+  margin-bottom: 0;
+}
+
+body[data-page="home"] section.home-capabilities--reference .service-stack__card {
+  transform: none;
+  transition: none;
+}
+
+body[data-page="home"] section.home-capabilities--reference {
+  padding-bottom: clamp(1rem, 3svh, 2.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+    position: relative;
+    top: auto;
+    margin-bottom: 1rem;
+  }
+}
+
+html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  position: relative;
+  top: auto;
+  margin-bottom: 1rem;
 }

@@ -179,3 +179,34 @@ html[data-motion="reduced"] .home-folder-stack__cards .project-folder__title,
 html[data-motion="reduced"] .home-folder-stack__cards .project-folder__spine {
   transition: none;
 }
+
+/* The entire Home Selected Work presentation occupies a viewport. Unlike the
+   Work index, its files remain upright; content can pan horizontally on
+   narrow devices rather than shrinking the stationery into tiny cards. */
+body[data-page="home"] section.swiss-selected {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  padding-block: clamp(1rem, 2.5svh, 2.25rem);
+}
+
+body[data-page="home"] section.swiss-selected .swiss-section-head {
+  margin-bottom: clamp(.75rem, 2svh, 1.5rem);
+}
+
+body[data-page="home"] section.swiss-selected .home-project-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body[data-page="home"] .home-folder-stack__cards {
+  height: clamp(20rem, calc(100svh - var(--nav-h) - 7rem), 70rem);
+}
+
+@media (max-width: 48rem) {
+  body[data-page="home"] .home-folder-stack__cards {
+    height: clamp(18rem, calc(100svh - var(--nav-h) - 6.5rem), 48rem);
+  }
+}

@@ -49,9 +49,7 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
     'aria-label="Browse selected case-study folders horizontally" tabindex="0">' +
     '<ol class="project-folder-stack__cards home-folder-stack__cards" aria-label="Selected case studies">' +
     selected.map((project, index) => renderFolderCard(project, index, base, true)).join("") +
-    '</ol></div></div>' +
-    '<div class="work-view-controls"><a href="' + base +
-    'work.html">All work <span aria-hidden="true">↗</span></a></div>';
+    '</ol></div></div>';
 }
 
 export function renderProjectArchive() {

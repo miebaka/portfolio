@@ -175,7 +175,9 @@ function enhance(list) {
 
   // Height-only viewport changes (including mobile browser chrome and rotated
   // screens) must resize the Work cards even when their width is unchanged.
-  if (!standing) {
+  {
+    // Height-only viewport changes (rotation, window resize, browser chrome)
+    // must remeasure both the upright Home rack and the compact Work rack.
     const refresh = () => measure();
     window.addEventListener("resize", refresh, { passive: true });
     document.fonts?.ready?.then(refresh);

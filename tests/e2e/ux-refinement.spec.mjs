@@ -10,7 +10,7 @@ test("Home keeps the landing restrained and Selected Work as upright folders",as
   await expect(page.locator('.work-view-controls [data-view="grid"]')).toHaveCount(0);
   await expect(page.locator(".home-folder-stack .project-folder")).toHaveCount(3);
   await expect(page.locator(".home-folder-stack .project-folder__paper")).toHaveCount(15);
-  await expect(page.getByRole("link",{name:/all work/i}).first()).toBeVisible();
+  await expect(page.locator("#selected-work .work-view-controls")).toHaveCount(0);
 });
 
 test("What I Do uses rounded inset cards and no colored section wrapper",async({page})=>{
@@ -71,4 +71,22 @@ test("Dot-matrix footer is rendered on Home, Work, and About", async ({page}) =>
     expect(width).toBeGreaterThan(200);
     expect(height).toBeGreaterThan(100);
   }
+});
+
+test("What I Do stacks by scroll, ignores hover and ends with the last card", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/index.html");
+  const cards = page.locator("#what-i-do .service-stack__item");
+  await expect(cards).toHaveCount(5);
+  const first = cards.first();
+  const second = cards.nth(1);
+  const last = cards.last();
+  const firstZ = await first.evaluate(el => getComputedStyle(el).zIndex);
+  await first.hover();
+  await expect(first).toHaveCSS("z-index", firstZ);
+  await expect(second).toHaveCSS("z-index", "11");
+  await last.scrollIntoViewIfNeeded();
+  await expect(last).toHaveCSS("position", "sticky");
+  await expect(last).toHaveCSS("z-index", "14");
+  await expect(last.locator(".service-stack__card")).toHaveCSS("transform", "none");
 });

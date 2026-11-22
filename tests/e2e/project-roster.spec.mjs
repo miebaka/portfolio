@@ -99,14 +99,26 @@ test("keyboard focus and Enter navigate to the focused standing folder", async (
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
 });
 
-test("All Work remains a large centered accessible link below the Home folders", async ({ page }) => {
-  await page.goto("/");
-  const link = page.getByRole("link", { name: /all work/i }).first();
-  await expect(link).toHaveAttribute("href", "work.html");
-  await link.scrollIntoViewIfNeeded();
-  const rect = await link.boundingBox();
-  expect(rect.width).toBeGreaterThanOrEqual(240);
-  expect(Math.abs(rect.x + rect.width / 2 - page.viewportSize().width / 2)).toBeLessThan(10);
+test("Home standing folders fill a viewport without an All Work button", async ({ page }) => {
+  for (const size of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(size);
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: /^all work$/i })).toHaveCount(0);
+    const section = page.locator("#selected-work");
+    const dimensions = await section.evaluate(element => {
+      const viewport = element.querySelector(".home-folder-stack__viewport");
+      const cards = element.querySelector(".home-folder-stack__cards");
+      return {
+        sectionHeight: element.getBoundingClientRect().height,
+        viewportWidth: viewport.clientWidth,
+        folderHeight: cards.getBoundingClientRect().height,
+        windowHeight: innerHeight
+      };
+    });
+    expect(dimensions.sectionHeight).toBeGreaterThanOrEqual(size.height - 5);
+    expect(dimensions.folderHeight).toBeGreaterThan(size.height * .65);
+    expect(dimensions.viewportWidth).toBeGreaterThan(200);
+  }
 });
 
 test("standing folders avoid document overflow and respect reduced motion", async ({ page }) => {
