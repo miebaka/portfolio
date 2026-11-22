@@ -150,7 +150,7 @@ body .site-footer__signature .site-footer__signature-canvas{
 
 
 /* Responsive upgrades are additive: mobile Index remains complete by default. */
-@media(min-width:48em){
+@media(min-width:56em){
   body .site-nav__inner{gap:clamp(calc(var(--spacing-unit) * 6),2.3vw,calc(var(--spacing-unit) * 18))}
   body .site-nav__menu-btn{
     min-width:6em;

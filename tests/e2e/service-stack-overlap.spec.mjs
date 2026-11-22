@@ -14,15 +14,15 @@ test("What I Do has a genuinely overlapping native-scroll stack with usable proo
       };
     }));
     for (let i = 1; i < before.length; i++) {
-      if (width > 768) {
+      if (width >= 896) {
         expect(before[i].top, "desktop cards overlap at " + width).toBeLessThan(before[i - 1].bottom);
       } else {
         expect(before[i].top, "mobile rows never overlap at " + width).toBeGreaterThanOrEqual(before[i - 1].bottom - 1);
       }
       expect(before[i].top).toBeGreaterThan(before[i - 1].top);
     }
-    expect(before[0].position).toBe(width > 768 ? "sticky" : "relative");
-    if (width > 768) expect(before[0].margin).toBeLessThan(0);
+    expect(before[0].position).toBe(width >= 896 ? "sticky" : "relative");
+    if (width >= 896) expect(before[0].margin).toBeLessThan(0);
     else expect(before[0].margin).toBeGreaterThanOrEqual(0);
 
     // Link targets may not be hidden beneath the following card.

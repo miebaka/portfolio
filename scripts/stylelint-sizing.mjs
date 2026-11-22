@@ -3,8 +3,8 @@ import stylelint from "stylelint";
 /** Enforce one spacing grid, one container source and one responsive range set. */
 export const ruleName = "portfolio/sizing-system";
 export const breakpointSizes = Object.freeze({
-  min: ["25em", "40em", "48em", "62em", "72em"],
-  max: ["24.999em", "39.999em", "47.999em", "61.999em", "71.999em"],
+  min: ["24em", "40em", "56em", "72em", "88em"],
+  max: ["23.999em", "39.999em", "55.999em", "71.999em", "87.999em"],
 });
 const messages = stylelint.utils.ruleMessages(ruleName, {
   rejected: message => message,

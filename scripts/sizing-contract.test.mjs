@@ -7,8 +7,16 @@ import { readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 test("exactly one responsive scale has five ascending breakpoints", () => {
-  assert.deepEqual(breakpointSizes.min, ["25em", "40em", "48em", "62em", "72em"]);
-  assert.deepEqual(breakpointSizes.max, ["24.999em", "39.999em", "47.999em", "61.999em", "71.999em"]);
+  assert.deepEqual(breakpointSizes.min, ["24em", "40em", "56em", "72em", "88em"]);
+  assert.deepEqual(breakpointSizes.max, ["23.999em", "39.999em", "55.999em", "71.999em", "87.999em"]);
+  assert.deepEqual(breakpointSizes.min.map(Number.parseFloat), [24, 40, 56, 72, 88]);
+  breakpointSizes.min.forEach((min, index) => {
+    const boundary = Number.parseFloat(min);
+    const precedingUpperBound = Number.parseFloat(breakpointSizes.max[index]);
+    assert.equal(Math.round((boundary - precedingUpperBound) * 1000), 1,
+      "each exclusive upper bound must sit 0.001em below its next lower bound");
+    if (index) assert.ok(boundary > Number.parseFloat(breakpointSizes.min[index - 1]));
+  });
 });
 
 test("sizing lint refuses unsupported spacing, arbitrary breakpoints and parallel containers", async () => {
@@ -17,7 +25,7 @@ test("sizing lint refuses unsupported spacing, arbitrary breakpoints and paralle
     "p { padding: 22px; }",
     "main { gap: clamp(1em, 2vw, 3em); }",
     "@media (min-width: 53em) { p { color: inherit; } }",
-    "@media (max-width: 48em) { p { color: inherit; } }",
+    "@media (max-width: 56em) { p { color: inherit; } }",
     "main { --tailor-container: 86em; }",
     "main { --grid-max: 100em; }",
     "a { min-height: 44px; }",
@@ -25,8 +33,12 @@ test("sizing lint refuses unsupported spacing, arbitrary breakpoints and paralle
   const accepted = [
     "p { margin-block: var(--s2); }",
     "main { gap: clamp(var(--s2), 2vw, var(--s4)); }",
-    "@media (min-width: 48em) { main { padding: var(--s4); } }",
-    "@media (max-width: 47.999em), (pointer: coarse) { main { padding: 0; } }",
+    "@media (min-width: 24em) { main { padding: var(--s4); } }",
+    "@media (min-width: 40em) { main { padding: var(--s4); } }",
+    "@media (min-width: 56em) { main { padding: var(--s4); } }",
+    "@media (min-width: 72em) { main { padding: var(--s4); } }",
+    "@media (min-width: 88em) { main { padding: var(--s4); } }",
+    "@media (max-width: 55.999em), (pointer: coarse) { main { padding: 0; } }",
     "main { width: min(100%, var(--content)); }",
     "a { min-height: var(--control-target); }",
   ];

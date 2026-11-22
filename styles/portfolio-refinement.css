@@ -146,7 +146,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__symb
 
 /* Let the portrait join the editorial copy only above the mobile breakpoint.
    Small viewports retain the native single-column reading order. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] .home-profile {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: clamp(var(--s4), 6vw, calc(var(--spacing-unit) * 56));
@@ -226,7 +226,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 
 /* Progressive editorial grid: only wide screens lay out copy, portrait and facts
    side by side. The DOM order remains unchanged for small screens. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero {
     grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
     gap: clamp(var(--s4), 5vw, var(--s12));
@@ -448,7 +448,7 @@ body[data-page] .now-playing{
   padding:calc(var(--spacing-unit) * 3);
 }
 body[data-page] .now-playing__copy{display:none}
-@media(min-width:62em){
+@media(min-width:72em){
   body[data-page] .theme-liquid-toggle__mode{display:inline}
   body[data-page] .site-nav__leading{gap:clamp(calc(var(--spacing-unit) * 3),1.2vw,calc(var(--spacing-unit) * 6))}
   body[data-page] .site-nav__listening{

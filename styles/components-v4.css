@@ -59,7 +59,7 @@ html[data-theme-transition="fade"]::view-transition-new(root){animation-duration
 html[data-theme-transition="fade"]::view-transition-old(root){animation-duration:180ms;animation-timing-function:var(--ease-standard)}
 .disciplines-heading>p{color:var(--muted);}
 .swiss-section-head>p{color:var(--muted);}
-@media(max-width:71.999em){
+@media(max-width:87.999em){
 .site-nav__inner{grid-template-columns:auto 1fr auto}
 }
 a[href]:focus-visible{color:var(--accent-interactive);}
@@ -99,7 +99,7 @@ a[href]:hover{color:var(--accent-interactive);}
 .site-footer__groups{display:grid;grid-template-columns:minmax(0,2fr) minmax(10em,.7fr) minmax(16em,1fr);gap:clamp(var(--s3),4vw,var(--s8));align-items:start}
 .site-footer__group{display:grid;align-content:start;gap:calc(var(--spacing-unit) * 5);min-width:0}
 .site-footer__location .site-footer__links{color:var(--muted)}
-@media(max-width:24.999em){.site-footer__groups{grid-template-columns:1fr}
+@media(max-width:23.999em){.site-footer__groups{grid-template-columns:1fr}
 .site-footer__socials{grid-column:1}
 .site-footer__location{grid-column:1}
 .site-footer__explore{grid-column:1}
@@ -220,7 +220,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(var(--s7) + var(--safe-
 .copy-email[data-state="copied"] .copy-email__check{stroke-dashoffset:0}
 .copy-email[data-state="error"]{border-color:var(--border-strong);color:var(--ink)}
 @media(max-width:39.999em){.copy-email{display:flex;width:max-content;margin:calc(var(--spacing-unit) * 5) 0 0}}
-@media(max-width:47.999em){.site-footer__panel{grid-template-columns:1fr 1fr}
+@media(max-width:55.999em){.site-footer__panel{grid-template-columns:1fr 1fr}
 .site-footer__context{grid-column:1/-1}
 .site-footer__groups{grid-template-columns:1fr 1fr}
 .site-footer__explore{grid-column:1/-1}
@@ -232,7 +232,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(var(--s7) + var(--safe-
 }
 
 /* Progressive desktop enhancement; narrow screens have natural reading columns. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   .experience-ledger__item {
     grid-template-columns: minmax(12em, .7fr) minmax(0, 1.3fr);
     gap: calc(var(--spacing-unit) * 6) clamp(var(--s4), 7vw, calc(var(--spacing-unit) * 56));

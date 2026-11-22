@@ -310,12 +310,12 @@ Responsive viewport queries MUST use exactly the five approved thresholds. Any n
 
 | Approved boundary | Required behavior |
 | --- | --- |
-| Below `25em` | Compact controls and readable Work folders |
-| `25em`–`39.999em` | Phone-first single-column content with comfortable margins |
-| `40em`–`47.999em` | Natural mobile reading order; no forced sticky cards |
-| `48em`–`61.999em` | Tablet composition and eight-track editorial grid |
-| `62em`–`71.999em` | Twelve-column editorial layout, wider index and evidence |
-| From `72em` | Wide-screen refinements within the same `86em` maximum container |
+| Below `24em` | Compact controls and readable Work folders |
+| `24em`–`39.999em` | Phone-first single-column content with comfortable margins |
+| `40em`–`55.999em` | Natural mobile reading order; no forced sticky cards |
+| `56em`–`71.999em` | Tablet composition and eight-track editorial grid |
+| `72em`–`87.999em` | Twelve-column editorial layout, wider index and evidence |
+| From `88em` | Wide-screen refinements within the same `86em` maximum container |
 
 ### 3.4 Radius, surfaces, strokes, shadows
 
@@ -1375,7 +1375,7 @@ Removed as dead visual code: `styles/project-roster.css`, `styles/optical-lens.c
 
 ### Mobile-first proportional sizing — 22 November 2026
 
-The current sizing system is based on the visitor's inherited font size, **not pixel presets**. Mobile is the starting composition: `styles/layout.css` defines four grid tracks and `styles/foundations.css` defines comfortable phone gutters, navigation height and section spacing; `@media (min-width: 48em)` expands the standard grid to twelve tracks, while editorial layouts have an intermediate eight-track tablet composition. Home hero and profile also begin with their mobile reading order and enhance at larger viewports. Component media-query widths use the single approved breakpoint table; independent page-specific viewport thresholds are prohibited.
+The current sizing system is based on the visitor's inherited font size, **not pixel presets**. Mobile is the starting composition: `styles/layout.css` defines four grid tracks and `styles/foundations.css` defines comfortable phone gutters, navigation height and section spacing; `@media (min-width: 56em)` expands the standard grid to twelve tracks, while editorial layouts have an intermediate eight-track tablet composition. Home hero and profile also begin with their mobile reading order and enhance at larger viewports. Component media-query widths use the single approved breakpoint table; independent page-specific viewport thresholds are prohibited.
 
 - All authored typography remains centralized in `styles/tokens.css`, with `em` size bounds. The system remains Geist Sans for headlines and body, Geist Mono for labels.
 - Relative `em` units are used for **typography, spacing, component layout, and responsive image-size hints**. An `em` is based on the font size of the element (or its parent for `font-size` itself). Deliberately test nested type scales to avoid compounded growth.

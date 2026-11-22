@@ -398,7 +398,7 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
 
 /* Progressive composition: the phone layout is the baseline, not a
    compressed desktop grid. Water canvas and folder stacking are untouched. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] {
     --hf: clamp(.75em, 1.25vw, 1.35em);
   }
@@ -484,7 +484,7 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
 }
 
 /* The optional service-journey fallback gains a two-up layout on wide screens. */
-@media(min-width:62em){
+@media(min-width:72em){
   body[data-page="home"] .service-journey{
     grid-column:span 6;
     min-height:clamp(25em,36vw,40em);

@@ -12,15 +12,15 @@ The basic unit is `--spacing-unit: .125em` (2px at a 16px element font size). Na
 
 ## 3. Container/grid — `styles/foundations.css` + `styles/layout.css`
 
-There is one content maximum: `--grid-max: 86em` (aliased as `--content`), and one outer gutter `--grid-outer` (aliased as `--page`). Layout uses the exact same content/gutter pair for the body, header and footer. The standard container expression is `min(calc(100% - 2 * var(--page)), var(--content))`. The generic grid is four tracks on phones and twelve from `48em`. Editorial compositions reuse four phone tracks, eight tablet tracks from `48em`, twelve from `62em`. The only global grid gutter is `--grid-gutter` (aliased as `--grid-gap`). Retired `--tailor-container` and `--tailor-gutter` are prohibited.
+There is one content maximum: `--grid-max: 86em` (aliased as `--content`), and one outer gutter `--grid-outer` (aliased as `--page`). Layout uses the exact same content/gutter pair for the body, header and footer. The standard container expression is `min(calc(100% - 2 * var(--page)), var(--content))`. The generic grid is four tracks below `56em` and twelve from `56em`. Editorial compositions use four tracks below `56em`, eight from `56em`, and twelve from `72em`. The only global grid gutter is `--grid-gutter` (aliased as `--grid-gap`). Retired `--tailor-container` and `--tailor-gutter` are prohibited.
 
 ## 4. Responsive sizing — `scripts/stylelint-sizing.mjs`
 
-CSS media queries cannot currently consume ordinary CSS custom properties, so the enforced breakpoint table is defined in the lint rule. The five approved upward boundaries are `25em`, `40em`, `48em`, `62em` and `72em`. Complementary upper boundaries are `24.999em`, `39.999em`, `47.999em`, `61.999em` and `71.999em`. New arbitrary breakpoint literals fail the lint rule. Browser preference queries (motion, pointer, contrast) do not define viewport widths and remain available.
+CSS media queries cannot currently consume ordinary CSS custom properties, so the enforced breakpoint table is defined in the lint rule. The five approved upward boundaries are `24em`, `40em`, `56em`, `72em` and `88em`. Matching non-overlapping upper boundaries are `23.999em`, `39.999em`, `55.999em`, `71.999em` and `87.999em`. At the browser's normal 16px initial font size, the lower thresholds are approximately 384px, 640px, 896px, 1152px and 1408px. The existing layout roles follow those five steps; no component may define an additional viewport-width breakpoint. New arbitrary breakpoint literals fail the lint rule. Browser preference queries (motion, pointer, contrast) do not define viewport widths and remain available.
 
 ## Verification
 
-`npm run lint:css` enforces the entire sizing contract through Stylelint. `npm run test:sizing` checks that the rule rejects deliberate violations; `npm run test:relative` guards the mobile-first four/twelve grid and font-relative behavior; the Playwright suite checks rendered geometry at 320, 390, 768, 1024 and 1440 pixels and enlarged text.
+`npm run lint:css` enforces the entire sizing contract through Stylelint. `npm run test:sizing` checks that the rule rejects deliberate violations; `npm run test:relative` guards the mobile-first four/twelve grid and font-relative behavior; the Playwright suite checks rendered geometry at 320, 390, 768, 896, 1024, 1152, 1408 and 1440 pixels and enlarged text.
 
 Painting primitives, hairline strokes and WebGL raster pixels are not layout scales. They retain device-level syntax to preserve fidelity and input accessibility.
 

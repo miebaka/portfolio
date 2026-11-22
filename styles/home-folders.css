@@ -82,7 +82,7 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
     gap: var(--s1);
   }
 
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] .home-folder-stack .project-folder__outcome {
     display: initial;
   }
@@ -92,7 +92,7 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
   }
 }
 
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] .home-content section.swiss-selected {
     padding-block-start: clamp(var(--s8), 10svh, calc(var(--spacing-unit) * 64));
   }

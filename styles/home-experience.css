@@ -9,7 +9,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
 }
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
@@ -91,7 +91,7 @@ html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
   animation: none;
 }
 
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] .marquee__item {
     width: clamp(18em, 27vw, 27em);
     height: clamp(6em, 9vw, 8em);
@@ -245,7 +245,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
 
 
 /* Sticky physical card layers are deliberately desktop-only. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="home"] .home-landing__meta {
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));

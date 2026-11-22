@@ -86,7 +86,7 @@ body[data-page="explorations"] .experiments-next nav a:focus-visible {
 }
 
 /* The gallery is usable on narrow devices without shrinking a desktop stage. */
-@media (min-width:48em) {
+@media (min-width:56em) {
   body[data-page="explorations"] .experiments-spatial__heading {
     top: clamp(4.5em, 10vh, 7em);
     width: min(24em, 29vw);

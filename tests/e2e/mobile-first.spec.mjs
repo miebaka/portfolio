@@ -47,7 +47,7 @@ test("mobile hero, editorial biography and footer honor the reading order", asyn
     expect(measure.links).toBeTruthy();
     expect(measure.hero.right).toBeLessThanOrEqual(width + 1);
     expect(measure.footer.right).toBeLessThanOrEqual(width + 1);
-    if (width < 768) {
+    if (width < 896) {
       expect(measure.introduction.right).toBeLessThanOrEqual(width + 1);
       expect(measure.portrait.right).toBeLessThanOrEqual(width + 1);
       expect(measure.introduction.bottom <= measure.portrait.top ||
@@ -70,5 +70,34 @@ test("relative layout survives larger text without cutting off page headings", a
     });
     expect(measured.left, route).toBeGreaterThanOrEqual(-2);
     expect(measured.right, route).toBeLessThanOrEqual(392);
+  }
+});
+
+test("the five approved breakpoint boundaries control responsive grids without overlap", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/about.html");
+  const thresholds = [24, 40, 56, 72, 88];
+  const points = thresholds.flatMap(em => [em * 16 - 1, em * 16]);
+  for (const width of points) {
+    await page.setViewportSize({ width, height: 900 });
+    const result = await page.evaluate(steps => {
+      const host = document.createElement("div");
+      host.style.width = "100%";
+      host.style.position = "absolute";
+      host.style.visibility = "hidden";
+      host.innerHTML = '<div class="grid"><span></span></div><div class="editorial-grid"><span></span></div>';
+      document.body.append(host);
+      const trackCount = selector => getComputedStyle(host.querySelector(selector))
+        .gridTemplateColumns.split(/\s+/).filter(Boolean).length;
+      const media = steps.map(value => matchMedia(`(min-width: ${value}em)`).matches);
+      const info = { grid: trackCount(".grid"), editorial: trackCount(".editorial-grid"), media };
+      host.remove();
+      return info;
+    }, thresholds);
+    expect(result.media, `media boundaries at ${width}px`)
+      .toEqual(thresholds.map(value => width >= value * 16));
+    expect(result.grid, `generic grid at ${width}px`).toBe(width >= 896 ? 12 : 4);
+    expect(result.editorial, `editorial grid at ${width}px`)
+      .toBe(width >= 1152 ? 12 : width >= 896 ? 8 : 4);
   }
 });

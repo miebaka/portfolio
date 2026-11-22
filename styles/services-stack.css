@@ -59,7 +59,7 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
 
 
 /* Desktop physical cards are an enhancement of the natural mobile list. */
-@media(min-width:48em){
+@media(min-width:56em){
   body[data-page="home"] .home-capabilities--reference{
     padding-bottom:clamp(calc(var(--spacing-unit) * 64),12vw,calc(var(--spacing-unit) * 112));
   }

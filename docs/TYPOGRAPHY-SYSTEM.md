@@ -69,11 +69,11 @@ The lint rule `scripts/stylelint-typography.mjs`, both typography tests and toke
 
 ## Mobile-first rebuild contract
 
-The responsive layouts use the four-column phone grid as the base. Editorial pages expand to eight columns at `48em` and twelve at `62em`. The generic shared grid switches to twelve tracks from `48em`. Layout files now use upward `min-width` queries in the homepage, editorial pages, footer, services, and Index.
+The responsive layouts use the four-column phone grid as the base. Editorial pages expand to eight columns at `56em` and twelve at `72em`. The generic shared grid switches to twelve tracks from `56em`. Layout files now use upward `min-width` queries in the homepage, editorial pages, footer, services, and Index.
 
 Home stays a natural document on mobile: its hero water remains interactive when WebGL2 is available, Selected Work keeps the physical file stack, What I Do is a readable nonsticky list, and the logo marquee respects reduced motion. The sticky service-card stack is a desktop enhancement, not a phone requirement.
 
-About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information from `62em`.
+About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information from `72em`.
 
 Keep `em` for typography, spacing, breakpoints and component dimensions. Painting edges and WebGL raster coordinates are not layout sizing scales. Interactive targets use the foundation-owned `--control-target` token, and JS reads `js/core/responsive.js`. The binding sizing contract is [`docs/SIZING-SYSTEM.md`](SIZING-SYSTEM.md). The folder controller measures native browser rectangles in CSS pixels but writes responsive dimensions back as `em`.
 
