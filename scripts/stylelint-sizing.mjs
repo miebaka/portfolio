@@ -16,7 +16,7 @@ const rawLength = /(^|[^\w-])-?(?:\d*\.)?\d+(?:em|rem|px)\b/i;
 export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
   if (!enabled) return;
   const file = root.source.input.file || "";
-  const ownsFoundations = /(?:^|[/\\])foundations\\.css$/.test(String(file).trim()) ||
+  const ownsFoundations = String(file).trim().endsWith("foundations.css") ||
     root.nodes.some(node => node.type === "rule" && node.selector === ":root" &&
       node.nodes.some(decl => decl.prop === "--grid-max"));
   const report = (node, message) => stylelint.utils.report({
@@ -48,7 +48,7 @@ export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
     if (!ownsFoundations && (outsideRoot.has(prop) || /^--s\d+$/.test(prop))) {
       report(decl, `Only foundations.css may define shared sizing token ${prop}`);
     }
-    if (!ownsFoundations && /(^|[^\\d])44px\\b/.test(value)) {
+    if (!ownsFoundations && /(^|[^\d])44px\b/.test(value)) {
       report(decl, "Use var(--control-target) rather than a raw 44px control size");
     }
     if (isSpacing.test(prop) && rawLength.test(value)) {
