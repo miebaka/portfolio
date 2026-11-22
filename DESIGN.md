@@ -1324,3 +1324,36 @@ These owner-approved changes supersede the preceding visual details where they c
 - **Case studies:** Preserve PR #46's five chapters and exact question descriptors, all case plates, native anchors and truthful evidence. Reveal **chapter headings, descriptors and body together**, both with JavaScript and without it. Never rely on raw DOM presence as proof of visible content.
 
 **Release acceptance:** enforce HTML/typography/static contracts, explicit five-chapter visible-browser assertions, complete project and service stack geometry/hit-target tests, theme/navigation/pill fallbacks, a no-bypass WebGL path, and Vercel preview inspection before merging.
+
+### Latest approved presentation — 22 November 2026, Home / Work / Footer
+
+This decision supersedes older references to upright Home case folders, a visible
+Home "Selected work" heading, an inert client marquee or footer links beneath
+the oversized signature. Preserve the existing hero-water, native navigation,
+case-study chapters, truthfulness and accessible interaction.
+
+- **Selected Work on Home:** the same compact landscape cardstock construction
+  as `work.html`: project colour, alternating number-only tabs, five static blank
+  papers and native links. The horizontal portrait rack and spine labels are retired.
+  The section retains `aria-label="Selected work"` but has no visible heading or
+  "All Work" CTA. The vertical folder-opening interaction is shared by both routes.
+- **What I Do:** native CSS sticky stacking in existing service order, ending on
+  yellow above purple. No hover-dependent choreography. Reserve a runway inside
+  the service stack so the final yellow panel actually covers earlier panels
+  before the independent client logo marquee begins; reduced-motion readers get
+  the static non-sticky sequence.
+- **Brands / marquee:** two identical tracks for seamless movement. While visible,
+  and unless motion is reduced, the rail travels continuously. Logos retain SVG
+  aspect ratios but share one rendered height; duplicates are aria-hidden.
+- **Footer:** adapt the observed Belonwus hierarchy, not its brand assets:
+  inquiry email and real internal/social links are placed above an oversized,
+  edge-to-edge **original interactive Miebaka script-name dot-matrix**. Keep its
+  authored SVG fallback, keyboard interaction, dark/light theme and intact links.
+  This footer layout is shared across the portfolio.
+
+**Authoritative source files:** `js/render/projects.js`,
+`js/core/project-folder-interactions.js`, `styles/project-folders.css`,
+`styles/home-folders.css`, `styles/home-experience.css`,
+`js/render/footer.js`, `styles/footer-layout.css`,
+`js/core/footer-signature.js`. Typography remains centralized in
+`styles/tokens.css`. Visual and automated contracts must be kept in sync.

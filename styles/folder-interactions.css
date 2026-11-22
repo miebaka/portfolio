@@ -57,8 +57,8 @@
   transform: translateY(-50%) scale(1);
 }
 
-/* The Work page retains its wide 47:38 sheets and full-length stacking.
-   Only the spacing calculation becomes interactive. */
+/* Both landscape racks share the same physical size and vertical pitch.
+   Work and Home differ in their containing section, not in folder behavior. */
 body:is([data-page="work"], [data-page="home"]) .project-folder-stack__cards.is-folder-interactive {
   min-height: 0;
 }

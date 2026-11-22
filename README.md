@@ -43,10 +43,10 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Base layouts, shared UI and page layout | `styles/layout.css`, `styles/components-v4.css`, `styles/pages-v4.css` |
 | Global CSS ordering | `styles/main.css` |
 | Physical Work folders | `styles/project-folders.css`, `js/render/projects.js`, `work.html` |
-| Homepage, services and current visual refinements | `styles/home.css`, `styles/services-stack.css`, `styles/portfolio-refinement.css` |
+| Homepage, services, marquee and current visual refinements | `styles/home.css`, `styles/services-stack.css`, `styles/home-experience.css`, `styles/portfolio-refinement.css` |
 | Navigation, index overlay and theme | `js/render/navigation.js`, `js/core/navigation.js`, `js/core/preferences.js` |
 | Server-rendered navigation/footer fallback | `scripts/render-partials.mjs` |
-| Interactive dot-matrix footer | `js/core/footer-signature.js` |
+| Footer links above interactive dot-matrix wordmark | `js/render/footer.js`, `styles/footer-layout.css`, `js/core/footer-signature.js` |
 | Three.js hero and fallback | `js/hero-water-three.js`, `js/core/hero-wave.js` |
 | Native service-card scrolling | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |

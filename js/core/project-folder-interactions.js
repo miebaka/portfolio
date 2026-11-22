@@ -1,28 +1,22 @@
-/* Shared landscape-folder rack interaction. Logical hit-testing means
-   overlapped folders remain individually reachable while their positions animate.
-   Native links and static folders work without JavaScript. */
+/* Both Home and Work use one vertical landscape-folder interaction.
+   Logical hit-testing keeps the overlapped native links reachable as folders
+   slide into view. Touch previews once, then navigates on the second tap. */
 import { navigateToCase } from "./case-route-transition.js";
 
 function enhance(list) {
   const folders = [...list.children].filter(el => el.matches(".project-folder"));
   if (!folders.length) return;
-  const standing = list.dataset.orientation === "portrait";
-  const viewport = standing ? list.closest(".home-folder-stack__viewport") : list.parentElement;
-  const sizeOf = () => standing ? folders[0].offsetWidth : folders[0].offsetHeight;
+  const viewport = list.parentElement;
   let active = -1;
   let pitch = 0;
   let size = 0;
-  let origin = 0;
   let lastPointer = "mouse";
   let touchPreview = -1;
   let frame = 0;
   let pending = 0;
   let entering = false;
 
-  const local = e => {
-    const rect = list.getBoundingClientRect();
-    return (standing ? e.clientX - rect.left : e.clientY - rect.top) - origin;
-  };
+  const local = event => event.clientY - list.getBoundingClientRect().top;
 
   function indexAt(value) {
     if (value < 0 || !size) return -1;
@@ -49,9 +43,8 @@ function enhance(list) {
     active = index;
     const reveal = size - pitch;
     folders.forEach((folder, i) => {
-      const offset = origin + i * pitch + (index >= 0 && i > index ? reveal : 0);
-      folder.style.setProperty("--folder-x", standing ? offset + "px" : "0px");
-      folder.style.setProperty("--folder-y", standing ? "0px" : offset + "px");
+      const offset = i * pitch + (index >= 0 && i > index ? reveal : 0);
+      folder.style.setProperty("--folder-y", offset + "px");
       folder.classList.toggle("is-active", i === index);
     });
     list.classList.toggle("has-active", index >= 0);
@@ -59,36 +52,24 @@ function enhance(list) {
   }
 
   function measure() {
-    const n = folders.length;
-    if (standing) {
-      size = sizeOf();
-      if (!size) return;
-      const available = viewport.clientWidth;
-      pitch = n > 2 ? Math.max(52, Math.min(88, (available - 2 * size) / (n - 2))) : 72;
-      const expanded = n === 1 ? size : 2 * size + (n - 2) * pitch;
-      origin = Math.max(0, (available - expanded) / 2);
-      list.style.width = Math.ceil(Math.max(available, origin + expanded + 4)) + "px";
-    } else {
-      // Use the ACTUAL space below the heading, not a width-derived file height.
-      // A fully opened middle/first folder takes 2 file-heights plus the
-      // visible pitches of any other folders. Reserve room for hover lift.
-      const home = document.body.dataset.page === "home";
-      const top = home
-        ? (document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72) + 24
-        : Math.max(0, viewport.getBoundingClientRect().top);
-      const available = Math.max(210, window.innerHeight - top - 22);
-      const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
-      list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
-      size = sizeOf();
-      if (!size) return;
-      const free = Math.max(0, available - 2 * size - 12);
-      pitch = n > 2
-        ? Math.max(18, Math.min(90, size * .34, free / (n - 2)))
-        : Math.min(90, size * .34);
-      origin = 0;
-      const expanded = n === 1 ? size : 2 * size + (n - 2) * pitch;
-      list.style.height = Math.ceil(expanded + 2) + "px";
-    }
+    // Work measures the space below its heading; Home is below the fold so
+    // measuring its initial absolute Y would make every folder far too short.
+    const home = document.body.dataset.page === "home";
+    const top = home
+      ? (document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72) + 24
+      : Math.max(0, viewport.getBoundingClientRect().top);
+    const available = Math.max(210, window.innerHeight - top - 22);
+    const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
+    list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
+    size = folders[0].offsetHeight;
+    if (!size) return;
+    const count = folders.length;
+    const free = Math.max(0, available - 2 * size - 12);
+    pitch = count > 2
+      ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
+      : Math.min(90, size * .34);
+    const expanded = count === 1 ? size : 2 * size + (count - 2) * pitch;
+    list.style.height = Math.ceil(expanded + 2) + "px";
     layout(active);
   }
 
@@ -175,15 +156,12 @@ function enhance(list) {
     addEventListener("pagehide", () => observer.disconnect(), { once: true });
   }
 
-  // Remeasure Work and Home on viewport height/width changes and font load.
-  {
-    const refresh = () => measure();
-    window.addEventListener("resize", refresh, { passive: true });
-    document.fonts?.ready?.then(refresh);
-    window.addEventListener("pagehide", () => {
-      window.removeEventListener("resize", refresh);
-    }, { once: true });
-  }
+  const refresh = () => measure();
+  window.addEventListener("resize", refresh, { passive: true });
+  document.fonts?.ready?.then(refresh);
+  window.addEventListener("pagehide", () => {
+    window.removeEventListener("resize", refresh);
+  }, { once: true });
 
   addEventListener("pagehide", () => {
     if (frame) cancelAnimationFrame(frame);

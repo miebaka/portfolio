@@ -83,7 +83,7 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Global layout | `styles/layout.css` |
 | Shared navigation/forms/footer/components | `styles/components-v4.css` |
 | Cross-page layouts and articles | `styles/pages-v4.css` |
-| Compact landscape Work folders and standing Home folders | `styles/project-folders.css`, `styles/home-folders.css`, `js/render/projects.js`, `work.html` |
+| Shared compact landscape folders on Home and Work | `styles/project-folders.css`, `styles/home-folders.css`, `js/render/projects.js`, `work.html` |
 | Approved current cross-page visual refinement | `styles/portfolio-refinement.css` |
 | Native scroll-driven services | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Seven homepage sections and scoped behavior | `styles/home.css` |
@@ -119,11 +119,11 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 **What I Do:** Use `data/services.js` for accurate service categories, descriptions, outputs and evidence links. Five discipline labels and published case-study chapter destinations are implemented; preserve their accurate, verifiable links and distinguish evidence from process explanations. Large photographic cards require accessible links, obvious scroll affordances, keyboard access and a layout that does not trap narrow-screen users in horizontal-only browsing.
 
-**Brands:** Existing `renderClients` duplicates the list for seamless marquee looping, calculates optical logo scale and pauses when hidden. Preserve the semantics, deduplicate visible accessibility announcements (`aria-hidden` on the duplicate), and verify real SVG geometry. Apply accurate labelling of client, employer and collaborator relationships; do not imply that every employment relationship was an agency client contract. Pause when `prefers-reduced-motion` or the site motion preference reduces motion, and account for focus/visibility.
+**Brands:** Existing `renderClients` duplicates the list for seamless marquee looping, preserves intrinsic SVG proportions at a shared display height, and pauses when hidden. Preserve the semantics, deduplicate visible accessibility announcements (`aria-hidden` on the duplicate), and verify real SVG geometry. Apply accurate labelling of client, employer and collaborator relationships; do not imply that every employment relationship was an agency client contract. Pause when `prefers-reduced-motion` or the site motion preference reduces motion, and account for focus/visibility.
 
 **CTA:** Primary contact paths must be real working links or validated forms. A decorative CTA animation cannot block the email link. Ensure text wrapping and target size on phones.
 
-**Footer:** Keep the interactive name-shaped dot matrix and its static SVG fallback. Pointer handlers are owned by the host while the canvas has `pointer-events:none`; do not reverse that architecture. Enhancement starts only when visible, rests when no interaction remains, stops in hidden/offscreen states and honors user/system reduced-motion settings. Keep lifecycle cleanup and theme synchronization tested.
+**Footer:** Place the complete contact/navigation/social links before the full-width wordmark, following the Belonwus reference hierarchy while retaining the original interactive name-shaped dot matrix and its static SVG fallback. Pointer handlers are owned by the host while the canvas has `pointer-events:none`; do not reverse that architecture. Enhancement starts only when visible, rests when no interaction remains, stops in hidden/offscreen states and honors user/system reduced-motion settings. Keep lifecycle cleanup and theme synchronization tested.
 
 ### 4.3 Other chapter contracts
 
@@ -262,7 +262,7 @@ The existing test suite checks document contracts, content schema, navigation, c
 | Hero | Static readable first paint, full/reduced motion, shader failure fallback, no major LCP regression |
 | Selected Work | Featured ordering, valid published links, project image visible at 320/390/430px, keyboard focus |
 | Services | Working evidence links, responsive cards, no scroll trap, focus-visible behavior |
-| Marquee | Optical logo sizing, hidden duplicate accessibility, reduced motion, visibility pause |
+| Marquee | Equal visible logo height, preserved SVG proportions, animated running state, hidden duplicate accessibility, reduced motion, visibility pause |
 | Footer | Host pointer interaction actually works, no blocked links, static fallback, cleanup on navigation |
 | Navigation | Open/close keyboard contract, Escape and focus restoration, theme/motion preference updates |
 | Case studies | All required content, truthful evidence status, image captions, next-case path |

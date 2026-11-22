@@ -1,5 +1,5 @@
-/* Full-width physical case folders: a letter-size 11 3/4 x 9 1/2 silhouette.
-   The site theme owns the page surface; only the folders have material colour. */
+/* Compact landscape case folders: full-width front, numbered tab, five blank
+   sheets, and a shared interaction on Home and Work. */
 body[data-page="work"] .project-archive--folders {
   width: calc(100% - 2 * var(--page));
   max-width: none;

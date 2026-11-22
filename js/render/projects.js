@@ -15,7 +15,7 @@ export function renderWork() {
 
 /* Home and Work share one physical landscape folder construction, with
    native case-study links and five non-interactive paper sheets. */
-function renderFolderCard(project, index, base, standing = false) {
+function renderFolderCard(project, index, base) {
   const slug = safeToken(project.slug);
   const title = esc(project.title);
   const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
@@ -25,16 +25,12 @@ function renderFolderCard(project, index, base, standing = false) {
   const papers = Array.from({ length: 5 }, (_, paperIndex) =>
     '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
     '" aria-hidden="true"></span>').join("");
-  const spine = standing
-    ? '<span class="project-folder__spine" aria-hidden="true">' + title + '</span>'
-    : "";
-
   return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
     '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
     '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study">' +
     '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
     '<span class="project-folder__tab-number">' + number + '</span></span></span>' + papers +
-    '<span class="project-folder__front">' + spine + '<strong class="project-folder__title">' +
+    '<span class="project-folder__front"><strong class="project-folder__title">' +
     title + '</strong></span></a></li>';
 }
 
