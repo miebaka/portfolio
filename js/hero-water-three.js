@@ -225,8 +225,9 @@ export function mountHeroWave(host,initialState){
   lightColor:{value:new Vector3()},lightDirection:{value:new Vector3(.025,.035,-1)},
   skyColor:{value:new Vector3()},nightFactor:{value:0}};
  let state={...initialState},destroyed=false,visible=true,frame=0,last=0,time=0,impulse=.7,steps=0,lastPointerAt=0;
- const motion=window.matchMedia?.("(prefers-reduced-motion: reduce)");
- const running=()=>Boolean(state.animate)&&!motion?.matches&&visible&&!document.hidden;
+ // One resolved motion preference controls the shader. Explicit Full must
+ // override OS Reduce instead of being blocked by a second matchMedia check.
+ const running=()=>Boolean(state.animate)&&visible&&!document.hidden;
  function pass(mat,target,inputs){
   mesh.material=mat;
   mat.uniforms.impulse.value=impulse;

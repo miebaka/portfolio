@@ -9,6 +9,7 @@ The site retains the original Three.js water (with a static fallback), the inter
 - **Motion preferences are authoritative.** The site's Reduce setting overrides system Full; its Full setting overrides system Reduce. In System mode, respect `prefers-reduced-motion`.
 - **Page-specific motion is owned by its feature.** Three.js handles the hero water, and the gallery handles its own poster transitions. Each controller must clean up listeners, observers and animation frames on teardown.
 - **Keep resources contained.** The hero water is lazily bundled; static fallbacks exist when WebGL is unsupported. No second global animation scheduler should load.
+- **One motion source of truth.** The renderer uses the controller's resolved `animate` flag. A second OS check must not defeat the visitor's explicit Full setting.
 - **Keyboard first.** Focus reveals the same information as hover. Avoid suppressing content or intercepting page scrolling to produce effects.
 
 ### Removed in the November 2026 cleanup
