@@ -225,21 +225,47 @@ body[data-page="contact"] .hero,body[data-page="privacy"] .hero,body[data-page="
 /* Work index — the 1800px Figma composition translated to a fluid editorial grid. */
 body[data-page="work"]{background:var(--paper);color:var(--ink)}
 body[data-page="work"] main{background:var(--paper)}
-body[data-page="work"] .project-archive__progress{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--s3);margin-top:clamp(7em,10vw,11em);padding-top:var(--s3);border-top:1px solid var(--line)}
-body[data-page="work"] .project-archive__progress-head{grid-column:1/6}
+body[data-page="work"] .project-archive__progress{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3);margin-top:5em;padding-top:var(--s3);border-top:1px solid var(--line)}
+body[data-page="work"] .project-archive__progress-head{grid-column:1}
 body[data-page="work"] .project-archive__progress-head p{max-width:30em;margin-top:var(--s2);color:var(--muted);}
-body[data-page="work"] .project-archive__progress ul{grid-column:7/-1;list-style:none}
+body[data-page="work"] .project-archive__progress ul{grid-column:1;margin-top:2em;list-style:none}
 body[data-page="work"] .project-archive__progress li{display:flex;justify-content:space-between;gap:var(--s2);padding:1.5em 0;border-bottom:1px solid var(--line);}
 body[data-page="work"] .project-archive__progress time{color:var(--muted)}
-body[data-page="work"] .project-archive__collections{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gap);margin-top:clamp(7em,12vw,13em);padding-top:var(--s3);border-top:1px solid var(--line)}
-body[data-page="work"] .project-archive__collections>div{grid-column:1/6}
+body[data-page="work"] .project-archive__collections{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--grid-gap);margin-top:5em;padding-top:var(--s3);border-top:1px solid var(--line)}
+body[data-page="work"] .project-archive__collections>div{grid-column:1}
 body[data-page="work"] .project-archive__eyebrow{color:var(--muted)}
 body[data-page="work"] .project-archive__collections h2{max-width:13ch;margin-top:var(--s2);}
-body[data-page="work"] .project-archive__collections ul{grid-column:7/-1;list-style:none}
+body[data-page="work"] .project-archive__collections ul{grid-column:1;margin-top:2em;list-style:none}
 body[data-page="work"] .project-archive__collections li{border-bottom:1px solid var(--line)}
-body[data-page="work"] .project-archive__collections a{display:grid;grid-template-columns:minmax(0,1fr) minmax(12em,1fr);gap:var(--s3);align-items:baseline;padding:1.5em 0;color:inherit;}
+body[data-page="work"] .project-archive__collections a{display:grid;grid-template-columns:minmax(0,1fr);gap:.5em;align-items:baseline;padding:1.5em 0;color:inherit;}
 body[data-page="work"] .project-archive__collections a small{color:var(--muted);}
 
+
+/* Published and in-progress Work files form a mobile reading list by default. */
+@media(min-width:48.001em){
+  body[data-page="work"] .project-archive__progress{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    margin-top:clamp(7em,10vw,11em);
+  }
+  body[data-page="work"] .project-archive__progress-head{grid-column:1/6}
+  body[data-page="work"] .project-archive__progress ul{
+    grid-column:7/-1;
+    margin-top:0;
+  }
+  body[data-page="work"] .project-archive__collections{
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    margin-top:clamp(7em,12vw,13em);
+  }
+  body[data-page="work"] .project-archive__collections>div{grid-column:1/6}
+  body[data-page="work"] .project-archive__collections ul{
+    grid-column:7/-1;
+    margin-top:0;
+  }
+  body[data-page="work"] .project-archive__collections a{
+    grid-template-columns:minmax(0,1fr) minmax(12em,1fr);
+    gap:var(--s3);
+  }
+}
 /* Project expression stays scoped to case content; navigation and footer remain portfolio-owned. */
 .case-page{--case-accent:var(--sys-color-primary);--case-tint:var(--accent-soft)}
 .case-page--rivo{--case-accent:var(--ref-rivo);--case-tint:color-mix(in srgb,var(--ref-rivo-light) 10%,var(--paper))}
@@ -268,7 +294,7 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
 
 @media(max-width:48em){
   body .site-nav{height:var(--nav-h);min-height:var(--nav-h)}body .site-nav__inner{height:var(--nav-h);padding-inline:1.25em;display:flex}body .nav-logo{width:2em;height:2em}body .site-nav__brand{width:3em;height:3em;min-width:3em;min-height:3em}body .site-nav__themes{margin-left:0}body .site-nav__links{color:var(--comp-nav-ink)}body .site-nav__link{justify-content:flex-start;color:var(--comp-nav-muted)}
-  body[data-page="work"] .project-archive{padding-block:6em 10em}body[data-page="work"] .project-archive__head{margin-bottom:5em}body[data-page="work"] .project-archive__progress,body[data-page="work"] .project-archive__collections{grid-template-columns:1fr;margin-top:5em}body[data-page="work"] .project-archive__progress-head,body[data-page="work"] .project-archive__collections>div{grid-column:1}body[data-page="work"] .project-archive__progress ul,body[data-page="work"] .project-archive__collections ul{grid-column:1;margin-top:2em}body[data-page="work"] .project-archive__collections a{grid-template-columns:1fr;gap:.5em}
+  
   body[data-page="writing"] .hero{padding-block:6em 5em}body[data-page="writing"] .section{padding-bottom:8em}body[data-page="writing"] .section-head{margin-bottom:3em}
   .editorial-index__row{min-height:11em;align-items:flex-start;padding-block:2em}.editorial-index--notes .writing-item__trailing{max-width:none}.editorial-index--notes .writing-item__summary{display:none}
   .editorial-index--notes .writing-item__identity>.writing-item__summary{display:block;}
