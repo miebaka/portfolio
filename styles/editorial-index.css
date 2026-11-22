@@ -11,7 +11,7 @@ body .site-nav__inner {
   display:grid;
   grid-template-columns:auto minmax(0,1fr) auto auto;
   align-items:center;
-  gap:clamp(.8em,2.3vw,2.25em);
+  gap:.45em;
   width:calc(100% - 2 * var(--page));
   max-width:var(--content);
   height:5.25em;
@@ -30,10 +30,10 @@ body .site-nav__menu-btn {
   display:inline-flex!important;
   align-items:center;
   justify-content:center;
-  gap:.7em;
-  min-width:6em;
+  gap:.45em;
+  min-width:4.5em;
   min-height:2.75em;
-  padding:.55em .8em;
+  padding:.45em .5em;
   border:1px solid var(--line);
   border-radius:0;
   background:transparent;
@@ -86,17 +86,17 @@ body .site-index__heading h2,body .site-index__close {
   color:var(--ink);}
 body .site-index .site-index__body {
   display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(16em,.6fr);
+  grid-template-columns:minmax(0,1fr);
   grid-template-rows:auto;
-  align-items:center;
-  min-height:calc(100dvh - 11em);
-  gap:clamp(2em,7vw,8em);
-  padding:clamp(2em,5vw,5em) 0;}
+  align-items:start;
+  min-height:0;
+  gap:2.5em;
+  padding:2em 0;}
 body .site-index__destinations{align-content:center}
 html body .site-index .site-index__link {
-  grid-template-columns:2.6em minmax(0,1fr);
-  min-height:clamp(4.25em,11vh,7.75em);
-  padding:clamp(.7em,1.8vw,1.5em) clamp(.75em,2vw,2em);
+  grid-template-columns:2em minmax(0,1fr);
+  min-height:3.9em;
+  padding:.7em .85em;
   border-bottom:1px solid var(--line);
   color:var(--ink);
   background:transparent;}
@@ -109,12 +109,12 @@ body .site-index .site-index__aside {
   display:grid;
   grid-template-columns:1fr;
   align-self:center;
-  gap:clamp(1.5em,3vw,3em);
-  padding:0;
+  gap:1.5em;
+  padding:0 0 var(--safe-bottom);
   border:0;}
 body .site-index__contact a{color:var(--ink)}
 body .site-index .site-index__cv span{color:var(--muted)}
-body .site-index__preferences{display:grid;gap:1.25em;min-width:0}
+body .site-index__preferences{display:grid;gap:.7em;min-width:0}
 body .site-index__preferences legend{color:var(--ink)}
 body .site-index__themes{background:var(--line)}
 body .site-index__themes button{background:var(--paper);color:var(--ink)}
@@ -147,17 +147,33 @@ body .site-footer__signature .site-footer__signature-canvas{
   opacity:.14;
   mix-blend-mode:soft-light;}
 :root[data-theme="dark"] body .site-footer__signature .site-footer__signature-canvas{opacity:.22;mix-blend-mode:screen}
-@media(max-width:47.999em){
-  body .site-nav__inner{grid-template-columns:auto minmax(0,1fr) auto auto;gap:.45em;width:calc(100% - 2 * var(--page))}
-  body .site-nav__menu-btn{min-width:4.5em;min-height:2.75em;gap:.45em;padding:.45em .5em;}
-  body[data-page] .site-nav__themes{margin:0}
-  body .site-index .site-index__body{grid-template-columns:minmax(0,1fr);gap:2.5em;align-items:start;min-height:0;padding:2em 0}
-  html body .site-index .site-index__link{min-height:3.9em;grid-template-columns:2em minmax(0,1fr);padding:.7em .85em}
-  body .site-index .site-index__aside{gap:1.5em;padding-bottom:var(--safe-bottom)}
-  body .site-index__preferences{display:grid;gap:.7em}
-}
-@media(max-width:23.5em){
-  body .site-nav__inner{grid-template-columns:auto 1fr auto auto}
+
+
+/* Responsive upgrades are additive: mobile Index remains complete by default. */
+@media(min-width:48em){
+  body .site-nav__inner{gap:clamp(.8em,2.3vw,2.25em)}
+  body .site-nav__menu-btn{
+    min-width:6em;
+    gap:.7em;
+    padding:.55em .8em;
+  }
+  body .site-index .site-index__body{
+    grid-template-columns:minmax(0,1.5fr) minmax(16em,.6fr);
+    align-items:center;
+    min-height:calc(100dvh - 11em);
+    gap:clamp(2em,7vw,8em);
+    padding:clamp(2em,5vw,5em) 0;
+  }
+  html body .site-index .site-index__link{
+    grid-template-columns:2.6em minmax(0,1fr);
+    min-height:clamp(4.25em,11vh,7.75em);
+    padding:clamp(.7em,1.8vw,1.5em) clamp(.75em,2vw,2em);
+  }
+  body .site-index .site-index__aside{
+    gap:clamp(1.5em,3vw,3em);
+    padding:0;
+  }
+  body .site-index__preferences{gap:1.25em}
 }
 @media(prefers-reduced-motion:reduce){
   body .site-nav__menu-mark::before,body .site-nav__menu-mark::after{transition:none}
