@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+# A new main commit supersedes its older visual/quality run. Do not waste
+# browser runners testing code that is no longer the branch head.
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     # Use GitHub's broadly available hosted Linux runner. The suite has no
