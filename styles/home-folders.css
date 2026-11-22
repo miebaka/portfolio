@@ -3,9 +3,9 @@
 body[data-page="home"] .home-content section.swiss-selected {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   min-height: 100svh;
-  padding-block: clamp(1rem, 3svh, 2.5rem);
+  padding-block: clamp(10rem, 25svh, 21rem) clamp(1.5rem, 3svh, 2.5rem);
   background: var(--paper);
   color: var(--ink);
 }
@@ -52,4 +52,27 @@ body[data-page="home"] .home-folder-stack .project-folder__front {
 
 body[data-page="home"] .home-folder-stack .project-folder__title {
   max-width: min(82%, 38ch);
+}
+
+/* Let the names sit within the exposed third of the stacked folders.
+   Descriptive metadata becomes fully readable as the chosen folder opens. */
+body[data-page="home"] .home-folder-stack .project-folder__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(.3rem, .7vw, .75rem);
+  width: 100%;
+}
+
+body[data-page="home"] .home-folder-stack .project-folder__preview {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  max-width: min(40rem, 90%);
+}
+
+@media (max-width: 48rem) {
+  body[data-page="home"] .home-content section.swiss-selected {
+    padding-block-start: clamp(7rem, 19svh, 13rem);
+  }
 }

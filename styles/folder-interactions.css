@@ -85,3 +85,12 @@ html[data-motion="reduced"] .project-folder-stack__cards.is-folder-interactive .
 html[data-motion="reduced"] .project-folder-stack__cards.is-folder-interactive .project-folder__tab::before {
   transition: none;
 }
+
+/* Home's taller paper folders need less vertical lift than Work's short ones. */
+body[data-page="home"] .home-folder-stack__cards.is-folder-interactive .project-folder.is-active {
+  --folder-lift: -8px;
+}
+
+body[data-page="home"] .home-folder-stack__cards.is-folder-interactive .project-folder.is-going {
+  --folder-lift: -14px;
+}

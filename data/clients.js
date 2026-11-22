@@ -30,13 +30,13 @@ export const clients = [
     "logo": "assets/images/clients/riv-techcreek.svg",
     "logoW": 40,
     "logoH": 40,
-    "optical": 0.96
+    "optical": 1.2
   },
   {
     "name": "WellaHealth Technologies",
     "logo": "assets/images/clients/wellahealth-technologies.svg",
     "logoW": 360,
     "logoH": 40,
-    "optical": 1.03
+    "optical": 1.08
   }
 ];
