@@ -108,11 +108,12 @@ test("footer social links stay visually clean", () => {
   }
 });
 
-test("Print and Screen remain explicit in the accessible Index preferences", () => {
+test("Index offers clearly labelled theme and motion choices", () => {
   const html = renderIndexMarkup();
   assert.match(html, /<legend>Theme<\/legend>/);
-  assert.match(html, /data-theme-choice="light"[^>]*aria-pressed="false">Print/);
-  assert.match(html, /data-theme-choice="dark"[^>]*aria-pressed="false">Screen/);
+  for (const mode of ["system", "light", "dark"]) assert.ok(html.includes('data-theme-choice="' + mode + '"'));
+  assert.match(html, /data-motion-choice="reduce"[^>]*>Reduce motion/);
+  assert.doesNotMatch(html, /Print<span>|Screen<span>/);
 });
 
 
