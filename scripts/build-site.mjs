@@ -137,7 +137,11 @@ for (const file of rootFiles) {
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
 }
 await ensureCopy(join(root, "robots.txt"), join(output, "robots.txt"));
-try { await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest")); } catch {}
+try {
+  await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest"));
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
 await writeFile(join(output, "sitemap.xml"), sitemap);
 await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));

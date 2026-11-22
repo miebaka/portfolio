@@ -481,7 +481,11 @@ test("Vercel configuration is valid and serves the static build", async () => {
   assert.ok(config.headers?.length);
   const header = (source, key) =>
     config.headers.find((rule) => rule.source === source)?.headers.find((item) => item.key === key)?.value;
-  assert.equal(header("/api/(.*)", "Cache-Control"), "no-store");
+  assert.equal(header("/api/contact", "Cache-Control"), "no-store");
+  assert.equal(header("/api/(.*)", "Cache-Control"), undefined,
+    "the Last.fm GET endpoint must be free to set a short shared cache at runtime");
+  const nowPlayingApi = await readFile(join(root, "api", "now-playing.js"), "utf8");
+  assert.match(nowPlayingApi, /s-maxage=60/);
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/assets/runtime/(.*)", "Cache-Control"), "public, max-age=0, must-revalidate");
@@ -569,12 +573,13 @@ test("CSP inventory permits every executable inline script and stages dependency
       assert.match(vercel, pattern, file);
     }
   }
-  assert.match(vercel, /Content-Security-Policy-Report-Only/);
-  const vercelCandidate = JSON.parse(vercel).headers[0].headers.find(
-    (item) => item.key === "Content-Security-Policy-Report-Only",
-  ).value;
-  assert.doesNotMatch(vercelCandidate, /audioscrobbler|report-uri|report-to/i);
-  assert.doesNotMatch(vercelCandidate, /upgrade-insecure-requests/i);
+  assert.doesNotMatch(vercel, /Content-Security-Policy-Report-Only/,
+    "an unenforced duplicate policy without a report endpoint serves no purpose");
+  const enforced = JSON.parse(vercel).headers[0].headers.find(
+    item => item.key === "Content-Security-Policy"
+  )?.value;
+  assert.match(enforced, /default-src 'self'/);
+  assert.match(enforced, /upgrade-insecure-requests/);
 });
 
 test("sitemap does not claim dates it cannot maintain", async () => {

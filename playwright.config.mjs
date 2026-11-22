@@ -8,8 +8,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  // Shared macOS runners serialize GPU work poorly; one CI worker keeps the
-  // WebGL assertions deterministic without weakening coverage or timeouts.
+  // One worker keeps shader and visual assertions deterministic in CI.
   workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI
     ? [["line"], ["html", { outputFolder: "playwright-report", open: "never" }],
@@ -27,19 +26,10 @@ export default defineConfig({
     video: "retain-on-failure"
   },
   projects: [
-    { name: "desktop", testIgnore: "**/work-cabinet-gpu.spec.mjs",
+    { name: "desktop",
       use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 } } },
-    { name: "mobile", testIgnore: "**/work-cabinet-gpu.spec.mjs",
-      use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } },
-    // Separately force a software WebGL2 backend in CI so the 3D cabinet
-    // *must* render rather than silently skipping all the meaningful checks.
-    { name: "cabinet-gpu", testMatch: "**/work-cabinet-gpu.spec.mjs",
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 1000 },
-        launchOptions: { args: [
-          "--use-gl=angle", "--use-angle=swiftshader",
-          "--enable-unsafe-swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"
-        ] }
-      } }
+    { name: "mobile",
+      use: { ...devices["iPhone 13"], browserName: "chromium", viewport: { width: 390, height: 844 } } }
   ],
   webServer: {
     command: "npm run build && node scripts/serve-static.mjs dist 4173",

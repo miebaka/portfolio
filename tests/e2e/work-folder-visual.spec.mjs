@@ -85,7 +85,7 @@ test("wide Work folders retain five blank sheets and readable titles across view
       document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
     await page.locator(".project-folder-stack__stage").screenshot({
-      path: `test-results/cabinet-${width}-${testInfo.project.name}.png`,
+      path: `test-results/folder-${width}-${testInfo.project.name}.png`,
       animations: "disabled"
     });
   }

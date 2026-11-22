@@ -37,12 +37,12 @@ jobs:
       - run: npm run quality
       # Keep visual evidence even on green builds; passing functional tests
       # alone cannot establish convincing physical materials or tab alignment.
-      - name: Upload Work cabinet visual evidence
+      - name: Upload Work folder visual evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: work-cabinet-visual-review
-          path: test-results/cabinet-*.png
+          name: work-folder-visual-review
+          path: test-results/folder-*.png
           if-no-files-found: ignore
           retention-days: 14
       # audit:shipped blocks releases; audit:dev-tools reports pinned LHCI/tooling
