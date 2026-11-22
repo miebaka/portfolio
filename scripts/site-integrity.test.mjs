@@ -607,9 +607,16 @@ test("dead listening integration stays removed and privacy copy matches browser 
   await assert.rejects(access(join(root, "api", "now-playing.js")));
   assert.doesNotMatch(site, /initNowPlaying|now-playing/);
   assert.doesNotMatch(config, /lastfmUser|lastfmKey/);
-  assert.doesNotMatch(privacy, /Last\\.fm|latest listening status|All fonts and images are served from this domain/i);
+  assert.doesNotMatch(privacy, /Last\.fm|latest listening status|All fonts and images are served from this domain/i);
   assert.match(privacy, /Geist text fonts load from jsDelivr/);
   assert.match(privacy, /colour-theme and motion preferences/);
+  for (const unused of [
+    "assets/fonts/Archivo-Variable.woff2",
+    "assets/fonts/FinlandicaText-Variable.woff2",
+    "assets/fonts/HostGrotesk-Variable.woff2",
+    "api/lib/mail-service.js",
+    "docs/work-filing-cabinet-threejs.md",
+  ]) await assert.rejects(access(join(root, unused)), unused);
 });
 
 test("retired source systems cannot return unnoticed", async () => {
