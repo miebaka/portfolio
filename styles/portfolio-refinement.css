@@ -141,6 +141,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
   min-height: clamp(25rem, 68svh, 44rem);
   border-radius: clamp(1rem, 2vw, 2rem);
   padding: clamp(2rem, 4.5vw, 5rem);
+
   /* Keep the proof link above the next card's physical overlap. */
   padding-bottom: calc(clamp(2rem, 4.5vw, 5rem) + clamp(2.5rem, 11svh, 6.5rem));
   box-shadow: 0 -.2rem .2rem rgb(0 0 0 / .06), 0 1.2rem 2.5rem rgb(0 0 0 / .13);}
