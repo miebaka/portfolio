@@ -8,13 +8,13 @@ export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
   if (!el) return;
   el.className = "home-project-list";
-  el.dataset.workView = "standing-folders";
+  el.dataset.workView = "landscape-folders";
   if (el.dataset.prerendered !== "true")
     el.innerHTML = renderHomeProjectList(SITE.projects, SITE.caseStudies, basePath());
 }
 
-/* Identical physical construction on both pages. Only its orientation
-   and interaction axis differ: Home stands, Work remains landscape. */
+/* Home and Work share one physical landscape folder construction, with
+   native case-study links and five non-interactive paper sheets. */
 function renderFolderCard(project, index, base, standing = false) {
   const slug = safeToken(project.slug);
   const title = esc(project.title);
@@ -45,11 +45,11 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
       studies?.[project.slug]?.status === "published")
     .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
       (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
-  return '<div class="home-folder-stack"><div class="home-folder-stack__viewport" role="region" ' +
-    'aria-label="Browse selected case-study folders horizontally" tabindex="0">' +
+  return '<div class="home-folder-stack project-folder-stack"><div class="home-folder-stack__viewport">' +
+    '<div class="project-folder-stack__stage">' +
     '<ol class="project-folder-stack__cards home-folder-stack__cards" aria-label="Selected case studies">' +
-    selected.map((project, index) => renderFolderCard(project, index, base, true)).join("") +
-    '</ol></div></div>';
+    selected.map((project, index) => renderFolderCard(project, index, base)).join("") +
+    '</ol></div></div></div>';
 }
 
 export function renderProjectArchive() {

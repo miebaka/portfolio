@@ -1,212 +1,31 @@
-/* Standing versions of the exact Work folder: same front/back, tab,
-   five stationery sheets, project colors, and native case links. */
-body[data-page="home"] .swiss-selected {
-  padding-block: clamp(3.5rem, 7vw, 6.5rem);
-  background: var(--paper);
-  color: var(--ink);
-}
-
-body[data-page="home"] .swiss-selected .swiss-section-head {
-  position: static;
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: var(--content);
-  margin: 0 auto clamp(1.5rem, 4vw, 3.5rem);
-  padding: 0;
-  overflow: visible;
-  clip-path: none;
-}
-
-body[data-page="home"] .home-project-list {
-  width: 100%;
-  max-width: var(--content);
-  color: var(--ink);
-}
-
-.home-folder-stack {
-  width: 100%;
-  min-width: 0;
-}
-
-.home-folder-stack__viewport {
-  width: 100%;
-  padding: 0 0 .5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: thin;
-  overscroll-behavior-x: contain;
-  touch-action: pan-x;
-}
-
-.home-folder-stack__viewport:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: -3px;
-}
-
-.home-folder-stack__cards {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(.75rem, 2vw, 1.5rem);
-  width: max-content;
-  min-width: 100%;
-  height: clamp(20rem, 65vw, 39rem);
-  margin: 0;
-  padding: 0 0 .75rem;
-  list-style: none;
-  isolation: isolate;
-}
-
-.home-folder-stack__cards .project-folder,
-.home-folder-stack__cards .project-folder + .project-folder {
-  position: relative;
-  flex: none;
-  width: auto;
-  height: calc(100% - .75rem);
-  min-width: 0;
-  max-width: none;
-  margin: 0;
-  aspect-ratio: .66;
-  --folder-back-top: clamp(1.65rem, 3vw, 2.5rem);
-}
-
-.home-folder-stack__cards .project-folder__back {
-  border-radius: .35rem .55rem .25rem .25rem;
-}
-
-.home-folder-stack__cards .project-folder__tab,
-.home-folder-stack__cards .project-folder:nth-child(2) .project-folder__tab,
-.home-folder-stack__cards .project-folder:nth-child(3) .project-folder__tab {
-  top: auto;
-  right: auto;
-  bottom: calc(100% - .12rem);
-  left: 4%;
-  width: 37%;
-  height: var(--folder-back-top);
-  transform: none;
-}
-
-.home-folder-stack__cards .project-folder__front {
-  inset: 22% 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(1rem, 2vw, 2rem);
-}
-
-.home-folder-stack__cards .project-folder__spine {
-  position: absolute;
-  z-index: 2;
-  top: 1.5rem;
-  bottom: 1.5rem;
-  left: clamp(.8rem, 1.3vw, 1.4rem);
-  display: block;
-  max-height: calc(100% - 3rem);
-  overflow: hidden;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  transition: opacity 220ms ease;
-}
-
-.home-folder-stack__cards .project-folder__title {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  margin-inline-start: clamp(1rem, 2.5vw, 3rem);
-  opacity: 0;
-  transform: translateY(.5rem);
-  transition: opacity 220ms ease, transform 360ms var(--editorial-ease);
-}
-
-.home-folder-stack__cards .project-folder.is-active .project-folder__title,
-.home-folder-stack__cards .project-folder:focus-within .project-folder__title,
-.home-folder-stack__cards:not(.is-folder-interactive) .project-folder__title {
-  opacity: 1;
-  transform: none;
-}
-
-.home-folder-stack__cards .project-folder.is-active .project-folder__spine,
-.home-folder-stack__cards .project-folder:focus-within .project-folder__spine,
-.home-folder-stack__cards:not(.is-folder-interactive) .project-folder__spine {
-  opacity: 0;
-}
-
-.home-folder-stack__cards.is-folder-interactive {
-  position: relative;
-  display: block;
-  min-width: 100%;
-  gap: 0;
-}
-
-.home-folder-stack__cards.is-folder-interactive .project-folder,
-.home-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
-  position: absolute;
-  top: auto;
-  right: auto;
-  bottom: 0;
-  left: 0;
-  margin: 0;
-  transform: translate3d(var(--folder-x, 0), var(--folder-lift, 0), 0);
-}
-
-body[data-page="home"] .home-project-list .work-view-controls {
-  margin-top: clamp(2rem, 5vw, 4rem);
-}
-
-@media (max-width: 48rem) {
-  .home-folder-stack__cards {
-    height: clamp(20rem, 86vw, 31rem);
-    justify-content: flex-start;
-  }
-  .home-folder-stack__cards .project-folder__front {
-    padding: clamp(.8rem, 3vw, 1.4rem);
-  }
-  .home-folder-stack__cards .project-folder__title {
-    margin-inline-start: 1.25rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) .home-folder-stack__cards .project-folder__title,
-  html:not([data-motion="full"]) .home-folder-stack__cards .project-folder__spine {
-    transition: none;
-  }
-}
-
-html[data-motion="reduced"] .home-folder-stack__cards .project-folder__title,
-html[data-motion="reduced"] .home-folder-stack__cards .project-folder__spine {
-  transition: none;
-}
-
-/* The entire Home Selected Work presentation occupies a viewport. Unlike the
-   Work index, its files remain upright; content can pan horizontally on
-   narrow devices rather than shrinking the stationery into tiny cards. */
+/* The Home rack deliberately uses the same landscape folders and vertical
+   opening interaction as Work. Only the section's screen-height framing differs. */
 body[data-page="home"] section.swiss-selected {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 100svh;
-  padding-block: clamp(1rem, 2.5svh, 2.25rem);
+  padding-block: clamp(1rem, 3svh, 2.5rem);
+  background: var(--paper);
+  color: var(--ink);
 }
 
-body[data-page="home"] section.swiss-selected .swiss-section-head {
-  margin-bottom: clamp(.75rem, 2svh, 1.5rem);
+body[data-page="home"] .swiss-selected .home-project-list,
+body[data-page="home"] .home-folder-stack,
+body[data-page="home"] .home-folder-stack__viewport {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
 }
 
-body[data-page="home"] section.swiss-selected .home-project-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+body[data-page="home"] .home-folder-stack__viewport {
+  overflow: visible;
+}
+
+body[data-page="home"] .home-folder-stack .project-folder-stack__stage {
+  margin: 0;
 }
 
 body[data-page="home"] .home-folder-stack__cards {
-  height: clamp(20rem, calc(100svh - var(--nav-h) - 7rem), 70rem);
-}
-
-@media (max-width: 48rem) {
-  body[data-page="home"] .home-folder-stack__cards {
-    height: clamp(18rem, calc(100svh - var(--nav-h) - 6.5rem), 48rem);
-  }
+  width: 100%;
 }

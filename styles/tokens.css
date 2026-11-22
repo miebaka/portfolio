@@ -1341,28 +1341,6 @@ body[data-page="home"] .swiss-selected .swiss-section-head h2 {
   text-transform: none;
 }
 
-/* Standing Home case folders preserve Work's material styling but use
-   a smaller, readable label system within their portrait front pockets. */
-body[data-page="home"] .home-folder-stack__cards .project-folder__title {
-  font: var(--type-weight-semibold) clamp(1.125rem, 2.7vw, 2.1rem)/1.13 var(--font-sans);
-  letter-spacing: var(--type-tracking-heading);
-  overflow-wrap: anywhere;
-  text-wrap: balance;
-}
-body[data-page="home"] .home-folder-stack__cards .project-folder__spine {
-  font: var(--type-weight-semibold) clamp(.7rem, 1vw, .85rem)/1.2 var(--font-mono);
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
-
-body[data-page="home"] .home-folder-stack__cards .project-folder__spine {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-body[data-page="home"] .home-folder-stack__cards .project-folder__title {
-  overflow-wrap: anywhere;
-}
-
 /* The viewport-height Work rack uses the same Geist roles at a readable,
    compact scale. The Home portrait folders have their own stronger title. */
 body[data-page="work"] .project-folder__title {

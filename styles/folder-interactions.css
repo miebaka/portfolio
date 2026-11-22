@@ -59,12 +59,12 @@
 
 /* The Work page retains its wide 47:38 sheets and full-length stacking.
    Only the spacing calculation becomes interactive. */
-body[data-page="work"] .project-folder-stack__cards.is-folder-interactive {
+body:is([data-page="work"], [data-page="home"]) .project-folder-stack__cards.is-folder-interactive {
   min-height: 0;
 }
 
-body[data-page="work"] .project-folder-stack__cards.is-folder-interactive .project-folder,
-body[data-page="work"] .project-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
+body:is([data-page="work"], [data-page="home"]) .project-folder-stack__cards.is-folder-interactive .project-folder,
+body:is([data-page="work"], [data-page="home"]) .project-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
   position: absolute;
   top: 0;
   left: 0;
@@ -72,19 +72,6 @@ body[data-page="work"] .project-folder-stack__cards.is-folder-interactive .proje
   bottom: auto;
   width: 100%;
   aspect-ratio: 47 / 38;
-}
-
-/* The same controller runs on Home, but the folders are standing,
-   with a horizontal logical pitch instead of Work's vertical pitch. */
-.home-folder-stack__cards.is-folder-interactive .project-folder,
-.home-folder-stack__cards.is-folder-interactive .project-folder + .project-folder {
-  top: auto;
-  right: auto;
-  bottom: 0;
-  width: auto;
-  height: calc(100% - .75rem);
-  aspect-ratio: .66;
-  transform: translate3d(var(--folder-x, 0), var(--folder-lift, 0), 0);
 }
 
 @media (prefers-reduced-motion: reduce) {

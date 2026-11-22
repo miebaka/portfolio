@@ -1,13 +1,12 @@
-/* The supplied Folder Rack HTML's logical hit-testing, spread, and
-   touch-to-preview interaction, adapted to two DISTINCT orientations:
-   standing (Home, x-axis) and wide landscape (Work, y-axis).
-   Native links and static folders remain usable without JavaScript. */
+/* Shared landscape-folder rack interaction. Logical hit-testing means
+   overlapped folders remain individually reachable while their positions animate.
+   Native links and static folders work without JavaScript. */
 import { navigateToCase } from "./case-route-transition.js";
 
 function enhance(list) {
   const folders = [...list.children].filter(el => el.matches(".project-folder"));
   if (!folders.length) return;
-  const standing = list.classList.contains("home-folder-stack__cards");
+  const standing = list.dataset.orientation === "portrait";
   const viewport = standing ? list.closest(".home-folder-stack__viewport") : list.parentElement;
   const sizeOf = () => standing ? folders[0].offsetWidth : folders[0].offsetHeight;
   let active = -1;
@@ -73,7 +72,10 @@ function enhance(list) {
       // Use the ACTUAL space below the heading, not a width-derived file height.
       // A fully opened middle/first folder takes 2 file-heights plus the
       // visible pitches of any other folders. Reserve room for hover lift.
-      const top = Math.max(0, viewport.getBoundingClientRect().top);
+      const home = document.body.dataset.page === "home";
+      const top = home
+        ? (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 75) + 24
+        : Math.max(0, viewport.getBoundingClientRect().top);
       const available = Math.max(210, window.innerHeight - top - 22);
       const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
       list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
@@ -173,11 +175,8 @@ function enhance(list) {
     addEventListener("pagehide", () => observer.disconnect(), { once: true });
   }
 
-  // Height-only viewport changes (including mobile browser chrome and rotated
-  // screens) must resize the Work cards even when their width is unchanged.
+  // Remeasure Work and Home on viewport height/width changes and font load.
   {
-    // Height-only viewport changes (rotation, window resize, browser chrome)
-    // must remeasure both the upright Home rack and the compact Work rack.
     const refresh = () => measure();
     window.addEventListener("resize", refresh, { passive: true });
     document.fonts?.ready?.then(refresh);
