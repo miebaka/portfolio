@@ -7,7 +7,7 @@ body[data-page="home"] .home-content section.swiss-selected {
   flex-direction: column;
   justify-content: flex-end;
   min-height: 100svh;
-  padding-block: clamp(4em, 10svh, 8em) clamp(1em, 2svh, 2em);
+  padding-block: clamp(3.5em, 9svh, 6em) clamp(1em, 2svh, 2em);
   background: var(--paper);
   color: var(--ink);
 }
@@ -74,16 +74,18 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
 }
 
 @media (max-width: 48em) {
-  body[data-page="home"] .home-content section.swiss-selected {
-    padding-block-start: clamp(3.5em, 9svh, 6em);
-  }
-
   body[data-page="home"] .home-folder-stack .project-folder__outcome {
     display: none;
   }
 
   body[data-page="home"] .home-folder-stack .project-folder__copy {
     gap: .5em;
+  }
+}
+
+@media (min-width: 48.001em) {
+  body[data-page="home"] .home-content section.swiss-selected {
+    padding-block-start: clamp(4em, 10svh, 8em);
   }
 }
 
