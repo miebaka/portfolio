@@ -10,7 +10,7 @@ const descriptors = [
   "What changed because this existed, and how do I know?"
 ];
 
-test("all five PR #46 chapters and their exact questions actually become visible", async ({ page }) => {
+test("all five case-study questions are immediately readable without reveal observers", async ({ page }) => {
   for (const route of cases) {
     await page.goto(route);
     const chapters = page.locator(".case-chapter");
@@ -20,7 +20,7 @@ test("all five PR #46 chapters and their exact questions actually become visible
     for (let i = 0; i < 5; i++) {
       const chapter = chapters.nth(i);
       await chapter.scrollIntoViewIfNeeded();
-      await expect(chapter).toHaveClass(/is-revealed/);
+      await expect(chapter).toBeVisible();
       for (const selector of [".case-chapter__intro", ".case-chapter__heading", ".case-chapter__body"]) {
         await expect(chapter.locator(selector)).toHaveCSS("opacity", "1");
       }
@@ -33,7 +33,7 @@ test("all five PR #46 chapters and their exact questions actually become visible
         });
       });
       for (const part of visible) {
-        expect(part.opacity, route + " chapter " + i + " must actually reveal").toBeGreaterThan(.98);
+        expect(part.opacity, route + " chapter " + i + " must be readable").toBeGreaterThan(.98);
         expect(part.visible).toBe("visible");
         expect(part.height).toBeGreaterThan(0);
       }

@@ -36,8 +36,19 @@ test("Last.fm pill follows the logo, reflects real status, and Index inverts wit
           (document.documentElement.clientWidth / 2)
       };
     });
-    expect(colors.fill).toBe(colors.ink);
-    expect(colors.text).toBe(colors.paper);
+    // Root tokens change immediately, while the button's CSS transition
+    // finishes a fraction of a second later. Assert the settled state.
+    await expect.poll(() => page.locator(".site-nav__menu-btn").evaluate(button => {
+      const style = getComputedStyle(button);
+      const probe = document.createElement("span");
+      probe.style.color = "var(--ink)";
+      document.body.append(probe);
+      const ink = getComputedStyle(probe).color;
+      probe.style.color = "var(--paper)";
+      const paper = getComputedStyle(probe).color;
+      probe.remove();
+      return style.backgroundColor === ink && style.color === paper;
+    })).toBe(true);
     expect(Math.abs(colors.offset)).toBeLessThan(4);
   }
 });
@@ -92,7 +103,8 @@ test("a previously live track clears when Last.fm goes offline", async ({ page }
       body: '{"error":"Listening status unavailable"}'
     });
   });
-  await page.goto("/index.html");
+  // The local static test server has no Vercel Function; opt in to mock fetch.
+  await page.goto("/index.html?now-playing-test=1");
   const pill = page.locator(".now-playing");
   await expect(pill).toContainText("Now playing");
   await expect(pill).toHaveAttribute("data-live", "true");

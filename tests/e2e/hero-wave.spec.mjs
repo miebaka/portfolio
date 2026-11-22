@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import sharp from "sharp";
 
-test("hero wave uses the authored palette in both themes", async ({ page }) => {
+test("one Three.js caustic shader responds to both themes", async ({ page }) => {
   await page.goto("/?shader-test=1&shader-static=1");
   const wave = page.locator("[data-hero-wave]");
   await expect(wave).toHaveClass(/is-ready/);
@@ -9,12 +9,7 @@ test("hero wave uses the authored palette in both themes", async ({ page }) => {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     await expect(wave).toHaveAttribute("data-preset", `${theme === "light" ? "Light" : "Dark"} water plane`);
   }
-  const palette = await page.evaluate(() => {
-    const styles = getComputedStyle(document.documentElement);
-    return ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"]
-      .map(token => styles.getPropertyValue(token).trim().replaceAll(" ", ""));
-  });
-  expect(palette).toEqual(["#07112b", "#002080", "#b1c5ff"]);
+  await expect(wave).toHaveAttribute("data-water-theme", "light");
 });
 
 test("static hero wave has genuine tonal relief", async ({ page }) => {
@@ -76,8 +71,8 @@ test("light-front caustics show clear overhead daylight and restrained moonlight
 });
 
 test("privacy-restricted mobile renderer works without the shader-test bypass", async ({ page }) => {
-  // Chromium is instrumented to expose the generic GPU identity common on
-  // Safari. shader-perf opts automation in but does NOT bypass GPU detection.
+  // Generic GPU identities are common on Safari. The real WebGL2 renderer
+  // must still mount without any software-GPU detection bypass.
   await page.addInitScript(() => {
     const context = WebGL2RenderingContext.prototype;
     const getExtension = context.getExtension;
@@ -91,11 +86,28 @@ test("privacy-restricted mobile renderer works without the shader-test bypass", 
       return getParameter.call(this, name);
     };
   });
-  await page.goto("/?shader-perf=1&shader-static=1");
+  await page.goto("/?shader-static=1");
   const wave = page.locator("[data-hero-wave]");
   await expect(wave).toHaveClass(/is-ready/);
   await expect(wave.locator("canvas")).toHaveCount(1);
   await expect(wave).toHaveAttribute("data-caustics", "refracted-lightfront");
+});
+
+test("mobile without WebGL2 gets a static fallback, never the retired ring animation", async ({ page }) => {
+  await page.addInitScript(() => {
+    const getContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+      if (type === "webgl2") return null;
+      return getContext.call(this, type, ...args);
+    };
+  });
+  await page.goto("/");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveAttribute("data-renderer", "fallback");
+  await expect(wave).toHaveAttribute("data-fallback-reason", "renderer-init");
+  await expect(wave).toHaveClass(/is-fallback/);
+  await expect(wave.locator("canvas")).toHaveCount(0);
+  expect(await wave.evaluate(node => getComputedStyle(node, "::after").content)).toBe("none");
 });
 
 test("a lost Three.js context shows water fallback instead of a blank canvas", async ({ page }) => {
@@ -107,5 +119,6 @@ test("a lost Three.js context shows water fallback instead of a blank canvas", a
   });
   await expect(wave).toHaveClass(/is-fallback/);
   await expect(wave).toHaveAttribute("data-renderer", "fallback");
+  await expect(wave).toHaveAttribute("data-fallback-reason", "context-lost");
   await expect(wave.locator("canvas")).toHaveCSS("opacity", "0");
 });

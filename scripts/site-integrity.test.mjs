@@ -307,8 +307,8 @@ test("hero water ships a bounded Three.js GPU fluid simulation with graceful fal
   const island = await readFile(join(root, "js", "hero-water-three.js"), "utf8");
   const runtime = await readFile(join(dist, "assets", "runtime", "hero-wave.js"), "utf8");
   const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
-  for (const token of ["--hero-wave-color-1", "--hero-wave-color-2", "--hero-wave-color-3"])
-    assert.match(source, new RegExp(token));
+  // A shader's actual WebGL uniforms, not unused stylesheet tokens, own its palette.
+  assert.match(source, /assets\\/runtime\\/hero-wave\\.js\\?rev=/);
   for (const contract of [
     /WebGLRenderer/, /WebGLRenderTarget/, /HalfFloatType/,
     /const advect=/, /const divergence=/, /const jacobi=/, /const project=/,
@@ -326,7 +326,7 @@ test("hero water ships a bounded Three.js GPU fluid simulation with graceful fal
   assert.match(source, /Pause background motion/);
   assert.match(source, /setPointer/);
   assert.match(runtime, /WebGLRenderer|WebGLRenderTarget|webgl2/i);
-  assert.match(foundations, /--hero-wave-color-1:var\(--ref-midnight\)/);
+  assert.doesNotMatch(foundations, /--hero-wave-color-|--ref-water-ripple-/);
   assert.doesNotMatch(source + island, /ShaderGradient|shader-background|ref-shader/);
 });
 
@@ -484,6 +484,7 @@ test("Vercel configuration is valid and serves the static build", async () => {
   assert.equal(header("/api/(.*)", "Cache-Control"), "no-store");
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
+  assert.equal(header("/assets/runtime/(.*)", "Cache-Control"), "public, max-age=0, must-revalidate");
   for (const rule of config.headers) {
     for (const item of rule.headers || []) {
       if (/immutable/i.test(item.value))
