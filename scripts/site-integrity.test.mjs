@@ -667,6 +667,16 @@ test("retired source systems cannot return unnoticed", async () => {
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
+test("retired page prototypes and temporary motion engines are absent", async () => {
+  const css = await readFile(join(root, "styles", "pages-v4.css"), "utf8");
+  const types = await readFile(join(root, "styles", "tokens.css"), "utf8");
+  const script = await readFile(join(root, "js", "main.js"), "utf8");
+  assert.doesNotMatch(css, /decision-field|experiment-tunnel|disciplines-index|impeccable-motion/);
+  assert.doesNotMatch(types, /experiment-tunnel/);
+  assert.doesNotMatch(script, /scroll-experience|editorial-reveals|initMotionLanguage/);
+  assert.doesNotMatch(css, /project-(?:image|copy)-enter/);
+});
+
 test("case chapters and Home proof remain visible without reveal observers", async () => {
   const css = await readFile(join(root, "styles", "pages-v4.css"), "utf8");
   const homeCss = await readFile(join(root, "styles", "home.css"), "utf8");

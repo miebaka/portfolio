@@ -444,7 +444,7 @@ body .case-chapter h2{font-size:var(--type-heading-md);font-weight:var(--type-we
 
 .experiments-spatial__heading p{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase}
 
-.experiment-tunnel__card span{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase;text-align:left}
+
 
 
 @media(max-width:48rem){.about-hero__copy h1{font-size:var(--type-heading-lg)}
