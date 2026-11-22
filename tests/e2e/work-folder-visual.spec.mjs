@@ -37,6 +37,8 @@ test("wide Work folders retain five blank sheets and readable titles across view
         stageBackground: getComputedStyle(stage).backgroundColor,
         stageImage: getComputedStyle(stage).backgroundImage,
         paperCount: papers.length,
+        frontGrain: getComputedStyle(folder.querySelector(".project-folder__front"), "::before").backgroundImage,
+        foldScore: getComputedStyle(folder.querySelector(".project-folder__front"), "::after").backgroundImage,
         papers: papers.map(paper => ({
           top: rect(paper).top,
           bottom: rect(paper).bottom,
@@ -50,12 +52,14 @@ test("wide Work folders retain five blank sheets and readable titles across view
     expect(measurements.map(item => item.href)).toEqual(expected.map(item => item.href));
     for (const item of measurements) {
       const ratio = item.bounds.width / item.bounds.height;
-      expect(ratio, "folders must be wider than they are tall").toBeGreaterThan(1.3);
+      expect(ratio, "folder must follow real letter-size file proportions").toBeCloseTo(11.75 / 9.5, 2);
       expect(item.bounds.width, "each folder must occupy most of the page width").toBeGreaterThan(width * .75);
       expect(item.bounds.right).toBeLessThanOrEqual(width + 1);
       expect(item.stageBackground).toBe("rgba(0, 0, 0, 0)");
       expect(item.stageImage).toBe("none");
       expect(item.paperCount).toBe(5);
+      expect(item.frontGrain, "front cardstock needs a subtle fibre grain").toContain("repeating-linear-gradient");
+      expect(item.foldScore, "front cover needs a pressure score").toContain("linear-gradient");
       expect(item.papers[0].top, "first paper must sit inside the rear panel").toBeGreaterThanOrEqual(item.back.top - 1);
       expect(item.papers[4].top, "last paper must sit behind the front pocket").toBeLessThan(item.face.top);
       for (const paper of item.papers) {
