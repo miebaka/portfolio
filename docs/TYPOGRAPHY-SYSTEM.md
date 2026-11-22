@@ -75,7 +75,7 @@ Home stays a natural document on mobile: its hero water remains interactive when
 
 About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information from `62em`.
 
-Keep `em` for typography, spacing, breakpoints and component dimensions. Fixed one-pixel material edges, outlines, the accessibility-required 44px control targets, native viewport units and WebGL canvas pixel coordinates are documented exceptions. The folder controller measures native browser rectangles in CSS pixels but writes responsive dimensions back as `em`.
+Keep `em` for typography, spacing, breakpoints and component dimensions. Painting edges and WebGL raster coordinates are not layout sizing scales. Interactive targets use the foundation-owned `--control-target` token, and JS reads `js/core/responsive.js`. The binding sizing contract is [`docs/SIZING-SYSTEM.md`](SIZING-SYSTEM.md). The folder controller measures native browser rectangles in CSS pixels but writes responsive dimensions back as `em`.
 
 Run `npm run test:relative` and `npm run test:e2e`. The browser suite includes the main public routes at widths 320, 390, 768, 1024 and 1440 pixels, as well as 200% enlarged-text checks. Do not accept a stylesheet-only pass as visual sign-off.
 

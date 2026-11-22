@@ -5,6 +5,7 @@ A static-first design portfolio built with HTML, CSS, vanilla ES modules and a N
 - **Visual direction and current approved behavior:** [`DESIGN.md`](DESIGN.md) (latest decision appendix takes precedence over historical proposals).
 - **Engineering, security and release requirements:** [`engineering-specification.md`](engineering-specification.md).
 - **Typography:** [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md), enforced by `styles/tokens.css`.
+- **One sizing contract:** [`docs/SIZING-SYSTEM.md`](docs/SIZING-SYSTEM.md), enforcing typography, spacing, container/grid and breakpoint sizing without parallel page scales.
 
 ## Run locally
 
@@ -39,7 +40,9 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Essays and experiments | `data/writing.js` and `assets/experiments/` |
 | Composition of public data for renderers | `data/site.js` (facade; do **not** duplicate or author content here) |
 | Typography, including every font/size/text declaration | `styles/tokens.css` |
-| Colour, spacing, motion and layout tokens | `styles/foundations.css` |
+| Colour, motion and shared spacing/geometry tokens | `styles/foundations.css` |
+| Approved spacing and breakpoint enforcement | `scripts/stylelint-sizing.mjs`, `scripts/sizing-contract.test.mjs` |
+| Browser viewport decisions | `js/core/responsive.js` |
 | Base layouts, shared UI and page layout | `styles/layout.css`, `styles/components-v4.css`, `styles/pages-v4.css` |
 | Global CSS ordering | `styles/main.css` |
 | Physical Work and Home folders | `styles/project-folders.css`, `styles/home-folders.css`, `styles/folder-interactions.css`, `js/core/project-folder-interactions.js`, `js/render/projects.js` |

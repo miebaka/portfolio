@@ -295,10 +295,10 @@ Stylelint rule `portfolio/typography-tokens`, `npm run test:typography` and the 
 
 ### 3.3 Grid, widths and spacing
 
-The existing document specifies a **12-column editorial grid** with generous outer margins; implementation owns `--page`, `--content`, `--grid-gap`, `--section-padding` and the `--s1…--s12` spacing scale.
+The binding four-system sizing contract is [`docs/SIZING-SYSTEM.md`](docs/SIZING-SYSTEM.md). Typography lives only in `styles/tokens.css`; spacing in `styles/foundations.css`; containers and grids use the same `--page`, `--content` and `--grid-gap` foundation tokens through `styles/layout.css`; responsive breakpoints are enforced by `scripts/stylelint-sizing.mjs`. The mobile editorial grid starts with four columns, expands to eight at `48em` and twelve at `62em`. The standard `.grid` grows from four to twelve at `48em`.
 
 - At wide screens, content aligns with the shared max-width and grid edges.
-- Full-bleed or frame-bleed sections are named exceptions, not arbitrary margin escapes.
+- Full-bleed or frame-bleed sections express their geometry with the canonical layout variables; they do not introduce another container scale.
 - Use the same section-heading rhythm and baseline alignment across Home, About, Work and Essays.
 - Preserve strong negative space, but do not use excessive blank space when it buries a CTA or makes important content difficult to reach.
 - The layout must work at **320, 360, 390, 430, 768, 1024, 1280, 1440, 1800 and 1920 CSS pixels**, with additional dynamic checks between breakpoints.
@@ -306,15 +306,16 @@ The existing document specifies a **12-column editorial grid** with generous out
 - `100svh` is preferable to unstable viewport assumptions for framed mobile hero behavior, with safe-area support.
 - Mobile uses deliberate stacking/recomposition, not one-column leftovers from desktop.
 
-Suggested responsive rules are **behavioral**, not a command to create dozens of breakpoints:
+Responsive viewport queries MUST use exactly the five approved thresholds. Any new query width fails CI:
 
-| Range | Required behavior |
+| Approved boundary | Required behavior |
 | --- | --- |
-| 320–479px | Single-column content, visible work thumbnails, comfortable horizontal padding, touch-safe controls |
-| 480–767px | Still content-first; balanced type, no hidden vital imagery, no forced oversized frames |
-| 768–1023px | Tablet compositions, adjusted column distribution and reliable navigation |
-| 1024–1439px | Desktop 12-column system with flexible spans and coordinated work hover presentation |
-| 1440px+ | Controlled max width, intentional negative space, no type or images expanding without limit |
+| Below `25em` | Compact controls and readable Work folders |
+| `25em`–`39.999em` | Phone-first single-column content with comfortable margins |
+| `40em`–`47.999em` | Natural mobile reading order; no forced sticky cards |
+| `48em`–`61.999em` | Tablet composition and eight-track editorial grid |
+| `62em`–`71.999em` | Twelve-column editorial layout, wider index and evidence |
+| From `72em` | Wide-screen refinements within the same `86em` maximum container |
 
 ### 3.4 Radius, surfaces, strokes, shadows
 
@@ -1374,10 +1375,10 @@ Removed as dead visual code: `styles/project-roster.css`, `styles/optical-lens.c
 
 ### Mobile-first proportional sizing — 22 November 2026
 
-The current sizing system is based on the visitor's inherited font size, **not pixel presets**. Mobile is the starting composition: `styles/layout.css` defines four grid tracks and `styles/foundations.css` defines comfortable phone gutters, navigation height and section spacing; `@media (min-width: 48.001em)` progressively expands these foundations into twelve desktop tracks. Home hero and profile also begin with their mobile reading order and enhance at larger viewports. Existing component-specific small-screen safeguards remain in place until individually simplified and visually regression-tested.
+The current sizing system is based on the visitor's inherited font size, **not pixel presets**. Mobile is the starting composition: `styles/layout.css` defines four grid tracks and `styles/foundations.css` defines comfortable phone gutters, navigation height and section spacing; `@media (min-width: 48em)` expands the standard grid to twelve tracks, while editorial layouts have an intermediate eight-track tablet composition. Home hero and profile also begin with their mobile reading order and enhance at larger viewports. Component media-query widths use the single approved breakpoint table; independent page-specific viewport thresholds are prohibited.
 
 - All authored typography remains centralized in `styles/tokens.css`, with `em` size bounds. The system remains Geist Sans for headlines and body, Geist Mono for labels.
 - Relative `em` units are used for **typography, spacing, component layout, and responsive image-size hints**. An `em` is based on the font size of the element (or its parent for `font-size` itself). Deliberately test nested type scales to avoid compounded growth.
-- Hairline borders, optical shading, raster textures, focus outlines, one-pixel clipping utilities and **44 CSS-pixel minimum tap targets** may retain device-pixel values. Three.js and pointer interactions continue to use pixel measurements because the browser's canvas and pointer APIs require pixel-space coordinates.
+- Painting details and native WebGL raster/pointer coordinates are rendering primitives, not competing layout sizing scales. The shared accessible touch target is `--control-target: max(44px, 2.75em)`; all page and component styles consume that token rather than writing independent 44px lengths. Browser viewport decisions are centralized in `js/core/responsive.js`.
 - Viewport, percentage, `ch`, `svh`, `vw`, `fr` and intrinsic sizing remain where their semantics are correct. Replacing these with `em` would make layout less adaptive, not more.
 - The `npm run test:relative` gate prevents accidental fixed-size CSS regressions. Validate reflow at 320, 390, 430, 768, 1024, 1440 CSS pixels **and** increased browser default text size or zoom. Preserve water, physical folder layering, focus and reduced-motion behavior.
