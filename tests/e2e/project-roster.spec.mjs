@@ -105,7 +105,9 @@ test("hover lifts the right Home folder into reserved space without moving the o
   expect(title.y, "project name stays in the raised exposed flap").toBeGreaterThan(activeFirst.y);
   expect(title.y + title.height, "hovered title must remain above the next folder")
     .toBeLessThan(second.y - 6);
-  await page.mouse.move(second.x + 25, second.y + 12);
+  // The active file still covers the next file's top paper edge.
+  // Hover the exposed folder body, not the intentionally overlapping lip.
+  await page.mouse.move(second.x + 25, second.y + Math.max(48, second.height * .12));
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "1");
   await expect(folders.nth(1)).toHaveClass(/is-active/);
 });
