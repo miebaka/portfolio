@@ -480,3 +480,24 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__evid
   scroll-margin-top: calc(var(--nav-h) + 2rem);
 }
 
+
+/* Align the masthead to the actual outer boundaries of the Three.js water
+   rectangle (home .home-landing uses margin: var(--hf)). */
+body[data-page]:not(.site-system-disabled) .site-nav__inner {
+  width: calc(100% - 2 * var(--water-edge, clamp(.75rem,1.25vw,1.35rem)));
+  max-width: none;
+  margin-inline: var(--water-edge, clamp(.75rem,1.25vw,1.35rem));
+  padding-inline: 0;
+}
+body[data-page="home"] { --water-edge: var(--hf); }
+body[data-page] .site-nav__brand { justify-items: start; }
+body[data-page] .nav-logo { width: 2.5rem; height: 2.5rem; }
+body[data-page] .site-nav__themes { justify-self: end; margin-inline-end: 0; }
+body[data-page] .site-nav__listening {
+  flex: 0 1 21rem;
+  width: clamp(12rem,22vw,21rem);
+  max-width: min(35vw,21rem);
+}
+@media(max-width: 52rem) {
+  body[data-page] .site-nav__listening { width: 2.7rem; max-width: 2.7rem; flex: none; }
+}

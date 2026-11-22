@@ -6,14 +6,14 @@
   --icon: "Material Symbols Outlined";
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
-  --type-label: .8125rem;
-  --type-caption: .875rem;
+  --type-label: 1rem;
+  --type-caption: 1rem;
   --type-input: 1rem;
-  --type-body: 1.0625rem;
-  --type-body-lg: clamp(1.0625rem, 1rem + .4vw, 1.25rem);
-  --type-lead: clamp(1.25rem, 1.125rem + .9vw, 1.75rem);
-  --type-heading-sm: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
-  --type-heading-md: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  --type-body: 1rem;
+  --type-body-lg: clamp(1rem, .95rem + .3vw, 1.125rem);
+  --type-lead: clamp(1.5rem, 1.1rem + 1.4vw, 2rem);
+  --type-heading-sm: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --type-heading-md: clamp(2rem, 1.6rem + 1.6vw, 3rem);
   --type-heading-lg: clamp(2.5rem, 1.75rem + 2.8vw, 4.5rem);
   --type-display: clamp(3.25rem, 2.25rem + 4.2vw, 6rem);
   --type-hero: clamp(3.5rem, 2.2rem + 7vw, 10rem);
@@ -23,15 +23,15 @@
   --type-inline-mark: .35em;
   --type-leading-hero: .92;
   --type-leading-display: 1;
-  --type-leading-heading: 1.12;
+  --type-leading-heading: 1.08;
   --type-leading-ui: 1.3;
-  --type-leading-body: 1.5;
+  --type-leading-body: 1.35;
   --type-leading-reading: 1.65;
   --type-tracking-display: -.055em;
-  --type-tracking-heading: -.025em;
+  --type-tracking-heading: -.015em;
   --type-tracking-normal: 0;
   --type-tracking-ui: .04em;
-  --type-tracking-label: .08em;
+  --type-tracking-label: -.005em;
   --type-tracking-label-wide: .12em;
 }
 
@@ -1331,3 +1331,35 @@ body[data-page] .now-playing__track {
 body[data-page="explorations"] .experiments-empty { text-align: center; }
 body[data-page="explorations"] .experiments-empty a { text-decoration: underline; }
 body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }
+
+/* BELONWUS audit (2026-11-22, 1440px): 16px/1 UI and metadata,
+   16px/1.35 project text, 32px/1 section and 32px/1.35 feature lead.
+   These are mapped to Geist's existing roles, not copied font assets. */
+body[data-page="home"] .swiss-selected .swiss-section-head h2 {
+  font: var(--type-weight-regular) var(--type-heading-md)/var(--type-leading-display) var(--font-sans);
+  letter-spacing: var(--type-tracking-heading);
+  text-transform: none;
+}
+body[data-page] .folder-rack__tab,
+body[data-page] .folder-rack__lip,
+body[data-page] .folder-rack__vertical-name,
+body[data-page] .folder-rack__index,
+body[data-page] .folder-rack__hint {
+  font: var(--type-weight-regular) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+}
+body[data-page] .folder-rack__tab,
+body[data-page] .folder-rack__lip,
+body[data-page] .folder-rack__index { font-size: .6875rem; }
+body[data-page] .folder-rack__vertical-name { font-size: .75rem; letter-spacing: .1em; }
+body[data-page] .folder-rack__hint { font-size: .6875rem; }
+body[data-page] .folder-rack__number {
+  font: 300 clamp(2.75rem, 6.5vh, 4.25rem)/1 var(--font-sans);
+  letter-spacing: -.04em;
+}
+body[data-page] .folder-rack__name {
+  font: var(--type-weight-semibold) clamp(1.125rem,2.6vh,1.5rem)/1.15 var(--font-sans);
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+}
