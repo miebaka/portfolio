@@ -326,6 +326,9 @@ test("hero water ships a bounded Three.js GPU fluid simulation with graceful fal
   assert.match(source, /Pause background motion/);
   assert.match(source, /setPointer/);
   assert.match(runtime, /WebGLRenderer|WebGLRenderTarget|webgl2/i);
+  assert.match(island, /uniform vec4 rippleEvents\[4\]/);
+  assert.match(island, /sunward-caustics/);
+  assert.match(source, /20261122-refract-lightfront/);
   assert.doesNotMatch(foundations, /--hero-wave-color-|--ref-water-ripple-/);
   assert.doesNotMatch(source + island, /ShaderGradient|shader-background|ref-shader/);
 });

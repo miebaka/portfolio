@@ -71,6 +71,8 @@ test("light-front caustics show clear overhead daylight and restrained moonlight
   const wave = page.locator("[data-hero-wave]");
   await expect(wave).toHaveClass(/is-ready/);
   await expect(wave).toHaveAttribute("data-caustics", "refracted-lightfront");
+  await expect(wave).toHaveAttribute("data-lighting", "sunward-caustics");
+  await expect(wave).toHaveAttribute("data-pointer-light", "refracted-impulses");
   await expect(wave).toHaveAttribute("data-light-source", "sun");
   const sunlight = await sharp(await wave.screenshot({ scale: "css" })).stats();
 

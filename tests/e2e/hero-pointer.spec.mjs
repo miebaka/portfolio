@@ -38,6 +38,9 @@ test("hero pointer input uses cursor on desktop and touch ripples on mobile", as
     await expect.poll(async () => Number(await host.getAttribute("data-cursor-x"))).toBeLessThan(-.5);
     await expect.poll(async () => Number(await host.getAttribute("data-cursor-y"))).toBeLessThan(-.4);
   }
+  await expect(host).toHaveAttribute("data-lighting", "sunward-caustics");
+  await expect(host).toHaveAttribute("data-pointer-light", "refracted-impulses");
+  await expect.poll(async () => Number(await host.getAttribute("data-pointer-wave-count"))).toBeGreaterThan(0);
   await expect(host).toHaveAttribute("data-ripple-brush", "150px");
   await expect(host).toHaveAttribute("data-ripple-rings", "4");
   if (isMobile) {

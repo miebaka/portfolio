@@ -36,3 +36,25 @@ Retain tests for water fallback and pointer ripples, native page scroll, all cas
   the revision so already-cached mobile browsers cannot keep an old effect.
 - The host reports `data-renderer` and `data-fallback-reason` to distinguish
   a working GPU shader from module load, initialization, or context loss.
+
+
+## Refract-inspired water direction (November 2026)
+The Hallmark Refract pool demo demonstrates a useful visual principle:
+the lightfront, not decorative noise or blue gradients, should carry the
+scene. Its caustics drift slowly, with dark valleys between bright folded
+seams, a sunward lighting bias, faint spectral splitting, and short-lived
+pointer distortions. We adapt those principles to our existing Three.js
+lightfront projection and GPU fluid; we do not copy Hallmark's shader.
+
+Light mode includes subtle sunlight falloff toward the top-right of the
+pool, restrained refracted limestone joints, concentrated highlights and
+gentle RGB dispersion. Pointer and touch events add up to four fading
+lightfront impulses (caustic UV refraction and crest glints), alongside
+the existing fluid height-field, within the existing renderer and render
+targets. The autonomous ripples are slower and less forceful.
+
+The GPU solver, 24 fps cap, mobile resolution budget, pause/resume,
+offscreen pause, and static/no-WebGL fallback remain intact. Pointer
+input is passive and never blocks scrolling. Pointer cancellation resets
+the field. Rebuild with `npm run build:hero` and update the revisioned
+shader import on every shader change.

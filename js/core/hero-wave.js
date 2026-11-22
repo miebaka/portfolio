@@ -20,7 +20,7 @@ export async function initHeroWave({
   document: doc = globalThis.document,
   window: win = globalThis.window,
   // Revisioned to bypass older cached shader bundles on mobile browsers.
-  loadRenderer = () => import("../../assets/runtime/hero-wave.js?rev=20261122-mobile-caustics"),
+  loadRenderer = () => import("../../assets/runtime/hero-wave.js?rev=20261122-refract-lightfront"),
 } = {}) {
   const parameters = new URLSearchParams(win?.location?.search || "");
   const testOptIn = parameters.has("shader-test");
@@ -128,6 +128,7 @@ export async function initHeroWave({
     pendingPointer = { x: 0, y: 0, force: 0, quiet: true, source: "static" };
     if (!pointerFrame) pointerFrame = win.requestAnimationFrame(applyPointer);
   };
+  const onPointerCancel = () => resetPointer();
   const onPointerLeave = event => {
     if (event.pointerType !== "touch") {
       resetPointer();
@@ -168,6 +169,7 @@ export async function initHeroWave({
   landing.addEventListener("pointermove", onPointerMove, { passive: true });
   landing.addEventListener("pointerdown", onPointerDown, { passive: true });
   landing.addEventListener("pointerleave", onPointerLeave, { passive: true });
+  landing.addEventListener("pointercancel", onPointerCancel, { passive: true });
   win.addEventListener("blur", resetPointer);
   const canvas = host.querySelector("canvas");
   const markReady = async () => {
@@ -206,6 +208,7 @@ export async function initHeroWave({
     landing.removeEventListener("pointermove", onPointerMove);
     landing.removeEventListener("pointerdown", onPointerDown);
     landing.removeEventListener("pointerleave", onPointerLeave);
+    landing.removeEventListener("pointercancel", onPointerCancel);
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     if (touchReleaseFrame) win.cancelAnimationFrame(touchReleaseFrame);
