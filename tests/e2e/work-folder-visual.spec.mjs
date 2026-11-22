@@ -32,6 +32,7 @@ test("wide Work folders retain five blank sheets and readable titles across view
         href: link.getAttribute("href"),
         bounds: rect(folder).toJSON(),
         back: rect(folder.querySelector(".project-folder__back")).toJSON(),
+        tab: rect(folder.querySelector(".project-folder__tab")).toJSON(),
         face: face.toJSON(),
         title: title.toJSON(),
         stageBackground: getComputedStyle(stage).backgroundColor,
@@ -50,8 +51,13 @@ test("wide Work folders retain five blank sheets and readable titles across view
     }));
 
     expect(measurements.map(item => item.href)).toEqual(expected.map(item => item.href));
-    for (const item of measurements) {
+    for (const [index, item] of measurements.entries()) {
       const ratio = item.bounds.width / item.bounds.height;
+      const tabCentre = (item.tab.left + item.tab.right) / 2;
+      const tabOffset = (tabCentre - item.bounds.left) / item.bounds.width;
+      if (index === 0) expect(tabOffset).toBeLessThan(.35);
+      if (index === 1) expect(tabOffset).toBeCloseTo(.5, 2);
+      if (index === 2) expect(tabOffset).toBeGreaterThan(.65);
       expect(ratio, "folder must follow real letter-size file proportions").toBeCloseTo(11.75 / 9.5, 2);
       expect(item.bounds.width, "each folder must occupy most of the page width").toBeGreaterThan(width * .75);
       expect(item.bounds.right).toBeLessThanOrEqual(width + 1);
