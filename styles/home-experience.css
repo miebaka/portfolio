@@ -346,3 +346,19 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   body[data-page="home"] .journey{padding-block:clamp(3em,5vw,6em)}
   body[data-page="home"] .client-proof{gap:clamp(5em,9vw,10em)}
 }
+
+
+/* Keep OS and explicit reduced motion readable after desktop sticky upgrades. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+    position: relative;
+    top: auto;
+    margin-bottom: 1em;
+  }
+}
+
+html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  position: relative;
+  top: auto;
+  margin-bottom: 1em;
+}
