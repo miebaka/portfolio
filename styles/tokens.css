@@ -6,16 +6,16 @@
   --icon: "Material Symbols Outlined";
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
-  --type-label: clamp(.8125rem, .79rem + .12vw, .875rem);
-  --type-caption: clamp(.875rem, .84rem + .15vw, 1rem);
-  --type-input: 1rem;
-  --type-body: 1rem;
-  --type-body-lg: clamp(1rem, .98rem + .18vw, 1.125rem);
-  --type-lead: clamp(1.125rem, 1.02rem + .4vw, 1.375rem);
-  --type-heading-sm: clamp(1.25rem, 1.08rem + .56vw, 1.625rem);
-  --type-heading-md: clamp(1.5rem, 1.24rem + 1vw, 2.125rem);
-  --type-heading-lg: clamp(2rem, 1.55rem + 1.7vw, 3rem);
-  --type-signature: clamp(2rem, 5vw, 4.5rem);
+  --type-label: clamp(.8125em, .79em + .12vw, .875em);
+  --type-caption: clamp(.875em, .84em + .15vw, 1em);
+  --type-input: 1em;
+  --type-body: 1em;
+  --type-body-lg: clamp(1em, .98em + .18vw, 1.125em);
+  --type-lead: clamp(1.125em, 1.02em + .4vw, 1.375em);
+  --type-heading-sm: clamp(1.25em, 1.08em + .56vw, 1.625em);
+  --type-heading-md: clamp(1.5em, 1.24em + 1vw, 2.125em);
+  --type-heading-lg: clamp(2em, 1.55em + 1.7vw, 3em);
+  --type-signature: clamp(2em, 5vw, 4.5em);
   --type-signature-vw: 5vw;
   --type-signature-wide-vw: 5.8vw;
   --type-inline-mark: .35em;
@@ -161,7 +161,7 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .field label{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase}
 
-@media(max-width:40rem){
+@media(max-width:40em){
 .site-index__link>span:last-child{font-size:var(--type-heading-lg)}
 
 .site-index .site-index__close{font-size:var(--type-label)}
@@ -198,7 +198,7 @@ a[href]:hover{text-decoration-color:currentColor}
 /* The mailto remains primary; this adds a small,reversible utility beside it. */
 .copy-email{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase;}
 
-@media(max-width:48rem){
+@media(max-width:48em){
 .site-footer__signature{font-size:var(--type-signature-vw);letter-spacing:var(--type-tracking-tight);}
 }
 
@@ -313,7 +313,7 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .case-page .case-next__state{font-size:var(--type-caption)}
 
-@media(max-width:48rem){
+@media(max-width:48em){
 
 .hero__title{font-size:var(--type-heading-lg)}
 
@@ -363,7 +363,7 @@ body[data-page="work"] .project-archive__collections a small{font:var(--type-wei
 .experiments-spatial__hint{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);letter-spacing:var(--type-tracking-label);white-space:nowrap;}
 
 
-@media(max-width:48rem){
+@media(max-width:48em){
 body .site-nav__menu-btn{font-size:var(--type-label);letter-spacing:var(--type-tracking-label)}
 body[data-page="work"] .project-archive__head h1{font-size:var(--type-heading-lg)}
 body[data-page="writing"] .hero__title{font-size:var(--type-heading-lg)}
@@ -374,7 +374,7 @@ body[data-page="writing"] .hero__title{font-size:var(--type-heading-lg)}
 }
 
 
-@media(max-width:40rem){
+@media(max-width:40em){
   .experiments-spatial__hint{font-size:var(--type-label)}
 }
 
@@ -383,7 +383,7 @@ body[data-page="writing"] .hero__title{font-size:var(--type-heading-lg)}
 body .case-chapter__copy::before{font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-tight);}
 body .case-chapter h2{font-size:var(--type-heading-md);font-weight:var(--type-weight-regular);line-height:var(--type-leading-heading);letter-spacing:var(--type-tracking-heading);}
 
-@media(max-width:48rem){.case-chapter h2{font-size:var(--type-heading-md)}
+@media(max-width:48em){.case-chapter h2{font-size:var(--type-heading-md)}
 }
 
 .about-hero__copy>p{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase}
@@ -439,7 +439,7 @@ body .case-chapter h2{font-size:var(--type-heading-md);font-weight:var(--type-we
 
 
 
-@media(max-width:48rem){.about-hero__copy h1{font-size:var(--type-heading-lg)}
+@media(max-width:48em){.about-hero__copy h1{font-size:var(--type-heading-lg)}
 .about-editorial__copy p,.about-editorial__copy--large p{font-size:var(--type-heading-sm)}
 .experience-ruler__scale{font-size:var(--type-label);letter-spacing:var(--type-tracking-normal)}
 .experience-ruler__period{text-align:right}
@@ -484,7 +484,7 @@ body[data-page="explorations"] .experiments-spatial__heading h1{font:var(--type-
 .experiments-index button b{font:var(--type-weight-regular) var(--type-heading-sm)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-heading);text-wrap:balance}
 .experiments-index button i{font:var(--type-weight-regular) var(--type-caption)/var(--type-leading-ui) var(--font-sans);font-style:normal;}
 
-@media(max-width:48rem){.experiments-spatial__heading dt{font-size:var(--type-label)}
+@media(max-width:48em){.experiments-spatial__heading dt{font-size:var(--type-label)}
 .experiments-spatial__heading dd{font-size:var(--type-label)}
 }
 
@@ -496,7 +496,7 @@ body[data-page="about"] .experience-ruler__scale{font-size:var(--type-label)}
 body[data-page="about"] .experience-ruler__period{font-size:var(--type-label)}
 
 
-@media(max-width:48rem){
+@media(max-width:48em){
   body[data-page="about"] .experience-ruler__scale{font-size:var(--type-label);letter-spacing:var(--type-tracking-normal)}
 }
 
@@ -576,7 +576,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   text-wrap: wrap;}
 
 
-@media (max-width: 40rem) {
+@media (max-width: 40em) {
 
   .case-page:not(.design-audit-disabled) .case-opening h1 {
     font-size:var(--type-heading-lg);
@@ -656,7 +656,7 @@ body.case-page .case-chapter__heading{font:var(--type-weight-semibold) var(--typ
 
 body.case-page .case-chapter__body{font-size:var(--type-body-lg);line-height:var(--type-leading-reading)}
 
-@media(max-width:48rem){body.case-page .case-chapter__heading{font-size:var(--type-heading-lg)}
+@media(max-width:48em){body.case-page .case-chapter__heading{font-size:var(--type-heading-lg)}
 }
 
 body.case-page .case-chapter__descriptor{
@@ -766,7 +766,7 @@ body[data-page="home"] .home-close__email {
   text-underline-offset: .2em;}
 
 
-@media (max-width: 48rem) {
+@media (max-width: 48em) {
   body[data-page="home"] .home-landing__statement {
   font-size:var(--type-heading-sm);}
 
@@ -809,21 +809,21 @@ body[data-page="home"] .service-journey__discipline{
 
 
 
-@media (max-width: 48rem){
+@media (max-width: 48em){
 body[data-page="home"] .home-profile__introduction h2{
   font-size:var(--type-heading-lg);}
 }
 
 
 
-@media (max-width: 48rem){
+@media (max-width: 48em){
 body[data-page="home"] .service-journey h3{
   font-size:var(--type-heading-md);}
 }
 
 
 
-@media (max-width: 48rem){
+@media (max-width: 48em){
 body[data-page="home"] .journey h2{
   font-size:var(--type-heading-lg);}
 }
@@ -874,7 +874,7 @@ body[data-page="home"] .service-stack__tag {
 
 body[data-page="home"] .marquee__wordmark {font-size:var(--type-heading-md)}
 
-@media(max-width:48rem){
+@media(max-width:48em){
   body[data-page="home"] .service-stack__card h3 {
     font-size:var(--type-heading-md);line-height:var(--type-leading-heading);}
 
@@ -903,7 +903,7 @@ body[data-page="writing"].article-page .article-hero__title {
 
 
 
-@media(max-width:48rem){
+@media(max-width:48em){
 
 }
 
@@ -947,15 +947,15 @@ body[data-page="home"] .service-stack__card h3{font-family:var(--font-sans);font
 
 /* Original centered reference navbar retained only as legacy cascade; editorial-index.css
    now owns the intentionally different, accessible fullscreen-index masthead. */
-@media(min-width:72rem){
+@media(min-width:72em){
  body .site-nav__links .site-nav__link{font:var(--type-weight-semibold) var(--type-caption)/var(--type-leading-ui) var(--font-mono);letter-spacing:var(--type-tracking-normal);text-transform:uppercase;}
 }
 
-@media(min-width:48rem) and (max-width:71.999rem){
+@media(min-width:48em) and (max-width:71.999em){
  body .site-nav__link{font-size:var(--type-label);}
 }
 
-@media(max-width:47.999rem){
+@media(max-width:47.999em){
  body[data-page="home"] .home-landing h1{font-size:var(--type-heading-lg);line-height:var(--type-leading-heading)}
 
  body[data-page="home"] .home-landing__statement{font-size:var(--type-heading-sm)}
@@ -982,7 +982,7 @@ body .site-footer__bottom{
  text-transform:uppercase;letter-spacing:var(--type-tracking-ui)
 }
 
-@media(max-width:47.999rem){
+@media(max-width:47.999em){
  body .site-footer__statement{font-size:var(--type-heading-lg)}
 }
 
@@ -1011,7 +1011,7 @@ body[data-page="writing"] .section-head h2{
 body[data-page="experiments"] .experiments-spatial__heading h1{
  font-family:var(--font-sans);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-tight);}
 
-@media(max-width:48rem){
+@media(max-width:48em){
  body[data-page="about"] .about-hero h1{font-size:var(--type-heading-lg)}
 }
 
@@ -1037,7 +1037,7 @@ body .site-index__motion button[aria-pressed="true"]{text-decoration:underline;t
 body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[class*="__meta"],[class*="__tag"],[class*="__number"],[class*="__state"],[class*="__discipline"],[class*="__count"],[class*="__period"],.site-nav__menu-btn,.site-index__link,.site-footer__links a,.site-footer__eyebrow) {
   text-transform:uppercase;}
 
-@media(max-width:47.999rem){
+@media(max-width:47.999em){
 
   body .site-nav__menu-btn{font-size:var(--type-label)}
 
@@ -1053,7 +1053,7 @@ body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[cla
 
 
 /* Touch needs visible evidence for every project, never a hover-gated image. */
-@media (max-width: 48rem), (hover: none), (pointer: coarse) {
+@media (max-width: 48em), (hover: none), (pointer: coarse) {
 
 
 
@@ -1142,7 +1142,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   font-size: var(--type-heading-lg);
   line-height: var(--type-leading-heading);}
 
-@media (max-width: 48rem) {
+@media (max-width: 48em) {
   body[data-page="home"] .home-landing__statement {
     font-size: var(--type-lead);}
 
@@ -1200,13 +1200,13 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 70rem) {
+@media (max-width: 70em) {
   .project-folder__title {
     font-size: var(--type-heading-lg);
   }
 }
 
-@media (max-width: 48rem), (pointer: coarse) {
+@media (max-width: 48em), (pointer: coarse) {
   body[data-page="work"] .project-archive--folders .project-archive__head h1 {
     font-size: var(--type-heading-lg);
   }
@@ -1216,7 +1216,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   }
 }
 
-@media (max-width: 25rem) {
+@media (max-width: 25em) {
   .project-folder__title {
     font-size: var(--type-heading-sm);
   }
@@ -1254,11 +1254,11 @@ body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-
 /* The viewport-height Work rack uses the same Geist roles at a readable,
    compact scale. Home uses the same heading roles, positioned within the exposed flap. */
 body:is([data-page="home"], [data-page="work"]) .project-folder__title {
-  font: var(--type-weight-semibold) clamp(1.2rem, 3vw, 2.75rem)/1.08 var(--font-sans);
+  font: var(--type-weight-semibold) clamp(1.2em, 3vw, 2.75em)/1.08 var(--font-sans);
   letter-spacing: var(--type-tracking-heading);
 }
 
-@media (max-width: 48rem), (pointer: coarse) {
+@media (max-width: 48em), (pointer: coarse) {
   body:is([data-page="home"], [data-page="work"]) .project-folder__title {
     font-size: var(--type-heading-sm);
   }

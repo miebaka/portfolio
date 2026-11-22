@@ -1,21 +1,20 @@
+/* Mobile-first grid: four tracks at the smallest viewport; expand to
+   twelve tracks only when the width can support them. */
 .container {
   width: min(calc(100% - 2 * var(--page)), var(--content));
-  margin-inline: auto;}
-
+  margin-inline: auto;
+}
 .grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--grid-gap);}
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, 1.5rem);}
-
-.section {
-  padding-block: var(--section-padding);}
-
-@media (max-width: 48rem) {
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));}
+  gap: var(--stack-gap, 1.5em);
+}
+.section { padding-block: var(--section-padding); }
+@media (min-width: 48.001em) {
+  .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }

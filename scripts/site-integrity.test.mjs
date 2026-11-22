@@ -384,8 +384,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
     /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/,
   );
   assert.match(css, /--content:var\(--grid-max\)/);
-  assert.match(css, /--grid-max:100rem/);
-  assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2rem,\s*3vw,\s*3\.25rem\)/);
+  assert.match(css, /--grid-max:100em/);
+  assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2em,\s*3vw,\s*3\.25em\)/);
   assert.doesNotMatch(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
   assert.match(projects, /aria-hidden="true"/);
@@ -409,7 +409,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   assert.match(navigation, /class="theme-liquid-toggle"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-theme-mode>Light/);
   assert.match(navigation, /themeButton\.addEventListener\("click", toggleTheme\)/);
-  assert.match(css, /--hr:\s*clamp\(1\.25rem,\s*2\.5vw,\s*2\.75rem\)/);
+  assert.match(css, /--hr:\s*clamp\(1\.25em,\s*2\.5vw,\s*2\.75em\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*\{[^}]*grid-template-columns:\s*repeat\(12,\s*1fr\)/);
@@ -417,8 +417,8 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
 
 test("interactive controls include the approved Figma button states", async () => {
   const css = await readAuthoredCss();
-  assert.match(css, /\.btn\{[^}]*height:2\.5rem[^}]*min-height:2\.5rem[^}]*padding:0 1\.5rem/);
-  assert.match(css, /body\[data-page="contact"\] \.contact__submit \.btn\{[^}]*width:100%[^}]*min-height:4rem/);
+  assert.match(css, /\.btn\{[^}]*height:2\.5em[^}]*min-height:2\.5em[^}]*padding:0 1\.5em/);
+  assert.match(css, /body\[data-page="contact"\] \.contact__submit \.btn\{[^}]*width:100%[^}]*min-height:4em/);
   assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
   assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
   assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);

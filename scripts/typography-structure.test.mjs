@@ -14,7 +14,7 @@ test("13 bounded size roles remain, without a display tier", () => {
   for(const [name,value] of sizes){
     if(PROPORTIONAL.has(name))continue;
     const parts=value.startsWith("clamp(")?split(value.slice(6,-1)):[value,value,value];
-    const bounds=[parts[0],parts[2]].map(v=>{const match=v.match(/^(\d*\.?\d+)rem$/);assert.ok(match,`${name}: ${v} must be rem-bounded`);return Number(match[1]);});
+    const bounds=[parts[0],parts[2]].map(v=>{const match=v.match(/^(\d*\.?\d+)em$/);assert.ok(match,`${name}: ${v} must be em-bounded`);return Number(match[1]);});
     assert.ok(bounds[0]>=.8125,`${name} is below the 13px minimum`);
     assert.ok(bounds[0]<=bounds[1],`${name}: inverted range`);
     if(name.startsWith("--type-heading-"))assert.ok(bounds[1]<=3,`${name} exceeds 48px`);

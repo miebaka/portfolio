@@ -18,7 +18,7 @@ test("styles/tokens.css is imported once and after all layout styles", () => {
   assert.equal((imports.match(/url\("tokens\.css"\)/g) || []).length, 1);
   assert.ok(imports.indexOf('url("tokens.css")') > imports.indexOf('url("portfolio-refinement.css")'));
   assert.match(imports, /url\("tokens\.css"\) layer\(typography\)/);
-  assert.match(tokens, /--type-heading-lg: clamp\(2rem, 1\.55rem \+ 1\.7vw, 3rem\)/);
+  assert.match(tokens, /--type-heading-lg: clamp\(2em, 1\.55em \+ 1\.7vw, 3em\)/);
   assert.doesNotMatch(tokens, /--type-(?:hero|display|leading-display|leading-hero|tracking-display)\b/);
 });
 
@@ -50,7 +50,7 @@ test("stylelint rejects typography even when it references a valid token", async
     "div{text-transform:uppercase}",
     "small{line-height:var(--type-leading-ui)}",
   ];
-  const accepted = ["h1{display:block}", "p{max-width:42rem}", "span{color:inherit}"];
+  const accepted = ["h1{display:block}", "p{max-width:42em}", "span{color:inherit}"];
   const report = await stylelint.lint({
     code: [...rejected, ...accepted].join("\n"),
     codeFilename: join(styles, "typography-rule-fixture.css"),
