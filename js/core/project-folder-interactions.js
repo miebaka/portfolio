@@ -81,7 +81,7 @@ function enhance(list) {
     const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72;
     const reserved = navHeight + Math.min(128, Math.max(80, window.innerHeight * .12));
     const available = Math.max(210, window.innerHeight - reserved - 22);
-    const mobileHome = isHome && matchMedia("(max-width: 48rem)").matches;
+    const mobileHome = isHome && matchMedia("(max-width: 48em)").matches;
     const serviceCards = isHome
       ? [...document.querySelectorAll("#what-i-do .service-stack__card")]
       : [];
