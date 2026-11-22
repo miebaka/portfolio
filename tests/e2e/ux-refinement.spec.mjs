@@ -15,6 +15,40 @@ test("Home keeps the landing restrained and Selected Work as landscape folders",
   await expect(page.locator("#selected-work")).toHaveAttribute("aria-label", "Selected work");
 });
 
+test("Landing and Selected Work move with normal scroll instead of covering one another", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/index.html");
+  await expect(page.locator(".home-folder-stack__cards")).toHaveClass(/is-folder-interactive/);
+  await page.locator(".home-landing").evaluate(async node => {
+    await Promise.all(node.getAnimations().map(animation => animation.finished.catch(() => null)));
+  });
+  const positions = async () => page.evaluate(() => {
+    const bounds = selector => document.querySelector(selector).getBoundingClientRect();
+    const hero = bounds(".home-landing");
+    const content = bounds(".home-content");
+    return {
+      scrollY,
+      heroTop: hero.top,
+      heroBottom: hero.bottom,
+      contentTop: content.top,
+      workTop: bounds("#selected-work").top,
+      folderTop: bounds(".home-folder-stack__cards .project-folder").top,
+      heroPosition: getComputedStyle(document.querySelector(".home-landing")).position,
+      folderPosition: getComputedStyle(document.querySelector(".home-folder-stack__cards")).position
+    };
+  });
+  const before = await positions();
+  expect(before.heroPosition).toBe("relative");
+  expect(before.folderPosition).toBe("relative");
+  expect(before.contentTop).toBeGreaterThanOrEqual(before.heroBottom - 2);
+  await page.evaluate(() => scrollTo({ top: Math.round(innerHeight * .7), behavior: "instant" }));
+  const after = await positions();
+  const delta = after.scrollY - before.scrollY;
+  expect(delta).toBeGreaterThan(200);
+  for (const axis of ["heroTop", "workTop", "folderTop"])
+    expect(Math.abs(after[axis] - before[axis] + delta), axis + " follows document scroll").toBeLessThanOrEqual(2);
+});
+
 test("What I Do uses rounded inset cards and no colored section wrapper",async({page})=>{
   await page.goto("/index.html");
   const section=page.locator("#what-i-do");
