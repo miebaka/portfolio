@@ -14,7 +14,7 @@ test("selected-work image preview changes on desktop hover without pointer displ
   if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/index.html");
-  await expect(page.locator("html")).toHaveClass(/motion-language-ready/);
+  await expect(page.locator("html")).not.toHaveClass(/motion-language-ready/);
   const first = page.locator(".home-project-list .editorial-index__row").first();
   await first.scrollIntoViewIfNeeded();
 
