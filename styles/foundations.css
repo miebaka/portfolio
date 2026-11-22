@@ -147,6 +147,7 @@ header[data-mount="nav"]{min-height:var(--nav-h)}
 html[data-motion="reduced"]{scroll-behavior:auto}
 :is(a,button,input,select,textarea,summary){touch-action:manipulation}
 :is(button,.btn,.site-nav__menu-btn){user-select:none;-webkit-user-select:none}
+
 /* Mobile defaults, with larger composition added only when space allows. */
 @media (min-width: 48.001em) {
   :root {
