@@ -21,7 +21,6 @@ const initialImages = [...html.matchAll(/<img\b([^>]*)>/giu)]
   .filter(Boolean).filter(local);
 const homepageMedia = unique(initialImages).reduce((sum, file) => sum + statSync(resolve(dist, file)).size, 0);
 const heroWave = gzipSync(readFileSync(resolve(dist, "assets/runtime/hero-wave.js"))).byteLength;
-const motionEngine = gzipSync(readFileSync(resolve(dist, "assets/runtime/motion-experience.js"))).byteLength;
 const fontFiles = unique([...readFileSync(resolve(dist, "styles/main.css"), "utf8").matchAll(/url\(["']?\.\.\/assets\/fonts\/([^"')]+)["']?\)/giu)].map(match => `assets/fonts/${match[1]}`));
 const fontBytes = gzipBytes(fontFiles);
 // In the Geist system, display/body/label font files are pinned to a remote
@@ -54,11 +53,9 @@ assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 const workHtml = readFileSync(resolve(dist, "work.html"), "utf8");
 const workCss = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu, workHtml));
 assertBudget("Work folder stack CSS", gzipBytes(["styles/project-folders.css"]), 6 * 1024);
-assertBudget("case arrival page-scoped JavaScript", gzipBytes(["js/core/case-arrival.js"]), 2 * 1024);
 assertBudget("total Work CSS (main + folders)", gzipBytes(workCss), 53 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);
-assertBudget("lazy Lenis + GSAP JavaScript", motionEngine, 110 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
 assertBudget("display font", displayFont, 100 * 1024);
 assertBudget("all site fonts (local + pinned Geist)", totalFontBytes, 420 * 1024);

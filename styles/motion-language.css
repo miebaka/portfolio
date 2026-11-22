@@ -1,95 +1,32 @@
-/* Motion language v1
-   One editorial family: reveal, response, continuity, rest.
-   No fonts/assets copied from inspiration libraries; static content always wins. */
-
-/* Kawai-style staggered slide/blur, applied only after JS has initialised.
-   The hero remains fully legible if scripts are blocked or fail. */
-html.motion-language-ready body[data-page="home"] .home-landing h1 > span {
-  display: inline-block;
-  animation: motion-headline-enter var(--motion-enter) var(--motion-expressive) both;}
-html.motion-language-ready body[data-page="home"] .home-landing h1 > span:last-child {
-  animation-delay: 130ms;}
-html.motion-language-ready body[data-page="home"] .home-landing__statement {
-  animation: motion-copy-enter 680ms var(--motion-expressive) 240ms both;}
-html.motion-language-ready body[data-page="home"] .home-landing__meta > * {
-  animation: motion-copy-enter 640ms var(--motion-expressive) 420ms both;}
-html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-child(2) {
-  animation-delay: 500ms;}
-html.motion-language-ready body[data-page="home"] .home-landing__meta > :nth-child(3) {
-  animation-delay: 580ms;}
-@keyframes motion-headline-enter {
-  from { opacity: 0; transform: translate3d(0, .23em, 0); clip-path: inset(32% 0 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); clip-path: inset(0); }
-}
-@keyframes motion-copy-enter {
-  from { opacity: 0; transform: translate3d(0, 14px, 0); filter: blur(4px); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); filter: blur(0); }
-}
-
-/* Quiet micro-feedback is meaningful on navigation and proof links, not every
-   paragraph: lift the active surface and the directional arrow by a few pixels. */
+/* Only useful interaction feedback and motion preferences live here.
+   Normal scrolling is native; essential text is never motion-gated. */
 @media (hover: hover) and (pointer: fine) {
-  html.motion-language-ready body .site-nav__links .site-nav__link {
+  body .site-nav__links .site-nav__link {
     transition: background-color var(--motion-response-duration) var(--motion-responsive),
-      translate var(--motion-response-duration) var(--motion-responsive);}
-  html.motion-language-ready body .site-nav__links .site-nav__link:is(:hover, :focus-visible) {
-    translate: 0 -2px;}
+      translate var(--motion-response-duration) var(--motion-responsive);
+  }
+  body .site-nav__links .site-nav__link:is(:hover, :focus-visible) { translate: 0 -2px; }
 }
-html.motion-language-ready body[data-page="home"] .service-stack__evidence .service-journey__arrow,
-html.motion-language-ready body[data-page="home"] .home-close__email > span {
+body[data-page="home"] .service-stack__evidence .service-journey__arrow,
+body[data-page="home"] .home-close__email > span {
   display: inline-block;
-  transition: translate var(--motion-response-duration) var(--motion-responsive);}
-html.motion-language-ready body[data-page="home"] .service-stack__evidence:is(:hover, :focus-visible) .service-journey__arrow,
-html.motion-language-ready body[data-page="home"] .home-close__email:is(:hover, :focus-visible) > span {
-  translate: 4px -4px;}
-
-/* Menu-open choreography: the overlay is fully accessible from its first
-   frame, and the focus trap continues to own keyboard interaction. */
-html.motion-language-ready .site-index[data-state="open"]:not([data-source="keyboard"]) .site-index__link {
-  animation: motion-menu-enter 460ms var(--motion-expressive) both;}
-html.motion-language-ready .site-index[data-state="open"]:not([data-source="keyboard"]) .site-index__link:nth-child(2) { animation-delay: 35ms;}
-html.motion-language-ready .site-index[data-state="open"]:not([data-source="keyboard"]) .site-index__link:nth-child(3) { animation-delay: 70ms;}
-html.motion-language-ready .site-index[data-state="open"]:not([data-source="keyboard"]) .site-index__link:nth-child(4) { animation-delay: 105ms;}
-html.motion-language-ready .site-index[data-state="open"]:not([data-source="keyboard"]) .site-index__link:nth-child(5) { animation-delay: 140ms;}
-@keyframes motion-menu-enter {
-  from { opacity: 0; transform: translate3d(0, 14px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  transition: translate var(--motion-response-duration) var(--motion-responsive);
 }
+body[data-page="home"] .service-stack__evidence:is(:hover, :focus-visible) .service-journey__arrow,
+body[data-page="home"] .home-close__email:is(:hover, :focus-visible) > span { translate: 4px -4px; }
 
-/* The explicit "Reduce" setting must override the user's OS setting and
-   existing home/page rules, including previously hidden editorial children.
-   Do not remove positioning transforms from project previews. */
 html[data-motion="reduced"] body[data-page="home"] .home-landing,
-html[data-motion="reduced"] body[data-page="home"] .home-landing :is(h1 > span, .home-landing__statement, .home-landing__meta > *),
-html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
-  animation: none !important;}
-html[data-motion="reduced"] body[data-page="home"] [data-editorial-reveal]
-:is(h2, .home-profile__lead, .home-profile__portrait, .editorial-index__item, .service-journey, .client-strip, .home-close__email) {
-  opacity: 1 !important;
-  transform: none !important;
-  animation: none !important;}
-html[data-motion="reduced"] body[data-page="home"] .service-stack__item { position: relative; top: auto;}
-html[data-motion="reduced"] body[data-page="home"] :is(.service-journey__arrow, .home-close__email > span) { transition: none; translate: none;}
-html[data-motion="reduced"]::view-transition-old(root),
-html[data-motion="reduced"]::view-transition-new(root) { animation-duration: .01ms !important;}
-
-/* Respect system Reduce when the site motion preference is still "System".
-   Explicit "Full" is the only exception and remains a user-controlled choice. */
-@media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) body[data-page="home"] [data-editorial-reveal]
-  :is(h2, .home-profile__lead, .home-profile__portrait, .editorial-index__item, .service-journey, .client-strip, .home-close__email) {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;}
-  html:not([data-motion="full"]) body[data-page="home"] .service-stack__item { position: relative; top: auto;}
-  html:not([data-motion="full"])::view-transition-old(root),
-  html:not([data-motion="full"])::view-transition-new(root) { animation-duration: .01ms !important;}
-  html[data-motion="full"] body[data-page="home"] .home-landing {
-    animation: frame-in 1200ms var(--motion-expressive) both;}
+html[data-motion="reduced"] body[data-page="home"] .client-marquee__track { animation: none !important; }
+html[data-motion="reduced"] body[data-page="home"] .service-stack__item { position: relative; top: auto; }
+html[data-motion="reduced"] body[data-page="home"] :is(.service-journey__arrow, .home-close__email > span) {
+  transition: none; translate: none;
 }
-
-/* Lenis preserves native document flow, fixed elements and anchor targets. */
-html.lenis, html.lenis body { height: auto;}
-html.lenis.lenis-smooth { scroll-behavior: auto !important;}
-html.lenis.lenis-stopped { overflow: hidden;}
-html.lenis [data-lenis-prevent] { overscroll-behavior: contain;}
+html[data-motion="reduced"]::view-transition-old(root),
+html[data-motion="reduced"]::view-transition-new(root) { animation-duration: .01ms !important; }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page="home"] .home-landing,
+  html:not([data-motion="full"]) body[data-page="home"] .client-marquee__track { animation: none !important; }
+  html:not([data-motion="full"]) body[data-page="home"] .service-stack__item { position: relative; top: auto; }
+  html:not([data-motion="full"])::view-transition-old(root),
+  html:not([data-motion="full"])::view-transition-new(root) { animation-duration: .01ms !important; }
+}

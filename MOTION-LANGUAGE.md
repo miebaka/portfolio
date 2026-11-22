@@ -1,74 +1,20 @@
-# Portfolio Motion Language — Research and implementation ledger
+# Motion architecture
 
-**Date:** 20 November 2026  
-**Status:** Historical motion-study ledger, reconciled with the currently approved PR #48 interface on 22 November 2026. Current behavior takes precedence over earlier design explorations; live deployment still requires its own verification.  
-**Authority:** `DESIGN.md` and `engineering-specification.md` outrank this supplementary ledger.
+## Current, supported effects
+The site retains the original Three.js water (with a static fallback), the interactive footer dot matrix, native-link Selected Work previews, the client marquee, the service card transitions, and the Experiments poster gallery. None of these requires a replacement scrolling engine or a page-wide reveal observer.
 
-## Direction
+### Rules
+- **Content is visible by default.** Headings, case-study chapters and body paragraphs must never be set to opacity zero awaiting a JavaScript observer.
+- **Native scrolling owns the document.** Wheel, touch, anchor links and browser history must continue to function without Lenis, GSAP or injected scroll listeners.
+- **Motion preferences are authoritative.** The site's Reduce setting overrides system Full; its Full setting overrides system Reduce. In System mode, respect `prefers-reduced-motion`.
+- **Page-specific motion is owned by its feature.** Three.js handles the hero water, and the gallery handles its own poster transitions. Each controller must clean up listeners, observers and animation frames on teardown.
+- **Keep resources contained.** The hero water is lazily bundled; static fallbacks exist when WebGL is unsupported. No second global animation scheduler should load.
+- **Keyboard first.** Focus reveals the same information as hover. Avoid suppressing content or intercepting page scrolling to produce effects.
 
-Motion is a way to demonstrate editorial judgment, not to demonstrate how many effects a website can run. The portfolio uses a rounded-frame hero, Three.js water, an interactive dot-matrix footer SVG, project image previews, sticky service cards, and a logo ticker. Optional Lenis/GSAP scroll enhancement is lazy and desktop-only. This pass improves their coherence, feedback, readability and performance rather than replacing the site with a new framework.
+### Removed in the November 2026 cleanup
+- The optional Lenis + GSAP scroll engine, its build task, runtime bundle, production dependency graph, and old engine-specific tests.
+- The full-page IntersectionObserver reveal controller and `data-editorial-reveal` hooks.
+- Homepage staggered opacity-zero entry effects, case-study text opacity gating, retired experiment-tunnel styles, and unused scroll-linked keyframes.
 
-**Vocabulary**
-
-| Function | Treatment | Timing |
-| --- | --- | --- |
-| Establish | Hero display enters in two readable phrases, supporting copy follows | 680–800 ms; stagger 80–160 ms |
-| Introduce | Existing scroll observer reveals headings, project proof and case chapters once | Existing ~800 ms; threshold 1% |
-| Respond | One large project image appears behind the active oversized title on hover or focus | 260 ms opacity; no layout movement |
-| Focus | Native focus-visible state marks the active unnumbered service card without a spotlight gradient | Immediate and keyboard accessible |
-| Orient | Navigation overlay links enter in sequence without delaying focus | 460 ms; 35 ms stagger |
-| Confirm | Navigation and case proof arrows move 2–4px to acknowledge a choice | 220 ms |
-| Rest | OS Reduce or the explicit Reduce setting removes decorative movement | Immediate; all important content visible |
-
-## Reference responsibility map
-
-The references below were reviewed as **concept and interaction references**, not sources of unlicensed code, screenshots, typefaces or imagery.
-
-| Source | What is useful | Implemented here | Deliberately not adopted |
-| --- | --- | --- | --- |
-| [Kawai Text Animation](https://kawai-text-animation.pages.dev/) | Slide-up, fade, restrained blur, tempo | Masked hero display, soft supporting-copy entrance | Shake, flashing, infinite color shifts, bouncing every word, typewriter on critical identity |
-| [21st.dev](https://21st.dev/) · [Hover Preview](https://21st.dev/@minhxthanh/components/hover-preview) | Contextual reveal on active image/item | One centered image preview per active project, without cursor following | Importing a React component into this static ESM site |
-| [21st.dev Spotlight Card](https://21st.dev/@easemize/components/spotlight-card) | Cursor-aware glow used as early reference | Superseded: current service cards deliberately have no radial spotlight | Heavy global cursor, high-energy glow and animated spotlight |
-| [OriginKit Hover Image Reveal](https://www.originkit.dev/components/hover-image-reveal) | Hovered list to image mapping, consistent keyboard focus | Preserved original case-study links and used a CSS-only centered image reveal | Recreating the proprietary component, oversized spring library, floating image on touch |
-| [OriginKit Round Carousel](https://www.originkit.dev/components/roundcarousel) | Circular spatial composition | Reference for future Experiments-only exploration | Constantly spinning project work in the primary recruitment journey |
-| [Supahero](https://supahero.io/) · [IntegratedBio](https://supahero.io/hero/integratedbio) | Hero visual hierarchy and high-quality first-fold composition | Preserved and staged the existing rounded-frame hero | Copying a reference company's layout or assets |
-| [MotionSites](https://motionsites.ai/) | Section rhythm, interactive portfolio examples and creative prompts | Used as a check on hierarchy and selective motion emphasis | Reusing premium prompts or adding a second ambient shader to each section |
-
-## Implementation map
-
-- `js/core/motion-language.js`: lightweight motion-preference controller with no project pointer tracking, animation frames or geometry reads. The module reacts to the site's *effective* motion preference, including changes made after page load.
-- `styles/motion-language.css`: visual language layered **after** the existing authored styles. It changes neither site copy nor the brand fonts. All content remains in normal DOM and keyboard order.
-- `js/core/editorial-reveals.js`: 1% intersection threshold so tall sections no longer risk never revealing. It listens to motion preference changes and reveals all pending content when Reduce becomes active.
-- `js/main.js` and `styles/main.css`: integrate with the existing static site. Separate pre-existing lazy bundles provide Three.js hero water and optional desktop Lenis/GSAP; this motion-language module does not add another library.
-- `tests/motion-language.test.mjs` and `tests/e2e/motion-language.spec.mjs`: exercise preference precedence, visual preview behavior, reduced motion, and live preference changes.
-
-## Performance and accessibility contracts
-
-1. No animation changes the underlying project title, evidence, destination or content order.
-2. No scroll or pointer event handlers are required for the work preview. The large image changes via CSS, with no forced geometry reads.
-3. Fine pointers gain a centered image reveal on hover; touch users receive large in-flow project images without requiring hover.
-4. An animation must never require a JavaScript observer to make essential text accessible; missing observers and Reduce reveal all content.
-5. The site-wide motion preference is authoritative: **System** follows OS, **Reduce** removes decorative motion, **Full** is an explicit override.
-6. Keyboard focus continues to expose the existing work image and service link without requiring hover.
-7. The Three.js caustics, interactive footer and scroll-linked project transitions are not duplicated.
-8. `prefers-reduced-motion` and explicit Reduce disable decorative menu and page-transition motion. No flash or rapid color-loop effects are added.
-
-## Release verification
-
-Run under Node.js 24:
-
-```sh
-npm ci
-npm run lint
-npm test
-npx playwright install chromium
-npm run test:e2e
-npm run test:budgets
-npm run quality
-```
-
-Review at 320, 390, 768, 1024 and 1440 pixels in both color themes. Confirm touch has visible project imagery without hover; verify keyboard focus, preference toggles during scrolling, fast repeated menu open/close, 3D fallback, and `document.hidden` throttling for the existing water shader. Inspect LCP, CLS and INP rather than claiming improvement from code inspection alone.
-
-## Not implemented yet
-
-An actual animated route transition between *every* case is inappropriate until it is tested against back navigation, long reading positions and low-end mobile devices. An extra 3D carousel or interactive shader in every chapter would compete with the existing hero and experiments and dilute the portfolio's proof. These are references, not accepted deliverables.
+### Regression tests
+Retain tests for water fallback and pointer ripples, native page scroll, all case chapters being visible, motion preferences, project-link focus, reduced motion, cross-page navigation, and image/gallery availability. Never preserve a test solely because a removed implementation used to produce a class or attribute.

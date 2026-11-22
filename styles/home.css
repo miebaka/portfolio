@@ -272,7 +272,7 @@ body[data-page="home"] .client-marquee {
 body[data-page="home"] .client-marquee__track {
   display: flex;
   width: max-content;
-  animation: logo-run 34s linear infinite;}
+}
 body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
   animation-play-state: paused;}
 body[data-page="home"] .client-proof {
@@ -292,11 +292,6 @@ body[data-page="home"] .marquee__item img {
   filter: brightness(0) invert(1);
   opacity: 0.8;
   transform: scale(var(--logo-scale, 1));}
-@keyframes logo-run {
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 body[data-page="home"] .home-close {
   display: grid;
@@ -388,50 +383,6 @@ body[data-page="home"] .home-close__email {
     animation: none;}
 }
 
-/* Jasmine Gunarto-inspired motion language: restrained entrances, image wipes,
-   and staggered typography that preserve reading order and reduced motion. */
-.has-js
-  body[data-page="home"]
-  [data-editorial-reveal]
-  :is(
-    h2,
-    .home-profile__lead,
-    .home-profile__portrait,
-    .editorial-index__item,
-    .service-journey,
-    .client-strip,
-    .home-close__email
-  ) {
-  opacity: 0;
-  transform: translate3d(0, 2.5rem, 0);}
-.has-js
-  body[data-page="home"]
-  [data-editorial-reveal].is-revealed
-  :is(
-    h2,
-    .home-profile__lead,
-    .home-profile__portrait,
-    .editorial-index__item,
-    .service-journey,
-    .client-strip,
-    .home-close__email
-  ) {
-  animation: home-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) both;}
-.has-js
-  body[data-page="home"]
-  [data-editorial-reveal].is-revealed
-  :is(.editorial-index__item, .service-journey):nth-child(2) {
-  animation-delay: 80ms;}
-.has-js
-  body[data-page="home"]
-  [data-editorial-reveal].is-revealed
-  :is(.editorial-index__item, .service-journey):nth-child(3) {
-  animation-delay: 160ms;}
-.has-js body[data-page="home"] [data-editorial-reveal].is-revealed .service-journey:nth-child(4) {
-  animation-delay: 240ms;}
-.has-js body[data-page="home"] [data-editorial-reveal].is-revealed .service-journey:nth-child(5) {
-  animation-delay: 320ms;}
-
 /* The global page system previously hid the authored dot matrix. Home restores
    the full interactive signature as the final chapter. */
 body[data-page="home"]:not(.site-system-disabled) .site-footer {
@@ -464,33 +415,6 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
     top: 1rem;
     height: 20rem;}
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .has-js
-    body[data-page="home"]
-    [data-editorial-reveal]
-    :is(
-      h2,
-      .home-profile__lead,
-      .home-profile__portrait,
-      .editorial-index__item,
-      .service-journey,
-      .client-strip,
-      .home-close__email
-    ) {
-    opacity: 1;
-    transform: none;
-    animation: none;}
-}
-
-@keyframes home-reveal {
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-
 
 body[data-page="home"] :is(.swiss-selected,.home-profile,.home-capabilities--reference,.home-close){
   padding-block: clamp(6.5rem,12vw,12.5rem);}

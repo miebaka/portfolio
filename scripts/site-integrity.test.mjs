@@ -251,11 +251,11 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.match(workPage, /class="project-folder-stack"/);
   assert.doesNotMatch(workPage, /work-cabinet|filing-cabinet/);
   await assert.rejects(access(join(dist, "js", "core", "work-cabinet.js")));
-  await access(join(dist, "js", "core", "case-arrival.js"));
+  await assert.rejects(access(join(dist, "js", "core", "case-arrival.js")));
   for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
     const html = await readFile(join(dist, "work", `${slug}.html`), "utf8");
     assert.match(html, /@view-transition\s*\{\s*navigation:\s*auto/);
-    assert.match(html, /src="\.\.\/js\/core\/case-arrival\.js"/);
+    assert.doesNotMatch(html, /case-arrival\.js/);
   }
   const homePage = await readFile(join(dist, "index.html"), "utf8");
   assert.doesNotMatch(homePage, /project-folders\.css/);
@@ -278,7 +278,9 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   await assert.rejects(access(join(dist, "js", "core", "decision-field.js")));
   await access(join(dist, "js", "core", "hero-wave.js"));
   await access(join(dist, "assets", "runtime", "hero-wave.js"));
-  await access(join(dist, "assets", "runtime", "motion-experience.js"));
+  await assert.rejects(access(join(dist, "assets", "runtime", "motion-experience.js")));
+  await assert.rejects(access(join(dist, "js", "core", "editorial-reveals.js")));
+  await assert.rejects(access(join(dist, "js", "core", "scroll-experience.js")));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.module.js")));
   await assert.rejects(access(join(dist, "assets", "vendor", "three.core.js")));
   await assert.rejects(access(join(dist, "node_modules")));
@@ -432,7 +434,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
     css,
     /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/,
   );
-  assert.match(css, /\.case-page \.case-statement\{[^}]*max-width:none/);
+  assert.match(css, /\.case-page \.case-chapter__body\{[^}]*max-width:/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
   assert.match(home, /<h1 id="hero-title"><span>Miebaka<\/span> <span>Joshua<\/span><\/h1>/);
   assert.doesNotMatch(home.match(/<h1 id="hero-title"[\s\S]*?<\/h1>/)?.[0] || "", /aria-label|aria-hidden/);
@@ -666,11 +668,30 @@ test("retired source systems cannot return unnoticed", async () => {
   assert.doesNotMatch(styles, /(?:base|components|sections|tokens)\//);
 });
 
-test("every published case chapter can reveal and reduced motion stays readable", async () => {
-  const reveals = await readFile(join(root, "js", "core", "editorial-reveals.js"), "utf8");
-  assert.match(reveals, /\.case-page \.case-chapter/);
-  assert.match(reveals, /prefers-reduced-motion: reduce/);
-  assert.doesNotMatch(reveals, /\.case-page--tedx \.case-chapter/);
+test("retired page prototypes and temporary motion engines are absent", async () => {
+  const css = await readFile(join(root, "styles", "pages-v4.css"), "utf8");
+  const types = await readFile(join(root, "styles", "tokens.css"), "utf8");
+  const script = await readFile(join(root, "js", "main.js"), "utf8");
+  assert.doesNotMatch(css, /decision-field|experiment-tunnel|disciplines-index|impeccable-motion/);
+  assert.doesNotMatch(types, /experiment-tunnel/);
+  assert.doesNotMatch(script, /scroll-experience|editorial-reveals|initMotionLanguage/);
+  assert.doesNotMatch(css, /project-(?:image|copy)-enter/);
+});
+
+test("case chapters and Home proof remain visible without reveal observers", async () => {
+  const css = await readFile(join(root, "styles", "pages-v4.css"), "utf8");
+  const homeCss = await readFile(join(root, "styles", "home.css"), "utf8");
+  const main = await readFile(join(root, "js", "main.js"), "utf8");
+  const home = await readFile(join(root, "index.html"), "utf8");
+  assert.doesNotMatch(css, /\\.has-js \\.case-page \\.case-chapter/);
+  assert.doesNotMatch(homeCss, /data-editorial-reveal|home-reveal/);
+  assert.doesNotMatch(main, /initEditorialReveals|initScrollExperience|initMotionLanguage/);
+  assert.doesNotMatch(home, /data-editorial-reveal/);
+  for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
+    const caseHtml = await readFile(join(dist, "work", slug + ".html"), "utf8");
+    assert.match(caseHtml, /class="case-chapter/);
+    assert.match(caseHtml, /class="case-chapter__body"/);
+  }
 });
 
 test("Experiments has a complete, navigable and image-rich no-JS gallery", async () => {
