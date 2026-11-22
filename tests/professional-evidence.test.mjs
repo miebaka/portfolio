@@ -139,14 +139,17 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
   assert.doesNotMatch(markup, /<details|card/i);
 });
 
-test("the homepage keeps selected work concise and image-led", () => {
+test("the homepage uses the same upright folder system as Work", () => {
   const markup = renderHomeProjectList(CONTENT.projects, CONTENT.caseStudies);
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
     const project = CONTENT.projects.find((item) => item.slug === slug);
     assert.ok(markup.includes(project.title), `${slug} title appears on Home`);
   }
   assert.doesNotMatch(markup, /Governing decision|home-project-list__decision/);
-  assert.equal((markup.match(/home-project-list__visual/g) || []).length, 3);
+  assert.equal((markup.match(/class="folder-rack__folder"/g) || []).length, 3);
+  assert.equal((markup.match(/class="folder-rack__sheet"/g) || []).length, 15);
+  assert.match(markup, /folder-rack--home/);
+  assert.match(markup, /All work/);
 });
 
 test("public service names are concrete disciplines backed by real published chapter anchors", async () => {
@@ -196,9 +199,9 @@ test("Work archive derives published cases and in-progress register from real pr
   const published = CONTENT.projects.filter(project =>
     project.status === "published" && CONTENT.caseStudies?.[project.slug]?.status === "published" && project.cover);
   const drafts = CONTENT.projects.filter(project => project.status === "coming-soon" && project.featured !== true);
-  assert.equal((markup.match(/class="project-folder__link"/g) || []).length, published.length);
-  assert.equal((markup.match(/class="project-folder project-folder--/g) || []).length, published.length);
-  for (const project of published) assert.ok(markup.includes(project.tone));
+  assert.equal((markup.match(/class="folder-rack__folder"/g) || []).length, published.length);
+  assert.equal((markup.match(/class="folder-rack__sheet"/g) || []).length, published.length * 5);
+  for (const project of published) assert.ok(markup.includes(project.title));
   assert.doesNotMatch(markup, /filing-cabinet|drawer/);
   for (const project of drafts) assert.ok(markup.includes(project.title));
   assert.doesNotMatch(markup, /Detour|Out Of Office/);
