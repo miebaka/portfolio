@@ -3,7 +3,7 @@ import {test,expect} from "@playwright/test";
 test("Home keeps the landing restrained and Selected Work as landscape folders",async({page})=>{
   await page.goto("/index.html");
   await expect(page.locator("body")).not.toContainText("Available for senior brand and marketing design roles");
-  await expect(page.locator(".home-landing")).toHaveCSS("position","sticky");
+  await expect(page.locator(".home-landing")).toHaveCSS("position","relative");
   await expect(page.locator(".home-content")).toHaveCSS("position","relative");
   const badge=await page.locator(".home-landing").evaluate(node=>getComputedStyle(node,"::before").content);
   expect(["none","normal","\"none\""]).toContain(badge);

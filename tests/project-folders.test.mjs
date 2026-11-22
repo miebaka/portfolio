@@ -83,3 +83,11 @@ test("Home matches the Work landscape folder construction", () => {
   assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });
+
+test("Home does not override the shared Work folder height, overlap or z-order", () => {
+  const css = readFileSync(resolve("styles/home-folders.css"), "utf8");
+  const controller = readFileSync(resolve("js/core/project-folder-interactions.js"), "utf8");
+  assert.doesNotMatch(css, /--work-folder-height\s*:|--folder-overlap\s*:|z-index\s*:/);
+  assert.doesNotMatch(controller, /const home\s*=|compactHeight\s*\*\s*2/);
+  assert.match(controller, /const shift = size - pitch/);
+});

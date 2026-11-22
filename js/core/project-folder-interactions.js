@@ -7,10 +7,8 @@ function enhance(list) {
   const folders = [...list.children].filter(el => el.matches(".project-folder"));
   if (!folders.length) return;
   const viewport = list.parentElement;
-  const home = document.body.dataset.page === "home";
   let active = -1;
   let pitch = 0;
-  let reveal = 0;
   let size = 0;
   let lastPointer = "mouse";
   let touchPreview = -1;
@@ -23,19 +21,6 @@ function enhance(list) {
   function indexAt(value) {
     if (value < 0 || !size) return -1;
     const n = folders.length;
-    if (home) {
-      // The next sheet always remains painted ABOVE the preceding folder,
-      // including while the preceding folder is hovered or keyboard-focused.
-      // Use the same measured offsets as layout(), so concealed surfaces
-      // never steal hover or pointer activation from the visible folder.
-      let hit = -1;
-      for (let i = 0; i < n; i++) {
-        const offset = i * pitch + (active >= 0 && i > active ? reveal : 0);
-        const lift = i === active ? -14 : 0;
-        if (value >= offset + lift && value < offset + size + lift) hit = i;
-      }
-      return hit;
-    }
     if (n === 1) return value < size ? 0 : -1;
     const lastLeft = (n - 1) * pitch + (active >= 0 && active < n - 1 ? size - pitch : 0);
     if (active < 0) {
@@ -56,7 +41,7 @@ function enhance(list) {
   function layout(index) {
     if (entering) return;
     active = index;
-    const shift = home ? reveal : size - pitch;
+    const shift = size - pitch;
     folders.forEach((folder, i) => {
       const offset = i * pitch + (index >= 0 && i > index ? shift : 0);
       folder.style.setProperty("--folder-y", offset + "px");
@@ -67,34 +52,22 @@ function enhance(list) {
   }
 
   function measure() {
-    // Work measures the space below its heading; Home is below the fold so
-    // measuring its initial absolute Y would make every folder far too short.
-    const top = home
-      ? (document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72) + 24
-      : Math.max(0, viewport.getBoundingClientRect().top);
-    const available = Math.max(210, window.innerHeight - top - 22);
-    const compactHeight = Math.min(300, Math.max(92, (available - 20) / 2.4));
-    const height = home ? compactHeight * 2 : compactHeight;
+    // One viewport-based sizing contract for Home and Work. Measuring the
+    // element's document Y made Home twice as tall because it sits below the
+    // landing hero; the shared reserved space avoids that page-dependent size.
+    const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72;
+    const reserved = navHeight + Math.min(128, Math.max(80, window.innerHeight * .12));
+    const available = Math.max(210, window.innerHeight - reserved - 22);
+    const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
     list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
     size = folders[0].offsetHeight;
     if (!size) return;
     const count = folders.length;
-    if (home) {
-      // Home folders are twice as tall as Work's compact versions, but
-      // opening one only spreads later folders enough to expose its upper
-      // portion. The next folder still conceals most of its lower face.
-      pitch = Math.min(170, Math.max(65, size * .26));
-      reveal = size * .22;
-    } else {
-      const free = Math.max(0, available - 2 * size - 12);
-      pitch = count > 2
-        ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
-        : Math.min(90, size * .34);
-      reveal = size - pitch;
-    }
-    const expanded = home
-      ? size + (count - 1) * pitch + (count > 1 ? reveal : 0)
-      : count === 1 ? size : 2 * size + (count - 2) * pitch;
+    const free = Math.max(0, available - 2 * size - 12);
+    pitch = count > 2
+      ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
+      : Math.min(90, size * .34);
+    const expanded = count === 1 ? size : 2 * size + (count - 2) * pitch;
     list.style.height = Math.ceil(expanded + 2) + "px";
     layout(active);
   }

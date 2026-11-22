@@ -19,26 +19,39 @@ test("Home renders the landscape folder material from Work, not standing version
     await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
     const bounds = await folder.boundingBox();
     expect(bounds.width).toBeGreaterThan(250);
-    // Doubling the height deliberately makes narrow-screen folders taller
-    // than they are wide, while retaining the same front/tab/paper geometry.
     if (page.viewportSize().width >= 768) {
       expect(bounds.width).toBeGreaterThan(bounds.height);
     }
-    expect(bounds.height, "Home folders must be twice the old compact height").toBeGreaterThan(310);
+    expect(bounds.height, "Home must use the same compact folder sizing as Work").toBeLessThanOrEqual(310);
   }
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
 });
 
-test("Home folders are approximately twice as tall as the compact Work folders", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
-  const homeHeight = await homeFolders(page).first().evaluate(el => el.offsetHeight);
-  await page.goto("/work.html");
-  const workHeight = await page.locator(".project-folder").first().evaluate(el => el.offsetHeight);
-  expect(homeHeight).toBeGreaterThan(workHeight * 1.7);
-  expect(homeHeight).toBeLessThan(workHeight * 2.8);
-  await expect(page.locator(".project-folder__paper")).toHaveCount(15);
-  await expect(page.locator(".project-folder__spine")).toHaveCount(0);
+test("Home and Work use identical folder height and paper geometry", async ({ page }) => {
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    const geometry = async path => {
+      await page.goto(path);
+      await expect(page.locator(".project-folder-stack__cards")).toHaveClass(/is-folder-interactive/);
+      return page.locator(".project-folder").first().evaluate(folder => {
+        const box = folder.getBoundingClientRect();
+        const front = folder.querySelector(".project-folder__front").getBoundingClientRect();
+        const sheets = [...folder.querySelectorAll(".project-folder__paper")];
+        return {
+          height: box.height,
+          frontTop: front.top - box.top,
+          papers: sheets.map(sheet => sheet.getBoundingClientRect().top - box.top),
+          frontBackground: getComputedStyle(folder.querySelector(".project-folder__front")).backgroundImage
+        };
+      });
+    };
+    const home = await geometry("/");
+    const work = await geometry("/work.html");
+    expect(Math.abs(home.height - work.height)).toBeLessThanOrEqual(1);
+    expect(Math.abs(home.frontTop - work.frontTop)).toBeLessThanOrEqual(1);
+    for (let i = 0; i < 5; i++) expect(Math.abs(home.papers[i] - work.papers[i])).toBeLessThanOrEqual(1);
+    expect(home.frontBackground).toBe(work.frontBackground);
+  }
 });
 
 test("hover opens the right Home landscape folder and moves subsequent folders down", async ({ page, isMobile }) => {
@@ -58,10 +71,9 @@ test("hover opens the right Home landscape folder and moves subsequent folders d
   const activeFirst = await folders.first().boundingBox();
   const second = await folders.nth(1).boundingBox();
   const layering = await folders.evaluateAll(nodes => nodes.map(el => Number(getComputedStyle(el).zIndex)));
-  expect(layering[1], "following folder must paint above the hovered folder").toBeGreaterThan(layering[0]);
-  expect(second.y, "next folder is still below the hovered folder's top").toBeGreaterThan(activeFirst.y);
-  expect(second.y, "next folder still hides the lower portion of the hovered folder")
-    .toBeLessThan(activeFirst.y + activeFirst.height * .75);
+  expect(layering[0], "active Home folder should lift above its neighbors as on Work").toBeGreaterThan(layering[1]);
+  expect(second.y, "next folder moves aside so the hovered face pops up")
+    .toBeGreaterThanOrEqual(activeFirst.y + activeFirst.height - 3);
   await page.mouse.move(second.x + 25, second.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "1");
   await expect(folders.nth(1)).toHaveClass(/is-active/);

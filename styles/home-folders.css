@@ -1,5 +1,5 @@
-/* The Home rack deliberately uses the same landscape folders and vertical
-   opening interaction as Work. Only the section's screen-height framing differs. */
+/* Home uses the exact same physical folder and interaction rules as Work.
+   This file only frames that rack within the homepage layout. */
 body[data-page="home"] .home-content section.swiss-selected {
   display: flex;
   flex-direction: column;
@@ -40,14 +40,5 @@ body[data-page="home"] #selected-work {
   padding-inline: 0;
 }
 
-/* Twice the compact Work-folder height, also when JavaScript is disabled. */
-body[data-page="home"] .home-folder-stack__cards {
-  --work-folder-height: clamp(16rem, calc((100svh - var(--nav-h) - 13rem) / 1.2), 38rem);
-  --folder-overlap: calc(var(--work-folder-height) * .74);
-}
-
-/* Keep physical stacking order on hover/focus: a file behind the next one
-   remains partly hidden, instead of popping fully above the whole pile. */
-body[data-page="home"] .home-folder-stack__cards.is-folder-interactive .project-folder:is(.is-active, :hover, :focus-within) {
-  z-index: calc(var(--folder-index, 0) + 1);
-}
+/* Height, overlap, layers, hover/focus and five-sheet geometry all come from
+   project-folders.css and the shared controller, exactly as on Work. */
