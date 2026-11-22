@@ -21,6 +21,9 @@ test("all five PR #46 chapters and their exact questions actually become visible
       const chapter = chapters.nth(i);
       await chapter.scrollIntoViewIfNeeded();
       await expect(chapter).toHaveClass(/is-revealed/);
+      for (const selector of [".case-chapter__intro", ".case-chapter__heading", ".case-chapter__body"]) {
+        await expect(chapter.locator(selector)).toHaveCSS("opacity", "1");
+      }
       const visible = await chapter.evaluate(node => {
         const parts = [".case-chapter__intro", ".case-chapter__heading", ".case-chapter__body"];
         return parts.map(selector => {

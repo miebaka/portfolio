@@ -141,6 +141,8 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
   min-height: clamp(25rem, 68svh, 44rem);
   border-radius: clamp(1rem, 2vw, 2rem);
   padding: clamp(2rem, 4.5vw, 5rem);
+  /* Keep the proof link above the next card's physical overlap. */
+  padding-bottom: calc(clamp(2rem, 4.5vw, 5rem) + clamp(2.5rem, 11svh, 6.5rem));
   box-shadow: 0 -.2rem .2rem rgb(0 0 0 / .06), 0 1.2rem 2.5rem rgb(0 0 0 / .13);}
 body[data-page="home"] section.home-capabilities--reference .service-stack__card h3 {
   max-width: 18ch;}
@@ -279,11 +281,11 @@ body .site-footer__panel {
     padding-inline: clamp(.75rem, 2.5vw, 1.5rem);}
   body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     top: calc(var(--nav-h) + .35rem + var(--stack-index, 0) * .2rem);
-    margin-bottom: calc(-1 * clamp(2rem, 7svh, 4rem));
-    margin-bottom: clamp(3rem, 6vh, 5rem);}
+    margin-bottom: calc(-1 * clamp(2rem, 7svh, 4rem));}
   body[data-page="home"] section.home-capabilities--reference .service-stack__card {
     min-height: clamp(25rem, 58svh, 36rem);
-    padding: clamp(1.4rem, 4vw, 2.2rem);}
+    padding: clamp(1.4rem, 4vw, 2.2rem);
+    padding-bottom: calc(clamp(1.4rem, 4vw, 2.2rem) + clamp(2rem, 7svh, 4rem));}
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero,
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro,
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
