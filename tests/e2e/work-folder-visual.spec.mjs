@@ -27,6 +27,10 @@ test("Work folder rack survives mobile, tablet and desktop without clipping or p
         tab: { scrollWidth: tab.scrollWidth, clientWidth: tab.clientWidth },
         paperCount: papers.length,
         paperBottoms: papers.map(paper => rect(paper).bottom),
+        visiblePaperHeads: papers.map((paper, index) => ({
+          labelBottom: rect(paper.querySelector("span")).bottom,
+          nextTop: index < papers.length - 1 ? rect(papers[index + 1]).top : rect(front).top
+        })),
         paperInteractions: papers.map(paper => ({
           pointerEvents: getComputedStyle(paper).pointerEvents,
           transitionDuration: getComputedStyle(paper).transitionDuration
@@ -41,6 +45,9 @@ test("Work folder rack survives mobile, tablet and desktop without clipping or p
       expect(item.paperCount).toBe(5);
       for (const bottom of item.paperBottoms) {
         expect(bottom, "every sheet must stay inside its file pocket").toBeLessThanOrEqual(item.folder.bottom + 1);
+      }
+      for (const head of item.visiblePaperHeads) {
+        expect(head.labelBottom, "each printed section name must clear the next paper").toBeLessThanOrEqual(head.nextTop + 3);
       }
       expect(item.tab.scrollWidth).toBeLessThanOrEqual(item.tab.clientWidth + 2);
       for (const paper of item.paperInteractions) {
