@@ -107,7 +107,8 @@ function enhance(list) {
     if (serviceCards.length && !mobileHome) {
       serviceCards.forEach(card => { card.style.minHeight = relativeLength(card, height); });
     }
-    list.style.setProperty("--work-folder-height", relativeLength(list, height));
+    // The inherited custom property is consumed by each folder: resolve em against the folder, not the parent list.
+    list.style.setProperty("--work-folder-height", relativeLength(folders[0], height));
     size = folders[0].offsetHeight;
     if (!size) return;
     const count = folders.length;
