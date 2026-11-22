@@ -24,7 +24,7 @@ export function renderFooter({ base = "" } = {}) {
   ).join("");
   const subject = "mailto:" + siteConfig.email + "?subject=Let%27s%20work%20together";
   return `<footer class="site-footer" data-mount="footer">
-    <div class="site-footer__top"><p class="site-footer__eyebrow">Lagos, Nigeria · Working worldwide</p><a class="site-footer__start" href="${escapeHTML(subject)}">Start a project <span aria-hidden="true">↗</span></a></div>
+    <div class="site-footer__top"><a class="site-footer__start" href="${escapeHTML(subject)}">Start a project <span aria-hidden="true">↗</span></a></div>
     <div class="site-footer__panel">
       <p class="site-footer__statement">Ideas made unmistakable.<span>Design made to last.</span></p>
       <nav class="site-footer__groups" aria-label="Footer">
@@ -33,7 +33,6 @@ export function renderFooter({ base = "" } = {}) {
       </nav>
     </div>
     <div class="site-footer__signature" aria-hidden="true"></div>
-    <div class="site-footer__bottom"><span>Miebaka Joshua</span><span>Independent creative practice</span></div>
   </footer>`;
 }
 
