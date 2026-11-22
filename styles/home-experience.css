@@ -1,16 +1,17 @@
 /* One baseline panel size drives both the service cards and Home folders.
    Actual rendered card heights are reconciled by the folder controller. */
 body[data-page="home"] {
-  --home-panel-height: clamp(25em, 68svh, 44em);
+  --home-panel-height: clamp(17em, 38svh, 21em);
 }
 
 body[data-page="home"] section.home-capabilities--reference .service-stack__card {
   min-height: var(--home-panel-height);
 }
 
-@media (max-width: 48em) {
+/* The larger sticky-card experience is an enhancement of the mobile list. */
+@media (min-width: 48.001em) {
   body[data-page="home"] {
-    --home-panel-height: clamp(17em, 38svh, 21em);
+    --home-panel-height: clamp(25em, 68svh, 44em);
   }
 }
 
@@ -56,8 +57,8 @@ body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
 body[data-page="home"] .marquee__item {
   display: grid;
   place-items: center;
-  width: clamp(18em, 27vw, 27em);
-  height: clamp(6em, 9vw, 8em);
+  width: clamp(12em, 52vw, 17em);
+  height: 4.5em;
   min-height: 0;
   flex: none;
 }
@@ -65,8 +66,8 @@ body[data-page="home"] .marquee__item {
 body[data-page="home"] .marquee__item img {
   display: block;
   width: auto;
-  height: clamp(2.125em, 2.8vw, 2.5em);
-  max-width: min(78%, 19em);
+  height: 2em;
+  max-width: 82%;
   max-height: none;
   object-fit: contain;
   transform: scale(var(--logo-optical, 1));
@@ -90,15 +91,15 @@ html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
   animation: none;
 }
 
-@media (max-width: 48em) {
+@media (min-width: 48.001em) {
   body[data-page="home"] .marquee__item {
-    width: clamp(12em, 52vw, 17em);
-    height: 4.5em;
+    width: clamp(18em, 27vw, 27em);
+    height: clamp(6em, 9vw, 8em);
   }
 
   body[data-page="home"] .marquee__item img {
-    height: 2em;
-    max-width: 82%;
+    height: clamp(2.125em, 2.8vw, 2.5em);
+    max-width: min(78%, 19em);
   }
 }
 
