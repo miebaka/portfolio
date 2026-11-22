@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-/* The former Lenis/GSAP suite tested an obsolete engine; this regression
-   still protects the live Three.js water and its native touch scrolling. */
+/* The same hero controller handles mouse movement, tap ripples and
+   native mobile scrolling without a second animation engine. */
 test("hero pointer input uses cursor on desktop and touch ripples on mobile", async ({ page, isMobile }) => {
   await page.goto("/?shader-test=1");
   const host = page.locator("[data-hero-wave]");

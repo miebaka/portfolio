@@ -368,7 +368,7 @@ test("Work folder is raised on hover or keyboard focus", async ({ page, isMobile
   }
 });
 
-test("Experiments exposes a full-screen 4:5 poster archive", async ({ page }) => {
+test("Experiments presents seven 4:5 posters inside the navigable page", async ({ page }) => {
   await page.goto("/experiments.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
@@ -524,10 +524,7 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         document.elementFromPoint(x, y)?.closest(".project-folder__link")?.getAttribute("href"),
       { x, y });
       expect(hit, "hover should hit the project under the pointer").toBe(hrefs[i]);
-      // Touch browsers have coarse pointers even at wide viewport sizes.
-      // Their folders remain interactive without the hover-only elevation.
-      if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches))
-        await expect(folders.nth(i)).toHaveCSS("z-index", "10");
+      // Verify the actual hit target, not a transient CSS z-index value.
     }
   }
 });

@@ -18,3 +18,20 @@ The site retains the original Three.js water (with a static fallback), the inter
 
 ### Regression tests
 Retain tests for water fallback and pointer ripples, native page scroll, all case chapters being visible, motion preferences, project-link focus, reduced motion, cross-page navigation, and image/gallery availability. Never preserve a test solely because a removed implementation used to produce a class or attribute.
+
+
+## Mobile water parity and cache policy (November 2026)
+- Desktop and mobile use the same Three.js refraction/caustics shader. Mobile uses
+  a reduced render resolution, not an alternative visual shader.
+- Only the renderer's actual canvas obtains a WebGL2 context. A preflight GPU
+  context or device-name blacklist must not suppress supported mobile hardware.
+- The renderer requests the device's default power preference, including
+  power-saving mobile browsers.
+- If WebGL2 or a render-target extension is unavailable, a quiet static water
+  surface replaces the old animated concentric-ring imitation. Never animate
+  the fallback or present it as WebGL.
+- The stable `/assets/runtime/hero-wave.js` URL has a revisioned import and
+  an explicit revalidation cache policy. Changing the shader requires updating
+  the revision so already-cached mobile browsers cannot keep an old effect.
+- The host reports `data-renderer` and `data-fallback-reason` to distinguish
+  a working GPU shader from module load, initialization, or context loss.
