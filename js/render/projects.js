@@ -2,7 +2,6 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
-import { renderEditorialIndex } from "./editorial-index.js";
 
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);

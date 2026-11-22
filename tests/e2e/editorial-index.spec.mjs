@@ -1,3 +1,9 @@
+test("Home no longer loads the obsolete editorial image lens", async ({ page }) => {
+  await page.goto("/index.html");
+  await expect(page.locator("#selected-work .project-folder")).toHaveCount(3);
+  await expect(page.locator("#selected-work .editorial-index")).toHaveCount(0);
+});
+
 import { test, expect } from "@playwright/test";
 
 const channels = color => color.match(/[\d.]+/g).slice(0, 3).map(Number);
@@ -14,7 +20,6 @@ const contrast = (foreground, background) => {
 };
 
 for (const [name, path, selector] of [
-  ["Home", "/index.html", ".editorial-index--work"],
   ["Essays", "/essays.html", ".editorial-index--notes"]
 ]) {
   test(`${name} uses the shared full-column AAA editorial-index interaction`, async ({ page }) => {
@@ -27,20 +32,13 @@ for (const [name, path, selector] of [
     });
     expect(padding[0]).toBeGreaterThanOrEqual(16);
     expect(padding[2]).toBeGreaterThanOrEqual(16);
-    if (name === "Essays") {
-      expect(padding[1]).toBeGreaterThanOrEqual(16);
-      expect(padding[3]).toBeGreaterThanOrEqual(16);
-    } else {
-      expect(padding[1]).toBe(0);
-      expect(padding[3]).toBe(0);
-    }
+    expect(padding[1]).toBeGreaterThanOrEqual(16);
+    expect(padding[3]).toBeGreaterThanOrEqual(16);
 
     await rows.first().focus();
     await expect(rows.first()).toHaveCSS("opacity", "1");
-    // Home's deliberately heavier Geist Sans display is a section-specific
-    // art-direction decision. The shared Work and Essays index remains weight 400.
     await expect(rows.first().locator(".editorial-index__title"))
-      .toHaveCSS("font-weight", name === "Home" ? "600" : "400");
+      .toHaveCSS("font-weight", "400");
     if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
     const focusColors = await rows.first().evaluate(element => ({
       foreground: getComputedStyle(element).color,

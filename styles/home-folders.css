@@ -1,6 +1,8 @@
 /* Home uses the exact same physical folder and interaction rules as Work.
    This file only frames that rack within the homepage layout. */
 body[data-page="home"] .home-content section.swiss-selected {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

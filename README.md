@@ -129,3 +129,9 @@ dist/               GENERATED deployment output (never edit/commit)
 **Build order.** `npm run build` validates authored content, builds the experiments manifest (`scripts/build-experiments.mjs`), produces the Three.js hero shader bundle (`scripts/build-hero-wave.mjs`), then assembles the production site (`scripts/build-site.mjs`). Use `npm run sync:fallbacks` when case-study shells change and `npm run optimize:images` after updating source art. Run `npm run test:css`, `npm run test:typography`, `npm run test:tokens` and `npm run test:e2e` before trusting appearance or links.
 
 **Contact and proof integrity.** `data/services.js` must only point to honest published case-study chapters; every `#decision`, `#system` and `#survival` anchor is generated from the published case-study chapter IDs. The route and deep-link Playwright tests verify local HTTP 200 responses, real anchored content and fallbacks. Production HTTP behavior and external links still require a separate live deployment check.
+
+### Mobile-first cleanup (November 2026)
+
+The homepage keeps the fluid water and a tactile Selected Work cabinet at every size, but its reading path changes below 48rem: the secondary hero job/location repetition is reduced, the biography stays focused, the service disciplines become a neutral non-sticky list with compact proof links, and the marquee uses smaller optical cells. The content and case links remain accessible without hover, animation or JavaScript.
+
+The retired homepage editorial image-row renderer was superseded by the actual physical folders. Its unused `styles/project-roster.css`, `styles/optical-lens.css` and `js/core/optical-lens.js` were deleted instead of carrying an inert enhancement and extra CSS selectors forward. The editorial index renderer and stylesheet **remain in use for Essays and navigation**. Add back a retired effect only when there's a real matching DOM component and a clear benefit for phone readers.
