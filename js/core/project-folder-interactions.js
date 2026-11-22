@@ -39,12 +39,36 @@ function enhance(list) {
     return value < lastLeft + size ? n - 1 : -1;
   }
 
+  // Work opens downward as before. On Home, keep the resting folders at
+  // the very bottom of the allocated area and lift only the chosen folder
+  // into the empty runway above the stack.
+  const homeRise = () => size * .62;
+  const homeBase = () => homeRise() + 8;
+
+  function homeIndexAt(value) {
+    if (!size) return -1;
+    const y = value - homeBase();
+    if (y < 0) return active >= 0 ? active : -1;
+    const index = Math.floor(y / pitch);
+    if (index < folders.length - 1) return Math.max(0, index);
+    return y < (folders.length - 1) * pitch + size ? folders.length - 1 : -1;
+  }
+
+  function indexForEvent(event) {
+    if (!isHome) return indexAt(local(event));
+    const node = event.target instanceof Element ? event.target.closest(".project-folder") : null;
+    const targetIndex = folders.indexOf(node);
+    return targetIndex >= 0 ? targetIndex : homeIndexAt(local(event));
+  }
+
   function layout(index) {
     if (entering) return;
     active = index;
     const shift = size - pitch;
     folders.forEach((folder, i) => {
-      const offset = i * pitch + (index >= 0 && i > index ? shift : 0);
+      const offset = isHome
+        ? homeBase() + i * pitch - (i === index ? homeRise() : 0)
+        : i * pitch + (index >= 0 && i > index ? shift : 0);
       folder.style.setProperty("--folder-y", offset + "px");
       folder.classList.toggle("is-active", i === index);
     });
@@ -81,7 +105,10 @@ function enhance(list) {
         ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
         : Math.min(90, size * .34);
     const expanded = count === 1 ? size : 2 * size + (count - 2) * pitch;
-    list.style.height = Math.ceil(expanded + 2) + "px";
+    // The Home list reserves opening space above the rest position, not
+    // below it. The final folder's bottom therefore meets the section foot.
+    const restingHeight = (count - 1) * pitch + size;
+    list.style.height = Math.ceil((isHome ? homeBase() + restingHeight : expanded) + 2) + "px";
     layout(active);
   }
 
@@ -100,11 +127,11 @@ function enhance(list) {
     lastPointer = event.pointerType || "mouse";
     if (lastPointer === "touch" || entering) return;
     touchPreview = -1;
-    pending = local(event);
+    pending = isHome ? indexForEvent(event) : local(event);
     if (frame) return;
     frame = requestAnimationFrame(() => {
       frame = 0;
-      const index = indexAt(pending);
+      const index = isHome ? pending : indexAt(pending);
       if (index !== active) layout(index);
     });
   };
@@ -128,7 +155,7 @@ function enhance(list) {
     // A real keyboard activation selects the focused native link, not a
     // coordinate inherited from a previous pointer.
     const keyboard = event.detail === 0 && focusIndex >= 0;
-    const index = keyboard ? focusIndex : indexAt(local(event));
+    const index = keyboard ? focusIndex : indexForEvent(event);
     if (index < 0) return;
     event.preventDefault();
     event.stopPropagation();

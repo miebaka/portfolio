@@ -27,6 +27,25 @@ test("Home renders the landscape folder material from Work, not standing version
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
 });
 
+test("Selected Work rests at the bottom of its section with a clear gap after the water hero", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/index.html");
+    await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
+    const bounds = await page.evaluate(() => {
+      const rect = s => document.querySelector(s).getBoundingClientRect();
+      const final = rect(".home-folder-stack__cards .project-folder:last-child");
+      const first = rect(".home-folder-stack__cards .project-folder:first-child");
+      const hero = rect(".home-landing");
+      const section = rect("#selected-work");
+      return { gap: first.top - hero.bottom, bottom: section.bottom - final.bottom, viewport: innerHeight };
+    });
+    expect(bounds.gap).toBeGreaterThan(bounds.viewport * .24);
+    expect(bounds.bottom).toBeGreaterThanOrEqual(0);
+    expect(bounds.bottom).toBeLessThan(110);
+  }
+});
+
 test("Home folders match What I Do card heights while Work stays compact", async ({ page }) => {
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
@@ -57,7 +76,7 @@ test("Home folders match What I Do card heights while Work stays compact", async
   }
 });
 
-test("hover opens the right Home landscape folder and moves subsequent folders down", async ({ page, isMobile }) => {
+test("hover lifts the right Home folder into reserved space without moving the other folders", async ({ page, isMobile }) => {
   if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const folders = homeFolders(page);
@@ -71,22 +90,20 @@ test("hover opens the right Home landscape folder and moves subsequent folders d
   const first = await folders.first().boundingBox();
   await page.mouse.move(first.x + 25, first.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "0");
-  // The Work-style opening motion takes 550ms; assert settled geometry,
-  // not an intermediate frame from the animation.
+  // Home rises upward by a little less than its original overlap while
+  // its following folders remain anchored at the section bottom.
   await expect.poll(async () => {
     const firstBox = await folders.first().boundingBox();
-    const secondBox = await folders.nth(1).boundingBox();
-    return secondBox.y - (firstBox.y + firstBox.height);
-  }).toBeGreaterThanOrEqual(-3);
+    return Math.round(first.y - firstBox.y);
+  }).toBeGreaterThan(90);
   const activeFirst = await folders.first().boundingBox();
   const second = await folders.nth(1).boundingBox();
   const layering = await folders.evaluateAll(nodes => nodes.map(el => Number(getComputedStyle(el).zIndex)));
-  expect(layering[0], "active Home folder should lift above its neighbors as on Work").toBeGreaterThan(layering[1]);
-  expect(second.y, "next folder moves aside so the hovered face pops up")
-    .toBeGreaterThanOrEqual(activeFirst.y + activeFirst.height - 3);
+  expect(layering[0], "active Home folder should lift above its neighbors").toBeGreaterThan(layering[1]);
+  expect(second.y, "next folder remains anchored while the first rises").toBeGreaterThan(first.y);
   const title = await folders.first().locator(".project-folder__title").boundingBox();
   expect(title.y, "project name stays in the raised exposed flap").toBeGreaterThan(activeFirst.y);
-  expect(title.y + title.height, "hovered title must not be covered by the next folder")
+  expect(title.y + title.height, "hovered title must remain above the next folder")
     .toBeLessThan(second.y - 6);
   await page.mouse.move(second.x + 25, second.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "1");
