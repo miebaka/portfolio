@@ -105,8 +105,6 @@ body[data-page="home"] .home-project-list {
   max-height: calc(100% - 3rem);
   overflow: hidden;
   writing-mode: vertical-rl;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   transform: rotate(180deg);
   transition: opacity 220ms ease;
 }
@@ -117,7 +115,6 @@ body[data-page="home"] .home-project-list {
   display: block;
   width: 100%;
   margin-inline-start: clamp(1rem, 2.5vw, 3rem);
-  overflow-wrap: anywhere;
   opacity: 0;
   transform: translateY(.5rem);
   transition: opacity 220ms ease, transform 360ms var(--editorial-ease);
@@ -151,7 +148,7 @@ body[data-page="home"] .home-project-list {
   bottom: 0;
   left: 0;
   margin: 0;
-  transform: translate3d(var(--folder-x, 0px), var(--folder-lift, 0px), 0);
+  transform: translate3d(var(--folder-x, 0), var(--folder-lift, 0), 0);
 }
 
 body[data-page="home"] .home-project-list .work-view-controls {

@@ -1354,3 +1354,11 @@ body[data-page="home"] .home-folder-stack__cards .project-folder__spine {
   letter-spacing: .09em;
   text-transform: uppercase;
 }
+
+body[data-page="home"] .home-folder-stack__cards .project-folder__spine {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+body[data-page="home"] .home-folder-stack__cards .project-folder__title {
+  overflow-wrap: anywhere;
+}
