@@ -42,7 +42,7 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Colour, spacing, motion and layout tokens | `styles/foundations.css` |
 | Base layouts, shared UI and page layout | `styles/layout.css`, `styles/components-v4.css`, `styles/pages-v4.css` |
 | Global CSS ordering | `styles/main.css` |
-| Physical Work folders | `styles/project-folders.css`, `js/render/projects.js`, `work.html` |
+| Physical Work and Home folders | `styles/project-folders.css`, `styles/home-folders.css`, `styles/folder-interactions.css`, `js/core/project-folder-interactions.js`, `js/render/projects.js` |
 | Homepage, services, marquee and current visual refinements | `styles/home.css`, `styles/services-stack.css`, `styles/home-experience.css`, `styles/portfolio-refinement.css` |
 | Navigation, index overlay and theme | `js/render/navigation.js`, `js/core/navigation.js`, `js/core/preferences.js` |
 | Server-rendered navigation/footer fallback | `scripts/render-partials.mjs` |
@@ -60,7 +60,7 @@ Geist Sans and Geist Mono are pinned to `geist@1.9.2` WOFF2 files on **jsDelivr*
 
 ## Work and published case studies
 
-The Work index uses three compact, full-width landscape folders sized to fit within one screen: each has a numbered third-cut tab, five decorative **blank** sheets, and only the project title on its front. Folders remain native links in light/dark themes, on touch and keyboard, and without JavaScript.
+The Work index uses three compact, full-width landscape folders: each has a numbered third-cut tab, five decorative **blank** sheets and a project title. The Home version reuses the same paper materials but matches its height to the rendered *What I Do* cards, rests at the bottom of the Selected Work section and rises into a reserved runway above the stack on hover/focus. Only Home surfaces the honest project category and summary. Both are native links with decorative sheets outside the anchor, functional on keyboard, touch and without JavaScript.
 
 To add a case study:
 
@@ -82,7 +82,7 @@ For changed case-study or profile images, run `npm run optimize:images`. The bui
 - The hero uses a lazy Three.js/WebGL island with a static, usable fallback.
 - What I Do uses native CSS sticky scrolling without an external scroll engine; reduced-motion users see a static sequence.
 - The Index overlay, theme toggle and footer signature have keyboard/touch paths; the underlying document and contact links remain available without JavaScript.
-- `System`, `Reduce` and `Full` motion preferences are persisted independently of the colour theme.
+- `System`, `Reduce` and `Full` motion choices are persisted independently of colour theme. The OS `prefers-reduced-motion: reduce` always disables decorative animation and live water, even when a prior `Full` choice was saved.
 - Essential content must not depend on decorative animation, GPU capability or hover.
 
 ## Last.fm Now Playing
@@ -91,7 +91,7 @@ The masthead displays a small vinyl pill directly after the logo. When a Last.fm
 
 ## Contact, privacy and deployment
 
-`POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback.
+`POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback. Visible email addresses also expose an adjacent keyboard-operable **Copy** button with a screen-reader-announced **Copied** result. Contact intake guides a first brief through goal, scope, deadline and success criteria without changing the validated API payload schema.
 
 The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` allows public pages to be crawled; the generated sitemap lists indexable canonical routes. Redirect-only and 404 pages retain page-specific `noindex` as appropriate. Privacy claims must match the actual browser requests, including the remote Geist fonts.
 
@@ -108,3 +108,24 @@ npm run quality
 `npm run quality` builds the site, runs unit/integrity tests, the full Chromium/Playwright browser matrix (no skipped tests), CSS/JavaScript/font/image budgets, desktop Lighthouse and dependency audits. The JavaScript budget now measures the complete static module graph; module bundling and immutable caching remain open performance work. CI uses Node.js 24. The font and CSS contracts are checked separately in the fast Typography workflow.
 
 **Automated green is necessary, not a live-release sign-off.** Before merge or production promotion, confirm a Vercel preview was built from the **exact PR head SHA**, then check actual Home, Work, case-study, Essays, Experiments, About and Contact routes. Do keyboard and screen-reader sampling, 200% zoom, light/dark and reduced-motion checks, a real touch/GPU pass, and an end-to-end contact delivery test with properly configured credentials. Verify external links and metadata, plus the ability to roll back to the last known-good deployment. The release checklist in [`engineering-specification.md`](engineering-specification.md) records what is automated versus still manual.
+
+## Repository layout and asset build path
+
+```text
+api/                Server-only contact and Last.fm handlers; no browser secrets
+assets/images/      Source/reference photography, covers, client SVG marks
+assets/experiments/ Authored experiment metadata and originals
+data/               Projects, case narratives, service proof and route registry
+js/core/            Interaction controllers (folders, water, motion, contact)
+js/render/          Data-driven semantic markup and no-JS-compatible UI
+styles/             Layout/decoration; tokens.css owns ALL type declarations
+work/               Published and draft case-study HTML shells
+essays/             Public essay HTML and assets
+scripts/            Build, optimization, validation and contract checks
+tests/e2e/          Route, proof-anchor, responsive and interaction assertions
+dist/               GENERATED deployment output (never edit/commit)
+```
+
+**Build order.** `npm run build` validates authored content, builds the experiments manifest (`scripts/build-experiments.mjs`), produces the Three.js hero shader bundle (`scripts/build-hero-wave.mjs`), then assembles the production site (`scripts/build-site.mjs`). Use `npm run sync:fallbacks` when case-study shells change and `npm run optimize:images` after updating source art. Run `npm run test:css`, `npm run test:typography`, `npm run test:tokens` and `npm run test:e2e` before trusting appearance or links.
+
+**Contact and proof integrity.** `data/services.js` must only point to honest published case-study chapters; every `#decision`, `#system` and `#survival` anchor is generated from the published case-study chapter IDs. The route and deep-link Playwright tests verify local HTTP 200 responses, real anchored content and fallbacks. Production HTTP behavior and external links still require a separate live deployment check.

@@ -82,10 +82,10 @@ test("the homepage makes the hiring proposition and proof available before biogr
   assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });
 
-test("the closing invitation has a direct contact action without surplus availability copy", async () => {
+test("the homepage has one final inquiry destination, not a duplicate pre-footer CTA", async () => {
   const html = await page("index.html");
-  assert.match(html, /Have something worth making unmistakable\?/);
-  assert.match(html, /class="home-close__email" href="contact\.html"/);
+  assert.doesNotMatch(html, /class="home-close|Have something worth making unmistakable\?/);
+  assert.match(html, /<footer data-mount="footer">/);
   assert.doesNotMatch(html, /Available for senior brand and marketing design roles/);
 });
 

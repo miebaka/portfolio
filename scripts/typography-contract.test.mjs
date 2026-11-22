@@ -59,3 +59,19 @@ test("stylelint rejects typography even when it references a valid token", async
   const warnings = report.results[0].warnings.filter(warning => warning.rule === ruleName);
   assert.equal(warnings.length, rejected.length, JSON.stringify(warnings));
 });
+
+test("Geist 400 and 600 faces are declared with swap and no synthetic text weights", () => {
+  const faces = [...tokens.matchAll(/@font-face\s*\{([^}]+)\}/g)]
+    .map(([, css]) => css)
+    .filter(css => /Geist (?:Sans|Mono)/.test(css));
+  assert.equal(faces.length, 4);
+  for (const family of ["Geist Sans", "Geist Mono"]) {
+    for (const weight of [400, 600]) {
+      const face = faces.find(css => css.includes('font-family:"' + family + '"') && css.includes('font-weight:' + weight));
+      assert.ok(face, family + " " + weight + " face must be declared");
+      assert.match(face, /font-display:swap/);
+      assert.match(face, /\.woff2/);
+    }
+  }
+  assert.match(tokens, /font-synthesis:none/);
+});

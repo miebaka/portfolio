@@ -143,7 +143,7 @@ export function createMarqueeController(root, deps = {}) {
 
   const isReduced = () => {
     const chosen = doc.documentElement?.dataset.motion;
-    return chosen === "reduced" || (chosen !== "full" && Boolean(motionQuery?.matches));
+    return chosen === "reduced" || Boolean(motionQuery?.matches);
   };
   const sync = () => {
     const running = !isReduced() && !destroyed && visible && !doc.hidden;

@@ -203,7 +203,7 @@ test("visible email addresses can be copied without replacing the mail link", as
   await page.goto("/contact.html");
   const mail = page.locator('a[data-href="email"]').filter({ hasText: "@" });
   await expect(mail).toHaveAttribute("href", /^mailto:/);
-  const copy = page.getByRole("button", { name: "Copy address to clipboard" });
+  const copy = page.locator(".contact-info .copy-email");
   await copy.click();
   await expect(copy).toContainText("Copied");
   await expect.poll(() => page.evaluate(() => window.__copiedEmail)).toBe("miebakakiki@gmail.com");
