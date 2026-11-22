@@ -2,9 +2,6 @@ import { isMotionReduced } from "./motion-language.js";
 
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
 
-export const isSoftwareRenderer = name =>
-  /swiftshader|llvmpipe|softpipe|lavapipe|software raster|microsoft basic render/i.test(String(name || ""));
-
 export const HERO_WAVE_PRESETS = Object.freeze({
   light: Object.freeze({
     name: "Light water plane",
@@ -14,14 +11,6 @@ export const HERO_WAVE_PRESETS = Object.freeze({
   }),
 });
 
-function resolvedColors(win, root) {
-  const styles = win.getComputedStyle?.(root);
-  const token = name => styles?.getPropertyValue(name).trim();
-  return {
-    colors: [token("--hero-wave-color-1"), token("--hero-wave-color-2"), token("--hero-wave-color-3")],
-  };
-}
-
 function resolvedState(root, reducedMotionQuery) {
   const theme = root.dataset.theme === "dark" ? "dark" : "light";
   return { theme, animate: !isMotionReduced(root, reducedMotionQuery) };
@@ -30,7 +19,8 @@ function resolvedState(root, reducedMotionQuery) {
 export async function initHeroWave({
   document: doc = globalThis.document,
   window: win = globalThis.window,
-  loadRenderer = () => import("../../assets/runtime/hero-wave.js"),
+  // Revisioned to bypass older cached shader bundles on mobile browsers.
+  loadRenderer = () => import("../../assets/runtime/hero-wave.js?rev=20261122-mobile-caustics"),
 } = {}) {
   const parameters = new URLSearchParams(win?.location?.search || "");
   const testOptIn = parameters.has("shader-test");
@@ -45,8 +35,7 @@ export async function initHeroWave({
   const root = doc.documentElement;
   const getState = () => {
     const state = resolvedState(root, reducedMotionQuery);
-    const colors = resolvedColors(win, root);
-    return { ...state, ...colors, animate: state.animate && !forceStatic && !userPaused };
+    return { ...state, animate: state.animate && !forceStatic && !userPaused };
   };
   let userPaused = false;
   const landing = doc.querySelector(".home-landing");
@@ -57,44 +46,20 @@ export async function initHeroWave({
   host.className = "hero-wave is-fallback";
   host.dataset.heroWave = "";
   host.dataset.renderer = "fallback";
+  host.dataset.fallbackReason = "loading";
   host.setAttribute("aria-hidden", "true");
   landing.prepend(host);
-  const keepFallback = error => {
-    if (error) console.warn("Three.js water unavailable; showing water fallback", error);
+  const keepFallback = (error, reason = "renderer-unavailable") => {
+    if (error) console.warn("Three.js water unavailable; showing static water", error);
     host.classList.add("is-fallback");
     host.classList.remove("is-ready");
     host.dataset.renderer = "fallback";
+    host.dataset.fallbackReason = reason;
     return { destroy() { host.remove(); } };
   };
 
-  // Only reject confirmed software rendering. Missing GPU-identification
-  // details are normal on mobile and must not suppress a working WebGL2 device.
-  // Explicit shader-test routes retain software GL for deterministic QA.
-  if (!testOptIn) {
-    try {
-      const probe = doc.createElement("canvas");
-      // Prefer default GPU selection: forcing high-performance can fail on
-      // battery/energy-saving browsers that still support the full shader.
-      const probeContext = probe.getContext("webgl2", {
-        alpha: false, antialias: false,
-      });
-      if (!probeContext) return keepFallback();
-      const info = probeContext.getExtension("WEBGL_debug_renderer_info");
-      const name = info
-        ? probeContext.getParameter(info.UNMASKED_RENDERER_WEBGL)
-        : probeContext.getParameter(probeContext.RENDERER);
-      const software = isSoftwareRenderer(name);
-      // Mobile Safari and privacy-conscious browsers often report only
-      // "WebKit WebGL" or "WebGL" and hide WEBGL_debug_renderer_info.
-      // An unrecognized name is NOT evidence of a software renderer.
-      if (software) return keepFallback();
-    } catch (error) {
-      return keepFallback(error);
-    }
-    // Do not explicitly lose the probe context. Safari/ANGLE can propagate a
-    // forced context loss to a newly created canvas, leaving a blank hero.
-    // The off-DOM probe is released by the browser after this function.
-  }
+  // One actual context is created by the renderer, not an extra mobile GPU
+  // probe. Reject only a real initialization failure, not a generic GPU name.
   const control = doc.createElement("button");
   control.type = "button";
   control.className = "hero-wave__control";
@@ -103,7 +68,7 @@ export async function initHeroWave({
   landing.append(control);
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
-  catch (error) { control.remove(); return keepFallback(error); }
+  catch (error) { control.remove(); return keepFallback(error, "module-load"); }
 
   let island;
   try {
@@ -112,7 +77,7 @@ export async function initHeroWave({
   catch (error) {
     island?.destroy();
     control.remove();
-    return keepFallback(error);
+    return keepFallback(error, "renderer-init");
   }
 
   let destroyed = false;
@@ -212,6 +177,7 @@ export async function initHeroWave({
     root.classList.add("has-hero-wave");
     host.classList.remove("is-fallback");
     host.dataset.renderer = "threejs";
+    delete host.dataset.fallbackReason;
     host.classList.add("is-ready");
   };
   const onContextLost = () => {
@@ -219,6 +185,7 @@ export async function initHeroWave({
     host.classList.add("is-fallback");
     host.classList.remove("is-ready");
     host.dataset.renderer = "fallback";
+    host.dataset.fallbackReason = "context-lost";
   };
   const onContextRestored = () => {
     if (destroyed) return;

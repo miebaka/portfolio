@@ -189,9 +189,11 @@ const SIZE=144;
 const ITERATIONS=10;
 export function mountHeroWave(host,initialState){
  const canvas=document.createElement("canvas");canvas.className="hero-wave__canvas";canvas.setAttribute("aria-hidden","true");
- const renderer=new WebGLRenderer({canvas,alpha:false,antialias:false,powerPreference:"high-performance"});
- // Three.js r163+ requires WebGL2 in WebGLRenderer; capability flags may be absent.
- const gl=renderer.getContext();
+ // Use the device default GPU and share ONE WebGL2 context with Three.js.
+ // "high-performance" can fail on mobile power-saving browsers.
+ const gl=canvas.getContext("webgl2",{alpha:false,antialias:false,powerPreference:"default"});
+ if(!gl)throw new Error("WebGL2 unavailable");
+ const renderer=new WebGLRenderer({canvas,context:gl,alpha:false,antialias:false,powerPreference:"default"});
  if(!gl.getExtension("EXT_color_buffer_float")&&!gl.getExtension("EXT_color_buffer_half_float")){renderer.dispose();throw new Error("Half float framebuffer unavailable");}
  renderer.setPixelRatio(1);renderer.toneMapping=NoToneMapping;host.append(canvas);
  const scene=new Scene(),camera=new OrthographicCamera(-1,1,1,-1,0,1),geometry=new PlaneGeometry(2,2);

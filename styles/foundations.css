@@ -37,7 +37,6 @@
   --ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-on-blue:#032485;--ref-near-black:#111;
   --ref-black:#000;--ref-rivo:#0000a8;--ref-rivo-light:#b1c5ff;--ref-chopbox:#b84314;--ref-chopbox-light:#ffcf2f;
   --ref-tedx:#702963;--ref-tedx-light:#e6b8dd;
-  --hero-wave-color-1:var(--ref-midnight);--hero-wave-color-2:var(--ref-ultramarine);--hero-wave-color-3:var(--ref-blue-80);
   --ref-white:#fff;
 
   /* Water shader fallback palette: authored centrally, never in page CSS. */
@@ -46,8 +45,6 @@
   --ref-water-light-a: #d7e9ed;
   --ref-water-light-b: #97cad1;
   --ref-water-light-c: #6ea7be;
-  --ref-water-ripple-strong: rgb(255 255 255 / .48);
-  --ref-water-ripple-soft: rgb(255 255 255 / .4);
   --ref-water-dark-glint: rgb(44 97 160 / .4);
   --ref-water-dark-depth: rgb(10 45 118 / .52);
   --ref-water-dark-a: #10264d;
