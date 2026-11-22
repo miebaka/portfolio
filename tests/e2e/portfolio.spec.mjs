@@ -491,8 +491,7 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         ratio: rect.width / rect.height };
     }));
     for (const rect of bounds) {
-      expect(rect.ratio, "folder must be landscape like a horizontal file").toBeGreaterThan(1.3);
-      expect(rect.ratio, "folder should stay physically proportioned").toBeLessThan(2.6);
+      expect(rect.ratio, "folder must keep authentic letter-size proportions").toBeCloseTo(11.75 / 9.5, 2);
     }
     for (let i = 0; i < bounds.length; i++) {
       for (let j = i + 1; j < bounds.length; j++) {
