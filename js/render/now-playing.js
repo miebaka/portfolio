@@ -81,6 +81,8 @@ export function initNowPlaying({
   };
   doc.addEventListener("visibilitychange", onVisibility);
   win.addEventListener("pagehide", destroy, { once: true });
-  if (!["localhost", "127.0.0.1"].includes(win.location?.hostname)) schedule(0);
+  // Poll on every host, including local development and browser-test servers.
+  // A missing endpoint safely leaves the original profile link in place.
+  schedule(0);
   return { destroy };
 }
