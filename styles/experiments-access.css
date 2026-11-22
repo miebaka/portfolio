@@ -84,6 +84,7 @@ body[data-page="explorations"] .experiments-next nav a {
 body[data-page="explorations"] .experiments-next nav a:focus-visible {
   outline: 3px solid var(--focus); outline-offset: 3px;
 }
+
 /* The gallery is usable on narrow devices without shrinking a desktop stage. */
 @media (min-width: 48.001em) {
   body[data-page="explorations"] .experiments-spatial__heading {
