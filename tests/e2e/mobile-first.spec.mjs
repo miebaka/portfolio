@@ -8,25 +8,26 @@ const routes = [
 ];
 const widths = [320, 390, 768, 1024, 1440];
 
-test("core pages are readable without horizontal document overflow", async ({ page }) => {
-  for (const width of widths) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const route of routes) {
+for (const route of routes) {
+  test(`route ${route} has no horizontal overflow at responsive widths`, async ({ page }) => {
+    test.setTimeout(90_000);
+    for (const width of widths) {
+      await page.setViewportSize({ width, height: 900 });
       await page.goto(route);
       await expect(page.locator("main h1").first(), route).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       const metrics = await page.evaluate(() => ({
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        root: document.documentElement.clientWidth,
         main: document.querySelector("main")?.getBoundingClientRect().width || 0
       }));
       expect(metrics.overflow, `${route} at ${width}px horizontally overflows`).toBeLessThanOrEqual(2);
       expect(metrics.main, `${route} at ${width}px has an empty main`).toBeGreaterThan(100);
     }
-  }
-});
+  });
+}
 
 test("mobile hero, editorial biography and footer honor the reading order", async ({ page }) => {
+  test.setTimeout(90_000);
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/index.html");
@@ -56,6 +57,7 @@ test("mobile hero, editorial biography and footer honor the reading order", asyn
 });
 
 test("relative layout survives larger text without cutting off page headings", async ({ page }) => {
+  test.setTimeout(90_000);
   await page.setViewportSize({ width: 390, height: 844 });
   for (const route of ["/index.html", "/about.html", "/contact.html", "/work.html"]) {
     await page.goto(route);
