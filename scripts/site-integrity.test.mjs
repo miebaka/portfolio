@@ -44,8 +44,9 @@ test("homepage keeps the approved chapter order", async () => {
     const biography = html.indexOf('id="profile"');
     const capabilities = html.indexOf('id="what-i-do"');
     const journey = html.indexOf('class="journey"');
-    const close = html.indexOf('class="home-close');
-    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < close, directory);
+    const footer = html.indexOf('<footer data-mount="footer">');
+    assert.ok(proof < biography && biography < capabilities && capabilities < journey && journey < footer, directory);
+    assert.doesNotMatch(html, /class="home-close/, "the footer is the only final inquiry CTA");
     assert.doesNotMatch(html, /practice-standard|Build the system|Edit until it holds/);
   }
 });

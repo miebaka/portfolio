@@ -52,7 +52,7 @@ export const services = [
     "description": "Make creative work reproducible, accessible and usable beyond the presentation.",
     "outputs": "Design rules, production specifications, templates and handoff materials.",
     "fit": "Teams who need a system to survive different people, sizes and media.",
-    "evidenceLabel": "Rivo's repeatable system",
-    "evidenceHref": "work/rivo.html#system"
+    "evidenceLabel": "Rivo's application system",
+    "evidenceHref": "work/rivo.html#survival"
   }
 ];

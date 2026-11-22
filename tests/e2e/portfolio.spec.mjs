@@ -223,7 +223,7 @@ test("Home content preserves the unblurred hero field", async ({ page }) => {
   await page.goto("/index.html?shader-test=1");
   const wave = page.locator("[data-hero-wave]");
   await expect(wave).toHaveAttribute("data-interaction", /cursor|static/);
-  await page.locator(".home-close").scrollIntoViewIfNeeded();
+  await page.locator(".journey").scrollIntoViewIfNeeded();
   await expect(wave.locator("canvas")).toBeVisible();
   const surfaces = await page.locator(".home-content, .journey").evaluateAll(elements => elements.map(element => ({
     className: element.className,

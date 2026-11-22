@@ -6,8 +6,9 @@ test("explicit Reduce takes precedence over an unrestricted OS", () => {
   assert.equal(isMotionReduced({ dataset: { motion: "reduced" } }, { matches: false }), true);
 });
 
-test("explicit Full overrides an OS Reduce preference", () => {
-  assert.equal(isMotionReduced({ dataset: { motion: "full" } }, { matches: true }), false);
+test("operating-system Reduce remains respected even if Full was previously chosen", () => {
+  assert.equal(isMotionReduced({ dataset: { motion: "full" } }, { matches: true }), true);
+  assert.equal(isMotionReduced({ dataset: { motion: "full" } }, { matches: false }), false);
 });
 
 test("System follows the OS setting and fails open when unavailable", () => {
