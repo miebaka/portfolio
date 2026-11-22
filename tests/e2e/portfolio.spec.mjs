@@ -493,13 +493,11 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
     for (const rect of bounds) {
       expect(rect.ratio, "folder must keep authentic letter-size proportions").toBeCloseTo(11.75 / 9.5, 2);
     }
-    for (let i = 0; i < bounds.length; i++) {
-      for (let j = i + 1; j < bounds.length; j++) {
-        const a = bounds[i], b = bounds[j];
-        const overlaps = a.left < b.right - 1 && a.right > b.left + 1 &&
-          a.top < b.bottom - 1 && a.bottom > b.top + 1;
-        expect(overlaps, "folder link hit areas must not overlap").toBe(false);
-      }
+    // Physical folders deliberately overlap. Confirm the intended stack order,
+    // then test actual hit targets below instead of rejecting overlapping boxes.
+    for (let i = 1; i < bounds.length; i++) {
+      expect(bounds[i].top, "folders stack in document order").toBeGreaterThan(bounds[i - 1].top);
+      expect(bounds[i].top, "adjacent folders overlap").toBeLessThan(bounds[i - 1].bottom);
     }
     for (let i = 0; i < 3; i++) {
       const folder = folders.nth(i);
@@ -529,7 +527,7 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
       // Touch browsers have coarse pointers even at wide viewport sizes.
       // Their folders remain interactive without the hover-only elevation.
       if (await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches))
-        await expect(folders.nth(i)).toHaveCSS("z-index", "2");
+        await expect(folders.nth(i)).toHaveCSS("z-index", "10");
     }
   }
 });
