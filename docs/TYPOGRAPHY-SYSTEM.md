@@ -17,11 +17,11 @@ There is **one source of truth for all typography-related CSS**: `styles/tokens.
 
 The approved family roles are Geist Sans for headings and body (400/600) and Geist Mono for labels and navigation (400/600). Material Symbols Outlined is an icon font only. Preserve fallbacks and font swap behavior.
 
-No separate editorial `display` or `hero` text tier is permitted. Every page title, the homepage name, case-study opening and major call to action draw from a **48px maximum** headline scale. Rather than using huge text to produce impact, rely on hierarchy, whitespace, composition and visual work.
+No separate editorial `display` or `hero` text tier is permitted. Every page title, the homepage name, case-study opening and major call to action draw from a **3em upper bound (nominally 48px at a 16px parent size)** headline scale. Rather than using huge text to produce impact, rely on hierarchy, whitespace, composition and visual work.
 
 ## Canonical size scale
 
-All editorial size bounds are in `rem` so browser zoom remains meaningful. Pixel references below assume a 16px root size.
+Editorial size bounds use `em` so each component's spacing and typography follow the inherited text size. The pixel references below are nominal values at a 16px parent text size; browser zoom and larger text preferences remain meaningful.
 
 | Token | Range | Purpose |
 | --- | --- | --- |

@@ -128,7 +128,7 @@ button{color:inherit;border:0;background:none;cursor:pointer}
 p{max-width:44em;}
 main{min-height:70vh;position:relative;z-index:1}
 footer{position:relative;z-index:1}
-.js-reveal [data-motion-role="comparison"]{transform:translate3d(-2rem,0,0);clip-path:inset(0 8% 0 0)}
+.js-reveal [data-motion-role="comparison"]{transform:translate3d(-2em,0,0);clip-path:inset(0 8% 0 0)}
 .js-reveal [data-motion-role="expansion"]{transform:scale(.985);clip-path:inset(8%)}
 .js-reveal [data-motion-role="reveal"]{transform:none;clip-path:inset(0 0 100%)}
 .js-reveal [data-motion-role="closure"]{transform:translate3d(0,1.5em,0);clip-path:inset(0)}

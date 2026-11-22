@@ -90,7 +90,7 @@ test("font roles, portrait source widths and OS motion preference remain coheren
     });
     expect(details.width).toBeGreaterThan(0);
     expect(details.sizes).toBe(details.webpSizes);
-    expect(details.sizes).toContain("max-width: 48rem");
+    expect(details.sizes).toContain("max-width: 48em");
     const desktopFraction = Number(details.sizes.match(/([\d.]+)vw$/)?.[1]) / 100;
     expect(Math.abs(details.width - details.viewport * desktopFraction)).toBeLessThan(details.viewport * .12);
     expect(details.naturalRatio).toBeCloseTo(.8, 3);

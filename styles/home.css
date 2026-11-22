@@ -1,6 +1,6 @@
 /* Home chapter — reference-locked editorial system. */
 body[data-page="home"] {
-  --hf: clamp(0.75em, 1.25vw, 1.35em);
+  --hf: 0.75em;
   --hr: clamp(1.25em, 2.5vw, 2.75em);
 
   background: var(--paper);}
@@ -8,8 +8,8 @@ body[data-page="home"] .home-landing {
   position: relative;
   isolation: isolate;
   width: calc(100% - 2 * var(--hf));
-  height: calc(100svh - var(--nav-h) - 2 * var(--hf));
-  min-height: 40em;
+  height: auto;
+  min-height: calc(100svh - var(--nav-h) - 1.5em);
   margin: var(--hf);
   overflow: hidden;
   color: var(--ref-paper);
@@ -32,27 +32,28 @@ body[data-page="home"] .home-landing::after {
 body[data-page="home"] .home-landing__inner {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: inherit;
   gap: var(--grid-gap);
   height: 100%;
-  padding-block: clamp(1.5em, 3vw, 3em);}
+  padding: 1.5em 1em;}
 body[data-page="home"] .home-landing__statement {
-  grid-column: 4/10;
-  max-width: 26ch;
+  grid-column: 1/-1;
+  max-width: 17ch;
   align-self: center;}
 body[data-page="home"] .home-landing h1 {
   grid-column: 1/-1;
-  display: flex;
-  justify-content: space-between;
-  gap: 1em;
+  display: grid;
+  gap: 0;
   color: var(--ref-paper);
   align-self: end;}
 body[data-page="home"] .home-landing__meta {
   grid-column: 1/-1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1em;
   align-items: end;
   margin-top: clamp(2em, 5vh, 4em);}
 body[data-page="home"] .home-landing__meta p:nth-child(2) {
@@ -136,12 +137,12 @@ body[data-page="home"] :is(.swiss-section-head, .disciplines-heading) h2 {
   grid-column: 1/10;}
 body[data-page="home"] .home-profile {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: clamp(2em,6vw,7em);}
+  gap: 3em;}
 body[data-page="home"] .home-profile__introduction {
-  grid-column: 7/-1;
-  grid-row: 1;}
+  grid-column: 1;
+  grid-row: 2;}
 body[data-page="home"] .home-profile__introduction h2 {
   max-width: 9ch;}
 body[data-page="home"] .home-profile__lead {
@@ -155,7 +156,7 @@ body[data-page="home"] .home-profile__introduction .swiss-link {
   display: inline-flex;
   margin-top: 2.25em;}
 body[data-page="home"] .home-profile > .home-profile__media {
-  grid-column: 1/6;
+  grid-column: 1;
   grid-row: 1;}
 body[data-page="home"] .home-profile__portrait {
   background: var(--surface);
@@ -487,3 +488,56 @@ body[data-page="home"] .service-journey__evidence{
   color:var(--editorial-inverse);}
 body[data-page="home"] .service-journey a:focus-visible .service-journey__evidence{
   border-color:currentColor;}
+
+/* Progressive composition: the phone layout is the baseline, not a
+   compressed desktop grid. Water canvas and folder stacking are untouched. */
+@media (min-width: 48.001em) {
+  body[data-page="home"] {
+    --hf: clamp(.75em, 1.25vw, 1.35em);
+  }
+
+  body[data-page="home"] .home-landing {
+    height: calc(100svh - var(--nav-h) - 2 * var(--hf));
+    min-height: 40em;
+  }
+
+  body[data-page="home"] .home-landing__inner {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto 1fr auto;
+    justify-content: initial;
+    min-height: 0;
+    padding: clamp(1.5em, 3vw, 3em) 0;
+  }
+
+  body[data-page="home"] .home-landing__statement {
+    grid-column: 4/10;
+    max-width: 26ch;
+  }
+
+  body[data-page="home"] .home-landing h1 {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  body[data-page="home"] .home-landing__meta {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  body[data-page="home"] .home-profile {
+    grid-template-columns: repeat(12, 1fr);
+    gap: clamp(2em, 6vw, 7em);
+  }
+
+  body[data-page="home"] .home-profile__introduction {
+    grid-column: 7/-1;
+    grid-row: 1;
+  }
+
+  body[data-page="home"] .home-profile > .home-profile__media {
+    grid-column: 1/6;
+    grid-row: 1;
+  }
+}
