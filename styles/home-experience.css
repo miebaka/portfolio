@@ -218,7 +218,6 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
     width: fit-content;
     max-width: 100%;
-    overflow-wrap: anywhere;
   }
 
   body[data-page="home"] .journey {
