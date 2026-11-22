@@ -31,7 +31,7 @@ test("homepage proof precedes biography in the source and built document", async
 test("static service proof links match their published, real case chapters", async () => {
   for (const route of ["index.html", "about.html"]) {
     const html = await readFile(join(root, route), "utf8");
-    const anchors = [...html.matchAll(/href="(work\\/[a-z0-9-]+\\.html#[a-z0-9-]+)"/g)].map(([, href]) => href);
+    const anchors = [...html.matchAll(/href="(work\/[a-z0-9-]+\.html#[a-z0-9-]+)"/g)].map(([, href]) => href);
     assert.deepEqual(anchors, SITE.capabilities.map(service => service.evidenceHref),
       route + ": fallback proof links must match authored service evidence");
     for (const href of anchors) {
