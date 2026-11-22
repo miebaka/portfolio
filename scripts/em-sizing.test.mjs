@@ -24,9 +24,9 @@ test("the core grid and spacing start mobile-first", async () => {
   const foundations = await readFile(join(styles, "foundations.css"), "utf8");
   const typography = await readFile(join(styles, "tokens.css"), "utf8");
   assert.match(layout, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(layout, /@media\s*\(min-width:\s*48\.001em\)/);
+  assert.match(layout, /@media\s*\(min-width:\s*48\em\)/);
   assert.match(layout, /grid-template-columns:\s*repeat\(12,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(foundations, /--grid-outer:1\.25em/);
+  assert.match(foundations, /--grid-outer:1em/);
   assert.match(typography, /--type-heading-lg:\s*clamp\(2em,\s*1\.55em \+ 1\.7vw,\s*3em\)/);
 });
 
@@ -49,5 +49,5 @@ test("canonical page layouts grow from phone defaults instead of shrinking deskt
   const editorial = await readFile(join(styles, "forliving-editorial.css"), "utf8");
   assert.match(editorial, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
   assert.match(editorial, /@media\(min-width:48em\)/);
-  assert.match(editorial, /@media\(min-width:62\.001em\)/);
+  assert.match(editorial, /@media\(min-width:62\em\)/);
 });

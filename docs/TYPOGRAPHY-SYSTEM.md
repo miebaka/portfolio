@@ -69,12 +69,17 @@ The lint rule `scripts/stylelint-typography.mjs`, both typography tests and toke
 
 ## Mobile-first rebuild contract
 
-The responsive layouts use the four-column phone grid as the base. Editorial pages expand to eight columns at `48em` and twelve at `62.001em`. The generic shared grid switches to twelve tracks above `48.001em`. Layout files now use upward `min-width` queries in the homepage, editorial pages, footer, services, and Index.
+The responsive layouts use the four-column phone grid as the base. Editorial pages expand to eight columns at `48em` and twelve at `62em`. The generic shared grid switches to twelve tracks from `48em`. Layout files now use upward `min-width` queries in the homepage, editorial pages, footer, services, and Index.
 
 Home stays a natural document on mobile: its hero water remains interactive when WebGL2 is available, Selected Work keeps the physical file stack, What I Do is a readable nonsticky list, and the logo marquee respects reduced motion. The sticky service-card stack is a desktop enhancement, not a phone requirement.
 
-About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information above `52.001em`.
+About, Work, Contact, Essays, case studies and Experiments follow their source DOM order before using additional columns. On small screens the fullscreen Index is single-column; the compact Now Playing pill expands to show track information from `62em`.
 
 Keep `em` for typography, spacing, breakpoints and component dimensions. Fixed one-pixel material edges, outlines, the accessibility-required 44px control targets, native viewport units and WebGL canvas pixel coordinates are documented exceptions. The folder controller measures native browser rectangles in CSS pixels but writes responsive dimensions back as `em`.
 
 Run `npm run test:relative` and `npm run test:e2e`. The browser suite includes the main public routes at widths 320, 390, 768, 1024 and 1440 pixels, as well as 200% enlarged-text checks. Do not accept a stylesheet-only pass as visual sign-off.
+
+
+## Four-system consolidation
+
+The canonical sizing systems are: typography in `styles/tokens.css`, spacing in `styles/foundations.css`, containers and grids in `styles/layout.css` using foundation tokens, and a fixed responsive breakpoint contract verified in CI. There are no parallel `--tailor-container` / `--tailor-gutter` page dimensions. The page container is `86em` maximum and uses the same `--page` gutter as the navigation and footer. The approved upward viewport breakpoints are 25em, 40em, 48em, 62em and 72em; their matching exclusive downward boundaries are 24.999em, 39.999em, 47.999em, 61.999em and 71.999em.
