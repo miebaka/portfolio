@@ -16,11 +16,11 @@ body[data-page]:not(.site-system-disabled) .site-footer__panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  column-gap: clamp(2em, 5vw, 6em);
-  row-gap: 1.75em;
+  column-gap: clamp(var(--s4), 5vw, var(--s12));
+  row-gap: calc(var(--spacing-unit) * 14);
   width: min(calc(100% - 2 * var(--page)), var(--content));
   margin: 0 auto;
-  padding: 2em 0 1.25em;
+  padding: var(--s4) 0 calc(var(--spacing-unit) * 10);
   pointer-events: auto;
 }
 
@@ -28,7 +28,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__top {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: .4em;
+  gap: calc(var(--spacing-unit) * 3);
   grid-column: 1;
   margin: 0;
 }
@@ -36,7 +36,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__top {
 body[data-page]:not(.site-system-disabled) .site-footer__groups {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1em;
+  gap: var(--s2);
   grid-column: 1;
   margin: 0;
   padding: 0;
@@ -51,7 +51,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__links {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: .25em clamp(.9em, 1.6vw, 1.8em);
+  gap: calc(var(--spacing-unit) * 2) clamp(calc(var(--spacing-unit) * 7), 1.6vw, calc(var(--spacing-unit) * 14));
 }
 
 body[data-page]:not(.site-system-disabled) .site-footer__links a {
@@ -62,7 +62,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__links a {
 body[data-page]:not(.site-system-disabled) .site-footer__bottom {
   grid-column: 1 / -1;
   width: 100%;
-  padding-top: clamp(.7em, 1vw, 1.4em);
+  padding-top: clamp(calc(var(--spacing-unit) * 6), 1vw, calc(var(--spacing-unit) * 11));
   border-top: 1px solid var(--line);
   color: var(--muted);
 }
@@ -99,23 +99,23 @@ body[data-page]:not(.site-system-disabled) .site-footer__signature.is-enhanced::
 
 /* Mobile gets a single readable column; two link groups fit from 28em.
    The editorial two-column footer is enabled only when there is room. */
-@media (min-width: 28em) {
+@media (min-width:40em) {
   body[data-page]:not(.site-system-disabled) .site-footer__groups {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 48.001em) {
+@media (min-width:48em) {
   body[data-page]:not(.site-system-disabled) .site-footer__panel {
     grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr);
-    row-gap: clamp(2em, 3vw, 3.5em);
-    padding: clamp(2em, 4vw, 4em) 0 clamp(1em, 2vw, 2em);
+    row-gap: clamp(var(--s4), 3vw, var(--s7));
+    padding: clamp(var(--s4), 4vw, var(--s8)) 0 clamp(var(--s2), 2vw, var(--s4));
   }
 
   body[data-page]:not(.site-system-disabled) .site-footer__groups {
     grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
     grid-column: 2;
-    gap: clamp(1.25em, 3vw, 3em);
+    gap: clamp(calc(var(--spacing-unit) * 10), 3vw, var(--s6));
   }
 
   body[data-page]:not(.site-system-disabled) .site-footer__signature {
@@ -129,7 +129,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__email-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .5em;
+  gap: var(--s1);
   max-width: 100%;
 }
 

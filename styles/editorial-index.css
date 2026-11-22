@@ -11,7 +11,7 @@ body .site-nav__inner {
   display:grid;
   grid-template-columns:auto minmax(0,1fr) auto auto;
   align-items:center;
-  gap:.45em;
+  gap:var(--s1);
   width:calc(100% - 2 * var(--page));
   max-width:var(--content);
   height:5.25em;
@@ -30,10 +30,10 @@ body .site-nav__menu-btn {
   display:inline-flex!important;
   align-items:center;
   justify-content:center;
-  gap:.45em;
+  gap:var(--s1);
   min-width:4.5em;
   min-height:2.75em;
-  padding:.45em .5em;
+  padding:var(--s1) var(--s1);
   border:1px solid var(--line);
   border-radius:0;
   background:transparent;
@@ -79,7 +79,7 @@ body .site-index__inner {
   max-width:var(--content);
   margin-inline:auto;
   min-height:100dvh;
-  padding:clamp(1.25em,3vw,3em) 0 clamp(2.25em,4vw,4em);}
+  padding:clamp(calc(var(--spacing-unit) * 10),3vw,var(--s6)) 0 clamp(calc(var(--spacing-unit) * 18),4vw,var(--s8));}
 body .site-index__heading {
   border-bottom:1px solid var(--line);}
 body .site-index__heading h2,body .site-index__close {
@@ -90,13 +90,13 @@ body .site-index .site-index__body {
   grid-template-rows:auto;
   align-items:start;
   min-height:0;
-  gap:2.5em;
-  padding:2em 0;}
+  gap:var(--s5);
+  padding:var(--s4) 0;}
 body .site-index__destinations{align-content:center}
 html body .site-index .site-index__link {
   grid-template-columns:2em minmax(0,1fr);
   min-height:3.9em;
-  padding:.7em .85em;
+  padding:calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 7);
   border-bottom:1px solid var(--line);
   color:var(--ink);
   background:transparent;}
@@ -109,12 +109,12 @@ body .site-index .site-index__aside {
   display:grid;
   grid-template-columns:1fr;
   align-self:center;
-  gap:1.5em;
+  gap:var(--s3);
   padding:0 0 var(--safe-bottom);
   border:0;}
 body .site-index__contact a{color:var(--ink)}
 body .site-index .site-index__cv span{color:var(--muted)}
-body .site-index__preferences{display:grid;gap:.7em;min-width:0}
+body .site-index__preferences{display:grid;gap:calc(var(--spacing-unit) * 6);min-width:0}
 body .site-index__preferences legend{color:var(--ink)}
 body .site-index__themes{background:var(--line)}
 body .site-index__themes button{background:var(--paper);color:var(--ink)}
@@ -151,29 +151,29 @@ body .site-footer__signature .site-footer__signature-canvas{
 
 /* Responsive upgrades are additive: mobile Index remains complete by default. */
 @media(min-width:48em){
-  body .site-nav__inner{gap:clamp(.8em,2.3vw,2.25em)}
+  body .site-nav__inner{gap:clamp(calc(var(--spacing-unit) * 6),2.3vw,calc(var(--spacing-unit) * 18))}
   body .site-nav__menu-btn{
     min-width:6em;
-    gap:.7em;
-    padding:.55em .8em;
+    gap:calc(var(--spacing-unit) * 6);
+    padding:var(--s1) calc(var(--spacing-unit) * 6);
   }
   body .site-index .site-index__body{
     grid-template-columns:minmax(0,1.5fr) minmax(16em,.6fr);
     align-items:center;
     min-height:calc(100dvh - 11em);
-    gap:clamp(2em,7vw,8em);
-    padding:clamp(2em,5vw,5em) 0;
+    gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 64));
+    padding:clamp(var(--s4),5vw,var(--s10)) 0;
   }
   html body .site-index .site-index__link{
     grid-template-columns:2.6em minmax(0,1fr);
     min-height:clamp(4.25em,11vh,7.75em);
-    padding:clamp(.7em,1.8vw,1.5em) clamp(.75em,2vw,2em);
+    padding:clamp(calc(var(--spacing-unit) * 6),1.8vw,var(--s3)) clamp(calc(var(--spacing-unit) * 6),2vw,var(--s4));
   }
   body .site-index .site-index__aside{
-    gap:clamp(1.5em,3vw,3em);
+    gap:clamp(var(--s3),3vw,var(--s6));
     padding:0;
   }
-  body .site-index__preferences{gap:1.25em}
+  body .site-index__preferences{gap:calc(var(--spacing-unit) * 10)}
 }
 @media(prefers-reduced-motion:reduce){
   body .site-nav__menu-mark::before,body .site-nav__menu-mark::after{transition:none}
@@ -182,12 +182,12 @@ body .site-footer__signature .site-footer__signature-canvas{
 /* The prerendered masthead is the no-JavaScript navigation. The fullscreen
    Index only exists after enhancement, so do not conceal real links in no-JS. */
 html.no-js body .site-nav {height:auto;min-height:5.25em}
-html.no-js body .site-nav__inner {height:auto;min-height:5.25em;grid-template-columns:minmax(0,1fr);padding-block:.85em}
+html.no-js body .site-nav__inner {height:auto;min-height:5.25em;grid-template-columns:minmax(0,1fr);padding-block:calc(var(--spacing-unit) * 7)}
 html.no-js body .site-nav__brand {grid-column:1;grid-row:1}
 html.no-js body .site-nav__links {
   display:flex!important;grid-column:1/-1;grid-row:2;position:static;
-  width:100%;min-height:2.75em;padding:.5em 0;gap:.75em 1.25em;
+  width:100%;min-height:2.75em;padding:var(--s1) 0;gap:calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 10);
   flex-wrap:wrap;justify-content:flex-start;opacity:1;visibility:visible;
   pointer-events:auto;transform:none;box-shadow:none;border:0;background:transparent;}
-html.no-js body .site-nav__links .site-nav__link {color:var(--ink);min-height:2.75em;opacity:1;padding:.5em .4em}
+html.no-js body .site-nav__links .site-nav__link {color:var(--ink);min-height:2.75em;opacity:1;padding:var(--s1) calc(var(--spacing-unit) * 3)}
 html.no-js body .site-nav__menu-btn,html.no-js body .site-nav__themes {display:none!important}

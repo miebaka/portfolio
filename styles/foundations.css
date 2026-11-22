@@ -8,8 +8,8 @@
   --grid-gap:var(--grid-gutter);--section-padding-tight:clamp(2em,5vw,4em);--nav-h:4.5em;
   --list-item-inline:clamp(1em,2vw,1.5em);--safe-top:env(safe-area-inset-top,0px);
   --safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
-  --safe-left:env(safe-area-inset-left,0px);--s1:.525em;--s2:1.05em;--s3:1.575em;--s4:2.1em;--s5:2.625em;
-  --s6:3.15em;--s8:4.2em;--s12:6.3em;
+  --safe-left:env(safe-area-inset-left,0px);--spacing-unit:.125em;--s1:.5em;--s2:1em;--s3:1.5em;--s4:2em;--s5:2.5em;
+  --s6:3em;--s7:3.5em;--s8:4em;--s9:4.5em;--s10:5em;--s11:5.5em;--s12:6em;
 
   /* Living Editorial semantic roles: a single authored token vocabulary. */
   
@@ -111,7 +111,7 @@
 *::after{box-sizing:border-box;margin:0}
 *::before{box-sizing:border-box;margin:0}
 *{box-sizing:border-box;margin:0}
-html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + 1em)}
+html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + var(--s2))}
 body{background:var(--paper);color:var(--ink);overflow-x:clip;min-height:100svh}
 svg{display:block;max-width:100%;height:auto}
 picture{display:block;max-width:100%;height:auto}
@@ -132,7 +132,7 @@ footer{position:relative;z-index:1}
 .js-reveal [data-motion-role="reveal"]{transform:none;clip-path:inset(0 0 100%)}
 .js-reveal [data-motion-role="closure"]{transform:translate3d(0,1.5em,0);clip-path:inset(0)}
 header[data-mount="nav"]{min-height:var(--nav-h)}
-.section--tight{padding-block:4.8em}
+.section--tight{padding-block:calc(var(--spacing-unit) * 38)}
 .stack>*+*{margin-top:var(--s4)}
 .stack>h2{margin-top:var(--s8);}
 .stack>h2:first-child{margin-top:0}
@@ -154,7 +154,7 @@ html[data-motion="reduced"]{scroll-behavior:auto}
     --grid-outer: clamp(1em, 4vw, 4em);
     --grid-gutter: clamp(.875em, 1.5vw, 1.5em);
   }
-  .section--tight { padding-block: clamp(5.45em, 8.4vw, 8em); }
+  .section--tight { padding-block: clamp(var(--s11), 8.4vw, calc(var(--spacing-unit) * 64)); }
 }
 
 /* Universal operating-system reduced motion belongs with the root rules.
