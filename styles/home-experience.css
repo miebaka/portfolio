@@ -115,7 +115,10 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
 
 /* Mobile-first composition: navigation, work, profile and proof form one calm
 // reading path. The immersive coloured sticky-card stack is desktop-only. */
-@media (max-width: 48em) {
+
+
+/* Natural-height reading order is the default, not a desktop fallback. */
+
   body[data-page="home"] .home-landing__meta {
     display: flex;
     flex-wrap: wrap;
@@ -239,4 +242,107 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   body[data-page="home"] .client-proof {
     gap: clamp(1.25em, 6vw, 3em);
   }
+
+
+/* Sticky physical card layers are deliberately desktop-only. */
+@media (min-width: 48.001em) {
+  body[data-page="home"] .home-landing__meta {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    justify-content:initial;
+    gap:0;
+  }
+  body[data-page="home"] .home-landing__meta p:first-child,
+  body[data-page="home"] .home-landing__meta .home-landing__secondary-role {
+    display:block;
+  }
+  body[data-page="home"] .home-landing__meta br { display:initial; }
+  body[data-page="home"] .home-landing__meta a{
+    display:inline-flex;
+    justify-content:initial;
+    min-height:2.75em;
+    padding-block:0 .6em;
+  }
+  body[data-page="home"] .home-landing__statement{max-width:26ch}
+  body[data-page="home"] .home-profile{
+    gap:clamp(2em,6vw,7em);
+    padding-block:clamp(6.5em,12vw,12.5em);
+  }
+  body[data-page="home"] .home-profile .home-profile__introduction{
+    gap:clamp(1.1em,2vw,2em);
+  }
+  body[data-page="home"] .home-profile__lead{max-width:24ch}
+  body[data-page="home"] .home-profile__leadership{display:block}
+  body[data-page="home"] .home-profile__portrait{
+    max-width:none;
+    margin:0;
+  }
+  body[data-page="home"] section.home-capabilities--reference{
+    padding-block:clamp(6.5em,12vw,12.5em);
+  }
+  body[data-page="home"] section.home-capabilities--reference .disciplines-heading{
+    margin-bottom:clamp(3em,6vw,6em);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack::after{
+    display:block;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item{
+    position:sticky;
+    top:calc(var(--nav-h) + 1em + var(--stack-index,0)*.6em);
+    z-index:calc(10 + var(--stack-index,0));
+    margin-bottom:calc(-1 * clamp(2.5em,11svh,6.5em));
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child{
+    margin-bottom:0;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(5){
+    z-index:100;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item .service-stack__card{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:var(--home-panel-height);
+    gap:1em;
+    padding:clamp(2em,4.5vw,5em);
+    padding-bottom:calc(clamp(2em,4.5vw,5em) + clamp(2.5em,11svh,6.5em));
+    border:0;
+    border-radius:clamp(1em,2vw,2em);
+    background:var(--ref-blue-80);
+    color:var(--ref-midnight);
+    box-shadow:0 -.2em .2em rgb(0 0 0/.06),0 1.2em 2.5em rgb(0 0 0/.13);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(2) .service-stack__card{
+    background:var(--ref-coral-75);
+    color:var(--ref-midnight);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(3) .service-stack__card{
+    background:var(--ref-tedx-light);
+    color:var(--ref-midnight);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(4) .service-stack__card{
+    background:var(--ref-tedx);
+    color:var(--ref-paper);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(5) .service-stack__card{
+    background:var(--ref-chopbox-light);
+    color:var(--ref-midnight);
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__symbol{
+    display:grid;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__tags{
+    display:flex;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__bottom{
+    display:grid;
+    grid-template-columns:minmax(0,1.4fr) minmax(10em,.6fr);
+    gap:clamp(2em,7vw,7em);
+    align-items:end;
+  }
+  body[data-page="home"] section.home-capabilities--reference .service-stack__description{
+    gap:1.25em;
+  }
+  body[data-page="home"] .journey{padding-block:clamp(3em,5vw,6em)}
+  body[data-page="home"] .client-proof{gap:clamp(5em,9vw,10em)}
 }
