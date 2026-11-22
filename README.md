@@ -93,7 +93,7 @@ The masthead displays a small vinyl pill directly after the logo. When a Last.fm
 
 `POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback.
 
-The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` intentionally blocks indexing until launch approval. Privacy claims must match the actual browser requests, including the remote Geist fonts.
+The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` allows public pages to be crawled; the generated sitemap lists indexable canonical routes. Redirect-only and 404 pages retain page-specific `noindex` as appropriate. Privacy claims must match the actual browser requests, including the remote Geist fonts.
 
 ## Quality and release
 

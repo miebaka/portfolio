@@ -582,6 +582,21 @@ test("CSP inventory permits every executable inline script and stages dependency
   assert.match(enforced, /upgrade-insecure-requests/);
 });
 
+test("search crawlers may index the public site and discover its sitemap", async () => {
+  const robots = await readFile(join(dist, "robots.txt"), "utf8");
+  assert.match(robots, /^User-agent:\s*\*$/m);
+  assert.match(robots, /^Allow:\s*\/$/m);
+  assert.doesNotMatch(robots, /^Disallow:\s*\/$/m);
+  assert.match(robots, /^Sitemap:\s*https:\/\/miebaka-portfolio\.vercel\.app\/sitemap\.xml$/m);
+  const homepage = await readFile(join(dist, "index.html"), "utf8");
+  const work = await readFile(join(dist, "work.html"), "utf8");
+  for (const markup of [homepage, work]) {
+    assert.doesNotMatch(markup, /<meta[^>]+name=["']robots["'][^>]+noindex/i);
+  }
+  const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
+  assert.match(sitemap, /<loc>https:\/\/miebaka-portfolio\.vercel\.app\/<\/loc>/);
+});
+
 test("sitemap does not claim dates it cannot maintain", async () => {
   assert.doesNotMatch(await readFile(join(dist, "sitemap.xml"), "utf8"), /<lastmod>/);
 });
