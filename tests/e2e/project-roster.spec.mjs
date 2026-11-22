@@ -68,6 +68,13 @@ test("hover opens the right Home landscape folder and moves subsequent folders d
   const first = await folders.first().boundingBox();
   await page.mouse.move(first.x + 25, first.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "0");
+  // The Work-style opening motion takes 550ms; assert settled geometry,
+  // not an intermediate frame from the animation.
+  await expect.poll(async () => {
+    const firstBox = await folders.first().boundingBox();
+    const secondBox = await folders.nth(1).boundingBox();
+    return secondBox.y - (firstBox.y + firstBox.height);
+  }).toBeGreaterThanOrEqual(-3);
   const activeFirst = await folders.first().boundingBox();
   const second = await folders.nth(1).boundingBox();
   const layering = await folders.evaluateAll(nodes => nodes.map(el => Number(getComputedStyle(el).zIndex)));
