@@ -448,7 +448,7 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   assert.match(css, /\.hero\{[^}]*grid-template-columns:repeat\(12,minmax\(0,1fr\)\)/);
   assert.match(
     css,
-    /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*grid-column:\s*1\/-1[^}]*justify-content:\s*space-between/,
+    /body\[data-page="home"\] \.home-landing h1\s*\{[^}]*display:\s*flex[^}]*justify-content:\s*space-between/,
   );
   assert.match(css, /\.case-page \.case-chapter__body\{[^}]*max-width:/);
   assert.match(css, /\.article-hero__title\{[^}]*max-width:none/);
