@@ -7,7 +7,6 @@
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
   --type-label: .8125rem;
-  --type-paper-label: .75rem;
   --type-caption: .875rem;
   --type-input: 1rem;
   --type-body: 1.0625rem;
@@ -1293,7 +1292,7 @@ body[data-page="work"] .project-folder-stack__intro {
   overflow-wrap: anywhere;}
 
 .project-folder__paper span {
-  font: var(--type-weight-semibold) var(--type-paper-label)/var(--type-leading-display) var(--font-mono);
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);
   letter-spacing: var(--type-tracking-ui);
   text-transform: uppercase;}
 
