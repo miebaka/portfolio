@@ -37,3 +37,15 @@ test("interactive folder dimensions scale with text rather than using fixed-pixe
   assert.match(controller, /setProperty\("--work-folder-height", relativeLength\(list, height\)\)/);
   assert.doesNotMatch(controller, /(?:style\.minHeight|--work-folder-height"\s*,)[^;\n]*toFixed\(2\) \+ "px"/);
 });
+
+test("canonical page layouts grow from phone defaults instead of shrinking desktop layouts", async () => {
+  for (const name of ["layout.css", "home.css", "forliving-editorial.css", "footer-layout.css"]) {
+    const css = await readFile(join(styles, name), "utf8");
+    const code = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    assert.doesNotMatch(code, /@media\s*\(max-width:/, name + " still starts from a desktop-first breakpoint");
+  }
+  const editorial = await readFile(join(styles, "forliving-editorial.css"), "utf8");
+  assert.match(editorial, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(editorial, /@media\(min-width:48em\)/);
+  assert.match(editorial, /@media\(min-width:62\.001em\)/);
+});
