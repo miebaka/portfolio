@@ -169,7 +169,7 @@ export function createFooterSignatureController(host, {
   const forceStatic = doc.defaultView?.location?.search.includes("visual-static=1") || false;
   const reducedQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
   const reduced = () => root?.dataset.motion === "reduced" ||
-    (root?.dataset.motion !== "full" && reducedQuery?.matches === true);
+    reducedQuery?.matches === true;
   const sync = () => {
     if (destroyed) return;
     // Leave the authored SVG fallback intact when motion is reduced before first paint.

@@ -1350,3 +1350,17 @@ body:is([data-page="home"], [data-page="work"]) .project-folder__title {
     font-size: var(--type-heading-sm);
   }
 }
+
+/* Homepage folder previews are content, not decoration. Keep the name dominant,
+   with readable category and outcome labels in the exposed folder flap. */
+body[data-page="home"] .project-folder__category {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: var(--type-tracking-label-wide);
+  text-transform: uppercase;
+}
+
+body[data-page="home"] .project-folder__outcome {
+  font: var(--type-weight-regular) var(--type-caption)/var(--type-leading-ui) var(--font-sans);
+  letter-spacing: var(--type-tracking-normal);
+  text-wrap: pretty;
+}

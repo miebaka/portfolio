@@ -30,3 +30,30 @@ html[data-motion="reduced"]::view-transition-new(root) { animation-duration: .01
   html:not([data-motion="full"])::view-transition-old(root),
   html:not([data-motion="full"])::view-transition-new(root) { animation-duration: .01ms !important; }
 }
+
+/* The operating-system reduced-motion choice always wins: no looping
+   marquee, vinyl, hero or cosmetic transforms, even after a saved Full mode. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body[data-page="home"] .client-marquee__track {
+    animation: none !important;
+  }
+
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+    position: relative;
+    top: auto;
+  }
+
+  html::view-transition-old(root),
+  html::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}

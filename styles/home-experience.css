@@ -51,12 +51,12 @@ body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
   animation-play-state: paused;
 }
 
-/* Equal optical HEIGHT while preserving the original SVG aspect ratio.
-   Wide logos need a sufficiently wide cell to avoid being scaled down. */
+/* Optical logo normalization: square emblems receive modest extra weight,
+   and long wordmarks respect a common visual width without distortion. */
 body[data-page="home"] .marquee__item {
   display: grid;
   place-items: center;
-  width: clamp(24rem, 29vw, 30rem);
+  width: clamp(18rem, 27vw, 27rem);
   height: clamp(6rem, 9vw, 8rem);
   min-height: 0;
   flex: none;
@@ -66,10 +66,10 @@ body[data-page="home"] .marquee__item img {
   display: block;
   width: auto;
   height: clamp(2.125rem, 2.8vw, 2.5rem);
-  max-width: none;
+  max-width: min(78%, 19rem);
   max-height: none;
   object-fit: contain;
-  transform: none;
+  transform: scale(var(--logo-optical, 1));
 }
 
 @media (prefers-reduced-motion: reduce) {
