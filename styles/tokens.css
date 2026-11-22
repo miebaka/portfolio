@@ -36,6 +36,7 @@
    Their non-type layout and decoration remain in their original stylesheets. */
 
 /* styles/foundations.css */
+
 /* stylelint-disable font-family-name-quotes -- quoted family names are asserted by scripts/site-integrity.test.mjs */
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.woff2") format("woff2");font-weight:400;font-display:swap}
 
@@ -754,15 +755,7 @@ body[data-page="home"] .marquee__wordmark {
   font:var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-tight) var(--font-sans);
   white-space: nowrap;}
 
-body[data-page="home"] .home-close h2 {
-  font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
-  font-weight:var(--type-weight-semibold);
-  letter-spacing:var(--type-tracking-tight);
-  font-stretch:normal;}
 
-body[data-page="home"] .home-close > p {
-  font-size:var(--type-body-lg);
-  line-height:var(--type-leading-body);}
 
 body[data-page="home"] .home-close__email {
   font:var(--type-weight-semibold) var(--type-heading-md)/var(--type-leading-tight) var(--font-sans);
@@ -789,8 +782,6 @@ body[data-page="home"] .home-close__email {
   body[data-page="home"] .home-landing__meta p:nth-child(2) {
     text-align: right;}
 
-  body[data-page="home"] .home-close h2 {
-    font-size:var(--type-heading-lg);}
 }
 
 
@@ -900,8 +891,6 @@ body[data-page="home"] .service-stack__evidence .service-journey__arrow {font-si
 body[data-page="home"] .service-stack__item a.service-stack__evidence {font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
   letter-spacing:var(--type-tracking-normal);text-transform:uppercase;}
 
-body[data-page="home"] .home-project-list__title {
-  font-weight:var(--type-weight-semibold);}
 
 body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
   font-size:var(--type-heading-lg);
@@ -911,18 +900,11 @@ body[data-page="writing"].article-page .article-hero__title {
   font-size:var(--type-heading-lg);
   line-height:var(--type-leading-tight);}
 
-body[data-page="home"] .home-project-list .editorial-index__row {
-  text-align:center;}
 
-body[data-page="home"] .home-project-list__identity{text-align:center;}
 
-body[data-page="home"] .home-project-list__title {text-align:center;
-  white-space:normal;overflow-wrap:normal;word-break:normal;
-  font-size:var(--type-heading-lg);line-height:var(--type-leading-tight);}
 
 @media(max-width:48rem){
-  body[data-page="home"] .home-project-list__title{
-    font-size:var(--type-heading-lg);line-height:var(--type-leading-tight);}
+
 }
 
 /* FROM styles/forliving-editorial.css */
@@ -955,7 +937,6 @@ body[data-page="home"] .swiss-section-head h2{font:var(--type-weight-regular) va
 
 body[data-page="home"] .disciplines-heading h2{font:var(--type-weight-regular) var(--type-heading-md)/var(--type-leading-heading) var(--font-sans);letter-spacing:var(--type-tracking-heading)}
 
-body[data-page="home"] .home-project-list__title{font-family:var(--font-sans);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-tight);line-height:var(--type-leading-heading);font-size:var(--type-heading-lg)}
 
 body[data-page="home"] .service-stack__card h3{font-family:var(--font-sans);font-weight:var(--type-weight-regular);letter-spacing:var(--type-tracking-heading);line-height:var(--type-leading-heading)}
 
@@ -1063,72 +1044,20 @@ body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[cla
   html body .site-index .site-index__link>span:last-child{font-size:var(--type-heading-lg)}
 }
 
-/* FROM styles/project-roster.css */
 
 
-/* Keep the landmark's accessible heading, remove the decorative micro-label. */
-body[data-page="home"] .swiss-selected .swiss-section-head {
-  white-space: nowrap;}
 
 
-body[data-page="home"] .home-project-list .editorial-index__row {
-  text-decoration: none;}
 
 
-body[data-page="home"] .home-project-list .home-project-list__identity {
-  text-align: center;}
-
-
-body[data-page="home"] .home-project-list .home-project-list__title {
-  font: var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
-  letter-spacing: var(--type-tracking-tight);
-  text-transform: uppercase;
-  text-wrap: balance;
-  text-align: center;
-  overflow-wrap: normal;}
-
-
-body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
-  font-size: var(--type-heading-lg);
-  line-height: var(--type-leading-tight);}
-
-
-body[data-page="home"] .home-project-list .work-view-controls a {
-  font: var(--type-weight-semibold) var(--type-lead)/var(--type-leading-heading) var(--font-mono);
-  letter-spacing: var(--type-tracking-heading);
-  text-decoration: none;
-  text-transform: uppercase;}
-
-
-body[data-page="home"] .home-project-list .work-view-controls a span {
-  font-size: var(--type-heading-sm);
-  font-weight: var(--type-weight-regular);
-  line-height: var(--type-leading-tight);}
 
 
 /* Touch needs visible evidence for every project, never a hover-gated image. */
 @media (max-width: 48rem), (hover: none), (pointer: coarse) {
 
-  body[data-page="home"] .home-project-list .home-project-list__identity {
-    text-align: left;}
 
 
-  body[data-page="home"] .home-project-list .home-project-list__title,
-  body[data-page="home"] .home-project-list .editorial-index__item:nth-child(2) .home-project-list__title,
-  body[data-page="home"] .home-project-list .editorial-index__row:is(:hover, :focus-visible) .home-project-list__title {
-    font-size: var(--type-heading-lg);
-    line-height: var(--type-leading-tight);
-    letter-spacing: var(--type-tracking-tight);
-    text-align: left;
-    overflow-wrap: break-word;}
 
-
-  body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
-    font-size: var(--type-heading-lg);}
-
-
-  body[data-page="home"] .home-project-list .work-view-controls a {
-    font-size: var(--type-body);}
 }
 
 /* FROM styles/portfolio-refinement.css */
@@ -1158,12 +1087,7 @@ body[data-page="home"] .home-landing h1 {
 body[data-page="home"] .home-landing h1 span:last-child {
   font-weight: var(--type-weight-semibold);}
 
-body[data-page="home"] .home-project-list .home-project-list__title {
-  font: var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
-  letter-spacing: var(--type-tracking-tight);}
 
-body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
-  font-size: var(--type-heading-lg);}
 
 body[data-page="home"] .home-profile__introduction h2 {
   font: var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
@@ -1226,9 +1150,6 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
     font-size: var(--type-heading-lg);
     line-height: var(--type-leading-tight);}
 
-  body[data-page="home"] .home-project-list .home-project-list__title,
-  body[data-page="home"] .home-project-list .project-tone--tedx-rsu .home-project-list__title {
-    font-size: var(--type-heading-lg);}
 
   body[data-page="home"] .home-profile__lead {
     font-size: var(--type-heading-sm);}
@@ -1329,14 +1250,6 @@ body[data-page="explorations"] .experiments-empty { text-align: center; }
 body[data-page="explorations"] .experiments-empty a { text-decoration: underline; }
 body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }
 
-/* BELONWUS audit (2026-11-22, 1440px): 16px/1 UI and metadata,
-   16px/1.35 project text, 32px/1 section and 32px/1.35 feature lead.
-   These are mapped to Geist's existing roles, not copied font assets. */
-body[data-page="home"] .swiss-selected .swiss-section-head h2 {
-  font: var(--type-weight-regular) var(--type-heading-sm)/var(--type-leading-tight) var(--font-sans);
-  letter-spacing: var(--type-tracking-heading);
-  text-transform: none;
-}
 
 /* The viewport-height Work rack uses the same Geist roles at a readable,
    compact scale. Home uses the same heading roles, positioned within the exposed flap. */
