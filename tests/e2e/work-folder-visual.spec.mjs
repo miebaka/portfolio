@@ -31,12 +31,14 @@ test("wide Work folders retain five blank sheets and readable titles across view
       return {
         href: link.getAttribute("href"),
         bounds: rect(folder).toJSON(),
+        back: rect(folder.querySelector(".project-folder__back")).toJSON(),
         face: face.toJSON(),
         title: title.toJSON(),
         stageBackground: getComputedStyle(stage).backgroundColor,
         stageImage: getComputedStyle(stage).backgroundImage,
         paperCount: papers.length,
         papers: papers.map(paper => ({
+          top: rect(paper).top,
           bottom: rect(paper).bottom,
           pointerEvents: getComputedStyle(paper).pointerEvents,
           transition: getComputedStyle(paper).transitionDuration,
@@ -54,6 +56,8 @@ test("wide Work folders retain five blank sheets and readable titles across view
       expect(item.stageBackground).toBe("rgba(0, 0, 0, 0)");
       expect(item.stageImage).toBe("none");
       expect(item.paperCount).toBe(5);
+      expect(item.papers[0].top, "first paper must sit inside the rear panel").toBeGreaterThanOrEqual(item.back.top - 1);
+      expect(item.papers[4].top, "last paper must sit behind the front pocket").toBeLessThan(item.face.top);
       for (const paper of item.papers) {
         expect(paper.bottom, "papers must stay in the physical folder").toBeLessThanOrEqual(item.bounds.bottom + 1);
         expect(paper.pointerEvents).toBe("none");
