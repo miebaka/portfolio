@@ -58,7 +58,8 @@ test("wide Work folders retain five blank sheets and readable titles across view
       if (index === 0) expect(tabOffset).toBeLessThan(.35);
       if (index === 1) expect(tabOffset).toBeCloseTo(.5, 2);
       if (index === 2) expect(tabOffset).toBeGreaterThan(.65);
-      expect(ratio, "folder must follow real letter-size file proportions").toBeCloseTo(11.75 / 9.5, 2);
+      expect(item.bounds.height, "compact Work folders should stay short").toBeLessThanOrEqual(310);
+      expect(ratio, "each file needs a broad, recognisable front face").toBeGreaterThan(.75);
       expect(item.bounds.width, "each folder must occupy most of the page width").toBeGreaterThan(width * .75);
       expect(item.bounds.right).toBeLessThanOrEqual(width + 1);
       expect(item.stageBackground).toBe("rgba(0, 0, 0, 0)");

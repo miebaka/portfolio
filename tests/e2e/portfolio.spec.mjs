@@ -491,7 +491,8 @@ test("Work folder hover hits exactly the intended project", async ({ page }) => 
         ratio: rect.width / rect.height };
     }));
     for (const rect of bounds) {
-      expect(rect.ratio, "folder must keep authentic letter-size proportions").toBeCloseTo(11.75 / 9.5, 2);
+      expect(rect.right - rect.left, "Work folders retain full-width landscape faces").toBeGreaterThan(width * .75);
+      expect(rect.bottom - rect.top, "Work folders must be compact").toBeLessThanOrEqual(310);
     }
     // Physical folders deliberately overlap. Confirm the intended stack order,
     // then test actual hit targets below instead of rejecting overlapping boxes.

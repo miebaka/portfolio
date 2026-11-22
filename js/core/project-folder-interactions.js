@@ -60,24 +60,32 @@ function enhance(list) {
   }
 
   function measure() {
-    size = sizeOf();
-    if (!size) return;
     const n = folders.length;
     if (standing) {
+      size = sizeOf();
+      if (!size) return;
       const available = viewport.clientWidth;
       pitch = n > 2 ? Math.max(52, Math.min(88, (available - 2 * size) / (n - 2))) : 72;
       const expanded = n === 1 ? size : 2 * size + (n - 2) * pitch;
       origin = Math.max(0, (available - expanded) / 2);
       list.style.width = Math.ceil(Math.max(available, origin + expanded + 4)) + "px";
     } else {
-      const rootEm = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      const narrow = matchMedia("(max-width: 48rem), (pointer: coarse)").matches;
-      const overlap = Math.min((narrow ? 6 : 16) * rootEm,
-        Math.max(3.5 * rootEm, window.innerWidth * .17));
-      pitch = Math.max(1, size - overlap);
+      // Use the ACTUAL space below the heading, not a width-derived file height.
+      // A fully opened middle/first folder takes 2 file-heights plus the
+      // visible pitches of any other folders. Reserve room for hover lift.
+      const top = Math.max(0, viewport.getBoundingClientRect().top);
+      const available = Math.max(210, window.innerHeight - top - 22);
+      const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
+      list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
+      size = sizeOf();
+      if (!size) return;
+      const free = Math.max(0, available - 2 * size - 12);
+      pitch = n > 2
+        ? Math.max(18, Math.min(90, size * .34, free / (n - 2)))
+        : Math.min(90, size * .34);
       origin = 0;
       const expanded = n === 1 ? size : 2 * size + (n - 2) * pitch;
-      list.style.height = Math.ceil(expanded) + "px";
+      list.style.height = Math.ceil(expanded + 2) + "px";
     }
     layout(active);
   }
@@ -164,6 +172,18 @@ function enhance(list) {
     observer.observe(viewport);
     addEventListener("pagehide", () => observer.disconnect(), { once: true });
   }
+
+  // Height-only viewport changes (including mobile browser chrome and rotated
+  // screens) must resize the Work cards even when their width is unchanged.
+  if (!standing) {
+    const refresh = () => measure();
+    window.addEventListener("resize", refresh, { passive: true });
+    document.fonts?.ready?.then(refresh);
+    window.addEventListener("pagehide", () => {
+      window.removeEventListener("resize", refresh);
+    }, { once: true });
+  }
+
   addEventListener("pagehide", () => {
     if (frame) cancelAnimationFrame(frame);
   }, { once: true });

@@ -72,3 +72,59 @@ test("overlapping folders follow painted hit areas rather than displaced click b
   await expect(target).toBeFocused();
   await expect(folders.nth(1)).toHaveCSS("z-index", "10");
 });
+
+test("the whole interactive Work folder rack stays inside one screen", async ({ page }) => {
+  for (const viewport of [
+    { width: 320, height: 667 },
+    { width: 390, height: 844 },
+    { width: 900, height: 900 },
+    { width: 1440, height: 900 }
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/work.html");
+    await page.evaluate(() => document.fonts.ready);
+    const stack = page.locator(".project-folder-stack__cards");
+    await expect(stack).toHaveClass(/is-folder-interactive/);
+    const middle = page.locator(".project-folder__link").nth(1);
+    await middle.focus();
+    await expect(stack).toHaveAttribute("data-active-index", "1");
+    const bounds = await page.locator(".project-folder").evaluateAll(items =>
+      items.map(item => item.getBoundingClientRect().toJSON()));
+    expect(bounds).toHaveLength(3);
+    for (const box of bounds) {
+      expect(box.height, "short, responsive folder height").toBeLessThanOrEqual(310);
+      expect(box.top, "folder never rises above viewport").toBeGreaterThanOrEqual(0);
+      expect(box.bottom, "all three open/closed sheets stay in one viewport")
+        .toBeLessThanOrEqual(viewport.height - 5);
+    }
+    const stageBottom = await page.locator(".project-folder-stack__stage")
+      .evaluate(element => element.getBoundingClientRect().bottom);
+    expect(stageBottom, "the expanded folder rack itself fits the viewport")
+      .toBeLessThanOrEqual(viewport.height - 5);
+  }
+});
+
+test("a stationary pointer resting over a Work tab opens it and spreads the next folder", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/work.html");
+  const folders = page.locator(".project-folder");
+  const stack = page.locator(".project-folder-stack__cards");
+  await expect(stack).toHaveClass(/is-folder-interactive/);
+  const before = await folders.nth(2).boundingBox();
+  await folders.nth(1).locator(".project-folder__tab").hover();
+  await expect(stack).toHaveAttribute("data-active-index", "1");
+  await expect(folders.nth(1)).toHaveClass(/is-active/);
+  await expect.poll(async () => (await folders.nth(2).boundingBox()).y)
+    .toBeGreaterThan(before.y + 40);
+});
+
+test("opening a Work folder shows the Belonwus-inspired logo curtain before the case hero", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/work.html");
+  const target = page.locator(".project-folder__link").nth(1);
+  await target.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".case-route-transition__mark")).toHaveCount(1);
+  await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
+  await expect(page.locator("body.case-page .case-shot--hero")).toBeVisible();
+});
