@@ -39,7 +39,9 @@ test("interactive folder dimensions scale with text rather than using fixed-pixe
 });
 
 test("canonical page layouts grow from phone defaults instead of shrinking desktop layouts", async () => {
-  for (const name of ["layout.css", "home.css", "forliving-editorial.css", "footer-layout.css"]) {
+  for (const name of ["layout.css", "home.css", "home-experience.css", "services-stack.css",
+    "forliving-editorial.css", "editorial-index.css", "portfolio-refinement.css",
+    "footer-layout.css"]) {
     const css = await readFile(join(styles, name), "utf8");
     const code = css.replace(/\/\*[\s\S]*?\*\//g, "");
     assert.doesNotMatch(code, /@media\s*\(max-width:/, name + " still starts from a desktop-first breakpoint");
