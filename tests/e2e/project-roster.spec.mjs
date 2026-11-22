@@ -33,7 +33,7 @@ test("Home and Work use identical folder height and paper geometry", async ({ pa
     const geometry = async path => {
       await page.goto(path);
       await expect(page.locator(".project-folder-stack__cards")).toHaveClass(/is-folder-interactive/);
-      return page.locator(".project-folder").first().evaluate(folder => {
+      return page.locator(".project-folder--rivo").first().evaluate(folder => {
         const box = folder.getBoundingClientRect();
         const front = folder.querySelector(".project-folder__front").getBoundingClientRect();
         const sheets = [...folder.querySelectorAll(".project-folder__paper")];
