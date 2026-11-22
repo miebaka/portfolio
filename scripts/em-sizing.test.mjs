@@ -34,7 +34,7 @@ test("interactive folder dimensions scale with text rather than using fixed-pixe
   const controller = await readFile(resolve("js/core/project-folder-interactions.js"), "utf8");
   assert.match(controller, /const relativeLength = \(element, pixels\)/);
   assert.match(controller, /style\.minHeight = relativeLength\(card, height\)/);
-  assert.match(controller, /setProperty\("--work-folder-height", relativeLength\(list, height\)\)/);
+  assert.match(controller, /setProperty\("--work-folder-height", relativeLength\(folders\[0\], height\)\)/);
   assert.doesNotMatch(controller, /(?:style\.minHeight|--work-folder-height"\s*,)[^;\n]*toFixed\(2\) \+ "px"/);
 });
 
