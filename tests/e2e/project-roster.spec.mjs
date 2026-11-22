@@ -134,6 +134,11 @@ test("Selected Work folders and What I Do cards match the water rectangle's hori
     await page.goto("/index.html");
     await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
     await expect(page.locator("#what-i-do .service-stack__card")).toHaveCount(5);
+    // The water frame intentionally animates from a smaller transform on
+    // arrival; compare layout edges only after that entrance has settled.
+    await page.locator(".home-landing").evaluate(async el => {
+      await Promise.all(el.getAnimations().map(animation => animation.finished.catch(() => null)));
+    });
     const edges = await page.evaluate(() => {
       const box = selector => {
         const rect = document.querySelector(selector).getBoundingClientRect();
