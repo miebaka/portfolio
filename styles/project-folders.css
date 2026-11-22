@@ -208,6 +208,13 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
     aspect-ratio: 1.55 / 1;
   }
 
+  /* The first sheet must begin inside the rear panel, even at 320px. */
+  .project-folder__paper--1 { top: 19%; }
+  .project-folder__paper--2 { top: 22%; }
+  .project-folder__paper--3 { top: 25%; }
+  .project-folder__paper--4 { top: 28%; }
+  .project-folder__paper--5 { top: 31%; }
+
   .project-folder__front {
     inset-block-start: 35%;
     padding: clamp(1.1rem, 4.5vw, 2.25rem);
