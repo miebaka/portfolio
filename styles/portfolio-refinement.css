@@ -266,6 +266,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
     grid-column: 2 / -1;
   }
 }
+
 /* Completely replace the embossed styling with legible interactive dots.
    Pseudo-element is a dotted SVG-masked fallback for no-JS/reduced-motion. */
 body[data-page]:not(.site-system-disabled) .site-footer__signature,
