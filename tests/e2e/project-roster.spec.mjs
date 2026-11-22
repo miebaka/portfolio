@@ -37,6 +37,10 @@ test("Selected Work rests at the bottom of its section with a clear gap after th
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/index.html");
     await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
+    await expect.poll(() => homeFolders(page).last().evaluate(node =>
+      Math.round(node.getBoundingClientRect().top -
+        document.querySelector(".home-folder-stack__cards .project-folder:first-child").getBoundingClientRect().top)
+    )).toBeGreaterThan(120);
     const bounds = await page.evaluate(() => {
       const rect = s => document.querySelector(s).getBoundingClientRect();
       const final = rect(".home-folder-stack__cards .project-folder:last-child");
@@ -56,6 +60,10 @@ test("Desktop files match service card heights; mobile uses compact readable sec
     await page.setViewportSize(viewport);
     await page.goto("/");
     await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
+    await expect.poll(() => homeFolders(page).last().evaluate(node =>
+      Math.round(node.getBoundingClientRect().top -
+        document.querySelector(".home-folder-stack__cards .project-folder:first-child").getBoundingClientRect().top)
+    )).toBeGreaterThan(120);
     const comparison = await page.evaluate(() => {
       const folders = [...document.querySelectorAll(".home-folder-stack__cards .project-folder")];
       const cards = [...document.querySelectorAll("#what-i-do .service-stack__card")];
