@@ -8,21 +8,21 @@ body[data-page="explorations"] main.experiments-page {
   height: auto; min-height: 0; overflow: visible; padding: 0; background: var(--paper); color: var(--ink);
 }
 body[data-page="explorations"] section.experiments-spatial {
-  position: relative; height: clamp(34rem, 78svh, 58rem); min-height: 0;
+  position: relative; height: clamp(34em, 78svh, 58em); min-height: 0;
   overflow: clip; background: var(--ref-neutral-94); color: var(--ref-near-black);
   isolation: isolate;
 }
 body[data-page="explorations"] .experiments-spatial::after { position: absolute; }
 body[data-page="explorations"] .experiments-nav {
-  position: absolute; top: 1rem; left: auto; right: var(--page);
-  transform: none; z-index: 30; gap: clamp(.8rem, 2vw, 2rem);
+  position: absolute; top: 1em; left: auto; right: var(--page);
+  transform: none; z-index: 30; gap: clamp(.8em, 2vw, 2em);
 }
 body[data-page="explorations"] .experiments-nav :is(a,button) {
-  min-height: 2.75rem; padding: .2rem .45rem; color: var(--ref-near-black);
+  min-height: 2.75em; padding: .2em .45em; color: var(--ref-near-black);
 }
 body[data-page="explorations"] .experiments-spatial__heading {
-  position: absolute; z-index: 20; top: clamp(4.5rem, 10vh, 7rem);
-  left: var(--page); width: min(24rem, 29vw); color: var(--ref-near-black);
+  position: absolute; z-index: 20; top: clamp(4.5em, 10vh, 7em);
+  left: var(--page); width: min(24em, 29vw); color: var(--ref-near-black);
 }
 body[data-page="explorations"] .experiments-spatial__viewport {
   position: absolute; inset: 0; z-index: 4; touch-action: pan-y pinch-zoom;
@@ -32,21 +32,21 @@ body[data-page="explorations"] .experiments-spatial__counter {
   position: absolute; top: 52%; right: var(--page);
 }
 body[data-page="explorations"] .experiments-spatial__caption {
-  position: absolute; bottom: 1.25rem; left: var(--page); right: var(--page);
+  position: absolute; bottom: 1.25em; left: var(--page); right: var(--page);
 }
 body[data-page="explorations"] .experiments-spatial__hint {
-  position: absolute; bottom: 1rem; left: 50%;
+  position: absolute; bottom: 1em; left: 50%;
 }
 body[data-page="explorations"] .experiments-controls {
-  position: absolute; right: var(--page); bottom: 3.5rem; z-index: 26;
+  position: absolute; right: var(--page); bottom: 3.5em; z-index: 26;
 }
 body[data-page="explorations"] .experiments-index {
   position: absolute; z-index: 48; inset: 0;
-  padding: clamp(1rem, 3vw, 3rem); overflow-y: auto; overscroll-behavior: contain;
+  padding: clamp(1em, 3vw, 3em); overflow-y: auto; overscroll-behavior: contain;
 }
 body[data-page="explorations"] .experiment-poster {
   left: 52%; top: 53%;
-  width: min(37vw, 26rem, 43svh);
+  width: min(37vw, 26em, 43svh);
   cursor: pointer;
 }
 body[data-page="explorations"] .experiment-poster__face {
@@ -60,17 +60,17 @@ body[data-page="explorations"] .experiment-poster:focus-visible .experiment-post
   clip-path: polygon(0 0,100% 0,100% 25%,100% 50%,100% 75%,100% 100%,0 100%,0 75%,0 50%,0 25%);
 }
 body[data-page="explorations"] .experiments-empty {
-  position: absolute; top: 50%; left: 50%; max-width: 28rem;
+  position: absolute; top: 50%; left: 50%; max-width: 28em;
   transform: translate(-50%, -50%);
 }
 body[data-page="explorations"] .experiments-next {
   width: min(calc(100% - 2 * var(--page)),var(--content));
-  margin: 0 auto; padding-block: clamp(4rem, 8vw, 9rem);
+  margin: 0 auto; padding-block: clamp(4em, 8vw, 9em);
   display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: clamp(2rem, 6vw, 7rem);
+  gap: clamp(2em, 6vw, 7em);
 }
 body[data-page="explorations"] .experiments-next p {
-  margin-bottom: 1.2rem; color: var(--muted);
+  margin-bottom: 1.2em; color: var(--muted);
 }
 body[data-page="explorations"] .experiments-next h2 { max-width: 16ch; }
 body[data-page="explorations"] .experiments-next nav {
@@ -78,24 +78,24 @@ body[data-page="explorations"] .experiments-next nav {
 }
 body[data-page="explorations"] .experiments-next nav a {
   display: flex; justify-content: space-between; align-items: center;
-  min-height: 3.5rem; padding-block: 1rem; border-bottom: 1px solid var(--line);
+  min-height: 3.5em; padding-block: 1em; border-bottom: 1px solid var(--line);
   color: var(--ink);
 }
 body[data-page="explorations"] .experiments-next nav a:focus-visible {
   outline: 3px solid var(--focus); outline-offset: 3px;
 }
-@media (max-width: 48rem) {
+@media (max-width: 48em) {
   body[data-page="explorations"] .experiments-spatial__heading {
-    top: 4.6rem; left: var(--page); width: min(59vw, 17rem);
+    top: 4.6em; left: var(--page); width: min(59vw, 17em);
   }
   body[data-page="explorations"] .experiments-nav {
-    top: .5rem; right: var(--page); left: auto; gap: .4rem;
+    top: .5em; right: var(--page); left: auto; gap: .4em;
   }
   body[data-page="explorations"] .experiments-nav__back { display: inline-flex; }
   body[data-page="explorations"] .experiment-poster {
-    left: 50%; top: 54%; width: min(65vw, 19rem, 36svh);
+    left: 50%; top: 54%; width: min(65vw, 19em, 36svh);
   }
-  body[data-page="explorations"] .experiments-controls { bottom: 3.2rem; }
+  body[data-page="explorations"] .experiments-controls { bottom: 3.2em; }
   body[data-page="explorations"] .experiments-next { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {

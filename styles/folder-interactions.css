@@ -23,7 +23,7 @@
   --folder-lift: -14px;
 
   z-index: 10;
-  filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .13));
+  filter: drop-shadow(0 .85em 1.2em rgb(0 0 0 / .13));
 }
 
 .project-folder-stack__cards.is-folder-interactive .project-folder.is-going {
@@ -41,7 +41,7 @@
 .project-folder-stack__cards.is-folder-interactive .project-folder__tab::before {
   position: absolute;
   top: 50%;
-  right: .9rem;
+  right: .9em;
   width: 7px;
   height: 7px;
   border-radius: 50%;

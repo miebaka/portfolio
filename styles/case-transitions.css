@@ -12,8 +12,8 @@ body.case-page .case .case-shot--hero {
   width: 100vw;
   max-width: none;
   height: calc(100svh - var(--nav-h));
-  min-height: 28rem;
-  max-height: 70rem;
+  min-height: 28em;
+  max-height: 70em;
   margin: 0;
   overflow: hidden;
   background: var(--surface);
@@ -29,16 +29,16 @@ body.case-page .case .case-shot--hero img {
 }
 body.case-page .case .case-opening {
   min-height: auto;
-  padding-block: clamp(2rem,5vw,5rem) clamp(3rem,6vw,6rem);
+  padding-block: clamp(2em,5vw,5em) clamp(3em,6vw,6em);
   animation: case-copy-reveal 650ms 250ms both;
 }
-body.case-page .case .case-back { margin-bottom: clamp(2rem,4vw,4rem); }
+body.case-page .case .case-back { margin-bottom: clamp(2em,4vw,4em); }
 @keyframes case-cover-reveal {
   0% { clip-path: inset(0 0 100% 0); transform: scale(1.02); opacity: .85; }
   100% { clip-path: inset(0); transform: scale(1); opacity: 1; }
 }
 @keyframes case-copy-reveal {
-  0% { opacity: 0; transform: translateY(2.5rem); }
+  0% { opacity: 0; transform: translateY(2.5em); }
   100% { opacity: 1; transform: translateY(0); }
 }
 @keyframes case-page-wipe {
@@ -46,7 +46,7 @@ body.case-page .case .case-back { margin-bottom: clamp(2rem,4vw,4rem); }
   100% { clip-path: inset(0); opacity: 1; }
 }
 @keyframes case-page-out {
-  100% { opacity: 0; transform: translateY(-1.5rem) scale(.985); }
+  100% { opacity: 0; transform: translateY(-1.5em) scale(.985); }
 }
 
 /* A native multi-page view transition handles outgoing pages. The case cover
@@ -83,7 +83,7 @@ html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
 }
 .case-route-transition__mark {
   display: block;
-  width: clamp(4.5rem,7vw,7rem);
+  width: clamp(4.5em,7vw,7em);
   aspect-ratio: 1;
   background: var(--ink);
   mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
@@ -104,7 +104,7 @@ body.case-page .case::after {
   z-index: 8501;
   top: 50%;
   left: 50%;
-  width: clamp(4.5rem,7vw,7rem);
+  width: clamp(4.5em,7vw,7em);
   aspect-ratio: 1;
   background: var(--ink);
   mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
