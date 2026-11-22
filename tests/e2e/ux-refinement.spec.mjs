@@ -49,23 +49,41 @@ test("Landing and Selected Work move with normal scroll instead of covering one 
     expect(Math.abs(after[axis] - before[axis] + delta), axis + " follows document scroll").toBeLessThanOrEqual(2);
 });
 
-test("What I Do uses rounded inset cards and no colored section wrapper",async({page})=>{
-  await page.goto("/index.html");
-  const section=page.locator("#what-i-do");
-  const cards=section.locator(".service-stack__card");
-  await expect(cards).toHaveCount(5);
-  await expect(section.locator(".service-journey__number,.service-stack__count")).toHaveCount(0);
-  const sizes=await page.evaluate(()=>{
-    const wrapper=document.querySelector("#what-i-do");
-    const card=wrapper.querySelector(".service-stack__card");
-    return {viewport:innerWidth,width:card.getBoundingClientRect().width,
-      sectionBg:getComputedStyle(wrapper).backgroundColor,bodyBg:getComputedStyle(document.body).backgroundColor};
-  });
-  expect(sizes.width).toBeLessThan(sizes.viewport);
-  expect(sizes.width).toBeGreaterThan(sizes.viewport * .8);
-  expect(sizes.sectionBg).toBe(sizes.bodyBg);
-  const radius=await cards.first().evaluate(node=>parseFloat(getComputedStyle(node).borderTopLeftRadius));
-  expect(radius).toBeGreaterThanOrEqual(12);
+test("What I Do preserves rich desktop cards and a calm mobile reading list", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/index.html");
+    const section = page.locator("#what-i-do");
+    const cards = section.locator(".service-stack__card");
+    await expect(cards).toHaveCount(5);
+    await expect(section.locator(".service-journey__number,.service-stack__count")).toHaveCount(0);
+    const geometry = await page.evaluate(() => {
+      const wrapper = document.querySelector("#what-i-do");
+      const card = wrapper.querySelector(".service-stack__card");
+      return {
+        width: card.getBoundingClientRect().width,
+        viewport: innerWidth,
+        sectionBackground: getComputedStyle(wrapper).backgroundColor,
+        bodyBackground: getComputedStyle(document.body).backgroundColor,
+        radius: parseFloat(getComputedStyle(card).borderTopLeftRadius),
+        position: getComputedStyle(wrapper.querySelector(".service-stack__item")).position,
+        labels: getComputedStyle(card.querySelector(".service-stack__tags")).display
+      };
+    });
+    expect(geometry.width).toBeGreaterThan(width * .8);
+    expect(geometry.width).toBeLessThanOrEqual(width);
+    if (width <= 768) {
+      expect(geometry.sectionBackground).toBe(geometry.bodyBackground);
+      expect(geometry.radius).toBe(0);
+      expect(geometry.position).toBe("relative");
+      expect(geometry.labels).toBe("none");
+    } else {
+      expect(geometry.sectionBackground).not.toBe(geometry.bodyBackground);
+      expect(geometry.radius).toBeGreaterThanOrEqual(12);
+      expect(geometry.position).toBe("sticky");
+      expect(geometry.labels).not.toBe("none");
+    }
+  }
 });
 
 test("Client marks are fitted mathematically without distortion",async({page})=>{

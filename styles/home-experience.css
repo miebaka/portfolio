@@ -123,8 +123,15 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     gap: .75rem 1.25rem;
   }
 
-  body[data-page="home"] .home-landing__meta p:nth-child(2) {
+  body[data-page="home"] .home-landing__meta p:first-child,
+  body[data-page="home"] .home-landing__meta .home-landing__secondary-role,
+  body[data-page="home"] .home-landing__meta br {
     display: none;
+  }
+
+  body[data-page="home"] .home-landing__meta p:nth-child(2) {
+    display: block;
+    margin: 0;
   }
 
   body[data-page="home"] .home-landing__meta a {

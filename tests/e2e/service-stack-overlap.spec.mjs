@@ -14,11 +14,16 @@ test("What I Do has a genuinely overlapping native-scroll stack with usable proo
       };
     }));
     for (let i = 1; i < before.length; i++) {
-      expect(before[i].top, "cards overlap at " + width).toBeLessThan(before[i - 1].bottom);
+      if (width > 768) {
+        expect(before[i].top, "desktop cards overlap at " + width).toBeLessThan(before[i - 1].bottom);
+      } else {
+        expect(before[i].top, "mobile rows never overlap at " + width).toBeGreaterThanOrEqual(before[i - 1].bottom - 1);
+      }
       expect(before[i].top).toBeGreaterThan(before[i - 1].top);
     }
-    expect(before[0].position).toBe("sticky");
-    expect(before[0].margin).toBeLessThan(0);
+    expect(before[0].position).toBe(width > 768 ? "sticky" : "relative");
+    if (width > 768) expect(before[0].margin).toBeLessThan(0);
+    else expect(before[0].margin).toBeGreaterThanOrEqual(0);
 
     // Link targets may not be hidden beneath the following card.
     for (const item of await items.all()) {
@@ -62,10 +67,14 @@ test("mobile capability proof reads as a calm nonsticky list with no empty scrol
     const mobile = await page.evaluate(() => ({
       runway: getComputedStyle(document.querySelector("#what-i-do .service-stack"), "::after").display,
       heroMeta: getComputedStyle(document.querySelector(".home-landing__meta p:nth-child(2)")).display,
+      secondaryRole: getComputedStyle(document.querySelector(".home-landing__secondary-role")).display,
+      location: getComputedStyle(document.querySelector(".home-landing__meta p:first-child")).display,
       overscroll: document.documentElement.scrollWidth - innerWidth
     }));
     expect(mobile.runway).toBe("none");
-    expect(mobile.heroMeta).toBe("none");
+    expect(mobile.heroMeta).not.toBe("none");
+    expect(mobile.secondaryRole).toBe("none");
+    expect(mobile.location).toBe("none");
     expect(mobile.overscroll).toBeLessThanOrEqual(2);
   }
 });
