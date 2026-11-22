@@ -18,7 +18,12 @@ test("Home renders the landscape folder material from Work, not standing version
     await expect(folder.locator(".project-folder__title")).toHaveText(title);
     await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
     const bounds = await folder.boundingBox();
-    expect(bounds.width).toBeGreaterThan(bounds.height);
+    expect(bounds.width).toBeGreaterThan(250);
+    // Doubling the height deliberately makes narrow-screen folders taller
+    // than they are wide, while retaining the same front/tab/paper geometry.
+    if (page.viewportSize().width >= 768) {
+      expect(bounds.width).toBeGreaterThan(bounds.height);
+    }
     expect(bounds.height, "Home folders must be twice the old compact height").toBeGreaterThan(310);
   }
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
