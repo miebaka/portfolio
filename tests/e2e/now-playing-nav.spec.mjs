@@ -71,3 +71,35 @@ test("navbar fits at 320px and remains readable with scripting disabled", async 
   await expect(noJS.locator(".site-nav__listening a")).toHaveAttribute("href", /last\.fm/);
   await context.close();
 });
+
+
+test("a previously live track clears when Last.fm goes offline", async ({ page }) => {
+  await page.clock.install();
+  let requests = 0;
+  await page.route("**/api/now-playing", route => {
+    requests++;
+    if (requests === 1) {
+      return route.fulfill({
+        status: 200, contentType: "application/json",
+        body: JSON.stringify({
+          track: "A live track", artist: "An artist", nowPlaying: true,
+          url: "https://www.last.fm/music/An+artist/_/A+live+track"
+        })
+      });
+    }
+    return route.fulfill({
+      status: 503, contentType: "application/json",
+      body: '{"error":"Listening status unavailable"}'
+    });
+  });
+  await page.goto("/index.html");
+  const pill = page.locator(".now-playing");
+  await expect(pill).toContainText("Now playing");
+  await expect(pill).toHaveAttribute("data-live", "true");
+
+  await page.clock.fastForward(60_000);
+  await expect(pill).toContainText("Listening history");
+  await expect(pill).toHaveAttribute("data-live", "false");
+  await expect(pill).toHaveAttribute("href", "https://www.last.fm/user/sheikmoujabaa");
+  expect(requests).toBeGreaterThanOrEqual(2);
+});
