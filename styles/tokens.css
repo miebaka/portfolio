@@ -1309,3 +1309,26 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
     font-size: var(--type-heading-sm);
   }
 }
+
+/* Now Playing: all typographic declarations remain in the sole type source. */
+body[data-page] .now-playing {
+  text-decoration: none;
+  font: var(--type-weight-regular) var(--type-label) / var(--type-leading-ui) var(--font-mono);
+}
+body[data-page] .now-playing__copy {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+body[data-page] .now-playing__label {
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--type-tracking-label);
+}
+body[data-page] .now-playing__track {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--type-caption);
+}

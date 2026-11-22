@@ -10,6 +10,7 @@ import { renderCapabilities, renderProfessionalEvidence, fillSlots } from "./ren
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
+import { initNowPlaying } from "./render/now-playing.js";
 import { initNavigation } from "./core/navigation.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
@@ -36,6 +37,7 @@ run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
+run("Last.fm listening status", initNowPlaying);
 if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);

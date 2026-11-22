@@ -27,6 +27,9 @@
   "functions": {
     "api/contact.js": {
       "maxDuration": 10
+    },
+    "api/now-playing.js": {
+      "maxDuration": 10
     }
   },
   "headers": [

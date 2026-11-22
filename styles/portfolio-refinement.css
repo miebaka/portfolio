@@ -132,12 +132,18 @@ body[data-page="home"] section.home-capabilities--reference .service-stack {
   padding-inline: var(--page);}
 body[data-page="home"] section.home-capabilities--reference .service-stack__item {
   top: calc(var(--nav-h) + 1rem + var(--stack-index, 0) * .6rem);
-  margin-bottom: clamp(4rem, 10vh, 8rem);}
+  margin-bottom: calc(-1 * clamp(2.5rem, 11svh, 6.5rem));
+  z-index: calc(10 + var(--stack-index, 0));}
+body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child {
+  margin-bottom: 0;}
 body[data-page="home"] section.home-capabilities--reference .service-stack__card {
   width: 100%;
   min-height: clamp(25rem, 68svh, 44rem);
   border-radius: clamp(1rem, 2vw, 2rem);
   padding: clamp(2rem, 4.5vw, 5rem);
+
+  /* Keep the proof link above the next card's physical overlap. */
+  padding-bottom: calc(clamp(2rem, 4.5vw, 5rem) + clamp(2.5rem, 11svh, 6.5rem));
   box-shadow: 0 -.2rem .2rem rgb(0 0 0 / .06), 0 1.2rem 2.5rem rgb(0 0 0 / .13);}
 body[data-page="home"] section.home-capabilities--reference .service-stack__card h3 {
   max-width: 18ch;}
@@ -212,7 +218,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
   z-index: 1;
   display: block;
   width: min(100%, calc(var(--content) + 2 * var(--page)));
-  height: clamp(17rem, 37vw, 35rem);
+  height: clamp(19rem, 43vw, 42rem);
   margin: clamp(2rem, 5vw, 5rem) auto 0;
   overflow: hidden;
   color: var(--ink);
@@ -276,10 +282,11 @@ body .site-footer__panel {
     padding-inline: clamp(.75rem, 2.5vw, 1.5rem);}
   body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     top: calc(var(--nav-h) + .35rem + var(--stack-index, 0) * .2rem);
-    margin-bottom: clamp(3rem, 6vh, 5rem);}
+    margin-bottom: calc(-1 * clamp(2rem, 7svh, 4rem));}
   body[data-page="home"] section.home-capabilities--reference .service-stack__card {
     min-height: clamp(25rem, 58svh, 36rem);
-    padding: clamp(1.4rem, 4vw, 2.2rem);}
+    padding: clamp(1.4rem, 4vw, 2.2rem);
+    padding-bottom: calc(clamp(1.4rem, 4vw, 2.2rem) + clamp(2rem, 7svh, 4rem));}
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero,
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro,
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
@@ -304,7 +311,7 @@ body .site-footer__panel {
     grid-row: auto;}
   body .site-footer__signature,
   body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
-    height: clamp(12rem, 42vw, 19rem);}
+    height: clamp(14rem, 50vw, 24rem);}
 }
 @media (prefers-reduced-motion: reduce) {
   body[data-page] .theme-liquid-toggle__thumb {
@@ -342,3 +349,134 @@ body[data-page] .theme-liquid-toggle__track {
   body[data-page] .theme-liquid-toggle:hover .theme-liquid-toggle__thumb {
     box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 35%, transparent);}
 }
+
+/* A balanced four-element masthead: logo + Last.fm on the left, Index centered,
+   theme toggle right. Symmetric flexible columns keep Index at 50% of the nav. */
+body[data-page]:not(.site-system-disabled) .site-nav__inner {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+body[data-page] .site-nav__leading {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  min-width: 0;
+  max-width: 100%;
+  gap: clamp(.35rem, 1.2vw, .8rem);
+}
+body[data-page] .site-nav__listening {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(31vw, 18rem);
+}
+body[data-page]:not(.site-system-disabled) .site-nav__menu-btn {
+  grid-column: 2;
+  justify-self: center;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+body[data-page]:not(.site-system-disabled) .site-nav__menu-btn:is(:hover, :focus-visible, [aria-expanded="true"]) {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+body[data-page] .now-playing {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .45rem .7rem;
+  background: var(--surface);
+  color: var(--ink);
+  transition: background-color 180ms var(--ease-standard), border-color 180ms var(--ease-standard);
+}
+body[data-page] .now-playing:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+body[data-page] .now-playing:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+body[data-page] .now-playing__vinyl {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--ink) 0 2px, var(--muted) 2.5px 3px, var(--ink) 3.5px 4.5px);
+  animation: listening-vinyl-turn 3.5s linear infinite;
+}
+body[data-page] .now-playing__vinyl::after {
+  content: "";
+  width: .35rem;
+  height: .35rem;
+  border-radius: 50%;
+  background: var(--paper);
+}
+body[data-page] .now-playing[data-live="false"] .now-playing__vinyl {
+  animation-play-state: paused;
+}
+body[data-page] .now-playing__copy {
+  min-width: 0;
+}
+@keyframes listening-vinyl-turn {
+  to { transform: rotate(360deg); }
+}
+@media (max-width: 52rem) {
+  body[data-page] .site-nav__leading { gap: .3rem; }
+  body[data-page] .site-nav__listening { max-width: 2.7rem; flex: none; }
+  body[data-page] .now-playing {
+    padding: .4rem;
+    width: 2.7rem;
+    justify-content: center;
+  }
+  body[data-page] .now-playing__copy { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page] .now-playing__vinyl { animation: none; }
+}
+html[data-motion="reduced"] body[data-page] .now-playing__vinyl { animation: none; }
+
+/* At extreme zoom the usable nav width shrinks independently of breakpoint
+   media queries. Preserve the logo and Index, with theme inside the Index. */
+body .site-nav {
+  container-type: inline-size;
+}
+@container (max-width: 17rem) {
+  body[data-page] .site-nav__listening,
+  body[data-page] .site-nav__themes {
+    display: none;
+  }
+  body[data-page] .site-nav__leading {
+    min-width: 2.75rem;
+    flex-shrink: 0;
+  }
+  body[data-page] .site-nav__inner {
+    grid-template-columns: minmax(2.75rem, 1fr) auto;
+    gap: .5rem;
+  }
+  body[data-page]:not(.site-system-disabled) .site-nav__menu-btn {
+    grid-column: 2;
+    min-width: 4.5rem;
+    padding-inline: .5rem;
+  }
+}
+
+/* Stacked service cards retain clickable proof links when layers overlap. */
+body[data-page="home"] section.home-capabilities--reference .service-stack__item:is(:hover, :focus-within) {
+  z-index: 50;
+}
+body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
+  scroll-margin-top: calc(var(--nav-h) + 2rem);
+}
+
