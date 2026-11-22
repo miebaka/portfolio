@@ -145,10 +145,6 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .case-view button{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:uppercase;}
 
-.now-playing{text-decoration:none;}
-
-.now-playing__track{text-overflow:ellipsis;white-space:nowrap;font-size:var(--type-label)}
-
 .field select{font:inherit}
 
 .field__error{line-height:var(--type-leading-body);font-size:var(--type-label);}

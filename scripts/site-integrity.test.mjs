@@ -349,7 +349,6 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   const projects = await readFile(join(dist, "js", "render", "projects.js"), "utf8");
   const sections = await readFile(join(dist, "js", "render", "sections.js"), "utf8");
   const footer = await readFile(join(dist, "js", "render", "footer.js"), "utf8");
-  const listening = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
   const navigation = await readFile(join(dist, "js", "render", "navigation.js"), "utf8");
   const css = await readAuthoredCss();
 
@@ -389,7 +388,6 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   );
   assert.doesNotMatch(html, /\b0[1-9] \/ (?:Work|About me|Practice|Selected clients|Let(?:&rsquo;|')s work)\b/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
-  assert.doesNotMatch(listening, /chip\.hidden\s*=\s*true/);
   assert.match(navigation, /class="theme-liquid-toggle"[^>]*role="switch"[^>]*aria-checked="false"/);
   assert.match(navigation, /data-theme-mode>Light/);
   assert.match(navigation, /themeButton\.addEventListener\("click", toggleTheme\)/);
@@ -601,16 +599,17 @@ test("production build excludes source and review directories", async () => {
   }
 });
 
-test("listening status uses the private server boundary and privacy copy matches network behavior", async () => {
-  const renderer = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
+test("dead listening integration stays removed and privacy copy matches browser traffic", async () => {
+  const site = await readFile(join(dist, "js", "main.js"), "utf8");
   const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
   const privacy = await readFile(join(dist, "privacy.html"), "utf8");
-  assert.match(renderer, /fetch\("\/api\/now-playing"/);
-  assert.doesNotMatch(renderer, /api_key|audioscrobbler/i);
-  assert.doesNotMatch(config, /lastfmKey|127872bcf2ccc619e4fb52bb4b81805f/);
-  assert.match(renderer, /https:\/\/www\.last\.fm\/user\//);
-  assert.match(privacy, /server asks Last\.fm for the latest track/i);
-  assert.match(privacy, /browser does not receive the Last\.fm API key/i);
+  await assert.rejects(access(join(dist, "js", "render", "now-playing.js")));
+  await assert.rejects(access(join(root, "api", "now-playing.js")));
+  assert.doesNotMatch(site, /initNowPlaying|now-playing/);
+  assert.doesNotMatch(config, /lastfmUser|lastfmKey/);
+  assert.doesNotMatch(privacy, /Last\\.fm|latest listening status|All fonts and images are served from this domain/i);
+  assert.match(privacy, /Geist text fonts load from jsDelivr/);
+  assert.match(privacy, /colour-theme and motion preferences/);
 });
 
 test("retired source systems cannot return unnoticed", async () => {

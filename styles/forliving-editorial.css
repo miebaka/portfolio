@@ -1,28 +1,6 @@
 
 .article-body{max-width:68ch}
 
-/* Original centered reference navbar retained only as legacy cascade; editorial-index.css
-   now owns the intentionally different, accessible fullscreen-index masthead. */
-@media(min-width:72rem){
- body .site-nav{height:5.5rem;min-height:5.5rem;background:var(--paper);border:0;box-shadow:none}
- body .site-nav__inner{height:5.5rem;width:calc(100% - 2 * var(--page));max-width:none;display:grid;grid-template-columns:minmax(8rem,1fr) minmax(0,48rem) minmax(8rem,1fr);gap:clamp(.75rem,1vw,1.5rem);align-items:center}
- body .site-nav__brand{grid-column:1;grid-row:1;justify-self:start}
- body .site-nav__links{grid-column:2;grid-row:1;justify-self:center;display:flex!important;align-items:center;justify-content:center;gap:0;
-   width:min(100%,48.2rem);min-height:3.9375rem;padding:.25rem .75rem;background:var(--ink);color:var(--paper);border-radius:.5625rem;box-shadow:0 10px 28px color-mix(in srgb,var(--ink) 12%,transparent)}
- body .site-nav__links .site-nav__link{color:var(--paper);opacity:.82;min-height:2.75rem;padding:.875rem clamp(.55rem,1.3vw,1.5rem);border-radius:.35rem;display:inline-flex;align-items:center;justify-content:center}
- body .site-nav__links .site-nav__link:hover,body .site-nav__links .site-nav__link:focus-visible,body .site-nav__links .site-nav__link[aria-current="page"]{color:var(--paper);opacity:1;background:color-mix(in srgb,var(--paper) 15%,transparent)}
- body .site-nav__themes{grid-column:3;grid-row:1;justify-self:end}
- body .site-nav__menu-btn{display:none}
-}
-@media(min-width:48rem) and (max-width:71.999rem){
- body .site-nav__links{gap:.4rem;justify-content:center}
- body .site-nav__link{padding-inline:.4rem}
-}
-@media(max-width:47.999rem){
- body .site-nav__links{display:none}
- body .site-nav__menu-btn{display:inline-flex}
-}
-
 /* Twelve-column editorial grid: 12/8/4 columns; asymmetrical art direction.
    Empty spans are deliberate, never create inaccessible DOM order. */
 .editorial-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--grid-gutter)}
@@ -71,9 +49,8 @@ body[data-page="writing"] .article-toc{grid-column:1/span 3}
 }
 
 
-/* The reference's embossed signature is recreated from the user's original SVG:
-   twin directional shadows and restrained inner lighting, never a raster image.
-   Every surface inherits the active site theme. */
+/* Footer layout inherits the active site theme. The dot-matrix material
+   and interaction live in portfolio-refinement.css and footer-signature.js. */
 body .site-footer,
 body[data-page="home"]:not(.site-system-disabled) .site-footer{
  position:relative;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;
@@ -121,31 +98,6 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature{
 
  pointer-events:auto;cursor:crosshair
 }
-body .site-footer__signature::before,body .site-footer__signature::after{
- content:"";position:absolute;inset:7% 2% 3%;display:block;
- -webkit-mask:url("../assets/images/miebaka-joshua-script-name.svg") center/contain no-repeat;
- mask:url("../assets/images/miebaka-joshua-script-name.svg") center/contain no-repeat;
- pointer-events:none;transform:none;transition:none;}
-body .site-footer__signature::before{
- z-index:0;background:var(--paper);opacity:1;
- filter:drop-shadow(-2px -2px 1px color-mix(in srgb,var(--ink) 38%,transparent))
-        drop-shadow(2px 2px 1px color-mix(in srgb,var(--paper) 15%,var(--ink)));}
-body .site-footer__signature::after{
- z-index:1;
- background:linear-gradient(135deg,
-   color-mix(in srgb,var(--paper) 55%,var(--ink)) 0%,
-   color-mix(in srgb,var(--paper) 92%,var(--ink)) 37%,
-   color-mix(in srgb,var(--ink) 14%,var(--paper)) 65%,
-   color-mix(in srgb,var(--ink) 44%,var(--paper)) 100%);
- opacity:.38;
- filter:drop-shadow(-1px -1px 1px var(--paper)) drop-shadow(2px 2px 2px color-mix(in srgb,var(--ink) 40%,transparent));}
-body .site-footer__signature .site-footer__signature-canvas{
- position:absolute;inset:0;z-index:3;width:100%;height:100%;
- opacity:.46;mix-blend-mode:multiply;pointer-events:auto;touch-action:pan-y
-}
-:root[data-theme="dark"] body .site-footer__signature .site-footer__signature-canvas{
- mix-blend-mode:screen;opacity:.62
-}
 body .site-footer__bottom{
  width:calc(100% - 2 * var(--page));max-width:var(--content);
  margin:0 auto;display:flex;justify-content:space-between;gap:1rem;
@@ -162,28 +114,10 @@ body .site-footer__bottom{
  }
  body .site-footer__bottom{flex-wrap:wrap}
 }
-@media(prefers-reduced-motion:reduce){
- body .site-footer__signature::before,body .site-footer__signature::after{transition:none}
-}
-
-body .site-footer__signature.is-enhanced::before,body[data-page="home"]:not(.site-system-disabled) .site-footer__signature.is-enhanced::before{opacity:1;display:block}
-
 /* Consume the 8px micro-row rhythm and calculated module width explicitly. */
 .editorial-asymmetric{grid-auto-rows:minmax(var(--grid-row),auto)}
 body[data-page="home"] .home-profile__introduction{max-width:min(68ch,calc(7 * var(--grid-column) + 6 * var(--grid-gutter)))}
 
-
-/* Override the older high-specificity site-nav variants. Without this
-   rule light-mode nav text becomes dark-on-dark (axe ratio ~1.7:1). */
-@media(min-width:72rem){
- body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link,
- body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link:visited{
-  color:var(--paper);opacity:1;background:transparent
- }
- body[data-page]:not(.site-system-disabled) .site-nav__links .site-nav__link:is(:hover,:focus-visible,[aria-current="page"]){
-  color:var(--paper);opacity:1;background:color-mix(in srgb,var(--paper) 15%,transparent)
- }
-}
 
 /* Editorial grid placements across all non-home chapters. */
 body[data-page="about"] .about-hero{
