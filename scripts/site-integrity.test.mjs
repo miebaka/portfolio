@@ -255,7 +255,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     assert.doesNotMatch(html, /case-arrival\.js/);
   }
   const homePage = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(homePage, /class="home-folder-stack"/);
+  assert.match(homePage, /class="home-folder-stack project-folder-stack"/);
   const css = await readFile(cssFiles[0], "utf8");
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
