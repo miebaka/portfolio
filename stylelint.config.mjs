@@ -1,11 +1,13 @@
 import typographyRule, { ruleName as typographyRuleName } from "./scripts/stylelint-typography.mjs";
+import sizingRule, { ruleName as sizingRuleName } from "./scripts/stylelint-sizing.mjs";
 
 export default {
-  plugins: [typographyRule],
+  plugins: [typographyRule, sizingRule],
   extends: ["stylelint-config-standard"],
   ignoreFiles: ["dist/**", "assets/runtime/**"],
   rules: {
     [typographyRuleName]: true,
+    [sizingRuleName]: true,
     "alpha-value-notation": null,
     "at-rule-empty-line-before": null,
     "block-no-empty": null,
