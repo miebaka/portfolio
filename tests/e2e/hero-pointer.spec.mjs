@@ -1,42 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-test("scroll enhancement is desktop-only and keeps content visible on both devices", async ({ page, isMobile }) => {
-  await page.goto("/?motion-test=1");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
-  if (isMobile) {
-    await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  } else {
-    await expect(page.locator("html")).toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  }
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator(".home-project-list .project-roster__row")).toHaveCount(3);
-  await page.locator(".home-profile").scrollIntoViewIfNeeded();
-  await expect(page.locator(".home-profile")).toBeVisible();
-});
-
-test("motion preference changes preserve correct native or enhanced scrolling", async ({ page, isMobile }) => {
-  await page.goto("/?motion-test=1");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
-  await page.evaluate(() => { document.documentElement.dataset.motion = "reduced"; });
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "native");
-  await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  await page.evaluate(() => { document.documentElement.dataset.motion = "full"; });
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", isMobile ? "native" : "active");
-  if (isMobile) {
-    await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  } else {
-    await expect(page.locator("html")).toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  }
-});
-
-test("a system reduced-motion preference leaves native scroll intact", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/?motion-test=1");
-  await expect(page.locator("html")).toHaveAttribute("data-scroll-experience", "native");
-  await expect(page.locator("html")).not.toHaveAttribute("data-scroll-engine", "lenis-gsap");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-});
-
+/* The former Lenis/GSAP suite tested an obsolete engine; this regression
+   still protects the live Three.js water and its native touch scrolling. */
 test("hero pointer input uses cursor on desktop and touch ripples on mobile", async ({ page, isMobile }) => {
   await page.goto("/?shader-test=1");
   const host = page.locator("[data-hero-wave]");

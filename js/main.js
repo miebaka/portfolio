@@ -15,9 +15,6 @@ import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
 import { initCopyEmail } from "./core/copy-email.js";
-import { initEditorialReveals } from "./core/editorial-reveals.js";
-import { initMotionLanguage } from "./core/motion-language.js";
-import { initScrollExperience } from "./core/scroll-experience.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
 
@@ -46,9 +43,6 @@ if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
 run("content slots", fillSlots);
 run("copy email", initCopyEmail);
-run("editorial reveals", initEditorialReveals);
-run("motion language", initMotionLanguage);
-run("scroll experience", initScrollExperience);
 if (page === "writing" && has(".article-body")) run("article navigation", initArticleNavigation);
 if (page === "explorations") run("experiments spatial archive", () => { void initExperimentsSpatial(); });
 
