@@ -60,6 +60,14 @@ export function initNowPlaying({
       pill.dataset.live = String(isLive);
       pill.href = typeof data.url === "string" && data.url.startsWith("https://www.last.fm/") ? data.url : profile;
       pill.setAttribute("aria-label", status + ": " + title + ". Open on Last.fm.");
+    } else {
+      // An old live result is not proof that music is still playing.
+      // Fall back to the profile whenever the status endpoint is unavailable.
+      label.textContent = "On Last.fm";
+      track.textContent = "Listening history";
+      pill.dataset.live = "false";
+      pill.href = profile;
+      pill.setAttribute("aria-label", "Open listening history on Last.fm");
     }
     backoff = data ? POLL_MS : Math.min(backoff * 2, MAX_BACKOFF_MS);
     schedule(backoff);
