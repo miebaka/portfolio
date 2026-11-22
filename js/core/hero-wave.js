@@ -28,7 +28,6 @@ export async function initHeroWave({
   if (!doc?.body || !win || doc.body.dataset.page !== "home" ||
       doc.querySelector("[data-hero-wave]")) return null;
 
-  if (testOptIn) doc.documentElement.classList.add("shader-test-mode");
 
   const finePointerQuery = win.matchMedia?.(FINE_POINTER);
   const reducedMotionQuery = win.matchMedia?.("(prefers-reduced-motion: reduce)");
@@ -216,7 +215,6 @@ export async function initHeroWave({
     island.destroy();
     host.remove();
     root.classList.remove("has-hero-wave");
-    root.classList.remove("shader-test-mode");
   };
   win.addEventListener("pagehide", destroy, { once: true });
   sync();
