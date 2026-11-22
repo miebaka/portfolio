@@ -1,8 +1,10 @@
 /* Shared, accessible case-study route handoff for native links and
    the interactive project folders. No animation when reduced motion is set. */
-const reducedMotion = () => document.documentElement.dataset.motion === "reduced" ||
-  (document.documentElement.dataset.motion !== "full" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+import { isMotionReduced } from "./motion-language.js";
+
+const reducedMotion = () => isMotionReduced(
+  document.documentElement, window.matchMedia("(prefers-reduced-motion: reduce)")
+);
 
 let leaving = false;
 

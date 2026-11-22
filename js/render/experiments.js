@@ -1,4 +1,5 @@
 import { basePath, escapeHTML as esc, safeURL } from "../utilities/dom.js";
+import { isMotionReduced } from "../core/motion-language.js";
 
 // Only authored media filenames may enter an asset URL; never allow path segments.
 const validMediaFile = file => typeof file === "string" &&
@@ -52,8 +53,8 @@ export async function initExperimentsSpatial() {
   }).join("");
 
   const cards = [...stage.querySelectorAll("[data-experiment-card]")];
-  const reducedMotion = () => document.documentElement.dataset.motion === "reduced" ||
-    (document.documentElement.dataset.motion !== "full" && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const reducedMotion = () => isMotionReduced(document.documentElement, motionQuery);
   const wrap = value => (value % cards.length + cards.length) % cards.length;
   const readHash = () => {
     const match = location.hash.match(/^#study-(\d{2})$/);

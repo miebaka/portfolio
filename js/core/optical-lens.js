@@ -1,5 +1,6 @@
 /* Kexsio-inspired optical tension for the existing Selected Work artwork.
    No React, second WebGL context, infinite RAF loop, or altered link target. */
+import { isMotionReduced } from "./motion-language.js";
 export function initHomeOpticalLens({
   document: doc = document, window: win = window,
 } = {}) {
@@ -12,10 +13,7 @@ export function initHomeOpticalLens({
 
   const motion = win.matchMedia?.("(prefers-reduced-motion: reduce)");
   const mouse = win.matchMedia?.("(hover: hover) and (pointer: fine)");
-  const isReduced = () => {
-    const selected = doc.documentElement.dataset.motion;
-    return selected === "reduced" || (selected !== "full" && motion?.matches);
-  };
+  const isReduced = () => isMotionReduced(doc.documentElement, motion);
   let scheduled = 0;
   let destroyed = false;
   const paint = () => {
