@@ -3,11 +3,11 @@
 body[data-page="work"] .project-archive--folders {
   width: calc(100% - 2 * var(--page));
   max-width: none;
-  padding-block: clamp(2em, 4vw, 4em) clamp(5em, 9vw, 10em);
+  padding-block: clamp(var(--s4), 4vw, var(--s8)) clamp(var(--s10), 9vw, calc(var(--spacing-unit) * 80));
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head {
-  margin: 0 0 clamp(1.75em, 4vw, 3.75em);
+  margin: 0 0 clamp(calc(var(--spacing-unit) * 14), 4vw, calc(var(--spacing-unit) * 30));
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head h1 {
@@ -21,7 +21,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack__stage {
   position: relative;
-  margin-bottom: clamp(4em, 9vw, 9em);
+  margin-bottom: clamp(var(--s8), 9vw, calc(var(--spacing-unit) * 72));
 }
 
 .project-folder-stack__cards {
@@ -88,7 +88,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   align-items: center;
   width: clamp(6em, 28%, 23em);
   height: var(--folder-back-top);
-  padding-inline: clamp(.85em, 2vw, 1.7em);
+  padding-inline: clamp(calc(var(--spacing-unit) * 7), 2vw, calc(var(--spacing-unit) * 14));
   border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 72%, black);
   border-bottom: 0;
   border-radius: .55em .55em 0 0;
@@ -201,7 +201,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: clamp(1.5em, 5vw, 5em);
+  padding: clamp(var(--s3), 5vw, var(--s10));
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 79%, black);
   border-radius: .26em .52em .3em .3em;
@@ -273,17 +273,17 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack .project-archive__progress,
 .project-folder-stack .project-archive__collections {
-  margin-block-start: clamp(4em, 8vw, 8em);
+  margin-block-start: clamp(var(--s8), 8vw, calc(var(--spacing-unit) * 64));
 }
 
-@media (max-width: 48em), (pointer: coarse) {
+@media (max-width:47.999em), (pointer: coarse) {
   .project-folder-stack__cards {
     --folder-overlap: clamp(3.5em, 17vw, 6em);
   }
 
   .project-folder__front {
     inset-block-start: 30%;
-    padding: clamp(1.1em, 4.5vw, 2.25em);
+    padding: clamp(calc(var(--spacing-unit) * 9), 4.5vw, calc(var(--spacing-unit) * 18));
   }
 
   .project-folder:focus-within {
@@ -291,7 +291,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   }
 }
 
-@media (max-width: 25em) {
+@media (max-width:24.999em) {
   .project-folder__front {
     inset-block-start: 33%;
   }
@@ -310,15 +310,15 @@ html[data-motion="reduced"] .project-folder {
 /* Shared compact landscape files on Home and Work. The controller measures
    actual viewport space, without the previous portrait-specific cascade. */
 body[data-page="work"] .project-archive--folders {
-  padding-block: clamp(.75em, 1.8svh, 1.5em) clamp(3em, 6vw, 5em);
+  padding-block: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3)) clamp(var(--s6), 6vw, var(--s10));
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head {
-  margin-block-end: clamp(.75em, 1.8svh, 1.5em);
+  margin-block-end: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3));
 }
 
 body:is([data-page="work"], [data-page="home"]) .project-folder-stack__stage {
-  margin-bottom: clamp(2em, 5vw, 4em);
+  margin-bottom: clamp(var(--s4), 5vw, var(--s8));
 }
 
 body:is([data-page="work"], [data-page="home"]) .project-folder-stack__cards {
@@ -335,7 +335,7 @@ body:is([data-page="work"], [data-page="home"]) .project-folder {
 
 body:is([data-page="work"], [data-page="home"]) .project-folder__front {
   inset-block-start: 29%;
-  padding: clamp(.75em, 2vw, 2.5em);
+  padding: clamp(calc(var(--spacing-unit) * 6), 2vw, var(--s5));
 }
 
 /* Keep each of the five stationery edges visible above the short front flap. */
@@ -369,17 +369,17 @@ body:is([data-page="work"], [data-page="home"]) .project-folder:focus-within .pr
     0 1em 1.7em rgb(0 0 0 / .19);
 }
 
-@media (max-width: 48em), (pointer: coarse) {
+@media (max-width:47.999em), (pointer: coarse) {
   body[data-page="work"] .project-archive--folders {
-    padding-block: clamp(.75em, 1.8svh, 1.5em) 4em;
+    padding-block: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3)) var(--s8);
   }
 
   body[data-page="work"] .project-archive--folders .project-archive__head {
-    margin-block-end: clamp(.75em, 1.8svh, 1.5em);
+    margin-block-end: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3));
   }
 
   body:is([data-page="work"], [data-page="home"]) .project-folder__front {
     inset-block-start: max(31%, calc(var(--folder-back-top) + 1.5em));
-    padding: clamp(.65em, 3.5vw, 1.5em);
+    padding: clamp(calc(var(--spacing-unit) * 5), 3.5vw, var(--s3));
   }
 }
