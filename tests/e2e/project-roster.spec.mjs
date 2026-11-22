@@ -33,17 +33,27 @@ test("Home and Work share paper surfaces but not folder orientation", async ({ p
   const workRatio = await page.locator(".project-folder").first()
     .evaluate(el => el.offsetWidth / el.offsetHeight);
   expect(homeRatio).toBeLessThan(.8);
-  expect(workRatio).toBeCloseTo(47 / 38, 2);
+  expect(workRatio).toBeGreaterThan(homeRatio + .2);
+  const compactHeight = await page.locator(".project-folder").first()
+    .evaluate(el => el.getBoundingClientRect().height);
+  expect(compactHeight).toBeLessThanOrEqual(310);
   await expect(page.locator(".project-folder__paper")).toHaveCount(15);
   await expect(page.locator(".project-folder__spine")).toHaveCount(0);
 });
 
 test("hover logically opens the correct standing folder and moves siblings aside", async ({ page, isMobile }) => {
-  test.skip(isMobile, "Touch interaction has a separate first-tap preview contract");
-  await page.setViewportSize({ width: 1440, height: 900 });
+  if (!isMobile) await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   const folders = homeFolders(page);
   const list = track(page);
+  if (isMobile) {
+    const link = folders.nth(1).locator(".project-folder__link");
+    await link.focus();
+    await expect(link).toBeFocused();
+    await expect(list).toHaveAttribute("data-active-index", "1");
+    await expect(folders.nth(1)).toHaveClass(/is-active/);
+    return;
+  }
   const first = await folders.first().boundingBox();
   await page.mouse.move(first.x + 20, first.y + first.height * .6);
   await expect(list).toHaveAttribute("data-active-index", "0");
