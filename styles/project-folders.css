@@ -35,6 +35,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder {
   --folder-back-top: clamp(2.25rem, 3.6vw, 3.25rem);
+
   position: relative;
   z-index: 0;
   width: 100%;
