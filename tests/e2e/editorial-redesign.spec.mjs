@@ -71,7 +71,7 @@ test("Published project folders are readable at mobile and desktop widths", asyn
     expect(bands.map(b => b.number)).toEqual(["01","02","03"]);
     for (const band of bands) {
       expect(band.display).not.toBe("none");
-      expect(band.width / band.height).toBeGreaterThan(1.3);
+      expect(band.width / band.height).toBeCloseTo(11.75 / 9.5, 2);
       expect(band.width).toBeGreaterThan(120);
       expect(band.tabWidth).toBeGreaterThan(60);
     }
