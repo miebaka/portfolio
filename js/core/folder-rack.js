@@ -60,6 +60,13 @@ export function createFolderRackController(root) {
     opening = true;
     track.classList.add("is-opening");
     folder.classList.add("is-going");
+    if (!reduced()) {
+      const curtain = document.createElement("div");
+      curtain.className = "case-route-transition";
+      curtain.setAttribute("aria-hidden", "true");
+      curtain.innerHTML = '<span class="case-route-transition__mark"></span>';
+      document.body.append(curtain);
+    }
     const href = folder.getAttribute("href");
     window.setTimeout(() => window.location.assign(href), reduced() ? 0 : 450);
   }

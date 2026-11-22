@@ -524,7 +524,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
-  assert.match(projects, /const published = projects/);
+  assert.match(projects, /function publishedProjects\(projects, studies, featuredOnly\)/);
   assert.match(projects, /const inProgress = projects/);
   const footer = await readFile(join(root, "js", "render", "footer.js"), "utf8");
   assert.match(footer, /site-footer__links/);

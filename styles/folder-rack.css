@@ -69,6 +69,17 @@ body[data-page="work"] .project-folder-stack__stage {
   height: 100%;
   min-width: 100%;
 }
+/* The prerendered / no-JS rack remains navigable and visually separated. */
+.folder-rack:not([data-rack-ready="true"]) .folder-rack__folder:nth-child(2) { --rack-x: 72px; }
+.folder-rack:not([data-rack-ready="true"]) .folder-rack__folder:nth-child(3) { --rack-x: 144px; }
+.folder-rack:not([data-rack-ready="true"]) .folder-rack__folder:is(:hover,:focus-visible) {
+  --rack-y: -14px;
+  z-index: 10;
+}
+.folder-rack:not([data-rack-ready="true"]) .folder-rack__folder:is(:hover,:focus-visible) :is(.folder-rack__face,.folder-rack__lip) {
+  opacity: 1;
+  transform: none;
+}
 .folder-rack__folder {
   position: absolute;
   z-index: var(--folder-order,1);
@@ -302,3 +313,72 @@ html[data-motion="reduced"] body.case-page .case .case-shot--hero,
 html[data-motion="reduced"] body.case-page .case .case-opening,
 html[data-motion="reduced"]::view-transition-old(root),
 html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
+
+/* The reference uses a full-screen transitional plane and a centrally
+   scaled brand mark. Recreate that rhythm with our own identity rather
+   than copying the original site's logo or proprietary source code. */
+.case-route-transition {
+  position: fixed;
+  z-index: 9000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  pointer-events: none;
+  animation: case-route-curtain 450ms cubic-bezier(.5,0,.5,1) both;
+}
+.case-route-transition__mark {
+  display: block;
+  width: clamp(4.5rem,7vw,7rem);
+  aspect-ratio: 1;
+  background: var(--ink);
+  mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
+  animation: case-route-mark 450ms cubic-bezier(.2,.8,.2,1) both;
+}
+body.case-page .case::before {
+  content: "";
+  position: fixed;
+  z-index: 8500;
+  inset: 0;
+  background: var(--paper);
+  pointer-events: none;
+  animation: case-arrival-curtain 760ms cubic-bezier(.5,0,.5,1) both;
+}
+body.case-page .case::after {
+  content: "";
+  position: fixed;
+  z-index: 8501;
+  top: 50%;
+  left: 50%;
+  width: clamp(4.5rem,7vw,7rem);
+  aspect-ratio: 1;
+  background: var(--ink);
+  mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
+  pointer-events: none;
+  animation: case-arrival-mark 760ms cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes case-route-curtain {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes case-route-mark {
+  from { opacity: 0; transform: scale(.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes case-arrival-curtain {
+  0%,30% { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes case-arrival-mark {
+  from { opacity: 0; transform: translate(-50%,-50%) scale(.7); }
+  30%,65% { opacity: 1; }
+  to { opacity: 0; transform: translate(-50%,-50%) scale(1.07); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .case-route-transition,
+  html:not([data-motion="full"]) body.case-page .case::before,
+  html:not([data-motion="full"]) body.case-page .case::after { display: none; animation: none; }
+}
+html[data-motion="reduced"] .case-route-transition,
+html[data-motion="reduced"] body.case-page .case::before,
+html[data-motion="reduced"] body.case-page .case::after { display: none; animation: none; }
