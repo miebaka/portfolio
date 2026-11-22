@@ -5,7 +5,7 @@
 
   /* Spacing and layout: --s1..--s12 is the only spacing scale */
   --section-padding:clamp(4rem,8vw,8rem);--page:var(--grid-outer);--content:var(--grid-max);
-  --grid-gap:var(--grid-gutter);--grid-edge:max(var(--page),calc((100vw - var(--content))/2));--nav-h:4.5rem;
+  --grid-gap:var(--grid-gutter);--nav-h:4.5rem;
   --list-item-inline:clamp(1rem,2vw,1.5rem);--safe-top:env(safe-area-inset-top,0px);
   --safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
   --safe-left:env(safe-area-inset-left,0px);--s1:.525rem;--s2:1.05rem;--s3:1.575rem;--s4:2.1rem;--s5:2.625rem;
