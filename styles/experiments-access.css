@@ -14,15 +14,15 @@ body[data-page="explorations"] section.experiments-spatial {
 }
 body[data-page="explorations"] .experiments-spatial::after { position: absolute; }
 body[data-page="explorations"] .experiments-nav {
-  position: absolute; top: 1em; left: auto; right: var(--page);
-  transform: none; z-index: 30; gap: clamp(.8em, 2vw, 2em);
+  position: absolute; top: .5em; left: auto; right: var(--page);
+  transform: none; z-index: 30; gap: .4em;
 }
 body[data-page="explorations"] .experiments-nav :is(a,button) {
   min-height: 2.75em; padding: .2em .45em; color: var(--ref-near-black);
 }
 body[data-page="explorations"] .experiments-spatial__heading {
-  position: absolute; z-index: 20; top: clamp(4.5em, 10vh, 7em);
-  left: var(--page); width: min(24em, 29vw); color: var(--ref-near-black);
+  position: absolute; z-index: 20; top: 4.6em;
+  left: var(--page); width: min(59vw, 17em); color: var(--ref-near-black);
 }
 body[data-page="explorations"] .experiments-spatial__viewport {
   position: absolute; inset: 0; z-index: 4; touch-action: pan-y pinch-zoom;
@@ -38,15 +38,15 @@ body[data-page="explorations"] .experiments-spatial__hint {
   position: absolute; bottom: 1em; left: 50%;
 }
 body[data-page="explorations"] .experiments-controls {
-  position: absolute; right: var(--page); bottom: 3.5em; z-index: 26;
+  position: absolute; right: var(--page); bottom: 3.2em; z-index: 26;
 }
 body[data-page="explorations"] .experiments-index {
   position: absolute; z-index: 48; inset: 0;
   padding: clamp(1em, 3vw, 3em); overflow-y: auto; overscroll-behavior: contain;
 }
 body[data-page="explorations"] .experiment-poster {
-  left: 52%; top: 53%;
-  width: min(37vw, 26em, 43svh);
+  left: 50%; top: 54%;
+  width: min(65vw, 19em, 36svh);
   cursor: pointer;
 }
 body[data-page="explorations"] .experiment-poster__face {
@@ -66,7 +66,7 @@ body[data-page="explorations"] .experiments-empty {
 body[data-page="explorations"] .experiments-next {
   width: min(calc(100% - 2 * var(--page)),var(--content));
   margin: 0 auto; padding-block: clamp(4em, 8vw, 9em);
-  display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  display: grid; grid-template-columns: minmax(0, 1fr);
   gap: clamp(2em, 6vw, 7em);
 }
 body[data-page="explorations"] .experiments-next p {
@@ -84,20 +84,33 @@ body[data-page="explorations"] .experiments-next nav a {
 body[data-page="explorations"] .experiments-next nav a:focus-visible {
   outline: 3px solid var(--focus); outline-offset: 3px;
 }
-@media (max-width: 48em) {
+/* The gallery is usable on narrow devices without shrinking a desktop stage. */
+@media (min-width: 48.001em) {
   body[data-page="explorations"] .experiments-spatial__heading {
-    top: 4.6em; left: var(--page); width: min(59vw, 17em);
+    top: clamp(4.5em, 10vh, 7em);
+    width: min(24em, 29vw);
   }
+
   body[data-page="explorations"] .experiments-nav {
-    top: .5em; right: var(--page); left: auto; gap: .4em;
+    top: 1em;
+    gap: clamp(.8em, 2vw, 2em);
   }
-  body[data-page="explorations"] .experiments-nav__back { display: inline-flex; }
+
   body[data-page="explorations"] .experiment-poster {
-    left: 50%; top: 54%; width: min(65vw, 19em, 36svh);
+    left: 52%;
+    top: 53%;
+    width: min(37vw, 26em, 43svh);
   }
-  body[data-page="explorations"] .experiments-controls { bottom: 3.2em; }
-  body[data-page="explorations"] .experiments-next { grid-template-columns: 1fr; }
+
+  body[data-page="explorations"] .experiments-controls {
+    bottom: 3.5em;
+  }
+
+  body[data-page="explorations"] .experiments-next {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) body[data-page="explorations"] .experiment-poster__face {
     transition: none; clip-path: none;
