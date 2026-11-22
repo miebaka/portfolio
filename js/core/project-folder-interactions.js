@@ -74,7 +74,7 @@ function enhance(list) {
       // visible pitches of any other folders. Reserve room for hover lift.
       const home = document.body.dataset.page === "home";
       const top = home
-        ? (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 75) + 24
+        ? (document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72) + 24
         : Math.max(0, viewport.getBoundingClientRect().top);
       const available = Math.max(210, window.innerHeight - top - 22);
       const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
