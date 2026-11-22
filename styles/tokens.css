@@ -1267,80 +1267,49 @@ body[data-page] .site-index__home {
   text-transform: uppercase;
   text-decoration: none;}
 
-/* FROM styles/project-folders.css (Work-only stylesheet) */
+/* FROM styles/project-folders.css (Work-only stylesheet)
+   Only three textual roles remain: the page heading, the tab number, the title.
+   No font settings live in the Work folder layout stylesheet. */
 
 body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   font: var(--type-weight-semibold) var(--type-display)/var(--type-leading-display) var(--font-sans);
-  letter-spacing: var(--type-tracking-display);}
-
-body[data-page="work"] .project-folder-stack__eyebrow {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: var(--type-tracking-label-wide);
-  text-transform: uppercase;}
-
-body[data-page="work"] .project-folder-stack__intro {
-  font-size: var(--type-lead);
-  line-height: var(--type-leading-body);}
-
-.project-folder__link {
-  text-decoration: none;}
-
-.project-folder__tab-title {
-  font: var(--type-weight-semibold) var(--type-body)/var(--type-leading-ui) var(--font-sans);
-  text-align: center;
-  text-wrap: balance;
-  overflow-wrap: anywhere;}
-
-.project-folder__paper span {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-display) var(--font-mono);
-  letter-spacing: var(--type-tracking-ui);
-  text-transform: uppercase;}
-
-.project-folder__overline,
-.project-folder__bottom {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: var(--type-tracking-ui);
-  text-transform: uppercase;}
-
-.project-folder__title {
-  font: var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-heading) var(--font-sans);
-  letter-spacing: var(--type-tracking-heading);
-  text-wrap: balance;
-  overflow-wrap: anywhere;}
-
-@media (max-width: 48rem), (pointer: coarse) {
-  body[data-page="work"] .project-archive--folders .project-archive__head h1 {
-    font-size: var(--type-heading-lg);}
-
-  .project-folder__tab-title {
-    font-size: var(--type-body);}
-
-  .project-folder__title {
-    font-size: var(--type-heading-sm);}
-
-  .project-folder__overline,
-  .project-folder__bottom {
-    font-size: var(--type-label);}
-}
-
-/* Work file-rack typography. All font roles remain owned by this sheet. */
-.project-folder__spine {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: var(--type-tracking-label-wide);
-  text-transform: uppercase;
-}
-
-.project-folder__serial {
-  font: var(--type-weight-regular) var(--type-heading-lg)/1 var(--font-sans);
   letter-spacing: var(--type-tracking-display);
 }
 
-.project-folder__index {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: var(--type-tracking-ui);
-  text-transform: uppercase;
+.project-folder__link {
+  text-decoration: none;
 }
 
-.project-folder__index b {
-  font-weight: var(--type-weight-semibold);
+.project-folder__tab-number {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: var(--type-tracking-label-wide);
+}
+
+.project-folder__title {
+  font: var(--type-weight-semibold) var(--type-display)/var(--type-leading-display) var(--font-sans);
+  letter-spacing: var(--type-tracking-display);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 70rem) {
+  .project-folder__title {
+    font-size: var(--type-heading-lg);
+  }
+}
+
+@media (max-width: 48rem), (pointer: coarse) {
+  body[data-page="work"] .project-archive--folders .project-archive__head h1 {
+    font-size: var(--type-heading-lg);
+  }
+
+  .project-folder__title {
+    font-size: var(--type-heading-md);
+  }
+}
+
+@media (max-width: 25rem) {
+  .project-folder__title {
+    font-size: var(--type-heading-sm);
+  }
 }
