@@ -15,6 +15,7 @@ function enhance(list) {
   let size = 0;
   let origin = 0;
   let lastPointer = "mouse";
+  let touchPreview = -1;
   let frame = 0;
   let pending = 0;
   let entering = false;
@@ -95,6 +96,7 @@ function enhance(list) {
   const pointerMove = event => {
     lastPointer = event.pointerType || "mouse";
     if (lastPointer === "touch" || entering) return;
+    touchPreview = -1;
     pending = local(event);
     if (frame) return;
     frame = requestAnimationFrame(() => {
@@ -127,7 +129,10 @@ function enhance(list) {
     if (index < 0) return;
     event.preventDefault();
     event.stopPropagation();
-    if (!keyboard && lastPointer === "touch" && index !== active) {
+    if (!keyboard && lastPointer === "touch" && index !== touchPreview) {
+      // Touch focus may activate the anchor before click. A separate
+      // preview marker guarantees the first tap NEVER navigates.
+      touchPreview = index;
       layout(index);
       return;
     }
