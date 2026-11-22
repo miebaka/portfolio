@@ -53,7 +53,6 @@ assertBudget("initial CSS", gzipBytes(css), 45 * 1024);
 const workHtml = readFileSync(resolve(dist, "work.html"), "utf8");
 const workCss = unique(refs(/<link[^>]+href=["']([^"']+\.css)["']/giu, workHtml));
 assertBudget("Work folder stack CSS", gzipBytes(["styles/project-folders.css"]), 6 * 1024);
-assertBudget("case arrival page-scoped JavaScript", gzipBytes(["js/core/case-arrival.js"]), 2 * 1024);
 assertBudget("total Work CSS (main + folders)", gzipBytes(workCss), 53 * 1024);
 assertBudget("initial JavaScript", gzipBytes(js), 75 * 1024);
 assertBudget("lazy hero-wave JavaScript", heroWave, 145 * 1024);

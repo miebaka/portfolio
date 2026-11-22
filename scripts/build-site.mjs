@@ -166,7 +166,6 @@ const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify
 await writeFile(join(output, "styles/main.css"), minifiedCss);
 await ensureCopy(join(root, "styles/project-folders.css"), join(output, "styles/project-folders.css"));
 await copyJsGraph("js/main.js");
-await copyJsGraph("js/core/case-arrival.js"); // Published case-study arrival; no global JS cost.
 await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
 
 const allHtml = await htmlFiles(output);
