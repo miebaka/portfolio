@@ -266,6 +266,7 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
     gap:var(--s3);
   }
 }
+
 /* Project expression stays scoped to case content; navigation and footer remain portfolio-owned. */
 .case-page{--case-accent:var(--sys-color-primary);--case-tint:var(--accent-soft)}
 .case-page--rivo{--case-accent:var(--ref-rivo);--case-tint:color-mix(in srgb,var(--ref-rivo-light) 10%,var(--paper))}
