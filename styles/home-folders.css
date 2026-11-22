@@ -28,6 +28,8 @@ body[data-page="home"] .home-folder-stack .project-folder-stack__stage {
 
 body[data-page="home"] .home-folder-stack__cards {
   width: 100%;
+  --work-folder-height: var(--home-panel-height);
+  --folder-overlap: calc(var(--home-panel-height) * .66);
 }
 
 /* The Three.js water frame is inset by --hf. Use its exact outer edges for
@@ -42,11 +44,6 @@ body[data-page="home"] #selected-work {
 
 /* Home uses a full-height folder to match What I Do, while Work stays compact.
    On non-JS pages, the same responsive panel token supplies both heights. */
-body[data-page="home"] .home-folder-stack__cards {
-  --work-folder-height: var(--home-panel-height);
-  --folder-overlap: calc(var(--home-panel-height) * .66);
-}
-
 /* Expose the folder title inside the flap visible above the next folder.
    The five paper sheets, colour and folder shape stay unchanged. */
 body[data-page="home"] .home-folder-stack .project-folder__front {
