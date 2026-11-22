@@ -22,7 +22,12 @@ test("Home renders the landscape folder material from Work, not standing version
     if (page.viewportSize().width >= 768) {
       expect(bounds.width).toBeGreaterThan(bounds.height);
     }
-    expect(bounds.height, "Home folders have the full height of What I Do cards").toBeGreaterThanOrEqual(395);
+    if (page.viewportSize().width <= 768) {
+      expect(bounds.height, "phone files should be shorter than full-screen panels").toBeGreaterThanOrEqual(272);
+      expect(bounds.height).toBeLessThanOrEqual(337);
+    } else {
+      expect(bounds.height, "desktop files match the full What I Do panels").toBeGreaterThanOrEqual(395);
+    }
   }
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
 });
