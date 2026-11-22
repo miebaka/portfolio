@@ -84,10 +84,14 @@ test("Home matches the Work landscape folder construction", () => {
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });
 
-test("Home does not override the shared Work folder height, overlap or z-order", () => {
+test("Home folder height follows measured service panels, Work remains compact", () => {
   const css = readFileSync(resolve("styles/home-folders.css"), "utf8");
+  const experience = readFileSync(resolve("styles/home-experience.css"), "utf8");
   const controller = readFileSync(resolve("js/core/project-folder-interactions.js"), "utf8");
-  assert.doesNotMatch(css, /--work-folder-height\s*:|--folder-overlap\s*:|z-index\s*:/);
-  assert.doesNotMatch(controller, /const home\s*=|compactHeight\s*\*\s*2/);
+  assert.match(experience, /--home-panel-height:\s*clamp/);
+  assert.match(css, /--work-folder-height:\s*var\(--home-panel-height\)/);
+  assert.match(css, /inset-block-start:\s*15%/);
+  assert.match(controller, /#what-i-do \.service-stack__card/);
   assert.match(controller, /const shift = size - pitch/);
+  assert.match(controller, /isHome\s*\? size \* \.34/);
 });

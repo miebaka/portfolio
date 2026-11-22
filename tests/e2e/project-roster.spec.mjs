@@ -22,35 +22,38 @@ test("Home renders the landscape folder material from Work, not standing version
     if (page.viewportSize().width >= 768) {
       expect(bounds.width).toBeGreaterThan(bounds.height);
     }
-    expect(bounds.height, "Home must use the same compact folder sizing as Work").toBeLessThanOrEqual(310);
+    expect(bounds.height, "Home folders have the full height of What I Do cards").toBeGreaterThanOrEqual(395);
   }
   await expect(page.locator(".home-folder-stack .project-folder__spine")).toHaveCount(0);
 });
 
-test("Home and Work use identical folder height and paper geometry", async ({ page }) => {
+test("Home folders match What I Do card heights while Work stays compact", async ({ page }) => {
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
-    const geometry = async path => {
-      await page.goto(path);
-      await expect(page.locator(".project-folder-stack__cards")).toHaveClass(/is-folder-interactive/);
-      return page.locator(".project-folder--rivo").first().evaluate(folder => {
-        const box = folder.getBoundingClientRect();
-        const front = folder.querySelector(".project-folder__front").getBoundingClientRect();
-        const sheets = [...folder.querySelectorAll(".project-folder__paper")];
-        return {
-          height: box.height,
-          frontTop: front.top - box.top,
-          papers: sheets.map(sheet => sheet.getBoundingClientRect().top - box.top),
-          frontBackground: getComputedStyle(folder.querySelector(".project-folder__front")).backgroundImage
-        };
-      });
-    };
-    const home = await geometry("/");
-    const work = await geometry("/work.html");
-    expect(Math.abs(home.height - work.height)).toBeLessThanOrEqual(1);
-    expect(Math.abs(home.frontTop - work.frontTop)).toBeLessThanOrEqual(1);
-    for (let i = 0; i < 5; i++) expect(Math.abs(home.papers[i] - work.papers[i])).toBeLessThanOrEqual(1);
-    expect(home.frontBackground).toBe(work.frontBackground);
+    await page.goto("/");
+    await expect(homeTrack(page)).toHaveClass(/is-folder-interactive/);
+    const comparison = await page.evaluate(() => {
+      const folders = [...document.querySelectorAll(".home-folder-stack__cards .project-folder")];
+      const cards = [...document.querySelectorAll("#what-i-do .service-stack__card")];
+      return {
+        heights: folders.map(el => el.getBoundingClientRect().height),
+        services: cards.map(el => el.getBoundingClientRect().height),
+        pitches: folders.map(el => el.getBoundingClientRect().top),
+        title: folders[0].querySelector(".project-folder__title").getBoundingClientRect().toJSON()
+      };
+    });
+    expect(comparison.services).toHaveLength(5);
+    expect(comparison.heights).toHaveLength(3);
+    for (const folderHeight of comparison.heights) {
+      for (const cardHeight of comparison.services) {
+        expect(Math.abs(folderHeight - cardHeight)).toBeLessThanOrEqual(2);
+      }
+    }
+    expect(comparison.pitches[1]).toBeGreaterThan(comparison.pitches[0]);
+    expect(comparison.pitches[1]).toBeLessThan(comparison.pitches[0] + comparison.heights[0]);
+    await page.goto("/work.html");
+    const workHeight = await page.locator(".project-folder").first().evaluate(el => el.getBoundingClientRect().height);
+    expect(workHeight).toBeLessThanOrEqual(310);
   }
 });
 
@@ -81,6 +84,10 @@ test("hover opens the right Home landscape folder and moves subsequent folders d
   expect(layering[0], "active Home folder should lift above its neighbors as on Work").toBeGreaterThan(layering[1]);
   expect(second.y, "next folder moves aside so the hovered face pops up")
     .toBeGreaterThanOrEqual(activeFirst.y + activeFirst.height - 3);
+  const title = await folders.first().locator(".project-folder__title").boundingBox();
+  expect(title.y, "project name stays in the raised exposed flap").toBeGreaterThan(activeFirst.y);
+  expect(title.y + title.height, "hovered title must not be covered by the next folder")
+    .toBeLessThan(second.y - 6);
   await page.mouse.move(second.x + 25, second.y + 12);
   await expect(homeTrack(page)).toHaveAttribute("data-active-index", "1");
   await expect(folders.nth(1)).toHaveClass(/is-active/);

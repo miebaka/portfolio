@@ -7,6 +7,7 @@ function enhance(list) {
   const folders = [...list.children].filter(el => el.matches(".project-folder"));
   if (!folders.length) return;
   const viewport = list.parentElement;
+  const isHome = document.body.dataset.page === "home";
   let active = -1;
   let pitch = 0;
   let size = 0;
@@ -52,21 +53,33 @@ function enhance(list) {
   }
 
   function measure() {
-    // One viewport-based sizing contract for Home and Work. Measuring the
-    // element's document Y made Home twice as tall because it sits below the
-    // landing hero; the shared reserved space avoids that page-dependent size.
+    // Work stays compact. Home measures the actual What I Do cards rather
+    // than assuming a viewport-based size or breaking the native scroll.
     const navHeight = document.querySelector('header[data-mount="nav"]')?.getBoundingClientRect().height || 72;
     const reserved = navHeight + Math.min(128, Math.max(80, window.innerHeight * .12));
     const available = Math.max(210, window.innerHeight - reserved - 22);
-    const height = Math.min(300, Math.max(92, (available - 20) / 2.4));
+    const serviceCards = isHome
+      ? [...document.querySelectorAll("#what-i-do .service-stack__card")]
+      : [];
+    // Clear previous inline sizes before remeasuring, so mobile rotation and
+    // responsive text can shrink as well as grow without retaining old heights.
+    serviceCards.forEach(card => card.style.removeProperty("min-height"));
+    const height = serviceCards.length
+      ? Math.max(...serviceCards.map(card => card.getBoundingClientRect().height))
+      : Math.min(300, Math.max(92, (available - 20) / 2.4));
+    if (serviceCards.length) {
+      serviceCards.forEach(card => card.style.minHeight = height.toFixed(2) + "px");
+    }
     list.style.setProperty("--work-folder-height", height.toFixed(2) + "px");
     size = folders[0].offsetHeight;
     if (!size) return;
     const count = folders.length;
     const free = Math.max(0, available - 2 * size - 12);
-    pitch = count > 2
-      ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
-      : Math.min(90, size * .34);
+    pitch = isHome
+      ? size * .34
+      : count > 2
+        ? Math.max(18, Math.min(90, size * .34, free / (count - 2)))
+        : Math.min(90, size * .34);
     const expanded = count === 1 ? size : 2 * size + (count - 2) * pitch;
     list.style.height = Math.ceil(expanded + 2) + "px";
     layout(active);

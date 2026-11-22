@@ -1,3 +1,19 @@
+/* One baseline panel size drives both the service cards and Home folders.
+   Actual rendered card heights are reconciled by the folder controller. */
+body[data-page="home"] {
+  --home-panel-height: clamp(25rem, 68svh, 44rem);
+}
+
+body[data-page="home"] section.home-capabilities--reference .service-stack__card {
+  min-height: var(--home-panel-height);
+}
+
+@media (max-width: 48rem) {
+  body[data-page="home"] {
+    --home-panel-height: clamp(25rem, 58svh, 36rem);
+  }
+}
+
 /* Closing card runway: the final (yellow) card fully covers the purple card
    before the independently stacked client marquee enters. */
 body[data-page="home"] section.home-capabilities--reference {
