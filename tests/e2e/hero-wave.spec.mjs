@@ -107,4 +107,5 @@ test("a lost Three.js context shows water fallback instead of a blank canvas", a
   });
   await expect(wave).toHaveClass(/is-fallback/);
   await expect(wave).toHaveAttribute("data-renderer", "fallback");
+  await expect(wave.locator("canvas")).toHaveCSS("opacity", "0");
 });
