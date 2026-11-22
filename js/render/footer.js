@@ -24,7 +24,7 @@ export function renderFooter() {
     '<div class="site-footer__panel">' +
       '<div class="site-footer__top">' +
         '<p class="site-footer__eyebrow">Inquiries</p>' +
-        '<a class="site-footer__start" href="' + safeURL('mailto:' + SITE.email + '?subject=Let%27s%20work%20together') + '">' + esc(SITE.email) + ' <span aria-hidden="true">↗</span></a>' +
+        '<div class="site-footer__email-actions"><a class="site-footer__start" href="' + safeURL('mailto:' + SITE.email + '?subject=Let%27s%20work%20together') + '">' + esc(SITE.email) + ' <span aria-hidden="true">↗</span></a></div>' +
       '</div>' +
       '<nav class="site-footer__groups" aria-label="Footer links">' +
         group('site-footer__explore', 'Explore', explore) +

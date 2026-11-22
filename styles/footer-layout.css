@@ -119,3 +119,17 @@ body[data-page]:not(.site-system-disabled) .site-footer__signature.is-enhanced::
     height: clamp(10rem, 40vw, 17rem);
   }
 }
+
+/* Copy email shares a row with the mailto link without disrupting the footer
+   link grid or producing a separate second conversion section. */
+body[data-page]:not(.site-system-disabled) .site-footer__email-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  max-width: 100%;
+}
+
+body[data-page]:not(.site-system-disabled) .site-footer__email-actions .copy-email {
+  margin: 0;
+}
