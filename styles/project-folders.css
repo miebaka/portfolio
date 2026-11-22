@@ -1,5 +1,5 @@
-/* Work archive: full-width, landscape file folders. The page surface belongs
-   to the global light/dark theme; only the physical folders carry colour. */
+/* Full-width physical case folders: a letter-size 11 3/4 x 9 1/2 silhouette.
+   The site theme owns the page surface; only the folders have material colour. */
 body[data-page="work"] .project-archive--folders {
   width: calc(100% - 2 * var(--page));
   max-width: none;
@@ -22,8 +22,6 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 .project-folder-stack__stage {
   position: relative;
   margin-bottom: clamp(4rem, 9vw, 9rem);
-
-  /* Intentionally transparent: the global theme owns the page background. */
 }
 
 .project-folder-stack__cards {
@@ -36,11 +34,12 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 }
 
 .project-folder {
+  --folder-back-top: clamp(2.25rem, 3.6vw, 3.25rem);
   position: relative;
   z-index: 0;
   width: 100%;
   min-width: 0;
-  aspect-ratio: 2.45 / 1;
+  aspect-ratio: 47 / 38;
   isolation: isolate;
   transform: translate3d(0, 0, 0);
   transition: transform 360ms var(--editorial-ease), filter 360ms var(--editorial-ease);
@@ -51,118 +50,173 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   display: block;
   width: 100%;
   height: 100%;
-  color: var(--folder-on, var(--ref-white));
   isolation: isolate;
+  color: var(--folder-on, var(--ref-white));
 }
 
+/* Die-cut rear cover: a dark paper edge underneath the loose sheets. */
 .project-folder__back {
   position: absolute;
-  inset: clamp(2.4rem, 3.6vw, 3.25rem) 0 0;
-  border-radius: .45rem .7rem .35rem .35rem;
-  background: color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 83%, black);
-  box-shadow: 0 .65rem 1.3rem rgb(0 0 0 / .12), inset 0 .07rem rgb(255 255 255 / .13);
+  inset: var(--folder-back-top) 0 0;
+  border: 1px solid color-mix(in srgb, var(--folder-tone) 76%, black);
+  border-radius: .2rem .42rem .28rem .28rem;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / .12), transparent 3%, transparent 97%, rgb(0 0 0 / .07)),
+    color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 83%, black);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / .16),
+    inset 0 -.18rem .25rem rgb(0 0 0 / .1),
+    0 .45rem .8rem rgb(0 0 0 / .1);
 }
 
 .project-folder__tab {
   position: absolute;
-  left: 3%;
-  bottom: calc(100% - .1rem);
+  bottom: calc(100% - .12rem);
+  left: 2.7%;
   display: flex;
   align-items: center;
-  width: clamp(5.5rem, 16%, 12.5rem);
-  height: clamp(2.35rem, 3.6vw, 3.25rem);
-  padding-inline: clamp(1rem, 2vw, 1.65rem);
-  border-radius: .75rem .75rem 0 0;
-  background: color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 83%, black);
+  width: clamp(6rem, 17%, 13rem);
+  height: var(--folder-back-top);
+  padding-inline: clamp(.85rem, 2vw, 1.7rem);
+  border: 1px solid color-mix(in srgb, var(--folder-tone) 72%, black);
+  border-bottom: 0;
+  border-radius: .55rem .55rem 0 0;
+  background:
+    linear-gradient(100deg, rgb(255 255 255 / .12), transparent 30%, rgb(0 0 0 / .06)),
+    color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 83%, black);
   color: var(--folder-on, var(--ref-white));
-  box-shadow: inset 0 1px rgb(255 255 255 / .16);
+  box-shadow: inset 0 1px rgb(255 255 255 / .22);
 }
 
-/* The ChopBox folder face is orange with black title text. Its darker
-   numbered tab needs independent white ink for accessible contrast. */
+/* The rear tab is one folded and reinforced piece of card, not a label. */
+.project-folder__tab::after {
+  position: absolute;
+  inset: .18rem .3rem 0;
+  border-top: 1px solid rgb(255 255 255 / .12);
+  border-radius: .35rem .35rem 0 0;
+  content: "";
+  pointer-events: none;
+}
+
 .project-folder--chopbox .project-folder__tab {
   color: var(--ref-white);
 }
 
-/* Exactly five warm, ruled sheets; hues and tiny rotations follow the supplied
-   HTML. Sheets are blank, fixed and cannot capture hover or click events. */
+/* Five ruled, blank pages with different paper tones, individually staggered.
+   Their fine edges and tiny rotations mimic loose stock under the front flap. */
 .project-folder__paper {
   position: absolute;
-  top: 13%;
-  right: 3.5%;
+  right: clamp(.8rem, 2.25vw, 2.75rem);
   bottom: .65rem;
-  left: 3.5%;
+  left: clamp(.8rem, 2.25vw, 2.75rem);
   z-index: 1;
-  border-radius: .15rem .15rem 0 0;
+  border: 1px solid rgb(80 68 46 / .12);
+  border-radius: .1rem .1rem 0 0;
   background:
     repeating-linear-gradient(
       to bottom,
       transparent 0 23px,
-      rgb(0 32 128 / .13) 23px 24px
-    ) 0 34px / 100% 100% no-repeat,
+      rgb(0 32 128 / .12) 23px 24px
+    ) 0 2.25rem / 100% 100% no-repeat,
+    linear-gradient(110deg, rgb(205 189 156 / .07), transparent 26%, rgb(255 255 255 / .2) 75%),
     var(--sheet-tone, #fbfaf5);
-  box-shadow: 0 0 0 1px rgb(0 0 0 / .07), 0 -1px 3px rgb(0 0 0 / .12);
+  box-shadow:
+    0 -1px rgb(255 255 255 / .8),
+    0 -.1rem .25rem rgb(0 0 0 / .13),
+    .06rem 0 .08rem rgb(0 0 0 / .09);
   transform-origin: 50% 100%;
   pointer-events: none;
 }
 
+.project-folder__paper::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: .15rem;
+  background: linear-gradient(to bottom, rgb(255 255 255 / .65), rgb(255 255 255 / 0));
+  content: "";
+}
+
 .project-folder__paper--1 {
-  top: 13%;
+  top: calc(var(--folder-back-top) + clamp(.3rem, .7vw, .75rem));
   transform: rotate(-.35deg);
   --sheet-tone: #f3f1e8;
 }
 
 .project-folder__paper--2 {
-  top: 16%;
+  top: calc(var(--folder-back-top) + clamp(.65rem, 1.55vw, 1.65rem));
   z-index: 2;
   transform: rotate(.25deg);
   --sheet-tone: #fbfaf5;
 }
 
 .project-folder__paper--3 {
-  top: 19%;
+  top: calc(var(--folder-back-top) + clamp(1rem, 2.4vw, 2.55rem));
   z-index: 3;
   transform: rotate(-.15deg);
   --sheet-tone: #f6f4ec;
 }
 
 .project-folder__paper--4 {
-  top: 22%;
+  top: calc(var(--folder-back-top) + clamp(1.35rem, 3.25vw, 3.45rem));
   z-index: 4;
   transform: rotate(.4deg);
   --sheet-tone: #fbfaf5;
 }
 
 .project-folder__paper--5 {
-  top: 25%;
+  top: calc(var(--folder-back-top) + clamp(1.7rem, 4.1vw, 4.35rem));
   z-index: 5;
   transform: rotate(-.25deg);
   --sheet-tone: #fdfcf8;
 }
 
-/* A continuous, landscape front pocket. The title is its only print. */
+/* Thick front cover: top bevel, subtle paper fibres, edge pressure and score.
+   Only the project name is printed; all other detailing is non-textual. */
 .project-folder__front {
   position: absolute;
-  inset: 34% 0 0;
+  inset: 18% 0 0;
   z-index: 6;
   display: flex;
   align-items: center;
   min-width: 0;
   padding: clamp(1.5rem, 5vw, 5rem);
   overflow: hidden;
-  border-radius: .55rem .8rem .5rem .5rem;
+  border: 1px solid color-mix(in srgb, var(--folder-tone) 79%, black);
+  border-radius: .26rem .52rem .3rem .3rem;
   background:
-    linear-gradient(90deg, rgb(255 255 255 / .09), transparent 28%, rgb(0 0 0 / .07)),
+    linear-gradient(to bottom, rgb(255 255 255 / .27) 0, rgb(255 255 255 / .045) 2px, transparent 9px),
+    linear-gradient(90deg, rgb(255 255 255 / .09), transparent 17%, transparent 79%, rgb(0 0 0 / .07)),
     color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 94%, white);
   color: var(--folder-on, var(--ref-white));
-  box-shadow: inset 0 1px rgb(255 255 255 / .28), 0 -.2rem .55rem rgb(0 0 0 / .12), 0 .55rem 1.2rem rgb(0 0 0 / .12);
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / .29),
+    inset 1px 0 rgb(255 255 255 / .12),
+    inset -1px 0 rgb(0 0 0 / .075),
+    inset 0 -.34rem .7rem rgb(0 0 0 / .075),
+    0 -.3rem .55rem rgb(0 0 0 / .16),
+    0 .75rem 1.35rem rgb(0 0 0 / .12);
 }
 
 .project-folder__front::before {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(95deg, rgb(255 255 255 / .08), transparent 33%, rgb(0 0 0 / .05));
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / .018) 0 1px, transparent 1px 4px),
+    linear-gradient(95deg, rgb(255 255 255 / .09), transparent 30%, rgb(0 0 0 / .055));
+  content: "";
+  pointer-events: none;
+}
+
+/* A pressure score just above the folded bottom edge. */
+.project-folder__front::after {
+  position: absolute;
+  right: clamp(.8rem, 2vw, 2rem);
+  bottom: clamp(.55rem, 1vw, 1rem);
+  left: clamp(.8rem, 2vw, 2rem);
+  height: 2px;
+  background: linear-gradient(to bottom, rgb(0 0 0 / .11), rgb(255 255 255 / .14));
+  opacity: .65;
   content: "";
   pointer-events: none;
 }
@@ -177,21 +231,21 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 .project-folder__link:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 5px;
-  border-radius: .7rem;
+  border-radius: .55rem;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .project-folder:hover {
     z-index: 2;
     transform: translate3d(0, -.55rem, 0);
-    filter: drop-shadow(0 .8rem 1.2rem rgb(0 0 0 / .12));
+    filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .11));
   }
 }
 
 .project-folder:focus-within {
   z-index: 2;
   transform: translate3d(0, -.55rem, 0);
-  filter: drop-shadow(0 .8rem 1.2rem rgb(0 0 0 / .12));
+  filter: drop-shadow(0 .85rem 1.2rem rgb(0 0 0 / .11));
 }
 
 .project-folder-stack .project-archive__progress,
@@ -199,30 +253,13 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   margin-block-start: clamp(4rem, 8vw, 8rem);
 }
 
-@media (max-width: 68rem) {
-  .project-folder {
-    aspect-ratio: 2 / 1;
-  }
-}
-
 @media (max-width: 48rem), (pointer: coarse) {
   .project-folder-stack__cards {
     gap: clamp(1.5rem, 5vw, 2.5rem);
   }
 
-  .project-folder {
-    aspect-ratio: 1.55 / 1;
-  }
-
-  /* The first sheet must begin inside the rear panel, even at 320px. */
-  .project-folder__paper--1 { top: 19%; }
-  .project-folder__paper--2 { top: 22%; }
-  .project-folder__paper--3 { top: 25%; }
-  .project-folder__paper--4 { top: 28%; }
-  .project-folder__paper--5 { top: 31%; }
-
   .project-folder__front {
-    inset-block-start: 35%;
+    inset-block-start: 30%;
     padding: clamp(1.1rem, 4.5vw, 2.25rem);
   }
 
@@ -232,12 +269,8 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 }
 
 @media (max-width: 25rem) {
-  .project-folder {
-    aspect-ratio: 1.38 / 1;
-  }
-
-  .project-folder__tab {
-    height: 2.35rem;
+  .project-folder__front {
+    inset-block-start: 33%;
   }
 }
 
