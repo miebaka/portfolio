@@ -22,6 +22,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 .project-folder-stack__stage {
   position: relative;
   margin-bottom: clamp(4rem, 9vw, 9rem);
+
   /* Intentionally transparent: the global theme owns the page background. */
 }
 
