@@ -27,3 +27,5 @@ Painting primitives, hairline strokes and WebGL raster pixels are not layout sca
 All browser-side layout decisions use `js/core/responsive.js`; the Three.js water performance tier and the physical folder interaction both consume its compact predicate instead of inventing independent pixel thresholds.
 
 The 44px minimum interactive target is defined once as `--control-target: max(44px, 2.75em)` in the foundation and consumed through `var(--control-target)`. Raw 44px literals in components are prohibited. JavaScript has one imported breakpoint helper (`js/core/responsive.js`) and a test rejects any second viewport-width threshold in browser scripts.
+
+Responsive image `sizes` hints in the case-study renderer also consume `viewportQueries` from the same browser-side source, rather than inventing 52.5em, 64em or 100em image-loading breakpoints. The image fallback content measure is the canonical `86em` maximum.

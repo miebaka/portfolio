@@ -5,6 +5,8 @@ export const viewportQueries = Object.freeze({
   compact: "(max-width: 47.999em)",
   tablet: "(min-width: 48em)",
   desktop: "(min-width: 62em)",
+  tabletMax: "(max-width: 61.999em)",
+  wideMax: "(max-width: 71.999em)",
   wide: "(min-width: 72em)",
 });
 

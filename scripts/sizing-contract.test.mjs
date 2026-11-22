@@ -44,6 +44,8 @@ test("browser interaction breakpoints match the CSS contract", () => {
   assert.equal(viewportQueries.compact, "(max-width: " + breakpointSizes.max[2] + ")");
   assert.equal(viewportQueries.tablet, "(min-width: " + breakpointSizes.min[2] + ")");
   assert.equal(viewportQueries.desktop, "(min-width: " + breakpointSizes.min[3] + ")");
+  assert.equal(viewportQueries.tabletMax, "(max-width: " + breakpointSizes.max[3] + ")");
+  assert.equal(viewportQueries.wideMax, "(max-width: " + breakpointSizes.max[4] + ")");
   assert.equal(viewportQueries.wide, "(min-width: " + breakpointSizes.min[4] + ")");
 });
 

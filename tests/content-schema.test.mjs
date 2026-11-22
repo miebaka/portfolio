@@ -201,12 +201,14 @@ test("invalid content fails CLI and direct build without touching previous outpu
   t.after(() => rm(directory, { recursive: true, force: true }));
   await mkdir(join(directory, "scripts"));
   await mkdir(join(directory, "js", "render"), { recursive: true });
+  await mkdir(join(directory, "js", "core"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
   for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) {
     await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
   }
   await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
+  await cp(new URL("../js/core/responsive.js", import.meta.url), join(directory, "js", "core", "responsive.js"));
   await writeFile(join(directory, "package.json"), '{"type":"module"}');
   const previousOutput = "Keep this previously built page.";
   await writeFile(join(directory, "dist", "index.html"), previousOutput);
@@ -274,10 +276,12 @@ test("missing build registry and origin fail with validation errors before dist 
   t.after(() => rm(directory, { recursive: true, force: true }));
   await mkdir(join(directory, "scripts"));
   await mkdir(join(directory, "js", "render"), { recursive: true });
+  await mkdir(join(directory, "js", "core"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
   for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
   await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
+  await cp(new URL("../js/core/responsive.js", import.meta.url), join(directory, "js", "core", "responsive.js"));
   await writeFile(join(directory, "package.json"), '{"type":"module"}');
   const previousOutput = "Keep the prior output.";
   await writeFile(join(directory, "dist", "index.html"), previousOutput);
