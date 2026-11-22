@@ -15,10 +15,10 @@ function shot(media, kind, base, plate) {
   const srcset = (ext) => widths.map((width) => `${stem}-${width}.${ext} ${width}w`).join(", ");
   const sizes =
     kind === "pair" || kind === "gallery"
-      ? "(max-width: 64rem) calc(100vw - 2.5rem), 43vw"
+      ? "(max-width: 64em) calc(100vw - 2.5em), 43vw"
       : kind === "upright"
-        ? "(max-width: 52.5rem) calc(100vw - 2.5rem), 50rem"
-        : "(max-width: 48rem) calc(100vw - 2.5rem), (max-width: 100rem) 90vw, 92rem";
+        ? "(max-width: 52.5em) calc(100vw - 2.5em), 50em"
+        : "(max-width: 48em) calc(100vw - 2.5em), (max-width: 100em) 90vw, 92em";
   const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
   const caption = media.caption
     ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>`
