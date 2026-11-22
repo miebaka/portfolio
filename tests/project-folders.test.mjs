@@ -74,6 +74,13 @@ test("folder surface keeps one target per case and static, non-intercepting pape
   assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
 });
 
+test("folder reveal only animates compositor-friendly transform and opacity", () => {
+  const css = readFileSync(resolve("styles/folder-interactions.css"), "utf8");
+  assert.match(css, /transition:\s*transform 550ms/);
+  assert.match(css, /opacity 400ms ease/);
+  assert.doesNotMatch(css, /(?:^|,)\s*filter\s+\d+ms/m);
+});
+
 test("Home matches the Work landscape folder construction", () => {
   const html = renderHomeProjectList(SITE.projects, SITE.caseStudies);
   assert.match(html, /home-folder-stack__cards/);
