@@ -1,54 +1,55 @@
 import { test, expect } from "@playwright/test";
 
-const cases = ["/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html"];
-const labels = ["The Call", "The System", "What Survived", "First Contact", "The Results"];
-const descriptors = [
-  "What did I decide, and what did I turn down to get there?",
-  "What did I build so the decision outlived the first week?",
-  "What did the deadline and the budget leave standing?",
-  "How did the people it was made for first meet it?",
-  "What changed because this existed, and how do I know?"
+const cases = [
+  { slug: "tedx-rsu", title: "Give the event a pause", status: /event-day photograph/i },
+  { slug: "rivo", title: "Soften the technical signal", status: /visualisation/i },
+  { slug: "chopbox", title: "Use appetite as the filter", status: /proposed packaging/i }
 ];
 
-test("all five case-study questions are immediately readable without reveal observers", async ({ page }) => {
-  for (const route of cases) {
-    await page.goto(route);
-    const chapters = page.locator(".case-chapter");
-    await expect(chapters).toHaveCount(5);
-    await expect(chapters.locator(".case-chapter__intro h2")).toHaveText(labels);
-    await expect(chapters.locator(".case-chapter__descriptor")).toHaveText(descriptors);
-    for (let i = 0; i < 5; i++) {
-      const chapter = chapters.nth(i);
-      await chapter.scrollIntoViewIfNeeded();
-      await expect(chapter).toBeVisible();
-      for (const selector of [".case-chapter__intro", ".case-chapter__heading", ".case-chapter__body"]) {
-        await expect(chapter.locator(selector)).toHaveCSS("opacity", "1");
-      }
-      const visible = await chapter.evaluate(node => {
-        const parts = [".case-chapter__intro", ".case-chapter__heading", ".case-chapter__body"];
-        return parts.map(selector => {
-          const element = node.querySelector(selector);
-          const style = getComputedStyle(element);
-          return { opacity: Number(style.opacity), visible: style.visibility, height: element.getBoundingClientRect().height };
-        });
-      });
-      for (const part of visible) {
-        expect(part.opacity, route + " chapter " + i + " must be readable").toBeGreaterThan(.98);
-        expect(part.visible).toBe("visible");
-        expect(part.height).toBeGreaterThan(0);
-      }
-    }
+test("case opening identifies project, role, constraint, action and lead imagery", async ({ page }) => {
+  for (const {slug} of cases) {
+    await page.goto("/work/" + slug + ".html");
+    await expect(page.locator(".case-opening h1")).toBeVisible();
+    await expect(page.locator(".case-opening__essentials dt")).toHaveText(["My role","The constraint"]);
+    await expect(page.locator(".case-opening__essentials dd")).toHaveCount(2);
+    await expect(page.locator(".case-opening__actions a")).toHaveAttribute("href", "../contact.html");
+    await expect(page.locator(".case-shot--hero")).toBeVisible();
+    await expect(page.locator(".case-lead-proof__images img")).toHaveCount(2);
+    await expect(page.locator(".case-lead-proof__status")).not.toBeEmpty();
   }
 });
 
-test("case-study chapters remain readable with JavaScript disabled", async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+test("specific decision headings replace generic prompt-led chapter hierarchy", async ({ page }) => {
+  for (const {slug,title} of cases) {
+    await page.goto("/work/" + slug + ".html");
+    const chapters = page.locator(".case-chapter");
+    await expect(chapters).toHaveCount(5);
+    await expect(chapters.locator(".case-chapter__eyebrow")).toHaveText([
+      "The Call","The System","What Survived","First Contact","The Results"
+    ]);
+    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(5);
+    await expect(chapters.first().locator("h2")).toHaveText(title);
+    await expect(page.locator(".case-chapter__descriptor")).toHaveCount(0);
+  }
+});
+
+test("proof status and inquiry path are present before or after every case", async ({ page }) => {
+  for (const {slug,status} of cases) {
+    await page.goto("/work/" + slug + ".html");
+    await expect(page.locator(".case-lead-proof__status")).toContainText(status);
+    await expect(page.locator(".case-end-actions a[href='../contact.html']")).toHaveCount(1);
+    await expect(page.locator(".case-end-actions a[href^='mailto:']")).toHaveCount(1);
+  }
+});
+
+test("case-study evidence and chapter labels remain accessible without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({javaScriptEnabled:false});
   const page = await context.newPage();
-  for (const route of cases) {
-    await page.goto(route);
-    await expect(page.locator(".case-chapter__intro h2")).toHaveText(labels);
-    await expect(page.locator(".case-chapter__descriptor")).toHaveText(descriptors);
-    await expect(page.locator(".case-chapter__heading")).toHaveCount(5);
+  for (const {slug} of cases) {
+    await page.goto("/work/" + slug + ".html");
+    await expect(page.locator(".case-opening h1")).toBeVisible();
+    await expect(page.locator(".case-lead-proof__images img")).toHaveCount(2);
+    await expect(page.locator(".case-chapter h2")).toHaveCount(5);
   }
   await context.close();
 });

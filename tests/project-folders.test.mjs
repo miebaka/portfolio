@@ -108,8 +108,8 @@ test("work and home share a mobile-first gallery with always-visible evidence", 
   const css = readFileSync(resolve("styles/visitor-journey.css"), "utf8");
   const home = renderHomeProjectList(SITE.projects, SITE.caseStudies);
   const work = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
-  assert.match(css, /grid-template-columns:\\s*minmax\\(0, 1fr\\)/);
-  assert.match(css, /@media \\(min-width:40em\\)/);
-  assert.match(css, /@media \\(min-width:72em\\)/);
+  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(css, /@media \(min-width:40em\)/);
+  assert.match(css, /@media \(min-width:72em\)/);
   for (const html of [home, work]) assert.equal((html.match(/class="project-folder__visual"/g) || []).length, 3);
 });
