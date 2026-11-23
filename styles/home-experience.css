@@ -30,23 +30,51 @@ body[data-page="home"] .journey {
   background: var(--paper);
 }
 
-/* The controller adds .is-running only while visible. Before this change,
-   animation-play-state remained paused forever. */
+body[data-page="home"] .client-marquee {
+  max-width: var(--content);
+  margin-inline: auto;
+}
+
+body[data-page="home"] .client-marquee__track {
+  animation: client-marquee 40s linear infinite paused;
+}
+
 body[data-page="home"] .client-marquee.is-running .client-marquee__track {
-  animation: client-marquee 40s linear infinite;
   animation-play-state: running;
 }
 
-body[data-page="home"] .client-marquee:not(.is-running) .client-marquee__track {
-  animation-play-state: paused;
+/* Half a gap at each end keeps the spacing identical across the seam. */
+body[data-page="home"] .client-marquee .client-proof {
+  gap: var(--client-logo-gap, var(--s4));
+  padding-inline: calc(var(--client-logo-gap, var(--s4)) / 2);
 }
 
-/* Optical logo normalization: square emblems receive modest extra weight,
-   and long wordmarks respect a common visual width without distortion. */
+body[data-page="home"] .client-marquee[data-marquee-mode="static"] {
+  mask-image: none;
+}
+
+body[data-page="home"] .client-marquee[data-marquee-mode="static"] .client-marquee__track {
+  width: 100%;
+  animation: none;
+}
+
+body[data-page="home"] .client-marquee[data-marquee-mode="static"] .client-proof {
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 0;
+  padding-inline: var(--page);
+  min-width: 0;
+  width: 100%;
+}
+
+body[data-page="home"] .client-marquee[data-marquee-mode="static"] .client-proof[aria-hidden="true"] {
+  display: none;
+}
+
 body[data-page="home"] .marquee__item {
   display: grid;
   place-items: center;
-  width: clamp(12em, 52vw, 17em);
+  width: auto;
   height: 4.5em;
   min-height: 0;
   flex: none;
@@ -56,31 +84,21 @@ body[data-page="home"] .marquee__item img {
   display: block;
   width: auto;
   height: 2em;
-  max-width: 82%;
+  max-width: 75vw;
   max-height: none;
   object-fit: contain;
-  transform: scale(var(--logo-optical, 1));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) body[data-page="home"] .client-marquee__track {
-    animation: none;
-  }
-}
-
-html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
-  animation: none;
+  transform: none;
+  zoom: var(--logo-optical, 1);
 }
 
 @media (min-width:56em) {
   body[data-page="home"] .marquee__item {
-    width: clamp(18em, 27vw, 27em);
     height: clamp(6em, 9vw, 8em);
   }
 
   body[data-page="home"] .marquee__item img {
     height: clamp(2.125em, 2.8vw, 2.5em);
-    max-width: min(78%, 19em);
+    max-width: 19em;
   }
 }
 
@@ -214,9 +232,6 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     padding-block: clamp(var(--s4), 6vw, var(--s6));
   }
 
-  body[data-page="home"] .client-proof {
-    gap: clamp(calc(var(--spacing-unit) * 10), 6vw, var(--s6));
-  }
 
 
 /* Sticky physical card layers are deliberately desktop-only. */
@@ -308,7 +323,6 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     gap:calc(var(--spacing-unit) * 10);
   }
   body[data-page="home"] .journey{padding-block:clamp(var(--s6),5vw,var(--s12))}
-  body[data-page="home"] .client-proof{gap:clamp(var(--s10),9vw,calc(var(--spacing-unit) * 80))}
 }
 
 

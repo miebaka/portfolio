@@ -132,7 +132,9 @@ export function renderClients() {
   control.className = "client-marquee__control";
   el.after(control);
   const controller = createMarqueeController(el, { control });
-  addEventListener("pagehide", () => controller.destroy(), { once: true });
+  addEventListener("pagehide", (event) => {
+    if (!event.persisted) controller.destroy();
+  });
 }
 
 export function renderClientProofMarkup(clients = SITE.clients) {
@@ -147,6 +149,15 @@ export function createMarqueeController(root, deps = {}) {
     deps.MutationObserver === undefined ? doc.defaultView?.MutationObserver : deps.MutationObserver;
   const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
   const { control } = deps;
+  const logos = [...(root.querySelectorAll?.(".client-proof:first-child .marquee__item") || [])];
+  const measureGap = () => {
+    const widest = Math.max(0, ...logos.map((logo) => logo.getBoundingClientRect().width));
+    if (widest) root.style.setProperty("--client-logo-gap", `${widest / 2}px`);
+  };
+  const ResizeObserver = doc.defaultView?.ResizeObserver;
+  const sizes = ResizeObserver && logos.length ? new ResizeObserver(measureGap) : null;
+  logos.forEach((logo) => sizes?.observe(logo));
+  measureGap();
   let userPaused = false;
   let visible = !Observer;
   let destroyed = false;
@@ -162,6 +173,7 @@ export function createMarqueeController(root, deps = {}) {
       control.hidden = reduced || destroyed;
       control.textContent = userPaused ? "Resume logo scrolling" : "Pause logo scrolling";
     }
+    root.dataset.marqueeMode = reduced ? "static" : "scroll";
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
   };
@@ -190,6 +202,7 @@ export function createMarqueeController(root, deps = {}) {
       if (destroyed) return;
       destroyed = true;
       control?.removeEventListener("click", onToggle);
+      sizes?.disconnect();
       observer?.disconnect();
       preferences?.disconnect();
       motionQuery?.removeEventListener?.("change", onVisibility);

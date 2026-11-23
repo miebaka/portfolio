@@ -47,6 +47,7 @@ test("every generated page preserves its reading path at narrow widths and witho
         const { x, width: titleWidth } = await title.boundingBox();
         expect(x).toBeGreaterThanOrEqual(-1);
         expect(x + titleWidth).toBeLessThanOrEqual(width + 1);
+        if (route === "404.html") expect(titleWidth).toBeGreaterThan(width / 2);
       });
     } finally {
       await context.close();

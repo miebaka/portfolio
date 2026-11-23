@@ -67,7 +67,7 @@
 .article-footer{margin-top:var(--s8);padding-top:var(--s3);border:0}
 .article-footer__back{display:inline-flex;align-items:center;min-height:2.75em}
 .hero--404{position:relative;display:flex;min-height:calc(100svh - var(--nav-h));justify-content:center;overflow:hidden}
-.hero--404__copy{position:relative;z-index:2;display:grid;gap:var(--s3)}
+.hero--404__copy{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s3)}
 
 
 .article-body :is(p,h2,h3,ul,ol,blockquote){margin-inline:0;}

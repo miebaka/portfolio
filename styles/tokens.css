@@ -272,7 +272,7 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .article-page main h2{font-size:var(--type-heading-md)}
 
-.article-figure figcaption{font-size:var(--type-label);line-height:var(--type-leading-body)}
+.article-figure figcaption{font-size:var(--type-label);line-height:var(--type-leading-body);text-wrap:pretty}
 
 .swiss-work-hero p{font-size:var(--type-body-lg)}
 
@@ -1125,7 +1125,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__copy--large p {
   font-size: var(--type-heading-sm);
-  line-height: var(--type-leading-heading);}
+  line-height: var(--type-leading-ui);}
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__closing p {
   font-size: var(--type-heading-lg);

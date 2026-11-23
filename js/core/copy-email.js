@@ -16,9 +16,10 @@ async function copyText(value) {
 
 export function initCopyEmail() {
   // Preserve mailto navigation while offering a clipboard alternative beside
-  // every visibly printed email address, including the shared footer.
+  // the printed contact details and shared footer.
   const links = [...document.querySelectorAll('a[href^="mailto:"]')]
-    .filter(link => link.textContent.includes("@") && !link.nextElementSibling?.matches(".copy-email"));
+    .filter(link => link.textContent.includes("@") && !link.closest(".contact__handoff") &&
+      !link.nextElementSibling?.matches(".copy-email"));
   const cleanups = links.map(link => {
     const button = document.createElement("button");
     button.type = "button";

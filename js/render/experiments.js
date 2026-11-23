@@ -224,5 +224,10 @@ export async function initExperimentsSpatial() {
     });
   }
   paint();
-  addEventListener("pagehide", () => { removeEventListener("popstate", onHistory); removeEventListener("hashchange", onHistory); cancelAnimationFrame(frame); }, { once: true });
+  addEventListener("pagehide", (event) => {
+    if (event.persisted) return;
+    removeEventListener("popstate", onHistory);
+    removeEventListener("hashchange", onHistory);
+    cancelAnimationFrame(frame);
+  });
 }

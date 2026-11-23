@@ -204,6 +204,8 @@ export function initFooterSignature() {
   const host = document.querySelector(".site-footer__signature");
   if (!host) return;
   const controller = createFooterSignatureController(host);
-  addEventListener("pagehide", () => controller.destroy(), { once: true });
+  addEventListener("pagehide", (event) => {
+    if (!event.persisted) controller.destroy();
+  });
   return controller;
 }

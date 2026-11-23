@@ -100,10 +100,11 @@ export function initNowPlaying({
     destroyed = true;
     win.clearTimeout(timer);
     doc.removeEventListener("visibilitychange", onVisibility);
-    win.removeEventListener("pagehide", destroy);
+    win.removeEventListener("pagehide", onPageHide);
   };
   doc.addEventListener("visibilitychange", onVisibility);
-  win.addEventListener("pagehide", destroy, { once: true });
+  const onPageHide = (event) => { if (!event.persisted) destroy(); };
+  win.addEventListener("pagehide", onPageHide);
   if (canPoll) schedule(0);
   return { destroy };
 }

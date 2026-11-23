@@ -212,14 +212,15 @@ export async function initHeroWave({
     win.removeEventListener("blur", resetPointer);
     if (pointerFrame) win.cancelAnimationFrame(pointerFrame);
     if (touchReleaseFrame) win.cancelAnimationFrame(touchReleaseFrame);
-    win.removeEventListener("pagehide", destroy);
+    win.removeEventListener("pagehide", onPageHide);
     canvas?.removeEventListener("webglcontextlost", onContextLost);
     canvas?.removeEventListener("webglcontextrestored", onContextRestored);
     island.destroy();
     host.remove();
     root.classList.remove("has-hero-wave");
   };
-  win.addEventListener("pagehide", destroy, { once: true });
+  const onPageHide = (event) => { if (!event.persisted) destroy(); };
+  win.addEventListener("pagehide", onPageHide);
   sync();
   return { destroy, get preset() { return host.dataset.preset; } };
 }

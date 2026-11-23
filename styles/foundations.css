@@ -129,6 +129,10 @@ button{color:inherit;border:0;background:none;cursor:pointer}
 :focus-visible{outline:2px solid var(--focus);outline-offset:4px}
 ::selection{background:var(--selection-bg);color:var(--selection-fg)}
 p{max-inline-size:72ch}
+:where(body.case-page) p{max-inline-size:44em}
+@media (max-width:55.999em){
+  body.case-page{--page:1em}
+}
 main{min-height:70vh;position:relative;z-index:1}
 footer{position:relative;z-index:1}
 .js-reveal [data-motion-role="comparison"]{transform:translate3d(-2em,0,0);clip-path:inset(0 8% 0 0)}

@@ -106,6 +106,41 @@ test("Client marks are fitted mathematically without distortion",async({page})=>
   });
 });
 
+test("Client logos use half the widest mark as the gap, including the loop seam", async ({ page }) => {
+  await page.goto("/index.html");
+  const marquee = page.locator(".client-marquee");
+  const track = marquee.locator(".client-marquee__track");
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toHaveClass(/is-running/);
+  const control = page.getByRole("button", { name: "Pause logo scrolling" });
+  await control.click();
+  await expect(track).toHaveCSS("animation-play-state", "paused");
+  const animationTime = () => track.evaluate(node => node.getAnimations()[0]?.currentTime);
+  const pausedAt = await animationTime();
+  expect(pausedAt).toBeGreaterThan(0);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  expect(await animationTime()).toBe(pausedAt);
+
+  for (const width of [390, 1440, 2560]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect.poll(async () => marquee.evaluate(root => {
+      const [primary, repeat] = root.querySelectorAll(".client-proof");
+      const logos = [...primary.children].map(node => node.firstElementChild.getBoundingClientRect());
+      const next = repeat.firstElementChild.firstElementChild.getBoundingClientRect();
+      const expected = Math.max(...logos.map(rect => rect.width)) / 2;
+      const gaps = logos.map((rect, index) => (logos[index + 1] || next).left - rect.right);
+      return Math.max(...gaps.map(gap => Math.abs(gap - expected)));
+    })).toBeLessThan(0.5);
+  }
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(marquee).toHaveAttribute("data-marquee-mode", "static");
+  await expect(marquee.locator(".client-proof[aria-hidden=true]")).toBeHidden();
+  for (const logo of await marquee.locator(".client-proof").first().getByRole("img").all()) {
+    await expect(logo).toBeVisible();
+  }
+});
+
 test("Footer dot field is keyboard-operable after entering viewport",async({page})=>{
   await page.goto("/index.html");
   const field=page.locator(".site-footer__signature");

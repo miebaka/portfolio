@@ -56,11 +56,11 @@ test("Person identity is shared by website, authored cases and essays", () => {
 test("case summaries specify supported scope and proposed versus delivered work", () => {
   for (const slug of ["rivo", "tedx-rsu", "chopbox"]) {
     const html = dist("work/" + slug + ".html");
-    assert.match(html, /class="case-opening__scope"/, slug);
+    assert.match(html, /class="case-lead-proof__status container"/, slug);
     assert.match(html, /class="case-opening__essentials"/, slug);
   }
-  assert.match(dist("work/chopbox.html"), /manufacture, sales and public rollout are not independently established/);
-  assert.match(dist("work/rivo.html"), /do not independently establish public rollout/);
+  assert.match(dist("work/chopbox.html"), /manufacture and sales are unverified/);
+  assert.match(dist("work/rivo.html"), /public production is not established/);
 });
 test("directory aliases redirect without intercepting individual asset paths", () => {
   const config = JSON.parse(readSource("vercel.json"));

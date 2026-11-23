@@ -12,6 +12,20 @@ test("one Three.js caustic shader responds to both themes", async ({ page }) => 
   await expect(wave).toHaveAttribute("data-water-theme", "light");
 });
 
+test("the water control survives a page preserved in browser history", async ({ page }) => {
+  await page.goto("/?shader-test=1");
+  const wave = page.locator("[data-hero-wave]");
+  await expect(wave).toHaveClass(/is-ready/);
+  await page.evaluate(() => {
+    dispatchEvent(new PageTransitionEvent("pagehide", { persisted: true }));
+    dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }));
+  });
+  await expect(wave).toHaveClass(/is-ready/);
+  const control = page.getByRole("button", { name: "Pause background motion" });
+  await control.click();
+  await expect(page.getByRole("button", { name: "Resume background motion" })).toBeVisible();
+});
+
 test("static hero wave has genuine tonal relief", async ({ page }) => {
   await page.goto("/?shader-test=1&shader-static=1");
   const wave = page.locator("[data-hero-wave]");

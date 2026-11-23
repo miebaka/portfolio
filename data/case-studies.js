@@ -45,7 +45,6 @@ export const caseStudies = {
     "status": "draft"
   },
   "rivo": {
-    "scopeNote": "The identity work covered Rivo Studio’s softened wordmark, colour system and practical guidelines. Supporting mockups demonstrate proposed uses; they do not independently establish public rollout.",
     "title": "Rivo Studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
     "hero": "rivo-in-use",
@@ -228,7 +227,6 @@ export const caseStudies = {
     "status": "published"
   },
   "tedx-rsu": {
-    "scopeNote": "I developed the local “Pause…” event language within TEDx’s fixed identity rules, from social creative and printed programmes to campus signage. Event-day photographs document public use, not audience impact.",
     "title": "TEDx Rivers State University",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
     "hero": "tedx-rsu-campus-banner",
@@ -412,7 +410,6 @@ export const caseStudies = {
     "status": "published"
   },
   "chopbox": {
-    "scopeNote": "I developed ChopBox’s visual identity, brand presentation and packaging concepts. Campaign and packaging mockups are proposed applications; manufacture, sales and public rollout are not independently established.",
     "title": "ChopBox",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",
     "hero": "chopbox-platter",

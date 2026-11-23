@@ -135,7 +135,7 @@ body[data-page="home"] .home-landing{
   }
 body[data-page="home"] .home-landing::after{
   background:linear-gradient(180deg,transparent 0%,color-mix(in srgb,var(--paper) 11%,transparent) 60%,color-mix(in srgb,var(--paper) 50%,transparent) 100%);}
-body[data-page="home"] .home-landing :is(h1,.home-landing__statement,.home-landing__meta){
+body[data-page="home"] .home-landing :is(h1,.home-landing__meta){
   color:var(--ink);}
 body[data-page="home"] .home-content {
   position:relative;background:var(--paper);}
