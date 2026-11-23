@@ -117,8 +117,7 @@ test("case studies offer text decisions, evidence meanings and embedded artwork 
     await expect(page.locator(".case-opening h1")).toBeVisible();
     await expect(page.locator(".case-opening__essentials dt")).toHaveText(["My role", "The constraint"]);
     await expect(page.locator(".case-lead-proof h2")).toBeVisible();
-    await expect(page.locator(".case-shot__embedded-words").first()).toBeAttached();
-    await expect(page.locator(".case-shot__embedded-words").first()).toContainText(words);
+    await expect(page.locator(".case-shot__embedded-words").filter({ hasText: words }).first()).toBeAttached();
     await expect(page.locator(".case-opening__actions a")).toHaveAttribute("href", "../contact.html");
     await expect(page.locator(".case-end-actions a[href^='mailto:']")).toHaveCount(1);
   }

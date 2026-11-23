@@ -7,7 +7,7 @@ const token = (value) => String(value ?? "").replace(/[^a-z0-9_-]/gi, "");
 const paras = (list) => (list || []).map((p) => `<p>${esc(p)}</p>`).join("");
 const upright = (media) => Boolean(media?.w && media?.h && media.w / media.h < 1.2);
 const embeddedArtworkText = Object.freeze({
-  "tedx-rsu-logomark": "pause… — Reflect. Reconsider. Reward.",
+  "tedx-rsu-logomark": "pause…: Reflect. Reconsider. Reward.",
   "tedx-rsu-typeface": "Remember to stay pause-itive.",
   "tedx-rsu-campus-banner": "Would you like to pause for a minute? The invitation names the Student Dialogue Center, Rivers State University, and 18 February 2023.",
   "rivo-tote": "Software that simply works for all.",
