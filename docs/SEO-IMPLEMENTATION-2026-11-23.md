@@ -15,7 +15,7 @@
 1. Confirm HTTP 308/301 for aliases in one hop to final canonical and HTTP 200 for /, /work.html, /essays.html.
 2. Confirm /assets/ and /styles/ now return 404 as directory listings are disabled, while a known image, stylesheet and script still return HTTP 200.
 3. Confirm a nonexistent route stays 404, /404.html remains noindex and /explorations.html redirects to /experiments.html.
-4. Run the existing test suite, mobile Playwright and Lighthouse on Home, Experiments and a published case. Compare repeat runs with the audit baseline (mobile Home: LCP 1.7 s, CLS 0, TBT 840 ms, performance 77). Lab scores are not field Core Web Vitals.
+4. Run the existing test suite and Playwright. The CI now runs a separate two-pass mobile Lighthouse audit for Home, Experiments and TEDx RSU, publishing `seo-mobile-lighthouse` as a downloadable Actions artifact. Record scores/metrics from the generated reports rather than claiming improvements without measurement. Compare repeat runs with the audit baseline (mobile Home: LCP 1.7 s, CLS 0, TBT 840 ms, performance 77). Lab scores are not field Core Web Vitals.
 5. In Google Search Console, check sitemap processing, index status, last crawl and Google-selected canonical for Home, About, Work, Rivo, TEDx, ChopBox and the two essays. Record branded queries and page impressions monthly.
 
 ## Work that cannot honestly be auto-published
