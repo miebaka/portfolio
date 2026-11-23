@@ -84,13 +84,6 @@ export function renderCaseMarkup(site, slug, base = "../") {
   let plate = 0;
   const nextPlate = () => ++plate;
   const heroMarkup = shot(hero, "hero", base, nextPlate());
-  const chapters = study.chapters
-    .map((item) => chapter(
-      item.id, item.label, item.title, item.body,
-      (item.media || []).map((src) => lookup.get(src)).filter(Boolean),
-      false, base, nextPlate,
-    ))
-    .join("");
   /* Use published artifacts only. The Rivo guidelines image is a cover,
      not a readable page excerpt; applications remain labelled visualisations. */
   const lead = {
@@ -135,6 +128,13 @@ export function renderCaseMarkup(site, slug, base = "../") {
       <p class="case-lead-proof__status container">${esc(lead.status)}</p>
     </section>`
     : "";
+  const chapters = study.chapters
+    .map((item) => chapter(
+      item.id, item.label, item.title, item.body,
+      (item.media || []).map((src) => lookup.get(src)).filter(Boolean),
+      false, base, nextPlate,
+    ))
+    .join("");
   return opening + heroMarkup + featured +
     `<div class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</div>` +
     chapters + nextBlock(site, study, base) +

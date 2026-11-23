@@ -58,8 +58,8 @@ test("published narratives need one usable next destination and allow omitted un
 });
 
 test("active next destinations require a published project and published case", () => {
-  reject((study, content) => { content.projects.find(project => project.slug === "chopbox").status = "coming-soon"; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
-  reject((study, content) => { content.caseStudies.chopbox.status = "draft"; }, "NEXT_CASE_UNPUBLISHED", "next.slug");
+  reject((study, content) => { content.projects.find(project => project.slug === "rivo").status = "coming-soon"; }, "NEXT_PROJECT_UNPUBLISHED", "next.slug");
+  reject((study, content) => { content.caseStudies.rivo.status = "draft"; }, "NEXT_CASE_UNPUBLISHED", "next.slug");
   reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
 });
 
