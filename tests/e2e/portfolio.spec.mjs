@@ -115,15 +115,18 @@ test("desktop display headings respect the editorial line and grid contracts", a
         right: bounds.right,
         containerLeft: container?.left ?? 0,
         containerRight: container?.right ?? innerWidth,
+        viewportRight: innerWidth,
         overflow: element.scrollWidth > element.clientWidth,
       };
     });
-    // Long essay headlines are allowed three deliberate editorial lines.
-    // Other page titles must remain within two; overflow is always prohibited.
+    // The oversized home name intentionally stretches beyond its narrow
+    // content grid, but must remain inside the viewport. Other headings stay
+    // within their original grid. All headings must avoid text overflow.
     const maxLines = route === "/index.html" || route.startsWith("/essays/") ? 3 : 2;
+    const homeWordmark = route === "/index.html";
     expect(geometry.lines, `${route} primary heading line count`).toBeLessThanOrEqual(maxLines);
-    expect(geometry.left, `${route} primary heading left grid edge`).toBeGreaterThanOrEqual(geometry.containerLeft - 1);
-    expect(geometry.right, `${route} primary heading right grid edge`).toBeLessThanOrEqual(geometry.containerRight + 1);
+    expect(geometry.left, `${route} primary heading left edge`).toBeGreaterThanOrEqual(homeWordmark ? -1 : geometry.containerLeft - 1);
+    expect(geometry.right, `${route} primary heading right edge`).toBeLessThanOrEqual(homeWordmark ? geometry.viewportRight + 1 : geometry.containerRight + 1);
     expect(geometry.overflow, `${route} primary heading overflow`).toBe(false);
   }
 });

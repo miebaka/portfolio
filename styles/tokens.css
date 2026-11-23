@@ -1316,3 +1316,25 @@ body.case-page .case-next__link {
 }
 
 .case-next__arrow {font-size: var(--type-heading-lg)}
+
+/* Belonwus-inspired oversized wordmark treatment, scoped to the existing
+   homepage name only. All original sections, navigation and water remain. */
+body[data-page="home"] .home-landing h1 {
+  font-size: clamp(3em, 10.5vw, 13em);
+  line-height: .94;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+}
+@media (min-width: 40em) {
+  body[data-page="home"] .home-landing h1 {
+    width: 96vw;
+    max-width: none;
+    margin-inline-start: calc(50% - 48vw);
+    gap: 0;
+  }
+}
+@media (max-width: 39.999em) {
+  body[data-page="home"] .home-landing h1 {
+    font-size: clamp(3em, 12.75vw, 6em);
+  }
+}
