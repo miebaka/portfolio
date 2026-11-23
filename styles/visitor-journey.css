@@ -27,6 +27,9 @@ body:is([data-page="home"], [data-page="work"]) .project-folder__link {
   min-height: 100%;
   padding-top: clamp(var(--s8), 9vw, calc(var(--s10) + var(--s6)));
 }
+body[data-page="home"] .project-folder__link {
+  padding-top: var(--s4);
+}
 body:is([data-page="home"], [data-page="work"]) .project-folder__back {
   inset-block-start: 2.5em;
 }
