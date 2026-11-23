@@ -1293,7 +1293,8 @@ body[data-page="contact"] :is(.contact-info a, .contact__handoff a) {
 body[data-page] :is(
   button, label, legend, dt, th, summary, select, option,
   .skip-link, .nav-fallback a, .swiss-link, .article-toc a, .article-footer__back,
-  .experiments-nav__back, .experiments-nav__list-link, .case-back a,
+  .experiments-nav__back, .experiments-nav__list-link, .experiments-static__nav a,
+  .case-back a, .case-next__link,
   .case-opening__actions a, .case-end-actions a, .project-archive__eyebrow,
   .project-archive__collections a > span, .project-folder__title
 ) {

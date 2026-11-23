@@ -40,7 +40,7 @@ test("every generated page preserves its reading path at narrow widths and witho
 
         if (!javaScriptEnabled) await expect(page.locator(".site-nav__links a[href$='work.html']").first()).toBeVisible();
         const uncapitalized = await page.evaluate(() =>
-          [...document.querySelectorAll("button,label,dt,summary,.skip-link,.swiss-link")]
+          [...document.querySelectorAll("button,label,dt,summary,.skip-link,.swiss-link,.experiments-static__nav a")]
             .filter(node => node.getClientRects().length && /[a-z]/.test(node.textContent) &&
               getComputedStyle(node).textTransform !== "uppercase")
             .map(node => node.textContent.trim()));
