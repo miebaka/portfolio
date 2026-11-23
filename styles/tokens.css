@@ -1295,3 +1295,25 @@ body[data-page="home"] .project-folder__outcome {
   letter-spacing: normal;
   text-transform: none;
 }
+
+/* Visitor journey text treatment: typography rules remain centralized. */
+body:is([data-page="home"], [data-page="work"]) .project-folder__link {
+  text-decoration: none;
+}
+body:is([data-page="home"], [data-page="work"]) .project-folder__title {
+  overflow-wrap: anywhere;
+}
+body[data-page="home"] .home-landing__statement {
+  text-shadow: none;
+  text-wrap: balance;
+}
+body.case-page :is(.case-opening__eyebrow, .case-opening__actions, .case-lead-proof__eyebrow, .case-lead-proof__status, .case-chapter__eyebrow) {
+  text-transform: uppercase;
+}
+body.case-page :is(.case-opening__actions, .case-end-actions) a {
+  text-underline-offset: .25em;
+}
+body[data-page="contact"] :is(.contact-info a, .contact__handoff a) {
+  text-decoration-thickness: .1em;
+  text-underline-offset: .2em;
+}
