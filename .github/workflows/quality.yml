@@ -51,6 +51,14 @@ jobs:
           path: test-results/folder-*.png
           if-no-files-found: ignore
           retention-days: 14
+      - name: Upload mobile SEO and performance baseline
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: seo-mobile-lighthouse
+          path: .lighthouseci/mobile-reports
+          if-no-files-found: ignore
+          retention-days: 30
       # audit:shipped blocks releases; audit:dev-tools reports pinned LHCI/tooling
       # advisories without misrepresenting them as production dependencies.
       - name: Upload failure evidence

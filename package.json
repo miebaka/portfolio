@@ -30,12 +30,12 @@
     "test:lighthouse": "lhci autorun",
     "audit:shipped": "npm audit --omit=dev --audit-level=moderate",
     "audit:dev-tools": "npm audit --audit-level=moderate || echo 'Non-blocking: review dev-tool advisories above; shipped dependencies are gated separately.'",
-    "quality": "npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm run audit:shipped && npm run audit:dev-tools",
+    "quality": "npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm run test:lighthouse:mobile && npm run audit:shipped && npm run audit:dev-tools",
     "dev": "npm run build:experiments && npm run build:hero && node scripts/serve-static.mjs . 4000",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
-    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run test:listening && npm run test:folders && npm run test:motion && npm run build && npm run test:css && npm run test:intent && npm run test:tokens && npm run test:sizing && npm run test:relative && npm run test:integrity && npm run test:contract",
+    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run test:listening && npm run test:folders && npm run test:motion && npm run build && npm run test:css && npm run test:intent && npm run test:tokens && npm run test:sizing && npm run test:relative && npm run test:integrity && npm run test:contract && node --test scripts/seo-audit.test.mjs",
     "test:motion": "node --test tests/motion-language.test.mjs",
     "lint:typography": "stylelint \"styles/**/*.css\"",
     "test:typography": "node --test scripts/typography-contract.test.mjs scripts/typography-structure.test.mjs",
@@ -44,7 +44,8 @@
     "test:sizing": "node --test scripts/sizing-contract.test.mjs",
     "test:interaction": "PORTFOLIO_INTERACTION_EVIDENCE=1 PLAYWRIGHT_HTML_OUTPUT_DIR=reports/interaction PLAYWRIGHT_HTML_OPEN=never playwright test tests/e2e --grep @interaction --reporter=line,html --output reports/interaction-results",
     "test:routes": "playwright test tests/route-matrix.spec.mjs --project desktop --reporter=line --output test-results/route-matrix",
-    "release:receipt": "node scripts/release-receipt.mjs"
+    "release:receipt": "node scripts/release-receipt.mjs",
+    "test:lighthouse:mobile": "lhci autorun --config=lighthouserc.mobile.cjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

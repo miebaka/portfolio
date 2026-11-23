@@ -32,7 +32,7 @@ function renderFolderCard(project, index, base, showPreview = false) {
     '" aria-hidden="true"></span>').join("");
   return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
     '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
-    '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title +
+    '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' ' + scope +
     ' case study" aria-describedby="folder-proof-' + slug + '">' +
     '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
     '<span class="project-folder__tab-number">' + number + '</span></span></span>' + papers +
