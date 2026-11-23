@@ -17,20 +17,12 @@ test("Home and Work share the same folder order and previews", async ({ page }) 
     nodes.map(node => node.getAttribute("href")))).toEqual(homeHrefs);
 });
 
-test("hero keeps proposition and first-work path readable beside the water on small phones", async ({ page }) => {
+test("hero keeps proposition and first-work path readable on small phones", async ({ page }) => {
   for (const width of [320, 375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/");
     await expect(page.locator(".home-landing__statement")).toContainText("I ask until the idea is clear");
-    const pause = page.locator(".hero-wave__control");
-    const statement = page.locator(".home-landing__statement");
-    const dimensions = await page.evaluate(() => {
-      const rect = sel => document.querySelector(sel)?.getBoundingClientRect();
-      const a = rect(".hero-wave__control");
-      const b = rect(".home-landing__statement");
-      return { intersects: a && b && a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top };
-    });
-    expect(dimensions.intersects, "pause button never covers statement at "+width).toBe(false);
+    await expect(page.locator(".hero-wave__control")).toHaveCount(0);
     await expect(page.locator('.home-landing__meta a[href="#selected-work"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(2);
   }
@@ -67,7 +59,7 @@ test("keyboard focus follows the visible order and Enter opens Rivo", async ({ p
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
 });
 
-test("Selected Work, services and water retain safe horizontal edges without overflow", async ({ page }) => {
+test("Selected Work, services and hero retain safe horizontal edges without overflow", async ({ page }) => {
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");

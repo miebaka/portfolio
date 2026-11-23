@@ -17,6 +17,6 @@ The Belonwus case page pairs a full-screen brand handoff with a media-led galler
 
 The next-project treatment draws on Wigxel’s right-aligned label and oversized destination, using the portfolio’s Geist roles and a forward arrow.
 
-The upright folder-rack experiment was reverted on 22 November 2026 at the user's request. Home uses the original image-led Selected Work roster; the Work page uses its previous wide, layered landscape folders. The case-study animation is owned separately by `styles/case-transitions.css` and `js/core/case-route-transition.js`.
+The upright folder-rack experiment was reverted on 22 November 2026 at the user's request. Home uses the native-link Selected Work paper folders; the Work page retains its wide, layered landscape folders. The case-study animation is owned separately by `styles/case-transitions.css` and `js/core/case-route-transition.js`.
 
-The Three.js water uses its existing home renderer without replacement; navigation aligns visually to the outer left and right edges of the water frame. The now-playing status remains Last.fm-backed, with an expanded pill width.
+The homepage keeps the oversized MIEBAKA JOSHUA name and an editorial dark frame without the previously used water renderer. Existing navigation and the Last.fm-backed now-playing pill remain unchanged.

@@ -69,60 +69,6 @@ body[data-page="home"] .home-landing__meta a {
   color: inherit;
   border-bottom: 1px solid currentColor;
   padding: var(--s2) 0 calc(var(--spacing-unit) * 5);}
-body[data-page="home"] .hero-wave {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  background: var(--ref-midnight);
-  opacity: 0;
-  transition: opacity 280ms var(--ease-enter);}
-body[data-page="home"] .hero-wave.is-ready {
-  opacity: 1;}
-
-/* Always show a water surface when the GPU cannot initialise.
-   A successful Three.js mount replaces this lightweight surface immediately. */
-body[data-page="home"] .hero-wave.is-fallback {
-  opacity: 1;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 75% 60% at 20% 12%, var(--ref-water-light-glint), transparent 80%),
-    radial-gradient(ellipse 70% 90% at 90% 82%, var(--ref-water-light-depth), transparent 78%),
-    linear-gradient(145deg, var(--ref-water-light-a), var(--ref-water-light-b) 53%, var(--ref-water-light-c));}
-:root[data-theme="dark"] body[data-page="home"] .hero-wave.is-fallback {
-  background:
-    radial-gradient(ellipse 60% 70% at 22% 22%, var(--ref-water-dark-glint), transparent 78%),
-    radial-gradient(ellipse 68% 83% at 85% 88%, var(--ref-water-dark-depth), transparent 82%),
-    linear-gradient(145deg, var(--ref-water-dark-a), var(--ref-water-dark-b) 70%, var(--ref-water-dark-c));}
-
-/* Unsupported WebGL2 uses a quiet static surface, not obsolete animated rings.
-   Capable mobile devices run the same refraction shader as desktop. */
-body[data-page="home"] .hero-wave__control {
-  position: absolute;
-  z-index: 3;
-  top: clamp(1em, 2vw, 2em);
-  right: clamp(1em, 2vw, 2em);
-  padding: var(--s1) calc(var(--spacing-unit) * 5);
-  border: 1px solid color-mix(in srgb, var(--ref-paper) 30%, transparent);
-  border-radius: 62.4375em;
-  background: color-mix(in srgb, var(--ref-midnight) 35%, transparent);
-  color: var(--ref-paper);
-  cursor: pointer;}
-body[data-page="home"] .hero-wave__control:hover {
-  background: color-mix(in srgb, var(--ref-midnight) 75%, transparent);}
-body[data-page="home"] .hero-wave__control:focus-visible {
-  background: color-mix(in srgb, var(--ref-midnight) 75%, transparent);
-  outline: 2px solid var(--ref-paper);
-  outline-offset: 3px;}
-body[data-page="home"] .hero-wave__control[hidden] {
-  display: none;}
-body[data-page="home"] .hero-wave__canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;}
-body[data-page="home"] .hero-wave.is-fallback .hero-wave__canvas {
-  /* A lost WebGL context can leave an opaque black canvas over the fallback. */
-  opacity: 0;}
 @keyframes frame-in {
   from { transform: scale(.94); opacity: .75; }
   to { transform: scale(1); opacity: 1; }

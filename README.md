@@ -1,6 +1,6 @@
 # Miebaka Joshua — Portfolio
 
-A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; Three.js water, scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory, the contact endpoint and the server-side Last.fm listening-status endpoint.
+A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory, the contact endpoint and the server-side Last.fm listening-status endpoint.
 
 - **Visual direction and current approved behavior:** [`DESIGN.md`](DESIGN.md) (latest decision appendix takes precedence over historical proposals).
 - **Engineering, security and release requirements:** [`engineering-specification.md`](engineering-specification.md).
@@ -18,14 +18,14 @@ npm run dev
 # Open http://localhost:4000
 ```
 
-Development serves the authored source pages and rebuilds the experiments manifest and hero shader. To inspect what Vercel actually deploys, build and serve the generated output:
+Development serves the authored source pages and rebuilds the experiments manifest. To inspect what Vercel actually deploys, build and serve the generated output:
 
 ```sh
 npm run build
 node scripts/serve-static.mjs dist 4000
 ```
 
-Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
+Do not commit `dist/`: it is generated during the build.
 
 ## Where changes belong
 
@@ -50,7 +50,6 @@ Do not commit `dist/` or `assets/runtime/`: they are generated during the build.
 | Navigation, index overlay and theme | `js/render/navigation.js`, `js/core/navigation.js`, `js/core/preferences.js` |
 | Server-rendered navigation/footer fallback | `scripts/render-partials.mjs` |
 | Footer links above interactive dot-matrix wordmark | `js/render/footer.js`, `styles/footer-layout.css`, `js/core/footer-signature.js` |
-| Three.js hero and fallback | `js/hero-water-three.js`, `js/core/hero-wave.js` |
 | Native service-card scrolling | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |
 | Public listening-status feed and navbar pill | `api/now-playing.js`, `js/render/now-playing.js`, `data/site-config.js` |
@@ -82,10 +81,10 @@ For changed case-study or profile images, run `npm run optimize:images`. The bui
 
 ## Motion and accessibility
 
-- The hero uses a lazy Three.js/WebGL island with a static, usable fallback.
+- The homepage has a static dark opening frame and does not load a canvas renderer.
 - What I Do uses native CSS sticky scrolling without an external scroll engine; reduced-motion users see a static sequence.
 - The Index overlay, theme toggle and footer signature have keyboard/touch paths; the underlying document and contact links remain available without JavaScript.
-- `System`, `Reduce` and `Full` motion choices are persisted independently of colour theme. The OS `prefers-reduced-motion: reduce` always disables decorative animation and live water, even when a prior `Full` choice was saved.
+- `System`, `Reduce` and `Full` motion choices are persisted independently of colour theme. The OS `prefers-reduced-motion: reduce` disables recurring decorative animation.
 - Essential content must not depend on decorative animation, GPU capability or hover.
 
 ## Last.fm Now Playing
@@ -110,7 +109,7 @@ npm run quality
 
 `npm run quality` builds the site, runs unit/integrity tests, the full Chromium/Playwright browser matrix (no skipped tests), CSS/JavaScript/font/image budgets, desktop Lighthouse and dependency audits. The JavaScript budget now measures the complete static module graph; module bundling and immutable caching remain open performance work. CI uses Node.js 24. The font and CSS contracts are checked separately in the fast Typography workflow.
 
-**Automated green is necessary, not a live-release sign-off.** Before merge or production promotion, confirm a Vercel preview was built from the **exact PR head SHA**, then check actual Home, Work, case-study, Essays, Experiments, About and Contact routes. Do keyboard and screen-reader sampling, 200% zoom, light/dark and reduced-motion checks, a real touch/GPU pass, and an end-to-end contact delivery test with properly configured credentials. Verify external links and metadata, plus the ability to roll back to the last known-good deployment. The release checklist in [`engineering-specification.md`](engineering-specification.md) records what is automated versus still manual.
+**Automated green is necessary, not a live-release sign-off.** Before merge or production promotion, confirm a Vercel preview was built from the **exact PR head SHA**, then check actual Home, Work, case-study, Essays, Experiments, About and Contact routes. Do keyboard and screen-reader sampling, 200% zoom, light/dark and reduced-motion checks, a real touch-device pass, and an end-to-end contact delivery test with properly configured credentials. Verify external links and metadata, plus the ability to roll back to the last known-good deployment. The release checklist in [`engineering-specification.md`](engineering-specification.md) records what is automated versus still manual.
 
 ## Repository layout and asset build path
 
@@ -119,7 +118,7 @@ api/                Server-only contact and Last.fm handlers; no browser secrets
 assets/images/      Source/reference photography, covers, client SVG marks
 assets/experiments/ Authored experiment metadata and originals
 data/               Projects, case narratives, service proof and route registry
-js/core/            Interaction controllers (folders, water, motion, contact)
+js/core/            Interaction controllers (folders, motion, contact)
 js/render/          Data-driven semantic markup and no-JS-compatible UI
 styles/             Layout/decoration; tokens.css owns ALL type declarations
 work/               Published and draft case-study HTML shells
@@ -129,7 +128,7 @@ tests/e2e/          Route, proof-anchor, responsive and interaction assertions
 dist/               GENERATED deployment output (never edit/commit)
 ```
 
-**Build order.** `npm run build` validates authored content, builds the experiments manifest (`scripts/build-experiments.mjs`), produces the Three.js hero shader bundle (`scripts/build-hero-wave.mjs`), then assembles the production site (`scripts/build-site.mjs`). Use `npm run sync:fallbacks` when case-study shells change and `npm run optimize:images` after updating source art. Run `npm run test:css`, `npm run test:typography`, `npm run test:tokens` and `npm run test:e2e` before trusting appearance or links.
+**Build order.** `npm run build` validates authored content, builds the experiments manifest (`scripts/build-experiments.mjs`), then assembles the production site (`scripts/build-site.mjs`). Use `npm run sync:fallbacks` when case-study shells change and `npm run optimize:images` after updating source art. Run `npm run test:css`, `npm run test:typography`, `npm run test:tokens` and `npm run test:e2e` before trusting appearance or links.
 
 **Contact and proof integrity.** `data/services.js` must only point to honest published case-study chapters; every `#decision`, `#system` and `#survival` anchor is generated from the published case-study chapter IDs. The route and deep-link Playwright tests verify local HTTP 200 responses, real anchored content and fallbacks. Production HTTP behavior and external links still require a separate live deployment check.
 

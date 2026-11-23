@@ -289,8 +289,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
     await assert.rejects(access(join(dist, "js", "core", file)));
   }
   await assert.rejects(access(join(dist, "js", "core", "decision-field.js")));
-  await access(join(dist, "js", "core", "hero-wave.js"));
-  await access(join(dist, "assets", "runtime", "hero-wave.js"));
+  await assert.rejects(access(join(dist, "js", "core", "hero-wave.js")));
+  await assert.rejects(access(join(dist, "assets", "runtime", "hero-wave.js")));
   await assert.rejects(access(join(dist, "assets", "runtime", "motion-experience.js")));
   await assert.rejects(access(join(dist, "js", "core", "editorial-reveals.js")));
   await assert.rejects(access(join(dist, "js", "core", "scroll-experience.js")));
@@ -315,35 +315,17 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.doesNotMatch(css, /filter:saturate/i);
 });
 
-test("hero water ships a bounded Three.js GPU fluid simulation with graceful fallback", async () => {
-  const source = await readFile(join(dist, "js", "core", "hero-wave.js"), "utf8");
-  const island = await readFile(join(root, "js", "hero-water-three.js"), "utf8");
-  const runtime = await readFile(join(dist, "assets", "runtime", "hero-wave.js"), "utf8");
-  const foundations = await readFile(join(root, "styles", "foundations.css"), "utf8");
-  // A shader's actual WebGL uniforms, not unused stylesheet tokens, own its palette.
-  assert.match(source, /assets\/runtime\/hero-wave\.js\?rev=/);
-  for (const contract of [
-    /WebGLRenderer/, /WebGLRenderTarget/, /HalfFloatType/,
-    /const advect=/, /const divergence=/, /const jacobi=/, /const project=/,
-    /const wave=/, /const shade=/, /PRESSURE|ITERATIONS/,
-    /setRenderTarget/, /renderer\.render/,
-    /IntersectionObserver/, /ResizeObserver/, /renderer\.dispose/,
-    /const causticsVertex=/, /const causticsFragment=/,
-    /dFdx\(vSource\)/, /refract\(incoming, n, 1\.0 \/ 1\.333\)/,
-    /host\.dataset\.caustics="refracted-lightfront"/,
-    /screen\.uniforms\.transmission\.value=dark\?/,
-  
-  ]) assert.match(island, contract);
-  assert.match(source, /shader-static/);
-  assert.match(source, /prefers-reduced-motion: reduce/);
-  assert.match(source, /Pause background motion/);
-  assert.match(source, /setPointer/);
-  assert.match(runtime, /WebGLRenderer|WebGLRenderTarget|webgl2/i);
-  assert.match(island, /uniform vec4 rippleEvents\[4\]/);
-  assert.match(island, /sunward-caustics/);
-  assert.match(source, /20261122-refract-lightfront/);
-  assert.doesNotMatch(foundations, /--hero-wave-color-|--ref-water-ripple-/);
-  assert.doesNotMatch(source + island, /ShaderGradient|shader-background|ref-shader/);
+test("portfolio source no longer contains the extracted water runtime", async () => {
+  for (const file of [
+    "js/core/hero-wave.js",
+    "js/hero-water-three.js",
+    "js/folder-stock-three.js",
+    "scripts/build-hero-wave.mjs",
+  ]) await assert.rejects(access(join(root, file)), file);
+  const main = await readFile(join(dist, "js", "main.js"), "utf8");
+  const homepage = await readFile(join(dist, "index.html"), "utf8");
+  assert.doesNotMatch(main, /initHeroWave|core\/hero-wave/);
+  assert.doesNotMatch(homepage, /data-hero-wave|hero-wave__canvas/);
 });
 
 test("rejected homepage language cannot return unnoticed", async () => {
@@ -504,7 +486,6 @@ test("Vercel configuration is valid and serves the static build", async () => {
   assert.match(nowPlayingApi, /s-maxage=60/);
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
-  assert.equal(header("/assets/runtime/(.*)", "Cache-Control"), "public, max-age=0, must-revalidate");
   for (const rule of config.headers) {
     for (const item of rule.headers || []) {
       if (/immutable/i.test(item.value))

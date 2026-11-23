@@ -212,22 +212,11 @@ test("visible email addresses can be copied without replacing the mail link", as
   await expect.poll(() => page.evaluate(() => window.__copiedEmail)).toBe("miebakakiki@gmail.com");
 });
 
-test("Home mounts the authored Three.js hero wave", async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem("color-theme", "dark"));
-  await page.goto("/index.html?shader-test=1&shader-static=1");
-  const wave = page.locator('[data-hero-wave][data-preset="Dark water plane"]');
-  await expect(wave).toBeVisible();
-  await expect(wave.locator("canvas")).toHaveCount(1);
-  await expect(page.locator('[data-hero-wave]')).toHaveCount(1);
-  await expect(wave).toHaveAttribute("data-interaction", "static");
-});
-
-test("Home content preserves the unblurred hero field", async ({ page }) => {
-  await page.goto("/index.html?shader-test=1");
-  const wave = page.locator("[data-hero-wave]");
-  await expect(wave).toHaveAttribute("data-interaction", /cursor|static/);
-  await page.locator(".journey").scrollIntoViewIfNeeded();
-  await expect(wave.locator("canvas")).toBeVisible();
+test("Home has a static framed hero without a Three.js canvas", async ({ page }) => {
+  await page.goto("/index.html");
+  await expect(page.locator(".home-landing")).toBeVisible();
+  await expect(page.locator(".home-landing h1")).toContainText("Miebaka");
+  await expect(page.locator("[data-hero-wave], .hero-wave__control")).toHaveCount(0);
   const pageBackground = await page.locator("body").evaluate(element => getComputedStyle(element).backgroundColor);
   const surfaces = await page.locator(".home-content, .journey").evaluateAll(elements => elements.map(element => ({
     className: element.className,

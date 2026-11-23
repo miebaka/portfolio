@@ -43,17 +43,6 @@
   --ref-neutral-62:oklch(0.6700433 0.0310019 268.2190099);
   --image-edge:oklch(0 0 0 / 0.1);
 
-  /* Water shader fallback palette: authored centrally, never in page CSS. */
-  --ref-water-light-glint: oklch(0.9891397 0.011661 203.4749068 / 0.88);
-  --ref-water-light-depth: oklch(0.5437371 0.098319 244.8299384 / 0.4);
-  --ref-water-light-a: oklch(0.9218285 0.0199031 212.5470558);
-  --ref-water-light-b: oklch(0.8057249 0.0538982 206.6577006);
-  --ref-water-light-c: oklch(0.6974836 0.068349 225.3844765);
-  --ref-water-dark-glint: oklch(0.4888528 0.1160922 254.450517 / 0.4);
-  --ref-water-dark-depth: oklch(0.3259499 0.1313665 262.4587753 / 0.52);
-  --ref-water-dark-a: oklch(0.2751415 0.0773326 260.8780479);
-  --ref-water-dark-b: oklch(0.2011859 0.0551978 262.399767);
-  --ref-water-dark-c: oklch(0.1788851 0.049803 263.5572563);
   --elevation-hover:0 1px 2px oklch(0 0 0 / 0.3),0 1px 3px 1px oklch(0 0 0 / 0.15);
 
   /* System roles: what a colour is for, remapped in dark */

@@ -1,3 +1,5 @@
+> **Approved implementation update, 23 November 2026:** The interactive homepage water and its Three.js bundle were extracted from this portfolio. The hero is now a static dark frame with the approved oversized uppercase name. All earlier GPU, water, ripple and shader requirements in the historical design decisions below are superseded. The existing navigation, Work folders, other site sections and accessibility requirements remain active.
+
 # MIEBAKA JOSHUA — PORTFOLIO DESIGN & EXPERIENCE CONSTITUTION
 
 > **Status:** Authoritative design and interaction contract. The most recent approved decisions below override historical reference proposals.  

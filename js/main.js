@@ -13,7 +13,6 @@ import { renderFooter } from "./render/footer.js";
 import { initNowPlaying } from "./render/now-playing.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
-import { initHeroWave } from "./core/hero-wave.js";
 import { initProjectFolderInteractions } from "./core/project-folder-interactions.js";
 import { initCaseRouteTransitions } from "./core/case-route-transition.js";
 import { initCopyEmail } from "./core/copy-email.js";
@@ -53,5 +52,4 @@ if (page === "explorations") run("experiments spatial archive", () => { void ini
 run("project-folder interaction", initProjectFolderInteractions);
 run("case-study route transitions", initCaseRouteTransitions);
 run("footer signature", initFooterSignature);
-run("hero wave", () => { void initHeroWave(); });
 if (page === "contact") run("contact form", initForm);
