@@ -45,8 +45,8 @@ test("static service proof links match their published, real case chapters", asy
 test("homepage hero and professional proof remain useful without JavaScript", async () => {
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
-    assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands/);
-    assert.match(html, /Marketing designer at Rise/);
+    assert.match(html, /I ask until the idea is clear\. Then I make it useful/);
+    assert.match(html, /Identities, campaigns &amp; systems/);
     assert.match(html, /more than eight years/);
   }
 });
@@ -77,8 +77,8 @@ test("Work archive separates published cases from work in progress", () => {
   assert.equal((html.match(/<a\b/g) || []).length, 5);
   assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
   assert.match(html, /class="project-folder-stack__cards"/);
-  assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="tedx-rsu"'));
-  assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="chopbox"'));
+  assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="rivo"'));
+  assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="chopbox"'));
   assert.doesNotMatch(html, /CASE STUDY \/ 20\d\d/, "folder fronts only carry their project names");
   assert.doesNotMatch(html, /filing-cabinet|drawer|folder--sealed/);
   assert.match(html, /class="project-archive__progress"/);
@@ -87,9 +87,9 @@ test("Work archive separates published cases from work in progress", () => {
   assert.match(html, /href="essays\.html"/);
   const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
   assert.ok(tedx, "Published TEDx project must remain in the source data");
-  assert.equal(tedx.tagline, "A global event system given a distinct pause-and-reflect rhythm.");
-  assert.doesNotMatch(html, /A global event system given a distinct pause-and-reflect rhythm\./,
-    "Keep full project details in source content and the case study, not the constrained physical lip");
+  assert.match(tedx.tagline, /“Pause…” gave a local event its own voice/);
+  assert.match(html, /How “Pause…” gave a local event its own voice/,
+    "Show the evidence-led reason to open TEDx at rest");
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
@@ -538,7 +538,7 @@ test("requested language and contact details stay canonical", async () => {
   assert.doesNotMatch(source, /article-hero__tag|Brand Strategy<\/span>|Inclusive Design<\/span>/);
   assert.match(source, /miebakakiki@gmail\.com/);
   const home = await readFile(join(dist, "index.html"), "utf8");
-  assert.match(home, /A creative partner for teams turning difficult briefs into unmistakable brands/);
+  assert.match(home, /I ask until the idea is clear\. Then I make it useful/);
   assert.doesNotMatch(home, /Senior-leaning/);
   const projects = await readFile(join(root, "js", "render", "projects.js"), "utf8");
   assert.match(projects, /const published = projects/);

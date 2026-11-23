@@ -74,10 +74,9 @@ test("service cards sanitize unsafe destinations, filenames and injected markup"
 
 test("the homepage makes the hiring proposition and proof available before biography", async () => {
   const html = await page("index.html");
-  assert.match(html, /A creative partner for teams turning difficult briefs into unmistakable brands\./);
+  assert.match(html, /I ask until the idea is clear\. Then I make it useful\./);
   assert.match(html, /Miebaka/);
-  assert.match(html, /Marketing designer at Rise/);
-  assert.match(html, /Lagos, Nigeria/);
+  assert.match(html, /Identities, campaigns &amp; systems/);
   assert.match(html, /Selected work/);
   assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });

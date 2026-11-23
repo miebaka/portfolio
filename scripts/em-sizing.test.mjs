@@ -30,12 +30,13 @@ test("the core grid and spacing start mobile-first", async () => {
   assert.match(typography, /--type-heading-lg:\s*clamp\(2em,\s*1\.55em \+ 1\.7vw,\s*3em\)/);
 });
 
-test("interactive folder dimensions scale with text rather than using fixed-pixel CSS sizes", async () => {
+test("responsive case folders use relative CSS sizing and never intercept a native link", async () => {
   const controller = await readFile(resolve("js/core/project-folder-interactions.js"), "utf8");
-  assert.match(controller, /const relativeLength = \(element, pixels\)/);
-  assert.match(controller, /style\.minHeight = relativeLength\(card, height\)/);
-  assert.match(controller, /setProperty\("--work-folder-height", relativeLength\(folders\[0\], height\)\)/);
-  assert.doesNotMatch(controller, /(?:style\.minHeight|--work-folder-height"\s*,)[^;\n]*toFixed\(2\) \+ "px"/);
+  const css = await readFile(join(styles, "visitor-journey.css"), "utf8");
+  assert.doesNotMatch(controller, /pointerdown|preventDefault|clientY|touchPreview/);
+  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(css, /@media \(min-width:40em\)/);
+  assert.match(css, /@media \(min-width:72em\)/);
 });
 
 test("canonical page layouts grow from phone defaults instead of shrinking desktop layouts", async () => {
