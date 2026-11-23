@@ -407,6 +407,11 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
     grid-column: 1/10;
   }
 
+  body[data-page="home"] .disciplines-heading > .swiss-link {
+    grid-column: 10 / -1;
+    justify-self: end;
+  }
+
   body[data-page="home"] .journey__head {
     grid-template-columns: repeat(12,minmax(0,1fr));
     gap: var(--grid-gap);

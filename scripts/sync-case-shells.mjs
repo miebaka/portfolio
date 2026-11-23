@@ -20,8 +20,8 @@ for (const project of SITE.projects) {
 
 const workPath = resolve(root, "work.html");
 const workSource = await readFile(workPath, "utf8");
-const workMarkup = `<div class="project-archive__list" data-project-archive>${renderProjectArchiveMarkup(SITE.projects, "", SITE.caseStudies)}</div>`;
-const workPattern = /(<div class="project-archive__head">[\s\S]*?<\/div>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/;
+const workMarkup = `<div class="project-folder-stack" data-project-archive>${renderProjectArchiveMarkup(SITE.projects, "", SITE.caseStudies)}</div>`;
+const workPattern = /(<header class="project-archive__head">[\s\S]*?<\/header>\s*)<div(?: class="[^"]*")? data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/;
 if (!workPattern.test(workSource)) throw new Error("Could not find Work archive fallback.");
 const workUpdated = workSource.replace(workPattern, `$1${workMarkup}`);
 await writeFile(workPath, workUpdated);

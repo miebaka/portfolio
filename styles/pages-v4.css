@@ -741,7 +741,7 @@ body[data-page="about"] .about-editorial__copy{
 
 
 .article-page .article-body :is(p,li,blockquote){
-  max-width: min(68ch,var(--editorial-copy));}
+  max-width: min(60ch,var(--editorial-copy));}
 
 
 body[data-page="contact"] .contact-page{

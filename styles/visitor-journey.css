@@ -200,6 +200,11 @@ body.case-page .case-narrative .case-chapter__copy > * {
   grid-column: 1;
 }
 
+body.case-page .case-narrative p,
+body[data-page="privacy"] main .stack p {
+  max-width: 60ch;
+}
+
 body.case-page .case-gallery-flow {
   display: grid;
   gap: var(--s3);
