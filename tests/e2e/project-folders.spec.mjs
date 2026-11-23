@@ -6,20 +6,18 @@ const routes = [
   { slug: "chopbox", title: "ChopBox", href: "work/chopbox.html" }
 ];
 
-test("published files lead with TEDx and offer evidence without hover", async ({ page }) => {
+test("published files lead with TEDx and expose numbered tabs", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.locator(".project-folder")).toHaveCount(3);
   await expect(page.locator(".project-folder__paper")).toHaveCount(15);
   await expect(page.locator(".project-folder__title")).toHaveText(routes.map(item => item.title));
-  await expect(page.locator(".project-folder__visual img")).toHaveCount(3);
-  await expect(page.locator(".project-folder__outcome")).toHaveCount(3);
+  await expect(page.locator(".project-folder__visual img")).toHaveCount(0);
   for (const [index, item] of routes.entries()) {
     const folder = page.locator(".project-folder").nth(index);
     await expect(folder).toHaveAttribute("data-slug", item.slug);
     await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", item.href);
-    await expect(folder.locator(".project-folder__link")).toHaveAttribute("aria-label", new RegExp("^View " + item.title + " .+ case study$"));
-    await expect(folder.locator(".project-folder__outcome")).not.toBeEmpty();
-    await expect(folder.locator(".project-folder__visual")).toBeVisible();
+    await expect(folder.locator(".project-folder__link")).toHaveAttribute("aria-label", "View " + item.title + " case study");
+    await expect(folder.locator(".project-folder__tab")).toBeVisible();
     await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
   }
 });
@@ -40,7 +38,7 @@ test("one touch opens the named case, without preview and without a second tap",
   const page = await context.newPage();
   await page.goto("/work.html");
   const target = page.locator('.project-folder[data-slug="rivo"] .project-folder__link');
-  await target.tap();
+  await target.locator(".project-folder__tab").tap();
   await expect(page).toHaveURL(/\/work\/rivo\.html$/);
   await context.close();
 });
@@ -54,25 +52,25 @@ test("all three fronts remain readable and reachable across breakpoints", async 
       const link = node.querySelector(".project-folder__link");
       const face = node.querySelector(".project-folder__front");
       const title = node.querySelector(".project-folder__title");
-      const image = node.querySelector(".project-folder__visual");
-      const reason = node.querySelector(".project-folder__outcome");
+      const tab = node.querySelector(".project-folder__tab");
       const rect = element => element.getBoundingClientRect();
-      const inFace = el => rect(el).left >= rect(face).left - 2 && rect(el).right <= rect(face).right + 2;
       return { named: Boolean(link.getAttribute("aria-label")),
-        inFace: inFace(title) && inFace(image) && inFace(reason),
-        visible: [title,image,reason].every(el => rect(el).width > 0 && rect(el).height > 0) };
+        inFace: rect(title).left >= rect(face).left - 2 && rect(title).right <= rect(face).right + 2,
+        visible: rect(title).height > 0 && rect(tab).height > 0 };
     }));
     expect(proof).toHaveLength(3);
     for (const item of proof) {
       expect(item.named).toBe(true);
-      expect(item.inFace, "title, visual and proof remain on the folder face at "+width).toBe(true);
+      expect(item.inFace, "title remains on the folder face at "+width).toBe(true);
       expect(item.visible).toBe(true);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
       .toBeLessThanOrEqual(2);
-    const columns = await page.locator(".project-folder-stack__cards").evaluate(element =>
-      getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length);
-    expect(columns).toBe(width >= 1152 ? 3 : width >= 640 ? 2 : 1);
+    const stacked = await page.locator(".project-folder-stack__cards").evaluate(list => {
+      const [first, second] = Array.from(list.children, node => node.getBoundingClientRect());
+      return getComputedStyle(list).flexDirection === "column" && second.top > first.top && second.top < first.bottom;
+    });
+    expect(stacked).toBe(true);
   }
 });
 

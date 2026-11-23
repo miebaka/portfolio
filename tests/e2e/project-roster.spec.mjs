@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 const folders = page => page.locator("#selected-work .project-folder");
 
-test("Home and Work share the same immediately visible project order, image and specific rationale", async ({ page }) => {
+test("Home and Work share the same folder order, with a preview on Home", async ({ page }) => {
   await page.goto("/");
   await expect(folders(page)).toHaveCount(3);
   await expect(folders(page).locator(".project-folder__title")).toHaveText([
     "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
-  await expect(folders(page).locator(".project-folder__visual img")).toHaveCount(3);
+  await expect(folders(page).locator(".project-folder__visual img")).toHaveCount(0);
   await expect(folders(page).locator(".project-folder__outcome")).toHaveCount(3);
   await expect(folders(page).locator(".project-folder__paper")).toHaveCount(15);
   const homeHrefs = await folders(page).locator(".project-folder__link").evaluateAll(nodes =>
@@ -54,7 +54,7 @@ test("the first case follows the hero naturally and the selected index stays vis
 
 test("a single pointer activation opens the correct Home case", async ({ page }) => {
   await page.goto("/");
-  await folders(page).nth(0).locator(".project-folder__link").click();
+  await folders(page).nth(0).locator(".project-folder__tab").click();
   await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
 });
 

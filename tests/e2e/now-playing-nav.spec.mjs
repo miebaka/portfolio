@@ -10,7 +10,7 @@ test("Last.fm pill follows the logo, reflects real status, and Index inverts wit
   }));
   await page.goto("/index.html?now-playing-test=1");
   const pill = page.locator(".site-nav__listening .now-playing");
-  await expect(pill).toContainText("Now playing");
+  await expect(pill).toContainText("Miebaka Is Listening To");
   await expect(pill).toContainText("Test track — Test artist");
   await expect(pill).toHaveAttribute("data-live", "true");
   const nav = page.locator(".site-nav__inner");
@@ -51,6 +51,22 @@ test("Last.fm pill follows the logo, reflects real status, and Index inverts wit
     })).toBe(true);
     expect(Math.abs(colors.offset)).toBeLessThan(4);
   }
+});
+
+test("the listening header switches to past tense when live playback ends", async ({ page }) => {
+  await page.clock.install();
+  let isLive = true;
+  await page.route("**/api/now-playing", route => route.fulfill({
+    json: { track: "Test track", artist: "Test artist", nowPlaying: isLive,
+      playedAt: Math.floor(Date.now() / 1000) - 5 }
+  }));
+  await page.goto("/index.html?now-playing-test=1");
+  const pill = page.locator(".now-playing");
+  await expect(pill.locator(".now-playing__label")).toHaveText("Miebaka Is Listening To");
+  isLive = false;
+  await page.clock.fastForward(60_000);
+  await expect(pill.locator(".now-playing__label")).toHaveText("Miebaka Was Listening To");
+  await expect(pill).toHaveAttribute("data-live", "false");
 });
 
 test("Now Playing stays a truthful accessible profile link when Last.fm is unavailable", async ({ page }) => {
@@ -106,7 +122,7 @@ test("a previously live track clears when Last.fm goes offline", async ({ page }
   // The local static test server has no Vercel Function; opt in to mock fetch.
   await page.goto("/index.html?now-playing-test=1");
   const pill = page.locator(".now-playing");
-  await expect(pill).toContainText("Now playing");
+  await expect(pill).toContainText("Miebaka Is Listening To");
   await expect(pill).toHaveAttribute("data-live", "true");
 
   await page.clock.fastForward(60_000);

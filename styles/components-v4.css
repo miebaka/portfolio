@@ -103,7 +103,7 @@ a[href]:hover{color:var(--accent-interactive);}
 .site-footer__explore{grid-column:1}
 .site-footer__socials .site-footer__links{grid-template-columns:1fr}
 }
-.btn:focus-visible{outline:3px solid var(--ref-coral-75);outline-offset:2px;box-shadow:none}
+.btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px;box-shadow:none}
 .btn:focus-visible::before,.btn:active::before{opacity:.1}
 .btn:active{transform:none;box-shadow:none}
 .btn[aria-disabled="true"],.btn:disabled{background:color-mix(in srgb,var(--sys-color-on-surface) 12%,transparent);color:color-mix(in srgb,var(--sys-color-on-surface) 38%,transparent);cursor:not-allowed;box-shadow:none;pointer-events:none}

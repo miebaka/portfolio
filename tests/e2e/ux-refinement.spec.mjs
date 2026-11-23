@@ -115,7 +115,11 @@ test("Client logos use half the widest mark as the gap, including the loop seam"
   const control = page.getByRole("button", { name: "Pause logo scrolling" });
   await control.click();
   await expect(track).toHaveCSS("animation-play-state", "paused");
-  const animationTime = () => track.evaluate(node => node.getAnimations()[0]?.currentTime);
+  const animationTime = () => track.evaluate(async node => {
+    const animation = node.getAnimations()[0];
+    await animation.ready;
+    return animation.currentTime;
+  });
   const pausedAt = await animationTime();
   expect(pausedAt).toBeGreaterThan(0);
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));

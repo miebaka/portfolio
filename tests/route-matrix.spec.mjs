@@ -39,6 +39,12 @@ test("every generated page preserves its reading path at narrow widths and witho
         else await expect(title).toHaveText(titles.get(route));
 
         if (!javaScriptEnabled) await expect(page.locator(".site-nav__links a[href$='work.html']").first()).toBeVisible();
+        const uncapitalized = await page.evaluate(() =>
+          [...document.querySelectorAll("button,label,dt,summary,.skip-link,.swiss-link")]
+            .filter(node => node.getClientRects().length && /[a-z]/.test(node.textContent) &&
+              getComputedStyle(node).textTransform !== "uppercase")
+            .map(node => node.textContent.trim()));
+        expect(uncapitalized).toEqual([]);
         const overflow = await page.evaluate(async () => {
           await document.fonts.ready;
           return document.documentElement.scrollWidth - document.documentElement.clientWidth;

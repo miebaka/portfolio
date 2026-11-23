@@ -62,7 +62,7 @@ export function initNowPlaying({
     if (destroyed) return;
     if (data && isFreshLastFmTrack(data)) {
       const isLive = data.nowPlaying === true;
-      const status = isLive ? "Now playing" : "Recently played";
+      const status = isLive ? "Miebaka Is Listening To" : "Miebaka Was Listening To";
       const title = data.track + " — " + data.artist;
       label.textContent = status;
       track.textContent = title;

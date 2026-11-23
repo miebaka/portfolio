@@ -130,7 +130,7 @@ test("desktop display headings respect the editorial line and grid contracts", a
 
 test("Home → TEDx → next project preserves the intended journey", async ({ page }) => {
   await page.goto("/index.html");
-  await page.getByRole("link", { name: "TEDx Rivers State University" }).click();
+  await page.getByRole("link", { name: "View TEDx Rivers State University case study" }).locator(".project-folder__tab").click();
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx Rivers State University");
   await expect(page.locator(".case-opening__summary, .case-lede, .case-index")).toHaveCount(0);
@@ -146,6 +146,10 @@ test("published case studies preserve the editorial reading order", async ({ pag
       return [".case-opening", ".case-shot--hero", ".case-chapter"].map(top);
     });
     expect(positions, `${slug} title, hero and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+    const captionIsClear = await page.locator(".case").evaluate(node =>
+      node.querySelector(".case-shot--hero figcaption").getBoundingClientRect().bottom <=
+        node.querySelector(".case-lead-proof").getBoundingClientRect().top + 1);
+    expect(captionIsClear, slug + " hero caption clears the following section").toBe(true);
   }
 });
 
@@ -335,15 +339,15 @@ test("Mobile Work folders are readable without horizontal overflow", async ({ pa
   }
 });
 
-test("Work folders reveal the three approved published projects with image and scope", async ({ page }) => {
+test("Work folders carry the three approved published projects on numbered cardstock covers", async ({ page }) => {
   await page.goto("/work.html");
   const links = page.locator(".project-folder__link");
   await expect(links).toHaveCount(3);
   await expect(page.locator(".project-folder__title")).toHaveText([
     "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
-  await expect(page.locator(".project-folder__outcome")).toHaveCount(3);
-  await expect(page.locator(".project-folder__visual img")).toHaveCount(3);
+  await expect(page.locator(".project-folder__tab-number")).toHaveText(["01", "02", "03"]);
+  await expect(page.locator(".project-folder__visual img")).toHaveCount(0);
   await expect(links.nth(0)).toHaveAttribute("href","work/tedx-rsu.html");
   await expect(links.nth(1)).toHaveAttribute("href","work/rivo.html");
   await expect(links.nth(2)).toHaveAttribute("href","work/chopbox.html");
@@ -503,7 +507,7 @@ test("navigation works without JavaScript", async ({ browser, baseURL }) => {
   await context.close();
 });
 
-test("all project targets activate their own routes without overlapping hit boxes", async ({ page }) => {
+test("each visible folder tab activates its own native route", async ({ page }) => {
   for (const width of [390,900,1440]) {
     await page.setViewportSize({width,height:1000});
     for (const slug of ["tedx-rsu","rivo","chopbox"]) {
@@ -513,7 +517,7 @@ test("all project targets activate their own routes without overlapping hit boxe
       const link = folder.locator(".project-folder__link");
       await link.scrollIntoViewIfNeeded();
       await expect(link).toBeVisible();
-      await link.click();
+      await folder.locator(".project-folder__tab").click();
       await expect(page).toHaveURL(new RegExp("/work/"+slug+"\\.html$"));
     }
   }

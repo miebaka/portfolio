@@ -31,16 +31,25 @@ body[data-page="home"] .journey {
 }
 
 body[data-page="home"] .client-marquee {
-  max-width: var(--content);
+  max-width: min(100%, 64em);
   margin-inline: auto;
+  --client-edge-fade: clamp(var(--s2), 4vw, var(--s5));
+
+  mask-image: linear-gradient(90deg, transparent, var(--ref-black) var(--client-edge-fade), var(--ref-black) calc(100% - var(--client-edge-fade)), transparent);
 }
 
 body[data-page="home"] .client-marquee__track {
-  animation: client-marquee 40s linear infinite paused;
+  animation: client-marquee 36s linear infinite paused;
 }
 
 body[data-page="home"] .client-marquee.is-running .client-marquee__track {
   animation-play-state: running;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-page="home"] .client-marquee.is-running:hover .client-marquee__track {
+    animation-play-state: paused;
+  }
 }
 
 /* Half a gap at each end keeps the spacing identical across the seam. */
@@ -75,7 +84,7 @@ body[data-page="home"] .marquee__item {
   display: grid;
   place-items: center;
   width: auto;
-  height: 4.5em;
+  height: 3.5em;
   min-height: 0;
   flex: none;
 }
@@ -83,8 +92,8 @@ body[data-page="home"] .marquee__item {
 body[data-page="home"] .marquee__item img {
   display: block;
   width: auto;
-  height: 2em;
-  max-width: 75vw;
+  height: 1.875em;
+  max-width: 9em;
   max-height: none;
   object-fit: contain;
   transform: none;
@@ -93,12 +102,12 @@ body[data-page="home"] .marquee__item img {
 
 @media (min-width:56em) {
   body[data-page="home"] .marquee__item {
-    height: clamp(6em, 9vw, 8em);
+    height: 4.5em;
   }
 
   body[data-page="home"] .marquee__item img {
-    height: clamp(2.125em, 2.8vw, 2.5em);
-    max-width: 19em;
+    height: 2.125em;
+    max-width: 11em;
   }
 }
 

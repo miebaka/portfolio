@@ -32,11 +32,10 @@ test("the core grid and spacing start mobile-first", async () => {
 
 test("responsive case folders use relative CSS sizing and never intercept a native link", async () => {
   const controller = await readFile(resolve("js/core/project-folder-interactions.js"), "utf8");
-  const css = await readFile(join(styles, "visitor-journey.css"), "utf8");
+  const css = await readFile(join(styles, "project-folders.css"), "utf8");
   assert.doesNotMatch(controller, /pointerdown|preventDefault|clientY|touchPreview/);
-  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
-  assert.match(css, /@media \(min-width:40em\)/);
-  assert.match(css, /@media \(min-width:72em\)/);
+  assert.match(css, /--work-folder-height: clamp\(8em,/);
+  assert.match(css, /height: var\(--work-folder-height\)/);
 });
 
 test("canonical page layouts grow from phone defaults instead of shrinking desktop layouts", async () => {

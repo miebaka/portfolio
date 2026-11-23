@@ -1,127 +1,3 @@
-/* 2026 mobile-first visitor journey. Folder fidelity remains; native links
-   and visible proof take priority over overlapping click geometry. */
-
-/* Project selection: a real file cover, a picture, and a reason to open it. */
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s4);
-  height: auto !important;
-  overflow: visible;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder,
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder + .project-folder {
-  position: relative;
-  inset: auto;
-  width: 100%;
-  height: auto;
-  min-height: 0;
-  margin: 0;
-  aspect-ratio: auto;
-  transform: none;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__link {
-  position: relative;
-  display: block;
-  height: auto;
-  min-height: 100%;
-  padding-top: clamp(var(--s8), 9vw, calc(var(--s10) + var(--s6)));
-}
-body[data-page="home"] .project-folder__link {
-  padding-top: var(--s4);
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__back {
-  inset-block-start: 2.5em;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__front,
-body[data-page="home"] .home-folder-stack .project-folder__front {
-  position: relative;
-  inset: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
-  min-height: 25em;
-  gap: var(--s3);
-  margin-top: 0;
-  padding: var(--s3);
-  overflow: hidden;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__copy,
-body[data-page="home"] .home-folder-stack .project-folder__copy {
-  display: grid;
-  align-items: start;
-  gap: var(--s1);
-  min-width: 0;
-  width: 100%;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__category {
-  opacity: .9;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__title {
-  max-width: 100%;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__outcome,
-body[data-page="home"] .home-folder-stack .project-folder__outcome {
-  display: block;
-  max-width: 45ch;
-  opacity: .96;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__visual {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  min-height: 0;
-  aspect-ratio: 16 / 8;
-  overflow: hidden;
-  border-radius: .2em;
-  background: oklch(0 0 0 / 0.12);
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__visual img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: inherit;
-  object-fit: cover;
-  transition: transform 360ms var(--editorial-ease);
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__open {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 2.75em;
-  padding-top: var(--s1);
-  border-top: .0625em solid currentColor;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder:hover,
-body:is([data-page="home"], [data-page="work"]) .project-folder:focus-within {
-  z-index: calc(var(--folder-index, 0) + 1);
-  transform: translateY(-.3em);
-  filter: drop-shadow(0 .65em 1em oklch(0 0 0 / 0.12));
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__link:focus-visible {
-  outline: .1875em solid var(--focus);
-  outline-offset: .25em;
-}
-body:is([data-page="home"], [data-page="work"]) .project-folder__link:hover .project-folder__visual img,
-body:is([data-page="home"], [data-page="work"]) .project-folder__link:focus-visible .project-folder__visual img {
-  transform: scale(1.035);
-}
-body[data-page="home"] .home-content section.swiss-selected {
-  min-height: 0;
-  justify-content: flex-start;
-  padding-block: var(--s6) var(--s8);
-}
-body[data-page="home"] .home-folder-stack .project-folder-stack__stage {
-  margin: 0;
-}
-body[data-page="work"] .project-archive--folders .project-archive__head {
-  margin-block-end: var(--s4);
-}
-
 /* Water remains the expression; reading surfaces remain legible when it moves. */
 body[data-page="home"] .home-landing__inner {
   padding-block-start: clamp(var(--s8), 13svh, var(--s10));
@@ -157,37 +33,13 @@ body[data-page="home"] .hero-wave__control {
   border-color: oklch(1 0 0 / 0.7);
 }
 
-@media (min-width:40em) {
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  body:is([data-page="home"], [data-page="work"]) .project-folder__front,
-  body[data-page="home"] .home-folder-stack .project-folder__front {
-    min-height: 26em;
-  }
-}
 @media (min-width:72em) {
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
   body[data-page="home"] .home-landing__inner {
     padding-block-start: var(--s6);
   }
   body[data-page="home"] .home-landing__statement {
     max-width: 30ch;
   }
-}
-@media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) body:is([data-page="home"], [data-page="work"]) .project-folder,
-  html:not([data-motion="full"]) body:is([data-page="home"], [data-page="work"]) .project-folder__visual img {
-    transition: none;
-    transform: none;
-  }
-}
-html[data-motion="reduced"] body:is([data-page="home"], [data-page="work"]) .project-folder,
-html[data-motion="reduced"] body:is([data-page="home"], [data-page="work"]) .project-folder__visual img {
-  transition: none;
-  transform: none;
 }
 
 /* Case studies: tell the visitor whose work this is before the cover image.
@@ -252,16 +104,20 @@ body.case-page .case-end-actions a {
   color: var(--ink);
 }
 body.case-page .case > .case-shot--hero {
+  --case-hero-image-height: clamp(16em, 42svh, 34em);
+
   width: calc(100% - 2 * var(--page));
-  height: clamp(16em, 42svh, 34em);
+  height: auto;
   min-height: 0;
   max-height: none;
   margin-inline: auto;
   border-radius: .2em;
   animation: none;
 }
-body.case-page .case > .case-shot--hero img,
 body.case-page .case > .case-shot--hero picture {
+  height: var(--case-hero-image-height);
+}
+body.case-page .case > .case-shot--hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -335,7 +191,7 @@ body.case-page .case-end-actions {
 @media (min-width:72em) {
   body.case-page .case > .case-opening { padding-block: var(--s4); }
   body.case-page .case > .case-shot--hero {
-    height: clamp(20em, 52svh, 40em);
+    --case-hero-image-height: clamp(20em, 52svh, 40em);
   }
 }
 

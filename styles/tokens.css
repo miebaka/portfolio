@@ -512,11 +512,11 @@ body[data-page]:not(.site-system-disabled) h1,body[data-page]:not(.site-system-d
 
 body[data-page]:not(.site-system-disabled) .btn{
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 body[data-page]:not(.site-system-disabled) .site-nav__link,body[data-page]:not(.site-system-disabled) .site-nav__menu-btn{
   font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 
 
 body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__link{
@@ -526,7 +526,7 @@ body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__lin
 body[data-page]:not(.site-system-disabled) .site-footer__links a{
   font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 
 
 body[data-page="work"]:not(.site-system-disabled) .project-archive__head h1{
@@ -535,7 +535,7 @@ body[data-page="work"]:not(.site-system-disabled) .project-archive__head h1{
   letter-spacing:var(--type-tracking-tight);}
 body[data-page="work"]:not(.site-system-disabled) .project-archive__eyebrow,body[data-page="work"]:not(.site-system-disabled) .project-archive__progress time{
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 
 
 body[data-page="about"]:not(.site-system-disabled) .about-hero__copy h1{
@@ -544,7 +544,7 @@ body[data-page="about"]:not(.site-system-disabled) .about-hero__copy h1{
 
 body[data-page="about"]:not(.site-system-disabled) .about-editorial :is(dt, .experience-ruler__period){
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 
 
 body[data-page="contact"]:not(.site-system-disabled) .hero__title{
@@ -554,7 +554,7 @@ body[data-page="contact"]:not(.site-system-disabled) .hero__title{
 
 body[data-page="contact"]:not(.site-system-disabled) :is(.field label, .contact-info dt, .copy-email){
   letter-spacing:var(--type-tracking-normal);
-  text-transform: none;}
+  text-transform: uppercase;}
 
 
 body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero__title {
@@ -1267,24 +1267,6 @@ body[data-page="home"] .project-folder__outcome {
   text-wrap: pretty;
 }
 
-/* Project-index typography lives in the single type layer, not in page CSS. */
-.project-folder__title {
-  font: var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-tight) var(--font-sans);
-  letter-spacing: var(--type-tracking-heading);
-  text-wrap: balance;
-}
-.project-folder__category,
-.project-folder__open {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing: var(--type-tracking-label);
-  text-transform: uppercase;
-}
-.project-folder__outcome {
-  font: var(--type-weight-regular) var(--type-input)/var(--type-leading-reading) var(--font-sans);
-  letter-spacing: normal;
-  text-transform: none;
-}
-
 /* Visitor journey text treatment: typography rules remain centralized. */
 body:is([data-page="home"], [data-page="work"]) .project-folder__link {
   text-decoration: none;
@@ -1305,4 +1287,15 @@ body.case-page :is(.case-opening__actions, .case-end-actions) a {
 body[data-page="contact"] :is(.contact-info a, .contact__handoff a) {
   text-decoration-thickness: .1em;
   text-underline-offset: .2em;
+}
+
+/* Visible UI labels use the portfolio's uppercase editorial voice. */
+body[data-page] :is(
+  button, label, legend, dt, th, summary, select, option,
+  .skip-link, .nav-fallback a, .swiss-link, .article-toc a, .article-footer__back,
+  .experiments-nav__back, .experiments-nav__list-link, .case-back a,
+  .case-opening__actions a, .case-end-actions a, .project-archive__eyebrow,
+  .project-archive__collections a > span, .project-folder__title
+) {
+  text-transform: uppercase;
 }

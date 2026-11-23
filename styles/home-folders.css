@@ -103,3 +103,10 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
 body[data-page="home"] .home-folder-stack .project-folder:is(.is-active, :focus-within) .project-folder__front {
   box-shadow: inset 0 1px oklch(1 0 0 / 0.32), inset -1px 0 oklch(0 0 0 / 0.075);
 }
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-page="home"] .home-folder-stack .project-folder:hover:not(:focus-within) {
+    z-index: calc(var(--folder-index, 0) + 1);
+    transform: translateY(-.8em);
+  }
+}

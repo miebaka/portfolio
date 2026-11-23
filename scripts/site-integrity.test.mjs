@@ -88,8 +88,8 @@ test("Work archive separates published cases from work in progress", () => {
   const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
   assert.ok(tedx, "Published TEDx project must remain in the source data");
   assert.match(tedx.tagline, /“Pause…” gave a local event its own voice/);
-  assert.match(html, /How “Pause…” gave a local event its own voice/,
-    "Show the evidence-led reason to open TEDx at rest");
+  assert.doesNotMatch(html, /project-folder__(?:visual|outcome|open)/,
+    "Work covers carry the project name while the Home preview carries the rationale");
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
@@ -419,7 +419,7 @@ test("interactive controls include the approved Figma button states", async () =
   const css = await readAuthoredCss();
   assert.match(css, /\.btn\{[^}]*height:2\.5em[^}]*min-height:2\.5em[^}]*padding:0 var\(--s3\)/);
   assert.match(css, /body\[data-page="contact"\] \.contact__submit \.btn\{[^}]*width:100%[^}]*min-height:4em/);
-  assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--ref-coral-75\)/);
+  assert.match(css, /\.btn:focus-visible\{[^}]*outline:3px solid var\(--focus\)/);
   assert.match(css, /\.btn:focus-visible::before,\.btn:active::before\{opacity:\.1\}/);
   assert.match(css, /@media\(hover:hover\)\{\.btn:hover\{[^}]*box-shadow:var\(--elevation-hover\)/);
   assert.match(css, /\.btn\[aria-busy="true"\]\{[^}]*cursor:wait/);

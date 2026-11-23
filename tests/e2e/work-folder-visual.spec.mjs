@@ -13,14 +13,12 @@ test("cardstock folders hold five paper sheets and legible project evidence at e
         const front = node.querySelector(".project-folder__front");
         const link = node.querySelector(".project-folder__link");
         const title = node.querySelector(".project-folder__title");
-        const preview = node.querySelector(".project-folder__visual");
-        const reason = node.querySelector(".project-folder__outcome");
+        const tab = node.querySelector(".project-folder__tab");
         const sheets = [...node.querySelectorAll(".project-folder__paper")];
         return {
           width: node.getBoundingClientRect().width,
           titleFits: title.getBoundingClientRect().right <= front.getBoundingClientRect().right + 1,
-          imageVisible: preview.getBoundingClientRect().height > 0,
-          reasonVisible: reason.getBoundingClientRect().height > 0,
+          tabVisible: tab.getBoundingClientRect().height > 0,
           linkNamed: Boolean(link.getAttribute("aria-label")),
           sheets: sheets.map(sheet => ({
             text: sheet.textContent,
@@ -33,8 +31,7 @@ test("cardstock folders hold five paper sheets and legible project evidence at e
     for (const m of measured) {
       expect(m.width).toBeGreaterThan(0);
       expect(m.titleFits).toBe(true);
-      expect(m.imageVisible).toBe(true);
-      expect(m.reasonVisible).toBe(true);
+      expect(m.tabVisible).toBe(true);
       expect(m.linkNamed).toBe(true);
       expect(m.sheets).toHaveLength(5);
       for (const sheet of m.sheets) {

@@ -67,13 +67,13 @@ test("Published project folders remain complete and readable at mobile and deskt
     await expect(page.locator(".project-folder__title")).toHaveText([
       "TEDx Rivers State University","Rivo Studio","ChopBox"
     ]);
-    await expect(page.locator(".project-folder__visual")).toHaveCount(3);
+    await expect(page.locator(".project-folder__visual")).toHaveCount(0);
     const geometry = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(link => {
       const face = link.querySelector(".project-folder__front");
       const title = link.querySelector(".project-folder__title");
-      const image = link.querySelector(".project-folder__visual");
+      const tab = link.querySelector(".project-folder__tab");
       return { titleFits: title.getBoundingClientRect().right <= face.getBoundingClientRect().right + 1,
-        previewVisible: image.getBoundingClientRect().width > 0 && image.getBoundingClientRect().height > 0 };
+        previewVisible: tab.getBoundingClientRect().width > 0 && tab.getBoundingClientRect().height > 0 };
     }));
     for(const item of geometry) {
       expect(item.titleFits).toBe(true);

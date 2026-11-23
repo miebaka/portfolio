@@ -14,7 +14,7 @@ test("archive publishes exactly three honest brand-specific native folder links"
   assert.doesNotMatch(html, /filing-cabinet|drawer|webgl|canvas/i);
 });
 
-test("each folder shows the project name, image, decision and numbered papers", () => {
+test("each Work folder shows its project name, numbered tab and blank sheets", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   for (const className of ["project-folder__back", "project-folder__tab",
     "project-folder__tab-number", "project-folder__front", "project-folder__title",
@@ -25,12 +25,10 @@ test("each folder shows the project name, image, decision and numbered papers", 
   assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
   assert.deepEqual([...html.matchAll(/class="project-folder__tab-number">(\d\d)</g)].map(match => match[1]), ["01", "02", "03"]);
   assert.doesNotMatch(html, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
-  for (const cls of ["visual", "outcome", "open"]) {
-    assert.equal((html.match(new RegExp('class="project-folder__' + cls + '"', "g")) || []).length, 3);
-  }
+  assert.doesNotMatch(html, /project-folder__(?:visual|outcome|open)/);
   assert.doesNotMatch(html, /The Call|The System|What Survived|First Contact|The Results|FILE 0/);
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
-    assert.match(html, new RegExp('aria-label="View ' + name + ' [^"]+ case study"'));
+    assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
     assert.match(html, new RegExp('class="project-folder__title">' + name + '</strong>'));
   }
 });
@@ -104,12 +102,9 @@ test("Home matches the Work landscape folder construction", () => {
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });
 
-test("work and home share a mobile-first gallery with always-visible evidence", () => {
-  const css = readFileSync(resolve("styles/visitor-journey.css"), "utf8");
+test("Selected Work adds a brief category and preview to the physical folder", () => {
   const home = renderHomeProjectList(SITE.projects, SITE.caseStudies);
-  const work = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
-  assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
-  assert.match(css, /@media \(min-width:40em\)/);
-  assert.match(css, /@media \(min-width:72em\)/);
-  for (const html of [home, work]) assert.equal((html.match(/class="project-folder__visual"/g) || []).length, 3);
+  assert.equal((home.match(/class="project-folder__category"/g) || []).length, 3);
+  assert.equal((home.match(/class="project-folder__outcome"/g) || []).length, 3);
+  assert.doesNotMatch(home, /project-folder__(?:visual|open)/);
 });
