@@ -19,7 +19,7 @@ function shot(media, kind, base, plate) {
       : kind === "upright"
         ? `${viewportQueries.tabletMax} calc(100vw - 2.5em), 50em`
         : `${viewportQueries.compact} calc(100vw - 2.5em), ${viewportQueries.wideMax} 90vw, 86em`;
-  const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
+  const loading = ' loading="lazy"';
   const caption = media.caption
     ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>`
     : "";
@@ -52,12 +52,8 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
-function chapter(id, label, heading, body, media, featured, base, nextPlate) {
-  const visual = media?.length
-    ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>`
-    : "";
-  const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><p class="case-chapter__eyebrow">${esc(label)}</p></div><h2 id="${token(id)}-title" class="case-chapter__heading">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+function chapter({ id, label, title, body }) {
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><p class="case-chapter__eyebrow">${esc(label)}</p></div><h2 id="${token(id)}-title" class="case-chapter__heading">${esc(title || label)}</h2><div class="case-chapter__body">${paras(body)}</div></div></section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -67,7 +63,7 @@ function nextBlock(site, study, base) {
   const published = project.status === "published" && site.caseStudies?.[next.slug]?.status === "published";
   const title =
     published && next.interactive !== false
-      ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html">${esc(next.title)}</a>`
+      ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html"><span class="case-next__label">Next project</span><span class="case-next__name">${esc(next.title)}</span><span class="case-next__arrow" aria-hidden="true">→</span></a>`
       : `<p class="case-next__title">${esc(next.title)}</p>`;
   return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
 }
@@ -117,27 +113,26 @@ export function renderCaseMarkup(site, slug, base = "../") {
       <div><dt>My role</dt><dd>${esc(role)}</dd></div>
       <div><dt>The constraint</dt><dd>${esc(constraint)}</dd></div>
     </dl>
-    <div class="case-opening__actions"><span>Lead artifact ↓</span><a href="${base}contact.html">Discuss a project ↗</a></div>
+    <div class="case-opening__actions"><a href="#case-gallery">View project gallery ↓</a><a href="${base}contact.html">Discuss a project ↗</a></div>
   </header>`;
   const featured = lead
     ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">
       <div class="case-lead-proof__copy container"><p class="case-lead-proof__eyebrow">The decision</p>
         <h2 id="case-lead-title">${esc(lead.heading)}</h2><p>${esc(lead.rationale)}</p></div>
-      <div class="case-lead-proof__images">${lead.images.map(src => lookup.get(src)).filter(Boolean)
-        .map(media => shot(media, "pair", base, nextPlate())).join("")}</div>
       <p class="case-lead-proof__status container">${esc(lead.status)}</p>
     </section>`
     : "";
-  const chapters = study.chapters
-    .map((item) => chapter(
-      item.id, item.label, item.title, item.body,
-      (item.media || []).map((src) => lookup.get(src)).filter(Boolean),
-      false, base, nextPlate,
-    ))
-    .join("");
-  return opening + heroMarkup + featured +
-    `<div class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</div>` +
-    chapters + nextBlock(site, study, base) +
+  const leadImages = lead?.images.map(src => lookup.get(src)).filter(Boolean) || [];
+  const leadGallery = leadImages.length
+    ? `<div class="case-lead-proof__images">${leadImages.map(media => shot(media, "pair", base, nextPlate())).join("")}</div>`
+    : "";
+  const gallery = study.chapters.map(item => sequence(
+    (item.media || []).map(src => lookup.get(src)).filter(Boolean), base, nextPlate,
+  )).join("");
+  return opening +
+    `<div class="case-narrative container"><div class="case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div><aside class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</aside></div>` +
+    `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
+    nextBlock(site, study, base) +
     `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry ↗</a><a href="mailto:miebakakiki@gmail.com">Email directly ↗</a><a href="${base}work.html">All work ↗</a><a href="#case-top">Back to top ↑</a></nav>`;
 
 }

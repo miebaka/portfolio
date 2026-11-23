@@ -1,31 +1,7 @@
-/* Reference-led case study: the cover fills the viewport, not a page column. */
+/* Coordinated entry motion for the editorial case pages. */
 body.case-page .case {
   display: flex;
   flex-direction: column;
-}
-body.case-page .case > .case-shot--hero { order: 0; }
-body.case-page .case > .case-opening { order: 1; }
-body.case-page .case > .case-chapter,body.case-page .case > .case-next { order: 2; }
-body.case-page .case .case-shot--hero {
-  position: relative;
-  display: block;
-  width: 100vw;
-  max-width: none;
-  height: calc(100svh - var(--nav-h));
-  min-height: 28em;
-  max-height: 70em;
-  margin: 0;
-  overflow: hidden;
-  background: var(--surface);
-  animation: case-cover-reveal 900ms cubic-bezier(.16,1,.3,1) both;
-}
-body.case-page .case .case-shot--hero picture,
-body.case-page .case .case-shot--hero img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: cover;
 }
 body.case-page .case .case-opening {
   min-height: auto;
@@ -33,10 +9,6 @@ body.case-page .case .case-opening {
   animation: case-copy-reveal 650ms 250ms both;
 }
 body.case-page .case .case-back { margin-bottom: clamp(var(--s4),4vw,var(--s8)); }
-@keyframes case-cover-reveal {
-  0% { clip-path: inset(0 0 100% 0); transform: scale(1.02); opacity: .85; }
-  100% { clip-path: inset(0); transform: scale(1); opacity: 1; }
-}
 @keyframes case-copy-reveal {
   0% { opacity: 0; transform: translateY(2.5em); }
   100% { opacity: 1; transform: translateY(0); }
@@ -83,7 +55,7 @@ html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
 }
 .case-route-transition__mark {
   display: block;
-  width: clamp(4.5em,7vw,7em);
+  width: clamp(4.5em,8vw,7em);
   aspect-ratio: 1;
   background: var(--ink);
   mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
@@ -104,12 +76,12 @@ body.case-page .case::after {
   z-index: 8501;
   top: 50%;
   left: 50%;
-  width: clamp(4.5em,7vw,7em);
+  width: clamp(4.5em,8vw,7em);
   aspect-ratio: 1;
   background: var(--ink);
   mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
   pointer-events: none;
-  animation: case-arrival-mark 760ms cubic-bezier(.2,.8,.2,1) both;
+  animation: case-arrival-mark 700ms cubic-bezier(.2,.8,.2,1) both;
 }
 @keyframes case-route-curtain {
   0% { opacity: 0; }

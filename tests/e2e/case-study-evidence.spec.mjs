@@ -12,7 +12,7 @@ test("case opening identifies project, role, constraint, action and lead imagery
     await expect(page.locator(".case-opening h1")).toBeVisible();
     await expect(page.locator(".case-opening__essentials dt")).toHaveText(["My role","The constraint"]);
     await expect(page.locator(".case-opening__essentials dd")).toHaveCount(2);
-    await expect(page.locator(".case-opening__actions a")).toHaveAttribute("href", "../contact.html");
+    await expect(page.locator(".case-opening__actions a[href$='contact.html']")).toHaveAttribute("href", "../contact.html");
     await expect(page.locator(".case-shot--hero")).toBeVisible();
     await expect(page.locator(".case-lead-proof__images img")).toHaveCount(2);
     await expect(page.locator(".case-lead-proof__status")).not.toBeEmpty();

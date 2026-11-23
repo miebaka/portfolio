@@ -1300,3 +1300,19 @@ body[data-page] :is(
 ) {
   text-transform: uppercase;
 }
+
+body.case-page .case-next__link {
+  font-size: var(--type-input);
+  text-align: end;
+}
+
+.case-next__label {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+}
+
+.case-next__name {
+  font-size: clamp(2em, 5vw, 5em);
+  overflow-wrap: anywhere;
+}
+
+.case-next__arrow {font-size: var(--type-heading-lg)}

@@ -63,14 +63,14 @@ test("active next destinations require a published project and published case", 
   reject(study => { study.next.interactive = "false"; }, "CASE_NEXT_INTERACTIVE_INVALID", "next.interactive");
 });
 
-test("TEDx opens with its title, hero and supported project facts", () => {
+test("TEDx places its title, narrative and supported facts before the gallery", () => {
   const html = markup();
   assert.doesNotMatch(html, /case-locked|aria-disabled/);
   assert.equal((html.match(/<h1\b/g) || []).length, 1);
   const opening = html.indexOf('class="case-opening container"');
   const hero = html.indexOf('case-shot--hero');
   const facts = html.indexOf('<dl class="case-facts">');
-  assert.ok(opening >= 0 && opening < hero && hero < facts);
+  assert.ok(opening >= 0 && opening < facts && facts < hero && html.indexOf('id="results"') < hero);
   assert.match(html, /case-opening__statement/);
   assert.match(html, /aria-label="Case study navigation"/);
   assert.doesNotMatch(html, /case-opening__summary|case-lede|case-index|case-proof|case-scroll-index/);
@@ -146,7 +146,7 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
     assert.equal(media.h, actual.height);
   }
   const hero = images.find(image => image.includes("tedx-rsu-campus-banner-"));
-  assert.match(hero, /loading="eager" fetchpriority="high"/);
+  assert.match(hero, /loading="lazy"/);
   assert.ok(images.filter(image => image !== hero).every(image => image.includes('loading="lazy"')));
 });
 
@@ -166,7 +166,7 @@ test("a published usable next case is linked while an unavailable case stays non
   site.caseStudies.rivo.status = "published";
   delete site.caseStudies["tedx-rsu"].next.interactive;
   const html = renderCaseMarkup(site, "tedx-rsu");
-  assert.match(html, /href="\.\.\/work\/rivo\.html">Rivo Studio<\/a>/);
+  assert.match(html, /href="\.\.\/work\/rivo\.html">[^]*?class="case-next__name">Rivo Studio<\/span>/);
   assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
@@ -199,7 +199,7 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.equal(article, markup());
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
-  assert.match(article, /href="\.\.\/work\/rivo\.html">Rivo Studio<\/a>/);
+  assert.match(article, /href="\.\.\/work\/rivo\.html">[^]*?class="case-next__name">Rivo Studio<\/span>/);
   assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.match(source, /<article class="case" data-mount="case">/);

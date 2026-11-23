@@ -375,3 +375,4 @@ export function mountHeroWave(host,initialState){
   causticsGeometry.dispose();geometry.dispose();renderer.dispose();canvas.remove();
  }};
 }
+export { renderFolderStock } from "./folder-stock-three.js";

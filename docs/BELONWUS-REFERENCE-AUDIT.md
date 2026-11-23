@@ -13,7 +13,9 @@ Inspected 22 November 2026 at 1440×900, using a live browser and computed CSS v
 
 Our portfolio deliberately keeps Geist Sans and Geist Mono, and translates this hierarchy into the canonical typography tokens in `styles/tokens.css`: 16px labels/body, 32px section roles, generous 1.35 text leading, compact larger tracking and the existing oversized hero size. No other stylesheet owns text roles.
 
-The Belonwus case page has a 0–1 opacity full-screen transition plane, a roughly 112px centered brand icon beginning at 70% scale, and a full-viewport case image ahead of editorial copy. We recreate that *behavior* using our own Miebaka logo with a cover-in/mark-in handoff at route exit, a cover-out/mark-out arrival, and a top-down full-bleed case image reveal. Native view transitions enhance browsers supporting cross-document navigation. Reduced-motion preference removes all entrance/exit effects. We do not copy source code, brand assets or claims from the reference.
+The Belonwus case page pairs a full-screen brand handoff with a media-led gallery and a two-column information section. This portfolio reverses the sequence: project opening, explanation and facts come before a gallery headed by a full-width image. The handoff uses the Miebaka mark, a cover-in and cover-out fade, and reduced-motion support.
+
+The next-project treatment draws on Wigxel’s right-aligned label and oversized destination, using the portfolio’s Geist roles and a forward arrow.
 
 The upright folder-rack experiment was reverted on 22 November 2026 at the user's request. Home uses the original image-led Selected Work roster; the Work page uses its previous wide, layered landscape folders. The case-study animation is owned separately by `styles/case-transitions.css` and `js/core/case-route-transition.js`.
 

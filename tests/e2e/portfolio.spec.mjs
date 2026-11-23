@@ -143,12 +143,12 @@ test("published case studies preserve the editorial reading order", async ({ pag
     await settle(page);
     const positions = await page.locator(".case").evaluate(caseStudy => {
       const top = selector => caseStudy.querySelector(selector)?.getBoundingClientRect().top + scrollY;
-      return [".case-opening", ".case-shot--hero", ".case-chapter"].map(top);
+      return [".case-opening", "#results", ".case-shot--hero", ".case-next"].map(top);
     });
-    expect(positions, `${slug} title, hero and narrative order`).toEqual([...positions].sort((a, b) => a - b));
+    expect(positions, `${slug} title, narrative, gallery and next-case order`).toEqual([...positions].sort((a, b) => a - b));
     const captionIsClear = await page.locator(".case").evaluate(node =>
       node.querySelector(".case-shot--hero figcaption").getBoundingClientRect().bottom <=
-        node.querySelector(".case-lead-proof").getBoundingClientRect().top + 1);
+        node.querySelector(".case-lead-proof__images").getBoundingClientRect().top + 1);
     expect(captionIsClear, slug + " hero caption clears the following section").toBe(true);
   }
 });

@@ -116,7 +116,8 @@ test("Work and Home share folder cover geometry and preview styling", async ({ p
         const outcome = node.querySelector(".project-folder__outcome");
         const name = node.querySelector(".project-folder__title");
         return {
-          height: node.offsetHeight, coverInset: cover.offsetTop,
+          left: Math.round(node.getBoundingClientRect().left),
+          width: node.offsetWidth, height: node.offsetHeight, coverInset: cover.offsetTop,
           padding: getComputedStyle(cover).padding,
           coverBackground: getComputedStyle(cover).backgroundColor,
           title: name.textContent, titleFont: getComputedStyle(name).font,
@@ -126,4 +127,24 @@ test("Work and Home share folder cover geometry and preview styling", async ({ p
     }
     expect(styles[0]).toEqual(styles[1]);
   }
+});
+
+test("folder stock paints in Three.js and leaves native links usable without WebGL", async ({ page }) => {
+  await page.goto("/work.html");
+  const stock = page.locator(".project-folder__stock");
+  await expect(stock).toHaveCount(3);
+  expect(await stock.first().evaluate(canvas =>
+    canvas.getContext("2d").getImageData(480, 192, 16, 16).data.some((channel, index) => index % 4 === 3 && channel > 0)
+  )).toBe(true);
+
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
+      return type === "webgl2" ? null : original.call(this, type, ...args);
+    };
+  });
+  await page.reload();
+  await expect(stock).toHaveCount(0);
+  await page.locator(".project-folder--rivo .project-folder__tab").click();
+  await expect(page).toHaveURL(/work\/rivo\.html$/);
 });

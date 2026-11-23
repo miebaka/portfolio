@@ -47,7 +47,7 @@ body[data-page="home"] #selected-work {
 body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__front {
   inset-block-start: 15%;
   align-items: flex-start;
-  padding-block-start: clamp(var(--s2), 2.6vw, calc(var(--spacing-unit) * 14));
+  padding-block-start: clamp(var(--s2), 2vw, var(--s3));
 }
 
 body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__title {
@@ -107,4 +107,23 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .pr
     z-index: calc(var(--folder-index, 0) + 1);
     transform: translateY(-.8em);
   }
+}
+
+/* The Work rack breaks out of the archive's text gutter to the Home frame. */
+body[data-page="work"] .project-archive--folders .project-folder-stack__stage {
+  width: calc(100% + 2 * (var(--page) - var(--hf)));
+  margin-inline-start: calc(var(--hf) - var(--page));
+}
+
+.project-folder__stock {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.project-folder__copy {
+  position: relative;
+  z-index: 1;
 }
