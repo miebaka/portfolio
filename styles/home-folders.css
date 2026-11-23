@@ -5,8 +5,8 @@ body[data-page="home"] .home-content section.swiss-selected {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 100svh;
-  padding-block: clamp(var(--s7), 9svh, var(--s12)) clamp(var(--s2), 2svh, var(--s4));
+  min-height: 0;
+  padding-block: clamp(var(--s4), 6svh, var(--s8));
   background: var(--paper);
   color: var(--ink);
 }
@@ -29,13 +29,13 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .pr
 
 body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
   width: 100%;
-  --work-folder-height: var(--home-panel-height);
-  --folder-overlap: calc(var(--work-folder-height) * .66);
+  --work-folder-height: min(var(--home-panel-height),24em);
+  --folder-overlap: calc(var(--work-folder-height) * .58);
 }
 
-@media (min-width:88em) {
+@media (min-width:56em) {
   body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
-    --work-folder-height: min(var(--home-panel-height),39em);
+    --folder-overlap: calc(var(--work-folder-height) * .4);
   }
 }
 
