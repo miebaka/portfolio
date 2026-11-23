@@ -1341,7 +1341,7 @@ case-study chapters, truthfulness and accessible interaction.
   file **inside the cabinet's original stacking order**: every subsequent file
   continues to cover its lower portion. Never promote the active Home folder to the
   foreground. The exposed upper cover shows the project's name and concise preview.
-  Work archive files remain compact and title-only. Selected Work retains
+  Work uses the same cover, responsive height, overlap, preview and hover treatment. Selected Work retains
   `aria-label="Selected work"` without a visible heading or duplicate "All Work" CTA.
 - **What I Do:** the five unnumbered colored cards form a native sticky stack
   on desktop, ending with yellow above purple; a contained runway completes the

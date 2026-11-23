@@ -60,6 +60,24 @@ test("copy email is usable beside the address and in the footer without replacin
   await expect(footerCopy).toContainText("Copied");
 });
 
+test("copy falls back after clipboard permission is denied and keeps focus", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: async () => { throw new DOMException("Denied", "NotAllowedError"); } }
+    });
+    document.execCommand = command => {
+      window.__copiedByFallback = command === "copy" && document.activeElement?.value.includes("@");
+      return window.__copiedByFallback;
+    };
+  });
+  await page.goto("/contact.html");
+  const button = page.locator(".contact-info .copy-email");
+  await button.focus();
+  await page.keyboard.press("Enter");
+  await expect(button).toContainText("Copied");
+  await expect(button).toBeFocused();
+});
+
 test("font roles, portrait source widths and OS motion preference remain coherent", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/index.html");

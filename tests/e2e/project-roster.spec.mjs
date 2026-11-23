@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 const folders = page => page.locator("#selected-work .project-folder");
 
-test("Home and Work share the same folder order, with a preview on Home", async ({ page }) => {
+test("Home and Work share the same folder order and previews", async ({ page }) => {
   await page.goto("/");
   await expect(folders(page)).toHaveCount(3);
   await expect(folders(page).locator(".project-folder__title")).toHaveText([

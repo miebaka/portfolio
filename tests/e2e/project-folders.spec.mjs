@@ -103,3 +103,27 @@ test("reduced-motion users can open every case without folder animations", async
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/work\/tedx-rsu\.html$/);
 });
+
+test("Work and Home share folder cover geometry and preview styling", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    const styles = [];
+    for (const route of ["/", "/work.html"]) {
+      await page.goto(route);
+      const folder = page.locator('.project-folder[data-slug="rivo"]');
+      styles.push(await folder.evaluate(node => {
+        const cover = node.querySelector(".project-folder__front");
+        const outcome = node.querySelector(".project-folder__outcome");
+        const name = node.querySelector(".project-folder__title");
+        return {
+          height: node.offsetHeight, coverInset: cover.offsetTop,
+          padding: getComputedStyle(cover).padding,
+          coverBackground: getComputedStyle(cover).backgroundColor,
+          title: name.textContent, titleFont: getComputedStyle(name).font,
+          preview: outcome.textContent, previewDisplay: getComputedStyle(outcome).display,
+        };
+      }));
+    }
+    expect(styles[0]).toEqual(styles[1]);
+  }
+});

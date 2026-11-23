@@ -1,5 +1,4 @@
-/* Home uses the exact same physical folder and interaction rules as Work.
-   This file only frames that rack within the homepage layout. */
+/* Home framing and the shared Home and Work folder covers. */
 body[data-page="home"] .home-content section.swiss-selected {
   position: relative;
   isolation: isolate;
@@ -24,11 +23,11 @@ body[data-page="home"] .home-folder-stack__viewport {
   overflow: visible;
 }
 
-body[data-page="home"] .home-folder-stack .project-folder-stack__stage {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder-stack__stage {
   margin: 0;
 }
 
-body[data-page="home"] .home-folder-stack__cards {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
   width: 100%;
   --work-folder-height: var(--home-panel-height);
   --folder-overlap: calc(var(--home-panel-height) * .66);
@@ -44,21 +43,20 @@ body[data-page="home"] #selected-work {
   padding-inline: 0;
 }
 
-/* The Home folder matches the service panel's height, while Work stays compact.
-   Place the name in the exposed upper flap; preserve the five paper sheets. */
-body[data-page="home"] .home-folder-stack .project-folder__front {
+/* Place each name in the exposed upper flap on both racks. */
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__front {
   inset-block-start: 15%;
   align-items: flex-start;
   padding-block-start: clamp(var(--s2), 2.6vw, calc(var(--spacing-unit) * 14));
 }
 
-body[data-page="home"] .home-folder-stack .project-folder__title {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__title {
   max-width: min(82%, 38ch);
 }
 
 /* Let the names sit within the exposed third of the stacked folders.
    Descriptive metadata becomes fully readable as the chosen folder opens. */
-body[data-page="home"] .home-folder-stack .project-folder__copy {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -66,7 +64,7 @@ body[data-page="home"] .home-folder-stack .project-folder__copy {
   width: 100%;
 }
 
-body[data-page="home"] .home-folder-stack .project-folder__preview {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__preview {
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing-unit) * 2);
@@ -74,20 +72,20 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
 }
 
 /* Phone folders keep their decision labels exposed without crowding the flap. */
-  body[data-page="home"] .home-folder-stack .project-folder__outcome {
+  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__outcome {
     display: none;
   }
 
-  body[data-page="home"] .home-folder-stack .project-folder__copy {
+  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
     gap: var(--s1);
   }
 
 @media (min-width:56em) {
-  body[data-page="home"] .home-folder-stack .project-folder__outcome {
+  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__outcome {
     display: initial;
   }
 
-  body[data-page="home"] .home-folder-stack .project-folder__copy {
+  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
     gap: clamp(calc(var(--spacing-unit) * 2), .7vw, calc(var(--spacing-unit) * 6));
   }
 }
@@ -100,12 +98,12 @@ body[data-page="home"] .home-folder-stack .project-folder__preview {
 
 /* The lifted folder remains a file *behind* every later folder, not a card
    floating above the whole rack. Leave the original paper edge shadow. */
-body[data-page="home"] .home-folder-stack .project-folder:is(.is-active, :focus-within) .project-folder__front {
+body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder:is(.is-active, :focus-within) .project-folder__front {
   box-shadow: inset 0 1px oklch(1 0 0 / 0.32), inset -1px 0 oklch(0 0 0 / 0.075);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  body[data-page="home"] .home-folder-stack .project-folder:hover:not(:focus-within) {
+  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder:hover:not(:focus-within) {
     z-index: calc(var(--folder-index, 0) + 1);
     transform: translateY(-.8em);
   }

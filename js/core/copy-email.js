@@ -1,17 +1,26 @@
 import { SITE } from "../../data/site.js";
 
 async function copyText(value) {
-  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(value);
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch { /* An embedded or permission-limited page may still allow native copy. */ }
+  }
+  const active = document.activeElement;
   const field = document.createElement("textarea");
   field.value = value;
   field.setAttribute("readonly", "");
   field.style.position = "fixed";
   field.style.opacity = "0";
   document.body.append(field);
-  field.select();
-  const copied = document.execCommand("copy");
-  field.remove();
-  if (!copied) throw new Error("Clipboard unavailable");
+  try {
+    field.select();
+    if (!document.execCommand("copy")) throw new Error("Clipboard unavailable");
+  } finally {
+    field.remove();
+    active?.focus({ preventScroll: true });
+  }
 }
 
 export function initCopyEmail() {

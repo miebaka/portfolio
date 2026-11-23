@@ -50,6 +50,9 @@ test("every generated page preserves its reading path at narrow widths and witho
           return document.documentElement.scrollWidth - document.documentElement.clientWidth;
         });
         expect(overflow).toBeLessThanOrEqual(1);
+        const clippedContents = await page.locator(".article-toc a").evaluateAll(links =>
+          links.filter(link => link.scrollWidth > link.clientWidth + 1).map(link => link.textContent.trim()));
+        expect(clippedContents).toEqual([]);
         const { x, width: titleWidth } = await title.boundingBox();
         expect(x).toBeGreaterThanOrEqual(-1);
         expect(x + titleWidth).toBeLessThanOrEqual(width + 1);

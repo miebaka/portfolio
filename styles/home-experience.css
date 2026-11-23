@@ -1,7 +1,9 @@
-/* One baseline panel size drives both the service cards and Home folders.
-   Actual rendered card heights are reconciled by the folder controller. */
-body[data-page="home"] {
+/* The service cards and both folder racks share one baseline size. */
+body:is([data-page="home"], [data-page="work"]) {
   --home-panel-height: clamp(17em, 38svh, 21em);
+}
+
+body[data-page="home"] {
   --service-overlap: 0px;
 }
 
@@ -11,7 +13,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
 @media (min-width:56em) {
-  body[data-page="home"] {
+  body:is([data-page="home"], [data-page="work"]) {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
 }

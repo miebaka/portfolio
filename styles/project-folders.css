@@ -370,14 +370,6 @@ body:is([data-page="work"], [data-page="home"]) .project-folder:focus-within .pr
 }
 
 @media (max-width:55.999em), (pointer: coarse) {
-  body[data-page="work"] .project-folder-stack__cards {
-    --folder-overlap: calc(var(--work-folder-height) * .42);
-  }
-
-  body[data-page="work"] .project-folder__front {
-    align-items: flex-start;
-  }
-
   body[data-page="work"] .project-archive--folders {
     padding-block: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3)) var(--s8);
   }

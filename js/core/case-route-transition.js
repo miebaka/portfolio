@@ -24,6 +24,11 @@ export function navigateToCase(url) {
 }
 
 export function initCaseRouteTransitions() {
+  window.addEventListener("pageshow", event => {
+    if (!event.persisted) return;
+    leaving = false;
+    document.querySelector(".case-route-transition")?.remove();
+  });
   document.addEventListener("click", event => {
     if (event.defaultPrevented || event.button !== 0 ||
         event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

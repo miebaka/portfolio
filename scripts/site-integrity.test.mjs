@@ -88,8 +88,8 @@ test("Work archive separates published cases from work in progress", () => {
   const tedx = SITE.projects.find(project => project.slug === "tedx-rsu");
   assert.ok(tedx, "Published TEDx project must remain in the source data");
   assert.match(tedx.tagline, /“Pause…” gave a local event its own voice/);
-  assert.doesNotMatch(html, /project-folder__(?:visual|outcome|open)/,
-    "Work covers carry the project name while the Home preview carries the rationale");
+  assert.match(html, /How “Pause…” gave a local event its own voice/);
+  assert.doesNotMatch(html, /project-folder__(?:visual|open)/);
 });
 
 test("built Home and Work expose truthful project states without JavaScript", async () => {
