@@ -18,7 +18,7 @@ test("Home keeps the landing restrained and Selected Work as landscape folders",
 test("Landing and Selected Work move with normal scroll instead of covering one another", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/index.html");
-  await expect(page.locator(".home-folder-stack__cards")).toHaveClass(/is-folder-interactive/);
+  await expect(page.locator(".home-folder-stack__cards")).toHaveAttribute("data-navigation", "native");
   await page.locator(".home-landing").evaluate(async node => {
     await Promise.all(node.getAnimations().map(animation => animation.finished.catch(() => null)));
   });

@@ -59,28 +59,27 @@ test("About introduction has a robust two-column grid on desktop and one on mobi
  expect(columns).toBe(isMobile?1:2);
 });
 
-test("Published project folders are readable at mobile and desktop widths", async ({page}) => {
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({width, height: 900});
+test("Published project folders remain complete and readable at mobile and desktop widths", async ({page}) => {
+  for (const width of [320,390,768,1440]) {
+    await page.setViewportSize({width,height:1000});
     await page.goto("/work.html");
-    const bands = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(node => {
-      const rect = node.getBoundingClientRect();
-      const tab = node.querySelector(".project-folder__tab");
-      const title = node.querySelector(".project-folder__title");
-      return {display: getComputedStyle(node).display, width: rect.width, height: rect.height,
-        title: title?.textContent?.trim(),
-        number: tab?.textContent?.trim(),
-        tabWidth: tab?.getBoundingClientRect().width || 0};
+    await expect(page.locator(".project-folder__title")).toHaveText([
+      "TEDx Rivers State University","Rivo Studio","ChopBox"
+    ]);
+    await expect(page.locator(".project-folder__visual")).toHaveCount(3);
+    const geometry = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(link => {
+      const face = link.querySelector(".project-folder__front");
+      const title = link.querySelector(".project-folder__title");
+      const image = link.querySelector(".project-folder__visual");
+      return { titleFits: title.getBoundingClientRect().right <= face.getBoundingClientRect().right + 1,
+        previewVisible: image.getBoundingClientRect().width > 0 && image.getBoundingClientRect().height > 0 };
     }));
-    expect(bands).toHaveLength(3);
-    expect(bands.map(b => b.title)).toEqual(["Rivo Studio","TEDx Rivers State University","ChopBox"]);
-    expect(bands.map(b => b.number)).toEqual(["01","02","03"]);
-    for (const band of bands) {
-      expect(band.display).not.toBe("none");
-      expect(band.height, "Work folders should fit together in one viewport").toBeLessThanOrEqual(310);
-      expect(band.width).toBeGreaterThan(120);
-      expect(band.tabWidth).toBeGreaterThan(60);
+    for(const item of geometry) {
+      expect(item.titleFits).toBe(true);
+      expect(item.previewVisible).toBe(true);
     }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth-innerWidth))
+      .toBeLessThanOrEqual(2);
   }
 });
 

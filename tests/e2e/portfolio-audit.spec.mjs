@@ -26,7 +26,7 @@ test("each distinctive capability proof link opens a real published chapter", as
     expect(response?.status(), href).toBe(200);
     const chapter = page.locator(url.hash + ".case-chapter");
     await expect(chapter, href).toHaveCount(1);
-    await expect(chapter.locator("h2, h3"), href).toHaveCount(2);
+    await expect(chapter.locator("h2.case-chapter__heading"), href).toHaveCount(1);
     expect((await chapter.innerText()).length, href).toBeGreaterThan(90);
   }
   for (const caseSlug of ["rivo", "tedx-rsu", "chopbox"]) {

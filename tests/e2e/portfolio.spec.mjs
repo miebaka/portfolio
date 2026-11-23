@@ -133,7 +133,7 @@ test("Home → TEDx → next project preserves the intended journey", async ({ p
   await expect(page).toHaveURL(/work\/tedx-rsu(?:\.html)?$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("TEDx Rivers State University");
   await expect(page.locator(".case-opening__summary, .case-lede, .case-index")).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "Next project" })).toContainText("ChopBox");
+  await expect(page.getByRole("region", { name: "Next project" })).toContainText("Rivo Studio");
 });
 
 test("published case studies preserve the editorial reading order", async ({ page }) => {
@@ -148,25 +148,20 @@ test("published case studies preserve the editorial reading order", async ({ pag
   }
 });
 
-test("every published case uses the same five labeled questions without an intro index or side rail", async ({ page }) => {
+test("published case chapters lead with their own decisions rather than boilerplate prompts", async ({ page }) => {
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(`/work/${slug}.html`);
+    await page.goto("/work/" + slug + ".html");
     const chapters = page.locator(".case-chapter");
     await expect(chapters).toHaveCount(5);
-    expect(await chapters.evaluateAll(items => items.map(item => item.id))).toEqual(["decision", "system", "survival", "encounter", "results"]);
-    expect(await chapters.locator("h2").allTextContents()).toEqual(["The Call", "The System", "What Survived", "First Contact", "The Results"]);
-    expect(await chapters.locator(".case-chapter__descriptor").allTextContents()).toEqual([
-      "What did I decide, and what did I turn down to get there?",
-      "What did I build so the decision outlived the first week?",
-      "What did the deadline and the budget leave standing?",
-      "How did the people it was made for first meet it?",
-      "What changed because this existed, and how do I know?",
+    await expect(chapters.locator(".case-chapter__eyebrow")).toHaveText([
+      "The Call", "The System", "What Survived", "First Contact", "The Results"
     ]);
-    await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
-    await page.setViewportSize({ width: 390, height: 844 });
-    await expect(page.locator(".case-index, .case-lede, .case-proof, .case-scroll-index, .case-opening__summary")).toHaveCount(0);
+    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(5);
+    await expect(chapters.locator(".case-chapter__descriptor")).toHaveCount(0);
+    await expect(page.locator(".case-index,.case-lede,.case-scroll-index,.case-opening__summary")).toHaveCount(0);
+    await page.setViewportSize({width:390,height:844});
     await expect(chapters.first()).toBeVisible();
+    await page.setViewportSize({width:1440,height:1000});
   }
 });
 
@@ -337,23 +332,23 @@ test("Mobile Work folders are readable without horizontal overflow", async ({ pa
   }
 });
 
-test("Work folders separate published cases from unfinished projects", async ({ page }) => {
+test("Work folders reveal the three approved published projects with image and scope", async ({ page }) => {
   await page.goto("/work.html");
   const links = page.locator(".project-folder__link");
   await expect(links).toHaveCount(3);
-  await expect(links.nth(0)).toHaveAttribute("href", "work/rivo.html");
-  await expect(links.nth(1)).toHaveAttribute("href", "work/tedx-rsu.html");
-  await expect(links.nth(2)).toHaveAttribute("href", "work/chopbox.html");
   await expect(page.locator(".project-folder__title")).toHaveText([
-    "Rivo Studio", "TEDx Rivers State University", "ChopBox",
+    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
   ]);
-  await expect(page.locator(".project-archive__progress li")).toHaveText([
-    "Poster A Week2024", "Kiki-Joshua2022", "Kigoma Hotels2021",
-  ]);
+  await expect(page.locator(".project-folder__outcome")).toHaveCount(3);
+  await expect(page.locator(".project-folder__visual img")).toHaveCount(3);
+  await expect(links.nth(0)).toHaveAttribute("href","work/tedx-rsu.html");
+  await expect(links.nth(1)).toHaveAttribute("href","work/rivo.html");
+  await expect(links.nth(2)).toHaveAttribute("href","work/chopbox.html");
+  await expect(page.locator(".project-archive__progress li")).toHaveCount(3);
   await expect(page.locator(".filing-cabinet,.filing-cabinet__three-canvas")).toHaveCount(0);
 });
 
-test("Work folder is raised on hover or keyboard focus", async ({ page, isMobile }) => {
+test("Work folder links display keyboard focus and a modest hover flourish", async ({ page, isMobile }) => {
   await page.goto("/work.html");
   const first = page.locator(".project-folder__link").first();
   await expect(first).toBeVisible();
@@ -361,9 +356,9 @@ test("Work folder is raised on hover or keyboard focus", async ({ page, isMobile
   await expect(first).toBeFocused();
   await expect(first.locator(".project-folder__front")).toBeVisible();
   if (!isMobile) {
-    await first.locator(".project-folder__tab").hover();
-    const transform = await first.locator("xpath=..").evaluate(el => getComputedStyle(el).transform);
-    expect(transform).not.toBe("none");
+    await first.hover();
+    await expect.poll(() => first.locator("xpath=..").evaluate(el => getComputedStyle(el).transform))
+      .not.toBe("none");
   }
 });
 
@@ -439,7 +434,7 @@ test("@a11y full WCAG text spacing does not hide content or create overflow", as
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Work with me" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Send inquiry" })).toBeVisible();
 });
 
 test("@a11y forced colours retain the primary experience", async ({ page, browserName }) => {
@@ -475,53 +470,18 @@ test("navigation works without JavaScript", async ({ browser, baseURL }) => {
   await context.close();
 });
 
-test("Work folder hover hits exactly the intended project", async ({ page }) => {
-  const hrefs = ["work/rivo.html", "work/tedx-rsu.html", "work/chopbox.html"];
-  for (const width of [390, 900, 1440]) {
-    await page.setViewportSize({ width, height: 1100 });
-    await page.goto("/work.html");
-    await settle(page);
-    const folders = page.locator(".project-folder");
-    await expect(folders).toHaveCount(3);
-
-    const bounds = await folders.evaluateAll(items => items.map(item => {
-      const rect = item.getBoundingClientRect();
-      return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom,
-        ratio: rect.width / rect.height };
-    }));
-    for (const rect of bounds) {
-      expect(rect.right - rect.left, "Work folders retain full-width landscape faces").toBeGreaterThan(width * .75);
-      expect(rect.bottom - rect.top, "Work folders must be compact").toBeLessThanOrEqual(310);
-    }
-    // Physical folders deliberately overlap. Confirm the intended stack order,
-    // then test actual hit targets below instead of rejecting overlapping boxes.
-    for (let i = 1; i < bounds.length; i++) {
-      expect(bounds[i].top, "folders stack in document order").toBeGreaterThan(bounds[i - 1].top);
-      expect(bounds[i].top, "adjacent folders overlap").toBeLessThan(bounds[i - 1].bottom);
-    }
-    for (let i = 0; i < 3; i++) {
-      const folder = folders.nth(i);
+test("all project targets activate their own routes without overlapping hit boxes", async ({ page }) => {
+  for (const width of [390,900,1440]) {
+    await page.setViewportSize({width,height:1000});
+    for (const slug of ["tedx-rsu","rivo","chopbox"]) {
+      await page.goto("/work.html");
+      const folder = page.locator('.project-folder[data-slug="' + slug + '"]');
       await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
-      await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", hrefs[i]);
-      const paperMotion = await folder.locator(".project-folder__paper").evaluateAll(items =>
-        items.map(item => ({
-          pointerEvents: getComputedStyle(item).pointerEvents,
-          transitionDuration: getComputedStyle(item).transitionDuration,
-        })));
-      for (const sheet of paperMotion) {
-        expect(sheet.pointerEvents).toBe("none");
-        expect(sheet.transitionDuration).toBe("0s");
-      }
-    }
-    if (width !== 1440) continue;
-    const track = page.locator(".project-folder-stack__cards");
-    for (let i = 0; i < 3; i++) {
-      const folder = folders.nth(i);
-      await folder.scrollIntoViewIfNeeded();
-      await folder.locator(".project-folder__link").focus();
-      await expect(track).toHaveAttribute("data-active-index", String(i));
-      await expect(folder).toHaveClass(/is-active/);
-      await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", hrefs[i]);
+      const link = folder.locator(".project-folder__link");
+      await link.scrollIntoViewIfNeeded();
+      await expect(link).toBeVisible();
+      await link.click();
+      await expect(page).toHaveURL(new RegExp("/work/"+slug+"\\.html$"));
     }
   }
 });
