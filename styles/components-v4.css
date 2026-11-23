@@ -62,7 +62,7 @@
 }
 a[href]:focus-visible{color:var(--accent-interactive);}
 a[href]:hover{color:var(--accent-interactive);}
-.btn{--button-container:var(--ref-blue-80);--button-label:var(--ref-on-blue);position:relative;width:max-content;height:2.5em;min-height:2.5em;display:inline-flex;align-items:center;justify-content:center;gap:var(--s1);padding:0 var(--s3);border:0;border-radius:0;background:var(--button-container);color:var(--button-label);box-shadow:none;overflow:hidden;isolation:isolate;transition:box-shadow 180ms var(--ease-standard)}
+.btn{--button-container:var(--ref-blue-80);--button-label:var(--ref-on-blue);position:relative;width:max-content;height:2.5em;min-height:2.5em;display:inline-flex;align-items:center;justify-content:center;gap:var(--s1);padding:0 var(--s3);border:0;border-radius:0;background:var(--button-container);color:var(--button-label);box-shadow:none;overflow:hidden;isolation:isolate}
 .btn::before{content:"";position:absolute;z-index:-1;inset:0;background:currentColor;opacity:0;transition:opacity 160ms var(--ease-standard)}
 @media(prefers-reduced-transparency:reduce){.site-nav{background:var(--sys-color-surface);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
 }
@@ -202,7 +202,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(var(--s7) + var(--safe-
 .site-footer__links{display:flex;align-items:center;flex-wrap:wrap;gap:calc(var(--spacing-unit) * 2) clamp(calc(var(--spacing-unit) * 6),1.5vw,var(--s3))}
 
 /* The mailto remains primary; this adds a small,reversible utility beside it. */
-.copy-email{display:inline-flex;min-width:5.8em;min-height:2.75em;margin-left:calc(var(--spacing-unit) * 5);padding:var(--s1) calc(var(--spacing-unit) * 6);align-items:center;justify-content:center;gap:var(--s1);border:1px solid var(--line);background:var(--surface);color:var(--muted);vertical-align:middle;transition:border-color 160ms var(--ease-standard),color 160ms var(--ease-standard),background-color 160ms var(--ease-standard),transform 160ms var(--ease-enter)}
+.copy-email{display:inline-flex;min-width:5.8em;min-height:var(--control-target);margin-left:calc(var(--spacing-unit) * 5);padding:var(--s1) calc(var(--spacing-unit) * 6);align-items:center;justify-content:center;gap:var(--s1);border:1px solid var(--line);background:var(--surface);color:var(--muted);vertical-align:middle;transition:border-color 160ms var(--ease-standard),color 160ms var(--ease-standard),background-color 160ms var(--ease-standard),transform 160ms var(--ease-enter)}
 .copy-email svg{width:1em;height:1em;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
 .copy-email__copy{opacity:1;transform-origin:center;transition:opacity 120ms var(--ease-standard),transform 160ms var(--ease-enter)}
 .copy-email__check{stroke-dasharray:14;stroke-dashoffset:14;transition:stroke-dashoffset 200ms var(--ease-enter)}

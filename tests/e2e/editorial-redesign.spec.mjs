@@ -22,7 +22,7 @@ test("Geist Sans typography roles and full-screen editorial Index are consistent
  await expect(dialog).toBeVisible();
  const labels=dialog.locator(".site-index__link");
  await expect(labels.locator("span:last-child")).toHaveText(["Work", "Experiments", "About", "Essays", "Contact", "Process", "Accessibility"]);
- for(const link of await labels.all())await expect(link).toHaveCSS("text-transform","uppercase");
+ for(const link of await labels.all())await expect(link).toHaveCSS("text-transform","none");
  await page.keyboard.press("Escape");
  await expect(menu).toBeFocused();
 });
@@ -91,7 +91,7 @@ test("404 recovery links remain valid from nested routes",async({page})=>{
  await expect(page.locator('link[rel="stylesheet"]')).toHaveAttribute("href","/styles/main.css");
 });
 
-test("What I Do has no numbers or card gradients and all UI labels are uppercase",async({page})=>{
+test("What I Do has no numbers or card gradients and labels retain authored casing",async({page})=>{
  await page.goto("/index.html");
  const section=page.locator("#what-i-do");
  await expect(section.locator(".service-stack__card")).toHaveCount(5);
@@ -107,7 +107,7 @@ test("What I Do has no numbers or card gradients and all UI labels are uppercase
  }
  await expect(page.locator(".site-footer__eyebrow,.site-footer__bottom")).toHaveCount(2);
  for(const selector of [".service-stack__tag"]){
-  await expect(page.locator(selector).first()).toHaveCSS("text-transform","uppercase");
+  await expect(page.locator(selector).first()).toHaveCSS("text-transform","none");
  }
 });
 test("Footer is a masked dot matrix, never an embossed relief", async ({page}) => {

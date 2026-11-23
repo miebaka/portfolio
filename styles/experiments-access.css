@@ -1,7 +1,7 @@
 /* Experiments: a navigable page with native vertical scroll and a contained gallery. */
 body[data-page="explorations"] { overflow-x: clip; overflow-y: auto; background: var(--paper); color: var(--ink); }
 body[data-page="explorations"] > header.site-nav {
-  display: block; position: sticky; inset: auto; top: 0; z-index: 100;
+  display: block;
 }
 body[data-page="explorations"] > footer.site-footer { display: block; position: relative; }
 body[data-page="explorations"] main.experiments-page {
@@ -42,7 +42,13 @@ body[data-page="explorations"] .experiments-controls {
 }
 body[data-page="explorations"] .experiments-index {
   position: absolute; z-index: 48; inset: 0;
-  padding: clamp(var(--s2), 3vw, var(--s6)); overflow-y: auto; overscroll-behavior: contain;
+  padding: clamp(var(--s2), 3vw, var(--s6)); overflow: hidden;
+}
+body[data-page="explorations"] .experiments-index:not([hidden]) {
+  display: grid; grid-template-rows: auto minmax(0, 1fr);
+}
+body[data-page="explorations"] .experiments-index ol {
+  overflow-y: auto; overscroll-behavior: contain;
 }
 body[data-page="explorations"] .experiment-poster {
   left: 50%; top: 54%;

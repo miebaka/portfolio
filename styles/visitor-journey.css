@@ -7,8 +7,8 @@ body[data-page="home"] .home-landing__statement {
   max-width: 24ch;
   padding: var(--s2);
   border-radius: .3em;
-  background: oklch(0.1860346 0.054866 265.18549 / 0.88);
-  color: oklch(1 0 0);
+  background: color-mix(in oklab,var(--ref-midnight) 88%,transparent);
+  color: var(--ref-paper);
 }
 body[data-page="home"] .home-landing__meta {
   gap: var(--s2);
@@ -17,11 +17,11 @@ body[data-page="home"] .home-landing__meta p:nth-child(2),
 body[data-page="home"] .home-landing__meta a {
   padding: var(--s2);
   border-radius: .25em;
-  background: oklch(0.1860346 0.054866 265.18549 / 0.9);
-  color: oklch(1 0 0);
+  background: color-mix(in oklab,var(--ref-midnight) 90%,transparent);
+  color: var(--ref-paper);
 }
 body[data-page="home"] .home-landing__meta a {
-  border: .0625em solid oklch(1 0 0 / 0.7);
+  border: .0625em solid color-mix(in oklab,var(--ref-white) 70%,transparent);
   min-height: 2.75em;
 }
 @media (min-width:72em) {

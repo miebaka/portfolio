@@ -291,7 +291,7 @@ Base source colors currently include:
 
 Material Symbols is an **icon font only**, not a third text family. **Every typography declaration** (font face, family, size, weight, leading, tracking, text wrapping, text decoration, uppercase transformation and responsive typography) belongs in `styles/tokens.css`. All other CSS files contain layout, appearance and behaviour only. The two text families are `--font-sans` and `--font-mono`; 400/600 are the only supported static weights. The homepage name and other major headings use the restrained, shared 48px maximum headline role. Separate oversized display and hero size tiers are retired. Do not reintroduce `--display`, `--body`, `--label`, `--signature` or the retired size aliases.
 
-**Accessibility remains mandatory:** exactly one semantic visible h1 per page; strong type hierarchy; accurate case on project names; uppercase UI labels, not paragraphs; short-line compressed display only; legible reading at 320px and 200% zoom; and proper fallback during font swap. Long-form copy SHOULD measure roughly 55–75 characters per line and use comfortable `--type-leading-reading`.
+**Accessibility remains mandatory:** exactly one semantic visible h1 per page; strong type hierarchy; accurate case on project names; authored casing for UI labels and paragraphs; short-line compressed display only; legible reading at 320px and 200% zoom; and proper fallback during font swap. Long-form copy SHOULD measure roughly 55–75 characters per line and use comfortable `--type-leading-reading`.
 
 Stylelint rule `portfolio/typography-tokens`, `npm run test:typography` and the GitHub Actions Quality job are the release gate. Add a named token in the authoritative file if a new editorial role is genuinely necessary. Do not suppress lint as a workaround.
 
@@ -1292,7 +1292,7 @@ The following observations are from the `main` branch reviewed on 19 November 20
 
 ### The Index, Geist Sans and embossed signature (20 November 2026)
 
-- **Typography:** Geist Sans throughout headlines and body, Geist Mono for labels, with no Geist Serif font request. All small UI labels are visually uppercase; paragraph and project-title case stays authored.
+- **Typography:** Geist Sans throughout headlines and body, Geist Mono for labels, with no Geist Serif font request. Small UI labels, paragraphs, and project titles retain their authored casing.
 - **Navigation:** replace the centered dark pill with a restrained masthead and fullscreen Index inspired by [Alex Pierce on Navbar Gallery](https://www.navbar.gallery/navbar/alex-pierce). Keep canonical routes, focus trapping, Escape restoration, theme/motion preferences and static no-JavaScript navigation.
 - **What I Do:** five unnumbered semantic service cards, flat authored token colours and no spotlight or image-overlay gradient. Evidence links remain accessible on touch, hover, and keyboard.
 - **Footer:** the original script SVG uses opposing masked highlight/shadow layers for a tactile, raised embossed effect inspired by [For Living](https://www.for-living.it/). Its small keyboard-operable interaction is progressive, not a requirement for reading the signature.

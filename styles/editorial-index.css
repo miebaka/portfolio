@@ -58,11 +58,11 @@ body .site-nav__menu-mark::before,body .site-nav__menu-mark::after {
   height:1px;
   background:currentColor;
   transform-origin:center;
-  transition:transform 180ms ease,top 180ms ease;}
+  transition:transform 180ms ease;}
 body .site-nav__menu-mark::before{top:.18em}
 body .site-nav__menu-mark::after{top:.55em}
-body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::before{top:.37em;transform:rotate(45deg)}
-body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::after{top:.37em;transform:rotate(-45deg)}
+body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::before{transform:translateY(.19em) rotate(45deg)}
+body .site-nav__menu-btn[aria-expanded="true"] .site-nav__menu-mark::after{transform:translateY(-.18em) rotate(-45deg)}
 body[data-page] .site-nav__themes {
   grid-column:4;
   grid-row:1;

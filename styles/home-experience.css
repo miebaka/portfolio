@@ -301,7 +301,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     border-radius:clamp(1em,2vw,2em);
     background:var(--ref-blue-80);
     color:var(--ref-midnight);
-    box-shadow:0 -.2em .2em oklch(0 0 0 / 0.06),0 1.2em 2.5em oklch(0 0 0 / 0.13);
+    box-shadow:0 -.2em .2em color-mix(in oklab,var(--ref-black) 6%,transparent),0 1.2em 2.5em color-mix(in oklab,var(--ref-black) 13%,transparent);
   }
   body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(2) .service-stack__card{
     background:var(--ref-coral-75);
