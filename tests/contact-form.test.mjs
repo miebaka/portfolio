@@ -118,7 +118,7 @@ test("prevents duplicate submits and clears only after a 202 success", async () 
   assert.equal(controller.state, "success");
   assert.equal(form.button.getAttribute("aria-busy"), null);
   assert.equal(form.fields.name.value, "");
-  assert.equal(form.status.textContent, "Message sent. I’ll reply by email.");
+  assert.equal(form.status.textContent, "Your inquiry was accepted. I’ll reply by email.");
 });
 
 test("server field errors retain inputs and merge stable error descriptions", async () => {

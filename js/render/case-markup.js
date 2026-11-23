@@ -6,6 +6,17 @@ const esc = (value) =>
 const token = (value) => String(value ?? "").replace(/[^a-z0-9_-]/gi, "");
 const paras = (list) => (list || []).map((p) => `<p>${esc(p)}</p>`).join("");
 const upright = (media) => Boolean(media?.w && media?.h && media.w / media.h < 1.2);
+const embeddedArtworkText = Object.freeze({
+  "tedx-rsu-logomark": "pause… — Reflect. Reconsider. Reward.",
+  "tedx-rsu-typeface": "Remember to stay pause-itive.",
+  "tedx-rsu-campus-banner": "Would you like to pause for a minute? The invitation names the Student Dialogue Center, Rivers State University, and 18 February 2023.",
+  "rivo-tote": "Software that simply works for all.",
+  "rivo-stage": "From village squares to virtual spaces.",
+  "rivo-flag": "Software that simply works for all.",
+  "chopbox-apron": "Hello, I am the chef.",
+  "chopbox-campaign": "Abobi, chop life, make life no chop you."
+});
+
 
 function shot(media, kind, base, plate) {
   if (!media?.src) return "";
@@ -20,8 +31,9 @@ function shot(media, kind, base, plate) {
         ? `${viewportQueries.tabletMax} calc(100vw - 2.5em), 50em`
         : `${viewportQueries.compact} calc(100vw - 2.5em), ${viewportQueries.wideMax} 90vw, 86em`;
   const loading = kind === "hero" ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
-  const caption = media.caption
-    ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>`
+  const textInArtwork = embeddedArtworkText[media.src];
+  const caption = media.caption || textInArtwork
+    ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}${media.caption ? `<p>${esc(media.caption)}</p>` : ""}${textInArtwork ? `<p class="case-shot__embedded-words">Words in the artwork: ${esc(textInArtwork)}</p>` : ""}</figcaption>`
     : "";
   return `<figure class="case-shot case-shot--${kind}"><picture><source type="image/avif" srcset="${srcset("avif")}" sizes="${sizes}"><source type="image/webp" srcset="${srcset("webp")}" sizes="${sizes}"><img src="${stem}-${fallback}.jpg" alt="${esc(media.alt || media.label)}" width="${media.w}" height="${media.h}"${loading} decoding="async"></picture>${caption}</figure>`;
 }

@@ -84,13 +84,13 @@
             <label for="name">Name</label>
             <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-help">
             <p class="field__help" id="name-help">How I should address you.</p>
-            <p class="field__error" id="name-error"></p>
+            <p class="field__error" id="name-error" aria-atomic="true"></p>
           </div>
           <div class="field">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-help">
             <p class="field__help" id="email-help">Where I should send my reply.</p>
-            <p class="field__error" id="email-error"></p>
+            <p class="field__error" id="email-error" aria-atomic="true"></p>
           </div>
           <div class="field">
             <label for="interest">What can I help with?</label>
@@ -105,13 +105,13 @@
               <option value="other">Something else</option>
             </select>
             <p class="field__help" id="interest-help">A quick route into the conversation.</p>
-            <p class="field__error" id="interest-error"></p>
+            <p class="field__error" id="interest-error" aria-atomic="true"></p>
           </div>
           <div class="field">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="5" maxlength="5000" required aria-describedby="message-help" placeholder="What are you building? What work needs doing? When do you need it? What would success look like?"></textarea>
             <p class="field__help" id="message-help">A strong brief covers the goal, deliverables, any constraints, timing and who will approve the work. A rough outline is enough to start.</p>
-            <p class="field__error" id="message-error"></p>
+            <p class="field__error" id="message-error" aria-atomic="true"></p>
           </div>
           <div class="contact__trap" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
           <div class="contact__submit">

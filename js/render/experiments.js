@@ -185,7 +185,7 @@ export async function initExperimentsSpatial() {
     card.addEventListener("focus", () => moveTo(index, false));
     card.addEventListener("click", event => {
       if (blockClick) { blockClick = false; event.preventDefault(); return; }
-      if (index !== activeIndex) { event.preventDefault(); moveTo(index); return; }
+      // Each visible poster is a native link, even when it isn't selected.
       if (video) video.pause();
     });
   });
@@ -207,13 +207,9 @@ export async function initExperimentsSpatial() {
     const openIndex = () => { indexPanel.hidden = false; root.setAttribute("data-index-open", ""); indexButton.setAttribute("aria-expanded", "true"); closeButton?.focus(); };
     indexButton.addEventListener("click", () => indexPanel.hidden ? openIndex() : closeIndex());
     closeButton?.addEventListener("click", () => closeIndex());
+    // A nonmodal region must not trap Tab or prevent reaching other content.
     indexPanel.addEventListener("keydown", event => {
-      if (event.key === "Escape") { event.preventDefault(); closeIndex(); return; }
-      if (event.key !== "Tab") return;
-      const focusable = [...indexPanel.querySelectorAll("button")];
-      const first = focusable[0]; const last = focusable.at(-1);
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      if (event.key === "Escape") { event.preventDefault(); closeIndex(); }
     });
     list.addEventListener("click", event => {
       const button = event.target.closest("[data-experiment-jump]");

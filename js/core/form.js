@@ -41,7 +41,13 @@ export function createContactForm(form, { submitContact: send = submitContact, t
   function transition(next, message = "") {
     state = next;
     form.dataset.state = next;
-    if (status) { status.textContent = message; status.dataset.state = next; }
+    if (status) {
+      const urgent = ["validation-error", "error", "rate-limited", "unavailable"].includes(next);
+      status.setAttribute("role", urgent ? "alert" : "status");
+      status.setAttribute("aria-live", urgent ? "assertive" : "polite");
+      status.dataset.state = next;
+      status.textContent = message;
+    }
     if (button) {
       const busy = next === "submitting";
       button.disabled = busy;
@@ -88,7 +94,7 @@ export function createContactForm(form, { submitContact: send = submitContact, t
       const response = await send(payload(), { signal: activeController.signal });
       if (destroyed) return;
       if (response.status === 202 && response.ok === true) {
-        form.reset(); transition("success", "Message sent. I’ll reply by email.");
+        form.reset(); transition("success", "Your inquiry was accepted. I’ll reply by email.");
       } else if (response.status === 422 && response.fieldErrors) {
         showErrors(response.fieldErrors); transition("validation-error", response.fieldErrors.form || "Check the highlighted fields.");
       } else if (response.status === 429 || response.code === "RATE_LIMITED") {
