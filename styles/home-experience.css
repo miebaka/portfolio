@@ -2,6 +2,7 @@
    Actual rendered card heights are reconciled by the folder controller. */
 body[data-page="home"] {
   --home-panel-height: clamp(17em, 38svh, 21em);
+  --service-overlap: 0px;
 }
 
 body[data-page="home"] section.home-capabilities--reference .service-stack__card {
@@ -15,23 +16,11 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
   }
 }
 
-/* Closing card runway: the final (yellow) card fully covers the purple card
-   before the independently stacked client marquee enters. */
 body[data-page="home"] section.home-capabilities--reference {
   position: relative;
   isolation: isolate;
   z-index: 2;
   padding-bottom: clamp(var(--s5), 5svh, var(--s8));
-}
-
-body[data-page="home"] section.home-capabilities--reference .service-stack::after {
-  content: "";
-  display: block;
-  height: clamp(23em, 72svh, 46em);
-}
-
-body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(5) {
-  z-index: 100;
 }
 
 body[data-page="home"] .journey {
@@ -74,17 +63,9 @@ body[data-page="home"] .marquee__item img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack::after {
-    display: none;
-  }
-
   html:not([data-motion="full"]) body[data-page="home"] .client-marquee__track {
     animation: none;
   }
-}
-
-html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack::after {
-  display: none;
 }
 
 html[data-motion="reduced"] body[data-page="home"] .client-marquee__track {
@@ -187,12 +168,7 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     color: var(--ink);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack::after {
-    display: none;
-  }
-
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item,
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child {
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     position: relative;
     top: auto;
     z-index: auto;
@@ -277,34 +253,23 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     margin:0;
   }
   body[data-page="home"] section.home-capabilities--reference{
-    padding-block:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
+    padding-top:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
+    padding-bottom: var(--s5);
   }
   body[data-page="home"] section.home-capabilities--reference .disciplines-heading{
     margin-bottom:clamp(var(--s6),6vw,var(--s12));
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack::after{
-    display:block;
-  }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item{
-    position:sticky;
-    top:calc(var(--nav-h) + 1em + var(--stack-index,0)*.6em);
-    z-index:calc(10 + var(--stack-index,0));
-    margin-bottom:calc(-1 * clamp(var(--s5),11svh,calc(var(--spacing-unit) * 52)));
-  }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:last-child{
-    margin-bottom:0;
-  }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(5){
-    z-index:100;
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item + .service-stack__item {
+    margin-top: var(--service-list-gap, var(--s2));
   }
   body[data-page="home"] section.home-capabilities--reference .service-stack__item .service-stack__card{
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    min-height:var(--home-panel-height);
+    min-height:min(var(--home-panel-height), 80svh);
     gap:var(--s2);
     padding:clamp(var(--s4),4.5vw,var(--s10));
-    padding-bottom:calc(clamp(var(--s4),4.5vw,var(--s10)) + clamp(var(--s5),11svh,calc(var(--spacing-unit) * 52)));
+    padding-bottom:calc(clamp(var(--s4),4.5vw,var(--s10)) + var(--service-overlap));
     border:0;
     border-radius:clamp(1em,2vw,2em);
     background:var(--ref-blue-80);
@@ -347,17 +312,56 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
 }
 
 
-/* Keep OS and explicit reduced motion readable after desktop sticky upgrades. */
+/* Pin each card on the same line so the last card covers the stack as it exits. */
+@media (min-width: 56em) and (min-height: 40em) {
+  body[data-page="home"] section.home-capabilities--reference {
+    --service-list-gap: calc(-1 * var(--service-overlap));
+    --service-overlap: clamp(var(--s5), 11svh, calc(var(--spacing-unit) * 52));
+  }
+
+  body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+    content: "";
+    display: block;
+    height: clamp(var(--s3), 9svh, var(--s7));
+  }
+
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+    position: sticky;
+    top: calc(var(--nav-h) + 1em);
+    z-index: calc(10 + var(--stack-index, 0));
+  }
+
+  body[data-page="home"] section.home-capabilities--reference .service-stack__item:has(:focus-visible) {
+    z-index: 20;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference {
+    --service-list-gap: var(--s2);
+    --service-overlap: 0px;
+  }
+
+  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+    display: none;
+  }
+
   html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     position: relative;
     top: auto;
-    margin-bottom: var(--s2);
   }
+}
+
+html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference {
+  --service-list-gap: var(--s2);
+  --service-overlap: 0px;
+}
+
+html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+  display: none;
 }
 
 html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
   position: relative;
   top: auto;
-  margin-bottom: var(--s2);
 }

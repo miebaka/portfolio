@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test("What I Do has a genuinely overlapping native-scroll stack with usable proof links", async ({ page }) => {
-  for (const width of [390, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
+  for (const [width, height] of [[390, 900], [1440, 560], [1440, 900]]) {
+    const stacks = width >= 896 && height >= 640;
+    await page.setViewportSize({ width, height });
     await page.goto("/index.html");
     const items = page.locator(".service-stack__item");
     await expect(items).toHaveCount(5);
@@ -10,20 +11,20 @@ test("What I Do has a genuinely overlapping native-scroll stack with usable proo
       const box = node.getBoundingClientRect();
       return {
         top: box.top, bottom: box.bottom, position: getComputedStyle(node).position,
-        margin: parseFloat(getComputedStyle(node).marginBottom),
+        margin: parseFloat(getComputedStyle(node).marginTop),
       };
     }));
     for (let i = 1; i < before.length; i++) {
-      if (width >= 896) {
+      if (stacks) {
         expect(before[i].top, "desktop cards overlap at " + width).toBeLessThan(before[i - 1].bottom);
       } else {
-        expect(before[i].top, "mobile rows never overlap at " + width).toBeGreaterThanOrEqual(before[i - 1].bottom - 1);
+        expect(before[i].top, "nonsticky rows never overlap at " + width + "×" + height).toBeGreaterThanOrEqual(before[i - 1].bottom - 1);
       }
       expect(before[i].top).toBeGreaterThan(before[i - 1].top);
     }
-    expect(before[0].position).toBe(width >= 896 ? "sticky" : "relative");
-    if (width >= 896) expect(before[0].margin).toBeLessThan(0);
-    else expect(before[0].margin).toBeGreaterThanOrEqual(0);
+    expect(before[0].position).toBe(stacks ? "sticky" : "relative");
+    if (stacks) expect(before[1].margin).toBeLessThan(0);
+    else expect(before[1].margin).toBeGreaterThanOrEqual(0);
 
     // Link targets may not be hidden beneath the following card.
     for (const item of await items.all()) {
@@ -65,7 +66,7 @@ test("mobile capability proof reads as a calm nonsticky list with no empty scrol
       await expect(item.locator(".service-stack__evidence")).toBeVisible();
     }
     const mobile = await page.evaluate(() => ({
-      runway: getComputedStyle(document.querySelector("#what-i-do .service-stack"), "::after").display,
+      runway: getComputedStyle(document.querySelector("#what-i-do .service-stack"), "::after").content,
       heroMeta: getComputedStyle(document.querySelector(".home-landing__meta p:nth-child(2)")).display,
       secondaryRole: getComputedStyle(document.querySelector(".home-landing__secondary-role")).display,
       location: getComputedStyle(document.querySelector(".home-landing__meta p:first-child")).display,

@@ -145,7 +145,7 @@ test("What I Do stacks by scroll, ignores hover and ends with the last card", as
   await expect(second).toHaveCSS("z-index", "11");
   await last.scrollIntoViewIfNeeded();
   await expect(second).toHaveCSS("position", "sticky");
-  await expect(last).toHaveCSS("position", "relative");
+  await expect(last).toHaveCSS("position", "sticky");
   expect(await last.evaluate(el => Number(getComputedStyle(el).zIndex))).toBeGreaterThan(Number(firstZ));
   await expect(last.locator(".service-stack__card")).toHaveCSS("transform", "none");
 });
@@ -175,13 +175,34 @@ test("yellow closes the service stack before the client-marquee boundary", async
   const section = page.locator("#what-i-do");
   const cards = section.locator(".service-stack__item");
   await expect(cards).toHaveCount(5);
-  const zIndices = await cards.evaluateAll(nodes => nodes.map(node => Number(getComputedStyle(node).zIndex)));
-  expect(zIndices[4]).toBeGreaterThan(zIndices[3]);
-  const spacer = await section.locator(".service-stack").evaluate(el => getComputedStyle(el, "::after").height);
-  expect(parseFloat(spacer)).toBeGreaterThan(300);
-  const boundary = await page.evaluate(() => ({
-    sectionBottom: document.querySelector("#what-i-do").getBoundingClientRect().bottom,
-    logosTop: document.querySelector(".journey").getBoundingClientRect().top
-  }));
-  expect(boundary.logosTop).toBeGreaterThanOrEqual(boundary.sectionBottom - 2);
+  const samples = await section.evaluate(node => {
+    const purple = node.querySelector(".service-stack__item:nth-child(4)");
+    const yellow = purple.nextElementSibling;
+    const logos = document.querySelector(".journey");
+    const pin = parseFloat(getComputedStyle(yellow).top);
+    const arrival = yellow.getBoundingClientRect().top + window.scrollY - pin;
+
+    return [16, 160].map(distance => {
+      window.scrollTo({ top: arrival + distance, behavior: "instant" });
+      const front = yellow.getBoundingClientRect();
+      const back = purple.getBoundingClientRect();
+      const target = document.elementFromPoint(front.left + front.width / 2, front.top + front.height / 2);
+      return {
+        pin, top: front.top, backTop: back.top, bottom: front.bottom,
+        backBottom: back.bottom, logosTop: logos.getBoundingClientRect().top,
+        yellowOnTop: yellow.contains(target),
+      };
+    });
+  });
+
+  const [arrival, exit] = samples;
+  expect(arrival.top).toBeCloseTo(arrival.pin, 0);
+  for (const state of samples) {
+    expect(state.top).toBeCloseTo(state.backTop, 0);
+    expect(state.bottom).toBeCloseTo(state.backBottom, 0);
+    expect(state.yellowOnTop).toBe(true);
+  }
+  expect(exit.top).toBeLessThan(arrival.top);
+  expect(exit.logosTop).toBeLessThan(900);
+  expect(exit.logosTop - exit.bottom).toBeLessThan(80);
 });

@@ -483,11 +483,6 @@ body .site-nav {
   }
 }
 
-/* Scroll order alone controls which card covers the previous one.
-   Focus can still bring a proof link forward for keyboard users. */
-body[data-page="home"] section.home-capabilities--reference .service-stack__item:focus-within {
-  z-index: calc(10 + var(--stack-index, 0));
-}
 body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
   scroll-margin-top: calc(var(--nav-h) + var(--s4));
 }
