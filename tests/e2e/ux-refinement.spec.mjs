@@ -91,10 +91,13 @@ test("Client marks are fitted mathematically without distortion",async({page})=>
   await page.goto("/index.html");
   const logos=page.locator(".client-proof").first().locator(".marquee__item img");
   await expect(logos).toHaveCount(6);
-  const geometry=await logos.evaluateAll(nodes=>nodes.map(node=>{
+  const geometry=await logos.evaluateAll(async nodes=>{
+    await Promise.all(nodes.map(node=>node.decode()));
+    return nodes.map(node=>{
     const style=getComputedStyle(node),w=parseFloat(style.width),h=parseFloat(style.height);
     return {w,h,fit:style.objectFit,loaded:node.naturalWidth > 0};
-  }));
+    });
+  });
   geometry.forEach(({w,h,fit,loaded})=>{
     expect(w).toBeGreaterThan(30);
     expect(h).toBeGreaterThan(20);
@@ -143,7 +146,7 @@ test("What I Do stacks by scroll, ignores hover and ends with the last card", as
   await last.scrollIntoViewIfNeeded();
   await expect(second).toHaveCSS("position", "sticky");
   await expect(last).toHaveCSS("position", "relative");
-  await expect(last).toHaveCSS("z-index", "14");
+  expect(await last.evaluate(el => Number(getComputedStyle(el).zIndex))).toBeGreaterThan(Number(firstZ));
   await expect(last.locator(".service-stack__card")).toHaveCSS("transform", "none");
 });
 

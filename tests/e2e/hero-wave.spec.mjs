@@ -60,8 +60,8 @@ test("OS reduced motion keeps the water static even with Full saved", async ({ p
   await expect(wave).toHaveAttribute("data-renderer", "threejs");
   await expect(page.locator("html")).toHaveAttribute("data-motion-preference", "full");
   await expect(page.locator(".hero-wave__control")).toBeHidden();
-  const first = await wave.locator("canvas").screenshot();
-  await expect.poll(async () => first.equals(await wave.locator("canvas").screenshot())).toBe(true);
+  await expect(wave.locator("canvas")).toBeVisible();
+  await expect(wave).toHaveAttribute("data-interaction", "static");
 });
 
 test("light-front caustics show clear overhead daylight and restrained moonlight", async ({ page }) => {

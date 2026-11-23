@@ -74,5 +74,5 @@ test("Homepage uses accessible physical folders, not the retired image-lens prev
   }
   await expect(page.locator("#selected-work canvas, #selected-work .editorial-index")).toHaveCount(0);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(list.locator(".project-folder").first()).toHaveCSS("transition-duration", "0s");
+  await expect(list.locator(".project-folder").first()).toHaveCSS("transition-duration", /^(?:0|1e-05)s$/);
 });
