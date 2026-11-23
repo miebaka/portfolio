@@ -455,7 +455,7 @@ export const caseStudies = {
         "label": "The Call",
         "title": "Use appetite as the filter",
         "body": [
-          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, packaging and rollout.",
+          "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, identity design and proposed packaging and campaign applications.",
           "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct.",
           "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration.",
           "A friendly rounded logotype and toasted yellow-red palette replace the category's harder, louder shorthand. The result aims to feel ready to order without making every application shout."
