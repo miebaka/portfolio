@@ -53,8 +53,8 @@ const scoped = new Set(Object.entries(sources)
 const LOCAL = new Set(`--distance --offset --position --swell --logo-scale --preview-order --experience-start --experience-span
 --experience-columns --rule-scale --stack-gap --stage-w --stage-h`.split(/\s+/));
 
-// Declared but intentionally not consumed by var(): contract pins, the JS-read hero colours and the complete scales.
-const KEEP = new Set(`--hero-wave-color-1 --hero-wave-color-2 --hero-wave-color-3 --motion-hover --motion-panel-in --motion-panel-out
+// Declared but intentionally not consumed by var(): contract pins and complete scales.
+const KEEP = new Set(`--motion-hover --motion-panel-in --motion-panel-out
 --ease-in-out-ui --ref-air --ref-blue-30 --ref-coral-75 --sys-color-tertiary --sys-color-focus`.split(/\s+/));
 const isScaleStep = name => /^--(type-|s\d+$|font-sans$|font-mono$|icon$)/.test(name);
 
