@@ -228,7 +228,7 @@ test("adding a validated root route generates its build output and sitemap entry
   const sourceRoot = new URL("../", import.meta.url);
   for (const folder of ["data", "scripts", "js", "styles", "work", "essays"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
   for (const entry of await readdir(sourceRoot)) {
-    if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
+    if (/\.html$/.test(entry) || ["robots.txt", "llms.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
   }
   for (const folder of ["assets", "node_modules"]) await symlink(new URL(folder, sourceRoot).pathname, join(directory, folder), "dir");
   const navigationModule = await import("../data/navigation.js");
@@ -250,7 +250,7 @@ test("accepted local writing URL variants build their pathname and retain author
   const sourceRoot = new URL("../", import.meta.url);
   for (const folder of ["data", "scripts", "js", "styles", "work", "essays"]) await cp(new URL(folder, sourceRoot), join(directory, folder), { recursive: true });
   for (const entry of await readdir(sourceRoot)) {
-    if (/\.html$/.test(entry) || ["robots.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
+    if (/\.html$/.test(entry) || ["robots.txt", "llms.txt", "package.json"].includes(entry)) await cp(new URL(entry, sourceRoot), join(directory, entry));
   }
   for (const folder of ["assets", "node_modules"]) await symlink(new URL(folder, sourceRoot).pathname, join(directory, folder), "dir");
   const pathname = "essays/when-the-swoosh-lost-its-soul.html";
