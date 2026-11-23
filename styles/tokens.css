@@ -1277,3 +1277,21 @@ body[data-page="home"] .project-folder__outcome {
   letter-spacing: var(--type-tracking-normal);
   text-wrap: pretty;
 }
+
+/* Project-index typography lives in the single type layer, not in page CSS. */
+.project-folder__title {
+  font: var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-tight) var(--font-sans);
+  letter-spacing: var(--type-tracking-heading);
+  text-wrap: balance;
+}
+.project-folder__category,
+.project-folder__open {
+  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  letter-spacing: var(--type-tracking-label);
+  text-transform: uppercase;
+}
+.project-folder__outcome {
+  font: var(--type-weight-regular) var(--type-input)/var(--type-leading-reading) var(--font-sans);
+  letter-spacing: normal;
+  text-transform: none;
+}

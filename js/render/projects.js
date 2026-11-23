@@ -21,23 +21,29 @@ function renderFolderCard(project, index, base, showPreview = false) {
   const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
   const href = base + safeURL(project.href || "work/" + slug + ".html");
   const number = String(index + 1).padStart(2, "0");
-  const papers = Array.from({ length: 5 }, (_, paperIndex) =>
-    '<span class="project-folder__paper project-folder__paper--' + (paperIndex + 1) +
-    '" aria-hidden="true"></span>').join("");
-  const preview = showPreview
-    ? '<span class="project-folder__preview" id="folder-preview-' + slug + '">' +
-      '<span class="project-folder__category">' + esc(project.category) + '</span>' +
-      '<span class="project-folder__outcome">' + esc(project.tagline) + '</span></span>'
+  const imageStem = safeToken(project.indexImage || project.cover);
+  const image = imageStem
+    ? '<span class="project-folder__visual"><img src="' + base +
+      'assets/images/optimized/' + imageStem + '-540.webp" alt="" width="540" height="360" loading="lazy" decoding="async"></span>'
     : "";
+  const scope = esc((project.tags || []).slice(0, 2).join(" · ") || project.category);
+  const papers = Array.from({ length: 5 }, (_, i) =>
+    '<span class="project-folder__paper project-folder__paper--' + (i + 1) +
+    '" aria-hidden="true"></span>').join("");
   return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
     '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
+    '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title +
+    ' case study" aria-describedby="folder-proof-' + slug + '">' +
     '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +
     '<span class="project-folder__tab-number">' + number + '</span></span></span>' + papers +
-    '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study"' +
-    (showPreview ? ' aria-describedby="folder-preview-' + slug + '"' : '') + '>' +
     '<span class="project-folder__front"><span class="project-folder__copy">' +
+    '<span class="project-folder__category">' + scope + '</span>' +
     '<strong class="project-folder__title">' + title + '</strong>' +
-    preview + '</span></span></a></li>';
+    '<span class="project-folder__outcome" id="folder-proof-' + slug + '">' +
+      esc(project.tagline) + '</span>' +
+    '</span>' + image +
+    '<span class="project-folder__open">Open case study <span aria-hidden="true">↗</span></span>' +
+    '</span></a></li>';
 }
 
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
@@ -71,9 +77,8 @@ export function renderProjectFolderStackMarkup(projects = SITE.projects, studies
     .filter(project => project.status === "published" &&
       studies?.[project.slug]?.status === "published" &&
       project.cover && !(project.href || "").startsWith("essays/"))
-    .sort((a, b) => Number(b.year) - Number(a.year) ||
-      (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) - (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) ||
-      a.title.localeCompare(b.title));
+    .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
+      (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title));
 
   const folders = published.map((project, index) =>
     renderFolderCard(project, index, base)).join("");

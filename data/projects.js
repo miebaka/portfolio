@@ -7,7 +7,7 @@ export const projects = [
     "featuredOrder": 2,
     "title": "Rivo Studio",
     "category": "Software studio",
-    "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
+    "tagline": "How a softened wordmark and clear colour rules made a technical brand feel accessible.",
     "tags": [
       "Brand identity",
       "Brand strategy",
@@ -26,7 +26,7 @@ export const projects = [
     "featuredOrder": 1,
     "title": "TEDx Rivers State University",
     "category": "Event",
-    "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
+    "tagline": "How “Pause…” gave a local event its own voice inside the global TEDx system.",
     "tags": [
       "Brand identity",
       "Creative direction",
@@ -35,6 +35,7 @@ export const projects = [
     "year": "2023",
     "tone": "#6e2962",
     "cover": "tedx-rsu-campus-banner",
+    "indexImage": "tedx-rsu-event",
     "span": 5,
     "ratio": "4 / 3",
     "featured": true,
@@ -45,7 +46,7 @@ export const projects = [
     "featuredOrder": 3,
     "title": "ChopBox",
     "category": "Food brand",
-    "tagline": "A food identity designed to feel warm, generous and ready to order.",
+    "tagline": "How an appetite test shaped the identity and proposed food packaging.",
     "tags": [
       "Brand identity",
       "Brand strategy",
@@ -54,6 +55,7 @@ export const projects = [
     "year": "2022",
     "tone": "#c2531c",
     "cover": "chopbox-platter",
+    "indexImage": "chopbox-packaging",
     "span": 7,
     "ratio": "16 / 10",
     "featured": true,
