@@ -17,7 +17,7 @@ test("published files lead with TEDx and offer evidence without hover", async ({
     const folder = page.locator(".project-folder").nth(index);
     await expect(folder).toHaveAttribute("data-slug", item.slug);
     await expect(folder.locator(".project-folder__link")).toHaveAttribute("href", item.href);
-    await expect(folder.locator(".project-folder__link")).toHaveAttribute("aria-label", "View " + item.title + " case study");
+    await expect(folder.locator(".project-folder__link")).toHaveAttribute("aria-label", new RegExp("^View " + item.title + " .+ case study$"));
     await expect(folder.locator(".project-folder__outcome")).not.toBeEmpty();
     await expect(folder.locator(".project-folder__visual")).toBeVisible();
     await expect(folder.locator(".project-folder__paper")).toHaveCount(5);
