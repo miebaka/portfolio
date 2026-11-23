@@ -180,7 +180,6 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
   }
 
   body[data-page="home"] section.home-capabilities--reference .disciplines-heading {
-    padding-inline: var(--page);
     margin-bottom: clamp(calc(var(--spacing-unit) * 10), 4vw, var(--s4));
   }
 

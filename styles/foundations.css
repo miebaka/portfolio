@@ -80,7 +80,7 @@
   --comp-footer-ink:var(--ref-midnight);--comp-footer-signature:var(--ref-ultramarine);
   --comp-footer-signature-active:var(--ref-coral-30);
   --grid-max:86em;
-  --grid-outer:1em;
+  --grid-outer:clamp(1em,4vw,4em);
   --grid-gutter:.875em;
   --baseline:1.5em;
   --grid-row:calc(var(--baseline)/3);}
@@ -155,7 +155,6 @@ html[data-motion="reduced"]{scroll-behavior:auto}
 @media (min-width:56em) {
   :root {
     --section-padding: clamp(4em, 8vw, 8em);
-    --grid-outer: clamp(1em, 4vw, 4em);
     --grid-gutter: clamp(.875em, 1.5vw, 1.5em);
   }
   .section--tight { padding-block: clamp(var(--s11), 8.4vw, calc(var(--spacing-unit) * 64)); }

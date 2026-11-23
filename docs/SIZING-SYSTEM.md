@@ -12,7 +12,7 @@ The basic unit is `--spacing-unit: .125em` (2px at a 16px element font size). Na
 
 ## 3. Container/grid — `styles/foundations.css` + `styles/layout.css`
 
-There is one content maximum: `--grid-max: 86em` (aliased as `--content`), and one outer gutter `--grid-outer` (aliased as `--page`). Layout uses the exact same content/gutter pair for the body, header and footer. The standard container expression is `min(calc(100% - 2 * var(--page)), var(--content))`. The generic grid is four tracks below `56em` and twelve from `56em`. Editorial compositions use four tracks below `56em`, eight from `56em`, and twelve from `72em`. The only global grid gutter is `--grid-gutter` (aliased as `--grid-gap`). Retired `--tailor-container` and `--tailor-gutter` are prohibited.
+There is one content maximum: `--grid-max: 86em` (aliased as `--content`), and one outer gutter `--grid-outer` (aliased as `--page`). Interior mastheads, standard content and footer panels use the same content and margin tokens. The Home masthead follows the framed hero. The outer margin grows fluidly from 1em to 4em, independently of the column gap. The standard container expression is `min(calc(100% - 2 * var(--page)), var(--content))`. The generic grid is four tracks below `56em` and twelve from `56em`. Editorial compositions use four tracks below `56em`, eight from `56em`, and twelve from `72em`. The only global grid gutter is `--grid-gutter` (aliased as `--grid-gap`). Retired `--tailor-container` and `--tailor-gutter` are prohibited.
 
 ## 4. Responsive sizing — `scripts/stylelint-sizing.mjs`
 

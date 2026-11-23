@@ -26,7 +26,7 @@ test("the core grid and spacing start mobile-first", async () => {
   assert.match(layout, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(layout, /@media\s*\(min-width:\s*56em\)/);
   assert.match(layout, /grid-template-columns:\s*repeat\(12,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(foundations, /--grid-outer:1em/);
+  assert.match(foundations, /--grid-outer:\s*clamp\(1em,\s*4vw,\s*4em\)/);
   assert.match(typography, /--type-heading-lg:\s*clamp\(2em,\s*1\.55em \+ 1\.7vw,\s*3em\)/);
 });
 

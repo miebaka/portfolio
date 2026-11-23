@@ -155,7 +155,8 @@ body[data-page="home"] .work-view-controls a{
 body[data-page="home"] .home-capabilities--reference {
   padding-inline:0;max-width:none;width:100%;}
 body[data-page="home"] .home-capabilities--reference .disciplines-heading{
-  padding-inline:var(--page);}
+  width:min(calc(100% - 2 * var(--page)),var(--content));
+  margin-inline:auto;}
 body[data-page="home"] .home-capabilities--reference .process-sequence{
   width:100%;max-width:none;overflow:visible;}
 body[data-page="home"] .service-stack__item{

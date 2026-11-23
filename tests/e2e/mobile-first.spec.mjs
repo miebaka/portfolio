@@ -101,3 +101,30 @@ test("the five approved breakpoint boundaries control responsive grids without o
       .toBe(width >= 1152 ? 12 : width >= 896 ? 8 : 4);
   }
 });
+
+test("shared content edges align while Home keeps its hero frame", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [320, 895, 896, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/work.html");
+    await expect(page.getByRole("group", { name: "Theme", exact: true })).toBeVisible();
+    const edges = selector => page.locator(selector).evaluate(element => {
+      const { left, right } = element.getBoundingClientRect();
+      return [Math.round(left), Math.round(right)];
+    });
+    const grid = await edges(".project-archive");
+    expect(await edges(".site-nav__inner")).toEqual(grid);
+    expect(await edges(".site-footer__panel")).toEqual(grid);
+
+    if (width === 320) {
+      await page.goto("/essays/when-the-swoosh-lost-its-soul.html");
+      await expect(page.locator(".article-reading")).toBeVisible();
+      expect(await edges(".article-body")).toEqual(await edges(".article-hero"));
+    }
+
+    await page.goto("/index.html");
+    await expect(page.getByRole("group", { name: "Theme", exact: true })).toBeVisible();
+    expect(await edges(".site-nav__inner")).toEqual(await edges(".home-landing"));
+    expect(await edges(".disciplines-heading")).toEqual(await edges(".site-footer__panel"));
+  }
+});

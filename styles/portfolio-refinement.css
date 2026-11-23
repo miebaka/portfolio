@@ -492,15 +492,11 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__evid
 }
 
 
-/* Align the masthead to the actual outer boundaries of the Three.js water
-   rectangle (home .home-landing uses margin: var(--hf)). */
-body[data-page]:not(.site-system-disabled) .site-nav__inner {
-  width: calc(100% - 2 * var(--water-edge, clamp(.75em,1.25vw,1.35em)));
+/* The Home masthead follows the framed hero. Interior pages use the content grid. */
+body[data-page="home"]:not(.site-system-disabled) .site-nav__inner {
+  width: calc(100% - 2 * var(--hf));
   max-width: none;
-  margin-inline: var(--water-edge, clamp(calc(var(--spacing-unit) * 6),1.25vw,calc(var(--spacing-unit) * 11)));
-  padding-inline: 0;
 }
-body[data-page="home"] { --water-edge: var(--hf); }
 body[data-page]:not(.site-system-disabled) .site-nav__brand {
   flex: none;
   min-inline-size: var(--control-target);
