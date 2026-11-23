@@ -129,22 +129,10 @@ test("Work and Home share folder cover geometry and preview styling", async ({ p
   }
 });
 
-test("folder stock paints in Three.js and leaves native links usable without WebGL", async ({ page }) => {
+test("folder paper remains styled and native links work without GPU rendering", async ({ page }) => {
   await page.goto("/work.html");
-  const stock = page.locator(".project-folder__stock");
-  await expect(stock).toHaveCount(3);
-  expect(await stock.first().evaluate(canvas =>
-    canvas.getContext("2d").getImageData(480, 192, 16, 16).data.some((channel, index) => index % 4 === 3 && channel > 0)
-  )).toBe(true);
-
-  await page.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function (type, ...args) {
-      return type === "webgl2" ? null : original.call(this, type, ...args);
-    };
-  });
-  await page.reload();
-  await expect(stock).toHaveCount(0);
+  await expect(page.locator(".project-folder__stock")).toHaveCount(0);
+  await expect(page.locator(".project-folder__front")).toHaveCount(3);
   await page.locator(".project-folder--rivo .project-folder__tab").click();
   await expect(page).toHaveURL(/work\/rivo\.html$/);
 });
