@@ -1106,7 +1106,8 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__desc
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
   font: var(--type-weight-semibold) var(--type-heading-md)/var(--type-leading-tight) var(--font-sans);
-  letter-spacing: var(--type-tracking-tight);}
+  letter-spacing: var(--type-tracking-tight);
+  text-wrap: balance;}
 
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > h2,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > h2,

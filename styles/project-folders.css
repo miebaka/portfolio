@@ -120,6 +120,8 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   pointer-events: none;
 }
 
+.project-folder--chopbox { --folder-cover-tone: 84%; }
+
 .project-folder--chopbox .project-folder__tab {
   color: var(--ref-white);
 }
@@ -208,7 +210,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   background:
     linear-gradient(to bottom, color-mix(in oklab,var(--ref-white) 27%,transparent) 0, color-mix(in oklab,var(--ref-white) 4.5%,transparent) 2px, transparent .5625em),
     linear-gradient(90deg, color-mix(in oklab,var(--ref-white) 9%,transparent), transparent 17%, transparent 79%, color-mix(in oklab,var(--ref-black) 7%,transparent)),
-    color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 94%, white);
+    color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) var(--folder-cover-tone,94%), var(--ref-white));
   color: var(--folder-on, var(--ref-white));
   box-shadow:
     inset 0 1px color-mix(in oklab,var(--ref-white) 29%,transparent),

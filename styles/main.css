@@ -1,3 +1,5 @@
+/* Hallmark · checked: 2026-11-23 · genre: editorial
+ * built: the project · redesign: polish · v2.0.0 */
 @layer reset, base, layout, components, utilities, pages, typography;
 
 @import url("foundations.css") layer(base);

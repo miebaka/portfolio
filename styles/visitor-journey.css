@@ -210,6 +210,11 @@ body.case-page .case-gallery-flow > .case-shot--hero {
   border-radius: 0;
 }
 
+body.case-page .case-gallery-flow > .case-shot--hero .case-shot__caption {
+  width: min(calc(100% - 2 * var(--page)),var(--content));
+  margin-inline: auto;
+}
+
 body.case-page .case-next {
   justify-items: end;
   border-block-start: 1px solid var(--line);
@@ -253,7 +258,7 @@ body[data-page="explorations"] section.experiments-spatial {
   gap: var(--s2);
   height: auto;
   min-height: 0;
-  padding: var(--s2) var(--page) var(--s3);
+  padding: var(--s2) max(var(--page),calc((100% - var(--content)) / 2)) var(--s3);
   overflow: hidden;
 }
 body[data-page="explorations"] .experiments-nav {

@@ -209,7 +209,7 @@ body:not([data-page="explorations"]){padding-bottom:calc(var(--s7) + var(--safe-
 .copy-email:is(:hover,:focus-visible){border-color:var(--ink);background:var(--surface);color:var(--ink)}
 .copy-email:active{transform:scale(.97)}
 .copy-email[data-state="copied"]{border-color:var(--ink);color:var(--ink)}
-.copy-email[data-state="copied"] .copy-email__copy{opacity:0;transform:scale(.8)}
+html.has-js .copy-email[data-state="copied"] .copy-email__copy{opacity:0;transform:scale(.8)}
 .copy-email[data-state="copied"] .copy-email__check{stroke-dashoffset:0}
 .copy-email[data-state="error"]{border-color:var(--border-strong);color:var(--ink)}
 @media(max-width:39.999em){.copy-email{display:flex;width:max-content;margin:calc(var(--spacing-unit) * 5) 0 0}}

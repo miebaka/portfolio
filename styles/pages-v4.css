@@ -772,6 +772,7 @@ body[data-page="contact"] .field :is(input,textarea,select):focus-visible{
 .experiments-static>p {max-width:56ch;margin-top:var(--s3);}
 .experiments-static__grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(var(--s3),4vw,var(--s8));padding:clamp(var(--s4),5vw,var(--s10)) 0 0;list-style:none}
 .experiments-static__grid li {min-width:0}
+.experiments-static__grid li:last-child:nth-child(odd) {grid-column:1 / -1}
 .experiments-static__grid a {display:block;min-height:2.75em;color:inherit;}
 .experiments-static__grid img {display:block;width:100%;height:auto;max-height:42em;object-fit:contain;background:var(--ref-neutral-94)}
 .experiments-static__meta {display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:var(--s2);padding:calc(var(--spacing-unit) * 10) calc(var(--spacing-unit) * 5) var(--s3);border-bottom:1px solid var(--border-strong);}
