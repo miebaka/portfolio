@@ -45,7 +45,7 @@ export const caseStudies = {
     "status": "draft"
   },
   "rivo": {
-    "scopeNote": "The in-house work covered Rivo Studio’s softened wordmark, colour system and identity guidelines. Supporting mockups demonstrate proposed uses; they do not independently establish public rollout.",
+    "scopeNote": "The identity work covered Rivo Studio’s softened wordmark, colour system and practical guidelines. Supporting mockups demonstrate proposed uses; they do not independently establish public rollout.",
     "title": "Rivo Studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
     "hero": "rivo-in-use",
