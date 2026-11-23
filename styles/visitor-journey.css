@@ -512,6 +512,7 @@ body[data-page="home"] .home-landing__meta a {
 body[data-page="home"] .hero-wave__control:focus-visible {
   outline-color: var(--ref-white);
 }
+
 /* Don't hide the motion and theme controls from people using mobile zoom. */
 body[data-page] .site-index .site-index__preferences {
   display: grid;
