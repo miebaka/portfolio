@@ -171,7 +171,7 @@ export const caseStudies = {
         "w": 2800,
         "h": 2240,
         "alt": "Business-card application visualisation with blue and yellow faces arranged on dark cloth.",
-        "caption": "The stationery application carries the identity at a small, information-heavy scale.",
+        "caption": "Stationery visualisation: the open wordmark, Clar blue and signal yellow tested at a small, information-heavy scale.",
         "loading": "lazy"
       },
       {
@@ -180,7 +180,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Brand-guidelines book visualisation with the Rivo cover facing up.",
-        "caption": "The guidelines package the system as a reference another person can use.",
+        "caption": "Guidelines cover: a handoff document, not a legible excerpt of its internal rules.",
         "loading": "lazy"
       },
       {
@@ -198,7 +198,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Tote-bag application visualisation reading Software that simply works for all in yellow.",
-        "caption": "The tote carries the proposition as a single portable message.",
+        "caption": "Tote visualisation: a proposed portable use of the brand proposition.",
         "loading": "lazy"
       },
       {
@@ -207,7 +207,7 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Stage-screen application visualisation reading From village squares to virtual spaces.",
-        "caption": "The stage screen extends the system to an environmental scale.",
+        "caption": "Stage-screen visualisation: a proposed environmental use of the identity.",
         "loading": "lazy"
       },
       {
@@ -216,13 +216,13 @@ export const caseStudies = {
         "w": 1240,
         "h": 995,
         "alt": "Flag application visualisation reading Software that simply works for all against open sky.",
-        "caption": "The flag pairs the short proposition and wordmark in a moving outdoor format.",
+        "caption": "Flag visualisation: a proposed outdoor use of the proposition and wordmark.",
         "loading": "lazy"
       }
     ],
     "next": {
-      "slug": "tedx-rsu",
-      "title": "TEDx Rivers State University"
+      "slug": "chopbox",
+      "title": "ChopBox"
     },
     "status": "published"
   },
@@ -404,8 +404,8 @@ export const caseStudies = {
       }
     ],
     "next": {
-      "slug": "chopbox",
-      "title": "ChopBox"
+      "slug": "rivo",
+      "title": "Rivo Studio"
     },
     "status": "published"
   },
@@ -554,7 +554,7 @@ export const caseStudies = {
         "w": 3500,
         "h": 3000,
         "alt": "A red lid for The Chop Dip pepper sauce, shown against black.",
-        "caption": "The packaging application brings the identity to The Chop Dip pepper sauce.",
+        "caption": "Proposed packaging: the appetite-led identity applied to The Chop Dip pepper sauce lid; production is unverified.",
         "loading": "lazy"
       },
       {
@@ -563,7 +563,7 @@ export const caseStudies = {
         "w": 3840,
         "h": 3840,
         "alt": "A red ChopBox apron printed with the line Hello, I am the chef.",
-        "caption": "The apron carries the brand's direct verbal voice into uniform design.",
+        "caption": "Proposed uniform visualisation: the direct brand voice applied to an apron.",
         "loading": "lazy"
       },
       {
@@ -572,7 +572,7 @@ export const caseStudies = {
         "w": 2248,
         "h": 3200,
         "alt": "A campaign poster reading Abobi, chop life, make life no chop you, surrounded by flying small chops.",
-        "caption": "The campaign application pairs the brand voice with small-chop imagery.",
+        "caption": "Proposed campaign artwork: brand voice paired with small-chop imagery; launch is unverified.",
         "loading": "lazy"
       },
       {
@@ -581,13 +581,13 @@ export const caseStudies = {
         "w": 2800,
         "h": 4000,
         "alt": "A ChopBox advert wrapped around a water tower against a blue sky.",
-        "caption": "The outdoor application carries the palette, logo and message at environmental scale.",
+        "caption": "Proposed out-of-home visualisation: palette, logo and message at environmental scale.",
         "loading": "lazy"
       }
     ],
     "next": {
-      "slug": "rivo",
-      "title": "Rivo"
+      "slug": "tedx-rsu",
+      "title": "TEDx Rivers State University"
     },
     "status": "published"
   }

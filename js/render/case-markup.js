@@ -1,4 +1,3 @@
-import { CASE_STORY_STRUCTURE } from "../../data/case-story-structure.js";
 import { viewportQueries } from "../core/responsive.js";
 
 const WIDTHS = [540, 810, 1080, 1440, 1920];
@@ -53,12 +52,12 @@ function factsBlock(study, project) {
   return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
-function chapter(id, label, descriptor, heading, body, media, featured, base, nextPlate) {
+function chapter(id, label, heading, body, media, featured, base, nextPlate) {
   const visual = media?.length
     ? `<div class="case-chapter__media${featured ? " case-chapter__media--feature" : ""}">${sequence(media, base, nextPlate)}</div>`
     : "";
   const title = heading || label;
-  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><h2 id="${token(id)}-title">${esc(label)}</h2><p class="case-chapter__descriptor">${esc(descriptor)}</p></div><h3 class="case-chapter__heading">${esc(title)}</h3><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
+  return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><p class="case-chapter__eyebrow">${esc(label)}</p></div><h2 id="${token(id)}-title" class="case-chapter__heading">${esc(title)}</h2><div class="case-chapter__body">${paras(body)}</div></div>${visual}</section>`;
 }
 
 function nextBlock(site, study, base) {
@@ -87,10 +86,58 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const heroMarkup = shot(hero, "hero", base, nextPlate());
   const chapters = study.chapters
     .map((item) => chapter(
-      item.id, item.label, CASE_STORY_STRUCTURE.find((spec) => spec.id === item.id)?.descriptor || "", item.title, item.body,
+      item.id, item.label, item.title, item.body,
       (item.media || []).map((src) => lookup.get(src)).filter(Boolean),
       false, base, nextPlate,
     ))
     .join("");
-  return `<header class="case-opening container" id="case-top"><p class="case-back"><a href="${base}work.html">Back to Work</a></p><h1>${esc(project?.title || study.title)}</h1><p class="case-opening__statement">${esc(study.tagline || project?.tagline || "")}</p></header>${heroMarkup}<div class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</div>${chapters}${nextBlock(site, study, base)}<nav class="case-end-actions container" aria-label="Case study navigation"><a href="#case-top">Back to top ↑</a><a href="${base}work.html">All work ↗</a></nav>`;
+  /* Use published artifacts only. The Rivo guidelines image is a cover,
+     not a readable page excerpt; applications remain labelled visualisations. */
+  const lead = {
+    "tedx-rsu": {
+      heading: "A local invitation inside a global identity",
+      rationale: "TEDx red and its wordmark were fixed. “Pause…” supplied the local idea. The event-day photograph documents the gathering, not audience impact.",
+      status: "Theme artwork and a documented event-day photograph.",
+      images: ["tedx-rsu-logomark", "tedx-rsu-event"]
+    },
+    rivo: {
+      heading: "One rule, from the kit to the application",
+      rationale: "Keep the wordmark open, let Clar blue carry the field, and reserve yellow for the signal. The guidelines cover shows the handoff document; the stationery visualisation shows a proposed application of the rule.",
+      status: "Guidelines cover and stationery visualisation; public production is not established.",
+      images: ["rivo-guidelines", "rivo-stationery"]
+    },
+    chopbox: {
+      heading: "If it doesn't build appetite, it doesn't belong",
+      rationale: "The appetite test favoured a warm, rounded identity over harder delivery-app shorthand. The proposed sauce packaging carries that decision from the logo to a physical format.",
+      status: "Brand presentation and proposed packaging; manufacture and sales are unverified.",
+      images: ["chopbox-logo-lockups", "chopbox-packaging"]
+    }
+  }[slug];
+  const role = study.facts?.role || project?.category || "";
+  const constraint = study.facts?.constraint || "";
+  const opening = `<header class="case-opening container" id="case-top">
+    <p class="case-back"><a href="${base}work.html">← All work</a></p>
+    <p class="case-opening__eyebrow">Selected case study / ${esc(project?.category || "Identity")}</p>
+    <h1>${esc(project?.title || study.title)}</h1>
+    <p class="case-opening__statement">${esc(study.tagline || project?.tagline || "")}</p>
+    <dl class="case-opening__essentials">
+      <div><dt>My role</dt><dd>${esc(role)}</dd></div>
+      <div><dt>The constraint</dt><dd>${esc(constraint)}</dd></div>
+    </dl>
+    <div class="case-opening__actions"><span>Lead artifact ↓</span><a href="${base}contact.html">Discuss a project ↗</a></div>
+  </header>`;
+  const featured = lead
+    ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">
+      <div class="case-lead-proof__copy container"><p class="case-lead-proof__eyebrow">The decision</p>
+        <h2 id="case-lead-title">${esc(lead.heading)}</h2><p>${esc(lead.rationale)}</p></div>
+      <div class="case-lead-proof__images">${lead.images.map(src => lookup.get(src)).filter(Boolean)
+        .map(media => shot(media, "pair", base, nextPlate())).join("")}</div>
+      <p class="case-lead-proof__status container">${esc(lead.status)}</p>
+    </section>`
+    : "";
+  return opening + heroMarkup + featured +
+    `<div class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</div>` +
+    chapters + nextBlock(site, study, base) +
+    `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry ↗</a><a href="mailto:miebakakiki@gmail.com">Email directly ↗</a><a href="${base}work.html">All work ↗</a><a href="#case-top">Back to top ↑</a></nav>`;
+
 }

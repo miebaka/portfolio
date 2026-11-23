@@ -190,3 +190,295 @@ html[data-motion="reduced"] body:is([data-page="home"], [data-page="work"]) .pro
   transition: none;
   transform: none;
 }
+
+/* Case studies: tell the visitor whose work this is before the cover image.
+   The photograph is evidence; the introductory text is not delayed a viewport. */
+body.case-page .case > .case-opening { order: 0; }
+body.case-page .case > .case-shot--hero { order: 1; }
+body.case-page .case > .case-lead-proof { order: 2; }
+body.case-page .case > .case-facts-wrap { order: 3; }
+body.case-page .case > .case-chapter { order: 4; }
+body.case-page .case > .case-next { order: 5; }
+body.case-page .case > .case-end-actions { order: 6; }
+
+body.case-page .case > .case-opening {
+  padding-block: var(--s3) var(--s3);
+  display: grid;
+  gap: var(--s2);
+  min-height: 0;
+  animation: none;
+}
+body.case-page .case .case-back { margin: 0; }
+body.case-page .case-opening__eyebrow,
+body.case-page .case-opening__actions,
+body.case-page .case-lead-proof__eyebrow,
+body.case-page .case-lead-proof__status,
+body.case-page .case-chapter__eyebrow {
+  color: var(--muted);
+  text-transform: uppercase;
+}
+body.case-page .case-opening__statement {
+  max-width: 55ch;
+  margin: 0;
+}
+body.case-page .case-opening__essentials {
+  display: grid;
+  gap: var(--s2);
+  border-top: .0625em solid var(--line);
+  padding-top: var(--s2);
+}
+body.case-page .case-opening__essentials > div {
+  display: grid;
+  grid-template-columns: 6.5em minmax(0,1fr);
+  gap: var(--s2);
+}
+body.case-page .case-opening__essentials dt { color: var(--muted); }
+body.case-page .case-opening__essentials dd {
+  margin: 0;
+  max-width: 60ch;
+}
+body.case-page .case-opening__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  border-top: .0625em solid var(--line);
+  padding-top: var(--s1);
+}
+body.case-page .case-opening__actions a,
+body.case-page .case-end-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75em;
+  color: var(--ink);
+  text-underline-offset: .25em;
+}
+body.case-page .case > .case-shot--hero {
+  width: calc(100% - 2 * var(--page));
+  height: clamp(16em, 42svh, 34em);
+  min-height: 0;
+  max-height: none;
+  margin-inline: auto;
+  border-radius: .2em;
+  animation: none;
+}
+body.case-page .case > .case-shot--hero img,
+body.case-page .case > .case-shot--hero picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+body.case-page .case-lead-proof {
+  display: grid;
+  gap: var(--s3);
+  padding-block: var(--s6);
+}
+body.case-page .case-lead-proof__copy {
+  display: grid;
+  gap: var(--s2);
+}
+body.case-page .case-lead-proof__copy h2,
+body.case-page .case-lead-proof__copy > p:last-child {
+  max-width: 60ch;
+}
+body.case-page .case-lead-proof__images {
+  width: calc(100% - 2 * var(--page));
+  max-width: var(--content);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s2);
+  align-items: start;
+}
+body.case-page .case-lead-proof__images .case-shot {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+body.case-page .case-lead-proof__images .case-shot img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+body.case-page .case-lead-proof__status {
+  margin-top: 0;
+}
+body.case-page .case-facts-wrap {
+  border-top: .0625em solid var(--line);
+  padding-block: var(--s3);
+}
+body.case-page .case-chapter__intro {
+  display: block;
+}
+body.case-page .case-chapter__eyebrow { margin: 0; }
+body.case-page .case-chapter__heading {
+  margin: 0;
+  max-width: 22ch;
+}
+body.case-page .case-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s4);
+  border-top: .0625em solid var(--line);
+  padding-block: var(--s4);
+}
+@media (min-width:40em) {
+  body.case-page .case-opening__essentials {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+  body.case-page .case-opening__essentials > div {
+    grid-template-columns: 1fr;
+  }
+  body.case-page .case-lead-proof__images {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+@media (min-width:72em) {
+  body.case-page .case > .case-opening { padding-block: var(--s4); }
+  body.case-page .case > .case-shot--hero {
+    height: clamp(20em, 52svh, 40em);
+  }
+}
+
+/* Experiments is a gallery first, but the metadata and controls live OUTSIDE
+   the poster transform area. The archive can be navigated by touch or keys. */
+body[data-page="explorations"] section.experiments-spatial {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(24em, 1fr) auto auto;
+  gap: var(--s2);
+  height: auto;
+  min-height: 0;
+  padding: var(--s2) var(--page) var(--s3);
+  overflow: hidden;
+}
+body[data-page="explorations"] .experiments-nav {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  z-index: 30;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s1);
+  transform: none;
+}
+body[data-page="explorations"] .experiments-spatial__heading {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  width: 100%;
+  max-width: 40em;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  pointer-events: auto;
+}
+body[data-page="explorations"] .experiments-spatial__heading dl>div {
+  grid-template-columns: 5.5em minmax(0, 1fr);
+}
+body[data-page="explorations"] .experiments-spatial__viewport {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: clamp(24em, 58svh, 43em);
+  grid-column: 1 / -1;
+  grid-row: 3;
+  overflow: hidden;
+}
+body[data-page="explorations"] .experiment-poster {
+  left: 50%;
+  top: 49%;
+  width: min(69vw, 19em, 38svh);
+}
+body[data-page="explorations"] .experiments-spatial__counter {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  grid-column: 1;
+  grid-row: 4;
+  display: block;
+  align-self: center;
+}
+body[data-page="explorations"] .experiments-controls {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  grid-column: 2;
+  grid-row: 4;
+  align-self: center;
+}
+body[data-page="explorations"] .experiments-spatial__caption {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  grid-column: 1 / -1;
+  grid-row: 5;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s2);
+  pointer-events: none;
+}
+body[data-page="explorations"] .experiments-spatial__caption p { max-width: 100%; }
+body[data-page="explorations"] .experiments-spatial__hint { display: none; }
+body[data-page="explorations"] .experiments-index {
+  position: absolute;
+  inset: 0;
+}
+@media (min-width:56em) {
+  body[data-page="explorations"] section.experiments-spatial {
+    grid-template-rows: auto auto minmax(30em, 1fr) auto auto;
+    padding-block: var(--s3);
+  }
+  body[data-page="explorations"] .experiments-spatial__heading {
+    width: min(100%, 46em);
+  }
+  body[data-page="explorations"] .experiment-poster {
+    width: min(35vw, 25em, 45svh);
+  }
+}
+
+/* Contact: no near-empty first screen. Make boundaries and focus states
+   discoverable in both themes; keep a direct email path. */
+body[data-page="contact"]:not(.site-system-disabled, .design-audit-disabled) .hero {
+  min-height: 0;
+  padding-block: var(--s4) var(--s2);
+}
+body[data-page="contact"] .contact-page {
+  padding-block-start: var(--s2);
+  gap: var(--s4);
+}
+body[data-page="contact"] .contact__form .field :is(input,select,textarea) {
+  border: .0625em solid var(--ink);
+  border-radius: .25em;
+  background: var(--paper);
+  color: var(--ink);
+}
+body[data-page="contact"] .contact__form .field :is(input,select,textarea)::placeholder {
+  color: var(--ink);
+  opacity: .86;
+}
+body[data-page="contact"] .contact__form .field :is(input,select,textarea):focus-visible {
+  outline: .1875em solid var(--focus);
+  outline-offset: .1875em;
+  box-shadow: none;
+}
+body[data-page="contact"] .contact__form .field :is(input,select,textarea)[aria-invalid="true"] {
+  border-color: var(--error, var(--ink));
+}
+body[data-page="contact"] .contact-info a,
+body[data-page="contact"] .contact__handoff a {
+  text-decoration-thickness: .1em;
+  text-underline-offset: .2em;
+}

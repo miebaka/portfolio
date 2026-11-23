@@ -191,6 +191,15 @@ export async function initExperimentsSpatial() {
   });
   previousButton?.addEventListener("click", () => go(-1));
   nextButton?.addEventListener("click", () => go(1));
+  // The advertised arrow-key path also works while either control has focus.
+  for (const button of [previousButton, nextButton]) {
+    button?.addEventListener("keydown", event => {
+      const delta = { ArrowLeft: -1, ArrowRight: 1 }[event.key];
+      if (!delta) return;
+      event.preventDefault();
+      go(delta);
+    });
+  }
   if (indexPanel && indexButton) {
     const list = indexPanel.querySelector("ol");
     list.innerHTML = entries.map((entry, index) => `<li><button type="button" data-experiment-jump="${index}"><span>${String(index + 1).padStart(2, "0")}</span><b>${esc(entry.title)}</b><i>${esc(entry.category || "Experiment")}</i></button></li>`).join("");
