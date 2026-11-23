@@ -15,7 +15,7 @@ The source's exact computed font family, CSS sizes, tracking, line heights and b
 
 There is **one source of truth for all typography-related CSS**: `styles/tokens.css`, imported once, last, in the `typography` cascade layer. It owns font faces, family, size, weight, line-height, tracking, transformation, wrapping, text decoration and responsive typographic selectors. Other CSS files own only layout, appearance and interaction.
 
-The approved family roles are Geist Sans for headings and body (400/600) and Geist Mono for labels and navigation (400/600). Material Symbols Outlined is an icon font only. Preserve fallbacks and font swap behavior.
+The approved family roles are Geist Sans for headings, body, labels and navigation (400/600). Material Symbols Outlined is an icon font only. Preserve fallbacks and font swap behavior.
 
 No separate editorial `display` or `hero` text tier is permitted. Every page title, the homepage name, case-study opening and major call to action draw from a **3em upper bound (nominally 48px at a 16px parent size)** headline scale. Rather than using huge text to produce impact, rely on hierarchy, whitespace, composition and visual work.
 

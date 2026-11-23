@@ -104,7 +104,7 @@ Avoid new duplicate content definitions, theme overrides, inline color literals,
 
 ### 4.1 Tokens, CSS and typography
 
-Preserve the existing **Geist Sans headings and body / Geist Mono label** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
+Preserve the existing **Geist Sans headings, body and labels** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
 
 Raw color definitions and semantic colour role assignments belong in `styles/foundations.css`. All font loading and typography declarations belong only in `styles/tokens.css`, imported last in the `typography` cascade layer. Page and component stylesheets must not set typography properties. Components consume the named shared type roles. Maintain the token-integrity checks and both explicit dark/theme fallback paths. Fonts must self-host only where permitted, use `font-display: swap`, and retain usable fallback stacks. Do not distribute font binaries as part of review documents.
 

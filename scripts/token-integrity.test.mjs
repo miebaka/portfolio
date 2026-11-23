@@ -60,8 +60,8 @@ const isScaleStep = name => /^--(type-|s\d+$|font-sans$|font-mono$|icon$)/.test(
 
 test("tokens have exactly one source file", () => {
   assert.equal(files.includes("tokens.css"), true, "typography tokens have a single authoritative source");
-  assert.ok(typeTokens.every(([name]) => /^(--type-|--font-sans$|--font-mono$|--icon$)/.test(name)), "tokens.css only contains typography");
-  assert.ok(base.every(([name]) => !/^(--type-|--font-sans$|--font-mono$|--icon$)/.test(name)), "foundations.css must not redeclare type");
+  assert.ok(typeTokens.every(([name]) => /^(--type-|--font-sans$|--icon$)/.test(name)), "tokens.css only contains typography");
+  assert.ok(base.every(([name]) => !/^(--type-|--font-sans$|--icon$)/.test(name)), "foundations.css must not redeclare type");
   for (const [name, css] of Object.entries(sources)) {
     if (name === "foundations.css" || name === "tokens.css") continue;
     assert.doesNotMatch(strip(css), /:root\s*\{[^}]*--[\w-]+\s*:/, `${name} declares root tokens; move them to foundations.css`);

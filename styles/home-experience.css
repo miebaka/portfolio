@@ -299,7 +299,7 @@ body section.service-stack-section .process-sequence .service-stack {
     padding-bottom:calc(clamp(var(--s4),4.5vw,var(--s10)) + var(--service-overlap));
     border:0;
     border-radius:clamp(1em,2vw,2em);
-    background:var(--ref-blue-80);
+    background:var(--ref-air);
     color:var(--ref-midnight);
     box-shadow:0 -.2em .2em color-mix(in oklab,var(--ref-black) 6%,transparent),0 1.2em 2.5em color-mix(in oklab,var(--ref-black) 13%,transparent);
   }

@@ -9,7 +9,7 @@ const origin = "https://miebaka-portfolio.vercel.app/";
 const personId = origin + "#miebaka-joshua";
 const pages = [
   "index.html", "about.html", "work.html", "work/rivo.html",
-  "work/tedx-rsu.html", "work/chopbox.html", "essays.html",
+  "work/tedx-rsu.html", "work/chopbox.html", "work/kiki-joshua-notepad.html", "essays.html",
   "essays/designing-for-disability-in-nigeria.html",
   "essays/when-the-swoosh-lost-its-soul.html", "process.html", "contact.html",
   "experiments.html", "accessibility.html", "privacy.html"
@@ -49,7 +49,7 @@ test("Person identity is shared by website, authored cases and essays", () => {
     const openGraphAlt = dist(path).match(/<meta property="og:image:alt" content="([^"]+)">/)?.[1];
     const twitterAlt = dist(path).match(/<meta name="twitter:image:alt" content="([^"]+)">/)?.[1];
     assert.equal(twitterAlt, openGraphAlt, path);
-    assert.ok(work.image?.startsWith(origin), path);
+    assert.ok(work.image?.startsWith(origin) || (path.endsWith("kiki-joshua-notepad.html") && work.image?.startsWith("https://mir-s3-cdn-cf.behance.net/project_modules/")), path);
     assert.ok(schema(dist(path)).some((x) => x["@type"] === "BreadcrumbList"), path);
   }
 });

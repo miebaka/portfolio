@@ -446,8 +446,8 @@ test("alignment, service parity and article hierarchy stay systemic", async () =
   );
 });
 
-test("built service fallback remains complete on the detailed About page", async () => {
-  for (const file of ["about.html"]) {
+test("shared service cards remain complete on both pages", async () => {
+  for (const file of ["index.html", "about.html"]) {
     const html = await readFile(join(dist, file), "utf8");
     assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
     const start = html.indexOf('data-mount="capabilities"');

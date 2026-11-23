@@ -166,7 +166,7 @@ The following references extend **The Living Editorial**, not the global brand. 
 | Source | Adopted feature | Rejected | Responsive and verification requirement |
 | --- | --- | --- | --- |
 | [Unsection](https://www.unsection.com/) | Clearer image-first Work media and deliberate case-study spacing | SaaS cards or new homepage chapters | One-cover previews occupy their full space; images remain visible on touch |
-| [Spell](https://spell.sh/docs/components) | Existing staggered text entrances with Geist Sans display, Geist Sans body, Geist Mono labels | Competing React animations or multiple effects per heading | Semantic first paint and reduced-motion state remain readable |
+| [Spell](https://spell.sh/docs/components) | Existing staggered text entrances with Geist Sans display, Geist Sans body, Geist Sans labels | Competing React animations or multiple effects per heading | Semantic first paint and reduced-motion state remain readable |
 | [Details](https://www.details.so/inspo) | Refinement of selected-work list and distinct case-study image rhythm | Hidden-on-touch previews or mandatory transitions | Keyboard, touch and static fallbacks preserve the work |
 | [Curated](https://curated.design/) | An authored editorial hierarchy across all templates | Importing unrelated palettes, images or typography | True evidence and readable image captions remain primary |
 
@@ -237,7 +237,7 @@ The new direction is **not** a facelift or continuation of the current visual pr
 
 **Image first:** For each flagship project, select one *excellent* cover image and 4–8 high-quality evidence frames with intentional crop, consistent visual logic and role-accurate captions. If assets are insufficient, surface the limitation rather than creating generic placeholders or overstating deliverables. Show the work's materiality—scale, print, real context, tactile depth—when supported by genuine files.
 
-**Typography is governed by the unified Geist system:** Geist Sans carries headings and body, Geist Mono carries labels, and `styles/tokens.css` is the only source of all typography-related CSS declarations. The contract is in [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md). Evaluating another family is a separate, deliberate project: compare actual hero, work, About and essay screenshots at 320/390/768/1440px, verify licensing and font availability before installing or redistributing anything, then update the tokens, the docs and the contract tests in the same pull request.
+**Typography is governed by the unified Geist system:** Geist Sans carries headings, body and labels, and `styles/tokens.css` is the only source of all typography-related CSS declarations. The contract is in [`docs/TYPOGRAPHY-SYSTEM.md`](docs/TYPOGRAPHY-SYSTEM.md). Evaluating another family is a separate, deliberate project: compare actual hero, work, About and essay screenshots at 320/390/768/1440px, verify licensing and font availability before installing or redistributing anything, then update the tokens, the docs and the contract tests in the same pull request.
 
 **Color is open to change:** Retain an identifiable ultramarine signal **only if** it still performs best after comparative visual studies. Author up to three *complete* palette directions with real source imagery, test both Print/Screen states, contrast and project world transitions, then record the chosen semantic palette in `styles/foundations.css`. Never let references turn the system into a beige/olive/terracotta average.
 
@@ -287,9 +287,9 @@ Base source colors currently include:
 | Home hero and main page headings | Geist Sans | 400 / 600 | `--type-heading-lg` (48px maximum) |
 | Section, card and article headings | Geist Sans | 400 / 600 | `--type-heading-sm`, `--type-heading-md`, `--type-heading-lg` |
 | Body, narrative and essays | Geist Sans | 400 / 600 | `--type-body`, `--type-body-lg`, `--type-lead` |
-| Navigation, metadata and short UI labels | Geist Mono | 400 / 600 | `--type-label`, `--type-caption` |
+| Navigation, metadata and short UI labels | Geist Sans | 400 / 600 | `--type-label`, `--type-caption` |
 
-Material Symbols is an **icon font only**, not a third text family. **Every typography declaration** (font face, family, size, weight, leading, tracking, text wrapping, text decoration, uppercase transformation and responsive typography) belongs in `styles/tokens.css`. All other CSS files contain layout, appearance and behaviour only. The two text families are `--font-sans` and `--font-mono`; 400/600 are the only supported static weights. The homepage name and other major headings use the restrained, shared 48px maximum headline role. Separate oversized display and hero size tiers are retired. Do not reintroduce `--display`, `--body`, `--label`, `--signature` or the retired size aliases.
+Material Symbols is an **icon font only**, not a text family. **Every typography declaration** (font face, family, size, weight, leading, tracking, text wrapping, text decoration, uppercase transformation and responsive typography) belongs in `styles/tokens.css`. All other CSS files contain layout, appearance and behaviour only. The single text family are `--font-sans` and `--font-mono`; 400/600 are the only supported static weights. The homepage name and other major headings use the restrained, shared 48px maximum headline role. Separate oversized display and hero size tiers are retired. Do not reintroduce `--display`, `--body`, `--label`, `--signature` or the retired size aliases.
 
 **Accessibility remains mandatory:** exactly one semantic visible h1 per page; strong type hierarchy; accurate case on project names; authored casing for UI labels and paragraphs; short-line compressed display only; legible reading at 320px and 200% zoom; and proper fallback during font swap. Long-form copy SHOULD measure roughly 55–75 characters per line and use comfortable `--type-leading-reading`.
 
@@ -1292,7 +1292,7 @@ The following observations are from the `main` branch reviewed on 19 November 20
 
 ### The Index, Geist Sans and embossed signature (20 November 2026)
 
-- **Typography:** Geist Sans throughout headlines and body, Geist Mono for labels, with no Geist Serif font request. Small UI labels, paragraphs, and project titles retain their authored casing.
+- **Typography:** Geist Sans throughout headlines, body and labels, with no Geist Serif font request. Small UI labels, paragraphs, and project titles retain their authored casing.
 - **Navigation:** replace the centered dark pill with a restrained masthead and fullscreen Index inspired by [Alex Pierce on Navbar Gallery](https://www.navbar.gallery/navbar/alex-pierce). Keep canonical routes, focus trapping, Escape restoration, theme/motion preferences and static no-JavaScript navigation.
 - **What I Do:** five unnumbered semantic service cards, flat authored token colours and no spotlight or image-overlay gradient. Evidence links remain accessible on touch, hover, and keyboard.
 - **Footer:** the original script SVG uses opposing masked highlight/shadow layers for a tactile, raised embossed effect inspired by [For Living](https://www.for-living.it/). Its small keyboard-operable interaction is progressive, not a requirement for reading the signature.
@@ -1379,7 +1379,7 @@ Removed as dead visual code: `styles/project-roster.css`, `styles/optical-lens.c
 
 The current sizing system is based on the visitor's inherited font size, **not pixel presets**. Mobile is the starting composition: `styles/layout.css` defines four grid tracks and `styles/foundations.css` defines comfortable phone gutters, navigation height and section spacing; `@media (min-width: 56em)` expands the standard grid to twelve tracks, while editorial layouts have an intermediate eight-track tablet composition. Home hero and profile also begin with their mobile reading order and enhance at larger viewports. Component media-query widths use the single approved breakpoint table; independent page-specific viewport thresholds are prohibited.
 
-- All authored typography remains centralized in `styles/tokens.css`, with `em` size bounds. The system remains Geist Sans for headlines and body, Geist Mono for labels.
+- All authored typography remains centralized in `styles/tokens.css`, with `em` size bounds. The system remains Geist Sans for headlines, body and labels.
 - Relative `em` units are used for **typography, spacing, component layout, and responsive image-size hints**. An `em` is based on the font size of the element (or its parent for `font-size` itself). Deliberately test nested type scales to avoid compounded growth.
 - Painting details and native WebGL raster/pointer coordinates are rendering primitives, not competing layout sizing scales. The shared accessible touch target is `--control-target: max(44px, 2.75em)`; all page and component styles consume that token rather than writing independent 44px lengths. Browser viewport decisions are centralized in `js/core/responsive.js`.
 - Viewport, percentage, `ch`, `svh`, `vw`, `fr` and intrinsic sizing remain where their semantics are correct. Replacing these with `em` would make layout less adaptive, not more.
