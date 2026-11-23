@@ -44,6 +44,11 @@ test("Person identity is shared by website, authored cases and essays", () => {
     assert.ok(work, path);
     assert.equal((work.creator || work.author)?.["@id"], personId, path);
     assert.ok(work.mainEntityOfPage?.["@id"], path);
+    const metaDescription = dist(path).match(/<meta name="description" content="([^"]+)">/)?.[1];
+    assert.equal(work.description, metaDescription.replaceAll("&amp;", "&"), path);
+    const openGraphAlt = dist(path).match(/<meta property="og:image:alt" content="([^"]+)">/)?.[1];
+    const twitterAlt = dist(path).match(/<meta name="twitter:image:alt" content="([^"]+)">/)?.[1];
+    assert.equal(twitterAlt, openGraphAlt, path);
     assert.ok(work.image?.startsWith(origin), path);
     assert.ok(schema(dist(path)).some((x) => x["@type"] === "BreadcrumbList"), path);
   }
@@ -54,7 +59,7 @@ test("case summaries specify supported scope and proposed versus delivered work"
     assert.match(html, /class="case-opening__scope"/, slug);
     assert.match(html, /class="case-opening__essentials"/, slug);
   }
-  assert.match(dist("work/chopbox.html"), /production, sales and public rollout are not independently established/);
+  assert.match(dist("work/chopbox.html"), /manufacture, sales and public rollout are not independently established/);
   assert.match(dist("work/rivo.html"), /do not independently establish public rollout/);
 });
 test("directory aliases redirect without intercepting individual asset paths", () => {
