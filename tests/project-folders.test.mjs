@@ -30,7 +30,7 @@ test("each folder shows the project name, image, decision and numbered papers", 
   }
   assert.doesNotMatch(html, /The Call|The System|What Survived|First Contact|The Results|FILE 0/);
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
-    assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
+    assert.match(html, new RegExp('aria-label="View ' + name + ' [^"]+ case study"'));
     assert.match(html, new RegExp('class="project-folder__title">' + name + '</strong>'));
   }
 });
