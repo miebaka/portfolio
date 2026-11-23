@@ -11,7 +11,6 @@ import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
 import { initNowPlaying } from "./render/now-playing.js";
-import { initNavigation } from "./core/navigation.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initHeroWave } from "./core/hero-wave.js";
@@ -51,7 +50,6 @@ if (page === "writing" && has(".article-body")) run("article navigation", initAr
 if (page === "explorations") run("experiments spatial archive", () => { void initExperimentsSpatial(); });
 
 /* Behaviour: attach handlers to the freshly rendered DOM. */
-run("navigation behaviour", initNavigation);
 run("project-folder interaction", initProjectFolderInteractions);
 run("case-study route transitions", initCaseRouteTransitions);
 run("footer signature", initFooterSignature);

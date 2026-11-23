@@ -51,12 +51,10 @@ export function renderNavigation() {
   if (!el) return;
   activeIndex?.destroy(); cleanupPreferences?.(); document.getElementById("site-index")?.remove();
   const base = basePath(), page = document.body.dataset.page || "";
-  const links = navigation.primary.map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : "") + '>' + esc(route.label) + '</a>').join("");
   el.className = "site-nav";
   el.innerHTML = '<div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand site-nav__balance" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
     '<div class="site-nav__listening" data-mount="now-playing"></div></div>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button>' +
-    '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary" aria-hidden="true">' + links + '</nav>' +
     '<div class="site-nav__themes">' + renderThemePicker() + '</div></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");
