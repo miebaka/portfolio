@@ -5,7 +5,7 @@ import AxeBuilder from "@axe-core/playwright";
 export const routes = [
   "/index.html", "/work.html", "/experiments.html", "/about.html",
   "/essays.html", "/contact.html", "/process.html", "/accessibility.html", "/privacy.html", "/404.html",
-  "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/christian-poster-a-week.html",
+  "/work/rivo.html", "/work/tedx-rsu.html", "/work/chopbox.html", "/work/kiki-joshua-notepad.html", "/work/christian-poster-a-week.html",
   "/essays/designing-for-disability-in-nigeria.html", "/essays/when-the-swoosh-lost-its-soul.html"
 ];
 
@@ -316,7 +316,7 @@ test("Mobile Work folders are readable without horizontal overflow", async ({ pa
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/work.html");
     const titles = page.locator(".project-folder__title");
-    await expect(titles).toHaveCount(3);
+    await expect(titles).toHaveCount(4);
     for (const element of await titles.all()) {
       const geometry = await element.evaluate(node => ({
         scrollWidth: node.scrollWidth,
@@ -331,19 +331,19 @@ test("Mobile Work folders are readable without horizontal overflow", async ({ pa
   }
 });
 
-test("Work folders carry the three approved published projects on numbered cardstock covers", async ({ page }) => {
+test("Work folders carry the four approved published projects on numbered cardstock covers", async ({ page }) => {
   await page.goto("/work.html");
   const links = page.locator(".project-folder__link");
-  await expect(links).toHaveCount(3);
+  await expect(links).toHaveCount(4);
   await expect(page.locator(".project-folder__title")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
+    "TEDx Rivers State University", "Rivo Studio", "ChopBox", "Kiki-Joshua"
   ]);
-  await expect(page.locator(".project-folder__tab-number")).toHaveText(["01", "02", "03"]);
+  await expect(page.locator(".project-folder__tab-number")).toHaveText(["01", "02", "03", "04"]);
   await expect(page.locator(".project-folder__visual img")).toHaveCount(0);
   await expect(links.nth(0)).toHaveAttribute("href","work/tedx-rsu.html");
   await expect(links.nth(1)).toHaveAttribute("href","work/rivo.html");
   await expect(links.nth(2)).toHaveAttribute("href","work/chopbox.html");
-  await expect(page.locator(".project-archive__progress li")).toHaveCount(3);
+  await expect(page.locator(".project-archive__progress li")).toHaveCount(2);
   await expect(page.locator(".filing-cabinet,.filing-cabinet__three-canvas")).toHaveCount(0);
 });
 
@@ -502,7 +502,7 @@ test("navigation works without JavaScript", async ({ browser, baseURL }) => {
 test("each visible folder tab activates its own native route", async ({ page }) => {
   for (const width of [390,900,1440]) {
     await page.setViewportSize({width,height:1000});
-    for (const slug of ["tedx-rsu","rivo","chopbox"]) {
+    for (const slug of ["tedx-rsu","rivo","chopbox","kiki-joshua-notepad"]) {
       await page.goto("/work.html");
       const folder = page.locator('.project-folder[data-slug="' + slug + '"]');
       await expect(folder.locator(".project-folder__paper")).toHaveCount(5);

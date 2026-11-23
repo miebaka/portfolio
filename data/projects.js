@@ -118,19 +118,20 @@ export const projects = [
     "slug": "kiki-joshua-notepad",
     "title": "Kiki-Joshua",
     "category": "Print",
-    "tagline": "Considered print for a notable physician.",
+    "tagline": "A medical induction keepsake inspired by historical physician notebooks.",
     "tags": [
       "Creative direction",
       "Print design"
     ],
-    "year": "2022",
-    "tone": "#3f3f46",
-    "cover": "",
+    "year": "2021",
+    "tone": "#6b4f36",
+    "cover": "kiki-joshua-cover",
     "span": 6,
     "ratio": "1 / 1",
-    "featured": false,
-    "caseReady": false,
-    "status": "coming-soon"
+    "featured": true,
+    "caseReady": true,
+    "status": "published",
+    "featuredOrder": 4
   },
   {
     "slug": "kigoma-hotels",

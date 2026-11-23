@@ -1,51 +1,51 @@
 
 /* Video-matched stacked portfolio services. Cards overlap naturally using sticky
    positioning: no scroll locking or JavaScript required. */
-body[data-page="home"] .home-capabilities--reference {
+body section.service-stack-section {
   position:relative;max-width:none;width:100%;padding-inline:var(--page);
-  background:var(--ref-service-card-section-green);color:var(--ref-service-card-section-cream);
+  background:var(--paper);color:var(--ink);
   padding-block:clamp(var(--s10),11vw,calc(var(--spacing-unit) * 80)) var(--s10);}
-body[data-page="home"] .home-capabilities--reference .disciplines-heading {
+body section.service-stack-section .disciplines-heading {
   margin:0 0 clamp(var(--s6),8vw,calc(var(--spacing-unit) * 64));padding:0;border:0;}
-body[data-page="home"] .home-capabilities--reference .disciplines-heading h2 {
-  max-width:16ch;color:var(--ref-service-card-section-cream);}
-body[data-page="home"] .home-capabilities--reference .process-sequence {
+body section.service-stack-section .disciplines-heading h2 {
+  max-width:16ch;color:var(--ink);}
+body section.service-stack-section .process-sequence {
   width:100%;max-width:93.75em;margin:0 auto;display:block;overflow:visible;}
-body[data-page="home"] .service-stack {
+body .service-stack-section .service-stack {
   list-style:none;margin:0;padding:0;display:block;}
-body[data-page="home"] .service-stack__item {
+body .service-stack-section .service-stack__item {
   position:relative;top:auto;
   z-index:auto;display:block;min-height:0;margin:0 0 clamp(var(--s4),6vh,var(--s8));
   padding:0;background:transparent;border:0;box-shadow:none;}
-body[data-page="home"] .service-stack__card {
+body .service-stack-section .service-stack__card {
   position:relative;display:flex;flex-direction:column;justify-content:space-between;
   min-height:clamp(24em,60svh,36em);border-radius:clamp(.7em,1.5vw,1.5em);
   padding:clamp(calc(var(--spacing-unit) * 10),4vw,var(--s4));overflow:hidden;
-  color:var(--ref-service-card-blue-ink);background:var(--ref-service-card-blue-paper);
-  box-shadow:0 -.7em 0 -.28em var(--ref-service-card-light-edge),0 .65em 1.6em var(--ref-service-card-green-shadow);}
-body[data-page="home"] .service-stack__item:nth-child(2) .service-stack__card {background:var(--ref-service-card-orange-paper);color:var(--ref-service-card-orange-ink)}
-body[data-page="home"] .service-stack__item:nth-child(3) .service-stack__card {background:var(--ref-service-card-pink-paper);color:var(--ref-service-card-pink-ink)}
-body[data-page="home"] .service-stack__item:nth-child(4) .service-stack__card {background:var(--ref-service-card-plum-paper);color:var(--ref-service-card-plum-ink)}
-body[data-page="home"] .service-stack__item:nth-child(5) .service-stack__card {background:var(--ref-service-card-yellow-paper);color:var(--ref-service-card-yellow-ink)}
-body[data-page="home"] .service-stack__heading {
+  color:var(--ref-midnight);background:var(--ref-air);
+  box-shadow:0 -.7em 0 -.28em var(--ref-air),0 .65em 1.6em var(--line);}
+body .service-stack-section .service-stack__item:nth-child(2) .service-stack__card {background:var(--ref-blue-80);color:var(--ref-midnight)}
+body .service-stack-section .service-stack__item:nth-child(3) .service-stack__card {background:var(--ref-paper);color:var(--ref-midnight)}
+body .service-stack-section .service-stack__item:nth-child(4) .service-stack__card {background:var(--ref-ultramarine);color:var(--ref-paper)}
+body .service-stack-section .service-stack__item:nth-child(5) .service-stack__card {background:var(--ref-midnight);color:var(--ref-paper)}
+body .service-stack-section .service-stack__heading {
   display:flex;align-items:center;gap:clamp(calc(var(--spacing-unit) * 6),1.6vw,var(--s3));}
-body[data-page="home"] .service-stack__symbol {
+body .service-stack-section .service-stack__symbol {
   display:grid;place-items:center;width:clamp(2.3em,4vw,4em);flex:none;}
-body[data-page="home"] .service-stack__card h3 {max-width:22ch;}
-body[data-page="home"] .service-stack__bottom {
+body .service-stack-section .service-stack__card h3 {max-width:22ch;}
+body .service-stack-section .service-stack__bottom {
   display:grid;grid-template-columns:minmax(0,1fr);
   gap:var(--s3);align-items:end;}
-body[data-page="home"] .service-stack__description {
+body .service-stack-section .service-stack__description {
   max-width:55ch;display:grid;gap:calc(var(--spacing-unit) * 10);}
-body[data-page="home"] .service-stack__description p {
+body .service-stack-section .service-stack__description p {
   max-width:55ch;margin:0;color:inherit;}
-body[data-page="home"] .service-stack__evidence {
+body .service-stack-section .service-stack__evidence {
   width:max-content;max-width:100%;min-height:2.75em;display:inline-flex;align-items:center;
   gap:calc(var(--spacing-unit) * 5);color:inherit;border-bottom:1px solid currentColor;}
-body[data-page="home"] .service-stack__evidence:focus-visible {outline:3px solid currentColor;outline-offset:4px}
-body[data-page="home"] .service-stack__tags {
+body .service-stack-section .service-stack__evidence:focus-visible {outline:3px solid currentColor;outline-offset:4px}
+body .service-stack-section .service-stack__tags {
   display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:var(--s1);}
-body[data-page="home"] .service-stack__tag {
+body .service-stack-section .service-stack__tag {
   display:inline-block;max-width:100%;padding:var(--s1) calc(var(--spacing-unit) * 6);border:1px solid currentColor;border-radius:62.4375em;}
 body[data-page="home"] .journey {padding-block:clamp(var(--s6),5vw,var(--s12))}
 body[data-page="home"] .journey .client-strip {margin-top:0}
@@ -60,24 +60,24 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
 
 /* Desktop physical cards are an enhancement of the natural mobile list. */
 @media(min-width:56em){
-  body[data-page="home"] .home-capabilities--reference{
+  body section.service-stack-section{
     padding-bottom:clamp(calc(var(--spacing-unit) * 64),12vw,calc(var(--spacing-unit) * 112));
   }
-  body[data-page="home"] .service-stack__item{
+  body .service-stack-section .service-stack__item{
     position:sticky;
     top:calc(var(--nav-h) + 1em + var(--stack-index, 0)*.85em);
     z-index:calc(10 + var(--stack-index, 0));
     margin-bottom:clamp(var(--s6),9vh,calc(var(--spacing-unit) * 56));
   }
-  body[data-page="home"] .service-stack__card{
+  body .service-stack-section .service-stack__card{
     min-height:clamp(23em,58vh,39em);
     padding:clamp(var(--s3),3.2vw,calc(var(--spacing-unit) * 30));
   }
-  body[data-page="home"] .service-stack__bottom{
+  body .service-stack-section .service-stack__bottom{
     grid-template-columns:minmax(0,1.4fr) minmax(10em,.6fr);
     gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 56));
   }
-  body[data-page="home"] .service-stack__tags{
+  body .service-stack-section .service-stack__tags{
     flex-direction:column;
     flex-wrap:nowrap;
   }
@@ -89,15 +89,15 @@ body[data-page="home"] .client-strip__fallback-label {display:none}
   body[data-page="home"] .marquee__item img{height:clamp(3.8em,6vw,6em)}
 }
 @media(prefers-reduced-motion:reduce) {
-  body[data-page="home"] .service-stack__item {position:relative;top:auto;margin-bottom:var(--s2)}
+  body .service-stack-section .service-stack__item {position:relative;top:auto;margin-bottom:var(--s2)}
 }
 
-body[data-page="home"] .service-stack__evidence .service-journey__arrow {
+body .service-stack-section .service-stack__evidence .service-journey__arrow {
   display:inline;position:static;border:0;border-radius:0;
   width:auto;height:auto;margin:0;transform:none;}
 
 /* Reset inherited full-card link styles: only the proof CTA is interactive. */
-body[data-page="home"] .service-stack__item a.service-stack__evidence {
+body .service-stack-section .service-stack__item a.service-stack__evidence {
   display:inline-flex;position:static;isolation:auto;min-height:2.75em;height:auto;
   width:max-content;max-width:100%;padding:0;margin:0;justify-content:flex-start;
   align-items:center;gap:calc(var(--spacing-unit) * 5);flex-direction:row;
@@ -119,12 +119,12 @@ html,body,body main,body .home-content,body .site-footer,
 body .site-footer__panel,body .site-nav,
 body[data-page="home"] .swiss-selected,
 body[data-page="home"] .home-profile,
-body[data-page="home"] .home-capabilities--reference,
+body section.service-stack-section,
 body[data-page="home"] .journey,
 body[data-page="home"] .home-close {
   background-color:var(--paper);
   color:var(--ink);}
-body[data-page="home"] .home-capabilities--reference .disciplines-heading h2 {
+body section.service-stack-section .disciplines-heading h2 {
   color:var(--ink);}
 
 /* The landing scrolls with the document; subsequent sections must not
@@ -152,29 +152,29 @@ body[data-page="home"] .work-view-controls a{
   min-height:var(--control-target);display:inline-flex;align-items:center;gap:calc(var(--spacing-unit) * 6);
   margin-left:0;outline-offset:4px;}
 
-body[data-page="home"] .home-capabilities--reference {
+body section.service-stack-section {
   padding-inline:0;max-width:none;width:100%;}
-body[data-page="home"] .home-capabilities--reference .disciplines-heading{
+body section.service-stack-section .disciplines-heading{
   width:min(calc(100% - 2 * var(--page)),var(--content));
   margin-inline:auto;}
-body[data-page="home"] .home-capabilities--reference .process-sequence{
+body section.service-stack-section .process-sequence{
   width:100%;max-width:none;overflow:visible;}
-body[data-page="home"] .service-stack__item{
+body .service-stack-section .service-stack__item{
   width:100%;max-width:none;margin-inline:0;}
-body[data-page="home"] .service-stack__card{
+body .service-stack-section .service-stack__card{
   width:100%;max-width:none;border-radius:0;
   padding-inline:clamp(var(--page),5vw,var(--s12));
   box-shadow:0 -1px 0 var(--line);
   background:var(--ref-blue-80);color:var(--ref-midnight);}
-body[data-page="home"] .service-stack__item:nth-child(2) .service-stack__card{
-  background:var(--ref-coral-75);color:var(--ref-midnight);}
-body[data-page="home"] .service-stack__item:nth-child(3) .service-stack__card{
-  background:var(--ref-tedx-light);color:var(--ref-midnight);}
-body[data-page="home"] .service-stack__item:nth-child(4) .service-stack__card{
-  background:var(--ref-tedx);color:var(--ref-paper);}
-body[data-page="home"] .service-stack__item:nth-child(5) .service-stack__card{
-  background:var(--ref-chopbox-light);color:var(--ref-midnight);}
-body[data-page="home"] .service-stack__card :is(a,button){
+body .service-stack-section .service-stack__item:nth-child(2) .service-stack__card{
+  background:var(--ref-blue-80);color:var(--ref-midnight);}
+body .service-stack-section .service-stack__item:nth-child(3) .service-stack__card{
+  background:var(--ref-paper);color:var(--ref-midnight);}
+body .service-stack-section .service-stack__item:nth-child(4) .service-stack__card{
+  background:var(--ref-ultramarine);color:var(--ref-paper);}
+body .service-stack-section .service-stack__item:nth-child(5) .service-stack__card{
+  background:var(--ref-midnight);color:var(--ref-paper);}
+body .service-stack-section .service-stack__card :is(a,button){
   min-height:var(--control-target);}
 body[data-page="home"] .journey .client-strip{
   background:var(--paper);border-color:var(--line);}
@@ -213,20 +213,20 @@ body .site-nav__link,body .site-nav__menu-btn{min-height:var(--control-target)}
   body[data-page="home"] .client-marquee__track{animation:none}
 }
 @media(forced-colors:active){
-  body[data-page="home"] .service-stack__card{
+  body .service-stack-section .service-stack__card{
     background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText;}
 }
 
 
 /* Specificity and full-bleed corrections verified against 1440px and 390px. */
-body[data-page="home"] section.home-capabilities--reference.container {
+body section.service-stack-section.container {
   width:100%!important;
   max-width:none!important;
   margin-inline:0!important;}
-body[data-page="home"] section.home-capabilities--reference .process-sequence,
-body[data-page="home"] section.home-capabilities--reference .service-stack,
-body[data-page="home"] section.home-capabilities--reference .service-stack__item,
-body[data-page="home"] section.home-capabilities--reference .service-stack__card {
+body section.service-stack-section .process-sequence,
+body section.service-stack-section .service-stack,
+body section.service-stack-section .service-stack__item,
+body section.service-stack-section .service-stack__card {
   width:100%!important;max-width:none!important;margin-inline:0;}
 html body .site-footer .site-footer__links a,
 html body .site-footer .site-footer__links a:visited {

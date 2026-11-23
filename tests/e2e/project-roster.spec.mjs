@@ -3,13 +3,13 @@ const folders = page => page.locator("#selected-work .project-folder");
 
 test("Home and Work share the same folder order and previews", async ({ page }) => {
   await page.goto("/");
-  await expect(folders(page)).toHaveCount(3);
+  await expect(folders(page)).toHaveCount(4);
   await expect(folders(page).locator(".project-folder__title")).toHaveText([
-    "TEDx Rivers State University", "Rivo Studio", "ChopBox"
+    "TEDx Rivers State University", "Rivo Studio", "ChopBox", "Kiki-Joshua"
   ]);
   await expect(folders(page).locator(".project-folder__visual img")).toHaveCount(0);
-  await expect(folders(page).locator(".project-folder__outcome")).toHaveCount(3);
-  await expect(folders(page).locator(".project-folder__paper")).toHaveCount(15);
+  await expect(folders(page).locator(".project-folder__outcome")).toHaveCount(4);
+  await expect(folders(page).locator(".project-folder__paper")).toHaveCount(20);
   const homeHrefs = await folders(page).locator(".project-folder__link").evaluateAll(nodes =>
     nodes.map(node => node.getAttribute("href")));
   await page.goto("/work.html");
@@ -40,7 +40,7 @@ test("the first case follows the hero naturally and the selected index stays vis
     });
     expect(positions.work).toBeGreaterThanOrEqual(positions.hero - 2);
     expect(positions.first).toBeGreaterThanOrEqual(positions.work - 2);
-    await expect(folders(page).locator(".project-folder__title")).toHaveCount(3);
+    await expect(folders(page).locator(".project-folder__title")).toHaveCount(4);
   }
 });
 
@@ -64,7 +64,7 @@ test("Selected Work, services and hero retain safe horizontal edges without over
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.locator("#what-i-do .service-stack__card")).toHaveCount(5);
-    await expect(folders(page)).toHaveCount(3);
+    await expect(folders(page)).toHaveCount(4);
     const result = await page.evaluate(() => {
       const box = selector => document.querySelector(selector).getBoundingClientRect();
       return { hero: box(".home-landing").toJSON(), work: box("#selected-work").toJSON(),
@@ -82,8 +82,8 @@ test("Home keeps three native case destinations without JavaScript", async ({ br
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("/");
-  await expect(page.locator("#selected-work .project-folder__link")).toHaveCount(3);
-  await expect(page.locator("#selected-work .project-folder__outcome")).toHaveCount(3);
+  await expect(page.locator("#selected-work .project-folder__link")).toHaveCount(4);
+  await expect(page.locator("#selected-work .project-folder__outcome")).toHaveCount(4);
   await context.close();
 });
 
@@ -91,7 +91,7 @@ test("reduced-motion Home preserves project access and calm service reading orde
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(folders(page)).toHaveCount(3);
+  await expect(folders(page)).toHaveCount(4);
   await expect(page.locator("#what-i-do .service-stack__item").first()).toHaveCSS("position", "relative");
   await folders(page).nth(2).locator(".project-folder__link").click();
   await expect(page).toHaveURL(/\/work\/chopbox\.html$/);

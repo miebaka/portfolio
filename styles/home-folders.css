@@ -12,29 +12,29 @@ body[data-page="home"] .home-content section.swiss-selected {
 }
 
 body[data-page="home"] .swiss-selected .home-project-list,
-body[data-page="home"] .home-folder-stack,
-body[data-page="home"] .home-folder-stack__viewport {
+body .home-folder-stack,
+body .home-folder-stack__viewport {
   width: 100%;
   min-width: 0;
   max-width: none;
 }
 
-body[data-page="home"] .home-folder-stack__viewport {
+body .home-folder-stack__viewport {
   overflow: visible;
 }
 
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder-stack__stage {
+body .project-folder-stack__cards .project-folder-stack__stage {
   margin: 0;
 }
 
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
+body .project-folder-stack__cards {
   width: 100%;
   --work-folder-height: min(var(--home-panel-height),24em);
   --folder-overlap: calc(var(--work-folder-height) * .58);
 }
 
 @media (min-width:56em) {
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
+  body .project-folder-stack__cards {
     --folder-overlap: calc(var(--work-folder-height) * .4);
   }
 }
@@ -49,19 +49,19 @@ body[data-page="home"] #selected-work {
 }
 
 /* Place each name in the exposed upper flap on both racks. */
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__front {
+body .project-folder-stack__cards .project-folder__front {
   inset-block-start: 15%;
   align-items: flex-start;
   padding-block-start: clamp(var(--s2), 2vw, var(--s3));
 }
 
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__title {
+body .project-folder-stack__cards .project-folder__title {
   max-width: min(82%, 38ch);
 }
 
 /* Let the names sit within the exposed third of the stacked folders.
    Descriptive metadata becomes fully readable as the chosen folder opens. */
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
+body .project-folder-stack__cards .project-folder__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -69,7 +69,7 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .pr
   width: 100%;
 }
 
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__preview {
+body .project-folder-stack__cards .project-folder__preview {
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing-unit) * 2);
@@ -77,20 +77,20 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .pr
 }
 
 /* Phone folders keep their decision labels exposed without crowding the flap. */
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__outcome {
+  body .project-folder-stack__cards .project-folder__outcome {
     display: none;
   }
 
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
+  body .project-folder-stack__cards .project-folder__copy {
     gap: var(--s1);
   }
 
 @media (min-width:56em) {
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__outcome {
+  body .project-folder-stack__cards .project-folder__outcome {
     display: initial;
   }
 
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder__copy {
+  body .project-folder-stack__cards .project-folder__copy {
     gap: clamp(calc(var(--spacing-unit) * 2), .7vw, calc(var(--spacing-unit) * 6));
   }
 }
@@ -103,22 +103,24 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .pr
 
 /* The lifted folder remains a file *behind* every later folder, not a card
    floating above the whole rack. Leave the original paper edge shadow. */
-body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder:is(.is-active, :focus-within) .project-folder__front {
+body .project-folder-stack__cards .project-folder:is(.is-active, :focus-within) .project-folder__front {
   box-shadow: inset 0 1px color-mix(in oklab,var(--ref-white) 32%,transparent), inset -1px 0 color-mix(in oklab,var(--ref-black) 7.5%,transparent);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards .project-folder:hover:not(:focus-within) {
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="reduced"]) body .project-folder-stack__cards .project-folder:hover:not(:focus-within) {
     z-index: calc(var(--folder-index, 0) + 1);
     transform: translateY(-.8em);
   }
 }
 
 /* The Work rack shares the Home frame and its wide-screen measure. */
-body[data-page="work"] .project-archive--folders .project-folder-stack__stage {
-  width: min(calc(100% + 2 * (var(--page) - var(--hf))),var(--content));
-  margin-inline-start: calc((100% - min(calc(100% + 2 * (var(--page) - var(--hf))),var(--content))) / 2);
+body[data-page="work"] .project-archive--folders {
+  width: min(calc(100% - 2 * var(--hf)), var(--content));
+  max-width: var(--content);
+  margin-inline: auto;
 }
+body .home-folder-stack .project-folder-stack__stage { width: 100%; margin-inline: 0; }
 
 .project-folder__stock {
   position: absolute;
@@ -135,6 +137,6 @@ body[data-page="work"] .project-archive--folders .project-folder-stack__stage {
 
 /* The focused or hovered Home folder stays at its natural paper depth.
    Later folders must continue to cover it instead of jumping beneath it. */
-body[data-page="home"] .home-folder-stack__cards .project-folder:is(:hover, :focus-within) {
+body .home-folder-stack__cards .project-folder:is(:hover, :focus-within) {
   z-index: calc(var(--folder-index, 0) + 1);
 }

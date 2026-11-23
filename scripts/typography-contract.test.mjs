@@ -22,14 +22,14 @@ test("styles/tokens.css is imported once and after all layout styles", () => {
   assert.doesNotMatch(tokens, /--type-(?:hero|display|leading-display|leading-hero|tracking-display)\b/);
 });
 
-test("Geist Sans / Mono and icon font faces are registered only in the canonical file", () => {
+test("Geist Sans and icon font faces are registered only in the canonical file", () => {
   const faces = [...tokens.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(x => x[1]);
-  assert.equal(faces.length, 5, "4 Geist text faces and 1 icon face");
-  assert.equal(faces.filter(face => /Geist (?:Sans|Mono)/.test(face)).length, 4);
+  assert.equal(faces.length, 3, "2 Geist text faces and 1 icon face");
+  assert.equal(faces.filter(face => /Geist Sans/.test(face)).length, 2);
   assert.ok(faces.every(face => /font-weight:(?:400|600)/.test(face)));
   assert.ok(faces.every(face => /src:/.test(face)), "font-face must include its source");
   assert.match(tokens, /--font-sans: "Geist Sans"/);
-  assert.match(tokens, /--font-mono: "Geist Mono"/);
+  assert.doesNotMatch(tokens, /--font-mono|Geist Mono|geist-mono/);
   assert.ok(sources.every(([, css]) => !/@font-face/.test(stripComments(css))));
 });
 
@@ -63,9 +63,9 @@ test("stylelint rejects typography even when it references a valid token", async
 test("Geist 400 and 600 faces are declared with swap and no synthetic text weights", () => {
   const faces = [...tokens.matchAll(/@font-face\s*\{([^}]+)\}/g)]
     .map(([, css]) => css)
-    .filter(css => /Geist (?:Sans|Mono)/.test(css));
-  assert.equal(faces.length, 4);
-  for (const family of ["Geist Sans", "Geist Mono"]) {
+    .filter(css => /Geist Sans/.test(css));
+  assert.equal(faces.length, 2);
+  for (const family of ["Geist Sans"]) {
     for (const weight of [400, 600]) {
       const face = faces.find(css => css.includes('font-family:"' + family + '"') && css.includes('font-weight:' + weight));
       assert.ok(face, family + " " + weight + " face must be declared");

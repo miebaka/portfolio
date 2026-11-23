@@ -38,6 +38,14 @@ function renderFolderCard(project, index, base) {
     preview + '</span></span></a></li>';
 }
 
+export function renderFolderStack(projects, base = "") {
+  return '<div class="home-folder-stack project-folder-stack"><div class="home-folder-stack__viewport">' +
+    '<div class="project-folder-stack__stage">' +
+    '<ol class="project-folder-stack__cards home-folder-stack__cards" aria-label="Selected case studies">' +
+    projects.map((project, index) => renderFolderCard(project, index, base)).join("") +
+    '</ol></div></div></div>';
+}
+
 export function renderHomeProjectList(projects = SITE.projects, studies = SITE.caseStudies, base = "") {
   const selected = projects
     .filter(project => project.featured === true &&
@@ -45,11 +53,7 @@ export function renderHomeProjectList(projects = SITE.projects, studies = SITE.c
       studies?.[project.slug]?.status === "published")
     .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
       (b.featuredOrder ?? Number.MAX_SAFE_INTEGER));
-  return '<div class="home-folder-stack project-folder-stack"><div class="home-folder-stack__viewport">' +
-    '<div class="project-folder-stack__stage">' +
-    '<ol class="project-folder-stack__cards home-folder-stack__cards" aria-label="Selected case studies">' +
-    selected.map((project, index) => renderFolderCard(project, index, base)).join("") +
-    '</ol></div></div></div>';
+  return renderFolderStack(selected, base);
 }
 
 export function renderProjectArchive() {
@@ -72,11 +76,7 @@ export function renderProjectFolderStackMarkup(projects = SITE.projects, studies
     .sort((a, b) => (a.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
       (b.featuredOrder ?? Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title));
 
-  const folders = published.map((project, index) =>
-    renderFolderCard(project, index, base)).join("");
-
-  return '<div class="project-folder-stack__stage"><ol class="project-folder-stack__cards" aria-label="Published case studies">' +
-    folders + '</ol></div>';
+  return renderFolderStack(published, base);
 }
 
 export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", studies = SITE.caseStudies) {

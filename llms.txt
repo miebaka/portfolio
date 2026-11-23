@@ -21,6 +21,8 @@ The case studies distinguish delivered work and documented applications from pro
 - [Rivo Studio — Brand Strategy, Identity and Guidelines (2024)](https://miebaka-portfolio.vercel.app/work/rivo.html): Developed a software studio identity based on clarity and accessibility, including a softened wordmark, Clar blue, signal yellow and brand guidelines. Applications demonstrate the system; public rollout metrics are not verified.
 - [ChopBox — Food Brand Identity and Packaging (2022)](https://miebaka-portfolio.vercel.app/work/chopbox.html): Designed an appetite-led food brand with an identity system, typography, packaging concepts, uniforms and campaign applications. Production and commercial performance are not independently documented.
 
+- [Kiki-Joshua — Commemorative Notepad and Print Design (2021)](https://miebaka-portfolio.vercel.app/work/kiki-joshua-notepad.html): A medical induction keepsake inspired by historical physician notebooks, with illustrated cover artwork and documented print production.
+
 ## Services and Approach
 
 - [Design process](https://miebaka-portfolio.vercel.app/process.html): How projects move from discovery and a governing creative decision to a usable identity or campaign system and handoff.

@@ -8,8 +8,8 @@ test("Home keeps the landing restrained and Selected Work as landscape folders",
   const badge=await page.locator(".home-landing").evaluate(node=>getComputedStyle(node,"::before").content);
   expect(["none","normal","\"none\""]).toContain(badge);
   await expect(page.locator('.work-view-controls [data-view="grid"]')).toHaveCount(0);
-  await expect(page.locator(".home-folder-stack .project-folder")).toHaveCount(3);
-  await expect(page.locator(".home-folder-stack .project-folder__paper")).toHaveCount(15);
+  await expect(page.locator(".home-folder-stack .project-folder")).toHaveCount(4);
+  await expect(page.locator(".home-folder-stack .project-folder__paper")).toHaveCount(20);
   await expect(page.locator("#selected-work .work-view-controls")).toHaveCount(0);
   await expect(page.locator("#selected-work .swiss-section-head")).toHaveCount(0);
   await expect(page.locator("#selected-work")).toHaveAttribute("aria-label", "Selected work");

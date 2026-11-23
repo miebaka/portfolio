@@ -54,7 +54,7 @@ const fontBytes = gzipBytes(fontFiles);
 // versioned CDN, so fetch their actual bytes rather than measuring retired Archivo.
 const stylesheet = readFileSync(resolve(dist, "styles/main.css"), "utf8");
 const remoteFontUrls = unique([...stylesheet.matchAll(/url\(["']?(https:\/\/cdn\.jsdelivr\.net\/npm\/geist@1\.9\.2\/[^"')]+\.woff2)["']?\)/giu)].map(match => match[1]));
-assert.ok(remoteFontUrls.length >= 3, "Geist font budget must include display, body and mono fonts");
+assert.ok(remoteFontUrls.length === 2, "Geist font budget includes regular and semibold only");
 const remoteFontBuffers = await Promise.all(remoteFontUrls.map(async url => {
   const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
   assert.ok(response.ok, `Geist font unavailable (${response.status}): ${url}`);

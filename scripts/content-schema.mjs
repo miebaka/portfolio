@@ -218,6 +218,7 @@ export function validateContent(content) {
       for (const field of ["label", "src"]) if (!hasText(media[field])) add(`${mediaPath}.${field}`, "MEDIA_FIELD_REQUIRED", `Media ${field} is required.`);
       if (hasText(media.src) && seenMedia.has(media.src)) add(`${mediaPath}.src`, "MEDIA_SOURCE_DUPLICATE", "Media IDs must be unique within a case study.");
       seenMedia.add(media.src);
+      if (media.remoteSrc !== undefined && !/^https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\/[a-zA-Z0-9_\/.-]+\.(?:jpg|png|webp)$/.test(media.remoteSrc)) add(`${mediaPath}.remoteSrc`, "MEDIA_REMOTE_INVALID", "Remote media must be an original Behance project image.");
       for (const field of ["w", "h"]) if (!Number.isInteger(media[field]) || media[field] <= 0) add(`${mediaPath}.${field}`, "MEDIA_DIMENSIONS_INVALID", "Media dimensions must be positive integers.");
       if (!hasText(media.alt)) add(`${mediaPath}.alt`, "MEDIA_ALT_REQUIRED", "Media needs a meaningful alternative.");
       if (media.loading !== undefined && !["lazy", "eager"].includes(media.loading)) add(`${mediaPath}.loading`, "MEDIA_LOADING_INVALID", "Use lazy or eager loading.");

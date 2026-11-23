@@ -1,5 +1,5 @@
 /* Home chapter — reference-locked editorial system. */
-body:is([data-page="home"], [data-page="work"]) {
+body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
   --hf: 0.75em;
 }
 
@@ -348,7 +348,7 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
 /* Progressive composition: the phone layout is the baseline, not a
    compressed desktop grid. Water canvas and folder stacking are untouched. */
 @media (min-width:56em) {
-  body:is([data-page="home"], [data-page="work"]) {
+  body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
     --hf: clamp(.75em, 1.25vw, 1.35em);
   }
 

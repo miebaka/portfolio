@@ -24,6 +24,8 @@ function shot(media, kind, base, plate) {
   const caption = media.caption
     ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>`
     : "";
+  if (media.remoteSrc && /^https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\//.test(media.remoteSrc))
+    return `<figure class="case-shot case-shot--${kind}"><picture><img src="${esc(media.remoteSrc)}" alt="${esc(media.alt || media.label)}" width="${media.w}" height="${media.h}" loading="${kind === "hero" ? "eager" : "lazy"}" referrerpolicy="no-referrer" decoding="async"></picture>${caption}</figure>`;
   return `<figure class="case-shot case-shot--${kind}"><picture><source type="image/avif" srcset="${srcset("avif")}" sizes="${sizes}"><source type="image/webp" srcset="${srcset("webp")}" sizes="${sizes}"><img src="${stem}-${fallback}.jpg" alt="${esc(media.alt || media.label)}" width="${media.w}" height="${media.h}"${loading} decoding="async"></picture>${caption}</figure>`;
 }
 
@@ -131,6 +133,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   return opening +
     `<div class="case-narrative container"><div class="case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div><aside class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</aside></div>` +
     `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
+    (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance ↗</a></p>` : "") +
     nextBlock(site, study, base) +
     `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry ↗</a><a href="mailto:miebakakiki@gmail.com">Email directly ↗</a><a href="${base}work.html">All work ↗</a><a href="#case-top">Back to top ↑</a></nav>`;
 

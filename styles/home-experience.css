@@ -1,24 +1,24 @@
 /* The service cards and both folder racks share one baseline size. */
-body:is([data-page="home"], [data-page="work"]) {
+body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
   --home-panel-height: clamp(17em, 38svh, 21em);
 }
 
-body[data-page="home"] {
-  --service-overlap: 0px;
+.service-stack-section {
+  --service-overlap: 0;
 }
 
-body[data-page="home"] section.home-capabilities--reference .service-stack__card {
+body section.service-stack-section .service-stack__card {
   min-height: var(--home-panel-height);
 }
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
 @media (min-width:56em) {
-  body:is([data-page="home"], [data-page="work"]) {
+  body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
 }
 
-body[data-page="home"] section.home-capabilities--reference {
+body section.service-stack-section {
   position: relative;
   isolation: isolate;
   z-index: 2;
@@ -116,11 +116,11 @@ body[data-page="home"] .marquee__item img {
 
 /* Keep service cards aligned with the homepage's framed opening,
    regardless of the full-bleed section and older !important width rules. */
-body[data-page="home"] section.home-capabilities--reference .process-sequence .service-stack {
+body section.service-stack-section .process-sequence .service-stack {
   box-sizing: border-box;
-  width: calc(100% - 2 * var(--hf)) !important;
-  max-width: none !important;
-  margin-inline: var(--hf) !important;
+  width: min(calc(100% - 2 * var(--hf)), var(--content)) !important;
+  max-width: var(--content) !important;
+  margin-inline: auto !important;
   padding-inline: 0 !important;
 }
 
@@ -184,28 +184,28 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     margin-inline: auto;
   }
 
-  body[data-page="home"] section.home-capabilities--reference {
+  body section.service-stack-section {
     padding-block: clamp(var(--s7), 8svh, var(--s10));
     background: var(--paper);
     color: var(--ink);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .disciplines-heading {
+  body section.service-stack-section .disciplines-heading {
     margin-bottom: clamp(calc(var(--spacing-unit) * 10), 4vw, var(--s4));
   }
 
-  body[data-page="home"] section.home-capabilities--reference .disciplines-heading h2 {
+  body section.service-stack-section .disciplines-heading h2 {
     color: var(--ink);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  body section.service-stack-section .service-stack__item {
     position: relative;
     top: auto;
     z-index: auto;
     margin: 0;
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item .service-stack__card {
+  body section.service-stack-section .service-stack__item .service-stack__card {
     display: grid;
     min-height: 0;
     gap: clamp(var(--s2), 4vw, var(--s3));
@@ -218,24 +218,24 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     color: var(--ink);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:first-child .service-stack__card {
+  body section.service-stack-section .service-stack__item:first-child .service-stack__card {
     border-top: 1px solid var(--line);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__symbol,
-  body[data-page="home"] section.home-capabilities--reference .service-stack__tags {
+  body section.service-stack-section .service-stack__symbol,
+  body section.service-stack-section .service-stack__tags {
     display: none;
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__bottom {
+  body section.service-stack-section .service-stack__bottom {
     display: block;
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__description {
+  body section.service-stack-section .service-stack__description {
     gap: calc(var(--spacing-unit) * 7);
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__evidence {
+  body section.service-stack-section .service-stack__evidence {
     width: fit-content;
     max-width: 100%;
   }
@@ -279,17 +279,17 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     max-width:none;
     margin:0;
   }
-  body[data-page="home"] section.home-capabilities--reference{
+  body section.service-stack-section{
     padding-top:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
     padding-bottom: var(--s5);
   }
-  body[data-page="home"] section.home-capabilities--reference .disciplines-heading{
+  body section.service-stack-section .disciplines-heading{
     margin-bottom:clamp(var(--s6),6vw,var(--s12));
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item + .service-stack__item {
+  body section.service-stack-section .service-stack__item + .service-stack__item {
     margin-top: var(--service-list-gap, var(--s2));
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item .service-stack__card{
+  body section.service-stack-section .service-stack__item .service-stack__card{
     display:flex;
     flex-direction:column;
     justify-content:space-between;
@@ -303,35 +303,35 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
     color:var(--ref-midnight);
     box-shadow:0 -.2em .2em color-mix(in oklab,var(--ref-black) 6%,transparent),0 1.2em 2.5em color-mix(in oklab,var(--ref-black) 13%,transparent);
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(2) .service-stack__card{
-    background:var(--ref-coral-75);
+  body section.service-stack-section .service-stack__item:nth-child(2) .service-stack__card{
+    background:var(--ref-blue-80);
     color:var(--ref-midnight);
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(3) .service-stack__card{
-    background:var(--ref-tedx-light);
+  body section.service-stack-section .service-stack__item:nth-child(3) .service-stack__card{
+    background:var(--ref-paper);
     color:var(--ref-midnight);
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(4) .service-stack__card{
-    background:var(--ref-tedx);
+  body section.service-stack-section .service-stack__item:nth-child(4) .service-stack__card{
+    background:var(--ref-ultramarine);
     color:var(--ref-paper);
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:nth-child(5) .service-stack__card{
-    background:var(--ref-chopbox-light);
-    color:var(--ref-midnight);
+  body section.service-stack-section .service-stack__item:nth-child(5) .service-stack__card{
+    background:var(--ref-midnight);
+    color:var(--ref-paper);
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__symbol{
+  body section.service-stack-section .service-stack__symbol{
     display:grid;
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__tags{
+  body section.service-stack-section .service-stack__tags{
     display:flex;
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__bottom{
+  body section.service-stack-section .service-stack__bottom{
     display:grid;
     grid-template-columns:minmax(0,1.4fr) minmax(10em,.6fr);
     gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 56));
     align-items:end;
   }
-  body[data-page="home"] section.home-capabilities--reference .service-stack__description{
+  body section.service-stack-section .service-stack__description{
     gap:calc(var(--spacing-unit) * 10);
   }
   body[data-page="home"] .journey{padding-block:clamp(var(--s6),5vw,var(--s12))}
@@ -340,54 +340,54 @@ body[data-page="home"] section.home-capabilities--reference .process-sequence .s
 
 /* Pin each card on the same line so the last card covers the stack as it exits. */
 @media (min-width: 56em) and (min-height: 40em) {
-  body[data-page="home"] section.home-capabilities--reference {
+  body section.service-stack-section {
     --service-list-gap: calc(-1 * var(--service-overlap));
     --service-overlap: clamp(var(--s5), 11svh, calc(var(--spacing-unit) * 52));
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+  body section.service-stack-section .service-stack::after {
     content: "";
     display: block;
     height: clamp(var(--s3), 9svh, var(--s7));
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  body section.service-stack-section .service-stack__item {
     position: sticky;
     top: calc(var(--nav-h) + 1em);
     z-index: calc(10 + var(--stack-index, 0));
   }
 
-  body[data-page="home"] section.home-capabilities--reference .service-stack__item:has(:focus-visible) {
+  body section.service-stack-section .service-stack__item:has(:focus-visible) {
     z-index: 20;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference {
+  html:not([data-motion="full"]) body section.service-stack-section {
     --service-list-gap: var(--s2);
     --service-overlap: 0px;
   }
 
-  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+  html:not([data-motion="full"]) body section.service-stack-section .service-stack::after {
     display: none;
   }
 
-  html:not([data-motion="full"]) body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+  html:not([data-motion="full"]) body section.service-stack-section .service-stack__item {
     position: relative;
     top: auto;
   }
 }
 
-html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference {
+html[data-motion="reduced"] body section.service-stack-section {
   --service-list-gap: var(--s2);
   --service-overlap: 0px;
 }
 
-html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack::after {
+html[data-motion="reduced"] body section.service-stack-section .service-stack::after {
   display: none;
 }
 
-html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
+html[data-motion="reduced"] body section.service-stack-section .service-stack__item {
   position: relative;
   top: auto;
 }

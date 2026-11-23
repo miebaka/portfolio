@@ -47,7 +47,7 @@ test("approved visual contract remains intact", async () => {
 
   // Fonts and their roles live only in styles/tokens.css.
   assert.match(css, /--font-sans:\s*"Geist Sans"/);
-  assert.match(css, /--font-mono:\s*"Geist Mono"/);
+  assert.doesNotMatch(css, /--font-mono|Geist Mono|geist-mono/);
   assert.doesNotMatch(css, /--(?:font-display|font-body|font-label|font-size-[\w-]+|editorial-display)\s*:/);
   const definedFonts = [...css.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, block]) => {
     const family = block.match(/font-family\s*:\s*(?:"([^"]+)"|'([^']+)'|([^;}]+))/i);

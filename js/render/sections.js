@@ -36,13 +36,8 @@ export function renderServiceAccordionMarkup(items = SITE.capabilities) {
 export function renderCapabilities() {
   const el = mount(MOUNT.CAPABILITIES);
   if (!el) return;
-  if (document.body.dataset.page === "home") {
-    el.className = "process-sequence";
-    el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
-    return;
-  }
-  el.className = "home-services";
-  el.innerHTML = renderServiceAccordionMarkup(SITE.capabilities);
+  el.className = "process-sequence";
+  if (el.dataset.prerendered !== "true") el.innerHTML = renderServiceSwatchesMarkup(SITE.capabilities);
 }
 
 export function renderExperienceLedger(entries = []) {

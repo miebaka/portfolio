@@ -63,7 +63,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-DejhjEnE0qGjWCdM5ZUAHUSCZgjdWHcny5Yg+mSbXq8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'sha256-DejhjEnE0qGjWCdM5ZUAHUSCZgjdWHcny5Yg+mSbXq8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mir-s3-cdn-cf.behance.net; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
         },
         {
           "key": "X-Content-Type-Options",

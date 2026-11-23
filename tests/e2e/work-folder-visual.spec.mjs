@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 test("cardstock folders hold five paper sheets and legible project evidence at every viewport", async ({ page }, testInfo) => {
-  const titles = ["TEDx Rivers State University", "Rivo Studio", "ChopBox"];
+  const titles = ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Kiki-Joshua"];
   for (const width of [320, 390, 900, 1440, 1920]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto("/work.html");
     await page.evaluate(() => document.fonts.ready);
     await expect(page.locator(".project-folder__title")).toHaveText(titles);
-    await expect(page.locator(".project-folder__tab-number")).toHaveText(["01","02","03"]);
+    await expect(page.locator(".project-folder__tab-number")).toHaveText(["01","02","03","04"]);
     const measured = await page.locator(".project-folder").evaluateAll(nodes =>
       nodes.map(node => {
         const front = node.querySelector(".project-folder__front");
@@ -27,7 +27,7 @@ test("cardstock folders hold five paper sheets and legible project evidence at e
           }))
         };
       }));
-    expect(measured).toHaveLength(3);
+    expect(measured).toHaveLength(4);
     for (const m of measured) {
       expect(m.width).toBeGreaterThan(0);
       expect(m.titleFits).toBe(true);

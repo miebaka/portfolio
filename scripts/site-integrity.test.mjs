@@ -74,9 +74,9 @@ test("Work archive separates published cases from work in progress", () => {
   for (const title of ["TEDx Rivers State University", "Rivo Studio", "ChopBox", "Poster A Week", "Kiki-Joshua", "Kigoma Hotels"])
     assert.match(html, new RegExp(title));
   assert.doesNotMatch(html, /Designing for Disability|When the Swoosh Lost Its Soul|<details|<summary/);
-  assert.equal((html.match(/<a\b/g) || []).length, 5);
-  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
-  assert.match(html, /class="project-folder-stack__cards"/);
+  assert.equal((html.match(/<a\b/g) || []).length, 6);
+  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 4);
+  assert.match(html, /class="project-folder-stack__cards home-folder-stack__cards"/);
   assert.ok(html.indexOf('data-slug="tedx-rsu"') < html.indexOf('data-slug="rivo"'));
   assert.ok(html.indexOf('data-slug="rivo"') < html.indexOf('data-slug="chopbox"'));
   assert.doesNotMatch(html, /CASE STUDY \/ 20\d\d/, "folder fronts only carry their project names");
@@ -100,7 +100,7 @@ test("built Home and Work expose truthful project states without JavaScript", as
   for (const html of [home, work]) assert.match(html, /href="work\/rivo.html"/);
   assert.doesNotMatch(home, /Case study in progress|Detour|Out Of Office/);
   assert.match(work, /<h2 id="in-progress-title">In progress<\/h2>/);
-  assert.equal((work.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.equal((work.match(/class="project-folder__link"/g) || []).length, 4);
   assert.doesNotMatch(work, /filing-cabinet|work-cabinet/);
   assert.doesNotMatch(work, /class="editorial-index--archive"/);
   for (const html of [home, work]) assert.match(html, /href="work\/chopbox\.html"/);
@@ -219,7 +219,7 @@ test("project publication states are explicit", async () => {
   for (const project of SITE.projects) {
     assert.ok(statuses.has(project.status), `${project.slug} needs a publication status`);
   }
-  assert.equal(SITE.projects.filter((project) => project.featured && project.status === "published").length, 3);
+  assert.equal(SITE.projects.filter((project) => project.featured && project.status === "published").length, 4);
   assert.ok(SITE.projects.some((project) => project.status === "coming-soon"));
 
   const pages = await walk(dist, ".html");
@@ -277,7 +277,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.match(css, /--accent:/);
   assert.doesNotMatch(css, /font-family:\s*"Geist Serif"/);
   assert.match(css, /font-family:\s*"?Geist Sans"?/);
-  assert.match(css, /font-family:\s*"?Geist Mono"?/);
+  assert.doesNotMatch(css, /font-family:\s*"?Geist Mono"?/);
   assert.match(css, /font-family:\s*"?Material Symbols Outlined"?/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
   for (const match of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -307,7 +307,7 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
   assert.match(css, /--font-sans:\s*"Geist Sans"/);
-  assert.match(css, /--font-mono:\s*"Geist Mono"/);
+  assert.doesNotMatch(css, /--font-mono|Geist Mono|geist-mono/);
   assert.doesNotMatch(css, /--(?:font-display|font-body|font-label|font-size-[\w-]+|editorial-display)\s*:/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /\.site-footer__signature-canvas/);
@@ -450,10 +450,10 @@ test("built service fallback remains complete on the detailed About page", async
   for (const file of ["about.html"]) {
     const html = await readFile(join(dist, file), "utf8");
     assert.equal((html.match(/data-mount="capabilities"/g) || []).length, 1, file);
-    const start = html.indexOf('<div data-mount="capabilities"');
+    const start = html.indexOf('data-mount="capabilities"');
     const capability = html.slice(start, html.indexOf("</section>", start));
     for (const service of SITE.capabilities)
-      for (const field of ["title", "description", "outputs", "fit"]) {
+      for (const field of ["title", "description"]) {
         const value = service[field].replaceAll("&", "&amp;");
         assert.equal(capability.split(value).length - 1, 1, `${file}: ${service.id}.${field}`);
       }

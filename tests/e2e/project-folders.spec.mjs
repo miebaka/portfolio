@@ -3,13 +3,14 @@ import { test, expect } from "@playwright/test";
 const routes = [
   { slug: "tedx-rsu", title: "TEDx Rivers State University", href: "work/tedx-rsu.html" },
   { slug: "rivo", title: "Rivo Studio", href: "work/rivo.html" },
-  { slug: "chopbox", title: "ChopBox", href: "work/chopbox.html" }
+  { slug: "chopbox", title: "ChopBox", href: "work/chopbox.html" },
+  { slug: "kiki-joshua-notepad", title: "Kiki-Joshua", href: "work/kiki-joshua-notepad.html" }
 ];
 
 test("published files lead with TEDx and expose numbered tabs", async ({ page }) => {
   await page.goto("/work.html");
-  await expect(page.locator(".project-folder")).toHaveCount(3);
-  await expect(page.locator(".project-folder__paper")).toHaveCount(15);
+  await expect(page.locator(".project-folder")).toHaveCount(4);
+  await expect(page.locator(".project-folder__paper")).toHaveCount(20);
   await expect(page.locator(".project-folder__title")).toHaveText(routes.map(item => item.title));
   await expect(page.locator(".project-folder__visual img")).toHaveCount(0);
   for (const [index, item] of routes.entries()) {
@@ -58,7 +59,7 @@ test("all three fronts remain readable and reachable across breakpoints", async 
         inFace: rect(title).left >= rect(face).left - 2 && rect(title).right <= rect(face).right + 2,
         visible: rect(title).height > 0 && rect(tab).height > 0 };
     }));
-    expect(proof).toHaveLength(3);
+    expect(proof).toHaveLength(4);
     for (const item of proof) {
       expect(item.named).toBe(true);
       expect(item.inFace, "title remains on the folder face at "+width).toBe(true);
@@ -89,7 +90,7 @@ test("JavaScript-off Work still exposes all three full links and project names",
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("/work.html");
-  await expect(page.locator(".project-folder__link")).toHaveCount(3);
+  await expect(page.locator(".project-folder__link")).toHaveCount(4);
   await expect(page.locator(".project-folder__title")).toHaveText(routes.map(item => item.title));
   await context.close();
 });
@@ -132,7 +133,7 @@ test("Work and Home share folder cover geometry and preview styling", async ({ p
 test("folder paper remains styled and native links work without GPU rendering", async ({ page }) => {
   await page.goto("/work.html");
   await expect(page.locator(".project-folder__stock")).toHaveCount(0);
-  await expect(page.locator(".project-folder__front")).toHaveCount(3);
+  await expect(page.locator(".project-folder__front")).toHaveCount(4);
   await page.locator(".project-folder--rivo .project-folder__tab").click();
   await expect(page).toHaveURL(/work\/rivo\.html$/);
 });

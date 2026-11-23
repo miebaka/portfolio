@@ -78,7 +78,7 @@ async function outputFiles(directory) {
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
 const { renderClientProofMarkup, renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
-const { renderServiceFallbackMarkup } = await import("../js/render/sections.js");
+const { renderServiceSwatchesMarkup } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
 const rootFiles = routes.filter(route => route.includeIn.includes("build")).map(route => route.href);
@@ -128,7 +128,7 @@ function renderShell(source, href) {
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/<div class="project-folder-stack" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="project-folder-stack" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
   if (href === "experiments.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
-  rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div data-mount="capabilities" data-prerendered="true">' + renderServiceFallbackMarkup(content.services) + '</div>');
+  rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div class="process-sequence" data-mount="capabilities" data-prerendered="true">' + renderServiceSwatchesMarkup(content.services) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
   return rendered;
 }
@@ -181,6 +181,7 @@ for (const file of allHtml) {
   for (const match of html.matchAll(/assets\/images\/optimized\/([a-z0-9_-]+\.(?:avif|webp|jpg|png))/gi)) assets.add(match[1]);
 }
 for (const project of SITE.projects.filter(project => project.caseReady !== false && project.cover)) {
+  if (SITE.caseStudies[project.slug]?.media?.find(media => media.src === project.cover)?.remoteSrc) continue;
   for (const width of [540, 810, 1080]) for (const ext of ["avif", "webp", "jpg"]) assets.add(`${project.cover}-${width}.${ext}`);
 }
 for (const asset of assets) {

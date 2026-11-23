@@ -5,11 +5,11 @@ import { resolve } from "node:path";
 import { SITE } from "../data/site.js";
 import { renderProjectFolderStackMarkup, renderProjectArchiveMarkup, renderHomeProjectList } from "../js/render/projects.js";
 
-test("archive publishes exactly three honest brand-specific native folder links", () => {
+test("archive publishes exactly four honest brand-specific native folder links", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
-  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-folder__link"/g) || []).length, 4);
   assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
-    ["tedx-rsu.html", "rivo.html", "chopbox.html"]);
+    ["tedx-rsu.html", "rivo.html", "chopbox.html", "kiki-joshua-notepad.html"]);
   for (const color of ["#000041", "#6e2962", "#c2531c"]) assert.ok(html.includes(color), color);
   assert.doesNotMatch(html, /filing-cabinet|drawer|webgl|canvas/i);
 });
@@ -20,15 +20,15 @@ test("each Work folder shows its project name, preview, numbered tab and blank s
     "project-folder__tab-number", "project-folder__front", "project-folder__title",
     "project-folder__paper--1", "project-folder__paper--2", "project-folder__paper--3",
     "project-folder__paper--4", "project-folder__paper--5"]) {
-    assert.equal((html.match(new RegExp('class="[^"]*' + className + '(?: [^"]*)?"', "g")) || []).length, 3, className);
+    assert.equal((html.match(new RegExp('class="[^"]*' + className + '(?: [^"]*)?"', "g")) || []).length, 4, className);
   }
-  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
-  assert.deepEqual([...html.matchAll(/class="project-folder__tab-number">(\d\d)</g)].map(match => match[1]), ["01", "02", "03"]);
+  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 20);
+  assert.deepEqual([...html.matchAll(/class="project-folder__tab-number">(\d\d)</g)].map(match => match[1]), ["01", "02", "03", "04"]);
   assert.doesNotMatch(html, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
-  assert.equal((html.match(/class="project-folder__outcome"/g) || []).length, 3);
+  assert.equal((html.match(/class="project-folder__outcome"/g) || []).length, 4);
   assert.doesNotMatch(html, /project-folder__(?:visual|open)/);
   assert.doesNotMatch(html, /The Call|The System|What Survived|First Contact|The Results|FILE 0/);
-  for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
+  for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox", "Kiki-Joshua"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
     assert.match(html, new RegExp('class="project-folder__title">' + name + '</strong>'));
   }
@@ -38,7 +38,7 @@ test("archive separates published case files from unpublished updates", () => {
   const html = renderProjectArchiveMarkup(SITE.projects, "", SITE.caseStudies);
   assert.match(html, /project-archive__progress/);
   assert.match(html, /project-archive__collections/);
-  assert.doesNotMatch(html, /href="work\/(?:kigoma-hotels|kiki-joshua-notepad|christian-poster-a-week)\.html"/);
+  assert.doesNotMatch(html, /href="work\/(?:kigoma-hotels|christian-poster-a-week)\.html"/);
 });
 
 test("Work page never loads retired drawer or WebGL components", () => {
@@ -55,9 +55,9 @@ test("static Work markup matches the horizontal folders and removes filler copy"
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   const fallback = readFileSync(resolve("work.html"), "utf8");
   for (const markup of [html, fallback]) {
-    assert.equal((markup.match(/class="project-folder__tab-number"/g) || []).length, 3);
-    assert.equal((markup.match(/class="project-folder__title"/g) || []).length, 3);
-    assert.equal((markup.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
+    assert.equal((markup.match(/class="project-folder__tab-number"/g) || []).length, 4);
+    assert.equal((markup.match(/class="project-folder__title"/g) || []).length, 4);
+    assert.equal((markup.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 20);
     assert.doesNotMatch(markup, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
     assert.doesNotMatch(markup, /demo.*would open|TEDx RSU.*Rise.*Hisa Nigeria/i);
   }
@@ -81,7 +81,7 @@ test("native folder links do not intercept mouse, touch or keyboard activation",
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   assert.doesNotMatch(controller, /pointermove|preventDefault|touchPreview|clientY|indexAt/);
   assert.match(controller, /native/);
-  for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
+  for (const slug of ["tedx-rsu", "rivo", "chopbox", "kiki-joshua-notepad"]) {
     assert.match(html, new RegExp('data-slug="' + slug + '"'));
     assert.match(html, new RegExp('href="work/' + slug + '\\.html"'));
   }
@@ -96,16 +96,17 @@ test("folder reveal only animates compositor-friendly transform and opacity", ()
 test("Home matches the Work landscape folder construction", () => {
   const html = renderHomeProjectList(SITE.projects, SITE.caseStudies);
   assert.match(html, /home-folder-stack__cards/);
+  assert.equal(html, renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies));
   assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
-    ["tedx-rsu.html", "rivo.html", "chopbox.html"]);
+    ["tedx-rsu.html", "rivo.html", "chopbox.html", "kiki-joshua-notepad.html"]);
   assert.doesNotMatch(html, /project-folder__spine/);
-  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 15);
+  assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]"/g) || []).length, 20);
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });
 
 test("Selected Work adds a brief category and preview to the physical folder", () => {
   const home = renderHomeProjectList(SITE.projects, SITE.caseStudies);
-  assert.equal((home.match(/class="project-folder__category"/g) || []).length, 3);
-  assert.equal((home.match(/class="project-folder__outcome"/g) || []).length, 3);
+  assert.equal((home.match(/class="project-folder__category"/g) || []).length, 4);
+  assert.equal((home.match(/class="project-folder__outcome"/g) || []).length, 4);
   assert.doesNotMatch(home, /project-folder__(?:visual|open)/);
 });

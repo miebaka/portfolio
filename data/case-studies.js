@@ -586,6 +586,161 @@ export const caseStudies = {
       }
     ],
     "next": {
+      "slug": "kiki-joshua-notepad",
+      "title": "Kiki-Joshua"
+    },
+    "status": "published"
+  },
+  "kiki-joshua-notepad": {
+    "title": "Kiki-Joshua",
+    "tagline": "A physician’s notebook reimagined as a keepsake for a medical induction.",
+    "hero": "kiki-joshua-cover",
+    "source": "https://www.behance.net/gallery/114357207/For-Dr-Amelia-Ibinabo-Kiki-Joshua-A-Notepad-Design",
+    "facts": {
+      "context": "Medical induction at Babcock University, February 2021",
+      "role": "Creative direction and print design",
+      "constraint": "A 24-hour brief; no portrait on the cover",
+      "delivered": "Custom notepad cover artwork and printed keepsake"
+    },
+    "proof": [
+      {
+        "type": "decision",
+        "statement": "Historical physician notebooks supplied a distinct concept for a medical induction souvenir.",
+        "strength": "verified"
+      },
+      {
+        "type": "system",
+        "statement": "The illustrated caduceus, university seal and medical ethics references form a coherent front-and-back cover design.",
+        "strength": "verified"
+      },
+      {
+        "type": "survival",
+        "statement": "The original project records a 24-hour brief and shows a finished printed notepad.",
+        "strength": "verified"
+      },
+      {
+        "type": "adoption",
+        "statement": "The notepad was designed as a celebratory keepsake; the print photograph confirms production, not distribution numbers.",
+        "strength": "partial"
+      },
+      {
+        "type": "results",
+        "statement": "The documented result is a physical notepad; recipient feedback and commercial metrics are not available.",
+        "strength": "partial"
+      }
+    ],
+    "chapters": [
+      {
+        "id": "decision",
+        "label": "The Call",
+        "title": "Make the souvenir belong to medicine",
+        "body": [
+          "When my sister, Dr. Amelia Ibinabo Kiki-Joshua, was inducted into medicine at Babcock University in February 2021, my parents asked me to design a commemorative notepad. I had 24 hours to work with, and they did not want her photograph on the cover.",
+          "Rather than make another portrait-led celebration souvenir, I drew on historical physician notebooks and Leonardo da Vinci’s studies. The aim was to make the object feel connected to the profession and the occasion."
+        ],
+        "media": [
+          "kiki-joshua-seal"
+        ]
+      },
+      {
+        "id": "system",
+        "label": "The System",
+        "title": "Build a physician’s notebook",
+        "body": [
+          "The front cover uses the caduceus, treated as a sketch through Photoshop, and a wax seal carrying the Babcock University identity, illustrated in Illustrator at my sister’s suggestion.",
+          "The back cover brings together the Hippocratic Oath, the Vitruvian Man and the Declaration of Geneva. These elements connect the notebook concept to medicine, anatomy and professional responsibility."
+        ],
+        "media": [
+          "kiki-joshua-back"
+        ]
+      },
+      {
+        "id": "survival",
+        "label": "What Survived",
+        "title": "Take the illustration into print",
+        "body": [
+          "The concept had to work as a tangible notepad under a short deadline. The front and back covers retain the historical notebook idea instead of introducing unrelated celebratory graphics.",
+          "The original design presentation shows the intended object, while the separate print photograph establishes that the design reached production. No print-run quantity or production budget is documented."
+        ],
+        "media": [
+          "kiki-joshua-presentation"
+        ]
+      },
+      {
+        "id": "encounter",
+        "label": "First Contact",
+        "title": "A keepsake rather than another portrait",
+        "body": [
+          "The intended first encounter was a souvenir marking a new physician’s induction. The cover identifies the occasion through the institution and medical symbolism; the reverse connects it to the responsibilities of the profession.",
+          "The photographed printed notepad is evidence of the finished object. There is no documented recipient-response study or distribution count."
+        ],
+        "media": [
+          "kiki-joshua-print"
+        ]
+      },
+      {
+        "id": "results",
+        "label": "The Results",
+        "title": "A finished object with a specific story",
+        "body": [
+          "The outcome was a printed commemorative notepad grounded in a clear concept, with a front and back that belong to the same visual language.",
+          "The original case study was published on 1 March 2021. The evidence supports the completed design and physical print, not quantified audience impact."
+        ]
+      }
+    ],
+    "media": [
+      {
+        "label": "Notepad design",
+        "src": "kiki-joshua-cover",
+        "remoteSrc": "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/e223a5114357207.603cd460c3c24.jpg",
+        "w": 1400,
+        "h": 1050,
+        "alt": "Original presentation of the physician-inspired Kiki-Joshua notepad.",
+        "caption": "The original notepad design presentation.",
+        "loading": "eager"
+      },
+      {
+        "label": "University seal",
+        "src": "kiki-joshua-seal",
+        "remoteSrc": "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200_webp/87cc50114357207.603ced992c319.png",
+        "w": 1200,
+        "h": 1176,
+        "alt": "Wax-seal illustration featuring the Babcock University identity.",
+        "caption": "The university seal makes the keepsake specific to the occasion.",
+        "loading": "lazy"
+      },
+      {
+        "label": "Cover artwork",
+        "src": "kiki-joshua-back",
+        "remoteSrc": "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/f602ca114357207.603ced992b90a.jpg",
+        "w": 1400,
+        "h": 788,
+        "alt": "Original notepad cover artwork from the published project.",
+        "caption": "Cover artwork presented in the original 2021 case study.",
+        "loading": "lazy"
+      },
+      {
+        "label": "Notepad visualisation",
+        "src": "kiki-joshua-presentation",
+        "remoteSrc": "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/86d3a7114357207.603cec8e207fe.jpg",
+        "w": 1400,
+        "h": 1050,
+        "alt": "Presentation visualisation of the commemorative notepad.",
+        "caption": "The design visualised as a finished print object.",
+        "loading": "lazy"
+      },
+      {
+        "label": "Printed notepad",
+        "src": "kiki-joshua-print",
+        "remoteSrc": "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/8d891c114357207.603ceec85f9bf.jpg",
+        "w": 1400,
+        "h": 1867,
+        "alt": "Photograph of the printed Kiki-Joshua notepad.",
+        "caption": "A photograph of the actual printed keepsake, not a proposed mockup.",
+        "loading": "lazy"
+      }
+    ],
+    "next": {
       "slug": "tedx-rsu",
       "title": "TEDx Rivers State University"
     },

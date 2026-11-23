@@ -8,7 +8,7 @@ test("Geist Sans typography roles and full-screen editorial Index are consistent
  });
  expect(fonts.display).toContain("Geist Sans");
  expect(fonts.body).toContain("Geist Sans");
- expect(fonts.label).toContain("Geist Mono");
+ expect(fonts.label).toContain("Geist Sans");
  const brand=page.getByRole("link",{name:/Miebaka Joshua, home/i});
  await expect(brand).toBeVisible();
  const menu=page.getByRole("button",{name:"Index",exact:true});
@@ -65,7 +65,7 @@ test("Published project folders remain complete and readable at mobile and deskt
     await page.setViewportSize({width,height:1000});
     await page.goto("/work.html");
     await expect(page.locator(".project-folder__title")).toHaveText([
-      "TEDx Rivers State University","Rivo Studio","ChopBox"
+      "TEDx Rivers State University","Rivo Studio","ChopBox","Kiki-Joshua"
     ]);
     await expect(page.locator(".project-folder__visual")).toHaveCount(0);
     const geometry = await page.locator(".project-folder__link").evaluateAll(nodes => nodes.map(link => {
