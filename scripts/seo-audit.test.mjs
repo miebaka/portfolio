@@ -15,7 +15,7 @@ const pages = [
   "experiments.html", "accessibility.html", "privacy.html"
 ];
 
-const schema = (html) => [...html.matchAll(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/g)]
+const schema = (html) => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
   .flatMap((match) => { const value = JSON.parse(match[1]); return Array.isArray(value) ? value : [value]; });
 
 test("every published page has one canonical, descriptive metadata and extractable JSON-LD", () => {
@@ -24,12 +24,12 @@ test("every published page has one canonical, descriptive metadata and extractab
     const canonical = origin + (path === "index.html" ? "" : path);
     assert.equal((html.match(/<link rel="canonical"/g) || []).length, 1, path);
     assert.ok(html.includes('<link rel="canonical" href="' + canonical + '">'), path);
-    assert.match(html, /<title>[^<]{12,}<\\/title>/, path);
+    assert.match(html, /<title>[^<]{12,}<\/title>/, path);
     assert.match(html, /<meta name="description" content="[^"]{50,}">/, path);
-    assert.equal((html.match(/<h1(?:\\s|>)/g) || []).length, 1, path);
+    assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, path);
     assert.ok(schema(html).length > 0, path);
-    for (const match of html.matchAll(/<img\\b[^>]*>/g)) {
-      assert.match(match[0], /\\balt="[^"]*"/, path + ": " + match[0].slice(0, 80));
+    for (const match of html.matchAll(/<img\b[^>]*>/g)) {
+      assert.match(match[0], /\balt="[^"]*"/, path + ": " + match[0].slice(0, 80));
     }
   }
 });
@@ -63,7 +63,7 @@ test("directory aliases redirect without intercepting individual asset paths", (
     ["/index.html", "/"], ["/work", "/work.html"], ["/work/", "/work.html"],
     ["/essays", "/essays.html"], ["/essays/", "/essays.html"]
   ]) assert.ok(config.redirects.some((r) => r.source === from && r.destination === to && r.permanent === true), from);
-  assert.ok(config.redirects.every((r) => !/^\\/(?:assets|styles)\\//.test(r.source)),
+  assert.ok(config.redirects.every((r) => !/^\/(?:assets|styles)\//.test(r.source)),
     "Do not accidentally redirect image, font, JS or CSS asset subpaths");
 });
 test("sitemap and llms.txt agree with the published case and article URLs", () => {
