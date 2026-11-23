@@ -113,6 +113,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     <p class="case-opening__eyebrow">Selected case study / ${esc(project?.category || "Identity")}</p>
     <h1>${esc(project?.title || study.title)}</h1>
     <p class="case-opening__statement">${esc(study.tagline || project?.tagline || "")}</p>
+    ${study.scopeNote ? `<p class="case-opening__scope">${esc(study.scopeNote)}</p>` : ""}
     <dl class="case-opening__essentials">
       <div><dt>My role</dt><dd>${esc(role)}</dd></div>
       <div><dt>The constraint</dt><dd>${esc(constraint)}</dd></div>

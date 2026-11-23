@@ -45,6 +45,7 @@ export const caseStudies = {
     "status": "draft"
   },
   "rivo": {
+    "scopeNote": "The in-house work covered Rivo Studio’s softened wordmark, colour system and identity guidelines. Supporting mockups demonstrate proposed uses; they do not independently establish public rollout.",
     "title": "Rivo Studio",
     "tagline": "A software studio positioned around access, built to feel useful before it feels technical.",
     "hero": "rivo-in-use",
@@ -52,7 +53,7 @@ export const caseStudies = {
       "context": "In-house identity work at Rivo Studios",
       "role": "Brand strategy, identity design and guidelines",
       "constraint": "Make a software studio feel capable without relying on cold, technical category codes",
-      "delivered": "Identity system and rollout"
+      "delivered": "Wordmark, identity system and guidelines; proposed application visualisations"
     },
     "proof": [
       {
@@ -227,6 +228,7 @@ export const caseStudies = {
     "status": "published"
   },
   "tedx-rsu": {
+    "scopeNote": "I developed the local “Pause…” event language within TEDx’s fixed identity rules, from social creative and printed programmes to campus signage. Event-day photographs document public use, not audience impact.",
     "title": "TEDx Rivers State University",
     "tagline": "A global event system given a distinct pause-and-reflect rhythm.",
     "hero": "tedx-rsu-campus-banner",
@@ -410,6 +412,7 @@ export const caseStudies = {
     "status": "published"
   },
   "chopbox": {
+    "scopeNote": "I developed ChopBox’s visual identity, brand presentation and packaging concepts. Campaign and packaging mockups are proposed applications; manufacture, sales and public rollout are not independently established.",
     "title": "ChopBox",
     "tagline": "A food identity designed to feel warm, generous and ready to order.",
     "hero": "chopbox-platter",
@@ -417,7 +420,7 @@ export const caseStudies = {
       "context": "Independent brand identity commission",
       "role": "Brand strategy, identity design and packaging",
       "constraint": "Build appetite and recognition without defaulting to the category’s loud delivery-app shorthand",
-      "delivered": "Identity, packaging and rollout"
+      "delivered": "Brand identity and guidelines; packaging and campaign concepts (production unverified)"
     },
     "proof": [
       {

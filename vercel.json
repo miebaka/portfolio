@@ -4,6 +4,31 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/work",
+      "destination": "/work.html",
+      "permanent": true
+    },
+    {
+      "source": "/work/",
+      "destination": "/work.html",
+      "permanent": true
+    },
+    {
+      "source": "/essays",
+      "destination": "/essays.html",
+      "permanent": true
+    },
+    {
+      "source": "/essays/",
+      "destination": "/essays.html",
+      "permanent": true
+    },
+    {
       "source": "/community.html",
       "destination": "/experiments.html",
       "permanent": true
