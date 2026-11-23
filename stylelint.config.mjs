@@ -16,6 +16,8 @@ export default {
     "declaration-block-no-shorthand-property-overrides": null,
     "declaration-block-no-redundant-longhand-properties": null,
     "hue-degree-notation": null,
+    "lightness-notation": "number",
+    "number-max-precision": [4, { insideFunctions: { oklch: 7 } }],
     "media-feature-range-notation": null,
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,

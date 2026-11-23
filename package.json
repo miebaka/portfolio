@@ -41,7 +41,10 @@
     "test:typography": "node --test scripts/typography-contract.test.mjs scripts/typography-structure.test.mjs",
     "test:folders": "node --test tests/project-folders.test.mjs",
     "test:relative": "node --test scripts/em-sizing.test.mjs",
-    "test:sizing": "node --test scripts/sizing-contract.test.mjs"
+    "test:sizing": "node --test scripts/sizing-contract.test.mjs",
+    "test:interaction": "PORTFOLIO_INTERACTION_EVIDENCE=1 PLAYWRIGHT_HTML_OUTPUT_DIR=reports/interaction PLAYWRIGHT_HTML_OPEN=never playwright test tests/e2e --grep @interaction --reporter=line,html --output reports/interaction-results",
+    "test:routes": "playwright test tests/route-matrix.spec.mjs --project desktop --reporter=line --output test-results/route-matrix",
+    "release:receipt": "node scripts/release-receipt.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

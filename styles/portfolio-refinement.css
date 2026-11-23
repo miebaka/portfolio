@@ -16,12 +16,13 @@ body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__men
 body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__themes {
   grid-column: 3;
   justify-self: end;}
+
 /* A compact appearance picker with native radio targets. */
 .theme-picker {
   display: inline-flex;
   align-items: center;
   min-inline-size: 0;
-  padding: .125em;
+  padding: var(--spacing-unit);
   border: 1px solid var(--line);
   border-radius: 62.4375em;
   background: var(--surface);

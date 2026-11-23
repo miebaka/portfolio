@@ -1,3 +1,4 @@
+import { captureState } from "../helpers/interaction-evidence.mjs";
 import { test, expect } from "@playwright/test";
 
 // Every canonical public template must remain readable, scroll-safe, and
@@ -53,7 +54,7 @@ test("Experiments has a functioning, art-rich and navigable no-script fallback",
   }
 });
 
-test("Essay table of contents links to real headings and exposes the current section", async ({ page }) => {
+test("@interaction essays: Essay table of contents links to real headings and exposes the current section", async ({ page }, testInfo) => {
   await page.goto("/essays/when-the-swoosh-lost-its-soul.html");
   const toc = page.locator(".article-toc");
   await expect(toc).toBeVisible();
@@ -70,4 +71,5 @@ test("Essay table of contents links to real headings and exposes the current sec
   await expect(toc.locator('a[aria-current="location"]')).toHaveCount(1);
   await links.nth(1).click();
   await expect.poll(() => links.nth(1).getAttribute("aria-current")).toBe("location");
+  await captureState(testInfo, toc, "essay-active-section");
 });

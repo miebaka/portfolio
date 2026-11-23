@@ -1,3 +1,4 @@
+import { captureState } from "../helpers/interaction-evidence.mjs";
 import { test, expect } from "@playwright/test";
 
 const valid = { name: "Ada Okafor", email: "ada@example.com", interest: "brand-identity", message: "I need help with a brand identity system." };
@@ -33,7 +34,7 @@ function expectNoLeak(page, consoleMessages, values = Object.values(valid)) {
 
 test.beforeEach(async ({ page }) => { await page.goto("/contact.html"); });
 
-test("202 confirms delivery, clears values and prevents a duplicate in flight", async ({ page }) => {
+test("@interaction contact: 202 confirms delivery, clears values and prevents a duplicate in flight", async ({ page }, testInfo) => {
   let requests = 0;
   const consoleMessages = [];
   page.on("console", message => consoleMessages.push(message.text()));
@@ -46,13 +47,14 @@ test("202 confirms delivery, clears values and prevents a duplicate in flight", 
   const button = page.getByRole("button", { name: "Send inquiry" });
   await button.dblclick();
   await expect(page.getByRole("status")).toHaveText("Message sent. I’ll reply by email.");
+  await captureState(testInfo, page.locator(".form-result"), "contact-sent");
   expect(requests).toBe(1);
   for (const field of Object.values(fields(page))) await expect(field).toHaveValue("");
   await expect(page.locator('[name="website"]')).toHaveValue("");
   expectNoLeak(page, consoleMessages);
 });
 
-test("422 exposes field feedback and retains input", async ({ page }) => {
+test("@interaction contact: 422 exposes field feedback and retains input", async ({ page }, testInfo) => {
   const consoleMessages = [];
   page.on("console", message => consoleMessages.push(message.text()));
   await mock(page, 422, { fieldErrors: { email: "Use a work email address." } });
@@ -60,6 +62,7 @@ test("422 exposes field feedback and retains input", async ({ page }) => {
   await page.getByRole("button", { name: "Send inquiry" }).click();
   await expect(page.getByRole("status")).toHaveText("Check the highlighted fields.");
   await expect(page.getByLabel("Email")).toHaveAttribute("aria-invalid", "true");
+  await captureState(testInfo, page.getByLabel("Email").locator("xpath=.."), "contact-field-error");
   await expectRetained(page);
   expectNoLeak(page, consoleMessages);
 });

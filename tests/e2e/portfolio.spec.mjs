@@ -1,3 +1,4 @@
+import { captureState } from "../helpers/interaction-evidence.mjs";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -289,7 +290,7 @@ test("Essay cards maintain internal padding at mobile and desktop widths", async
   }
 });
 
-test("Mobile navigation has a focus-trapped index", async ({ page }) => {
+test("@interaction index: Mobile navigation has a focus-trapped index", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/index.html");
   const menu = page.getByRole("button", { name: "Index" });
@@ -301,6 +302,7 @@ test("Mobile navigation has a focus-trapped index", async ({ page }) => {
   await expect(menu).toHaveAttribute("aria-expanded", "true");
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("link", { name: "Work" })).toBeVisible();
+  await captureState(testInfo, dialog, "index-open");
   await page.keyboard.press("Escape");
   await expect(menu).toHaveAttribute("aria-expanded", "false");
   await expect(menu).toBeFocused();
@@ -349,21 +351,24 @@ test("Work folders reveal the three approved published projects with image and s
   await expect(page.locator(".filing-cabinet,.filing-cabinet__three-canvas")).toHaveCount(0);
 });
 
-test("Work folder links display keyboard focus and a modest hover flourish", async ({ page, isMobile }) => {
+test("@interaction work: Work folder links display keyboard focus and a modest hover flourish", async ({ page, isMobile }, testInfo) => {
   await page.goto("/work.html");
   const first = page.locator(".project-folder__link").first();
   await expect(first).toBeVisible();
+  await captureState(testInfo, first, "folder-rest");
   await first.focus();
   await expect(first).toBeFocused();
   await expect(first.locator(".project-folder__front")).toBeVisible();
+  await captureState(testInfo, first, "folder-focus");
   if (!isMobile) {
     await first.hover();
     await expect.poll(() => first.locator("xpath=..").evaluate(el => getComputedStyle(el).transform))
       .not.toBe("none");
+    await captureState(testInfo, first, "folder-hover");
   }
 });
 
-test("Experiments presents seven 4:5 posters inside the navigable page", async ({ page }) => {
+test("@interaction experiments: Experiments presents seven 4:5 posters inside the navigable page", async ({ page }, testInfo) => {
   await page.goto("/experiments.html");
   await expect(page.locator("[data-experiments-viewport]")).toBeVisible();
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
@@ -371,6 +376,7 @@ test("Experiments presents seven 4:5 posters inside the navigable page", async (
   await expect(page.getByRole("navigation", { name: "Experiments navigation" })).toBeVisible();
   await expect(page.locator("[data-experiments-index]")).toBeVisible();
   await expect(page.locator("[data-experiment-title]")).toContainText("Wada Sanzō");
+  await captureState(testInfo, page.locator("[data-experiments-viewport]"), "poster-rest");
 });
 
 test("retired community route redirects to Experiments", async ({ page }) => {
@@ -387,7 +393,7 @@ test("stored theme preference persists", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("masthead theme picker supports pointer, keyboard and the system preference", async ({ page }) => {
+test("@interaction theme: masthead theme picker supports pointer, keyboard and the system preference", async ({ page, isMobile }, testInfo) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/index.html");
   const picker = page.getByRole("group", { name: "Theme", exact: true });
@@ -397,10 +403,14 @@ test("masthead theme picker supports pointer, keyboard and the system preference
   const root = page.locator("html");
 
   await expect(system).toBeChecked();
-  await light.click();
+  await captureState(testInfo, picker, "theme-system-rest");
+  if (isMobile) await light.tap();
+  else await light.click();
+  await captureState(testInfo, picker, isMobile ? "theme-touch-selected" : "theme-pointer-selected");
   await expect(light).toBeChecked();
   await light.press("ArrowRight");
   await expect(dark).toBeFocused();
+  await captureState(testInfo, picker, "theme-keyboard-focus");
   await expect(dark).toBeChecked();
   await expect(root).toHaveAttribute("data-theme", "dark");
 
@@ -414,24 +424,26 @@ test("masthead theme picker supports pointer, keyboard and the system preference
   await expect(system).toBeChecked();
 });
 
-test("client logo scrolling can be paused and resumed", async ({ page }) => {
+test("@interaction motion: client logo scrolling can be paused and resumed", async ({ page }, testInfo) => {
   await page.goto("/index.html");
   const marquee = page.locator(".client-marquee");
   await marquee.scrollIntoViewIfNeeded();
   await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
   await page.getByRole("button", { name: "Pause logo scrolling" }).click();
   await expect(marquee).toHaveAttribute("data-marquee-state", "paused");
+  await captureState(testInfo, marquee, "marquee-paused");
   await page.getByRole("button", { name: "Resume logo scrolling" }).click();
   await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
 });
 
-test("client marquee responds to the site motion preference immediately", async ({ page }) => {
+test("@interaction motion: client marquee responds to the site motion preference immediately", async ({ page }, testInfo) => {
   await page.goto("/index.html");
   const marquee = page.locator(".client-marquee");
   await marquee.scrollIntoViewIfNeeded();
   await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
   await page.evaluate(() => document.documentElement.dataset.motion = "reduced");
   await expect(marquee).toHaveAttribute("data-marquee-state", "paused");
+  await captureState(testInfo, marquee, "marquee-reduced-motion");
   await page.evaluate(() => document.documentElement.dataset.motion = "full");
   await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
 });

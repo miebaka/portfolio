@@ -138,3 +138,10 @@ dist/               GENERATED deployment output (never edit/commit)
 The homepage keeps the fluid water and a tactile Selected Work cabinet at every size, but its reading path changes below 48rem: the secondary hero job/location repetition is reduced, the biography stays focused, the service disciplines become a neutral non-sticky list with compact proof links, and the marquee uses smaller optical cells. The content and case links remain accessible without hover, animation or JavaScript.
 
 The retired homepage editorial image-row renderer was superseded by the actual physical folders. Its unused `styles/project-roster.css`, `styles/optical-lens.css` and `js/core/optical-lens.js` were deleted instead of carrying an inert enhancement and extra CSS selectors forward. The editorial index renderer and stylesheet **remain in use for Essays and navigation**. Add back a retired effect only when there's a real matching DOM component and a clear benefit for phone readers.
+
+### Release and interaction checks
+
+- `npm run lint && npm run test:typography` runs the same lint and typography gates as GitHub Actions. `npm run quality` runs the broader unit, browser, budget and Lighthouse checks.
+- `npm run test:interaction` runs tagged interaction checks and attaches state screenshots to the Playwright HTML report at `reports/interaction/index.html`. Add `-- --grep '@interaction theme'` to capture just the theme control. Other areas are `index`, `work`, `experiments`, `motion`, `essays` and `contact`.
+- `npm run test:routes` discovers generated HTML in the build and checks reading paths at 320px, at 200% text size, and with JavaScript disabled.
+- `npm run release:receipt -- [base-commit-sha]` reads GitHub Actions and Vercel status for the remote default branch head, compares the requested base tree with the remote head's parent, and checks the live Home and Work HTML with JavaScript disabled. It requires authenticated `gh` and Playwright Chromium. A nonzero exit means at least one condition is unverified or failed. The production smoke check tests the public alias independently of the exact-commit deployment status.
