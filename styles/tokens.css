@@ -1317,3 +1317,10 @@ body[data-page="contact"] :is(.contact-info a, .contact__handoff a) {
   text-decoration-thickness: .1em;
   text-underline-offset: .2em;
 }
+
+/* The companion artwork is not the only source for words embedded in images. */
+.case-page .case-shot__embedded-words {
+  font: var(--type-weight-regular) var(--type-input)/var(--type-leading-reading) var(--font-sans);
+  letter-spacing: normal;
+  text-transform: none;
+}
