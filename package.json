@@ -4,17 +4,16 @@
   "private": true,
   "description": "Build and image-optimization tooling for Miebaka Joshua's static portfolio.",
   "scripts": {
-    "build": "npm run validate:content && npm run build:experiments && npm run build:hero && node scripts/build-site.mjs",
+    "build": "npm run validate:content && npm run build:experiments && node scripts/build-site.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:html": "htmlhint \"*.html\" \"work/*.html\" \"essays/*.html\"",
     "lint:css": "stylelint \"styles/**/*.css\"",
     "lint": "npm run lint:html && npm run lint:css",
     "build:experiments": "node scripts/build-experiments.mjs",
-    "build:hero": "node scripts/build-hero-wave.mjs",
     "sync:fallbacks": "node scripts/sync-case-shells.mjs",
     "validate:content": "node scripts/validate-content.mjs",
-    "test:content": "npm run build:hero && node --test tests/content-schema.test.mjs",
+    "test:content": "node --test tests/content-schema.test.mjs",
     "test:navigation": "node --test tests/navigation.test.mjs",
     "test:case": "node --test tests/case-study.test.mjs",
     "test:professional": "node --test tests/professional-evidence.test.mjs",
@@ -31,7 +30,7 @@
     "audit:shipped": "npm audit --omit=dev --audit-level=moderate",
     "audit:dev-tools": "npm audit --audit-level=moderate || echo 'Non-blocking: review dev-tool advisories above; shipped dependencies are gated separately.'",
     "quality": "npm test && npm run test:e2e && npm run test:budgets && npm run test:lighthouse && npm run test:lighthouse:mobile && npm run audit:shipped && npm run audit:dev-tools",
-    "dev": "npm run build:experiments && npm run build:hero && node scripts/serve-static.mjs . 4000",
+    "dev": "npm run build:experiments && node scripts/serve-static.mjs . 4000",
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
@@ -61,8 +60,5 @@
   "type": "module",
   "engines": {
     "node": "24.x"
-  },
-  "dependencies": {
-    "three": "0.187.0"
   }
 }

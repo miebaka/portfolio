@@ -113,7 +113,7 @@ body[data-page="home"] .marquee__item img {
   }
 }
 
-/* The service cards align exactly with the Three.js water rectangle,
+/* Keep service cards aligned with the homepage's framed opening,
    regardless of the full-bleed section and older !important width rules. */
 body[data-page="home"] section.home-capabilities--reference .process-sequence .service-stack {
   box-sizing: border-box;

@@ -171,7 +171,6 @@ const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify
 await writeFile(join(output, "styles/main.css"), minifiedCss);
 /* The Work folder surface is imported into main.css for both pages. */
 await copyJsGraph("js/main.js");
-await ensureCopy(join(root, "assets/runtime/hero-wave.js"), join(output, "assets/runtime/hero-wave.js"));
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();

@@ -700,10 +700,6 @@ body[data-page="home"] .home-landing__meta p:nth-child(2) {
 body[data-page="home"] .home-landing__meta a {
   text-decoration: none;}
 
-body[data-page="home"] .hero-wave__control {
-  font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  letter-spacing:var(--type-tracking-normal);}
-
 body[data-page="home"] :is(.swiss-section-head, .disciplines-heading) h2 {
   font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
   font-stretch:normal;
@@ -990,7 +986,7 @@ body .site-footer__bottom{
 
 
 /* PR #26 reconciliation: complementary chapter grids only.
-   Preserve PR #27's verified typography, navigation, footer and shader.
+   Preserve PR #27's verified typography, navigation and footer.
    Use the tokens that exist in the consolidated design system. */
 html{font-kerning:normal;font-optical-sizing:auto}
 

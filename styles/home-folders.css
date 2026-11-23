@@ -33,8 +33,8 @@ body:is([data-page="home"], [data-page="work"]) .project-folder-stack__cards {
   --folder-overlap: calc(var(--home-panel-height) * .66);
 }
 
-/* The Three.js water frame is inset by --hf. Use its exact outer edges for
-   Home's folder stack; the Work page retains its own content width. */
+/* Align the Home folder stack to the framed opening's inset edges;
+   the Work page retains its own content width. */
 body[data-page="home"] #selected-work {
   box-sizing: border-box;
   width: calc(100% - 2 * var(--hf));
