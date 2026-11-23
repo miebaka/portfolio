@@ -9,12 +9,12 @@ test("archive publishes exactly three honest brand-specific native folder links"
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   assert.equal((html.match(/class="project-folder__link"/g) || []).length, 3);
   assert.deepEqual([...html.matchAll(/href="work\/([^"]+\.html)"/g)].map(match => match[1]),
-    ["rivo.html", "tedx-rsu.html", "chopbox.html"]);
+    ["tedx-rsu.html", "rivo.html", "chopbox.html"]);
   for (const color of ["#000041", "#6e2962", "#c2531c"]) assert.ok(html.includes(color), color);
   assert.doesNotMatch(html, /filing-cabinet|drawer|webgl|canvas/i);
 });
 
-test("each landscape folder shows only the project name on its face and a number on the tab", () => {
+test("each folder shows the project name, image, decision and numbered papers", () => {
   const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
   for (const className of ["project-folder__back", "project-folder__tab",
     "project-folder__tab-number", "project-folder__front", "project-folder__title",
@@ -25,6 +25,9 @@ test("each landscape folder shows only the project name on its face and a number
   assert.equal((html.match(/class="project-folder__paper project-folder__paper--[1-5]" aria-hidden="true"><\/span>/g) || []).length, 15);
   assert.deepEqual([...html.matchAll(/class="project-folder__tab-number">(\d\d)</g)].map(match => match[1]), ["01", "02", "03"]);
   assert.doesNotMatch(html, /project-folder__(?:spine|serial|index|overline|bottom|view|tab-title)/);
+  for (const cls of ["visual", "outcome", "open"]) {
+    assert.equal((html.match(new RegExp('class="project-folder__' + cls + '"', "g")) || []).length, 3);
+  }
   assert.doesNotMatch(html, /The Call|The System|What Survived|First Contact|The Results|FILE 0/);
   for (const name of ["Rivo Studio", "TEDx Rivers State University", "ChopBox"]) {
     assert.match(html, new RegExp('aria-label="View ' + name + ' case study"'));
@@ -74,14 +77,16 @@ test("folder surface keeps one target per case and static, non-intercepting pape
   assert.doesNotMatch(css, /will-change:|preserve-3d|pointermove|overflow-x:\s*auto/);
 });
 
-test("Home retains the fixed file-cabinet stack depth and bounded rise", () => {
-  const css = readFileSync(resolve("styles/folder-interactions.css"), "utf8");
+test("native folder links do not intercept mouse, touch or keyboard activation", () => {
   const controller = readFileSync(resolve("js/core/project-folder-interactions.js"), "utf8");
-  assert.match(css, /z-index:\s*calc\(var\(--folder-index, 0\) \+ 1\)/);
-  assert.match(css, /home-folder-stack__cards\.is-folder-interactive\.has-active/);
-  assert.match(controller, /homeRise = \(\) => Math\.min\(9\.5 \* em\(\), size \* \.29\)/);
+  const html = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
+  assert.doesNotMatch(controller, /pointermove|preventDefault|touchPreview|clientY|indexAt/);
+  assert.match(controller, /native/);
+  for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
+    assert.match(html, new RegExp('data-slug="' + slug + '"'));
+    assert.match(html, new RegExp('href="work/' + slug + '\\.html"'));
+  }
 });
-
 test("folder reveal only animates compositor-friendly transform and opacity", () => {
   const css = readFileSync(resolve("styles/folder-interactions.css"), "utf8");
   assert.match(css, /transition:\s*transform 550ms/);
@@ -99,14 +104,12 @@ test("Home matches the Work landscape folder construction", () => {
   assert.doesNotMatch(html, /project-roster__row|folder-rack__/);
 });
 
-test("Home folder height follows measured service panels, Work remains compact", () => {
-  const css = readFileSync(resolve("styles/home-folders.css"), "utf8");
-  const experience = readFileSync(resolve("styles/home-experience.css"), "utf8");
-  const controller = readFileSync(resolve("js/core/project-folder-interactions.js"), "utf8");
-  assert.match(experience, /--home-panel-height:\s*clamp/);
-  assert.match(css, /--work-folder-height:\s*var\(--home-panel-height\)/);
-  assert.match(css, /inset-block-start:\s*15%/);
-  assert.match(controller, /#what-i-do \.service-stack__card/);
-  assert.match(controller, /const shift = size - pitch/);
-  assert.match(controller, /isHome\s*\? size \* \.34/);
+test("work and home share a mobile-first gallery with always-visible evidence", () => {
+  const css = readFileSync(resolve("styles/visitor-journey.css"), "utf8");
+  const home = renderHomeProjectList(SITE.projects, SITE.caseStudies);
+  const work = renderProjectFolderStackMarkup(SITE.projects, SITE.caseStudies);
+  assert.match(css, /grid-template-columns:\\s*minmax\\(0, 1fr\\)/);
+  assert.match(css, /@media \\(min-width:40em\\)/);
+  assert.match(css, /@media \\(min-width:72em\\)/);
+  for (const html of [home, work]) assert.equal((html.match(/class="project-folder__visual"/g) || []).length, 3);
 });

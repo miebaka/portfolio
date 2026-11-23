@@ -186,7 +186,8 @@ test("published case narratives render when their project is published", () => {
   const chapters = CASE_STORY_STRUCTURE.map(({ id, label }) => ({ id, label, title: "A focused chapter", body: ["A documented design decision."] }));
   const markup = renderCaseMarkup(fixture({ caseStudies: { sample: study({ status: "published", hero: "sample-hero", facts: { role: "Identity", delivered: "Application system" }, chapters }) } }), "sample");
   assert.match(markup, /id="results"/);
-  assert.match(markup, /What did I decide, and what did I turn down to get there\?/);
+  assert.match(markup, /<h2 id="decision-title" class="case-chapter__heading">A focused chapter<\/h2>/);
+  assert.match(markup, /case-opening__essentials/);
   assert.doesNotMatch(markup, /case-index|case-lede/);
   assert.doesNotMatch(markup, /Coming soon/);
 });

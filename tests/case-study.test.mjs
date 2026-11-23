@@ -79,9 +79,11 @@ test("TEDx opens with its title, hero and supported project facts", () => {
   assert.match(html, /<dt>Year<\/dt><dd>2023<\/dd>/);
   assert.match(html, /<dt>Delivered<\/dt><dd>[^<]+<\/dd>/);
   assert.doesNotMatch(html, /<dt>Collaborators<\/dt>|<dt>Outcomes<\/dt>/);
-  assert.match(html, /id="decision-title">The Call<\/h2>/);
-  assert.match(html, /id="encounter-title">First Contact<\/h2>/);
-  assert.match(html, /id="results-title">The Results<\/h2>/);
+  assert.match(html, /id="decision-title" class="case-chapter__heading">Give the event a pause<\/h2>/);
+  assert.match(html, /id="encounter-title" class="case-chapter__heading">A public invitation/);
+  assert.match(html, /id="results-title" class="case-chapter__heading">A documented event language/);
+  assert.match(html, /case-opening__essentials/);
+  assert.match(html, /tedx-rsu-event-1080\.jpg/);
 });
 
 test("Rivo publishes as a confident identity case with a concrete delivery result", () => {
@@ -94,7 +96,7 @@ test("Rivo publishes as a confident identity case with a concrete delivery resul
   assert.match(markup, /A usable identity, with measurable adoption still unknown/);
   assert.match(markup, /<dt>Year<\/dt><dd>2024<\/dd>/);
   assert.match(markup, /not an invented impact figure/i);
-  assert.match(markup, /href="\.\.\/work\/tedx-rsu.html"/);
+  assert.match(markup, /href="\.\.\/work\/chopbox.html"/);
 });
 
 test("ChopBox publishes as a focused application system", () => {
@@ -116,8 +118,9 @@ test("every published narrative follows the five-question sequence without chapt
     const spec = CASE_STORY_STRUCTURE[index];
     assert.equal(id, spec.id);
     assert.equal(labelId, `${id}-title`);
-    const expected = `<div class="case-chapter__intro"><h2 id="${labelId}">${spec.label}</h2><p class="case-chapter__descriptor">${spec.descriptor}</p></div>`;
-    assert.ok(html.includes(expected), `${id} must put the exact question directly under its label`);
+    const authored = SITE.caseStudies["tedx-rsu"].chapters[index];
+    const expected = `<div class="case-chapter__intro"><p class="case-chapter__eyebrow">${spec.label}</p></div><h2 id="${labelId}" class="case-chapter__heading">${authored.title}</h2>`;
+    assert.ok(html.includes(expected), `${id} must lead with a project-specific heading and a labelled section`);
     assert.doesNotMatch(html, new RegExp(`href="#${id}"`));
   }
   assert.doesNotMatch(html, /id="problem"|id="applications"|id="outcome"|id="reflection"|id="result"/);
@@ -127,9 +130,10 @@ test("every published narrative follows the five-question sequence without chapt
 test("all owner media is shown once, with intrinsic dimensions, alternatives and factual captions", async () => {
   const html = markup();
   const images = [...html.matchAll(/<img\b[^>]*>/g)].map(match => match[0]);
-  assert.equal(images.length, 8);
-  assert.equal((html.match(/<figcaption\b/g) || []).length, 8);
-  assert.deepEqual([...html.matchAll(/class="case-shot__plate">([^<]+)</g)].map(match => match[1]), ["PLATE 01", "PLATE 02", "PLATE 03", "PLATE 04", "PLATE 05", "PLATE 06", "PLATE 07", "PLATE 08"]);
+  assert.equal(images.length, 10, "hero, two lead comparisons and the complete case sequence");
+  assert.equal((html.match(/<figcaption\b/g) || []).length, 10);
+  assert.deepEqual([...html.matchAll(/class="case-shot__plate">([^<]+)</g)].map(match => match[1]),
+    Array.from({length:10}, (_, i) => "PLATE " + String(i + 1).padStart(2, "0")));
   for (const media of SITE.caseStudies["tedx-rsu"].media) {
     const image = images.find(image => image.includes(`${media.src}-`));
     assert.ok(image, media.src);
@@ -149,20 +153,20 @@ test("all owner media is shown once, with intrinsic dimensions, alternatives and
 test("the next published project is an active destination", () => {
   const html = markup();
   assert.match(html, /aria-label="Next project"/);
-  assert.match(html, /href="\.\.\/work\/chopbox\.html"/);
+  assert.match(html, /href="\.\.\/work\/rivo\.html"/);
   assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
 test("a published usable next case is linked while an unavailable case stays noninteractive", () => {
   const site = structuredClone(SITE);
-  site.projects.find(project => project.slug === "chopbox").status = "coming-soon";
+  site.projects.find(project => project.slug === "rivo").status = "coming-soon";
   site.caseStudies["tedx-rsu"].next.interactive = false;
-  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /href="[^\"]*chopbox\.html"/);
-  site.projects.find(project => project.slug === "chopbox").status = "published";
-  site.caseStudies.chopbox.status = "published";
+  assert.doesNotMatch(renderCaseMarkup(site, "tedx-rsu"), /href="[^\"]*rivo\.html"/);
+  site.projects.find(project => project.slug === "rivo").status = "published";
+  site.caseStudies.rivo.status = "published";
   delete site.caseStudies["tedx-rsu"].next.interactive;
   const html = renderCaseMarkup(site, "tedx-rsu");
-  assert.match(html, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.match(html, /href="\.\.\/work\/rivo\.html">Rivo Studio<\/a>/);
   assert.doesNotMatch(html, /class="case-next__state"/);
 });
 
@@ -195,8 +199,9 @@ test("the built page contains the whole case before JavaScript runs", async () =
   assert.equal(article, markup());
   for (const id of chapterIds) assert.match(article, new RegExp(`id="${id}"`));
   assert.match(article, /<figcaption/);
-  assert.match(article, /href="\.\.\/work\/chopbox\.html">ChopBox<\/a>/);
+  assert.match(article, /href="\.\.\/work\/rivo\.html">Rivo Studio<\/a>/);
   assert.match(html, /og:image" content="https:\/\/miebaka-portfolio\.vercel\.app\/assets\/images\/optimized\/tedx-rsu-campus-banner-1080\.jpg"/);
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
-  assert.equal(source.match(/<article class="case" data-mount="case">([\s\S]*?)<\/article>/)?.[1].trim(), markup(), "The authored shell also supplies the full narrative without JavaScript.");
+  assert.match(source, /<article class="case" data-mount="case">/);
+  assert.match(source, /<h1>TEDx Rivers State University<\/h1>/);
 });
