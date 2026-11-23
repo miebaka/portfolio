@@ -1316,3 +1316,14 @@ body.case-page .case-next__link {
 }
 
 .case-next__arrow {font-size: var(--type-heading-lg)}
+
+/* Oversized landing-page type inspired by Belonwus. This changes only the
+   homepage name's font size; the original water, copy and layout stay intact. */
+body[data-page="home"] .home-landing h1 {
+  font-size: clamp(3em, 9.5vw, 10em);
+}
+@media (max-width: 55.999em) {
+  body[data-page="home"] .home-landing h1 {
+    font-size: clamp(3em, 13vw, 6em);
+  }
+}
