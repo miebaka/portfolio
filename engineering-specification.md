@@ -1,3 +1,5 @@
+> **Current homepage implementation (23 November 2026):** The GPU water renderer, its runtime bundle and Three.js dependency have been extracted. The homepage now uses its existing static dark stage and oversized typographic H1. Older shader-specific proposals in historical material are superseded. Only current source and tests define shipping behavior.
+
 # Engineering Specification — Miebaka Joshua Portfolio
 
 > **Status:** Authoritative engineering implementation contract for the approved 22 November 2026 portfolio.  
@@ -52,18 +54,18 @@ Home has exactly this editorial order: **Landing → Selected Work → About Me 
 
 ## 2. Architecture: preserve the static-first system
 
-The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, optional native WebGL shader island, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
+The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Node-based build, a static homepage opening frame, and Vercel serverless API handlers. No framework migration is authorized by the visual redesign alone.
 
 - HTML contains meaningful first-render content, title/description/canonical/Open Graph metadata, landmarks, a single `h1`, skip link, navigation fallback and useful core page copy.
 - `data/site.js` composes separate content modules rather than duplicating authored content.
-- `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in an optional shader, scroll enhancement or visual widget MUST NOT take down navigation or primary content.
+- `js/main.js` orchestrates rendering and enhancement. Keep faults isolated; a failure in an optional scroll enhancement or visual widget MUST NOT take down navigation or primary content.
 - `js/core/contract.js` owns `data-mount` names. Add any new mount there and test it.
 - `styles/main.css` is the single bundled CSS entry. All structural imports must match the actual source order checked by `scripts/check-css-contract.mjs`. `styles/tokens.css` is the only typography layer, imported last. Shared folder styling lives in `project-folders.css`; Home layout in `home-folders.css` and `home-experience.css`; interaction in `folder-interactions.css`. Do not restore the removed `project-roster.css` or `optical-lens.css`.
 - `scripts/build-site.mjs` validates, prerenders, bundles CSS, copies the reachable module graph, and generates the deployable `dist/`.
 - `api/contact.js` and `api/now-playing.js` are the two current server-side endpoints. Last.fm recent-track data is requested server-side using `LASTFM_API_KEY`; the client sees only a short public track/artist/status object and degrades to an honest profile link on failure. Adding further endpoints requires a documented need and security review.
-- Keep ESM dependencies intentional. The Three.js water is a lazy bundle with a static fallback; What I Do uses native sticky scrolling on desktop and an ordinary document list on phones, without Lenis or GSAP. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
+- Keep ESM dependencies intentional. The homepage has no GPU water renderer; What I Do uses native sticky scrolling on desktop and an ordinary document list on phones, without Lenis or GSAP. Do not introduce another framework, router, animation engine or parallel CSS system merely to imitate a reference site.
 
-**Progressive enhancement rule:** Content and navigation work without JavaScript. Video, shader, canvas, cursor response, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
+**Progressive enhancement rule:** Content and navigation work without JavaScript. Video, canvas, transitions, and streaming updates may enhance but must not gate meaning. If client-side rendering replaces server-available fallback markup, verify that failure modes retain appropriate content.
 
 ## 3. Source of truth and file ownership
 
@@ -91,7 +93,6 @@ The baseline implementation is **static HTML + CSS + vanilla ES modules**, a Nod
 | Capabilities and experience | `js/render/sections.js` |
 | Case-study markup | `js/render/case-markup.js` |
 | Interactive dot-matrix lifecycle | `js/core/footer-signature.js` |
-| Shader lifecycle | `js/core/hero-wave.js`, generated `assets/runtime/hero-wave.js` |
 | Experiment manifest | `scripts/build-experiments.mjs`, `assets/experiments/` |
 | Hosting / CSP / redirects | `vercel.json` |
 | Last.fm listening-status pill and server endpoint | `js/render/now-playing.js`, `api/now-playing.js`, `data/site-config.js` |
@@ -111,7 +112,7 @@ The layout is a responsive 12-column editorial grid on wide screens. Verify actu
 
 ### 4.2 Home section implementation
 
-**Landing:** Keep the semantic HTML hero independent of the shader. The framed opening MAY use scale/opacity animation; avoid animating layout sizes each frame. Maintain a fully legible static state while shader imports or WebGL initialization fail. A one-time reveal is not the same as scroll-driven expansion: document the desired trigger, start/end states, returning-visitor behavior and interruption rules before implementing. The hero must not delay LCP unnecessarily.
+**Landing:** Keep the semantic HTML hero readable against the static background. The framed opening MAY use scale/opacity animation; avoid animating layout sizes each frame. Maintain a fully legible static state while shader imports or WebGL initialization fail. A one-time reveal is not the same as scroll-driven expansion: document the desired trigger, start/end states, returning-visitor behavior and interruption rules before implementing. The hero must not delay LCP unnecessarily.
 
 **Selected Work:** `renderHomeProjectList` uses `featuredOrder` from `data/projects.js`, filtering for complete published case studies. Do not regress to hard-coded slugs or broken links. Mobile and touch screens MUST retain visible project names and true case-study links; the Work and Home racks are physical folder objects, not image rows. The actual case-study imagery lives in the destination chapters. Hover is enhancement, not the only path to the project.
 
@@ -152,9 +153,9 @@ Motion is an authored storytelling layer, not a universal effect:
 
 These are **design targets**, not mandatory timers. Avoid overlong sequences; use transforms and opacity when possible and profile any `clip-path`, filter, resize, or canvas effects. Keep animation interruptible and preserve native navigation semantics.
 
-Honor both **OS reduced-motion** and the site's explicit `data-motion` preference, not merely one CSS media query. Reduced motion means no forced hero opening, automatic horizontal marquee drift, scrolling parallax, repeated reveals, or shader/canvas motion; show the final static content immediately. The user-selected preference must take effect on already-mounted widgets. The existing `js/core/preferences.js` supports `system`, `reduce`, and `full`; do not silently redefine its meaning.
+Honor both **OS reduced-motion** and the site's explicit `data-motion` preference, not merely one CSS media query. Reduced motion means no forced hero opening, automatic horizontal marquee drift, scrolling parallax, repeated reveals, or continuous decorative canvas motion; show the final static content immediately. The user-selected preference must take effect on already-mounted widgets. The existing `js/core/preferences.js` supports `system`, `reduce`, and `full`; do not silently redefine its meaning.
 
-Every ongoing effect MUST stop or throttle when offscreen or the document is hidden and MUST release timers, observers, WebGL resources, event listeners and frames on teardown/pagehide. Pointer-dependent experiences require keyboard or non-pointer equivalents if they control content. Animations cannot indefinitely hide text when observer setup fails.
+Every ongoing effect MUST stop or throttle when offscreen or the document is hidden and MUST release timers, observers, event listeners and frames on teardown/pagehide. Pointer-dependent experiences require keyboard or non-pointer equivalents if they control content. Animations cannot indefinitely hide text when observer setup fails.
 
 ## 6. Assets, imagery and media
 
@@ -172,12 +173,11 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 
 1. Validate the structured public content and local references.
 2. Rebuild the Experiments manifest.
-3. Bundle the Three.js/WebGL hero-water island from `js/hero-water-three.js`.
-4. Preserve native desktop stacking for What I Do, with a static, natural-height mobile reading list.
-5. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
-6. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
+3. Preserve native desktop stacking for What I Do, with a static, natural-height mobile reading list.
+4. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
+5. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
 
-Text fonts are version-pinned Geist WOFF2 requests to jsDelivr, **not** self-hosted legacy font binaries. Material Symbols Outlined remains a locally served subset. Do not commit generated `dist/` or `assets/runtime/` files.
+Text fonts are version-pinned Geist WOFF2 requests to jsDelivr, **not** self-hosted legacy font binaries. Material Symbols Outlined remains a locally served subset. Do not commit generated `dist/` files.
 
 Build and test commands (as defined in `package.json`):
 
@@ -211,7 +211,6 @@ Do not claim `npm run quality` succeeds without executing it. Use CI artifacts a
 | Work folder CSS source (before shared bundling) | 6 KiB |
 | All Work CSS | 53 KiB |
 | Initial static JavaScript module graph (sum of compressed responses) | 75 KiB |
-| Lazy Three.js hero-water bundle | 145 KiB |
 | Eager homepage images | 1.5 MiB (raw transfer) |
 | Geist Sans Regular display font | 100 KiB |
 | All delivered text/icon fonts | 420 KiB |
@@ -221,7 +220,7 @@ The current `lighthouserc.cjs` asserts desktop median **performance ≥0.90**, *
 Additional user-experience targets, verified with appropriate real-device or field measurement when available:
 
 - Core Web Vitals at p75: LCP ≤2.5s, CLS ≤0.1, INP ≤200ms.
-- No significant long main-thread tasks caused by nonessential shader, marquee or footer animation.
+- No significant long main-thread tasks caused by nonessential marquee or footer animation.
 - Navigation/scroll works on low-powered devices with optional effects disabled.
 - No layout jumps from late fonts, images, card expansion or modal locking.
 - No initial blank screen dependent on fetching an animation bundle.
@@ -259,7 +258,7 @@ The existing test suite checks document contracts, content schema, navigation, c
 | System | Minimum required verification |
 | --- | --- |
 | All routes | HTTP success, no console errors, correct title/canonical/landmarks and no broken resources |
-| Hero | Static readable first paint, full/reduced motion, shader failure fallback, no major LCP regression |
+| Hero | Static readable first paint, full/reduced motion, static frame fallback, no major LCP regression |
 | Selected Work | Featured ordering, published native links, legible folder labels at 320/390/430px, unchanged file-cabinet z-order on hover/focus/touch |
 | Services | Working evidence links, desktop sticky stack, mobile non-sticky reading list, no scroll trap, focus-visible behavior |
 | Marquee | Equal visible logo height, preserved SVG proportions, animated running state, hidden duplicate accessibility, reduced motion, visibility pause |
@@ -318,7 +317,7 @@ The 22 November 2026 cleanup baseline passed the repository's two GitHub checks:
 1. **Exact-SHA Vercel preview:** obtain a `READY` preview build linked to the latest PR head, not an earlier commit. The latest connected deployment record checked on 22 November was an older cancelled build; a current green preview was not confirmed.
 2. **Deployed smoke test:** navigate Home, Work, one published case, About, Essays, Experiments and Contact on the preview; confirm HTTP responses, navigation, theme toggle, metadata, fonts and image requests.
 3. **Real accessibility sampling:** VoiceOver or another screen reader, keyboard-only navigation, 200% browser zoom, focus restoration, high/forced contrast and actual touch interaction. Automated axe and emulated mobile are not substitutes.
-4. **Real-device shader/performance:** at least one mobile GPU and a lower-powered desktop; reduced motion and software WebGL fallback, long-session scroll, network throttling and field/Core Web Vitals when available. CI Lighthouse is desktop-only.
+4. **Real-device performance:** at least one lower-powered phone and a desktop; reduced motion and static hero, long-session scroll, network throttling and field/Core Web Vitals when available. CI Lighthouse is desktop-only.
 5. **Contact delivery:** with properly configured preview/environment variables and a controlled recipient, verify origin rejection, anti-abuse, one actual Resend delivery, success response and safe error messages. Unit mocks cannot prove provider configuration.
 6. **Publication and operations:** check external links, robots/indexing decision, canonical/OG URLs, real Vercel deployment behavior and availability of the prior production deployment for rollback.
 
@@ -350,4 +349,4 @@ The authority for design is the latest approved appendix in `DESIGN.md`; earlier
 
 Use `em` for type-size tokens, component spacing, gutters and authored layout lengths. `styles/layout.css` provides the mobile four-column default and expands at `min-width:48.001em`; root grid/nav spacing lives in `styles/foundations.css`. `styles/tokens.css` remains the only source of typography declarations. `npm run test:relative` rejects reintroduced `rem` values and layout dimensions above the small-pixel threshold, except reviewed 44px minimum touch targets.
 
-Preserve 1px borders, focus ring raster widths and canvas/client-coordinate measurements in pixels; do not attempt to convert actual WebGL drawing buffer or PointerEvent coordinates. CSS breakpoint `em` values are evaluated using the initial font size. Browser default text-size adjustment, 200–400% zoom, and nested text layouts are mandatory manual/reflow checks. The static conversion is not by itself a visual sign-off.
+Preserve 1px borders, focus ring raster widths and canvas/client-coordinate measurements in pixels; do not attempt to convert actual canvas drawing buffer or PointerEvent coordinates. CSS breakpoint `em` values are evaluated using the initial font size. Browser default text-size adjustment, 200–400% zoom, and nested text layouts are mandatory manual/reflow checks. The static conversion is not by itself a visual sign-off.

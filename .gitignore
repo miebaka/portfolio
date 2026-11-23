@@ -9,7 +9,6 @@ graphify-out/
 playwright-report/
 test-results/
 .lighthouseci/
-assets/runtime/
 assets/vendor/
 assets/experiments/manifest.json
 
