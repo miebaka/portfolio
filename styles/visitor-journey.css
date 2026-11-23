@@ -249,31 +249,62 @@ body.case-page .case-gallery-flow > .case-shot--hero .case-shot__caption {
   margin-inline: auto;
 }
 
-body.case-page .case-next {
-  justify-items: end;
+/* Shared next-content link. The stationary hit area controls a right-hinged
+   perspective swing; only the title moves, so hovering cannot flicker. */
+.next-content {
+  --next-outline: color-mix(in srgb, var(--ink) 72%, var(--paper));
+  margin-block-start: var(--s12);
   border-block-start: 1px solid var(--line);
 }
-
-body.case-page .case-next__link {
+.next-content .case-next__link {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: end;
-  column-gap: var(--s2);
+  align-content: center;
+  gap: var(--s4);
+  min-height: clamp(16em, 37vw, 46em);
+  padding-block: var(--s4);
+  color: var(--ink);
+  cursor: pointer;
+  perspective: 65em;
+  perspective-origin: right center;
 }
-
-body.case-page .case-next__label {
-  grid-column: 1 / -1;
+.next-content .case-next__label {
+  align-self: start;
+  color: var(--accent);
 }
-
-body.case-page .case-next__arrow {
-  transition: transform var(--dur-ui) var(--ease-standard);
+.next-content .case-next__name {
+  display: block;
+  max-width: 100%;
+  transform-origin: right center;
 }
-
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  body.case-page .case-next__link:hover .case-next__arrow {
-    transform: translateX(.18em);
+.next-content .case-next__link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+@supports (-webkit-text-stroke: 1px currentColor) {
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    html:not([data-motion="reduced"]) .next-content .case-next__name {
+      color: transparent;
+      transform: rotateY(-32deg);
+      transition: transform var(--dur-proof-shift) var(--ease-in-out-ui),
+        color var(--dur-proof-fade) var(--ease-in-out-ui);
+    }
+    html:not([data-motion="reduced"]) .next-content .case-next__link:is(:hover, :focus-visible) .case-next__name {
+      color: var(--ink);
+      transform: rotateY(0deg);
+    }
   }
 }
+@media (forced-colors: active) {
+  html .next-content .case-next__name {
+    color: LinkText !important;
+    transform: none !important;
+    transition: none !important;
+    --next-outline: LinkText;
+  }
+}
+
 
 @media (min-width:56em) {
   body.case-page .case-narrative {

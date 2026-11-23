@@ -35,7 +35,6 @@
 .link{color:var(--link);transition:color var(--dur-ui) var(--ease-standard)}
 .writing-item__link{transition:transform 140ms var(--ease-standard),color 180ms var(--ease-standard),background-color 180ms var(--ease-standard);border:0;background:var(--surface);padding-inline:var(--list-item-inline);min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;gap:calc(var(--spacing-unit) * 6);padding-block:clamp(var(--s4),4vw,var(--s7));}
 .site-footer a{transition:color var(--dur-ui) var(--ease-standard);display:inline-flex;align-items:center;width:fit-content;min-height:2.75em;}
-.case-next__link:hover{color:var(--accent)}
 .writing-item__link:hover{color:var(--accent)}
 .site-footer a:hover{color:var(--accent)}
 .swiss-link:hover{color:var(--accent)}

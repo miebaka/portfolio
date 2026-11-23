@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
+import { renderNextEssayMarkup } from "../js/render/next-content.js";
 import { renderProjectArchiveMarkup } from "../js/render/projects.js";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
@@ -26,4 +27,11 @@ if (!workPattern.test(workSource)) throw new Error("Could not find Work archive 
 const workUpdated = workSource.replace(workPattern, `$1${workMarkup}`);
 await writeFile(workPath, workUpdated);
 
-console.log("Synchronized authored Work and case-study fallbacks.");
+for (const entry of SITE.writing) {
+  const path = resolve(root, entry.href);
+  const source = await readFile(path, "utf8");
+  const pattern = /<section class="case-next next-content article-next container"[\s\S]*?<\/section>/;
+  if (!pattern.test(source)) throw new Error(`Could not find essay continuation: ${entry.href}`);
+  await writeFile(path, source.replace(pattern, renderNextEssayMarkup(entry.href)));
+}
+console.log("Synchronized authored Work, case-study and essay fallbacks.");

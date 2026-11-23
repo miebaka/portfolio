@@ -1,4 +1,5 @@
 import { viewportQueries } from "../core/responsive.js";
+import { renderNextContent } from "./next-content.js";
 
 const WIDTHS = [540, 810, 1080, 1440, 1920];
 const esc = (value) =>
@@ -61,11 +62,9 @@ function nextBlock(site, study, base) {
   const project = site.projects?.find((item) => item.slug === next?.slug);
   if (!next?.slug || !project || project.status === "private") return "";
   const published = project.status === "published" && site.caseStudies?.[next.slug]?.status === "published";
-  const title =
-    published && next.interactive !== false
-      ? `<a class="case-next__link" href="${base}work/${token(next.slug)}.html"><span class="case-next__label">Next project</span><span class="case-next__name">${esc(next.title)}</span><span class="case-next__arrow" aria-hidden="true">→</span></a>`
-      : `<p class="case-next__title">${esc(next.title)}</p>`;
-  return `<section class="case-next container" aria-label="Next project">${title}${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
+  if (published && next.interactive !== false)
+    return renderNextContent({ label: "Next project", title: next.title, href: `${base}work/${token(next.slug)}.html` });
+  return `<section class="case-next container" aria-label="Next project"><p class="case-next__title">${esc(next.title)}</p>${published ? "" : '<p class="case-next__state">Coming soon</p>'}</section>`;
 }
 
 export function renderCaseMarkup(site, slug, base = "../") {

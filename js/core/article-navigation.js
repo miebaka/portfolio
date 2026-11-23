@@ -1,23 +1,11 @@
 import { escapeHTML as esc } from "../utilities/dom.js";
+import { renderNextEssayMarkup } from "../render/next-content.js";
 
 /* Progressive article navigation: the authored article remains complete without JS. */
 const slugify = value => String(value || "section")
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/^-|-$/g, "");
-
-const ARTICLES = {
-  "designing-for-disability-in-nigeria.html": {
-    title: "When the Swoosh Lost Its Soul",
-    href: "when-the-swoosh-lost-its-soul.html",
-    context: "Next note · Brand critique"
-  },
-  "when-the-swoosh-lost-its-soul.html": {
-    title: "Making the World More Accessible",
-    href: "designing-for-disability-in-nigeria.html",
-    context: "Next note · Design and access"
-  }
-};
 
 export function initArticleNavigation() {
   const article = document.querySelector(".article-body");
@@ -62,14 +50,10 @@ export function initArticleNavigation() {
     updateActive();
   }
 
-  const current = location.pathname.split("/").pop();
-  const next = ARTICLES[current];
-  if (next) {
-    const section = document.createElement("aside");
-    section.className = "article-next container";
-    section.setAttribute("aria-label", "Next article");
-    section.innerHTML = '<p>' + esc(next.context) + '</p><a href="' + esc(next.href) + '">' + esc(next.title) + '</a>';
-    (document.querySelector(".article-reading") || article).after(section);
+  // The authored/build-time continuation works without JavaScript.
+  if (!document.querySelector(".next-content")) {
+    const markup = renderNextEssayMarkup(location.pathname);
+    if (markup) (document.querySelector(".article-reading") || article).insertAdjacentHTML("afterend", markup);
   }
 
   const progress = document.createElement("div");

@@ -212,7 +212,6 @@ a[href]:hover{text-decoration-color:currentColor}
   letter-spacing:var(--type-tracking-tight);}
 
 /* styles/pages-v4.css */
-.case-next__link{text-decoration:none;font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);}
 
 .swiss-section-head h2{font-size:var(--type-heading-lg);line-height:var(--type-leading-tight);font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:none}
 
@@ -264,11 +263,8 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .article-toc__title{overflow-wrap:anywhere;font:var(--type-weight-semibold) var(--type-caption)/var(--type-leading-ui) var(--font-sans)}
 
-.article-next p{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);letter-spacing:var(--type-tracking-label);text-transform:none;}
 
-.article-next a{font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-tight);text-decoration:none}
 
-.article-next span{font:var(--type-weight-regular) var(--type-inline-mark)/var(--type-leading-tight) var(--font-sans)}
 
 .article-page main h2{font-size:var(--type-heading-md)}
 
@@ -280,7 +276,7 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .collection-shell .hero__title{font-size:var(--type-heading-lg)}
 
-:is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-chapter__copy,.case-next,.section,.section--tight)>*{text-align:left}
+:is(.hero,.article-hero,.article-body,.about-grid,.contact-page,.case-chapter__copy,.section,.section--tight)>*{text-align:left}
 
 .article-body :is(p,h2,h3,ul,ol,blockquote){text-align:left}
 
@@ -321,7 +317,6 @@ a[href]:hover{text-decoration-color:currentColor}
 .swiss-section-head h2{font-size:var(--type-heading-lg)}
 
 .case-page .case-statement{font-size:var(--type-heading-lg);text-wrap:pretty}
-.article-next a{font-size:var(--type-heading-lg)}
 }
 
 body .site-nav__link{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-mono);letter-spacing:var(--type-tracking-label);}
@@ -1297,28 +1292,36 @@ body[data-page] :is(
   button, label, legend, dt, th, summary, select, option,
   .skip-link, .nav-fallback a, .swiss-link, .article-toc a, .article-footer__back,
   .experiments-nav__back, .experiments-nav__list-link, .experiments-static__nav a,
-  .case-back a, .case-next__link,
+  .case-back a,
   .case-opening__actions a, .case-end-actions a, .project-archive__eyebrow,
   .project-archive__collections a > span, .project-folder__title
 ) {
   text-transform: none;
 }
 
-body.case-page .case-next__link {
-  font-size: var(--type-input);
+/* Next-content handoff: oversized type remains in the shared type source. */
+.next-content .case-next__link {
+  text-decoration: none;
   text-align: end;
 }
-
-.case-next__label {
+.next-content .case-next__label {
   font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
+  text-transform: uppercase;
 }
-
-.case-next__name {
-  font-size: clamp(2em, 5vw, 5em);
+.next-content .case-next__name {
+  font: var(--type-weight-semibold) clamp(2.25em, 9.5vw, 9em)/.96 var(--font-sans);
+  letter-spacing: -.055em;
+  text-transform: uppercase;
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
-
-.case-next__arrow {font-size: var(--type-heading-lg)}
+@supports (-webkit-text-stroke: 1px currentColor) {
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    html:not([data-motion="reduced"]) .next-content .case-next__name {
+      -webkit-text-stroke: 1px var(--next-outline);
+    }
+  }
+}
 
 /* Belonwus-inspired oversized wordmark treatment, scoped to the existing
    homepage name only. */
