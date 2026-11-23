@@ -94,6 +94,7 @@ body[data-page="home"] .marquee__item {
 body[data-page="home"] .marquee__item img {
   display: block;
   width: auto;
+  min-width: 2em;
   height: 1.875em;
   max-width: 9em;
   max-height: none;

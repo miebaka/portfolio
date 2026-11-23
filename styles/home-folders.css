@@ -127,3 +127,9 @@ body[data-page="work"] .project-archive--folders .project-folder-stack__stage {
   position: relative;
   z-index: 1;
 }
+
+/* The focused or hovered Home folder stays at its natural paper depth.
+   Later folders must continue to cover it instead of jumping beneath it. */
+body[data-page="home"] .home-folder-stack__cards .project-folder:is(:hover, :focus-within) {
+  z-index: calc(var(--folder-index, 0) + 1);
+}
