@@ -137,6 +137,7 @@ for (const file of rootFiles) {
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
 }
 await ensureCopy(join(root, "robots.txt"), join(output, "robots.txt"));
+await ensureCopy(join(root, "llms.txt"), join(output, "llms.txt"));
 try {
   await ensureCopy(join(root, "manifest.webmanifest"), join(output, "manifest.webmanifest"));
 } catch (error) {
