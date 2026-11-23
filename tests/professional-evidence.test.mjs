@@ -76,7 +76,7 @@ test("the homepage makes the hiring proposition and proof available before biogr
   const html = await page("index.html");
   assert.match(html, /I ask until the idea is clear\. Then I make it useful\./);
   assert.match(html, /Miebaka/);
-  assert.match(html, /Identities, campaigns &amp; systems/);
+  assert.match(html, /Marketing designer at Rise/);
   assert.match(html, /Selected work/);
   assert.ok(html.indexOf('id="selected-work"') < html.indexOf('id="profile"'));
 });

@@ -46,7 +46,7 @@ test("homepage hero and professional proof remain useful without JavaScript", as
   for (const directory of [root, dist]) {
     const html = await readFile(join(directory, "index.html"), "utf8");
     assert.match(html, /I ask until the idea is clear\. Then I make it useful/);
-    assert.match(html, /Identities, campaigns &amp; systems/);
+    assert.match(html, /Marketing designer at Rise/);
     assert.match(html, /more than eight years/);
   }
 });
