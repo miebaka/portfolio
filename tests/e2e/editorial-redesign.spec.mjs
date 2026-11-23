@@ -21,7 +21,7 @@ test("Geist Sans typography roles and full-screen editorial Index are consistent
  const dialog=page.getByRole("dialog",{name:"Index"});
  await expect(dialog).toBeVisible();
  const labels=dialog.locator(".site-index__link");
- await expect(labels).toHaveCount(5);
+ await expect(labels.locator("span:last-child")).toHaveText(["Work", "Experiments", "About", "Essays", "Contact", "Process", "Accessibility"]);
  for(const link of await labels.all())await expect(link).toHaveCSS("text-transform","uppercase");
  await page.keyboard.press("Escape");
  await expect(menu).toBeFocused();
@@ -32,7 +32,8 @@ test("One original interactive dot-matrix footer is present and theme-aware on k
   await page.goto(route);
   const footer=page.locator(".site-footer");
   await expect(footer.locator(".site-footer__eyebrow")).toHaveText("Inquiries");
-  await expect(footer.locator(".site-footer__links a")).toHaveCount(10);
+  await expect(footer.locator(".site-footer__explore a")).toHaveCount(8);
+  await expect(footer.locator(".site-footer__socials a")).toHaveCount(4);
   await expect(footer.locator(".site-footer__start")).toHaveAttribute("href",/mailto:/);
   await expect(footer.locator(".site-footer__signature")).toHaveCount(1);
   const bounds = await footer.evaluate(node => ({

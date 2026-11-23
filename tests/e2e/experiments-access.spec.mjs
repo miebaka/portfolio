@@ -62,7 +62,7 @@ test("Homepage uses accessible physical folders, not the retired image-lens prev
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/index.html");
   const list = page.locator(".home-folder-stack__cards");
-  await expect(list).toHaveClass(/is-folder-interactive/);
+  await expect(list).toHaveAttribute("data-navigation", "native");
   const links = list.locator(".project-folder__link");
   await expect(links).toHaveCount(3);
   await expect(list.locator(".project-folder__paper")).toHaveCount(15);

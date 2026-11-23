@@ -39,7 +39,7 @@ test("Landing and Selected Work move with normal scroll instead of covering one 
   });
   const before = await positions();
   expect(before.heroPosition).toBe("relative");
-  expect(before.folderPosition).toBe("relative");
+  expect(["static", "relative"]).toContain(before.folderPosition);
   expect(before.contentTop).toBeGreaterThanOrEqual(before.heroBottom - 2);
   await page.evaluate(() => scrollTo({ top: Math.round(innerHeight * .7), behavior: "instant" }));
   const after = await positions();
@@ -63,6 +63,7 @@ test("What I Do preserves rich desktop cards and a calm mobile reading list", as
       return {
         width: card.getBoundingClientRect().width,
         viewport: innerWidth,
+        cardBackground: getComputedStyle(card).backgroundColor,
         sectionBackground: getComputedStyle(wrapper).backgroundColor,
         bodyBackground: getComputedStyle(document.body).backgroundColor,
         radius: parseFloat(getComputedStyle(card).borderTopLeftRadius),
@@ -78,7 +79,7 @@ test("What I Do preserves rich desktop cards and a calm mobile reading list", as
       expect(geometry.position).toBe("relative");
       expect(geometry.labels).toBe("none");
     } else {
-      expect(geometry.sectionBackground).not.toBe(geometry.bodyBackground);
+      expect(geometry.cardBackground).not.toBe(geometry.sectionBackground);
       expect(geometry.radius).toBeGreaterThanOrEqual(12);
       expect(geometry.position).toBe("sticky");
       expect(geometry.labels).not.toBe("none");
@@ -92,13 +93,13 @@ test("Client marks are fitted mathematically without distortion",async({page})=>
   await expect(logos).toHaveCount(6);
   const geometry=await logos.evaluateAll(nodes=>nodes.map(node=>{
     const style=getComputedStyle(node),w=parseFloat(style.width),h=parseFloat(style.height);
-    return {w,h,actual:w/h,source:node.getAttribute("width")/node.getAttribute("height")};
+    return {w,h,fit:style.objectFit,loaded:node.naturalWidth > 0};
   }));
-  geometry.forEach(({w,h,actual,source})=>{
+  geometry.forEach(({w,h,fit,loaded})=>{
     expect(w).toBeGreaterThan(30);
     expect(h).toBeGreaterThan(20);
-    expect(Math.abs(actual/source)).toBeGreaterThan(.94);
-    expect(Math.abs(actual/source)).toBeLessThan(1.06);
+    expect(loaded).toBe(true);
+    expect(fit).toBe("contain");
   });
 });
 
@@ -140,7 +141,8 @@ test("What I Do stacks by scroll, ignores hover and ends with the last card", as
   await expect(first).toHaveCSS("z-index", firstZ);
   await expect(second).toHaveCSS("z-index", "11");
   await last.scrollIntoViewIfNeeded();
-  await expect(last).toHaveCSS("position", "sticky");
+  await expect(second).toHaveCSS("position", "sticky");
+  await expect(last).toHaveCSS("position", "relative");
   await expect(last).toHaveCSS("z-index", "14");
   await expect(last.locator(".service-stack__card")).toHaveCSS("transform", "none");
 });

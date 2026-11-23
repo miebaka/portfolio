@@ -52,18 +52,16 @@ test("system reduced-motion preference suppresses the motion toggle", async ({ p
   await expect(page.locator(".hero-wave__control")).toBeHidden();
 });
 
-test("explicit Full overrides OS reduced motion for the live water shader", async ({ page }) => {
+test("OS reduced motion keeps the water static even with Full saved", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(() => localStorage.setItem("motion-preference", "full"));
   await page.goto("/?shader-test=1");
   const wave = page.locator("[data-hero-wave]");
   await expect(wave).toHaveAttribute("data-renderer", "threejs");
-  await expect(page.locator("html")).toHaveAttribute("data-motion", "full");
-  await expect(page.getByRole("button", { name: "Pause background motion" })).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("data-motion-preference", "full");
+  await expect(page.locator(".hero-wave__control")).toBeHidden();
   const first = await wave.locator("canvas").screenshot();
-  await page.waitForTimeout(440);
-  const second = await wave.locator("canvas").screenshot();
-  expect(first.equals(second), "water must animate after an explicit Full choice").toBe(false);
+  await expect.poll(async () => first.equals(await wave.locator("canvas").screenshot())).toBe(true);
 });
 
 test("light-front caustics show clear overhead daylight and restrained moonlight", async ({ page }) => {
