@@ -250,7 +250,7 @@ The new direction is **not** a facelift or continuation of the current visual pr
 
 ### 3.1 Color roles and existing palette
 
-The portfolio already ships a layered color-token system in `styles/foundations.css`. **Preserve the semantic-token architecture, not necessarily today's palette. A coherent, research-backed new palette is authorized if tested across light/dark surfaces, cases, forms, and focus states.** Existing architecture: raw `--ref-*` values → semantic `--sys-color-*` values → short aliases such as `--paper`, `--ink`, `--muted`, `--line`, `--accent` → component roles. **Preserve this architecture.** No hard-coded new hex values in component/page CSS. All colors must reference semantic roles or bounded project-specific tokens.
+The portfolio already ships a layered color-token system in `styles/foundations.css`. **Preserve the semantic-token architecture, not necessarily today's palette. A coherent, research-backed new palette is authorized if tested across light/dark surfaces, cases, forms, and focus states.** Existing architecture: OKLCH `--ref-*` values → semantic `--sys-color-*` values → short aliases such as `--paper`, `--ink`, `--muted`, `--line`, `--accent` → component roles. **Preserve this architecture.** No hard-coded new hex values in component/page CSS. All colors must reference semantic roles or bounded project-specific tokens.
 
 Base source colors currently include:
 
@@ -656,7 +656,7 @@ The masthead is quiet. The full-screen **Index** is the navigational statement. 
 
 Preserve **Print / Screen** color-mode language and the existing **System / Reduce / Full** motion preference UI. `js/core/preferences.js` is the state owner. Preferences must update CSS and active controls without reload, persist safely when storage is available, and degrade gracefully when localStorage is blocked.
 
-The existing pull-cord visual may remain as a distinctive detail only if it is easy to understand as a theme switch. It must have an accessible name, correct checked state, keyboard interaction and non-drag activation. An unintuitive theme control is not saved by being clever.
+The masthead uses a compact Light, Dark and System picker with sun, moon and monitor icons. Use native single-select controls with a visible selection and keyboard focus. The Index offers the same preferences when the masthead runs out of room.
 
 ### 6.3 Buttons, links, toggles and form states
 
@@ -1320,7 +1320,7 @@ These owner-approved changes supersede the preceding visual details where they c
 
 - **Work:** Maintain the full-width 47:38 physical folders, authentic brand colours, five blank sheets and number-only tabs. Overlap the three folders slightly in a vertical stack, based on the owner's `Work — Folder Rack.html` logical overlap concept. Each visible surface remains an independent native anchor; avoid a transform-based guessed click target.
 - **What I Do:** Five full-width unnumbered cards form a gently overlapping sticky stack as readers scroll. No scroll-jacking, hidden cards or gradient overlays; keyboard, touch and reduced-motion flows remain usable.
-- **Nav:** Original logo at left, a concise Last.fm Now Playing vinyl pill immediately afterward, Index mathematically centered and an accessible liquid light/dark toggle on the right. Index uses **light text on a dark fill** in light mode and **dark text on a light fill** in dark mode via semantic theme aliases. The listening pill links to the real public Last.fm account when the API is missing; no fake song.
+- **Nav:** Original logo at left, a concise Last.fm Now Playing vinyl pill immediately afterward, Index mathematically centered and a three-option Light, Dark and System picker on the right. Index uses **light text on a dark fill** in light mode and **dark text on a light fill** in dark mode via semantic theme aliases. The listening pill links to the real public Last.fm account when the API is missing; no fake song.
 - **Footer:** Keep the contact CTA, navigation, social links and full interactive dot-matrix signature. Remove the standalone location/worldwide line and bottom personal-name/independent-practice line; enlarge the signature without hiding its fallback or blocking footer links.
 - **Case studies:** Preserve PR #46's five chapters and exact question descriptors, all case plates, native anchors and truthful evidence. Reveal **chapter headings, descriptors and body together**, both with JavaScript and without it. Never rely on raw DOM presence as proof of visible content.
 

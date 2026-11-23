@@ -5,8 +5,8 @@
     "Geist Mono"
   ],
   "tokens": {
-    "--ref-ultramarine": "#002080",
-    "--ref-paper": "#f8f9fc"
+    "--ref-ultramarine": "oklch(0.30849 0.1630241 263.4279283)",
+    "--ref-paper": "oklch(0.9822037 0.0041209 271.3701277)"
   },
   "protectedCopy": [
     "I ask until the idea is clear. Then I make it useful.",

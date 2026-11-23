@@ -40,9 +40,9 @@
 /* stylelint-disable font-family-name-quotes -- quoted family names are asserted by scripts/site-integrity.test.mjs */
 @font-face{font-family:"Material Symbols Outlined";src:url("../assets/fonts/MaterialSymbolsOutlined-subset.woff2") format("woff2");font-weight:400;font-display:swap}
 
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
 
-body{font:var(--type-weight-regular) var(--type-input)/var(--type-leading-body) var(--font-sans);font-synthesis:none;-webkit-font-smoothing:antialiased;}
+body{font:var(--type-weight-regular) var(--type-input)/var(--type-leading-body) var(--font-sans);font-synthesis-weight:none;}
 
 a{text-decoration-line:underline;text-decoration-thickness:1px;text-decoration-color:color-mix(in srgb,currentColor 34%,transparent);text-underline-offset:.26em;text-decoration-skip-ink:auto;}
 
@@ -65,6 +65,7 @@ h1{font-family:var(--font-sans);font-size:var(--type-heading-lg);font-weight:var
 strong{font-weight:var(--type-weight-semibold)}
 
 p{text-wrap:pretty}
+.client-marquee__control{text-decoration:underline;text-underline-offset:.2em}
 
 main{text-align:left;}
 
@@ -1061,18 +1062,6 @@ body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[cla
 }
 
 /* FROM styles/portfolio-refinement.css */
-
-body[data-page] .theme-liquid-toggle__sun,
-body[data-page] .theme-liquid-toggle__moon {
-  text-align: center;
-  line-height: var(--type-leading-ui);
-  font-size: var(--type-body);}
-
-body[data-page] .theme-liquid-toggle__mode {
-  font: var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: var(--type-tracking-ui);}
-
 
 /* Establish the requested hero hierarchy using existing semantic tokens. */
 body[data-page="home"] .home-landing__statement {

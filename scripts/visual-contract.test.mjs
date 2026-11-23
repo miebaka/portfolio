@@ -38,7 +38,8 @@ test("approved visual contract remains intact", async () => {
   const compactCss = css.replace(/\s+/g, "").toLowerCase();
   assert.doesNotMatch(css, /@import\b/i);
   for (const [token, value] of Object.entries(contract.tokens)) {
-    assert.ok(compactCss.includes(`${token}:${value}`), `${token} changed from ${value}`);
+    const normalized = value.replace(/\b0\.(?=\d)/g, ".").replace(/\s+/g, "");
+    assert.ok(compactCss.includes(`${token}:${normalized}`), `${token} changed from ${value}`);
   }
   for (const pattern of contract.forbiddenCss) {
     assert.ok(!compactCss.includes(pattern), `forbidden CSS: ${pattern}`);

@@ -36,8 +36,7 @@ function enhanceFooterSignature(host) {
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    const channels = getComputedStyle(host).color.match(/[\d.]+/g)?.slice(0, 3) || [255, 255, 255];
-    restColor = `rgba(${channels.join(",")},.48)`;
+    restColor = `color-mix(in srgb, ${getComputedStyle(host).color} 48%, transparent)`;
     activeColor = getComputedStyle(host).getPropertyValue("--footer-signature-active").trim() || activeColor;
     let image;
     try { image = await loadImage(); } catch { return; }

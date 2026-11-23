@@ -73,5 +73,5 @@ test("Geist 400 and 600 faces are declared with swap and no synthetic text weigh
       assert.match(face, /\.woff2/);
     }
   }
-  assert.match(tokens, /font-synthesis:none/);
+  assert.match(tokens, /font-synthesis-weight:none/);
 });

@@ -30,27 +30,31 @@
   --ease-standard:cubic-bezier(.23,1,.32,1);--ease-enter:cubic-bezier(.23,1,.32,1);--dur-fast:var(--motion-press);
   --dur-ui:180ms;
 
-  /* Reference palette: raw values, the only place hex lives */
-  --ref-ultramarine:#002080;--ref-air:#e8eeff;--ref-paper:#f8f9fc;--ref-midnight:#07112b;--ref-blue-30:#1c3da4;
-  --ref-blue-80:#b1c5ff;--ref-navy-13:#172138;--ref-neutral-30:#3c4661;--ref-neutral-80:#c3c6cf;
-  --ref-neutral-94:#eceef3;--ref-neutral-95:#eff1f6;--ref-neutral-96:#f2f3f8;--ref-coral-30:#83251d;
-  --ref-coral-75:#ffa08f;--ref-error-30:#8f0b28;--ref-error-75:#ff9e9f;--ref-on-blue:#032485;--ref-near-black:#111;
-  --ref-black:#000;--ref-rivo:#0000a8;--ref-rivo-light:#b1c5ff;--ref-chopbox:#b84314;--ref-chopbox-light:#ffcf2f;
-  --ref-tedx:#702963;--ref-tedx-light:#e6b8dd;
-  --ref-white:#fff;
+  /* Reference palette: OKLCH primitives */
+  --ref-ultramarine:oklch(0.30849 0.1630241 263.4279283);--ref-air:oklch(0.9496069 0.0237882 270.3425562);--ref-paper:oklch(0.9822037 0.0041209 271.3701277);--ref-midnight:oklch(0.1860346 0.054866 265.18549);--ref-blue-30:oklch(0.4077383 0.1703921 265.4406785);
+  --ref-blue-80:oklch(0.8288005 0.0847627 269.7365604);--ref-navy-13:oklch(0.2508156 0.046157 265.3869209);--ref-neutral-30:oklch(0.397038 0.0477215 268.5096921);--ref-neutral-80:oklch(0.8269054 0.0129506 271.2585004);
+  --ref-neutral-94:oklch(0.9490215 0.0070399 268.5464724);--ref-neutral-95:oklch(0.958049 0.007023 268.5470969);--ref-neutral-96:oklch(0.9648131 0.0067461 277.1630822);--ref-coral-30:oklch(0.4118179 0.1299018 28.8309974);
+  --ref-coral-75:oklch(0.7977425 0.1166691 30.7978838);--ref-error-30:oklch(0.4166833 0.1602546 18.3676927);--ref-error-75:oklch(0.7980031 0.1160317 19.3022615);--ref-on-blue:oklch(0.3220885 0.1643034 263.7906553);--ref-near-black:oklch(0.1776378 0 0);
+  --ref-black:oklch(0 0 0);--ref-rivo:oklch(0.330691 0.2291461 264.0520206);--ref-rivo-light:oklch(0.8288005 0.0847627 269.7365604);--ref-chopbox:oklch(0.5395644 0.1609725 39.2234679);--ref-chopbox-light:oklch(0.8722056 0.1676868 90.4352697);
+  --ref-tedx:oklch(0.4061841 0.1243915 335.4328397);--ref-tedx-light:oklch(0.8345865 0.0717274 333.0543853);
+  --ref-white:oklch(1 0 0);
+  --ref-navy-10:oklch(0.2100541 0.0520823 264.4787307);
+  --ref-neutral-68:oklch(0.7156968 0.0273326 268.7417752);
+  --ref-neutral-62:oklch(0.6700433 0.0310019 268.2190099);
+  --image-edge:oklch(0 0 0 / 0.1);
 
   /* Water shader fallback palette: authored centrally, never in page CSS. */
-  --ref-water-light-glint: rgb(243 254 255 / .88);
-  --ref-water-light-depth: rgb(56 117 165 / .4);
-  --ref-water-light-a: #d7e9ed;
-  --ref-water-light-b: #97cad1;
-  --ref-water-light-c: #6ea7be;
-  --ref-water-dark-glint: rgb(44 97 160 / .4);
-  --ref-water-dark-depth: rgb(10 45 118 / .52);
-  --ref-water-dark-a: #10264d;
-  --ref-water-dark-b: #08152f;
-  --ref-water-dark-c: #061027;
-  --elevation-hover:0 1px 2px rgb(0 0 0/.3),0 1px 3px 1px rgb(0 0 0/.15);
+  --ref-water-light-glint: oklch(0.9891397 0.011661 203.4749068 / 0.88);
+  --ref-water-light-depth: oklch(0.5437371 0.098319 244.8299384 / 0.4);
+  --ref-water-light-a: oklch(0.9218285 0.0199031 212.5470558);
+  --ref-water-light-b: oklch(0.8057249 0.0538982 206.6577006);
+  --ref-water-light-c: oklch(0.6974836 0.068349 225.3844765);
+  --ref-water-dark-glint: oklch(0.4888528 0.1160922 254.450517 / 0.4);
+  --ref-water-dark-depth: oklch(0.3259499 0.1313665 262.4587753 / 0.52);
+  --ref-water-dark-a: oklch(0.2751415 0.0773326 260.8780479);
+  --ref-water-dark-b: oklch(0.2011859 0.0551978 262.399767);
+  --ref-water-dark-c: oklch(0.1788851 0.049803 263.5572563);
+  --elevation-hover:0 1px 2px oklch(0 0 0 / 0.3),0 1px 3px 1px oklch(0 0 0 / 0.15);
 
   /* System roles: what a colour is for, remapped in dark */
   --sys-color-surface:var(--ref-paper);--sys-color-surface-container-low:var(--ref-neutral-95);
@@ -72,7 +76,7 @@
   --inverse-ink:var(--ref-paper);
 
   /* Component tokens */
-  --comp-nav-bg:var(--ref-paper);--comp-nav-ink:var(--ref-midnight);--comp-nav-muted:var(--ref-neutral-30);
+  --theme-picker-selection-ink:var(--ref-paper);--comp-nav-bg:var(--ref-paper);--comp-nav-ink:var(--ref-midnight);--comp-nav-muted:var(--ref-neutral-30);
   --comp-footer-ink:var(--ref-midnight);--comp-footer-signature:var(--ref-ultramarine);
   --comp-footer-signature-active:var(--ref-coral-30);
   --grid-max:86em;
@@ -84,34 +88,34 @@
 /* The two dark blocks are generated from one list and must stay identical:
    scripts/token-integrity.test.mjs enforces it. The media block serves no-JS visitors. */
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;
+  --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:var(--ref-navy-10);
   --sys-color-surface-container-high:var(--ref-navy-13);
-  --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:#9ca3b5;
+  --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:var(--ref-neutral-68);
   --sys-color-primary:var(--ref-blue-80);--sys-color-primary-container:var(--ref-ultramarine);
   --sys-color-on-primary-container:var(--ref-air);--sys-color-secondary:var(--ref-blue-80);
   --sys-color-tertiary:var(--ref-coral-75);--sys-color-error:var(--ref-error-75);--sys-color-focus:var(--ref-coral-75);
   --sys-color-outline:var(--ref-neutral-80);--sys-color-outline-variant:var(--ref-navy-13);
   --sys-color-selection:var(--ref-navy-13);--sys-color-on-selection:var(--ref-air);
-  --comp-nav-bg:var(--ref-midnight);--comp-nav-ink:var(--ref-blue-80);--comp-nav-muted:#8d95a9;
+  --image-edge:oklch(1 0 0 / 0.1);--theme-picker-selection-ink:var(--ref-midnight);--comp-nav-bg:var(--ref-midnight);--comp-nav-ink:var(--ref-blue-80);--comp-nav-muted:var(--ref-neutral-62);
   --comp-footer-ink:var(--ref-blue-80);--comp-footer-signature:var(--ref-blue-80);
   --comp-footer-signature-active:var(--ref-coral-75);
 }}
 :root[data-theme="dark"]{color-scheme:dark;
-  --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:#0c1730;
+  --sys-color-surface:var(--ref-midnight);--sys-color-surface-container-low:var(--ref-navy-10);
   --sys-color-surface-container-high:var(--ref-navy-13);
-  --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:#9ca3b5;
+  --sys-color-on-surface:var(--ref-neutral-80);--sys-color-on-surface-variant:var(--ref-neutral-68);
   --sys-color-primary:var(--ref-blue-80);--sys-color-primary-container:var(--ref-ultramarine);
   --sys-color-on-primary-container:var(--ref-air);--sys-color-secondary:var(--ref-blue-80);
   --sys-color-tertiary:var(--ref-coral-75);--sys-color-error:var(--ref-error-75);--sys-color-focus:var(--ref-coral-75);
   --sys-color-outline:var(--ref-neutral-80);--sys-color-outline-variant:var(--ref-navy-13);
   --sys-color-selection:var(--ref-navy-13);--sys-color-on-selection:var(--ref-air);
-  --comp-nav-bg:var(--ref-midnight);--comp-nav-ink:var(--ref-blue-80);--comp-nav-muted:#8d95a9;
+  --image-edge:oklch(1 0 0 / 0.1);--theme-picker-selection-ink:var(--ref-midnight);--comp-nav-bg:var(--ref-midnight);--comp-nav-ink:var(--ref-blue-80);--comp-nav-muted:var(--ref-neutral-62);
   --comp-footer-ink:var(--ref-blue-80);--comp-footer-signature:var(--ref-blue-80);
   --comp-footer-signature-active:var(--ref-coral-75);}
 *::after{box-sizing:border-box;margin:0}
 *::before{box-sizing:border-box;margin:0}
 *{box-sizing:border-box;margin:0}
-html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav-h) + var(--s2))}
+html{background:var(--paper);scroll-behavior:smooth;overflow-x:clip;-webkit-tap-highlight-color:transparent;scroll-padding-block-start:calc(var(--nav-h) + var(--s2))}
 body{background:var(--paper);color:var(--ink);overflow-x:clip;min-height:100svh}
 svg{display:block;max-width:100%;height:auto}
 picture{display:block;max-width:100%;height:auto}
@@ -124,7 +128,7 @@ input{color:inherit}
 button{color:inherit;border:0;background:none;cursor:pointer}
 :focus-visible{outline:2px solid var(--focus);outline-offset:4px}
 ::selection{background:var(--selection-bg);color:var(--selection-fg)}
-p{max-width:44em;}
+p{max-inline-size:72ch}
 main{min-height:70vh;position:relative;z-index:1}
 footer{position:relative;z-index:1}
 .js-reveal [data-motion-role="comparison"]{transform:translate3d(-2em,0,0);clip-path:inset(0 8% 0 0)}

@@ -127,7 +127,11 @@ export function renderClients() {
     '</ul><ul class="client-proof" aria-hidden="true">' +
     items +
     "</ul></div>";
-  const controller = createMarqueeController(el);
+  const control = document.createElement("button");
+  control.type = "button";
+  control.className = "client-marquee__control";
+  el.after(control);
+  const controller = createMarqueeController(el, { control });
   addEventListener("pagehide", () => controller.destroy(), { once: true });
 }
 
@@ -142,6 +146,8 @@ export function createMarqueeController(root, deps = {}) {
   const AttrObserver =
     deps.MutationObserver === undefined ? doc.defaultView?.MutationObserver : deps.MutationObserver;
   const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
+  const { control } = deps;
+  let userPaused = false;
   let visible = !Observer;
   let destroyed = false;
 
@@ -150,10 +156,17 @@ export function createMarqueeController(root, deps = {}) {
     return chosen === "reduced" || Boolean(motionQuery?.matches);
   };
   const sync = () => {
-    const running = !isReduced() && !destroyed && visible && !doc.hidden;
+    const reduced = isReduced();
+    const running = !reduced && !userPaused && !destroyed && visible && !doc.hidden;
+    if (control) {
+      control.hidden = reduced || destroyed;
+      control.textContent = userPaused ? "Resume logo scrolling" : "Pause logo scrolling";
+    }
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
   };
+  const onToggle = () => { userPaused = !userPaused; sync(); };
+  control?.addEventListener("click", onToggle);
   const onVisibility = () => sync();
   doc.addEventListener("visibilitychange", onVisibility);
   motionQuery?.addEventListener?.("change", onVisibility);
@@ -176,6 +189,7 @@ export function createMarqueeController(root, deps = {}) {
     destroy() {
       if (destroyed) return;
       destroyed = true;
+      control?.removeEventListener("click", onToggle);
       observer?.disconnect();
       preferences?.disconnect();
       motionQuery?.removeEventListener?.("change", onVisibility);

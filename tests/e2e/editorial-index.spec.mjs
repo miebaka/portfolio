@@ -6,9 +6,8 @@ test("Home no longer loads the obsolete editorial image lens", async ({ page }) 
 
 import { test, expect } from "@playwright/test";
 
-const channels = color => color.match(/[\d.]+/g).slice(0, 3).map(Number);
 const luminance = color => {
-  const [r, g, b] = channels(color).map(value => {
+  const [r, g, b] = color.map(value => {
     const channel = value / 255;
     return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
   });
@@ -18,6 +17,21 @@ const contrast = (foreground, background) => {
   const values = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
   return (values[0] + 0.05) / (values[1] + 0.05);
 };
+
+// Computed CSS colors can use any color space. Let the browser resolve them to sRGB.
+function readColors(element) {
+  const context = document.createElement("canvas").getContext("2d");
+  const toSRGB = color => {
+    context.clearRect(0, 0, 1, 1);
+    context.fillStyle = color;
+    context.fillRect(0, 0, 1, 1);
+    return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+  };
+  return {
+    foreground: toSRGB(getComputedStyle(element).color),
+    background: toSRGB(getComputedStyle(element, "::before").backgroundColor)
+  };
+}
 
 for (const [name, path, selector] of [
   ["Essays", "/essays.html", ".editorial-index--notes"]
@@ -40,20 +54,14 @@ for (const [name, path, selector] of [
     await expect(rows.first().locator(".editorial-index__title"))
       .toHaveCSS("font-weight", "400");
     if (await rows.count() > 1) await expect(rows.nth(1)).toHaveCSS("opacity", "1");
-    const focusColors = await rows.first().evaluate(element => ({
-      foreground: getComputedStyle(element).color,
-      background: getComputedStyle(element, "::before").backgroundColor
-    }));
+    const focusColors = await rows.first().evaluate(readColors);
     expect(contrast(focusColors.foreground, focusColors.background)).toBeGreaterThanOrEqual(7);
 
     const canHover = await page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches);
     if (!canHover) return;
     for (const row of await rows.all()) {
       await row.hover();
-      const colors = await row.evaluate(element => ({
-        foreground: getComputedStyle(element).color,
-        background: getComputedStyle(element, "::before").backgroundColor
-      }));
+      const colors = await row.evaluate(readColors);
       expect(contrast(colors.foreground, colors.background)).toBeGreaterThanOrEqual(7);
     }
   });

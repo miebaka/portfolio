@@ -220,6 +220,7 @@ test("Home content preserves the unblurred hero field", async ({ page }) => {
   await expect(wave).toHaveAttribute("data-interaction", /cursor|static/);
   await page.locator(".journey").scrollIntoViewIfNeeded();
   await expect(wave.locator("canvas")).toBeVisible();
+  const pageBackground = await page.locator("body").evaluate(element => getComputedStyle(element).backgroundColor);
   const surfaces = await page.locator(".home-content, .journey").evaluateAll(elements => elements.map(element => ({
     className: element.className,
     background: getComputedStyle(element).backgroundColor,
@@ -227,7 +228,7 @@ test("Home content preserves the unblurred hero field", async ({ page }) => {
   })));
   expect(surfaces).toHaveLength(2);
   for (const surface of surfaces) {
-    if (surface.className.includes("home-content")) expect(surface.background).toMatch(/rgb\((?:248, 249, 252|7, 17, 43)\)/);
+    if (surface.className.includes("home-content")) expect(surface.background).toBe(pageBackground);
     expect(surface.blur).toBe("none");
   }
 });
@@ -386,22 +387,42 @@ test("stored theme preference persists", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("liquid theme switch exposes and changes the light/dark state", async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem("color-theme", "light"));
+test("masthead theme picker supports pointer, keyboard and the system preference", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/index.html");
-  const control = page.getByRole("switch", { name: "Switch to dark mode" });
-  await expect(control).toHaveAttribute("aria-checked", "false");
-  await control.click();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.locator(".theme-liquid-toggle")).toHaveAttribute("aria-checked", "true");
-  await expect(page.locator(".theme-liquid-toggle")).toHaveAccessibleName("Switch to light mode");
+  const picker = page.getByRole("group", { name: "Theme", exact: true });
+  const light = picker.getByRole("radio", { name: "Light theme" });
+  const dark = picker.getByRole("radio", { name: "Dark theme" });
+  const system = picker.getByRole("radio", { name: "System theme" });
+  const root = page.locator("html");
+
+  await expect(system).toBeChecked();
+  await light.click();
+  await expect(light).toBeChecked();
+  await light.press("ArrowRight");
+  await expect(dark).toBeFocused();
+  await expect(dark).toBeChecked();
+  await expect(root).toHaveAttribute("data-theme", "dark");
+
+  await page.reload();
+  await expect(dark).toBeChecked();
+  await expect(root).toHaveAttribute("data-theme", "dark");
+  await system.click();
+  await expect(root).toHaveAttribute("data-theme", "light");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(root).toHaveAttribute("data-theme", "dark");
+  await expect(system).toBeChecked();
 });
 
-test("client marquee runs without an unnecessary pause control", async ({ page }) => {
+test("client logo scrolling can be paused and resumed", async ({ page }) => {
   await page.goto("/index.html");
-  await expect(page.locator(".client-marquee__control")).toHaveCount(0);
-  await page.locator(".client-marquee").scrollIntoViewIfNeeded();
-  await expect(page.locator(".client-marquee")).toHaveAttribute("data-marquee-state", "playing");
+  const marquee = page.locator(".client-marquee");
+  await marquee.scrollIntoViewIfNeeded();
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
+  await page.getByRole("button", { name: "Pause logo scrolling" }).click();
+  await expect(marquee).toHaveAttribute("data-marquee-state", "paused");
+  await page.getByRole("button", { name: "Resume logo scrolling" }).click();
+  await expect(marquee).toHaveAttribute("data-marquee-state", "playing");
 });
 
 test("client marquee responds to the site motion preference immediately", async ({ page }) => {

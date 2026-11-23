@@ -16,55 +16,62 @@ body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__men
 body[data-page]:not(.site-system-disabled, [data-site-cascade-1]) .site-nav__themes {
   grid-column: 3;
   justify-self: end;}
-body[data-page] .theme-liquid-toggle {
+/* A compact appearance picker with native radio targets. */
+.theme-picker {
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--spacing-unit) * 5);
-  min-width: 3.9em;
-  min-height: 2.75em;
-  padding: 0;
-  color: var(--ink);
-  cursor: pointer;}
-body[data-page] .theme-liquid-toggle__track {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 4.25em;
-  height: 2.45em;
-  flex: none;
-  padding: calc(var(--spacing-unit) * 2) var(--s1);
+  min-inline-size: 0;
+  padding: .125em;
   border: 1px solid var(--line);
   border-radius: 62.4375em;
-  background: var(--ink);
-  color: var(--paper);
-  box-shadow: inset 0 1px 2px rgb(0 0 0 / .15);
-  overflow: hidden;}
-body[data-page] .theme-liquid-toggle__sun,
-body[data-page] .theme-liquid-toggle__moon {
+  background: var(--surface);
+}
+.theme-picker__option {
   position: relative;
-  z-index: 1;
-  display: inline-block;
-  width: 1.4em;}
-body[data-page] .theme-liquid-toggle__thumb {
+  display: grid;
+  place-items: center;
+  inline-size: 2em;
+  min-block-size: 2em;
+  cursor: pointer;
+}
+.theme-picker__option input {
   position: absolute;
-  z-index: 2;
-  top: .24em;
-  left: .25em;
-  width: 1.86em;
-  height: 1.86em;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0;
+  cursor: inherit;
+}
+.theme-picker__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75em;
+  block-size: 1.75em;
+  border: 1px solid transparent;
   border-radius: 50%;
-  background: var(--paper);
-  box-shadow: 0 2px .5em rgb(0 0 0 / .24);
-  transition: transform 400ms cubic-bezier(.19, 1, .22, 1), border-radius 400ms cubic-bezier(.19, 1, .22, 1);}
-body[data-page] .theme-liquid-toggle[aria-checked="true"] .theme-liquid-toggle__thumb {
-  transform: translateX(1.85em);}
-body[data-page] .theme-liquid-toggle:active .theme-liquid-toggle__thumb {
-  border-radius: 44% 56% 56% 44%;}
-body[data-page] .theme-liquid-toggle:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 4px;
-  border-radius: 62.4375em;}
+  color: var(--ink);
+}
+.theme-picker__icon svg { inline-size: 1em; }
+.theme-picker__option input:checked + .theme-picker__icon {
+  background: var(--accent);
+  color: var(--theme-picker-selection-ink);
+}
+.theme-picker__option input:focus-visible + .theme-picker__icon {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+@media (hover: hover) {
+  .theme-picker__option:hover .theme-picker__icon { border-color: currentColor; }
+}
+@media (forced-colors: active) {
+  .theme-picker__option input:checked + .theme-picker__icon { border-color: Highlight; }
+  .theme-picker__option input:focus-visible + .theme-picker__icon { outline-color: Highlight; }
+}
+
+.home-profile__portrait img {
+  outline: 1px solid var(--image-edge);
+  outline-offset: -1px;
+}
 
 /* Establish the requested hero hierarchy using existing semantic tokens. */
 body[data-page="home"] .home-landing__statement {
@@ -138,7 +145,7 @@ body[data-page="home"] section.home-capabilities--reference .service-stack__card
 
   /* Keep the proof link above the next card's physical overlap. */
   padding-bottom: calc(clamp(var(--s4), 4.5vw, var(--s10)) + clamp(var(--s5), 11svh, calc(var(--spacing-unit) * 52)));
-  box-shadow: 0 -.2em .2em rgb(0 0 0 / .06), 0 1.2em 2.5em rgb(0 0 0 / .13);}
+  box-shadow: 0 -.2em .2em oklch(0 0 0 / 0.06), 0 1.2em 2.5em oklch(0 0 0 / 0.13);}
 body[data-page="home"] section.home-capabilities--reference .service-stack__card h3 {
   max-width: 18ch;}
 body[data-page="home"] section.home-capabilities--reference .service-stack__symbol {
@@ -315,8 +322,6 @@ body .site-footer__panel {
   z-index: 2;}
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page] .theme-liquid-toggle__thumb {
-    transition: none;}
   body[data-page="home"] section.home-capabilities--reference .service-stack__item {
     position: relative;
     top: auto;}
@@ -324,8 +329,6 @@ body .site-footer__panel {
 html[data-motion="reduced"] body[data-page="home"] section.home-capabilities--reference .service-stack__item {
   position: relative;
   top: auto;}
-html[data-motion="reduced"] body[data-page] .theme-liquid-toggle__thumb {
-  transition: none;}
 
 
 /* Visible, keyboard-reachable route home after the visual masthead was simplified. */
@@ -339,14 +342,6 @@ body[data-page] .site-index__home {
 body[data-page] .site-index__home:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 4px;}
-
-/* The liquid theme switch stays tactile rather than reading as an OS checkbox. */
-body[data-page] .theme-liquid-toggle__track {
-  background: linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--ink) 75%, var(--accent)));}
-@media (hover: hover) and (pointer: fine) {
-  body[data-page] .theme-liquid-toggle:hover .theme-liquid-toggle__thumb {
-    box-shadow: 0 2px .75em color-mix(in srgb, var(--accent) 35%, transparent);}
-}
 
 /* A balanced four-element masthead: logo + Last.fm on the left, Index centered,
    theme toggle right. Symmetric flexible columns keep Index at 50% of the nav. */
@@ -438,8 +433,7 @@ html[data-motion="reduced"] body[data-page] .now-playing__vinyl { animation: non
 
 
 /* Phone defaults: compact listening pill, legible Index and no nav overflow.
-   The full track and theme label are added only when the masthead has room. */
-body[data-page] .theme-liquid-toggle__mode{display:none}
+   The full track is added only when the masthead has room. */
 body[data-page] .site-nav__leading{gap:calc(var(--spacing-unit) * 2)}
 body[data-page] .site-nav__listening{flex:none;width:2.7em;max-width:2.7em}
 body[data-page] .now-playing{
@@ -449,7 +443,6 @@ body[data-page] .now-playing{
 }
 body[data-page] .now-playing__copy{display:none}
 @media(min-width:72em){
-  body[data-page] .theme-liquid-toggle__mode{display:inline}
   body[data-page] .site-nav__leading{gap:clamp(calc(var(--spacing-unit) * 3),1.2vw,calc(var(--spacing-unit) * 6))}
   body[data-page] .site-nav__listening{
     flex:0 1 auto;
@@ -508,15 +501,28 @@ body[data-page]:not(.site-system-disabled) .site-nav__inner {
   padding-inline: 0;
 }
 body[data-page="home"] { --water-edge: var(--hf); }
-body[data-page] .site-nav__brand { justify-items: start; }
+body[data-page]:not(.site-system-disabled) .site-nav__brand {
+  flex: none;
+  min-inline-size: var(--control-target);
+  min-block-size: var(--control-target);
+  justify-items: start;
+}
 body[data-page] .nav-logo { width: 2.5em; height: 2.5em; }
 body[data-page] .site-nav__themes { justify-self: end; margin-inline-end: 0; }
 body[data-page] .site-nav__listening {
-  flex: 0 1 21em;
-  width: clamp(12em,22vw,21em);
-  max-width: min(35vw,21em);
+  flex: none;
+  inline-size: var(--control-target);
+  max-inline-size: var(--control-target);
 }
-
+body[data-page] .now-playing { padding-inline: 0; }
+@media (min-width: 72em) {
+  body[data-page] .site-nav__listening {
+    flex: 0 1 21em;
+    inline-size: clamp(12em,22vw,21em);
+    max-inline-size: min(35vw,21em);
+  }
+  body[data-page] .now-playing { padding-inline: calc(var(--spacing-unit) * 6); }
+}
 
 /* What I Do: scroll-driven stacking, never a mouse-hover-triggered lift.
    The last card is the final layer; the sequence ends when it arrives. */

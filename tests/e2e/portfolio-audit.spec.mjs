@@ -68,7 +68,7 @@ test("font roles, portrait source widths and OS motion preference remain coheren
     return {
       faces: [...document.fonts].filter(face => /^Geist (Sans|Mono)$/.test(face.family.replaceAll('"', "")))
         .map(face => [face.family.replaceAll('"', ""), String(face.weight)]),
-      synthesis: getComputedStyle(document.body).fontSynthesis,
+      synthesis: getComputedStyle(document.body).fontSynthesisWeight,
       headingWeight: getComputedStyle(document.querySelector(".home-landing h1")).fontWeight
     };
   });

@@ -27,12 +27,19 @@ export function createPreferencesController({
 
   const sync = () => {
     const resolvedTheme = theme === "system" ? (darkQuery?.matches ? "dark" : "light") : theme;
+    const themeChanged = root.dataset.theme && root.dataset.theme !== resolvedTheme;
+    if (themeChanged) root.setAttribute("data-theme-changing", "");
     root.dataset.theme = resolvedTheme;
     root.dataset.colorPreference = theme;
     const reducedMotion = motion === "reduce" || (motion === "system" && motionQuery?.matches);
     root.dataset.motionPreference = motion;
     root.dataset.motion = reducedMotion ? "reduced" : "full";
     onChange?.({ theme, resolvedTheme, motion, reducedMotion });
+    if (themeChanged) {
+      // Commit the new theme with transitions disabled before restoring them.
+      root.getBoundingClientRect();
+      root.removeAttribute("data-theme-changing");
+    }
   };
   const onSystemTheme = () => { if (theme === "system") sync(); };
   darkQuery?.addEventListener?.("change", onSystemTheme);

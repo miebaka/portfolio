@@ -301,8 +301,8 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
 
 test("ultramarine identity stays within its documented visual language", async () => {
   const css = await readFile(join(dist, "styles", "main.css"), "utf8");
-  assert.match(css, /--ref-ultramarine:#002080/);
-  assert.match(css, /--ref-paper:#f8f9fc/);
+  assert.match(css, /--ref-ultramarine:oklch\(0?\.30849 0?\.1630241 263\.4279283\)/);
+  assert.match(css, /--ref-paper:oklch\(0?\.9822037 0?\.0041209 271\.3701277\)/);
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
@@ -406,9 +406,9 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
   );
   assert.doesNotMatch(html, /\b0[1-9] \/ (?:Work|About me|Practice|Selected clients|Let(?:&rsquo;|')s work)\b/);
   assert.match(css, /body\[data-page="home"\] \.home-profile\s*>\s*\.home-profile__media\s*\{[^}]*grid-column:\s*1\/6/);
-  assert.match(navigation, /class="theme-liquid-toggle"[^>]*role="switch"[^>]*aria-checked="false"/);
-  assert.match(navigation, /data-theme-mode>Light/);
-  assert.match(navigation, /themeButton\.addEventListener\("click", toggleTheme\)/);
+  assert.match(navigation, /<fieldset class="theme-picker" aria-label="Theme">/);
+  assert.match(navigation, /<input type="radio" name="nav-theme"/);
+  assert.match(navigation, /themePicker\.addEventListener\("change", chooseNavTheme\)/);
   assert.match(css, /--hr:\s*clamp\(1\.25em,\s*2\.5vw,\s*2\.75em\)/);
   assert.doesNotMatch(css, /cursor:\s*url\(/);
   assert.doesNotMatch(css, /\.editorial-field/);

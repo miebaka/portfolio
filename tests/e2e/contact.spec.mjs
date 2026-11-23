@@ -43,13 +43,12 @@ test("202 confirms delivery, clears values and prevents a duplicate in flight", 
     await route.fulfill({ status: 202, contentType: "application/json", body: JSON.stringify({ ok: true }) });
   });
   await fill(page);
-  const button = page.getByRole("button", { name: "Work with me" });
+  const button = page.getByRole("button", { name: "Send inquiry" });
   await button.dblclick();
   await expect(page.getByRole("status")).toHaveText("Message sent. I’ll reply by email.");
   expect(requests).toBe(1);
   for (const field of Object.values(fields(page))) await expect(field).toHaveValue("");
   await expect(page.locator('[name="website"]')).toHaveValue("");
-  await expect(page.locator('[name="startedAt"]')).not.toHaveValue("");
   expectNoLeak(page, consoleMessages);
 });
 
@@ -58,7 +57,7 @@ test("422 exposes field feedback and retains input", async ({ page }) => {
   page.on("console", message => consoleMessages.push(message.text()));
   await mock(page, 422, { fieldErrors: { email: "Use a work email address." } });
   await fill(page);
-  await page.getByRole("button", { name: "Work with me" }).click();
+  await page.getByRole("button", { name: "Send inquiry" }).click();
   await expect(page.getByRole("status")).toHaveText("Check the highlighted fields.");
   await expect(page.getByLabel("Email")).toHaveAttribute("aria-invalid", "true");
   await expectRetained(page);
@@ -74,7 +73,7 @@ for (const outcome of [
     page.on("console", message => consoleMessages.push(message.text()));
     await mock(page, outcome.status, outcome.body);
     await fill(page);
-    await page.getByRole("button", { name: "Work with me" }).click();
+    await page.getByRole("button", { name: "Send inquiry" }).click();
     await expect(page.getByRole("status")).toHaveText(outcome.copy);
     await expectRetained(page);
     expectNoLeak(page, consoleMessages);

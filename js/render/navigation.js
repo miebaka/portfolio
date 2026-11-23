@@ -20,17 +20,32 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
     '<fieldset class="site-index__preferences"><legend>Theme</legend><div class="site-index__themes"><button type="button" data-theme-choice="system" aria-pressed="false">System</button><button type="button" data-theme-choice="light" aria-pressed="false">Light</button><button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button></div><div class="site-index__motion" role="group" aria-label="Motion"><button type="button" data-motion-choice="system" aria-pressed="false">Follow device</button><button type="button" data-motion-choice="reduce" aria-pressed="false">Reduce motion</button><button type="button" data-motion-choice="full" aria-pressed="false">Full motion</button></div></fieldset></div></div></div></section>';
 }
 
-function setupPreferences(index, preferences) {
+function setupPreferences(index, themePicker, preferences) {
   const choices = [...index.querySelectorAll("[data-theme-choice]")];
+  const chooseNavTheme = event => preferences.setTheme(event.target.value);
+  themePicker.addEventListener("change", chooseNavTheme);
   const motionChoices = [...index.querySelectorAll("[data-motion-choice]")];
   const chooseTheme = event => preferences.setTheme(event.currentTarget.dataset.themeChoice);
   const chooseMotion = event => preferences.setMotion(event.currentTarget.dataset.motionChoice);
   choices.forEach(btn => btn.addEventListener("click", chooseTheme));
   motionChoices.forEach(btn => btn.addEventListener("click", chooseMotion));
-  return () => { choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); };
+  return () => { themePicker.removeEventListener("change", chooseNavTheme); choices.forEach(btn => btn.removeEventListener("click", chooseTheme)); motionChoices.forEach(btn => btn.removeEventListener("click", chooseMotion)); };
 }
 
-let activeIndex, cleanupPreferences, themeButton;
+const themeIcons = {
+  light: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
+  dark: '<path d="M20.8 14.1A9 9 0 0 1 9.9 3.2a9 9 0 1 0 10.9 10.9Z"/>',
+  system: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M12 17v3m-4 0h8"/>'
+};
+
+function renderThemePicker() {
+  return '<fieldset class="theme-picker" aria-label="Theme">' +
+    Object.entries(themeIcons).map(([mode, icon]) =>
+      `<label class="theme-picker__option"><input type="radio" name="nav-theme" value="${mode}" aria-label="${mode[0].toUpperCase() + mode.slice(1)} theme"><span class="theme-picker__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icon}</svg></span></label>`
+    ).join("") + '</fieldset>';
+}
+
+let activeIndex, cleanupPreferences;
 export function renderNavigation() {
   const el = mount(MOUNT.NAV);
   if (!el) return;
@@ -42,27 +57,22 @@ export function renderNavigation() {
     '<div class="site-nav__listening" data-mount="now-playing"></div></div>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button>' +
     '<nav class="site-nav__links" id="site-nav-links" aria-label="Primary" aria-hidden="true">' + links + '</nav>' +
-    '<div class="site-nav__themes"><button class="theme-liquid-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="theme-liquid-toggle__track" aria-hidden="true"><span class="theme-liquid-toggle__sun">☀</span><span class="theme-liquid-toggle__moon">☾</span><span class="theme-liquid-toggle__thumb"></span></span><span class="theme-liquid-toggle__mode" data-theme-mode>Light</span></button></div></div>';
+    '<div class="site-nav__themes">' + renderThemePicker() + '</div></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");
   const menuButton = el.querySelector(".site-nav__menu-btn");
   activeIndex = createIndexController({ root: index, trigger: menuButton });
-  themeButton = el.querySelector(".theme-liquid-toggle");
-  let preferences;
-  const toggleTheme = () => preferences.setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
-  preferences = createPreferencesController({
+  const themePicker = el.querySelector(".theme-picker");
+  const preferences = createPreferencesController({
     root: document.documentElement,
     onChange: ({ theme, resolvedTheme, motion }) => {
-      themeButton.setAttribute("aria-checked", String(resolvedTheme === "dark"));
-      themeButton.setAttribute("aria-label", resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode");
-      themeButton.querySelector("[data-theme-mode]").textContent = resolvedTheme === "dark" ? "Dark" : "Light";
+      themePicker.querySelectorAll("input").forEach(input => { input.checked = input.value === theme; });
       index.querySelectorAll("[data-theme-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.themeChoice === theme)));
       index.querySelectorAll("[data-motion-choice]").forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.motionChoice === motion)));
       document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.setAttribute("content", resolvedTheme === "dark" ? "#07112B" : "#F8F9FC"));
     }
   });
-  themeButton.addEventListener("click", toggleTheme);
-  const cleanupIndexPreferences = setupPreferences(index, preferences);
+  const cleanupIndexPreferences = setupPreferences(index, themePicker, preferences);
   cleanupPreferences = () => {
     cleanupIndexPreferences();
     preferences.destroy();

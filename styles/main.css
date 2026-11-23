@@ -21,3 +21,11 @@
 
 /* Typography has a single source, applied after layout and components. */
 @import url("tokens.css") layer(typography);
+
+/* Keep a theme change immediate even when individual controls transition. */
+html[data-theme-changing],
+html[data-theme-changing] *,
+html[data-theme-changing] *::before,
+html[data-theme-changing] *::after {
+  transition: none !important;
+}
