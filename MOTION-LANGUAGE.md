@@ -1,60 +1,18 @@
 # Motion architecture
 
-## Current, supported effects
-The site retains the original Three.js water (with a static fallback), the interactive footer dot matrix, native-link Selected Work previews, the client marquee, the service card transitions, and the Experiments poster gallery. None of these requires a replacement scrolling engine or a page-wide reveal observer.
+## Current effects
 
-### Rules
-- **Content is visible by default.** Headings, case-study chapters and body paragraphs must never be set to opacity zero awaiting a JavaScript observer.
-- **Native scrolling owns the document.** Wheel, touch, anchor links and browser history must continue to function without Lenis, GSAP or injected scroll listeners.
-- **Motion preferences are authoritative.** The site's Reduce setting overrides system Full; its Full setting overrides system Reduce. In System mode, respect `prefers-reduced-motion`.
-- **Page-specific motion is owned by its feature.** Three.js handles the hero water, and the gallery handles its own poster transitions. Each controller must clean up listeners, observers and animation frames on teardown.
-- **Keep resources contained.** The hero water is lazily bundled; static fallbacks exist when WebGL is unsupported. No second global animation scheduler should load.
-- **One motion source of truth.** The renderer uses the controller's resolved `animate` flag. A second OS check must not defeat the visitor's explicit Full setting.
-- **Keyboard first.** Focus reveals the same information as hover. Avoid suppressing content or intercepting page scrolling to produce effects.
+The portfolio uses a **static homepage opening frame**, the interactive footer dot matrix, native-link Selected Work folders, a client marquee, native service-card transitions and the Experiments poster gallery. The previously integrated GPU water simulation has been extracted from the portfolio and preserved separately in the dedicated source snapshot on `archive/threejs-water-standalone` until repository transfer is complete.
 
-### Removed in the November 2026 cleanup
-- The optional Lenis + GSAP scroll engine, its build task, runtime bundle, production dependency graph, and old engine-specific tests.
-- The full-page IntersectionObserver reveal controller and `data-editorial-reveal` hooks.
-- Homepage staggered opacity-zero entry effects, case-study text opacity gating, retired experiment-tunnel styles, and unused scroll-linked keyframes.
+## Principles
 
-### Regression tests
-Retain tests for water fallback and pointer ripples, native page scroll, all case chapters being visible, motion preferences, project-link focus, reduced motion, cross-page navigation, and image/gallery availability. Never preserve a test solely because a removed implementation used to produce a class or attribute.
+- **Content is visible by default.** Primary text, project links and case-study evidence must never wait for an animation controller.
+- **Native scrolling owns the document.** Wheel, touch, anchor links and browser history continue to work without Lenis, GSAP or global scroll hijacking.
+- **Motion preferences are authoritative.** The site's Reduce, System and Full choices apply to supported enhancements; System respects the operating system preference.
+- **Each feature owns its own animation.** The poster gallery, project folders, client marquee and footer signature must manage their own lifecycles and cleanup.
+- **Accessibility first.** Focus and touch expose the same content as hover; reduced motion never hides important information.
+- **Static opening frame.** The homepage hero must work without canvas, WebGL2, shader bundles, generated water assets or JavaScript. The oversized name remains a semantic H1.
 
+## Release tests
 
-## Mobile water parity and cache policy (November 2026)
-- Desktop and mobile use the same Three.js refraction/caustics shader. Mobile uses
-  a reduced render resolution, not an alternative visual shader.
-- Only the renderer's actual canvas obtains a WebGL2 context. A preflight GPU
-  context or device-name blacklist must not suppress supported mobile hardware.
-- The renderer requests the device's default power preference, including
-  power-saving mobile browsers.
-- If WebGL2 or a render-target extension is unavailable, a quiet static water
-  surface replaces the old animated concentric-ring imitation. Never animate
-  the fallback or present it as WebGL.
-- The stable `/assets/runtime/hero-wave.js` URL has a revisioned import and
-  an explicit revalidation cache policy. Changing the shader requires updating
-  the revision so already-cached mobile browsers cannot keep an old effect.
-- The host reports `data-renderer` and `data-fallback-reason` to distinguish
-  a working GPU shader from module load, initialization, or context loss.
-
-
-## Refract-inspired water direction (November 2026)
-The Hallmark Refract pool demo demonstrates a useful visual principle:
-the lightfront, not decorative noise or blue gradients, should carry the
-scene. Its caustics drift slowly, with dark valleys between bright folded
-seams, a sunward lighting bias, faint spectral splitting, and short-lived
-pointer distortions. We adapt those principles to our existing Three.js
-lightfront projection and GPU fluid; we do not copy Hallmark's shader.
-
-Light mode includes subtle sunlight falloff toward the top-right of the
-pool, restrained refracted limestone joints, concentrated highlights and
-gentle RGB dispersion. Pointer and touch events add up to four fading
-lightfront impulses (caustic UV refraction and crest glints), alongside
-the existing fluid height-field, within the existing renderer and render
-targets. The autonomous ripples are slower and less forceful.
-
-The GPU solver, 24 fps cap, mobile resolution budget, pause/resume,
-offscreen pause, and static/no-WebGL fallback remain intact. Pointer
-input is passive and never blocks scrolling. Pointer cancellation resets
-the field. Rebuild with `npm run build:hero` and update the revisioned
-shader import on every shader change.
+Test native scrolling, semantic heading and case content, keyboard project navigation, reduced motion, responsive overflow and the absence of unwanted runtime dependencies. The old water shader, ripple and GPU fallback tests were extracted along with the feature; they must not run against the portfolio.

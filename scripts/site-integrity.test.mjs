@@ -486,7 +486,6 @@ test("Vercel configuration is valid and serves the static build", async () => {
   assert.match(nowPlayingApi, /s-maxage=60/);
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
-  assert.equal(header("/assets/runtime/(.*)", "Cache-Control"), "public, max-age=0, must-revalidate");
   for (const rule of config.headers) {
     for (const item of rule.headers || []) {
       if (/immutable/i.test(item.value))
