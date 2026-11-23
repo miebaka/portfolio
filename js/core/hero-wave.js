@@ -64,8 +64,7 @@ export async function initHeroWave({
   control.className = "hero-wave__control";
   control.textContent = "Pause background motion";
   control.setAttribute("aria-pressed", "false");
-  // Place the control in visual and keyboard order before the hero copy.
-  landing.insertBefore(control, landing.querySelector(".home-landing__inner"));
+  landing.append(control);
   let rendererModule;
   try { rendererModule = await loadRenderer(); }
   catch (error) { control.remove(); return keepFallback(error, "module-load"); }

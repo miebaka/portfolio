@@ -22,15 +22,9 @@ function renderFolderCard(project, index, base, showPreview = false) {
   const href = base + safeURL(project.href || "work/" + slug + ".html");
   const number = String(index + 1).padStart(2, "0");
   const imageStem = safeToken(project.indexImage || project.cover);
-  // Informative preview descriptions complement the project rationale.
-  const previewAlt = {
-    "tedx-rsu": "Attendees standing beside the red TEDx X at the event.",
-    rivo: "Rivo wordmark applied over a person using a phone.",
-    chopbox: "Proposed sauce packaging with a red ChopBox lid."
-  }[slug] || "";
   const image = imageStem
     ? '<span class="project-folder__visual"><img src="' + base +
-      'assets/images/optimized/' + imageStem + '-540.webp" alt="' + esc(previewAlt) + '" width="540" height="360" loading="lazy" decoding="async"></span>'
+      'assets/images/optimized/' + imageStem + '-540.webp" alt="" width="540" height="360" loading="lazy" decoding="async"></span>'
     : "";
   const scope = esc((project.tags || []).slice(0, 2).join(" · ") || project.category);
   const papers = Array.from({ length: 5 }, (_, i) =>
