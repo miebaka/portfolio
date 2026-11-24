@@ -718,7 +718,7 @@ body[data-page]:not(.site-system-disabled) .site-nav__inner {
 }
 .reference-nav-links { gap:var(--grid-gap); margin:0; }
 body[data-page="home"] .home-landing .hero-listening {
-  width:min(100%,28.75rem); margin-inline:auto; align-self:center;
+  width:min(100%,28.75rem); min-width:0; margin-inline:auto; align-self:center;
 }
 body[data-page="home"] .hero-listening .now-playing {
   width:100%; display:grid; grid-template-columns:auto minmax(0,1fr);
@@ -793,7 +793,9 @@ body .next-content { container-type:inline-size; padding-block:var(--section-pad
 body .next-content .case-next__label { display:block;margin-bottom:var(--s4); }
 body .next-content .case-next__link { display:block;width:fit-content;max-width:100%;margin-inline:auto;min-height:var(--control-target);padding:0; }
 body .next-content .case-next__name { display:block;max-width:100%; }
-.page-loader {position:fixed;inset:0;z-index:10000;color:var(--ref-white);pointer-events:none;}
+.page-loader {position:fixed;inset:0;z-index:10000;color:var(--ref-white);pointer-events:none;animation:proof-loader-safety 1ms 4.5s forwards;}
+html.no-js .page-loader{display:none;}
+@keyframes proof-loader-safety {to{visibility:hidden;}}
 .page-loader__panel {position:absolute;inset:0;background:var(--ref-ultramarine);transition:transform 1.6s cubic-bezier(.9,0,.1,1);}
 .page-loader__ui {position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:var(--s3);transition:transform 1s cubic-bezier(.9,0,.1,1),opacity .8s cubic-bezier(.9,0,.1,1);}
 .page-loader__mark {width:1.375rem;height:1.375rem;background:var(--ref-white);mask:url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;animation:proof-loader-spin 1s linear infinite;}

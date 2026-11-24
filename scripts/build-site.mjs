@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
 import { renderNextEssayMarkup } from "../js/render/next-content.js";
+import { renderPageLoaderMarkup } from "../js/core/page-loader.js";
 import { assertValidContent } from "./validate-content.mjs";
 import { normalizeHead, renderFooter, renderHeader } from "./render-partials.mjs";
 
@@ -130,7 +131,7 @@ function renderShell(source, href) {
   if (href === "experiments.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div class="process-sequence" data-mount="capabilities" data-prerendered="true">' + renderServiceSwatchesMarkup(content.services) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
-  return rendered;
+  return rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup());
 }
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });

@@ -13,7 +13,7 @@
   --type-heading-sm: var(--type-body);
   --type-heading-md: var(--type-heading-lg);
   --type-heading-lg: 1.5rem;
-  --type-name:clamp(1.5rem,13.25cqi,19rem);
+  --type-name:clamp(1.5rem,calc((100vw - 2 * var(--page)) * .1325),19rem);
   --type-record:1.375rem;
   --type-signature: clamp(2rem,5vw,4.5rem);
   --type-signature-vw: 5vw;

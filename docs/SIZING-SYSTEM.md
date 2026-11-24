@@ -18,7 +18,7 @@ Belonwus uses 16px ordinary text and 32px large text on desktop, 14px and 24px o
 | Tight section spacing | 32px | 40px |
 | Major section break | 120px | 240px |
 
-The reference uses a 12-column desktop grid, 2-column project grids, and stacked small-screen content. There is no desktop content-width cap. Reading and project description copy use a maximum 628px measure from the reference project description. Essays and cases retain the shared sticky legend on the left and narrative in columns 7–12; on smaller screens both stack. The shared oversized name role `--type-name` is centered and container-scaled at 13.25cqi for the homepage, case covers and next-page handoffs. Longer names wrap; the link wraps only the displayed name. Belonwus uses a graphic wordmark, so this is a live-text adaptation.
+The reference uses a 12-column desktop grid, 2-column project grids, and stacked small-screen content. There is no desktop content-width cap. Reading and project description copy use a maximum 628px measure from the reference project description. Essays and cases retain the shared sticky legend on the left and narrative in columns 7–12; on smaller screens both stack. The shared oversized name role `--type-name` is centered and scaled to 13.25% of the shared viewport content width for the homepage, case covers and next-page handoffs. Longer names wrap; the link wraps only the displayed name. Belonwus uses a graphic wordmark, so this is a live-text adaptation.
 
 ## Sources of truth
 
