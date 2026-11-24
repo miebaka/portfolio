@@ -5,7 +5,7 @@ import { writing } from "../../data/writing.js";
    The legacy case/article selectors remain as compatibility hooks. */
 export function renderNextContent({ label, title, href, essay = false }) {
   const classes = `case-next next-content${essay ? " article-next" : ""} container`;
-  return `<section class="${classes}" aria-label="${esc(label)}"><a class="case-next__link" href="${esc(href)}"><span class="case-next__label">${esc(label)}</span><span class="case-next__name">${esc(title)}</span></a></section>`;
+  return `<section class="${classes}" aria-label="${esc(label)}"><span class="case-next__label">${esc(label)}</span><a class="case-next__link" href="${esc(href)}"><span class="case-next__name display-name">${esc(title)}</span></a></section>`;
 }
 
 export function renderNextEssayMarkup(path) {

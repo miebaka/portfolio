@@ -16,6 +16,7 @@
 
   /* Living Editorial semantic roles: a single authored token vocabulary. */
   
+  --button-bg:var(--ref-ultramarine);--button-ink:var(--ref-white);--button-hover-bg:var(--ref-coral-30);--button-hover-ink:var(--ref-white);
   --editorial-signal:var(--ref-ultramarine);--editorial-inverse:var(--ref-paper);
   --editorial-rule:var(--line);
   --editorial-stage:var(--ref-midnight);

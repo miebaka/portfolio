@@ -2,6 +2,7 @@
    main.js — module entry. Renders the data-driven DOM, then wires behaviour.
    Order matters: the nav must be rendered before its handlers attach.
    ========================================================================== */
+import { initPageLoader } from "./core/page-loader.js";
 import { initContract } from "./core/contract.js";
 
 import { renderNavigation } from "./render/navigation.js";
@@ -30,6 +31,7 @@ const run = (label, task) => {
   catch (error) { console.error("[portfolio] " + label + " failed", error); }
 };
 
+run("Page loader", initPageLoader);
 run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */

@@ -33,7 +33,7 @@ export function initNowPlaying({
   pill.rel = "noopener noreferrer";
   pill.dataset.live = "false";
   pill.setAttribute("aria-label", "Open listening history on Last.fm");
-  pill.innerHTML = '<span class="now-playing__vinyl" aria-hidden="true"></span>' +
+  pill.innerHTML = '<span class="now-playing__vinyl" aria-hidden="true"><i></i></span>' +
     '<span class="now-playing__copy"><span class="now-playing__label">On Last.fm</span>' +
     '<span class="now-playing__track">Listening history</span></span>';
   mount.append(pill);

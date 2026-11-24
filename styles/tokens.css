@@ -13,6 +13,8 @@
   --type-heading-sm: var(--type-body);
   --type-heading-md: var(--type-heading-lg);
   --type-heading-lg: 1.5rem;
+  --type-name:clamp(1.5rem,13.25cqi,19rem);
+  --type-record:1.375rem;
   --type-signature: clamp(2rem,5vw,4.5rem);
   --type-signature-vw: 5vw;
   --type-signature-wide-vw: 5.8vw;
@@ -1346,11 +1348,21 @@ body.case-page:not(.design-audit-disabled) .case-opening h1 { font-weight:var(--
 
 /* Text wordmark: Belonwus uses a graphic; fit our existing live name to the
    available inline width instead. This is the only display-size exception. */
-body[data-page="home"] .home-landing h1 {
-  font:var(--type-weight-semibold) clamp(1.5rem,13.25cqi,19rem)/.94 var(--font-sans);
+body[data-page="home"] .home-landing h1,
+body.case-page .case-cover .display-name,
+body .next-content .case-next__name {
+  font:var(--type-weight-semibold) var(--type-name)/.94 var(--font-sans);
   letter-spacing:-.055em;
   text-align:center;
-  white-space:nowrap;
-  text-wrap:nowrap;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
   text-transform:none;
 }
+body[data-page="home"] .home-landing h1 { white-space:nowrap; }
+body[data-page] .hero-listening .now-playing__copy,
+body[data-page] .hero-listening .now-playing__track { white-space:normal; overflow:visible; text-overflow:clip; }
+body[data-page] .hero-listening .now-playing__track { font-size:var(--type-record); letter-spacing:var(--type-tracking-heading); }
+.page-loader__count { font:var(--type-weight-regular) var(--type-body)/1 var(--font-sans); font-variant-numeric:tabular-nums; text-align:right; }
+.home-beyond__art { text-align:center; }
+body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.home-beyond__card) { text-decoration:none; }
+

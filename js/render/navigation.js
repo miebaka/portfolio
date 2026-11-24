@@ -16,7 +16,7 @@ export function renderIndexMarkup({ base = "", page = "", site = SITE } = {}) {
   return '<section class="site-index" id="site-index" role="dialog" aria-modal="true" aria-labelledby="site-index-title" tabindex="-1" hidden inert>' +
     '<div class="site-index__inner container"><div class="site-index__heading"><h2 id="site-index-title">Index</h2><button class="site-index__close" type="button" data-index-close>Close<span aria-hidden="true"> ×</span></button></div>' +
     '<div class="site-index__body"><nav class="site-index__destinations" aria-label="All destinations">' + destinations + '</nav>' +
-    '<div class="site-index__aside"><a class="site-index__home" href="' + base + 'index.html">Home <span aria-hidden="true">↗</span></a><div class="site-index__contact"><a href="' + safeURL('mailto:' + (site.email || "")) + '">' + esc(site.email) + '</a>' + cv + '</div>' +
+    '<div class="site-index__aside"><a class="site-index__home" href="' + base + 'index.html">Home </a><div class="site-index__contact"><a href="' + safeURL('mailto:' + (site.email || "")) + '">' + esc(site.email) + '</a>' + cv + '</div>' +
     '<fieldset class="site-index__preferences"><legend>Motion</legend><div class="site-index__motion" role="group" aria-label="Motion"><button type="button" data-motion-choice="system" aria-pressed="false">Follow device</button><button type="button" data-motion-choice="reduce" aria-pressed="false">Reduce motion</button><button type="button" data-motion-choice="full" aria-pressed="false">Full motion</button></div></fieldset></div></div></div></section>';
 }
 
@@ -37,7 +37,7 @@ export function renderNavigation() {
   el.innerHTML = '<div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand site-nav__balance" href="' + base + 'index.html" aria-label="' + esc(SITE.name) + ', home"><img class="nav-logo" src="' + base + 'assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a>' +
     '</div>' +
     '<nav class="reference-nav-links" aria-label="Primary">' + navigation.primary.filter(route => route.key !== "contact").map(route => '<a class="site-nav__link" href="' + base + safeURL(route.href) + '"' + (route.key === page ? ' aria-current="page"' : '') + '>' + esc(route.label) + '</a>').join("") + '</nav>' +
-    '<a class="reference-nav-contact" href="' + base + 'contact.html">Let’s talk <span aria-hidden="true">↗</span></a>' +
+    '<a class="reference-nav-contact" href="' + base + 'contact.html">Let’s talk </a>' +
     '<button class="site-nav__menu-btn" type="button" aria-expanded="false" aria-controls="site-index"><span class="site-nav__menu-mark" aria-hidden="true"></span>Index</button></div>';
   document.body.insertAdjacentHTML("beforeend", renderIndexMarkup({ base, page }));
   const index = document.getElementById("site-index");

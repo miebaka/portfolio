@@ -89,7 +89,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
         '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join("") +
       '</ul></div>'
     : "";
-  const collectionMarkup = '<nav class="project-archive__collections reference-panel" aria-labelledby="more-practice-title"><h2 id="more-practice-title">There is another side to the work.</h2><div><p>Self-initiated studies and writing show the questions behind the practice.</p><a class="reference-link" href="' + base + 'experiments.html">Explore experiments ↗</a></div></nav>';
+  const collectionMarkup = '<nav class="project-archive__collections reference-panel" aria-labelledby="more-practice-title"><h2 id="more-practice-title">There is another side to the work.</h2><div><p>Self-initiated studies and writing show the questions behind the practice.</p><a class="reference-link" href="' + base + 'experiments.html">Explore experiments</a></div></nav>';
   return renderProjectFolderStackMarkup(projects, studies, base) + progressMarkup + collectionMarkup;
 }
 
@@ -100,7 +100,7 @@ function clientItem(client) {
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
 
   // One measured height across logos; SVGs retain their intrinsic proportions.
-  return '<li class="marquee__item" style="--logo-optical:' + (Number.isFinite(client.optical) ? client.optical : 1) + '">' + inner + '</li>';
+  return '<li class="marquee__item" style="--logo-optical:' + (Number.isFinite(client.optical) ? client.optical : 1) + '">' + inner + '<span class="marquee__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8"/><path d="M12 0v24M0 12h24"/></svg></span></li>';
 }
 
 export function renderClients() {
@@ -137,17 +137,22 @@ export function createMarqueeController(root, deps = {}) {
   const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
   const { control } = deps;
   const logos = [...(root.querySelectorAll?.(".client-proof:first-child .marquee__item") || [])];
-  const measureGap = () => {
-    const widest = Math.max(0, ...logos.map((logo) => logo.getBoundingClientRect().width));
-    if (widest) root.style.setProperty("--client-logo-gap", `${widest / 2}px`);
-  };
-  const ResizeObserver = doc.defaultView?.ResizeObserver;
-  const sizes = ResizeObserver && logos.length ? new ResizeObserver(measureGap) : null;
-  logos.forEach((logo) => sizes?.observe(logo));
-  measureGap();
+  const sizes = null;
   let userPaused = false;
   let visible = !Observer;
   let destroyed = false;
+  const win = doc.defaultView;
+  const track = root.querySelector?.(".client-marquee__track");
+  let frame = 0, x = 0, previousY = win?.scrollY || 0, last = 0;
+  const tick = time => {
+    if (destroyed || !root.classList.contains("is-running")) { frame = 0; last = 0; return; }
+    const y = win.scrollY, velocity = Math.abs(y - previousY);
+    previousY = y;
+    const half = track.scrollWidth / 2;
+    const elapsed = last ? Math.min(32, time - last) : 16.67; last = time;
+    if (half) { x = ((x - (.55 + velocity * .35) * elapsed / 16.67) % half + half) % half; track.style.transform = "translate3d(" + (x - half) + "px,0,0)"; }
+    frame = win.requestAnimationFrame(tick);
+  };
 
   const isReduced = () => {
     const chosen = doc.documentElement?.dataset.motion;
@@ -163,6 +168,12 @@ export function createMarqueeController(root, deps = {}) {
     root.dataset.marqueeMode = reduced ? "static" : "scroll";
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
+    if (track && win?.requestAnimationFrame) {
+      track.style.animation = "none";
+      if (reduced) track.style.transform = "";
+      if (running && !frame) { previousY = win.scrollY; frame = win.requestAnimationFrame(tick); }
+      else if (!running && frame) { win.cancelAnimationFrame(frame); frame = 0; last = 0; }
+    }
   };
   const onToggle = () => { userPaused = !userPaused; sync(); };
   control?.addEventListener("click", onToggle);

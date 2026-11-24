@@ -14,7 +14,7 @@ export function renderHeader({ base = "", page = "" } = {}) {
   const links = routesFor("primary").filter(route => route.key !== "contact").map(route =>
     `<a class="site-nav__link" href="${base}${escapeHTML(route.href)}"${route.key === page ? ' aria-current="page"' : ""}>${escapeHTML(route.label)}</a>`
   ).join("");
-  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a></div><nav class="reference-nav-links" aria-label="Primary">${links}</nav><a class="reference-nav-contact" href="${base}contact.html">Let’s talk ↗</a></div></header>`;
+  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a></div><nav class="reference-nav-links" aria-label="Primary">${links}</nav><a class="reference-nav-contact" href="${base}contact.html">Let’s talk</a></div></header>`;
 }
 
 export function renderFooter({ base = "" } = {}) {
@@ -24,7 +24,7 @@ export function renderFooter({ base = "" } = {}) {
   ).join("");
   const subject = "mailto:" + siteConfig.email + "?subject=Let%27s%20work%20together";
   return `<footer class="site-footer" data-mount="footer">
-    <div class="site-footer__top"><p class="site-footer__eyebrow">Have something worth making?</p><h2>Let’s find the idea.</h2><a class="site-footer__start" href="${escapeHTML(subject)}">Start a conversation ↗</a></div>
+    <div class="site-footer__top"><p class="site-footer__eyebrow">Have something worth making?</p><h2>Let’s find the idea.</h2><a class="site-footer__start" href="${escapeHTML(subject)}">Start a conversation</a></div>
     <div class="site-footer__panel">
       <p class="site-footer__statement">Ideas made unmistakable.<span>Design made to last.</span></p>
       <nav class="site-footer__groups" aria-label="Footer">
