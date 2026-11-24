@@ -34,17 +34,28 @@ run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
-run("Page loader", initPageLoader);
-if (page === "home") run("Fit homepage name", () => {
-  const name = document.querySelector(".home-landing h1");
+if (page === "home") run("Page loader", initPageLoader);
+if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
+if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
+if (has('[data-mount="clients"]')) run("clients render", renderClients);
+if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
+if (has('[data-mount="experience"], [data-mount="cv"]')) run("professional evidence render", renderProfessionalEvidence);
+if (isCaseStudy) run("case study render", renderCaseStudy);
+if (page === "home" || isCaseStudy) run("Fit display title", () => {
+  const name = document.querySelector(".home-landing h1, .case-cover h1");
   if (!name) return;
   const fit = () => {
-    const range = document.createRange();
-    range.selectNodeContents(name);
-    const width = range.getBoundingClientRect().width;
     const available = name.clientWidth;
-    if (width > 0 && available > 0) {
-      const size = parseFloat(getComputedStyle(name).fontSize);
+    if (!available) return;
+    const style = getComputedStyle(name);
+    const probe = document.createElement("span");
+    Object.assign(probe.style, {position:"absolute",visibility:"hidden",whiteSpace:"nowrap",font:style.font,letterSpacing:style.letterSpacing});
+    probe.textContent = "Miebaka Joshua";
+    name.append(probe);
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    if (width > 0) {
+      const size = parseFloat(style.fontSize);
       name.style.setProperty("--home-name-fit", (size * available * .985 / width / parseFloat(getComputedStyle(document.documentElement).fontSize)) + "rem");
     }
   };
@@ -55,12 +66,6 @@ if (page === "home") run("Fit homepage name", () => {
   document.fonts?.ready.then(fit);
   fit();
 });
-if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
-if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
-if (has('[data-mount="clients"]')) run("clients render", renderClients);
-if (has('[data-mount="capabilities"]')) run("capabilities render", renderCapabilities);
-if (has('[data-mount="experience"], [data-mount="cv"]')) run("professional evidence render", renderProfessionalEvidence);
-if (isCaseStudy) run("case study render", renderCaseStudy);
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
 run("content slots", fillSlots);

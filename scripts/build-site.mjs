@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE } from "../data/site.js";
 import { renderCaseMarkup } from "../js/render/case-markup.js";
+import { renderExperimentMetadata } from "../js/render/metadata-strip.js";
 import { renderNextEssayMarkup } from "../js/render/next-content.js";
 import { renderPageLoaderMarkup } from "../js/core/page-loader.js";
 import { assertValidContent } from "./validate-content.mjs";
@@ -109,7 +110,8 @@ function renderShell(source, href) {
   if (href === "work.html") rendered = rendered.replace(/<div class="project-folder-stack" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="project-folder-stack" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div class="process-sequence" data-mount="capabilities" data-prerendered="true">' + renderServiceSwatchesMarkup(content.services) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
-  return rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup());
+  if (href === "experiments.html") rendered = rendered.replace(/<dl class="metadata-strip">[\s\S]*?<\/dl>/, renderExperimentMetadata());
+  return href === "index.html" ? rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup()) : rendered;
 }
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });

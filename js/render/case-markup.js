@@ -1,5 +1,6 @@
 import { viewportQueries } from "../core/responsive.js";
 import { renderNextContent } from "./next-content.js";
+import { renderMetadataStrip } from "./metadata-strip.js";
 
 const WIDTHS = [540, 810, 1080, 1440, 1920];
 const esc = (value) =>
@@ -49,7 +50,7 @@ function factsBlock(study, project) {
     ["Deliverables", facts.delivered || "Not documented"],
     ["Credits", facts.collaborators || facts.role || "Not documented"],
   ];
-  return `<dl class="case-facts container">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
+  return renderMetadataStrip(rows, {caseStudy:true});
 }
 
 function chapter({ id, label, title, body }) {

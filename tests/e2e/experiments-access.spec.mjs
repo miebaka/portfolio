@@ -4,7 +4,8 @@ test("Experiments exposes site navigation, footer, and natural vertical scrollin
   await page.goto("/experiments.html");
   await expect(page.locator("header.site-nav")).toBeVisible();
   await expect(page.locator("header.site-nav .site-nav__brand")).toBeVisible();
-  await expect(page.locator(".experiments-nav__back")).toHaveAttribute("href", "work.html");
+  await expect(page.locator(".experiments-nav__back")).toHaveCount(0);
+  await expect(page.locator(".metadata-strip dt")).toHaveText(["Study", "Medium"]);
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
   await expect(page.locator(".experiments-static")).toHaveCount(0);
   await expect(page.locator(".experiment-poster[data-active]")).toBeVisible();

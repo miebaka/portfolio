@@ -100,7 +100,7 @@ function clientItem(client) {
     : '<span class="marquee__wordmark">' + esc(client.name) + "</span>";
 
   // One measured height across logos; SVGs retain their intrinsic proportions.
-  return '<li class="marquee__item" style="--logo-optical:' + (Number.isFinite(client.optical) ? client.optical : 1) + '">' + inner + '<span class="marquee__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8"/><path d="M12 0v24M0 12h24"/></svg></span></li>';
+  return '<li class="marquee__item" style="--logo-optical:' + (Number.isFinite(client.optical) ? client.optical : 1) + '">' + inner + '</li>';
 }
 
 export function renderClients() {
@@ -148,7 +148,7 @@ export function createMarqueeController(root, deps = {}) {
     previousY = y;
     const half = track.scrollWidth / 2;
     const elapsed = last ? Math.min(32, time - last) : 16.67; last = time;
-    if (half) { x = ((x - (.55 + velocity * .35) * elapsed / 16.67) % half + half) % half; track.style.transform = "translate3d(" + (x - half) + "px,0,0)"; }
+    if (half) { x = ((x - (.72 + velocity * .35) * elapsed / 16.67) % half + half) % half; track.style.transform = "translate3d(" + (x - half) + "px,0,0)"; }
     frame = win.requestAnimationFrame(tick);
   };
 

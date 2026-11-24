@@ -1,6 +1,7 @@
 /* Shared, accessible case-study route handoff for native links and
    the interactive project folders. No animation when reduced motion is set. */
 import { isMotionReduced } from "./motion-language.js";
+import { projects } from "../../data/projects.js";
 
 const reducedMotion = () => isMotionReduced(
   document.documentElement, window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -17,6 +18,9 @@ export function navigateToCase(url) {
   }
   const curtain = document.createElement("div");
   curtain.className = "case-route-transition";
+  const slug = new URL(url, location.href).pathname.split("/").pop().replace(/\.html$/i, "");
+  const tone = projects.find(project => project.slug === slug)?.tone;
+  if (/^#[0-9a-f]{6}$/i.test(tone || "")) curtain.style.setProperty("--transition-tone", tone);
   curtain.setAttribute("aria-hidden", "true");
   curtain.innerHTML = '<span class="case-route-transition__mark"></span>';
   document.body.append(curtain);

@@ -131,7 +131,7 @@ body[data-page="home"] .home-profile__portrait img {
   height: 100%;
   object-fit: cover;}
 body section.service-stack-section .service-stack {
-  padding-inline:var(--page);}
+  padding-inline:0;}
 body section.service-stack-section .service-stack__item {
   top: calc(var(--nav-h) + 1em + var(--stack-index, 0) * .6em);
   margin-bottom:calc(-1 * var(--s11));

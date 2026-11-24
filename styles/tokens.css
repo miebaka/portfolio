@@ -1349,8 +1349,7 @@ body.case-page:not(.design-audit-disabled) .case-opening h1 { font-weight:var(--
 /* Text wordmark: Belonwus uses a graphic; fit our existing live name to the
    available inline width instead. This is the only display-size exception. */
 body[data-page="home"] .home-landing h1,
-body.case-page:not(.design-audit-disabled) .case-cover h1.display-name,
-body .next-content .case-next__name {
+body.case-page:not(.design-audit-disabled) .case-cover h1.display-name {
   font:var(--type-weight-semibold) var(--type-name)/.94 var(--font-sans);
   letter-spacing:-.055em;
   text-align:center;
@@ -1359,6 +1358,14 @@ body .next-content .case-next__name {
   text-transform:none;
 }
 body[data-page="home"] .home-landing h1 { white-space:nowrap; font-size:var(--home-name-fit,13.25cqi); }
+body.case-page:not(.design-audit-disabled) .case-cover h1.display-name {font-size:var(--home-name-fit,13.25cqi);text-wrap:balance;overflow-wrap:anywhere}
+body .next-content :is(.case-next__name,.case-next__label) {text-align:right}
+body .next-content .case-next__name {font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-heading);text-transform:none}
+body.case-page .metadata-strip dt,
+body[data-page="explorations"] .metadata-strip dt {font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase}
+body.case-page .metadata-strip dd,
+body[data-page="explorations"] .metadata-strip dd {font:var(--type-weight-regular) var(--type-input)/var(--type-leading-reading) var(--font-sans);text-align:left;overflow-wrap:anywhere}
+body[data-page="writing"] .editorial-index--notes .writing-item__title {font-size:var(--type-heading-lg)}
 body[data-page] .hero-listening .now-playing__copy,
 body[data-page] .hero-listening .now-playing__track { white-space:normal; overflow:visible; text-overflow:clip; }
 body[data-page] .hero-listening .now-playing__track { font-size:var(--type-record); letter-spacing:var(--type-tracking-heading); }

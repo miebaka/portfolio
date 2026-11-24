@@ -10,7 +10,7 @@
   --s7:2.5rem; --s8:3rem; --s9:4rem; --s10:5rem; --s11:7.5rem; --s12:15rem;
   --page:var(--grid-outer); --content:var(--grid-max); --grid-gap:var(--grid-gutter);
   --section-padding:var(--s9); --section-padding-tight:var(--s6); --section-break:var(--s11);
-  --nav-h:3rem; --list-item-inline:var(--s4); --control-target:max(44px,2.75rem);
+  --nav-h:4.5rem; --list-item-inline:var(--s4); --control-target:max(44px,2.75rem);
   --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px); --safe-left:env(safe-area-inset-left,0px);
 
@@ -173,7 +173,7 @@ html[data-motion="reduced"]{scroll-behavior:auto}
 /* Mobile defaults, with larger composition added only when space allows. */
 @media (min-width:48.0625em) {
   :root {
-    --section-padding:var(--s10); --section-padding-tight:var(--s7); --section-break:var(--s12); --grid-outer:2.5rem; --nav-h:4rem;
+    --section-padding:var(--s10); --section-padding-tight:var(--s7); --section-break:var(--s12); --grid-outer:2.5rem; --nav-h:6rem;
     --grid-gutter:1.5rem;
   }
   .section--tight { padding-block:var(--section-padding-tight); }

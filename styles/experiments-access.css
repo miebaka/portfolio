@@ -9,7 +9,7 @@ body[data-page="explorations"] main.experiments-page {
 }
 body[data-page="explorations"] section.experiments-spatial {
   position: relative; height: clamp(34em, 78svh, 58em); min-height: 0;
-  overflow: clip; background: var(--ref-neutral-94); color: var(--ref-near-black);
+  overflow: clip; background: var(--paper); color: var(--ink);
   isolation: isolate;
 }
 body[data-page="explorations"] .experiments-spatial::after { position: absolute; }

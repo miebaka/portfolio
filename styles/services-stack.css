@@ -218,16 +218,19 @@ body .site-nav__link,body .site-nav__menu-btn{min-height:var(--control-target)}
 }
 
 
-/* Specificity and full-bleed corrections verified against 1440px and 390px. */
+/* The section owns the shared gutter; its children use the remaining width. */
 body section.service-stack-section.container {
-  width:100%!important;
-  max-width:none!important;
-  margin-inline:0!important;}
+  width:min(calc(100% - 2 * var(--page)),var(--content));
+  max-width:var(--content);
+  margin-inline:auto;
+  padding-inline:0;
+}
 body section.service-stack-section .process-sequence,
 body section.service-stack-section .service-stack,
 body section.service-stack-section .service-stack__item,
 body section.service-stack-section .service-stack__card {
-  width:100%!important;max-width:none!important;margin-inline:0;}
+  width:100%;max-width:100%;margin-inline:0;
+}
 html body .site-footer .site-footer__links a,
 html body .site-footer .site-footer__links a:visited {
   color:var(--ink)!important;}
