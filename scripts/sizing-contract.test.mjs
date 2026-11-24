@@ -6,9 +6,9 @@ import { viewportQueries } from "../js/core/responsive.js";
 import { readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
-test("reference breakpoints are the 375/425/768px boundaries", () => {
-  assert.deepEqual(breakpointSizes.min, ["23.5em", "26.625em", "48.0625em"]);
-  assert.deepEqual(breakpointSizes.max, ["23.4375em", "26.5625em", "48em"]);
+test("reference breakpoints include the editorial 1024px grid boundary", () => {
+  assert.deepEqual(breakpointSizes.min, ["23.5em", "26.625em", "48.0625em", "64em"]);
+  assert.deepEqual(breakpointSizes.max, ["23.4375em", "26.5625em", "48em", "63.9375em"]);
   breakpointSizes.min.forEach((min, index) => {
     assert.equal((Number.parseFloat(min) - Number.parseFloat(breakpointSizes.max[index])) * 16, 1);
   });

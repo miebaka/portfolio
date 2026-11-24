@@ -107,7 +107,7 @@ body[data-page="home"] .home-profile .home-profile__introduction {
   max-width: 54em;
   min-width: 0;
   display: grid;
-  gap:var(--s4);
+  gap:var(--space-support);
   align-content: center;}
 body[data-page="home"] .home-profile .home-profile__media {
   grid-column: 1;
@@ -142,10 +142,10 @@ body section.service-stack-section .service-stack__card {
   width: 100%;
   min-height:var(--service-card-height);
   border-radius: clamp(1em, 2vw, 2em);
-  padding:var(--s10);
+  padding:var(--space-card);
 
   /* Keep the proof link above the next card's physical overlap. */
-  padding-bottom: calc(var(--s10) + var(--service-overlap, var(--s5)));
+  padding-bottom:calc(var(--space-card) + var(--service-overlap));
   box-shadow: 0 -.2em .2em color-mix(in oklab,var(--ref-black) 6%,transparent), 0 1.2em 2.5em color-mix(in oklab,var(--ref-black) 13%,transparent);}
 body section.service-stack-section .service-stack__card h3 {
   max-width: 18ch;}
@@ -205,8 +205,8 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap:var(--s4);
-  padding-block:var(--s11);}
+  gap:var(--heading-content-gap);
+  padding-block:var(--section-half);}
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > h2,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section > h2,
 body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience > h2 {
@@ -255,7 +255,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__section,
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-experience {
     grid-template-columns: minmax(10em, 3fr) minmax(0, 7fr) minmax(8em, 2fr);
-    gap:var(--s7);
+    gap:var(--grid-gap);
   }
 
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-editorial__intro > .about-editorial__copy,

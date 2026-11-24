@@ -21,7 +21,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack__stage {
   position: relative;
-  margin-bottom:var(--s11);
+  margin-bottom:0;
 }
 
 .project-folder-stack__cards {
@@ -279,7 +279,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack .project-archive__progress,
 .project-folder-stack .project-archive__collections {
-  margin-block-start:var(--s11);
+  margin-block-start:var(--section-padding);
 }
 
 @media (max-width:48em), (pointer: coarse) {
@@ -323,9 +323,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head {
   margin-block-end:var(--s3);
 }
 
-body .project-folder-stack__stage {
-  margin-bottom:var(--s8);
-}
+body .project-folder-stack__stage {margin-bottom:0}
 
 body .project-folder-stack__cards {
   --work-folder-height: clamp(8em, calc((100svh - var(--nav-h) - 13em) / 2.4), 19em);

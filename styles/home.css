@@ -72,10 +72,11 @@ body[data-page="home"] .home-landing__meta a {
   to { transform: scale(1); opacity: 1; }
 }
 body[data-page="home"] .home-content {
-  position: relative;
-  background: var(--paper);}
-body[data-page="home"] :is(.swiss-selected, .home-profile, .home-capabilities--reference, .home-close) {
-  padding-block:var(--s12);}
+  position:relative;
+  display:flex;flex-direction:column;
+  gap:var(--section-padding);
+  padding-block:var(--section-break) var(--section-padding);
+  background:var(--paper);}
 
 body[data-page="home"] :is(.swiss-section-head, .disciplines-heading) {
   display: grid;
@@ -96,15 +97,12 @@ body[data-page="home"] .home-profile__introduction {
 body[data-page="home"] .home-profile__introduction h2 {
   max-width: 9ch;}
 body[data-page="home"] .home-profile__lead {
-  margin-top:var(--s4);
   max-width: 22ch;}
 body[data-page="home"] .home-profile__introduction p:not(.home-profile__lead) {
-  max-width: 54ch;
-  margin-top:var(--s4);
+  max-width:54ch;
   color: var(--muted);}
 body[data-page="home"] .home-profile__introduction .swiss-link {
-  display: inline-flex;
-  margin-top:var(--s6);}
+  display:inline-flex;}
 body[data-page="home"] .home-profile > .home-profile__media {
   grid-column: 1;
   grid-row: 1;}
@@ -235,8 +233,7 @@ body[data-page="home"] .home-close__email {
 
 /* Footer geometry is authored in footer-layout.css. */
 
-body[data-page="home"] :is(.swiss-selected,.home-profile,.home-capabilities--reference,.home-close){
-  padding-block:var(--section-padding);}
+body[data-page="home"] :is(.swiss-selected,.home-capabilities--reference,.home-close){padding-block:0}
 
 
 body[data-page="home"] .swiss-section-head{

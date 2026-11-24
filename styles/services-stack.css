@@ -47,7 +47,7 @@ body .service-stack-section .service-stack__tags {
   display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:var(--s1);}
 body .service-stack-section .service-stack__tag {
   display:inline-block;max-width:100%;padding:var(--s1) var(--s3);border:1px solid currentColor;border-radius:62.4375em;}
-body[data-page="home"] .journey {padding-block:var(--section-padding)}
+body[data-page="home"] .journey {padding-block:0}
 body[data-page="home"] .journey .client-strip {margin-top:0}
 body[data-page="home"] .client-proof {gap:var(--grid-gap);padding-inline:var(--s10)}
 body[data-page="home"] .marquee__item {

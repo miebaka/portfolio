@@ -12,9 +12,14 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap:var(--stack-gap, var(--s3));
+  gap:var(--stack-gap, var(--space-support));
 }
-.section { padding-block:var(--section-padding); }
+.section { padding-block:var(--section-half); }
+.editorial-flow {display:flex;flex-direction:column;gap:var(--section-padding)}
+.editorial-section {display:flex;flex-direction:column;gap:var(--heading-content-gap)}
 @media (min-width:48.0625em) {
+  .grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+@media (min-width:64em) {
   .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }

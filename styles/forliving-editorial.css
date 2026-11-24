@@ -1,6 +1,6 @@
 /* Mobile-first editorial grids. Four tracks are the default; expand only
    where the content has room. Footer layout belongs to footer-layout.css. */
-.article-body{max-width:68ch}
+.article-body{max-width:var(--editorial-copy)}
 .editorial-grid,.editorial-asymmetric{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
@@ -27,11 +27,11 @@ body[data-page="home"] .home-profile__introduction,
 body[data-page="home"] .home-profile__media{grid-column:1/-1;min-width:0}
 body[data-page="home"] .home-profile__introduction{max-width:68ch}
 body[data-page="writing"] .article-reading{display:block;min-width:0}
-body[data-page="writing"] .article-reading .article-body{max-width:68ch}
+body[data-page="writing"] .article-reading .article-body{max-width:var(--editorial-copy)}
 .case-page .case-gallery{
   display:grid;
   grid-template-columns:minmax(0,1fr);
-  gap:calc(var(--baseline)*2) var(--grid-gutter);
+  gap:var(--space-gallery);
 }
 .case-page .case-gallery>*{grid-column:1/-1;min-width:0}
 

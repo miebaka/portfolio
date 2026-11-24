@@ -366,7 +366,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
     /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/,
   );
   assert.match(css, /--content:var\(--grid-max\)/);
-  assert.match(css, /--grid-max:100em/);
+  assert.match(css, /--grid-max:100rem/);
   assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2em,\s*3vw,\s*3\.25em\)/);
   assert.doesNotMatch(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);

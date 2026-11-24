@@ -18,7 +18,10 @@ test("styles/tokens.css is imported once and after all layout styles", () => {
   assert.equal((imports.match(/url\("tokens\.css"\)/g) || []).length, 1);
   assert.ok(imports.indexOf('url("tokens.css")') > imports.indexOf('url("portfolio-refinement.css")'));
   assert.match(imports, /url\("tokens\.css"\) layer\(typography\)/);
-  assert.match(tokens, /--type-heading-lg: clamp\(2em, 1\.55em \+ 1\.7vw, 3em\)/);
+  assert.match(tokens, /--type-heading-lg:\s*1\.5rem/);
+  assert.match(tokens, /--type-heading-lg:\s*2rem/);
+  assert.match(tokens, /--type-leading-reading:\s*1\.6/);
+  assert.match(tokens, /--type-leading-body:\s*1\.5/);
   assert.doesNotMatch(tokens, /--type-(?:hero|display|leading-display|leading-hero|tracking-display)\b/);
 });
 

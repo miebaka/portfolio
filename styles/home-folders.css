@@ -6,7 +6,7 @@ body[data-page="home"] .home-content section.swiss-selected {
   flex-direction: column;
   justify-content: flex-end;
   min-height: 0;
-  padding-block:var(--s8);
+  padding-block:0;
   background: var(--paper);
   color: var(--ink);
 }
@@ -95,11 +95,6 @@ body .project-folder-stack__cards .project-folder__preview {
   }
 }
 
-@media (min-width:48.0625em) {
-  body[data-page="home"] .home-content section.swiss-selected {
-    padding-block-start:var(--s11);
-  }
-}
 
 /* The lifted folder remains a file *behind* every later folder, not a card
    floating above the whole rack. Leave the original paper edge shadow. */

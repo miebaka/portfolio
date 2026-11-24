@@ -13,11 +13,11 @@ test("shared spacing and typography reproduce the reference at the normal root",
   const typography = await readFile(join(styles, "tokens.css"), "utf8");
   const layout = await readFile(join(styles, "layout.css"), "utf8");
   assert.match(foundations, /--spacing-unit:\s*\.25rem/);
-  assert.match(foundations, /--grid-outer:\s*1rem/);
-  assert.match(foundations, /--grid-outer:\s*2\.5rem/);
-  assert.match(foundations, /--grid-gutter:\s*1rem/);
-  assert.match(foundations, /--grid-gutter:\s*1\.5rem/);
-  assert.match(foundations, /--grid-max:\s*100%/);
+  assert.match(foundations, /--grid-outer:clamp\(1\.25rem,.*3\.5rem\)/);
+  assert.match(foundations, /--grid-gutter:var\(--space-gallery\)/);
+  assert.match(foundations, /--grid-max:100rem/);
+  assert.match(foundations, /--section-padding:clamp\(4rem,.*6rem\)/);
+  assert.match(foundations, /--heading-content-gap:clamp\(1\.5rem,.*2rem\)/);
   assert.match(typography, /--type-body:\s*\.875rem/);
   assert.match(typography, /--type-body:\s*1rem/);
   assert.match(typography, /--type-heading-lg:\s*1\.5rem/);
@@ -25,7 +25,7 @@ test("shared spacing and typography reproduce the reference at the normal root",
   assert.match(layout, /grid-template-columns:\s*repeat\(12,\s*minmax\(0,\s*1fr\)\)/);
   assert.match(layout, /@media\s*\(min-width:\s*48\.0625em\)/);
   for (const { name, css } of sources) {
-    assert.doesNotMatch(css, /--grid-max:\s*(?:74|86)em|--grid-outer:\s*clamp\(/, name);
+    if (name !== "foundations.css") assert.doesNotMatch(css, /--grid-max\s*:|--grid-outer\s*:/, name);
     assert.doesNotMatch(css, /(?:min|max)-width:\s*(?:24|40|56|72|88|23\.999|39\.999|55\.999|71\.999|87\.999)em\)/, name);
   }
 });
