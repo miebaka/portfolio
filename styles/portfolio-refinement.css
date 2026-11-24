@@ -287,7 +287,6 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
   margin:var(--s10) auto 0;
   overflow: hidden;
   background: transparent;
-
   cursor: crosshair;}
 body .site-footer__signature::before,
 body[data-page="home"]:not(.site-system-disabled) .site-footer__signature::before {
