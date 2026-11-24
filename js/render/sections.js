@@ -41,17 +41,11 @@ export function renderCapabilities() {
 }
 
 export function renderExperienceLedger(entries = []) {
-  const firstYear = Math.min(...entries.map(entry => entry.startYear));
-  const lastYear = Math.max(new Date().getFullYear(), ...entries.map(entry => entry.endYear));
-  const scale = Math.max(1, lastYear - firstYear + 1);
-  const years = Array.from({ length: scale }, (_, index) => firstYear + index);
-  const ruler = '<div class="experience-ruler__scale" aria-hidden="true">' + years.map(year => '<span>' + year + '</span>').join('') + '</div>';
-  const jobs = entries.map(entry => {
-    const start = ((entry.startYear - firstYear) / scale) * 100;
-    const span = ((Math.max(entry.endYear, entry.startYear) - entry.startYear + 1) / scale) * 100;
-    return '<li class="experience-ruler__item" style="--experience-start:' + start.toFixed(3) + '%;--experience-span:' + span.toFixed(3) + '%"><div class="experience-ruler__track" role="img" aria-label="' + esc(entry.organisation) + ', ' + entry.startYear + ' to ' + entry.endYear + '"><span aria-hidden="true"></span></div><div class="experience-ruler__copy"><div><p class="experience-ruler__organisation">' + esc(entry.organisation) + '</p><p class="experience-ruler__role">' + esc(entry.role) + '</p></div><p class="experience-ruler__period">' + esc(entry.period) + '</p><p class="experience-ruler__contribution">' + esc(entry.contribution) + '</p></div></li>';
-  }).join('');
-  return '<div class="experience-ruler"><div class="experience-ruler__viewport" tabindex="0" aria-label="Work experience timeline from ' + firstYear + ' to ' + lastYear + '"><div class="experience-ruler__canvas" style="--experience-columns:' + scale + '">' + ruler + '<ol class="experience-ruler__jobs">' + jobs + '</ol></div></div></div>';
+  return '<ol class="career-index experience-fallback" role="list">' + entries.map((entry, index) =>
+    '<li class="career-index__entry"><div class="career-index__meta"><span class="career-index__number" aria-hidden="true">' + String(index + 1).padStart(2, "0") + '</span><p class="career-index__period">' + esc(entry.period) + '</p></div>' +
+    '<div class="career-index__identity"><h3 class="career-index__organisation">' + esc(entry.organisation) + '</h3><p class="career-index__role">' + esc(entry.role) + '</p></div>' +
+    '<p class="career-index__contribution">' + esc(entry.contribution) + '</p></li>'
+  ).join("") + '</ol>';
 }
 
 export function renderCvMarkup(cv, base = "") {
@@ -61,7 +55,7 @@ export function renderCvMarkup(cv, base = "") {
 
 export function renderProfessionalEvidence() {
   const experience = document.querySelector('[data-mount="experience"]');
-  if (experience && SITE.experience?.length) experience.innerHTML = renderExperienceLedger(SITE.experience);
+  if (experience && experience.dataset.prerendered !== "true" && SITE.experience?.length) experience.innerHTML = renderExperienceLedger(SITE.experience);
   const cv = document.querySelector('[data-mount="cv"]');
   if (cv) cv.innerHTML = renderCvMarkup(SITE.cv, basePath());
 }

@@ -133,8 +133,14 @@ test("experience ledger uses one bounded contribution and no numeric outcome cla
     assert.doesNotMatch(entry.contribution, /\b\d[\d,+.%]*\b/);
   }
   const markup = renderExperienceLedger(entries);
-  assert.equal((markup.match(/class="experience-ruler__item"/g) || []).length, entries.length);
-  assert.match(markup, /experience-ruler__scale/);
+  assert.equal((markup.match(/class="career-index__entry"/g) || []).length, entries.length);
+  assert.match(markup, /<ol class="career-index experience-fallback" role="list">/);
+  assert.equal((markup.match(/<h3 class="career-index__organisation">/g) || []).length, entries.length);
+  assert.doesNotMatch(markup, /experience-ruler|tabindex|role="img"|style=/);
+  for (const entry of entries) {
+    assert.ok(markup.includes(entry.period));
+    assert.ok(markup.includes(entry.contribution));
+  }
   assert.doesNotMatch(markup, /<details|card/i);
 });
 

@@ -886,14 +886,6 @@ body[data-page] .article-toc a {padding-block:var(--s3)}
   body[data-page="explorations"] .experiments-spatial__heading .metadata-strip {grid-template-columns:minmax(0,1fr)}
 }
 
-/* Current route marker: the contact action and home mark use the same dot. */
-body[data-page] .site-nav :is(.site-nav__link,.reference-nav-contact,.site-nav__brand)[aria-current="page"] {position:relative;overflow:visible}
-body[data-page] .site-nav :is(.site-nav__link,.reference-nav-contact,.site-nav__brand)[aria-current="page"]::after {
-  content:"";position:absolute;inset-inline-start:50%;inset-block-end:calc(-1 * var(--s2));
-  width:.375rem;aspect-ratio:1;border-radius:50%;background:var(--ink);transform:translateX(-50%);pointer-events:none;
-}
-body[data-page] .site-index__link[aria-current="page"] {position:relative}
-body[data-page] .site-index__link[aria-current="page"]::after {content:"";position:absolute;inset-inline-end:var(--s3);inset-block-end:var(--s2);width:.375rem;aspect-ratio:1;border-radius:50%;background:currentColor;pointer-events:none}
 body:is([data-page="home"],[data-page="about"]) section.service-stack-section .disciplines-heading {width:100%;margin:0 0 var(--heading-content-gap)}
 body[data-page="home"] section.service-stack-section {padding-block:0}
 body[data-page="about"] section.service-stack-section {padding-block:var(--section-half)}

@@ -412,15 +412,10 @@ body .case-chapter h2{font-size:var(--type-heading-md);font-weight:var(--type-we
 
 .about-editorial__closing a{text-underline-offset:.12em}
 
-.experience-ruler__scale{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-label);}
 
-.experience-ruler__scale span:last-child{text-align:right;}
 
-.experience-ruler__organisation{font:var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-heading) var(--font-sans)}
 
-.experience-ruler__period{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label);text-transform:none;}
 
-.experience-ruler__contribution{line-height:var(--type-leading-body)}
 
 .case-page .case-opening h1{font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-tight)}
 
@@ -443,8 +438,6 @@ body .case-chapter h2{font-size:var(--type-heading-md);font-weight:var(--type-we
 
 @media(max-width:48em){.about-hero__copy h1{font-size:var(--type-heading-lg)}
 .about-editorial__copy p,.about-editorial__copy--large p{font-size:var(--type-heading-sm)}
-.experience-ruler__scale{font-size:var(--type-label);letter-spacing:var(--type-tracking-normal)}
-.experience-ruler__period{text-align:right}
 .case-page .case-opening h1{font-size:var(--type-heading-lg)}
 .case-page .case-chapter__copy h2{font-size:var(--type-heading-lg)}
 .experiments-spatial__heading p{text-align:right}
@@ -493,14 +486,9 @@ body[data-page="explorations"] .experiments-spatial__heading h1{font:var(--type-
 
 body[data-page="contact"] .contact__submit .btn{font-size:var(--type-input)}
 
-body[data-page="about"] .experience-ruler__scale{font-size:var(--type-label)}
-
-body[data-page="about"] .experience-ruler__period{font-size:var(--type-label)}
 
 
-@media(max-width:48em){
-  body[data-page="about"] .experience-ruler__scale{font-size:var(--type-label);letter-spacing:var(--type-tracking-normal)}
-}
+
 
 
 /* Home process: one visible decision, with the full sequence acting as its index. */
@@ -543,7 +531,7 @@ body[data-page="about"]:not(.site-system-disabled) .about-hero__copy h1{
   font:var(--type-weight-regular) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);}
 
 
-body[data-page="about"]:not(.site-system-disabled) .about-editorial :is(dt, .experience-ruler__period){
+body[data-page="about"]:not(.site-system-disabled) .about-editorial :is(dt, .career-index__period){
   letter-spacing:var(--type-tracking-label);
   text-transform: none;}
 
@@ -644,13 +632,9 @@ body[data-page="contact"] .hero__title{
 
 .experiments-static__meta strong {font:var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-heading) var(--font-sans);overflow-wrap:anywhere}
 
-.experience-fallback__period{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-body) var(--font-sans);}
 
-.experience-fallback h3{font:var(--type-weight-semibold) var(--type-heading-md)/var(--type-leading-heading) var(--font-sans);letter-spacing:var(--type-tracking-heading)}
 
-.experience-fallback__organisation{font-weight:var(--type-weight-semibold)}
 
-.experience-fallback li>div>p:last-child{line-height:var(--type-leading-reading)}
 
 body.case-page .case-chapter__copy h2{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label);text-transform:none;}
 
@@ -1380,3 +1364,9 @@ body[data-page="explorations"] .experiments-static__meta {overflow-wrap:anywhere
 @media(max-width:48em) {
   body[data-page="writing"] .editorial-index--notes .writing-item__meta {white-space:normal}
 }
+
+/* Career index: existing type roles, no local type scale. */
+.career-index__number{font:var(--type-weight-regular) var(--type-heading-sm)/var(--type-leading-heading) var(--font-sans);font-variant-numeric:tabular-nums}
+.career-index__period{font:var(--type-weight-regular) var(--type-label)/var(--type-leading-body) var(--font-sans)}
+.career-index__organisation{font:var(--type-weight-semibold) var(--type-heading-sm)/var(--type-leading-heading) var(--font-sans);letter-spacing:var(--type-tracking-heading);overflow-wrap:anywhere}
+.career-index__role,.career-index__contribution{font:var(--type-weight-regular) var(--type-body)/var(--type-leading-reading) var(--font-sans);overflow-wrap:anywhere}

@@ -80,7 +80,7 @@ async function outputFiles(directory) {
 // Validate before touching dist, including when this script runs directly.
 const content = assertValidContent();
 const { renderClientProofMarkup, renderHomeProjectList, renderProjectArchiveMarkup } = await import("../js/render/projects.js");
-const { renderServiceSwatchesMarkup } = await import("../js/render/sections.js");
+const { renderServiceSwatchesMarkup, renderExperienceLedger } = await import("../js/render/sections.js");
 const { escapeHTML: esc } = await import("../js/utilities/dom.js");
 const routes = content.navigation.routes;
 const rootFiles = routes.filter(route => route.includeIn.includes("build")).map(route => route.href);
@@ -109,6 +109,7 @@ function renderShell(source, href) {
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/<div class="project-folder-stack" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="project-folder-stack" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div class="process-sequence" data-mount="capabilities" data-prerendered="true">' + renderServiceSwatchesMarkup(content.services) + '</div>');
+  if (href === "about.html") rendered = rendered.replace(/<div data-mount="experience">[\s\S]*?<\/ol><\/div>/, '<div data-mount="experience" data-prerendered="true">' + renderExperienceLedger(content.siteConfig.experience) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
   if (href === "experiments.html") rendered = rendered.replace(/<dl class="metadata-strip">[\s\S]*?<\/dl>/, renderExperimentMetadata());
   return href === "index.html" ? rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup()) : rendered;
