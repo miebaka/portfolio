@@ -216,8 +216,6 @@ body section.service-stack-section .process-sequence .service-stack {
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
-    background: transparent;
-    color: var(--ink);
   }
 
   body section.service-stack-section .service-stack__item:first-child .service-stack__card {
@@ -298,25 +296,7 @@ body section.service-stack-section .process-sequence .service-stack {
     padding-bottom:calc(var(--space-card) + var(--service-overlap));
     border:0;
     border-radius:clamp(1em,2vw,2em);
-    background:var(--ref-air);
-    color:var(--ref-midnight);
     box-shadow:0 -.2em .2em color-mix(in oklab,var(--ref-black) 6%,transparent),0 1.2em 2.5em color-mix(in oklab,var(--ref-black) 13%,transparent);
-  }
-  body section.service-stack-section .service-stack__item:nth-child(2) .service-stack__card{
-    background:var(--ref-blue-80);
-    color:var(--ref-midnight);
-  }
-  body section.service-stack-section .service-stack__item:nth-child(3) .service-stack__card{
-    background:var(--ref-paper);
-    color:var(--ref-midnight);
-  }
-  body section.service-stack-section .service-stack__item:nth-child(4) .service-stack__card{
-    background:var(--ref-ultramarine);
-    color:var(--ref-paper);
-  }
-  body section.service-stack-section .service-stack__item:nth-child(5) .service-stack__card{
-    background:var(--ref-midnight);
-    color:var(--ref-paper);
   }
   body section.service-stack-section .service-stack__tags{
     display:flex;

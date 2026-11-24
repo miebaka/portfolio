@@ -557,12 +557,6 @@ body[data-page="home"] .home-profile.reference-panel .home-profile__introduction
 @media(min-width:48.0625em) {
   body[data-page="home"] .home-profile.reference-panel, body[data-page="work"] .project-archive__collections.reference-panel { grid-template-columns:minmax(0,3fr) minmax(0,2fr); align-items:center; }
 }
-body section.service-stack-section .service-stack__item .service-stack__card { background:var(--service-card-a); color:var(--service-card-ink); }
-body section.service-stack-section .service-stack__item:nth-child(even) .service-stack__card { background:var(--service-card-b); color:var(--service-card-ink); }
-:root { --service-card-a:var(--ref-midnight); --service-card-b:var(--ref-navy-10); --service-card-ink:var(--ref-white); }
-@media(prefers-color-scheme:dark) {
-  :root { --service-card-a:var(--ref-neutral-96); --service-card-b:var(--ref-neutral-95); --service-card-ink:var(--ref-black); }
-}
 body[data-page="home"] .home-beyond {padding-block:0}
 .home-beyond__grid { display:grid; gap:var(--space-gallery); margin-top:var(--heading-content-gap); }
 .home-beyond__card { display:grid; gap:var(--s2); color:var(--ink); }
@@ -598,8 +592,6 @@ body[data-page="home"] .home-landing__meta { flex-wrap:wrap; }
 body[data-page="home"] .home-profile.reference-panel .home-profile__introduction,
 body[data-page="home"] .home-profile.reference-panel .home-profile__media { grid-row:auto; min-width:0; }
 body[data-page="home"] .home-profile.reference-panel .home-profile__introduction p:not(.home-profile__lead) { color:inherit; }
-body section.service-stack-section .service-stack__item:nth-child(odd) .service-stack__card { background:var(--service-card-a); color:var(--service-card-ink); }
-body section.service-stack-section .service-stack__item:nth-child(even) .service-stack__card { background:var(--service-card-b); color:var(--service-card-ink); }
 body.case-page .case-toc ol { grid-template-columns:minmax(0,1fr); }
 body.case-page .case-toc a:focus-visible { color:var(--paper); }
 @media(max-width:48em) {

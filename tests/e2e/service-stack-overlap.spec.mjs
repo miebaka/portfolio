@@ -116,3 +116,89 @@ test("shared motifs are distinct, inherit existing ink and never cover text", as
     }
   }
 });
+
+
+test("five service palettes are fixed by discipline across routes, themes and widths", async ({ page }) => {
+  const tokenNames = ["blue","orange","pink","plum","yellow"];
+  let baseline;
+  for (const route of ["/index.html","/about.html"]) {
+    for (const width of [390,1440]) {
+      await page.setViewportSize({width,height:900});
+      for (const colorScheme of ["light","dark"]) {
+        await page.emulateMedia({colorScheme,reducedMotion:"reduce",forcedColors:"none"});
+        await page.goto(route);
+        await expect(page.locator(".service-stack__card")).toHaveCount(5);
+        const palettes=await page.locator(".service-stack__card").evaluateAll((cards,names)=>{
+          const probe=document.createElement("span");
+          document.body.append(probe);
+          const canvas=document.createElement("canvas");
+          canvas.width=canvas.height=1;
+          const ctx=canvas.getContext("2d",{willReadFrequently:true});
+          const pixel=color=>{
+            ctx.clearRect(0,0,1,1);
+            ctx.fillStyle=color;
+            ctx.fillRect(0,0,1,1);
+            return [...ctx.getImageData(0,0,1,1).data].slice(0,3);
+          };
+          const luminance=rgb=>rgb.map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+          const contrast=(a,b)=>{
+            const x=luminance(pixel(a)),y=luminance(pixel(b));
+            return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);
+          };
+          const result=cards.map((card,i)=>{
+            const cs=getComputedStyle(card);
+            probe.style.color="var(--ref-service-card-"+names[i]+"-paper)";
+            const expectedPaper=getComputedStyle(probe).color;
+            probe.style.color="var(--ref-service-card-"+names[i]+"-ink)";
+            const expectedInk=getComputedStyle(probe).color;
+            const descendants=[...card.querySelectorAll("h3,.service-stack__description p,.service-stack__evidence,.service-stack__tag,.service-stack__motif")];
+            return {paper:cs.backgroundColor,ink:cs.color,expectedPaper,expectedInk,
+              inherited:descendants.every(el=>getComputedStyle(el).color===cs.color),
+              contrast:contrast(cs.backgroundColor,cs.color),gradient:cs.backgroundImage};
+          });
+          probe.remove();
+          return result;
+        },tokenNames);
+        expect(new Set(palettes.map(p=>p.paper)).size).toBe(5);
+        for(const [i,p] of palettes.entries()){
+          expect(p.paper).toBe(p.expectedPaper);
+          expect(p.ink).toBe(p.expectedInk);
+          expect(p.inherited).toBe(true);
+          expect(p.gradient).toBe("none");
+          expect(p.contrast).toBeGreaterThanOrEqual(i===1?4.5:7);
+        }
+        const signature=palettes.map(p=>[p.paper,p.ink]);
+        if(!baseline) baseline=signature;
+        else expect(signature).toEqual(baseline);
+      }
+    }
+  }
+});
+
+test("forced colors keep service cards and their evidence links legible", async ({page})=>{
+  await page.emulateMedia({forcedColors:"active",reducedMotion:"reduce"});
+  for(const route of ["/index.html","/about.html"]){
+    await page.goto(route);
+    const cards=page.locator(".service-stack__card");
+    await expect(cards).toHaveCount(5);
+    for(const card of await cards.all()){
+      const palette=await card.evaluate(el=>{
+        const probe=document.createElement("span");
+        probe.style.backgroundColor="Canvas";
+        probe.style.color="CanvasText";
+        document.body.append(probe);
+        const actual=getComputedStyle(el),expected=getComputedStyle(probe);
+        const result={paper:actual.backgroundColor,ink:actual.color,expectedPaper:expected.backgroundColor,expectedInk:expected.color};
+        probe.remove();
+        return result;
+      });
+      expect(palette.paper).toBe(palette.expectedPaper);
+      expect(palette.ink).toBe(palette.expectedInk);
+      await expect(card.locator(".service-stack__motif")).toBeVisible();
+      const link=card.locator(".service-stack__evidence");
+      await link.focus();
+      await expect(link).toBeFocused();
+      expect(await link.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe("none");
+    }
+  }
+});

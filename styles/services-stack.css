@@ -21,12 +21,31 @@ body .service-stack-section .service-stack__card {
   position:relative;display:flex;flex-direction:column;justify-content:space-between;
   min-height:clamp(24em,60svh,36em);border-radius:clamp(.7em,1.5vw,1.5em);
   padding:var(--s4);overflow:hidden;
-  color:var(--ref-midnight);background:var(--ref-air);
-  box-shadow:0 -.7em 0 -.28em var(--ref-air),0 .65em 1.6em var(--line);}
-body .service-stack-section .service-stack__item:nth-child(2) .service-stack__card {background:var(--ref-blue-80);color:var(--ref-midnight)}
-body .service-stack-section .service-stack__item:nth-child(3) .service-stack__card {background:var(--ref-paper);color:var(--ref-midnight)}
-body .service-stack-section .service-stack__item:nth-child(4) .service-stack__card {background:var(--ref-ultramarine);color:var(--ref-paper)}
-body .service-stack-section .service-stack__item:nth-child(5) .service-stack__card {background:var(--ref-midnight);color:var(--ref-paper)}
+  color:var(--service-ink,var(--ref-service-card-blue-ink));background:var(--service-paper,var(--ref-service-card-blue-paper));
+  box-shadow:0 -.7em 0 -.28em var(--service-paper,var(--ref-service-card-blue-paper)),0 .65em 1.6em var(--line);}
+
+/* Fixed artwork colours: map service identity, not position or system theme. */
+.service-stack__item.service-journey--brand-identity-systems {
+  --service-paper:var(--ref-service-card-blue-paper);
+  --service-ink:var(--ref-service-card-blue-ink);
+}
+.service-stack__item.service-journey--art-direction {
+  --service-paper:var(--ref-service-card-orange-paper);
+  --service-ink:var(--ref-service-card-orange-ink);
+}
+.service-stack__item.service-journey--campaign-marketing {
+  --service-paper:var(--ref-service-card-pink-paper);
+  --service-ink:var(--ref-service-card-pink-ink);
+}
+.service-stack__item.service-journey--editorial-graphic {
+  --service-paper:var(--ref-service-card-plum-paper);
+  --service-ink:var(--ref-service-card-plum-ink);
+}
+.service-stack__item.service-journey--design-systems-production {
+  --service-paper:var(--ref-service-card-yellow-paper);
+  --service-ink:var(--ref-service-card-yellow-ink);
+}
+
 body .service-stack-section .service-stack__heading {
   position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);}
 .service-stack__motif {
@@ -194,16 +213,7 @@ body .service-stack-section .service-stack__item{
 body .service-stack-section .service-stack__card{
   width:100%;max-width:none;border-radius:0;
   padding-inline:var(--section-padding);
-  box-shadow:0 -1px 0 var(--line);
-  background:var(--ref-blue-80);color:var(--ref-midnight);}
-body .service-stack-section .service-stack__item:nth-child(2) .service-stack__card{
-  background:var(--ref-blue-80);color:var(--ref-midnight);}
-body .service-stack-section .service-stack__item:nth-child(3) .service-stack__card{
-  background:var(--ref-paper);color:var(--ref-midnight);}
-body .service-stack-section .service-stack__item:nth-child(4) .service-stack__card{
-  background:var(--ref-ultramarine);color:var(--ref-paper);}
-body .service-stack-section .service-stack__item:nth-child(5) .service-stack__card{
-  background:var(--ref-midnight);color:var(--ref-paper);}
+  box-shadow:0 -1px 0 var(--line);}
 body .service-stack-section .service-stack__card :is(a,button){
   min-height:var(--control-target);}
 body[data-page="home"] .journey .client-strip{
