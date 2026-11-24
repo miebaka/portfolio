@@ -79,7 +79,7 @@ body .site-index__inner {
   max-width:var(--content);
   margin-inline:auto;
   min-height:100dvh;
-  padding:clamp(calc(var(--spacing-unit) * 10),3vw,var(--s6)) 0 clamp(calc(var(--spacing-unit) * 18),4vw,var(--s8));}
+  padding:var(--s6) 0 var(--s8);}
 body .site-index__heading {
   border-bottom:1px solid var(--line);}
 body .site-index__heading h2,body .site-index__close {
@@ -96,7 +96,7 @@ body .site-index__destinations{align-content:center}
 html body .site-index .site-index__link {
   grid-template-columns:2em minmax(0,1fr);
   min-height:3.9em;
-  padding:calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 7);
+  padding:var(--s3) var(--s3);
   border-bottom:1px solid var(--line);
   color:var(--ink);
   background:transparent;}
@@ -114,7 +114,7 @@ body .site-index .site-index__aside {
   border:0;}
 body .site-index__contact a{color:var(--ink)}
 body .site-index .site-index__cv span{color:var(--muted)}
-body .site-index__preferences{display:grid;gap:calc(var(--spacing-unit) * 6);min-width:0}
+body .site-index__preferences{display:grid;gap:var(--s3);min-width:0}
 body .site-index__preferences legend{color:var(--ink)}
 body .site-index__themes{background:var(--line)}
 body .site-index__themes button{background:var(--paper);color:var(--ink)}
@@ -150,30 +150,30 @@ body .site-footer__signature .site-footer__signature-canvas{
 
 
 /* Responsive upgrades are additive: mobile Index remains complete by default. */
-@media(min-width:56em){
-  body .site-nav__inner{gap:clamp(calc(var(--spacing-unit) * 6),2.3vw,calc(var(--spacing-unit) * 18))}
+@media(min-width:48.0625em){
+  body .site-nav__inner{gap:var(--s6)}
   body .site-nav__menu-btn{
     min-width:6em;
-    gap:calc(var(--spacing-unit) * 6);
-    padding:var(--s1) calc(var(--spacing-unit) * 6);
+    gap:var(--s3);
+    padding:var(--s1) var(--s3);
   }
   body .site-index .site-index__body{
     grid-template-columns:minmax(0,1.5fr) minmax(16em,.6fr);
     align-items:center;
     min-height:calc(100dvh - 11em);
-    gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 64));
-    padding:clamp(var(--s4),5vw,var(--s10)) 0;
+    gap:var(--grid-gap);
+    padding:var(--s10) 0;
   }
   html body .site-index .site-index__link{
     grid-template-columns:2.6em minmax(0,1fr);
     min-height:clamp(4.25em,11vh,7.75em);
-    padding:clamp(calc(var(--spacing-unit) * 6),1.8vw,var(--s3)) clamp(calc(var(--spacing-unit) * 6),2vw,var(--s4));
+    padding:var(--s3) var(--s4);
   }
   body .site-index .site-index__aside{
-    gap:clamp(var(--s3),3vw,var(--s6));
+    gap:var(--s6);
     padding:0;
   }
-  body .site-index__preferences{gap:calc(var(--spacing-unit) * 10)}
+  body .site-index__preferences{gap:var(--s4)}
 }
 @media(prefers-reduced-motion:reduce){
   body .site-nav__menu-mark::before,body .site-nav__menu-mark::after{transition:none}
@@ -182,12 +182,12 @@ body .site-footer__signature .site-footer__signature-canvas{
 /* The prerendered masthead is the no-JavaScript navigation. The fullscreen
    Index only exists after enhancement, so do not conceal real links in no-JS. */
 html.no-js body .site-nav {height:auto;min-height:5.25em}
-html.no-js body .site-nav__inner {height:auto;min-height:5.25em;grid-template-columns:minmax(0,1fr);padding-block:calc(var(--spacing-unit) * 7)}
+html.no-js body .site-nav__inner {height:auto;min-height:5.25em;grid-template-columns:minmax(0,1fr);padding-block:var(--s3)}
 html.no-js body .site-nav__brand {grid-column:1;grid-row:1}
 html.no-js body .site-nav__links {
   display:flex!important;grid-column:1/-1;grid-row:2;position:static;
-  width:100%;min-height:2.75em;padding:var(--s1) 0;gap:calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 10);
+  width:100%;min-height:2.75em;padding:var(--s1) 0;gap:var(--s3) var(--s4);
   flex-wrap:wrap;justify-content:flex-start;opacity:1;visibility:visible;
   pointer-events:auto;transform:none;box-shadow:none;border:0;background:transparent;}
-html.no-js body .site-nav__links .site-nav__link {color:var(--ink);min-height:2.75em;opacity:1;padding:var(--s1) calc(var(--spacing-unit) * 3)}
+html.no-js body .site-nav__links .site-nav__link {color:var(--ink);min-height:2.75em;opacity:1;padding:var(--s1) var(--s1)}
 html.no-js body .site-nav__menu-btn,html.no-js body .site-nav__themes {display:none!important}

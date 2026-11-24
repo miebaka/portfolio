@@ -3,7 +3,7 @@
 .project-folder-stack__cards.is-folder-interactive {
   position: relative;
   display: block;
-  gap: 0;
+  gap:0;
   isolation: isolate;
 }
 
@@ -13,7 +13,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  margin: 0;
+  margin:0;
   transform: translate3d(0, var(--folder-y, 0), 0) translateY(var(--folder-lift, 0));
   transition: transform 550ms cubic-bezier(.2, .8, .2, 1),
     opacity 400ms ease;

@@ -2,19 +2,19 @@
    twelve tracks only when the width can support them. */
 .container {
   width: min(calc(100% - 2 * var(--page)), var(--content));
-  margin-inline: auto;
+  margin-inline:auto;
 }
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--grid-gap);
+  gap:var(--grid-gap);
 }
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, var(--s3));
+  gap:var(--stack-gap, var(--s3));
 }
-.section { padding-block: var(--section-padding); }
+.section { padding-block:var(--section-padding); }
 @media (min-width:48.0625em) {
   .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }

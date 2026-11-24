@@ -22,7 +22,7 @@ body section.service-stack-section {
   position: relative;
   isolation: isolate;
   z-index: 2;
-  padding-bottom: clamp(var(--s5), 5svh, var(--s8));
+  padding-bottom:var(--s8);
 }
 
 body[data-page="home"] .journey {
@@ -34,7 +34,7 @@ body[data-page="home"] .journey {
 
 body[data-page="home"] .client-marquee {
   max-width: min(100%, 64em);
-  margin-inline: auto;
+  margin-inline:auto;
   --client-edge-fade: clamp(var(--s2), 4vw, var(--s5));
 
   mask-image: linear-gradient(90deg, transparent, var(--ref-black) var(--client-edge-fade), var(--ref-black) calc(100% - var(--client-edge-fade)), transparent);
@@ -56,8 +56,8 @@ body[data-page="home"] .client-marquee.is-running .client-marquee__track {
 
 /* Half a gap at each end keeps the spacing identical across the seam. */
 body[data-page="home"] .client-marquee .client-proof {
-  gap: var(--client-logo-gap, var(--s4));
-  padding-inline: calc(var(--client-logo-gap, var(--s4)) / 2);
+  gap:var(--client-logo-gap, var(--s4));
+  padding-inline:calc(var(--client-logo-gap, var(--s4)) / 2);
 }
 
 body[data-page="home"] .client-marquee[data-marquee-mode="static"] {
@@ -72,8 +72,8 @@ body[data-page="home"] .client-marquee[data-marquee-mode="static"] .client-marqu
 body[data-page="home"] .client-marquee[data-marquee-mode="static"] .client-proof {
   flex-wrap: wrap;
   justify-content: center;
-  row-gap: 0;
-  padding-inline: var(--page);
+  row-gap:0;
+  padding-inline:var(--page);
   min-width: 0;
   width: 100%;
 }
@@ -118,10 +118,10 @@ body[data-page="home"] .marquee__item img {
    regardless of the full-bleed section and older !important width rules. */
 body section.service-stack-section .process-sequence .service-stack {
   box-sizing: border-box;
-  width: min(calc(100% - 2 * var(--hf)), var(--content)) !important;
+  width: min(calc(100% - 2 * var(--page)), var(--content)) !important;
   max-width: var(--content) !important;
-  margin-inline: auto !important;
-  padding-inline: 0 !important;
+  margin-inline:auto !important;
+  padding-inline:0 !important;
 }
 
 /* Mobile-first composition: navigation, work, profile and proof form one calm
@@ -135,7 +135,7 @@ body section.service-stack-section .process-sequence .service-stack {
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 10);
+    gap:var(--s3) var(--s4);
   }
 
   body[data-page="home"] .home-landing__meta p:first-child,
@@ -146,7 +146,7 @@ body section.service-stack-section .process-sequence .service-stack {
 
   body[data-page="home"] .home-landing__meta p:nth-child(2) {
     display: block;
-    margin: 0;
+    margin:0;
   }
 
   body[data-page="home"] .home-landing__meta a {
@@ -155,7 +155,7 @@ body section.service-stack-section .process-sequence .service-stack {
     justify-content: space-between;
     min-height: 2.75em;
     width: auto;
-    padding: var(--s1) 0;
+    padding:var(--s1) 0;
   }
 
   body[data-page="home"] .home-landing__statement {
@@ -163,12 +163,12 @@ body section.service-stack-section .process-sequence .service-stack {
   }
 
   body[data-page="home"] .home-profile {
-    gap: clamp(var(--s3), 5vw, var(--s4));
-    padding-block: clamp(var(--s7), 8svh, var(--s10));
+    gap:var(--s4);
+    padding-block:var(--s10);
   }
 
   body[data-page="home"] .home-profile .home-profile__introduction {
-    gap: calc(var(--spacing-unit) * 7);
+    gap:var(--s3);
   }
 
   body[data-page="home"] .home-profile__lead {
@@ -181,17 +181,17 @@ body section.service-stack-section .process-sequence .service-stack {
 
   body[data-page="home"] .home-profile__portrait {
     max-width: 23em;
-    margin-inline: auto;
+    margin-inline:auto;
   }
 
   body section.service-stack-section {
-    padding-block: clamp(var(--s7), 8svh, var(--s10));
+    padding-block:var(--s10);
     background: var(--paper);
     color: var(--ink);
   }
 
   body section.service-stack-section .disciplines-heading {
-    margin-bottom: clamp(calc(var(--spacing-unit) * 10), 4vw, var(--s4));
+    margin-bottom:var(--s4);
   }
 
   body section.service-stack-section .disciplines-heading h2 {
@@ -202,15 +202,15 @@ body section.service-stack-section .process-sequence .service-stack {
     position: relative;
     top: auto;
     z-index: auto;
-    margin: 0;
+    margin:0;
   }
 
   body section.service-stack-section .service-stack__item .service-stack__card {
     display: grid;
     min-height: 0;
-    gap: clamp(var(--s2), 4vw, var(--s3));
-    padding: clamp(calc(var(--spacing-unit) * 11), 5vw, var(--s4)) var(--page);
-    padding-bottom: clamp(calc(var(--spacing-unit) * 11), 5vw, var(--s4));
+    gap:var(--s3);
+    padding:var(--s4) var(--page);
+    padding-bottom:var(--s4);
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
@@ -232,7 +232,7 @@ body section.service-stack-section .process-sequence .service-stack {
   }
 
   body section.service-stack-section .service-stack__description {
-    gap: calc(var(--spacing-unit) * 7);
+    gap:var(--s3);
   }
 
   body section.service-stack-section .service-stack__evidence {
@@ -241,7 +241,7 @@ body section.service-stack-section .process-sequence .service-stack {
   }
 
   body[data-page="home"] .journey {
-    padding-block: clamp(var(--s4), 6vw, var(--s6));
+    padding-block:var(--s6);
   }
 
 
@@ -263,15 +263,15 @@ body section.service-stack-section .process-sequence .service-stack {
     display:inline-flex;
     justify-content:initial;
     min-height:2.75em;
-    padding-block:0 calc(var(--spacing-unit) * 5);
+    padding-block:0 var(--s2);
   }
   body[data-page="home"] .home-landing__statement{max-width:26ch}
   body[data-page="home"] .home-profile{
-    gap:clamp(var(--s4),6vw,calc(var(--spacing-unit) * 56));
-    padding-block:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
+    gap:var(--grid-gap);
+    padding-block:var(--section-padding);
   }
   body[data-page="home"] .home-profile .home-profile__introduction{
-    gap:clamp(calc(var(--spacing-unit) * 9),2vw,var(--s4));
+    gap:var(--s4);
   }
   body[data-page="home"] .home-profile__lead{max-width:24ch}
   body[data-page="home"] .home-profile__leadership{display:block}
@@ -280,14 +280,14 @@ body section.service-stack-section .process-sequence .service-stack {
     margin:0;
   }
   body section.service-stack-section{
-    padding-top:clamp(calc(var(--spacing-unit) * 52),12vw,calc(var(--spacing-unit) * 100));
-    padding-bottom: var(--s5);
+    padding-top:var(--section-padding);
+    padding-bottom:var(--s5);
   }
   body section.service-stack-section .disciplines-heading{
-    margin-bottom:clamp(var(--s6),6vw,var(--s12));
+    margin-bottom:var(--section-padding);
   }
   body section.service-stack-section .service-stack__item + .service-stack__item {
-    margin-top: var(--service-list-gap, var(--s2));
+    margin-top:var(--service-list-gap, var(--s2));
   }
   body section.service-stack-section .service-stack__item .service-stack__card{
     display:flex;
@@ -295,8 +295,8 @@ body section.service-stack-section .process-sequence .service-stack {
     justify-content:space-between;
     min-height:min(var(--home-panel-height), 80svh);
     gap:var(--s2);
-    padding:clamp(var(--s4),4.5vw,var(--s10));
-    padding-bottom:calc(clamp(var(--s4),4.5vw,var(--s10)) + var(--service-overlap));
+    padding:var(--s10);
+    padding-bottom:calc(var(--s10) + var(--service-overlap));
     border:0;
     border-radius:clamp(1em,2vw,2em);
     background:var(--ref-air);
@@ -328,13 +328,13 @@ body section.service-stack-section .process-sequence .service-stack {
   body section.service-stack-section .service-stack__bottom{
     display:grid;
     grid-template-columns:minmax(0,1.4fr) minmax(10em,.6fr);
-    gap:clamp(var(--s4),7vw,calc(var(--spacing-unit) * 56));
+    gap:var(--grid-gap);
     align-items:end;
   }
   body section.service-stack-section .service-stack__description{
-    gap:calc(var(--spacing-unit) * 10);
+    gap:var(--s4);
   }
-  body[data-page="home"] .journey{padding-block:clamp(var(--s6),5vw,var(--s12))}
+  body[data-page="home"] .journey{padding-block:var(--section-padding)}
 }
 
 
@@ -342,7 +342,7 @@ body section.service-stack-section .process-sequence .service-stack {
 @media (min-width: 48.0625em) and (min-height: 40em) {
   body section.service-stack-section {
     --service-list-gap: calc(-1 * var(--service-overlap));
-    --service-overlap: clamp(var(--s5), 11svh, calc(var(--spacing-unit) * 52));
+    --service-overlap: clamp(var(--s5), 11svh, var(--s11));
   }
 
   body section.service-stack-section .service-stack::after {

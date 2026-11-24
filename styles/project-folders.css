@@ -3,11 +3,11 @@
 body[data-page="work"] .project-archive--folders {
   width: calc(100% - 2 * var(--page));
   max-width: none;
-  padding-block: clamp(var(--s4), 4vw, var(--s8)) clamp(var(--s10), 9vw, calc(var(--spacing-unit) * 80));
+  padding-block:var(--s8) var(--s11);
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head {
-  margin: 0 0 clamp(calc(var(--spacing-unit) * 14), 4vw, calc(var(--spacing-unit) * 30));
+  margin:0 0 var(--s9);
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head h1 {
@@ -21,7 +21,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack__stage {
   position: relative;
-  margin-bottom: clamp(var(--s8), 9vw, calc(var(--spacing-unit) * 72));
+  margin-bottom:var(--s11);
 }
 
 .project-folder-stack__cards {
@@ -29,9 +29,9 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin: 0;
-  padding: 0;
+  gap:0;
+  margin:0;
+  padding:0;
   list-style: none;
 }
 
@@ -52,7 +52,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
    Native paint-order hit-testing follows the visible topmost folder, without
    transformed-position guesses or click interception from the reference demo. */
 .project-folder + .project-folder {
-  margin-block-start: calc(-1 * var(--folder-overlap));
+  margin-block-start:calc(-1 * var(--folder-overlap));
 }
 
 .project-folder__link {
@@ -88,7 +88,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   align-items: center;
   width: clamp(6em, 28%, 23em);
   height: var(--folder-back-top);
-  padding-inline: clamp(calc(var(--spacing-unit) * 7), 2vw, calc(var(--spacing-unit) * 14));
+  padding-inline:var(--s5);
   border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 72%, black);
   border-bottom: 0;
   border-radius: .55em .55em 0 0;
@@ -203,7 +203,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   display: flex;
   align-items: center;
   min-width: 0;
-  padding: clamp(var(--s3), 5vw, var(--s10));
+  padding:var(--s10);
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--folder-tone, var(--ref-ultramarine)) 79%, black);
   border-radius: .26em .52em .3em .3em;
@@ -279,17 +279,17 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
 
 .project-folder-stack .project-archive__progress,
 .project-folder-stack .project-archive__collections {
-  margin-block-start: clamp(var(--s8), 8vw, calc(var(--spacing-unit) * 64));
+  margin-block-start:var(--s11);
 }
 
-@media (max-width:55.999em), (pointer: coarse) {
+@media (max-width:48em), (pointer: coarse) {
   .project-folder-stack__cards {
     --folder-overlap: clamp(3.5em, 17vw, 6em);
   }
 
   .project-folder__front {
     inset-block-start: 30%;
-    padding: clamp(calc(var(--spacing-unit) * 9), 4.5vw, calc(var(--spacing-unit) * 18));
+    padding:var(--s6);
   }
 
   .project-folder:focus-within {
@@ -297,7 +297,7 @@ body[data-page="work"] .project-archive--folders .project-archive__head h1 {
   }
 }
 
-@media (max-width:23.999em) {
+@media (max-width:23.4375em) {
   .project-folder__front {
     inset-block-start: 33%;
   }
@@ -316,15 +316,15 @@ html[data-motion="reduced"] .project-folder {
 /* Shared compact landscape files on Home and Work. The controller measures
    actual viewport space, without the previous portrait-specific cascade. */
 body[data-page="work"] .project-archive--folders {
-  padding-block: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3)) clamp(var(--s6), 6vw, var(--s10));
+  padding-block:var(--s3) var(--s10);
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head {
-  margin-block-end: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3));
+  margin-block-end:var(--s3);
 }
 
 body .project-folder-stack__stage {
-  margin-bottom: clamp(var(--s4), 5vw, var(--s8));
+  margin-bottom:var(--s8);
 }
 
 body .project-folder-stack__cards {
@@ -341,7 +341,7 @@ body .project-folder {
 
 body .project-folder__front {
   inset-block-start: 29%;
-  padding: clamp(calc(var(--spacing-unit) * 6), 2vw, var(--s5));
+  padding:var(--s5);
 }
 
 /* Keep each of the five stationery edges visible above the short front flap. */
@@ -375,18 +375,18 @@ body .project-folder:focus-within .project-folder__front {
     0 1em 1.7em color-mix(in oklab,var(--ref-black) 19%,transparent);
 }
 
-@media (max-width:55.999em), (pointer: coarse) {
+@media (max-width:48em), (pointer: coarse) {
   body[data-page="work"] .project-archive--folders {
-    padding-block: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3)) var(--s8);
+    padding-block:var(--s3) var(--s8);
   }
 
   body[data-page="work"] .project-archive--folders .project-archive__head {
-    margin-block-end: clamp(calc(var(--spacing-unit) * 6), 1.8svh, var(--s3));
+    margin-block-end:var(--s3);
   }
 
   body .project-folder__front {
     inset-block-start: max(31%, calc(var(--folder-back-top) + 1.5em));
-    padding: clamp(calc(var(--spacing-unit) * 5), 3.5vw, var(--s3));
+    padding:var(--s3);
   }
 }
 

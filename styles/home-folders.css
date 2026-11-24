@@ -6,7 +6,7 @@ body[data-page="home"] .home-content section.swiss-selected {
   flex-direction: column;
   justify-content: flex-end;
   min-height: 0;
-  padding-block: clamp(var(--s4), 6svh, var(--s8));
+  padding-block:var(--s8);
   background: var(--paper);
   color: var(--ink);
 }
@@ -24,7 +24,7 @@ body .home-folder-stack__viewport {
 }
 
 body .project-folder-stack__cards .project-folder-stack__stage {
-  margin: 0;
+  margin:0;
 }
 
 body .project-folder-stack__cards {
@@ -42,17 +42,17 @@ body .project-folder-stack__cards {
 /* Match the framed opening gutters and cap the folder rack on wide screens. */
 body[data-page="home"] #selected-work {
   box-sizing: border-box;
-  width: calc(100% - 2 * var(--hf));
+  width: calc(100% - 2 * var(--page));
   max-width: var(--content);
-  margin-inline: auto;
-  padding-inline: 0;
+  margin-inline:auto;
+  padding-inline:0;
 }
 
 /* Place each name in the exposed upper flap on both racks. */
 body .project-folder-stack__cards .project-folder__front {
   inset-block-start: 15%;
   align-items: flex-start;
-  padding-block-start: clamp(var(--s2), 2vw, var(--s3));
+  padding-block-start:var(--s3);
 }
 
 body .project-folder-stack__cards .project-folder__title {
@@ -65,14 +65,14 @@ body .project-folder-stack__cards .project-folder__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(calc(var(--spacing-unit) * 2), .7vw, calc(var(--spacing-unit) * 6));
+  gap:var(--s3);
   width: 100%;
 }
 
 body .project-folder-stack__cards .project-folder__preview {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing-unit) * 2);
+  gap:var(--s1);
   max-width: min(40em, 90%);
 }
 
@@ -82,7 +82,7 @@ body .project-folder-stack__cards .project-folder__preview {
   }
 
   body .project-folder-stack__cards .project-folder__copy {
-    gap: var(--s1);
+    gap:var(--s1);
   }
 
 @media (min-width:48.0625em) {
@@ -91,13 +91,13 @@ body .project-folder-stack__cards .project-folder__preview {
   }
 
   body .project-folder-stack__cards .project-folder__copy {
-    gap: clamp(calc(var(--spacing-unit) * 2), .7vw, calc(var(--spacing-unit) * 6));
+    gap:var(--s3);
   }
 }
 
 @media (min-width:48.0625em) {
   body[data-page="home"] .home-content section.swiss-selected {
-    padding-block-start: clamp(var(--s8), 10svh, calc(var(--spacing-unit) * 64));
+    padding-block-start:var(--s11);
   }
 }
 
@@ -116,11 +116,11 @@ body .project-folder-stack__cards .project-folder:is(.is-active, :focus-within) 
 
 /* The Work rack shares the Home frame and its wide-screen measure. */
 body[data-page="work"] .project-archive--folders {
-  width: min(calc(100% - 2 * var(--hf)), var(--content));
+  width: min(calc(100% - 2 * var(--page)), var(--content));
   max-width: var(--content);
-  margin-inline: auto;
+  margin-inline:auto;
 }
-body .home-folder-stack .project-folder-stack__stage { width: 100%; margin-inline: 0; }
+body .home-folder-stack .project-folder-stack__stage { width: 100%; margin-inline:0; }
 
 .project-folder__stock {
   position: absolute;

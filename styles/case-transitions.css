@@ -5,10 +5,10 @@ body.case-page .case {
 }
 body.case-page .case .case-opening {
   min-height: auto;
-  padding-block: clamp(var(--s4),5vw,var(--s10)) clamp(var(--s6),6vw,var(--s12));
+  padding-block:var(--s10) var(--section-padding);
   animation: case-copy-reveal 650ms 250ms both;
 }
-body.case-page .case .case-back { margin-bottom: clamp(var(--s4),4vw,var(--s8)); }
+body.case-page .case .case-back { margin-bottom:var(--s8); }
 @keyframes case-copy-reveal {
   0% { opacity: 0; transform: translateY(2.5em); }
   100% { opacity: 1; transform: translateY(0); }

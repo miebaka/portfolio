@@ -887,9 +887,7 @@ body[data-page="writing"].article-page .article-hero__title {
 
 
 
-@media(max-width:48em){
 
-}
 
 /* FROM styles/forliving-editorial.css */
 
@@ -1034,12 +1032,7 @@ body :is(label,legend,dt,time,small,[class*="__label"],[class*="__eyebrow"],[cla
 
 
 /* Touch needs visible evidence for every project, never a hover-gated image. */
-@media (max-width:48em), (hover: none), (pointer: coarse) {
 
-
-
-
-}
 
 /* FROM styles/portfolio-refinement.css */
 
