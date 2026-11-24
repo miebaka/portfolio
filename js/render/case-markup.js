@@ -78,7 +78,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const lookup = new Map((study.media || []).map((media) => [media.src, media]));
   let plate = 0;
   const nextPlate = () => ++plate;
-  const heroMarkup = shot(hero, "hero", base, nextPlate()).replace('loading="eager"', 'loading="lazy"');
+  const heroMarkup = shot(hero, "hero", base).replace('loading="eager"', 'loading="lazy"');
   const tone = /^#[0-9a-fA-F]{6}$/.test(project?.tone || "") ? project.tone : "#002080";
   const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
   /* Use published artifacts only. The Rivo guidelines image is a cover,
@@ -112,12 +112,18 @@ export function renderCaseMarkup(site, slug, base = "../") {
       <p class="case-lead-proof__status container">${esc(lead.status)}</p>
     </section>`
     : "";
-  const leadImages = lead?.images.map(src => lookup.get(src)).filter(Boolean) || [];
+  const seen = new Set([study.hero]);
+  const uniqueMedia = ids => ids.flatMap(src => {
+    if (seen.has(src) || !lookup.has(src)) return [];
+    seen.add(src);
+    return [lookup.get(src)];
+  });
+  const leadImages = uniqueMedia(lead?.images || []);
   const leadGallery = leadImages.length
     ? `<div class="case-lead-proof__images">${leadImages.map(media => shot(media, "pair", base, nextPlate())).join("")}</div>`
     : "";
   const gallery = study.chapters.map(item => sequence(
-    (item.media || []).map(src => lookup.get(src)).filter(Boolean), base, nextPlate,
+    uniqueMedia(item.media || []), base, nextPlate,
   )).join("");
   return opening + factsBlock(study, project) +
     `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +

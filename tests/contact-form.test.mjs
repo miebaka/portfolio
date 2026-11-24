@@ -136,9 +136,9 @@ test("maps rate limit, provider, server and network failures without clearing va
   const cases = [
     [() => ({ status: 429, ok: false, code: "RATE_LIMITED" }), "rate-limited", "Too many attempts just now. Please wait and try again, or email me directly."],
     [() => ({ status: 503, ok: false, code: "PROVIDER_UNAVAILABLE" }), "unavailable", "The form is temporarily unavailable. Your message is still here; email me directly or try again."],
-    [() => ({ status: 500, ok: false, code: "INTERNAL_ERROR" }), "error", "That didn’t send. Your message is still here; try again or email me directly."],
-    [() => { throw new TypeError("offline"); }, "error", "That didn’t send. Your message is still here; try again or email me directly."],
-    [() => { throw new DOMException("timed out", "AbortError"); }, "error", "That didn’t send. Your message is still here; try again or email me directly."]
+    [() => ({ status: 500, ok: false, code: "INTERNAL_ERROR" }), "error", "I couldn’t confirm delivery. Your message is still here; check before retrying or email me directly."],
+    [() => { throw new TypeError("offline"); }, "error", "I couldn’t confirm delivery. Your message is still here; check before retrying or email me directly."],
+    [() => { throw new DOMException("timed out", "AbortError"); }, "error", "I couldn’t confirm delivery. Your message is still here; check before retrying or email me directly."]
   ];
   for (const [response, state, copy] of cases) await t.test(copy.slice(0, 18), async () => {
     const form = fixture();

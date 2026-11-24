@@ -114,7 +114,7 @@ export const caseStudies = {
         "body": [
           "The same wordmark, short proposition and yellow signal were extended from stationery and a carried object to an environmental scale without repeating a fixed composition.",
           "The delivered identity included guidelines, stationery and a practical application system that another designer could carry forward. The tote, flag and stage images are visualisations, not proof that every object was produced.",
-          "The record contains no confirmed budget figures or delivery calendar. The supported result of this stress test is consistency across scales, not a claim about money or time saved."
+          "The stress test demonstrated consistency across scales."
         ],
         "media": [
           "rivo-tote",
@@ -140,9 +140,9 @@ export const caseStudies = {
         "label": "The Results",
         "title": "A usable identity, with measurable adoption still unknown",
         "body": [
-          "The final identity gives Rivo a recognisable wordmark, a stable blue field, one signal colour and a documented set of rules for applying them across brand materials.",
+          "The identity kit establishes a recognisable wordmark, a stable blue field and one signal colour.",
           "The documented result is a complete identity kit: a recognisable Rivo wordmark, controlled Clar blue and signal-yellow palette, stationery applications and guidelines another designer can refer to. The deliverables shown here substantiate that scope.",
-          "No verified audience recognition, customer adoption or business-performance measurements accompany the project. The evidence supports a reusable identity system, not an invented impact figure."
+          "Audience recognition, customer adoption and business performance were not measured in the available record."
         ]
       }
     ],
@@ -299,7 +299,7 @@ export const caseStudies = {
         "body": [
           "The “Pause…” motif translated from social promotion into programmes, merchandise, campus signage and the event environment without competing with the fixed TEDx identity.",
           "The hoodie pairs the theme mark with the TEDx lockup. The street banner uses a reflective question and ripple pattern, while campus and event-day photographs show related pieces in a physical setting.",
-          "No budget figures or production timetable accompany the case. What survived was the repeatable motif across documented formats, not a measured cost or speed improvement."
+          "The repeatable motif held across the documented formats."
         ],
         "media": [
           "tedx-rsu-merch",
@@ -323,9 +323,9 @@ export const caseStudies = {
         "label": "The Results",
         "title": "A documented event language, not an invented metric",
         "body": [
-          "The final identity carried one invitation to pause and reflect, from social promotion into garments, campus signage, printed materials and the event-day environment, while keeping TEDx recognisable.",
+          "One invitation to pause and reflect held across the event's formats.",
           "The theme travelled from an authored pause mark and palette into a public campus invitation, merchandise and the event-day environment while keeping TEDx recognisable. The photographed banner and attendee setting, alongside the printed and visual applications, substantiate that rollout.",
-          "There are no accompanying attendance, engagement, recall or satisfaction measurements. The evidence supports delivery and public exposure of the event identity. It does not establish a measurable change in audience behaviour."
+          "The record establishes delivery and public exposure; attendance, engagement, recall and satisfaction were not measured in the available evidence."
         ]
       }
     ],

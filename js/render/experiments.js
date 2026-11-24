@@ -142,12 +142,12 @@ export async function initExperimentsSpatial() {
   });
   let blockClick = false;
   viewport.addEventListener("pointerdown", event => {
-    if (event.button !== 0 || (event.pointerType === "mouse" && event.target.closest("a,button") && event.detail === 0)) return;
-    dragging = { x: event.clientX, y: event.clientY, startX: event.clientX,
+    if (dragging || !event.isPrimary || event.button !== 0 || (event.pointerType === "mouse" && event.target.closest("a,button") && event.detail === 0)) return;
+    dragging = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, startX: event.clientX,
       target, time: performance.now(), lastX: event.clientX, velocity: 0, moved: false };
   });
   viewport.addEventListener("pointermove", event => {
-    if (!dragging) return;
+    if (!dragging || dragging.pointerId !== event.pointerId) return;
     if (!dragging.moved) {
       if (Math.abs(event.clientY - dragging.y) > Math.abs(event.clientX - dragging.startX) + 8) { dragging = null; return; }
       if (Math.abs(event.clientX - dragging.startX) < 8) return;
@@ -165,13 +165,13 @@ export async function initExperimentsSpatial() {
     frame = requestAnimationFrame(animate);
   });
   const release = event => {
-    if (!dragging) return;
+    if (!dragging || dragging.pointerId !== event.pointerId) return;
     if (dragging.moved) {
       blockClick = true;
       // A completed drag may suppress the synthetic click entirely. Do not
       // make the next independent click a dead interaction.
       setTimeout(() => { blockClick = false; }, 180);
-      const velocity = reducedMotion() ? 0 : dragging.velocity * 1.8;
+      const velocity = reducedMotion() || event.type !== "pointerup" ? 0 : dragging.velocity * 1.8;
       moveTo(Math.round(target + velocity));
     }
     dragging = null;
@@ -180,6 +180,7 @@ export async function initExperimentsSpatial() {
   };
   viewport.addEventListener("pointerup", release);
   viewport.addEventListener("pointercancel", release);
+  viewport.addEventListener("lostpointercapture", release);
   cards.forEach((card, index) => {
     const video = card.querySelector("video");
     card.addEventListener("focus", () => moveTo(index, false));

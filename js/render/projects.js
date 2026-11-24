@@ -84,7 +84,7 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
     .filter(project => project.status === "coming-soon" && project.featured !== true)
     .sort((a, b) => Number(b.year) - Number(a.year) || a.title.localeCompare(b.title));
   const progressMarkup = inProgress.length
-    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">On the workbench.</h2></div><ul>' +
+    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">On the workbench.</h2></div><p>Case studies in preparation; not yet published.</p><ul>' +
       inProgress.map(project =>
         '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join("") +
       '</ul></div>'

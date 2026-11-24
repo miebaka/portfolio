@@ -3,7 +3,7 @@
    confirms acceptance with HTTP 202. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 const FIELD_NAMES = ["name", "email", "interest", "message"];
-const NETWORK_COPY = "That didn’t send. Your message is still here; try again or email me directly.";
+const NETWORK_COPY = "I couldn’t confirm delivery. Your message is still here; check before retrying or email me directly.";
 
 export async function submitContact(payload, { signal, fetchImpl = globalThis.fetch } = {}) {
   if (typeof fetchImpl !== "function") throw new TypeError("fetch is unavailable");

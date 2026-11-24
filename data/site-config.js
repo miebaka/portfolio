@@ -15,10 +15,10 @@ export const siteConfig = {
     {
       "organisation": "Rise",
       "role": "Marketing Designer",
-      "period": "Jul 2025 - Present",
+      "period": "Jul 2025 – Present",
       "startYear": 2025,
       "endYear": 2026,
-      "contribution": "One brand, six marketing teams: daily campaign work without letting the system lose its shape."
+      "contribution": "One brand, six marketing teams: prioritising competing briefs, aligning stakeholders and keeping campaign work coherent."
     },
     {
       "organisation": "Anakle",
@@ -39,7 +39,7 @@ export const siteConfig = {
     {
       "organisation": "Grey Finance",
       "role": "Brand Designer",
-      "period": "Oct 2022 - Feb 2023",
+      "period": "Oct 2022 – Feb 2023",
       "startYear": 2022,
       "endYear": 2023,
       "contribution": "Turned cross-border finance launches, campaigns and editorial information into clear visual stories."
@@ -47,7 +47,7 @@ export const siteConfig = {
     {
       "organisation": "WellaHealth Technologies",
       "role": "Brand Designer",
-      "period": "May - Sep 2022",
+      "period": "May 2022 – Sep 2022",
       "startYear": 2022,
       "endYear": 2022,
       "contribution": "Designed brand, campaign and product-education work where healthcare information had to stay clear."
@@ -55,7 +55,7 @@ export const siteConfig = {
     {
       "organisation": "Riv-TechCreek",
       "role": "Generalist Designer",
-      "period": "2018 - 2021",
+      "period": "2018 – 2021",
       "startYear": 2018,
       "endYear": 2021,
       "contribution": "The generalist years: brand, print and digital briefs for a range of clients."

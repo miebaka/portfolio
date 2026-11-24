@@ -130,10 +130,10 @@ test("every published narrative follows the five-question sequence without chapt
 test("all owner media is shown once, with intrinsic dimensions, alternatives and factual captions", async () => {
   const html = markup();
   const images = [...html.matchAll(/<img\b[^>]*>/g)].map(match => match[0]);
-  assert.equal(images.length, 10, "hero, two lead comparisons and the complete case sequence");
-  assert.equal((html.match(/<figcaption\b/g) || []).length, 10);
+  assert.equal(images.length, SITE.caseStudies["tedx-rsu"].media.length, "each declared image appears once");
+  assert.equal((html.match(/<figcaption\b/g) || []).length, images.length - 1);
   assert.deepEqual([...html.matchAll(/class="case-shot__plate">([^<]+)</g)].map(match => match[1]),
-    Array.from({length:10}, (_, i) => "PLATE " + String(i + 1).padStart(2, "0")));
+    Array.from({length:images.length - 1}, (_, i) => "PLATE " + String(i + 1).padStart(2, "0")));
   for (const media of SITE.caseStudies["tedx-rsu"].media) {
     const image = images.find(image => image.includes(`${media.src}-`));
     assert.ok(image, media.src);
@@ -204,4 +204,16 @@ test("the built page contains the whole case before JavaScript runs", async () =
   const source = await readFile(new URL("work/tedx-rsu.html", root), "utf8");
   assert.match(source, /<article class="case" data-mount="case">/);
   assert.match(source, /<h1>TEDx Rivers State University<\/h1>/);
+});
+
+ test("published galleries render every declared image exactly once, with continuous caption numbering", () => {
+  for (const [slug, study] of Object.entries(SITE.caseStudies)) {
+    if (study.status !== "published") continue;
+    const html = renderCaseMarkup(SITE, slug);
+    const images = [...html.matchAll(/<img\\b[^>]*\\bsrc="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(images.length, study.media.length, slug);
+    assert.equal(new Set(images).size, images.length, slug);
+    const plates = [...html.matchAll(/class="case-shot__plate">PLATE (\\d+)/g)].map(match => Number(match[1]));
+    assert.deepEqual(plates, Array.from({length: images.length - 1}, (_, index) => index + 1), slug);
+  }
 });
