@@ -5,15 +5,15 @@
   --icon: "Material Symbols Outlined";
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
-  --type-label: clamp(.8125em, .79em + .12vw, .875em);
-  --type-caption: clamp(.875em, .84em + .15vw, 1em);
+  --type-label: .875em;
+  --type-caption: .9375em;
   --type-input: 1em;
   --type-body: 1em;
-  --type-body-lg: clamp(1em, .98em + .18vw, 1.125em);
-  --type-lead: clamp(1.125em, 1.02em + .4vw, 1.375em);
-  --type-heading-sm: clamp(1.25em, 1.08em + .56vw, 1.625em);
-  --type-heading-md: clamp(1.5em, 1.24em + 1vw, 2.125em);
-  --type-heading-lg: clamp(2em, 1.55em + 1.7vw, 3em);
+  --type-body-lg: 1em;
+  --type-lead: clamp(1em, 1em + .15vw, 1.125em);
+  --type-heading-sm: clamp(1.125em, 1.05em + .25vw, 1.25em);
+  --type-heading-md: clamp(1.375em, 1.25em + .4vw, 1.5em);
+  --type-heading-lg: clamp(1.75em, 1.45em + 1vw, 2.375em);
   --type-signature: clamp(2em, 5vw, 4.5em);
   --type-signature-vw: 5vw;
   --type-signature-wide-vw: 5.8vw;
@@ -1146,7 +1146,7 @@ body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .abou
 
 @media (min-width:56em) {
   body[data-page="about"]:not(.site-system-disabled, .design-audit-disabled) .about-hero__copy h1 {
-    font-size: clamp(var(--type-heading-lg),4.4vw,4.5em);
+    font-size: var(--type-heading-lg);
   }
 }
 
@@ -1237,7 +1237,7 @@ body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-
 /* The viewport-height Work rack uses the same Overused Grotesk roles at a readable,
    compact scale. Home uses the same heading roles, positioned within the exposed flap. */
 body:is([data-page="home"], [data-page="work"]) .project-folder__title {
-  font: var(--type-weight-semibold) clamp(1.2em, 3vw, 2.75em)/1.08 var(--font-sans);
+  font: var(--type-weight-semibold) var(--type-heading-md)/1.08 var(--font-sans);
   letter-spacing: var(--type-tracking-heading);
 }
 
@@ -1305,7 +1305,7 @@ body[data-page] :is(
   text-transform: uppercase;
 }
 .next-content .case-next__name {
-  font: var(--type-weight-semibold) clamp(2.25em, 9.5vw, 9em)/.96 var(--font-sans);
+  font: var(--type-weight-semibold) clamp(1.75em, 4.6vw, 4.5em)/.96 var(--font-sans);
   letter-spacing: -.055em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
@@ -1319,38 +1319,46 @@ body[data-page] :is(
   }
 }
 
-/* Belonwus-inspired oversized wordmark treatment, scoped to the existing
-   homepage name only. */
-body[data-page="home"] .home-landing h1 {
-  font-size: clamp(3em, 9.2vw, 10em);
-  line-height: .94;
-  letter-spacing: -.055em;
-  text-transform: uppercase;
-}
-@media (min-width: 40em) {
-  body[data-page="home"] .home-landing h1 {
-    width: 100%;
-    max-width: none;
-    margin-inline-start: 0;
-  }
-}
-@media (max-width: 39.999em) {
-  body[data-page="home"] .home-landing h1 {
-    font-size: clamp(3em, 12.75vw, 6em);
-  }
-}
-
-
 /* Reference display hierarchy. */
-body[data-page="home"] .home-landing h1 { font-size:clamp(2em,11.2vw,11.5em); line-height:.94; letter-spacing:-.055em; white-space:nowrap; text-transform:none; text-wrap:nowrap; }
+body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,8.6cqi,7em); line-height:.94; letter-spacing:-.055em; white-space:nowrap; text-transform:none; text-wrap:nowrap; }
 body[data-page="home"] .home-landing__meta p.hero-support { font-size:var(--type-lead); line-height:var(--type-leading-body); text-wrap:pretty; }
-.home-beyond__art { font:var(--type-weight-semibold) clamp(3em,8vw,7em)/.94 var(--font-sans); letter-spacing:-.055em; }
+.home-beyond__art { font:var(--type-weight-semibold) clamp(2em,4.5vw,4em)/.94 var(--font-sans); letter-spacing:-.055em; }
 .home-beyond__caption { font-size:var(--type-heading-sm); }
 .home-beyond__card,.reference-nav-contact,.scroll-cue { text-decoration:none; }
-@media(max-width:39.999em) { body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,11.2vw,4.5em); } }
 
 body.case-page .case-back a { text-decoration:none; }
-body.case-page:not(.design-audit-disabled) .case-opening h1 { max-width:none; font-size:clamp(2em,5.4vw,5em); line-height:var(--type-leading-tight); }
+body.case-page:not(.design-audit-disabled) .case-opening h1 { max-width:none; font-size:var(--type-heading-lg); line-height:var(--type-leading-tight); }
 @media(min-width:56em) { body.case-page:not(.design-audit-disabled) .case-opening h1 { white-space:nowrap; text-wrap:nowrap; } }
 
-body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,13.3cqi,12em); text-align:left; }
+body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,8.6cqi,7em); text-align:left; }
+
+
+/* One editorial reading hierarchy for essays and project narratives.
+   Relative sizes are applied once to avoid nested em amplification. */
+body.article-page .article-reading .article-body,
+body.case-page .article-reading .case-narrative__copy {
+  font-size:var(--type-body);
+  line-height:var(--type-leading-reading);
+}
+body.article-page .article-reading .article-body :is(p,li,blockquote),
+body.case-page .article-reading .case-narrative__copy :is(p,li,blockquote),
+body.case-page .article-reading .case-chapter__body {
+  font-size:inherit;
+  line-height:inherit;
+}
+body.article-page .article-reading .article-body h2,
+body.case-page .article-reading .case-chapter__copy h2,
+body.case-page .article-reading .case-lead-proof__copy h2 {
+  font:var(--type-weight-regular) var(--type-heading-md)/var(--type-leading-heading) var(--font-sans);
+  letter-spacing:var(--type-tracking-heading);
+  text-wrap:pretty;
+}
+body.case-page .article-reading .case-chapter__eyebrow,
+body.case-page .article-reading .case-lead-proof__eyebrow,
+body.case-page .article-reading .case-lead-proof__status {
+  font-size:var(--type-label);
+  line-height:var(--type-leading-ui);
+}
+body.article-page .article-reading .article-body > p:first-child { font-size:inherit; line-height:inherit; }
+body.article-page .article-hero__summary { font-size:var(--type-lead); }
+body.case-page:not(.design-audit-disabled) .case-opening h1 { font-weight:var(--type-weight-regular); }

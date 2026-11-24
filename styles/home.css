@@ -1,6 +1,6 @@
 /* Home chapter — reference-locked editorial system. */
 body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
-  --hf: 0.75em;
+  --hf: var(--page);
 }
 
 body[data-page="home"] {
@@ -349,7 +349,7 @@ body[data-page="home"] .service-journey a:focus-visible .service-journey__eviden
    compressed desktop grid. Water canvas and folder stacking are untouched. */
 @media (min-width:56em) {
   body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
-    --hf: clamp(.75em, 1.25vw, 1.35em);
+    --hf: var(--page);
   }
 
   body[data-page="home"] .home-landing {

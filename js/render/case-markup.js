@@ -117,7 +117,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     (item.media || []).map(src => lookup.get(src)).filter(Boolean), base, nextPlate,
   )).join("");
   return opening + heroMarkup + factsBlock(study, project) +
-    `<div class="case-narrative container">${toc}<div class="case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +
+    `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +
     `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${leadGallery}${gallery}</section>` +
     (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance ↗</a></p>` : "") +
     nextBlock(site, study, base) +
