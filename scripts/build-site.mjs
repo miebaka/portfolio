@@ -98,27 +98,6 @@ const sitemapRoutes = [
 ];
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   [...new Set(sitemapRoutes)].map(href => `  <url><loc>${canonicalUrl(href)}</loc></url>`).join("\n") + '\n</urlset>\n';
-async function readExperimentEntries() {
-  try {
-    return JSON.parse(await readFile(join(root, "assets", "experiments", "manifest.json"), "utf8"));
-  } catch (error) {
-    if (error?.code !== "ENOENT") throw error;
-    const directory = join(root, "assets", "experiments");
-    const files = (await readdir(directory, { withFileTypes: true }))
-      .filter(entry => entry.isFile() && /\.(?:avif|gif|jpe?g|png|webp|mp4|webm)$/i.test(entry.name))
-      .map(entry => entry.name)
-      .sort((a, b) => a.localeCompare(b));
-    return files.map(file => ({ file, title: file.replace(/\.[^.]+$/, ""), alt: file.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "), type: /\.(?:mp4|webm)$/i.test(file) ? "video" : "image" }));
-  }
-}
-const experimentEntries = await readExperimentEntries();
-const renderExperimentFallback = () => experimentEntries.map((entry, index) => {
-  const source = `assets/experiments/${encodeURIComponent(entry.file)}`;
-  const media = entry.type === "video"
-    ? `<video src="${source}" muted playsinline preload="metadata" aria-label="${esc(entry.title)}"></video>`
-    : `<img src="${source}" alt="${esc(entry.alt || entry.title)}" loading="lazy" decoding="async">`;
-  return `<figure class="experiment-poster" style="--i:${index}" data-experiment-card data-title="${esc(entry.title)}"><span class="experiment-poster__face">${media}</span><figcaption class="experiment-poster__label">${esc(entry.title)}</figcaption></figure>`;
-}).join("");
 function renderShell(source, href) {
   const base = "../".repeat(href.split("/").length - 1);
   const page = routes.find(route => route.href === href)?.key || (href.startsWith("work/") ? "work" : href.startsWith("essays/") ? "writing" : "");
@@ -128,7 +107,6 @@ function renderShell(source, href) {
   if (href === "index.html") rendered = rendered.replace(/<div data-mount="work-grid">[\s\S]*?<\/div>/, '<div class="home-project-list" data-mount="work-grid" data-prerendered="true">' + renderHomeProjectList(content.projects, content.caseStudies, base) + '</div>');
   if (href === "index.html") rendered = rendered.replace(/<div class="client-strip__viewport" data-mount="clients">[\s\S]*?<\/div>/, '<div class="client-strip__viewport" data-mount="clients" data-prerendered="true">' + renderClientProofMarkup(content.clients) + '</div>');
   if (href === "work.html") rendered = rendered.replace(/<div class="project-folder-stack" data-project-archive(?: data-prerendered="true")?>[\s\S]*?(?=\s*<\/section>)/, '<div class="project-folder-stack" data-project-archive data-prerendered="true">' + renderProjectArchiveMarkup(content.projects, base, content.caseStudies) + '</div>');
-  if (href === "experiments.html") rendered = rendered.replace('<div class="experiments-spatial__stage" data-experiments-stage></div>', '<div class="experiments-spatial__stage" data-experiments-stage data-prerendered="true">' + renderExperimentFallback() + '</div>');
   rendered = rendered.replace(/<div data-mount="capabilities">[\s\S]*?<\/div>(?=\s*<\/section>)/, '<div class="process-sequence" data-mount="capabilities" data-prerendered="true">' + renderServiceSwatchesMarkup(content.services) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
   return rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup());
@@ -174,6 +152,7 @@ const { code: minifiedCss } = await transform(cssBundle, { loader: "css", minify
 await writeFile(join(output, "styles/main.css"), minifiedCss);
 /* The Work folder surface is imported into main.css for both pages. */
 await copyJsGraph("js/main.js");
+await ensureCopy(join(root, "js/boot.js"), join(output, "js/boot.js"));
 
 const allHtml = await htmlFiles(output);
 const assets = new Set();

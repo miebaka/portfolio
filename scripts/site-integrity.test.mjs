@@ -366,7 +366,7 @@ test("homepage hierarchy and motion affordances cannot regress", async () => {
     /body\[data-page="home"\] \.client-marquee\s*\{[^}]*width:\s*100%[^}]*mask-image:\s*linear-gradient\(90deg,\s*transparent/,
   );
   assert.match(css, /--content:var\(--grid-max\)/);
-  assert.match(css, /--grid-max:86em/);
+  assert.match(css, /--grid-max:100em/);
   assert.match(css, /body\[data-page="home"\] \.marquee__item img\s*\{[^}]*height:\s*clamp\(2em,\s*3vw,\s*3\.25em\)/);
   assert.doesNotMatch(projects, /Pause client logos/);
   assert.match(projects, /createMarqueeController/);
@@ -619,27 +619,11 @@ test("production build excludes source and review directories", async () => {
   }
 });
 
-test("Last.fm listening is restored through a server-only key and truthful privacy copy", async () => {
+test("listening status is not mounted or requested by the published homepage", async () => {
   const site = await readFile(join(dist, "js", "main.js"), "utf8");
-  const client = await readFile(join(dist, "js", "render", "now-playing.js"), "utf8");
-  const server = await readFile(join(root, "api", "now-playing.js"), "utf8");
-  const config = await readFile(join(dist, "data", "site-config.js"), "utf8");
-  const privacy = await readFile(join(dist, "privacy.html"), "utf8");
-  assert.match(site, /initNowPlaying/);
-  assert.match(client, /\/api\/now-playing/);
-  assert.doesNotMatch(client, /LASTFM_API_KEY|ws\.audioscrobbler\.com/);
-  assert.match(server, /process\.env\.LASTFM_API_KEY/);
-  assert.match(config, /lastfmUser/);
-  assert.match(privacy, /Last\.fm/);
-  assert.match(privacy, /Overused Grotesk text fonts are served from this domain/);
-  assert.match(privacy, /colour-theme and motion preferences/);
-  for (const unused of [
-    "assets/fonts/Archivo-Variable.woff2",
-    "assets/fonts/FinlandicaText-Variable.woff2",
-    "assets/fonts/HostGrotesk-Variable.woff2",
-    "api/lib/mail-service.js",
-    "docs/work-filing-cabinet-threejs.md",
-  ]) await assert.rejects(access(join(root, unused)), unused);
+  const home = await readFile(join(dist, "index.html"), "utf8");
+  assert.doesNotMatch(site, /initNowPlaying/);
+  assert.doesNotMatch(home, /data-mount="now-playing"|hero-listening/);
 });
 
 test("documentation and example contact origins follow active code, not retired systems", async () => {

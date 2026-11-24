@@ -593,7 +593,7 @@ body[data-page="contact"]:not(.site-system-disabled) .hero__title{
 
 body[data-page="contact"]:not(.site-system-disabled) .contact-page{
   grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  gap:var(--s12);}
+  gap:var(--grid-gap);}
 
 @media (max-width:48em) {
   body[data-page]:not(.site-system-disabled, [data-site-cascade-2]) .site-nav__inner{

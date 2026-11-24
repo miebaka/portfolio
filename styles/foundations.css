@@ -94,7 +94,7 @@
   --theme-picker-selection-ink:var(--ref-paper);--comp-nav-bg:var(--ref-paper);--comp-nav-ink:var(--ref-midnight);--comp-nav-muted:var(--ref-neutral-30);
   --comp-footer-ink:var(--ref-midnight);--comp-footer-signature:var(--ref-ultramarine);
   --comp-footer-signature-active:var(--ref-coral-30);
-  --grid-max:100%;
+  --grid-max:100em;
   --grid-outer:1rem;
   --grid-gutter:1rem;
   --baseline:1rem;

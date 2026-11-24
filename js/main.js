@@ -11,7 +11,6 @@ import { renderCapabilities, renderProfessionalEvidence, fillSlots } from "./ren
 import { renderCaseStudy } from "./render/case-study.js";
 import { renderWriting } from "./render/writing.js";
 import { renderFooter } from "./render/footer.js";
-import { initNowPlaying } from "./render/now-playing.js";
 import { initForm } from "./core/form.js";
 import { initFooterSignature } from "./core/footer-signature.js";
 import { initProjectFolderInteractions } from "./core/project-folder-interactions.js";
@@ -36,7 +35,26 @@ run("DOM contract", initContract);
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
 run("Page loader", initPageLoader);
-run("Last.fm listening status", initNowPlaying);
+if (page === "home") run("Fit homepage name", () => {
+  const name = document.querySelector(".home-landing h1");
+  if (!name) return;
+  const fit = () => {
+    const range = document.createRange();
+    range.selectNodeContents(name);
+    const width = range.getBoundingClientRect().width;
+    const available = name.clientWidth;
+    if (width > 0 && available > 0) {
+      const size = parseFloat(getComputedStyle(name).fontSize);
+      name.style.setProperty("--home-name-fit", (size * available * .985 / width / parseFloat(getComputedStyle(document.documentElement).fontSize)) + "rem");
+    }
+  };
+  let lastWidth = 0;
+  if ("ResizeObserver" in window) new ResizeObserver(() => {
+    if (name.clientWidth !== lastWidth) { lastWidth = name.clientWidth; fit(); }
+  }).observe(name);
+  document.fonts?.ready.then(fit);
+  fit();
+});
 if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
 if (has('[data-mount="clients"]')) run("clients render", renderClients);

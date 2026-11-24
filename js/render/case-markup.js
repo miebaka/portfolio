@@ -77,7 +77,9 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const lookup = new Map((study.media || []).map((media) => [media.src, media]));
   let plate = 0;
   const nextPlate = () => ++plate;
-  const heroMarkup = shot(hero, "hero", base, nextPlate());
+  const heroMarkup = shot(hero, "hero", base, nextPlate()).replace('loading="eager"', 'loading="lazy"');
+  const tone = /^#[0-9a-fA-F]{6}$/.test(project?.tone || "") ? project.tone : "#002080";
+  const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
   /* Use published artifacts only. The Rivo guidelines image is a cover,
      not a readable page excerpt; applications remain labelled visualisations. */
   const lead = {
@@ -100,7 +102,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
       images: ["chopbox-logo-lockups", "chopbox-packaging"]
     }
   }[slug];
-  const opening = `<header class="case-opening case-cover" id="case-top">${heroMarkup}<div class="case-cover__intro"><p class="case-back"><a href="${base}work.html">← All work</a></p><h1 class="display-name">${esc(project?.title || study.title)}</h1></div></header>`;
+  const opening = `<header class="case-opening case-cover" id="case-top" style="--folder-tone:${tone};--folder-on:${onColor}"><div class="case-cover__intro container"><p class="case-back"><a href="${base}work.html">← All work</a></p><h1 class="display-name">${esc(project?.title || study.title)}</h1></div></header>`;
   const toc = `<nav class="article-toc case-toc" aria-label="Case study contents"><p>The story</p><ol>${study.chapters.map((item, index) => `<li><a href="#${token(item.id)}"><span class="article-toc__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><strong class="article-toc__title">${esc(item.label)}</strong></a></li>`).join("")}</ol></nav>`;
   const featured = lead
     ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">
@@ -118,7 +120,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   )).join("");
   return opening + factsBlock(study, project) +
     `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +
-    `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${leadGallery}${gallery}</section>` +
+    `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
     (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance</a></p>` : "") +
     nextBlock(site, study, base) +
     `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry</a><a href="mailto:miebakakiki@gmail.com">Email directly</a><a href="${base}work.html">All work</a><a href="#case-top">Back to top ↑</a></nav>`;

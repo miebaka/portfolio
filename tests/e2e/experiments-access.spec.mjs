@@ -6,6 +6,9 @@ test("Experiments exposes site navigation, footer, and natural vertical scrollin
   await expect(page.locator("header.site-nav .site-nav__brand")).toBeVisible();
   await expect(page.locator(".experiments-nav__back")).toHaveAttribute("href", "work.html");
   await expect(page.locator(".experiment-poster")).toHaveCount(7);
+  await expect(page.locator(".experiments-static")).toHaveCount(0);
+  await expect(page.locator(".experiment-poster[data-active]")).toBeVisible();
+  await expect(page.locator("[data-experiments-next]")).toBeVisible();
   const shell = await page.evaluate(() => ({
     overflow: getComputedStyle(document.body).overflowY,
     height: document.documentElement.scrollHeight,

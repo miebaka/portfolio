@@ -40,7 +40,7 @@ export async function initExperimentsSpatial() {
     (entry.type === "image" || entry.type === "video"));
   if (!Array.isArray(entries) || !entries.length) {
     status.textContent = "Experiments could not be loaded.";
-    stage.innerHTML = '<p class="experiments-empty">The visual archive is unavailable. <a href="work.html">Explore selected work</a>.</p>';
+    // Keep the authored static gallery available when enhancement fails.
     return;
   }
 
@@ -224,6 +224,8 @@ export async function initExperimentsSpatial() {
     });
   }
   paint();
+  root.dataset.experimentsReady = "true";
+  root.parentElement.querySelector(".experiments-static")?.remove();
   addEventListener("pagehide", (event) => {
     if (event.persisted) return;
     removeEventListener("popstate", onHistory);
