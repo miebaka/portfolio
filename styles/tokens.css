@@ -1366,3 +1366,8 @@ body[data-page] .hero-listening .now-playing__track { font-size:var(--type-recor
 .home-beyond__art { text-align:center; }
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.home-beyond__card) { text-decoration:none; }
 
+
+body[data-page="explorations"] .experiments-static__meta {overflow-wrap:anywhere}
+@media(max-width:48em) {
+  body[data-page="writing"] .editorial-index--notes .writing-item__meta {white-space:normal}
+}

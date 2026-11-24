@@ -253,6 +253,7 @@ body.case-page .case-gallery-flow > .case-shot--hero .case-shot__caption {
    perspective swing; only the title moves, so hovering cannot flicker. */
 .next-content {
   --next-outline: color-mix(in srgb, var(--ink) 72%, var(--paper));
+
   margin-block-start:var(--s12);
   border-block-start: 1px solid var(--line);
 }
@@ -560,7 +561,6 @@ body[data-page="home"] .home-beyond { padding-block:var(--section-padding) var(-
 @media(min-width:26.625em) { .home-beyond__grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 body[data-page]:not(.site-system-disabled) .site-footer__signature { color:var(--ref-ultramarine); --footer-signature-active:var(--signature-displaced); }
 body[data-page]:not(.site-system-disabled) .site-footer__signature::before { opacity:1; }
-body[data-page="work"] .project-archive__head.visually-hidden { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 body[data-page="work"] .project-archive__collections.reference-panel { width:100%; }
 
 
@@ -714,6 +714,7 @@ body[data-page]:not(.site-system-disabled) .site-footer__panel { column-gap:var(
 /* Shared editorial row interaction: square edges and rising colour plane. */
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.about-cv,.writing-item__link,.article-toc a) {
   --row-fill:var(--ink); --row-on:var(--paper);
+
   position:relative; isolation:isolate; overflow:clip; border-radius:0;
   background:transparent; color:var(--ink); box-shadow:none;
   transition:color var(--dur-ui) var(--ease-standard);
@@ -753,7 +754,9 @@ body.case-page .case-cover__intro {
 body.case-page .case-cover__intro h1 {width:100%;max-width:none;color:inherit;margin:0}
 body.case-page .case-cover__intro .case-back {margin:0;align-self:flex-start}
 body.case-page .case-cover__intro .case-back a {
-  --row-fill:var(--folder-on);--row-on:var(--folder-tone);color:var(--folder-on);
+  --row-fill:var(--folder-on);--row-on:var(--folder-tone);
+
+  color:var(--folder-on);
 }
 body.case-page .case-cover__intro .case-back a:focus-visible {outline-color:var(--folder-on)}
 body.case-page .case-cover__intro .case-back a:is(:hover,:focus-visible) {color:var(--row-on)}
@@ -805,7 +808,7 @@ body[data-page] .site-nav__inner .reference-nav-contact {flex-shrink:0}
   body[data-page] .site-nav__inner:not(:has(.site-nav__menu-btn)) {flex-wrap:wrap;padding-block:var(--s1)}
   body[data-page] .site-nav__inner:not(:has(.site-nav__menu-btn)) .reference-nav-links {display:flex;flex-wrap:wrap;width:100%;order:3;gap:var(--s2)}
   body[data-page] .site-nav__inner:not(:has(.site-nav__menu-btn)) .reference-nav-contact {margin-inline-start:auto}
-  body[data-page]:has(.site-nav__inner:not(:has(.site-nav__menu-btn))) .site-nav {position:relative}
+  body[data-page] .site-nav:not(:has(.site-nav__menu-btn)) {position:relative}
 }
 body[data-page="explorations"] section.experiments-spatial {
   width:min(calc(100% - 2 * var(--page)),var(--content));margin-inline:auto;
@@ -821,7 +824,7 @@ body[data-page="explorations"] .experiments-spatial:not([data-experiments-ready]
 body[data-page="explorations"] .experiments-spatial:not([data-experiments-ready])::after {content:none}
 body[data-page="explorations"] .experiments-static {padding-block:var(--s3) var(--s8)}
 body[data-page="explorations"] .experiments-static__grid {min-width:0}
-body[data-page="explorations"] .experiments-static__meta {grid-template-columns:minmax(0,1fr);overflow-wrap:anywhere}
+body[data-page="explorations"] .experiments-static__meta {grid-template-columns:minmax(0,1fr)}
 body[data-page="explorations"] .experiments-spatial__viewport:focus-visible {outline:2px solid var(--ref-near-black);outline-offset:-2px}
 
 body[data-page="work"] .project-archive--folders .project-archive__head {position:relative;width:100%;height:auto;clip-path:none;overflow:visible;margin-block-end:var(--s6)}
@@ -842,6 +845,6 @@ html[data-motion="reduced"] body[data-page] :is(.btn,.reference-nav-contact,.sit
 @media(max-width:48em) {
   body[data-page="writing"] .editorial-index--notes .writing-item__link {display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s2)}
   body[data-page="writing"] .editorial-index--notes .writing-item__trailing {justify-content:flex-start;max-width:100%}
-  body[data-page="writing"] .editorial-index--notes .writing-item__meta {flex-wrap:wrap;white-space:normal}
+  body[data-page="writing"] .editorial-index--notes .writing-item__meta {flex-wrap:wrap}
   body.article-page .article-reading.container {padding-block-start:var(--s2);gap:var(--s3)}
 }
