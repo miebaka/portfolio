@@ -8,26 +8,26 @@ const sources = await Promise.all((await readdir(styles))
   .filter(name => name.endsWith(".css"))
   .map(async name => ({ name, css: await readFile(join(styles, name), "utf8") })));
 
-test("authored font and spacing sizes use em rather than root-fixed rem", () => {
-  for (const { name, css } of sources) {
-    const code = css.replace(/\/\*[\s\S]*?\*\//g, "");
-    assert.doesNotMatch(code, /(?<![\w])\d*\.?\d+rem\b/, name + " uses a fixed root-relative unit");
-    const fixed = [...code.matchAll(/(?<![\w])(-?\d*\.?\d+)px\b/g)]
-      .map(x => Number(x[1]))
-      .filter(v => Math.abs(v) > 7 && !(name === "foundations.css" && Math.abs(v) === 44));
-    assert.deepEqual(fixed, [], name + " includes a fixed-length layout dimension");
-  }
-});
-
-test("the core grid and spacing start mobile-first", async () => {
-  const layout = await readFile(join(styles, "layout.css"), "utf8");
+test("shared spacing and typography reproduce the reference at the normal root", async () => {
   const foundations = await readFile(join(styles, "foundations.css"), "utf8");
   const typography = await readFile(join(styles, "tokens.css"), "utf8");
-  assert.match(layout, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(layout, /@media\s*\(min-width:\s*56em\)/);
+  const layout = await readFile(join(styles, "layout.css"), "utf8");
+  assert.match(foundations, /--spacing-unit:\s*\.25rem/);
+  assert.match(foundations, /--grid-outer:\s*1rem/);
+  assert.match(foundations, /--grid-outer:\s*2\.5rem/);
+  assert.match(foundations, /--grid-gutter:\s*1rem/);
+  assert.match(foundations, /--grid-gutter:\s*1\.5rem/);
+  assert.match(foundations, /--grid-max:\s*100%/);
+  assert.match(typography, /--type-body:\s*\.875rem/);
+  assert.match(typography, /--type-body:\s*1rem/);
+  assert.match(typography, /--type-heading-lg:\s*1\.5rem/);
+  assert.match(typography, /--type-heading-lg:\s*2rem/);
   assert.match(layout, /grid-template-columns:\s*repeat\(12,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(foundations, /--grid-outer:\s*clamp\(1em,\s*4vw,\s*4em\)/);
-  assert.match(typography, /--type-heading-lg:\s*clamp\(2em,\s*1\.55em \+ 1\.7vw,\s*3em\)/);
+  assert.match(layout, /@media\s*\(min-width:\s*48\.0625em\)/);
+  for (const { name, css } of sources) {
+    assert.doesNotMatch(css, /--grid-max:\s*(?:74|86)em|--grid-outer:\s*clamp\(/, name);
+    assert.doesNotMatch(css, /(?:min|max)-width:\s*(?:24|40|56|72|88|23\.999|39\.999|55\.999|71\.999|87\.999)em\)/, name);
+  }
 });
 
 test("responsive case folders use relative CSS sizing and never intercept a native link", async () => {
@@ -48,6 +48,6 @@ test("canonical page layouts grow from phone defaults instead of shrinking deskt
   }
   const editorial = await readFile(join(styles, "forliving-editorial.css"), "utf8");
   assert.match(editorial, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
-  assert.match(editorial, /@media\(min-width:56em\)/);
-  assert.match(editorial, /@media\(min-width:72em\)/);
+  assert.match(editorial, /@media\(min-width:48\.0625em\)/);
+  assert.match(editorial, /@media\(min-width:48\.0625em\)/);
 });

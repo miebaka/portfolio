@@ -3,14 +3,14 @@ import stylelint from "stylelint";
 /** Enforce one spacing grid, one container source and one responsive range set. */
 export const ruleName = "portfolio/sizing-system";
 export const breakpointSizes = Object.freeze({
-  min: ["24em", "40em", "56em", "72em", "88em"],
-  max: ["23.999em", "39.999em", "55.999em", "71.999em", "87.999em"],
+  min: ["23.5em", "26.625em", "48.0625em"],
+  max: ["23.4375em", "26.5625em", "48em"],
 });
 const messages = stylelint.utils.ruleMessages(ruleName, {
   rejected: message => message,
 });
 const isSpacing = /^(?:(?:margin|padding|scroll-margin|scroll-padding)(?:-[a-z-]+)?|gap|row-gap|column-gap)$/;
-const outsideRoot = new Set(["--content", "--page", "--grid-max", "--grid-outer", "--grid-gutter", "--grid-gap", "--spacing-unit", "--section-padding", "--section-padding-tight", "--nav-h"]);
+const outsideRoot = new Set(["--content", "--page", "--grid-max", "--grid-outer", "--grid-gutter", "--grid-gap", "--spacing-unit", "--section-padding", "--section-padding-tight", "--section-break", "--nav-h"]);
 const rawLength = /(^|[^\w-])-?(?:\d*\.)?\d+(?:em|rem|px)\b/i;
 
 export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
@@ -51,7 +51,7 @@ export default stylelint.createPlugin(ruleName, enabled => (root, result) => {
     if (!ownsFoundations && /(^|[^\d])44px\b/.test(value)) {
       report(decl, "Use var(--control-target) rather than a raw 44px control size");
     }
-    if (isSpacing.test(prop) && rawLength.test(value)) {
+    if (isSpacing.test(prop) && (rawLength.test(value) || /clamp\([^;]*(?:vw|vh|svh)/i.test(value))) {
       report(decl, `${prop} must consume the shared spacing scale, not a literal length: ${value}`);
     }
   });

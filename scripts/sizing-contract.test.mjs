@@ -6,16 +6,11 @@ import { viewportQueries } from "../js/core/responsive.js";
 import { readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
-test("exactly one responsive scale has five ascending breakpoints", () => {
-  assert.deepEqual(breakpointSizes.min, ["24em", "40em", "56em", "72em", "88em"]);
-  assert.deepEqual(breakpointSizes.max, ["23.999em", "39.999em", "55.999em", "71.999em", "87.999em"]);
-  assert.deepEqual(breakpointSizes.min.map(Number.parseFloat), [24, 40, 56, 72, 88]);
+test("reference breakpoints are the 375/425/768px boundaries", () => {
+  assert.deepEqual(breakpointSizes.min, ["23.5em", "26.625em", "48.0625em"]);
+  assert.deepEqual(breakpointSizes.max, ["23.4375em", "26.5625em", "48em"]);
   breakpointSizes.min.forEach((min, index) => {
-    const boundary = Number.parseFloat(min);
-    const precedingUpperBound = Number.parseFloat(breakpointSizes.max[index]);
-    assert.equal(Math.round((boundary - precedingUpperBound) * 1000), 1,
-      "each exclusive upper bound must sit 0.001em below its next lower bound");
-    if (index) assert.ok(boundary > Number.parseFloat(breakpointSizes.min[index - 1]));
+    assert.equal((Number.parseFloat(min) - Number.parseFloat(breakpointSizes.max[index])) * 16, 1);
   });
 });
 
@@ -32,13 +27,11 @@ test("sizing lint refuses unsupported spacing, arbitrary breakpoints and paralle
   ];
   const accepted = [
     "p { margin-block: var(--s2); }",
-    "main { gap: clamp(var(--s2), 2vw, var(--s4)); }",
-    "@media (min-width: 24em) { main { padding: var(--s4); } }",
-    "@media (min-width: 40em) { main { padding: var(--s4); } }",
-    "@media (min-width: 56em) { main { padding: var(--s4); } }",
-    "@media (min-width: 72em) { main { padding: var(--s4); } }",
-    "@media (min-width: 88em) { main { padding: var(--s4); } }",
-    "@media (max-width: 55.999em), (pointer: coarse) { main { padding: 0; } }",
+    "main { gap: var(--grid-gap); }",
+    "@media (min-width: 23.5em) { main { padding: var(--s4); } }",
+    "@media (min-width: 26.625em) { main { padding: var(--s4); } }",
+    "@media (min-width: 48.0625em) { main { padding: var(--s4); } }",
+    "@media (max-width: 48em), (pointer: coarse) { main { padding: 0; } }",
     "main { width: min(100%, var(--content)); }",
     "a { min-height: var(--control-target); }",
   ];
@@ -55,10 +48,10 @@ test("sizing lint refuses unsupported spacing, arbitrary breakpoints and paralle
 test("browser interaction breakpoints match the CSS contract", () => {
   assert.equal(viewportQueries.compact, "(max-width: " + breakpointSizes.max[2] + ")");
   assert.equal(viewportQueries.tablet, "(min-width: " + breakpointSizes.min[2] + ")");
-  assert.equal(viewportQueries.desktop, "(min-width: " + breakpointSizes.min[3] + ")");
-  assert.equal(viewportQueries.tabletMax, "(max-width: " + breakpointSizes.max[3] + ")");
-  assert.equal(viewportQueries.wideMax, "(max-width: " + breakpointSizes.max[4] + ")");
-  assert.equal(viewportQueries.wide, "(min-width: " + breakpointSizes.min[4] + ")");
+  assert.equal(viewportQueries.desktop, "(min-width: " + breakpointSizes.min[2] + ")");
+  assert.equal(viewportQueries.tabletMax, "(max-width: " + breakpointSizes.max[2] + ")");
+  assert.equal(viewportQueries.wideMax, "(max-width: " + breakpointSizes.max[2] + ")");
+  assert.equal(viewportQueries.wide, "(min-width: " + breakpointSizes.min[2] + ")");
 });
 
 
