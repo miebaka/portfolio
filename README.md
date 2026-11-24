@@ -58,7 +58,7 @@ Do not commit `dist/`: it is generated during the build.
 
 The CSS bundle uses the imports in `styles/main.css`, with the `typography` layer applied last. Both Home and Work use `project-folders.css` through the single `main.css` bundle. Adding a conflicting typography declaration elsewhere is a regression.
 
-Geist Sans and Geist Mono are pinned to `geist@1.9.2` WOFF2 files on **jsDelivr**; the Material Symbols icon subset is local. The legacy Archivo, Finlandica and Host Grotesk files are removed. Fonts use `font-display: swap` and fallback families. Do not claim that every font is self-hosted.
+Overused Grotesk Regular (400) and Semibold (600) are self-hosted official OpenType files from RandomMaerks/Overused-Grotesk, pinned to upstream commit 749aa2c96c43a4af2d6932607ed42a5709982c5f. The SIL Open Font License is included in assets/fonts. The Material Symbols icon subset is also local. Fonts use font-display: swap and fallback families.
 
 ## Work and published case studies
 
@@ -95,7 +95,7 @@ The masthead displays a small vinyl pill directly after the logo. When a Last.fm
 
 `POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback. Visible email addresses also expose an adjacent keyboard-operable **Copy** button with a screen-reader-announced **Copied** result. Contact intake guides a first brief through goal, scope, deadline and success criteria without changing the validated API payload schema.
 
-The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` allows public pages to be crawled; the generated sitemap lists indexable canonical routes. Redirect-only and 404 pages retain page-specific `noindex` as appropriate. Privacy claims must match the actual browser requests, including the remote Geist fonts.
+The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` allows public pages to be crawled; the generated sitemap lists indexable canonical routes. Redirect-only and 404 pages retain page-specific `noindex` as appropriate. Privacy claims must match the actual browser requests, including the self-hosted text fonts.
 
 ## Quality and release
 

@@ -276,7 +276,7 @@ test("production CSS is bundled and dead runtime modules are absent", async () =
   assert.doesNotMatch(css, /@import/);
   assert.match(css, /--accent:/);
   assert.doesNotMatch(css, /font-family:\s*"Geist Serif"/);
-  assert.match(css, /font-family:\s*"?Geist Sans"?/);
+  assert.match(css, /font-family:\s*"?Overused Grotesk"?/);
   assert.doesNotMatch(css, /font-family:\s*"?Geist Mono"?/);
   assert.match(css, /font-family:\s*"?Material Symbols Outlined"?/);
   assert.doesNotMatch(css, /font-family:\s*"(?:Television Sans|Borges)"/);
@@ -306,8 +306,8 @@ test("ultramarine identity stays within its documented visual language", async (
   assert.match(css, /--sys-color-primary:var\(--ref-ultramarine\)/);
   assert.match(css, /--sys-color-tertiary:var\(--ref-coral-30\)/);
   assert.match(css, /--sys-color-focus:var\(--ref-coral-30\)/);
-  assert.match(css, /--font-sans:\s*"Geist Sans"/);
-  assert.doesNotMatch(css, /--font-mono|Geist Mono|geist-mono/);
+  assert.match(css, /--font-sans:\s*"Overused Grotesk"/);
+  assert.doesNotMatch(css, /--font-mono|Geist|geist-sans|geist-mono/i);
   assert.doesNotMatch(css, /--(?:font-display|font-body|font-label|font-size-[\w-]+|editorial-display)\s*:/);
   assert.doesNotMatch(css, /font-family:"(?:Borges|Television Sans)"/);
   assert.match(css, /\.site-footer__signature-canvas/);
@@ -631,7 +631,7 @@ test("Last.fm listening is restored through a server-only key and truthful priva
   assert.match(server, /process\.env\.LASTFM_API_KEY/);
   assert.match(config, /lastfmUser/);
   assert.match(privacy, /Last\.fm/);
-  assert.match(privacy, /Geist text fonts load from jsDelivr/);
+  assert.match(privacy, /Overused Grotesk text fonts are served from this domain/);
   assert.match(privacy, /colour-theme and motion preferences/);
   for (const unused of [
     "assets/fonts/Archivo-Variable.woff2",
@@ -654,7 +654,7 @@ test("documentation and example contact origins follow active code, not retired 
   for (const module of ["data/projects.js", "data/case-studies.js", "styles/tokens.css", "styles/project-folders.css"]) {
     assert.ok(readme.includes(module), `README must name the actual source: ${module}`);
   }
-  assert.ok(readme.includes("jsDelivr"));
+  assert.ok(readme.includes("self-hosted"));
   assert.ok(engineering.includes("api/contact.js"));
   assert.ok(engineering.includes("api/now-playing.js"), "active Last.fm boundary must be documented");
   assert.ok(docs.includes("Material Symbols Outlined"));

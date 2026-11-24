@@ -194,6 +194,7 @@ const bundledCss = await readFile(join(output, "styles/main.css"), "utf8");
 for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:woff2?|ttf|otf))/gi)) {
   await ensureCopy(join(root, "assets/fonts", match[1]), join(output, "assets/fonts", match[1]));
 }
+await ensureCopy(join(root, "assets/fonts/OverusedGrotesk-LICENSE.txt"), join(output, "assets/fonts/OverusedGrotesk-LICENSE.txt"));
 
 // Fail closed if a future copy step leaks implementation or review material.
 const forbiddenOutput = /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i;

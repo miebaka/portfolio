@@ -1,7 +1,7 @@
 /* Knowhere-informed restrained portfolio typography. ONE stylesheet owns ALL typography rules.
-   Geist Sans only. Regular 400 and semibold 600. */
+   Overused Grotesk only. Regular 400 and semibold 600. */
 :root {
-  --font-sans: "Geist Sans", Arial, system-ui, sans-serif;
+  --font-sans: "Overused Grotesk", Arial, system-ui, sans-serif;
   --icon: "Material Symbols Outlined";
   --type-weight-regular: 400;
   --type-weight-semibold: 600;
@@ -900,11 +900,10 @@ body[data-page="writing"].article-page .article-hero__title {
 
 /* FROM styles/forliving-editorial.css */
 
-/* Fonts: official Geist 1.9.2 distribution, pinned and verified on unpkg.
-   These external WOFF2 files are licensed under SIL Open Font License. */
-@font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+/* Overused Grotesk, upstream commit 749aa2c96c43a4af2d6932607ed42a5709982c5f; SIL OFL 1.1, self-hosted. */
+@font-face{font-family:"Overused Grotesk";src:url("../assets/fonts/OverusedGrotesk-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
 
-@font-face{font-family:"Geist Sans";src:url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Overused Grotesk";src:url("../assets/fonts/OverusedGrotesk-SemiBold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
 
 
 
@@ -1235,7 +1234,7 @@ body[data-page="explorations"] .experiments-empty a { text-decoration: underline
 body[data-page="explorations"] .experiments-next p { letter-spacing: var(--type-tracking-label); }
 
 
-/* The viewport-height Work rack uses the same Geist roles at a readable,
+/* The viewport-height Work rack uses the same Overused Grotesk roles at a readable,
    compact scale. Home uses the same heading roles, positioned within the exposed flap. */
 body:is([data-page="home"], [data-page="work"]) .project-folder__title {
   font: var(--type-weight-semibold) clamp(1.2em, 3vw, 2.75em)/1.08 var(--font-sans);

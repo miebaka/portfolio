@@ -50,25 +50,10 @@ const initialImages = [...html.matchAll(/<img\b([^>]*)>/giu)]
 const homepageMedia = unique(initialImages).reduce((sum, file) => sum + statSync(resolve(dist, file)).size, 0);
 const fontFiles = unique([...readFileSync(resolve(dist, "styles/main.css"), "utf8").matchAll(/url\(["']?\.\.\/assets\/fonts\/([^"')]+)["']?\)/giu)].map(match => `assets/fonts/${match[1]}`));
 const fontBytes = gzipBytes(fontFiles);
-// In the Geist system, display/body/label font files are pinned to a remote
-// versioned CDN, so fetch their actual bytes rather than measuring retired Archivo.
-const stylesheet = readFileSync(resolve(dist, "styles/main.css"), "utf8");
-const remoteFontUrls = unique([...stylesheet.matchAll(/url\(["']?(https:\/\/cdn\.jsdelivr\.net\/npm\/geist@1\.9\.2\/[^"')]+\.woff2)["']?\)/giu)].map(match => match[1]));
-assert.ok(remoteFontUrls.length === 2, "Geist font budget includes regular and semibold only");
-const remoteFontBuffers = await Promise.all(remoteFontUrls.map(async url => {
-  const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
-  assert.ok(response.ok, `Geist font unavailable (${response.status}): ${url}`);
-  assert.match(response.headers.get("content-type") || "", /font\/woff2|application\/font-woff/i,
-    `Font endpoint must return WOFF2: ${url}`);
-  return { url, buffer: Buffer.from(await response.arrayBuffer()) };
-}));
-const displayFontBuffer = remoteFontBuffers.find(({url}) => url.includes("/geist-sans/Geist-Regular.woff2"))?.buffer;
-assert.ok(displayFontBuffer, "Geist Sans Regular display font is missing");
-const displayFont = gzipSync(displayFontBuffer).byteLength;
-const totalFontBytes = gzipSync(Buffer.concat([
-  ...fontFiles.map(file => readFileSync(resolve(dist, file))),
-  ...remoteFontBuffers.map(({buffer}) => buffer),
-])).byteLength;
+assert.deepEqual(fontFiles.filter(file => file.includes("OverusedGrotesk")).sort(), ["assets/fonts/OverusedGrotesk-Regular.otf", "assets/fonts/OverusedGrotesk-SemiBold.otf"]);
+for (const file of fontFiles.filter(file => file.endsWith(".otf"))) assert.equal(readFileSync(resolve(dist, file)).subarray(0, 4).toString("ascii"), "OTTO");
+const displayFont = gzipSync(readFileSync(resolve(dist, "assets/fonts/OverusedGrotesk-Regular.otf"))).byteLength;
+const totalFontBytes = fontBytes;
 
 function assertBudget(label, actual, budget) {
   const display = bytes => `${(bytes / 1024).toFixed(1)} KiB`;
@@ -84,4 +69,4 @@ assertBudget("total Work CSS (main + folders)", gzipBytes(workCss), 53 * 1024);
 assertBudget("initial JavaScript module graph", jsGraphGzipBytes, 75 * 1024);
 assertBudget("homepage media", homepageMedia, 1.5 * 1024 * 1024);
 assertBudget("display font", displayFont, 100 * 1024);
-assertBudget("all site fonts (local + pinned Geist)", totalFontBytes, 420 * 1024);
+assertBudget("all site fonts (local)", totalFontBytes, 420 * 1024);

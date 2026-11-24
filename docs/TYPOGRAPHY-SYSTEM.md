@@ -9,13 +9,13 @@
 
 The Knowhere website's publicly readable content follows an editorial hierarchy: a studio introduction, the numbered **Our Philosophy** section, succinct headings with supporting sentences, and a compact contact close. That structure informs this move to quieter typography that lets projects and imagery carry the composition.
 
-The source's exact computed font family, CSS sizes, tracking, line heights and breakpoints were **not independently verified**. This is an intentional, restrained interpretation of the observable hierarchy, not a pixel-accurate copy or a claim about Knowhere's unseen design tokens. Retain this portfolio's approved Geist families and original imagery.
+The source's exact computed font family, CSS sizes, tracking, line heights and breakpoints were **not independently verified**. This is an intentional, restrained interpretation of the observable hierarchy, not a pixel-accurate copy or a claim about Knowhere's unseen design tokens. Retain this portfolio's approved Overused Grotesk family and original imagery.
 
 ## Rules
 
 There is **one source of truth for all typography-related CSS**: `styles/tokens.css`, imported once, last, in the `typography` cascade layer. It owns font faces, family, size, weight, line-height, tracking, transformation, wrapping, text decoration and responsive typographic selectors. Other CSS files own only layout, appearance and interaction.
 
-The approved family roles are Geist Sans for headings, body, labels and navigation (400/600). Material Symbols Outlined is an icon font only. Preserve fallbacks and font swap behavior.
+The approved family roles are Overused Grotesk for headings, body, labels and navigation (400/600). Material Symbols Outlined is an icon font only. Preserve fallbacks and font swap behavior.
 
 No separate editorial `display` or `hero` text tier is permitted. Every page title, the homepage name, case-study opening and major call to action draw from a **3em upper bound (nominally 48px at a 16px parent size)** headline scale. Rather than using huge text to produce impact, rely on hierarchy, whitespace, composition and visual work.
 

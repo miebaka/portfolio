@@ -104,7 +104,7 @@ Avoid new duplicate content definitions, theme overrides, inline color literals,
 
 ### 4.1 Tokens, CSS and typography
 
-Preserve the existing **Geist Sans headings, body and labels** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
+Preserve the existing **Overused Grotesk headings, body and labels** roles and **ultramarine / air / paper / midnight** identity unless an explicit approved redesign migration supersedes them. Coral stays a restrained interaction accent. Project identity colors belong inside project-owned surfaces, not global navigation.
 
 Raw color definitions and semantic colour role assignments belong in `styles/foundations.css`. All font loading and typography declarations belong only in `styles/tokens.css`, imported last in the `typography` cascade layer. Page and component stylesheets must not set typography properties. Components consume the named shared type roles. Maintain the token-integrity checks and both explicit dark/theme fallback paths. Fonts must self-host only where permitted, use `font-display: swap`, and retain usable fallback stacks. Do not distribute font binaries as part of review documents.
 
@@ -177,7 +177,7 @@ Use existing `assets/images/optimized` AVIF/WebP/JPEG variants and intrinsic wid
 4. Prerender the registered HTML routes and published cases into `dist/`, bundle the ordered CSS imports, and copy only reachable JavaScript, referenced images and the required local icon font.
 5. Reject private drafts, working files, documentation, source maps and review artifacts from the deployable directory.
 
-Text fonts are version-pinned Geist WOFF2 requests to jsDelivr, **not** self-hosted legacy font binaries. Material Symbols Outlined remains a locally served subset. Do not commit generated `dist/` files.
+Text fonts are self-hosted, upstream-pinned Overused Grotesk Regular and Semibold OpenType files under SIL OFL 1.1. Material Symbols Outlined remains a locally served subset. Do not commit generated `dist/` files.
 
 Build and test commands (as defined in `package.json`):
 
@@ -212,7 +212,7 @@ Do not claim `npm run quality` succeeds without executing it. Use CI artifacts a
 | All Work CSS | 53 KiB |
 | Initial static JavaScript module graph (sum of compressed responses) | 75 KiB |
 | Eager homepage images | 1.5 MiB (raw transfer) |
-| Geist Sans Regular display font | 100 KiB |
+| Overused Grotesk Regular display font | 100 KiB |
 | All delivered text/icon fonts | 420 KiB |
 
 The current `lighthouserc.cjs` asserts desktop median **performance ≥0.90**, **accessibility ≥0.95**, **LCP ≤2,500ms**, **CLS ≤0.05** and **TBT ≤200ms** across configured routes. These are *existing configured CI thresholds*, not independently measured passing scores.
@@ -247,7 +247,7 @@ Automated axe audits are necessary but not sufficient. Run manual keyboard, Voic
 
 Existing `api/contact.js` uses server-side schema, origin/abuse controls, rate limits and mail integration. Preserve these rather than substituting a third-party frontend-only form. Validate and normalize user input on the server, restrict lengths and accepted content types, prevent header injection, use safe structured logging and return non-leaking error responses. Do not assert perfect abuse resistance based solely on an in-memory limiter.
 
-Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with the contact endpoint, restored server-backed Last.fm status, local theme/motion preferences, and remote Geist font requests. Keep Last.fm credentials server-only and preserve the profile-link fallback when upstream data or credentials are unavailable.
+Keep credentials and keys in server-only environment variables. Never put them in `data/`, committed config, generated HTML, browser JS, screenshots or error messages. Maintain privacy disclosures aligned with the contact endpoint, restored server-backed Last.fm status, local theme/motion preferences, and self-hosted font requests. Keep Last.fm credentials server-only and preserve the profile-link fallback when upstream data or credentials are unavailable.
 
 `vercel.json` owns production CSP/security headers, redirects and caching. Any change to inline executable scripts, imported modules, external origins or API endpoints MUST be checked against the CSP and related integrity tests. External new-tab links must include `rel="noopener noreferrer"`.
 

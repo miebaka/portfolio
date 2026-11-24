@@ -1,14 +1,14 @@
 import {test,expect} from "@playwright/test";
 
-test("Geist Sans typography roles and full-screen editorial Index are consistent on every viewport",async({page})=>{
+test("Overused Grotesk typography roles and full-screen editorial Index are consistent on every viewport",async({page})=>{
  await page.goto("/index.html");
  const fonts=await page.evaluate(()=>{
   const get=selector=>getComputedStyle(document.querySelector(selector)).fontFamily;
   return {display:get(".home-landing h1"),body:get(".home-profile__introduction p:not(.home-profile__lead)"),label:get(".site-nav__menu-btn")};
  });
- expect(fonts.display).toContain("Geist Sans");
- expect(fonts.body).toContain("Geist Sans");
- expect(fonts.label).toContain("Geist Sans");
+ expect(fonts.display).toContain("Overused Grotesk");
+ expect(fonts.body).toContain("Overused Grotesk");
+ expect(fonts.label).toContain("Overused Grotesk");
  const brand=page.getByRole("link",{name:/Miebaka Joshua, home/i});
  await expect(brand).toBeVisible();
  const menu=page.getByRole("button",{name:"Index",exact:true});
