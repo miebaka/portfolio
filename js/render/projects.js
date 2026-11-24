@@ -84,17 +84,12 @@ export function renderProjectArchiveMarkup(projects = SITE.projects, base = "", 
     .filter(project => project.status === "coming-soon" && project.featured !== true)
     .sort((a, b) => Number(b.year) - Number(a.year) || a.title.localeCompare(b.title));
   const progressMarkup = inProgress.length
-    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">In progress</h2><p>Projects being prepared for publication. These are not case studies yet.</p></div><ul>' +
+    ? '<div class="project-archive__progress" role="region" aria-labelledby="in-progress-title"><div class="project-archive__progress-head"><h2 id="in-progress-title">On the workbench.</h2></div><ul>' +
       inProgress.map(project =>
         '<li><span>' + esc(project.title) + '</span><time>' + esc(project.year) + '</time></li>').join("") +
       '</ul></div>'
     : "";
-  const collectionMarkup =
-    '<nav class="project-archive__collections" aria-labelledby="more-practice-title"><div><p class="project-archive__eyebrow">Beyond case studies</p><h2 id="more-practice-title">See the practice from another angle</h2></div><ul><li><a href="' +
-    base +
-    'experiments.html"><span>Experiments</span><small>Posters, tests and unfinished visual questions</small></a></li><li><a href="' +
-    base +
-    'essays.html"><span>Essays</span><small>Writing on brands, culture and accessible design</small></a></li></ul></nav>';
+  const collectionMarkup = '<nav class="project-archive__collections reference-panel" aria-labelledby="more-practice-title"><h2 id="more-practice-title">There is another side to the work.</h2><div><p>Self-initiated studies and writing show the questions behind the practice.</p><a class="reference-link" href="' + base + 'experiments.html">Explore experiments ↗</a></div></nav>';
   return renderProjectFolderStackMarkup(projects, studies, base) + progressMarkup + collectionMarkup;
 }
 

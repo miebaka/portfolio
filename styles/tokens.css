@@ -1339,3 +1339,12 @@ body[data-page="home"] .home-landing h1 {
     font-size: clamp(3em, 12.75vw, 6em);
   }
 }
+
+
+/* Reference display hierarchy. */
+body[data-page="home"] .home-landing h1 { font-size:clamp(2em,11.2vw,11.5em); line-height:.94; letter-spacing:-.055em; white-space:nowrap; text-transform:none; text-wrap:nowrap; }
+body[data-page="home"] .home-landing__meta p.hero-support { font-size:var(--type-lead); line-height:var(--type-leading-body); text-wrap:pretty; }
+.home-beyond__art { font:var(--type-weight-semibold) clamp(3em,8vw,7em)/.94 var(--font-sans); letter-spacing:-.055em; }
+.home-beyond__caption { font-size:var(--type-heading-sm); }
+.home-beyond__card,.reference-nav-contact,.scroll-cue { text-decoration:none; }
+@media(max-width:39.999em) { body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,11.2vw,4.5em); } }

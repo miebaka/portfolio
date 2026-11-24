@@ -60,10 +60,7 @@
   </script>
   <script>(function(r){
     r.classList.replace("no-js","has-js");
-    /* localStorage throws outright when storage is blocked (Safari private
-       browsing, some enterprise policies). Unguarded, that exception kills
-       the rest of this script. */
-    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
+    r.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">
@@ -87,22 +84,22 @@
   <main id="main">
     <section class="home-landing" aria-labelledby="hero-title">
       <div class="home-landing__inner container">
-        <p class="home-landing__statement">I ask until the idea is clear. Then I make it useful.</p>
+        <div class="hero-listening" data-mount="now-playing"></div>
         <h1 id="hero-title"><span>Miebaka</span> <span>Joshua</span></h1>
-        <div class="home-landing__meta"><p>Lagos, Nigeria<br>Working worldwide</p><p>Brand &amp; visual designer<br><span class="home-landing__secondary-role">Identities, campaigns &amp; systems</span></p><a href="#selected-work">View selected work <span aria-hidden="true">&darr;</span></a></div>
+        <div class="home-landing__meta"><p class="hero-support">I build brands, campaigns and visual systems from clear ideas, and make them work in the real world.</p><a class="scroll-cue" href="#selected-work"><span>Scroll down</span><span aria-hidden="true">↓</span></a></div>
       </div>
     </section>
     <div class="home-content">
     <section class="swiss-selected container" id="selected-work" aria-label="Selected work">
       <div data-mount="work-grid"><ul class="link-fallback"><li><a href="work/tedx-rsu.html">TEDx Rivers State University</a></li><li><a href="work/rivo.html">Rivo Studio</a></li><li><a href="work/chopbox.html">ChopBox</a></li><li><a href="work/kiki-joshua-notepad.html">Kiki-Joshua</a></li></ul></div>
     </section>
-    <section class="home-profile container" id="profile" aria-labelledby="about-title">
+    <section class="home-profile container reference-panel" id="profile" aria-labelledby="about-title">
       <div class="home-profile__introduction">
         <h2 id="about-title">Hi, I&rsquo;m Miebaka.</h2>
         <p class="home-profile__lead">I design identities and campaigns that still work after the presentation.</p>
         <p>I&rsquo;m the marketing designer at Rise, with more than eight years of practice across brand, campaign and production work.</p>
         <p class="home-profile__leadership">I also lead and train designers in my church community, translating direction into practical systems other people can use.</p>
-         <a class="swiss-link" href="about.html">More about me</a>
+         <a class="swiss-link" href="about.html">Meet the designer ↗</a>
       </div>
       <div class="home-profile__media">
         <figure class="home-profile__portrait"><picture><source type="image/avif" srcset="assets/images/optimized/miebaka-joshua-profile-600.avif 600w, assets/images/optimized/miebaka-joshua-profile-1200.avif 1200w" sizes="(max-width: 48em) calc(100vw - 2.5em), (max-width: 80em) 38vw, 35vw"><source type="image/webp" srcset="assets/images/optimized/miebaka-joshua-profile-600.webp 600w, assets/images/optimized/miebaka-joshua-profile-1200.webp 1200w" sizes="(max-width: 48em) calc(100vw - 2.5em), (max-width: 80em) 38vw, 35vw"><img src="assets/images/optimized/miebaka-joshua-profile-600.webp" alt="Miebaka Joshua" width="1200" height="1500" loading="lazy" decoding="async"></picture></figure>
@@ -113,6 +110,13 @@
       <div data-mount="capabilities"><ol class="service-fallback"><li><h3>Brand Identity &amp; Systems</h3><p>Turn a clear positioning decision into a recognisable identity that works across channels.</p><a href="work/rivo.html#system">See the proof: Rivo's identity system</a></li><li><h3>Art Direction</h3><p>Give a campaign or event one cohesive image language, idea and production direction.</p><a href="work/tedx-rsu.html#decision">See the proof: TEDx creative decision</a></li><li><h3>Campaign &amp; Marketing Design</h3><p>Build attention and recognition across the pieces people actually encounter.</p><a href="work/chopbox.html#survival">See the proof: ChopBox applications</a></li><li><h3>Editorial &amp; Graphic Design</h3><p>Make information and culture-facing work clear, memorable and carefully composed.</p><a href="work/tedx-rsu.html#survival">See the proof: TEDx design applications</a></li><li><h3>Design Systems &amp; Production</h3><p>Make creative work reproducible, accessible and usable beyond the presentation.</p><a href="work/rivo.html#survival">See the proof: Rivo's application system</a></li></ol></div>
     </section>
     <section class="journey" aria-label="Organizations I have worked with"><div class="client-strip"><div class="client-strip__viewport" data-mount="clients"><ul class="client-strip__fallback" aria-label="Organizations I have worked with"><li><img src="assets/images/clients/anakle.svg" alt="Anakle" width="217" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">Anakle</span></li><li><img src="assets/images/clients/celebration-church.svg" alt="Celebration Church" width="163" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">Celebration Church</span></li><li><img src="assets/images/clients/grey-finance.svg" alt="Grey Finance" width="136" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">Grey Finance</span></li><li><img src="assets/images/clients/rise.svg" alt="Rise" width="128" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">Rise</span></li><li><img src="assets/images/clients/riv-techcreek.svg" alt="Riv-TechCreek" width="40" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">Riv-TechCreek</span></li><li><img src="assets/images/clients/wellahealth-technologies.svg" alt="WellaHealth Technologies" width="360" height="40" loading="lazy" decoding="async"><span class="client-strip__fallback-label">WellaHealth Technologies</span></li></ul></div></div></section>
+    <section class="home-beyond container" aria-labelledby="beyond-title">
+      <h2 id="beyond-title">Beyond the brief.</h2>
+      <div class="home-beyond__grid">
+        <a href="experiments.html" class="home-beyond__card"><span class="home-beyond__art" aria-hidden="true">Field<br>notes.</span><span class="home-beyond__caption"><span>Visual experiments</span><span aria-hidden="true">↗</span></span></a>
+        <a href="essays.html" class="home-beyond__card"><span class="home-beyond__art" aria-hidden="true">On<br>design.</span><span class="home-beyond__caption"><span>Essays &amp; observations</span><span aria-hidden="true">↗</span></span></a>
+      </div>
+    </section>
     </div>
   </main>
 

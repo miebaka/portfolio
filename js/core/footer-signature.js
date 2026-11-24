@@ -36,7 +36,7 @@ function enhanceFooterSignature(host) {
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    restColor = `color-mix(in srgb, ${getComputedStyle(host).color} 48%, transparent)`;
+    restColor = getComputedStyle(host).color;
     activeColor = getComputedStyle(host).getPropertyValue("--footer-signature-active").trim() || activeColor;
     let image;
     try { image = await loadImage(); } catch { return; }
@@ -82,7 +82,7 @@ function enhanceFooterSignature(host) {
       point.x += point.vx;
       point.y += point.vy;
       unsettled ||= Math.abs(point.x - point.homeX) > .12 || Math.abs(point.y - point.homeY) > .12;
-      context.fillStyle = proximity > .08 ? activeColor : restColor;
+      context.fillStyle = Math.hypot(point.x - point.homeX, point.y - point.homeY) > .12 ? activeColor : restColor;
       const size = DOT + proximity * 1.8;
       context.fillRect(point.x - size / 2, point.y - size / 2, size, size);
     }

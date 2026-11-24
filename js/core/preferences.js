@@ -1,6 +1,5 @@
 const COLOR_KEY = "color-theme";
 const MOTION_KEY = "motion-preference";
-const VALID_THEMES = new Set(["system", "light", "dark"]);
 const VALID_MOTION = new Set(["system", "reduce", "full"]);
 
 function read(storage, key, allowed, fallback) {
@@ -21,7 +20,7 @@ export function createPreferencesController({
   if (resolvedStorage === undefined) {
     try { resolvedStorage = globalThis.localStorage; } catch { resolvedStorage = null; }
   }
-  let theme = read(resolvedStorage, COLOR_KEY, VALID_THEMES, "system");
+  const theme = "system";
   let motion = read(resolvedStorage, MOTION_KEY, VALID_MOTION, "system");
   let destroyed = false;
 
@@ -48,7 +47,7 @@ export function createPreferencesController({
   sync();
 
   return {
-    setTheme(value) { if (!VALID_THEMES.has(value)) return; theme = value; write(resolvedStorage, COLOR_KEY, value); sync(); },
+    setTheme() { sync(); },
     setMotion(value) { if (!VALID_MOTION.has(value)) return; motion = value; write(resolvedStorage, MOTION_KEY, value); sync(); },
     destroy() {
       if (destroyed) return; destroyed = true;
