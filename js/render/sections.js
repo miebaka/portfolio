@@ -2,18 +2,17 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeURL, safeToken, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
+import { renderServiceMotif } from "./service-motifs.js";
 
 export function renderServiceSwatchesMarkup(items = SITE.capabilities) {
   // Stacked services, inspired by the user's supplied 16-second video.
   // The source content and evidence links stay truthful and keyboard accessible.
-  const marks = ["✦", "✳", "◉", "❖", "▧"];
   return '<ul class="service-journeys service-stack">' + items.map((service, index) => {
     const outputs = String(service.outputs || "").split(",").map(value => value.trim()).filter(Boolean).slice(0, 4);
     const tags = outputs.map(item => '<span class="service-stack__tag">' + esc(item) + '</span>').join("");
     return '<li class="service-journey service-stack__item service-journey--' + safeToken(service.id) + '" style="--stack-index:' + index + '">' +
       '<article class="service-stack__card">' +
-      '<div class="service-stack__heading"><span class="service-stack__symbol" aria-hidden="true">' + marks[index % marks.length] + '</span>' +
-      '<h3>' + esc(service.title) + '</h3></div>' +
+      '<div class="service-stack__heading"><h3>' + esc(service.title) + '</h3>' + renderServiceMotif(service.id) + '</div>' +
       '<div class="service-stack__bottom"><div class="service-stack__description"><p>' + esc(service.description) + '</p>' +
       '<a class="service-stack__evidence service-journey__evidence" href="' + safeURL(service.evidenceHref) + '">See the proof: ' + esc(service.evidenceLabel) + ' </a></div>' +
       '<div class="service-stack__tags" aria-label="Typical deliverables">' + tags + '</div></div>' +

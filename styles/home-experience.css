@@ -224,7 +224,6 @@ body section.service-stack-section .process-sequence .service-stack {
     border-top: 1px solid var(--line);
   }
 
-  body section.service-stack-section .service-stack__symbol,
   body section.service-stack-section .service-stack__tags {
     display: none;
   }
@@ -318,9 +317,6 @@ body section.service-stack-section .process-sequence .service-stack {
   body section.service-stack-section .service-stack__item:nth-child(5) .service-stack__card{
     background:var(--ref-midnight);
     color:var(--ref-paper);
-  }
-  body section.service-stack-section .service-stack__symbol{
-    display:grid;
   }
   body section.service-stack-section .service-stack__tags{
     display:flex;

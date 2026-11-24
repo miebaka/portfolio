@@ -28,9 +28,39 @@ body .service-stack-section .service-stack__item:nth-child(3) .service-stack__ca
 body .service-stack-section .service-stack__item:nth-child(4) .service-stack__card {background:var(--ref-ultramarine);color:var(--ref-paper)}
 body .service-stack-section .service-stack__item:nth-child(5) .service-stack__card {background:var(--ref-midnight);color:var(--ref-paper)}
 body .service-stack-section .service-stack__heading {
-  display:flex;align-items:center;gap:var(--s3);}
-body .service-stack-section .service-stack__symbol {
-  display:grid;place-items:center;width:clamp(2.3em,4vw,4em);flex:none;}
+  position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);}
+.service-stack__motif {
+  display:block;flex:none;width:2.75rem;height:2.75rem;
+  pointer-events:none;overflow:visible;
+}
+.service-stack__motif :is(.motif-a,.motif-b) {
+  transform-box:fill-box;transform-origin:center;
+}
+@media (min-width:48.0625em) {
+  body .service-stack-section .service-stack__heading {
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,25%);
+  }
+  .service-stack__motif {
+    position:absolute;inset-inline-end:0;inset-block-start:0;
+    width:min(25%,8rem);height:auto;
+    max-height:calc(100% + var(--heading-content-gap));
+  }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  html:not([data-motion="reduced"]) .service-stack__motif :is(.motif-a,.motif-b) {
+    transition:transform var(--motion-panel-in) var(--ease-out-ui);
+  }
+  html:not([data-motion="reduced"]) .service-journey--brand-identity-systems .service-stack__card:is(:hover,:focus-within) .motif-a {transform:translate(-6px,-6px)}
+  html:not([data-motion="reduced"]) .service-journey--brand-identity-systems .service-stack__card:is(:hover,:focus-within) .motif-b {transform:translate(6px,6px)}
+  html:not([data-motion="reduced"]) .service-journey--art-direction .service-stack__card:is(:hover,:focus-within) .motif-a {transform:scale(.7)}
+  html:not([data-motion="reduced"]) .service-journey--art-direction .service-stack__card:is(:hover,:focus-within) .motif-b {transform:rotate(20deg)}
+  html:not([data-motion="reduced"]) .service-journey--campaign-marketing .service-stack__card:is(:hover,:focus-within) .motif-a {transform:scale(1.12)}
+  html:not([data-motion="reduced"]) .service-journey--campaign-marketing .service-stack__card:is(:hover,:focus-within) .motif-b {transform:scale(1.16)}
+  html:not([data-motion="reduced"]) .service-journey--editorial-graphic .service-stack__card:is(:hover,:focus-within) .motif-a {transform:translateY(-4px)}
+  html:not([data-motion="reduced"]) .service-journey--editorial-graphic .service-stack__card:is(:hover,:focus-within) .motif-b {transform:translateY(4px)}
+  html:not([data-motion="reduced"]) .service-journey--design-systems-production .service-stack__card:is(:hover,:focus-within) .motif-a {transform:translateY(-8px)}
+  html:not([data-motion="reduced"]) .service-journey--design-systems-production .service-stack__card:is(:hover,:focus-within) .motif-b {transform:translateY(8px)}
+}
 body .service-stack-section .service-stack__card h3 {max-width:22ch;}
 body .service-stack-section .service-stack__bottom {
   display:grid;grid-template-columns:minmax(0,1fr);

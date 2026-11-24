@@ -827,8 +827,6 @@ body .service-stack-section .service-journey a:focus-visible .service-journey__e
 body section.service-stack-section .disciplines-heading h2 {font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
   text-transform:none;letter-spacing:var(--type-tracking-label);}
 
-body .service-stack-section .service-stack__symbol {
-  font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);}
 
 body .service-stack-section .service-stack__card h3 {
   font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);
@@ -1059,8 +1057,6 @@ body section.service-stack-section .service-stack__card h3 {
   font: var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-heading) var(--font-sans);
   letter-spacing: var(--type-tracking-heading);}
 
-body section.service-stack-section .service-stack__symbol {
-  font-size: var(--type-heading-md);}
 
 body section.service-stack-section .service-stack__description p {
   font-weight: var(--type-weight-regular);

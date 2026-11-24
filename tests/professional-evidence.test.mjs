@@ -121,7 +121,8 @@ test("mobile service markup is a vertical, fully readable accordion", () => {
 test("service journeys expose unnumbered titles and evidence links", async () => {
   const markup = renderServiceSwatchesMarkup(services);
   assert.doesNotMatch(markup, /service-journey__number|service-stack__count/);
-  assert.equal((markup.match(/class="service-journey__arrow"/g) || []).length, 5);
+  assert.equal((markup.match(/class="service-stack__motif"/g) || []).length, 5);
+  assert.doesNotMatch(markup, /service-stack__symbol|service-journey__arrow/);
   for (const service of services) assert.ok(markup.includes(service.evidenceHref));
 });
 
@@ -212,3 +213,19 @@ test("Work archive derives published cases and in-progress register from real pr
   assert.doesNotMatch(markup, /javascript:/);
 });
 
+
+
+test("each service has a distinct decorative SVG using only inherited colour", () => {
+  const motifs = [...renderServiceSwatchesMarkup(services).matchAll(/<svg class="service-stack__motif"[\s\S]*?<\/svg>/g)].map(match => match[0]);
+  assert.equal(motifs.length, 5);
+  assert.equal(new Set(motifs).size, 5);
+  for (const motif of motifs) {
+    assert.match(motif, /viewBox="0 0 128 128"/);
+    assert.match(motif, /aria-hidden="true" focusable="false"/);
+    assert.match(motif, /stroke="currentColor"/);
+    for (const [, paint] of motif.matchAll(/(?:fill|stroke)="([^"]+)"/g)) {
+      assert.ok(["none", "currentColor"].includes(paint), paint);
+    }
+    assert.doesNotMatch(motif, /<script|<animate|<foreignObject|tabindex=/);
+  }
+});

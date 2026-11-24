@@ -62,7 +62,7 @@ test("mobile capability proof reads as a calm nonsticky list with no empty scrol
     for (const item of await section.locator(".service-stack__item").all()) {
       await expect(item).toHaveCSS("position", "relative");
       await expect(item.locator(".service-stack__tags")).toBeHidden();
-      await expect(item.locator(".service-stack__symbol")).toBeHidden();
+      await expect(item.locator(".service-stack__motif")).toBeVisible();
       await expect(item.locator(".service-stack__evidence")).toBeVisible();
     }
     const mobile = await page.evaluate(() => ({
@@ -77,5 +77,42 @@ test("mobile capability proof reads as a calm nonsticky list with no empty scrol
     expect(mobile.secondaryRole).toBe("none");
     expect(mobile.location).toBe("none");
     expect(mobile.overscroll).toBeLessThanOrEqual(2);
+  }
+});
+
+
+test("shared motifs are distinct, inherit existing ink and never cover text", async ({ page }) => {
+  const motifs = [];
+  for (const route of ["/index.html", "/about.html"]) {
+    for (const colorScheme of ["light","dark"]) {
+      await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+      for (const width of [320,390,768,1024,1440]) {
+        await page.setViewportSize({ width, height:900 });
+        await page.goto(route);
+        const cards=page.locator(".service-stack__card");
+        await expect(cards).toHaveCount(5);
+        const markup=await cards.locator(".service-stack__motif").evaluateAll(nodes=>nodes.map(svg=>svg.innerHTML));
+        expect(new Set(markup).size).toBe(5);
+        if (!motifs.length) motifs.push(...markup);
+        else expect(markup).toEqual(motifs);
+        for (const card of await cards.all()) {
+          const graphic=card.locator(".service-stack__motif");
+          await expect(graphic).toBeVisible();
+          await expect(graphic).toHaveAttribute("aria-hidden","true");
+          const layout=await card.evaluate(node=>{
+            const svg=node.querySelector(".service-stack__motif");
+            const rect=svg.getBoundingClientRect(), title=node.querySelector("h3").getBoundingClientRect(), bottom=node.querySelector(".service-stack__bottom").getBoundingClientRect();
+            const box=node.getBoundingClientRect();
+            return {inside:rect.left>=box.left-1&&rect.right<=box.right+1&&rect.bottom<=box.bottom+1,
+              textClear:title.right<=rect.left+1, bottomClear:rect.bottom<=bottom.top+1,
+              inherited:getComputedStyle(svg).color===getComputedStyle(node).color,
+              static:getComputedStyle(svg.querySelector(".motif-a")).transform==="none",
+              overflow:node.scrollWidth-node.clientWidth};
+          });
+          expect(layout).toMatchObject({inside:true,textClear:true,bottomClear:true,inherited:true,static:true});
+          expect(layout.overflow).toBeLessThanOrEqual(1);
+        }
+      }
+    }
   }
 });
