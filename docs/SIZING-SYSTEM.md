@@ -1,31 +1,38 @@
-# Sizing system: four sources, no alternate scales
+# Portfolio sizing system — Belonwus
 
-**Binding rules for the entire portfolio.** Effective 22 November 2026.
+Effective 24 November 2026. Source: https://belonwus.com/ (rendered stylesheet, inspected 24 November). This replaces the previous Knowhere/Kati fluid typography and capped-container system.
 
-## 1. Typography — `styles/tokens.css`
+## Reference values and implementation
 
-Geist Sans (headings/body) and Geist Mono (metadata/controls) use only the approved `--type-*` roles. Font faces, size, line height, weight, tracking, wrapping and text transformations are defined exclusively in this file. No typography declaration belongs to a page or component CSS file.
+Belonwus uses 16px ordinary text and 32px large text on desktop, 14px and 24px on mobile; all use 1.35 line-height. The portfolio retains Overused Grotesk (400/600). Reference pixels are expressed as rem at the default 16px browser root to respect text enlargement. Text fields retain a 16px input size to avoid mobile browser auto-zoom.
 
-## 2. Spacing — `styles/foundations.css`
+| Role | Mobile | Desktop |
+|---|---:|---:|
+| Standard text, labels, captions | 14px | 16px |
+| Display/section headings and lead | 24px | 32px |
+| Line height | 1.35 | 1.35 |
+| Outer margin | 16px | 40px |
+| Column gutter | 16px | 24px |
+| Navigation height | 48px | 64px |
+| Normal section spacing | 64px | 80px |
+| Tight section spacing | 32px | 40px |
+| Major section break | 120px | 240px |
 
-The basic unit is `--spacing-unit: .125em` (2px at a 16px element font size). Named stops `--s1` to `--s12` represent increments of `.5em`, from `.5em` to `6em`. All `margin`, `padding`, `gap`, `scroll-margin` and `scroll-padding` declarations consume one of those stops or a whole-number multiple of the single unit, e.g. `calc(var(--spacing-unit) * 14)`. Fluid `clamp()` expressions may interpolate through viewport units but their length endpoints must use the spacing system. No authored literal `em`, `rem` or `px` is permitted in spacing declarations. Position and component aspect sizing remain geometric, not a competing spacing scale.
+The reference uses a 12-column desktop grid, 2-column project grids, and stacked small-screen content. There is no desktop content-width cap. Reading and project description copy use a maximum 628px measure from the reference project description. Essays and cases retain the shared sticky legend on the left and narrative in columns 7–12; on smaller screens both stack. The oversized live homepage name is a custom exception (Belonwus uses a graphic wordmark): centered and scaled to its container.
 
-## 3. Container/grid — `styles/foundations.css` + `styles/layout.css`
+## Sources of truth
 
-There is one content maximum: `--grid-max: 86em` (aliased as `--content`), and one outer gutter `--grid-outer` (aliased as `--page`). Interior mastheads, standard content and footer panels use the same content and margin tokens. The Home masthead follows the framed hero. The outer margin grows fluidly from 1em to 4em, independently of the column gap. The standard container expression is `min(calc(100% - 2 * var(--page)), var(--content))`. The generic grid is four tracks below `56em` and twelve from `56em`. Editorial compositions use four tracks below `56em`, eight from `56em`, and twelve from `72em`. The only global grid gutter is `--grid-gutter` (aliased as `--grid-gap`). Retired `--tailor-container` and `--tailor-gutter` are prohibited.
+- `styles/tokens.css`: typography roles, font faces and type declarations.
+- `styles/foundations.css`: shared spacing stops, margins, gutters, section rhythm and navigation height.
+- `styles/layout.css`: reusable container and grid.
+- `scripts/stylelint-sizing.mjs` and `js/core/responsive.js`: responsive contract and browser queries.
 
-## 4. Responsive sizing — `scripts/stylelint-sizing.mjs`
+The reference spacing stops used in the portfolio are 4, 8, 12, 16, 24, 32, 40, 48, 64, 80, 120 and 240px. Use the shared `--s1`–`--s12` stops, `--spacing-unit` (4px), or semantic section/gutter tokens rather than introducing a second scale. Painting and component geometry are not a second spacing scale. Minimum control target remains 44px for accessibility.
 
-CSS media queries cannot currently consume ordinary CSS custom properties, so the enforced breakpoint table is defined in the lint rule. The five approved upward boundaries are `24em`, `40em`, `56em`, `72em` and `88em`. Matching non-overlapping upper boundaries are `23.999em`, `39.999em`, `55.999em`, `71.999em` and `87.999em`. At the browser's normal 16px initial font size, the lower thresholds are approximately 384px, 640px, 896px, 1152px and 1408px. The existing layout roles follow those five steps; no component may define an additional viewport-width breakpoint. New arbitrary breakpoint literals fail the lint rule. Browser preference queries (motion, pointer, contrast) do not define viewport widths and remain available.
+## Responsive behavior
+
+Belonwus's source uses 375px, 425px and 768px upper boundaries, with desktop starting at 769px. At the normal browser root these correspond to 23.4375em, 26.5625em and 48em. Portfolio component and JS breakpoints are migrated to these ranges. The reference's root viewport scaling is not copied because the measured reference text and spacing are fixed CSS pixel lengths; using rem preserves browser text resizing.
 
 ## Verification
 
-`npm run lint:css` enforces the entire sizing contract through Stylelint. `npm run test:sizing` checks that the rule rejects deliberate violations; `npm run test:relative` guards the mobile-first four/twelve grid and font-relative behavior; the Playwright suite checks rendered geometry at 320, 390, 768, 896, 1024, 1152, 1408 and 1440 pixels and enlarged text.
-
-Painting primitives, hairline strokes and WebGL raster pixels are not layout scales. They retain device-level syntax to preserve fidelity and input accessibility.
-
-All browser-side layout decisions use `js/core/responsive.js`; the Three.js water performance tier and the physical folder interaction both consume its compact predicate instead of inventing independent pixel thresholds.
-
-The 44px minimum interactive target is defined once as `--control-target: max(44px, 2.75em)` in the foundation and consumed through `var(--control-target)`. Raw 44px literals in components are prohibited. JavaScript has one imported breakpoint helper (`js/core/responsive.js`) and a test rejects any second viewport-width threshold in browser scripts.
-
-Responsive image `sizes` hints in the case-study renderer also consume `viewportQueries` from the same browser-side source, rather than inventing 52.5em, 64em or 100em image-loading breakpoints. The image fallback content measure is the canonical `86em` maximum.
+Run CSS lint, sizing contract tests and browser geometry checks at the three boundaries and representative desktop widths. Confirm the homepage name fits, the gallery is outside the sticky reading region, the navigation stays usable and both operating-system color schemes remain supported.

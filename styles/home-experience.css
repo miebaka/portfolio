@@ -12,7 +12,7 @@ body section.service-stack-section .service-stack__card {
 }
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
-@media (min-width:56em) {
+@media (min-width:48.0625em) {
   body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
@@ -103,7 +103,7 @@ body[data-page="home"] .marquee__item img {
   zoom: var(--logo-optical, 1);
 }
 
-@media (min-width:56em) {
+@media (min-width:48.0625em) {
   body[data-page="home"] .marquee__item {
     height: 4.5em;
   }
@@ -247,7 +247,7 @@ body section.service-stack-section .process-sequence .service-stack {
 
 
 /* Sticky physical card layers are deliberately desktop-only. */
-@media (min-width:56em) {
+@media (min-width:48.0625em) {
   body[data-page="home"] .home-landing__meta {
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
@@ -339,7 +339,7 @@ body section.service-stack-section .process-sequence .service-stack {
 
 
 /* Pin each card on the same line so the last card covers the stack as it exits. */
-@media (min-width: 56em) and (min-height: 40em) {
+@media (min-width: 48.0625em) and (min-height: 40em) {
   body section.service-stack-section {
     --service-list-gap: calc(-1 * var(--service-overlap));
     --service-overlap: clamp(var(--s5), 11svh, calc(var(--spacing-unit) * 52));

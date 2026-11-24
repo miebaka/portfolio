@@ -15,6 +15,6 @@
   gap: var(--stack-gap, var(--s3));
 }
 .section { padding-block: var(--section-padding); }
-@media (min-width:56em) {
+@media (min-width:48.0625em) {
   .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }
