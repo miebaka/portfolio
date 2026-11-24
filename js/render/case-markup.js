@@ -20,8 +20,8 @@ function shot(media, kind, base, plate) {
       : kind === "upright"
         ? `${viewportQueries.tabletMax} calc(100vw - 2.5em), 50em`
         : `${viewportQueries.compact} calc(100vw - 2.5em), ${viewportQueries.wideMax} 90vw, 86em`;
-  const loading = ' loading="lazy"';
-  const caption = media.caption
+  const loading = kind === "hero" ? ' loading="eager"' : ' loading="lazy"';
+  const caption = kind !== "hero" && media.caption
     ? `<figcaption class="case-shot__caption">${plate ? `<span class="case-shot__plate">PLATE ${String(plate).padStart(2, "0")}</span>` : ""}<p>${esc(media.caption)}</p></figcaption>`
     : "";
   if (media.remoteSrc && /^https:\/\/mir-s3-cdn-cf\.behance\.net\/project_modules\//.test(media.remoteSrc))
@@ -45,14 +45,11 @@ function sequence(media, base, nextPlate) {
 function factsBlock(study, project) {
   const facts = study.facts || {};
   const rows = [
-    ["Context", facts.context],
-    ["Role", facts.role],
-    ["Constraint", facts.constraint],
-    ["Year", project?.year],
-    ["Collaborators", facts.collaborators],
-    ["Delivered", facts.delivered],
-  ].filter(([, value]) => value);
-  return `<dl class="case-facts">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
+    ["Year", project?.year || "Not documented"],
+    ["Deliverables", facts.delivered || "Not documented"],
+    ["Credits", facts.collaborators || facts.role || "Not documented"],
+  ];
+  return `<dl class="case-facts container">${rows.map(([label, value]) => `<div class="case-facts__cell"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
 function chapter({ id, label, title, body }) {
@@ -103,19 +100,8 @@ export function renderCaseMarkup(site, slug, base = "../") {
       images: ["chopbox-logo-lockups", "chopbox-packaging"]
     }
   }[slug];
-  const role = study.facts?.role || project?.category || "";
-  const constraint = study.facts?.constraint || "";
-  const opening = `<header class="case-opening container" id="case-top">
-    <p class="case-back"><a href="${base}work.html">← All work</a></p>
-    <p class="case-opening__eyebrow">Selected case study / ${esc(project?.category || "Identity")}</p>
-    <h1>${esc(project?.title || study.title)}</h1>
-    <p class="case-opening__statement">${esc(study.tagline || project?.tagline || "")}</p>
-    <dl class="case-opening__essentials">
-      <div><dt>My role</dt><dd>${esc(role)}</dd></div>
-      <div><dt>The constraint</dt><dd>${esc(constraint)}</dd></div>
-    </dl>
-    <div class="case-opening__actions"><a href="#case-gallery">View project gallery ↓</a><a href="${base}contact.html">Discuss a project ↗</a></div>
-  </header>`;
+  const opening = `<header class="case-opening container" id="case-top"><p class="case-back"><a href="${base}work.html">← All work</a></p><h1>${esc(project?.title || study.title)}</h1></header>`;
+  const toc = `<nav class="article-toc case-toc" aria-label="Case study contents"><p>The story</p><ol>${study.chapters.map((item, index) => `<li><a href="#${token(item.id)}"><span class="article-toc__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><strong class="article-toc__title">${esc(item.label)}</strong></a></li>`).join("")}</ol></nav>`;
   const featured = lead
     ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">
       <div class="case-lead-proof__copy container"><p class="case-lead-proof__eyebrow">The decision</p>
@@ -130,9 +116,9 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const gallery = study.chapters.map(item => sequence(
     (item.media || []).map(src => lookup.get(src)).filter(Boolean), base, nextPlate,
   )).join("");
-  return opening +
-    `<div class="case-narrative container"><div class="case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div><aside class="case-facts-wrap container" aria-label="Project at a glance">${factsBlock(study, project)}</aside></div>` +
-    `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
+  return opening + heroMarkup + factsBlock(study, project) +
+    `<div class="case-narrative container">${toc}<div class="case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +
+    `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${leadGallery}${gallery}</section>` +
     (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance ↗</a></p>` : "") +
     nextBlock(site, study, base) +
     `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry ↗</a><a href="mailto:miebakakiki@gmail.com">Email directly ↗</a><a href="${base}work.html">All work ↗</a><a href="#case-top">Back to top ↑</a></nav>`;

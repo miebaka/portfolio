@@ -566,3 +566,24 @@ body[data-page]:not(.site-system-disabled) .site-footer__signature { color:var(-
 body[data-page]:not(.site-system-disabled) .site-footer__signature::before { opacity:1; }
 body[data-page="work"] .project-archive__head.visually-hidden { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 body[data-page="work"] .project-archive__collections.reference-panel { width:100%; }
+
+
+/* Bounded sticky legend: the gallery is a sibling, never part of the sticky containing block. */
+body.case-page .case-back a {
+  display:inline-flex; align-items:center; gap:var(--s1); min-height:var(--control-target);
+  border:1px solid currentColor; border-radius:62.4375em; padding-inline:var(--s2); color:var(--ink);
+}
+body.case-page .case > .case-shot--hero { width:min(calc(100% - 2 * var(--page)),var(--content)); margin-inline:auto; height:auto; min-height:0; max-height:none; }
+body.case-page .case > .case-shot--hero picture { display:block; width:100%; aspect-ratio:16 / 9; height:auto; }
+body.case-page .case > .case-shot--hero img { display:block; width:100%; height:100%; object-fit:cover; }
+body.case-page .case > .case-facts { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--s2); padding-block:var(--s3); border-bottom:1px solid var(--line); }
+body.case-page .case-toc { position:static; align-self:start; }
+body.case-page .case-toc a { display:flex; gap:var(--s1); align-items:center; min-height:var(--control-target); }
+body.case-page .case-toc a[aria-current="location"] { color:var(--accent); border-inline-start:2px solid currentColor; padding-inline-start:var(--s1); }
+body.case-page .case-chapter { scroll-margin-top:calc(var(--nav-h) + var(--s2)); }
+body.case-page .case-narrative { grid-template-columns:minmax(0,1fr); align-items:start; overflow:visible; }
+@media(min-width:56em) {
+  body.case-page .case > .case-facts { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  body.case-page .case-narrative { grid-template-columns:minmax(0,1fr) minmax(0,3fr); gap:var(--s8); }
+  body.case-page .case-toc { position:sticky; top:calc(var(--nav-h) + var(--s2)); max-height:calc(100svh - var(--nav-h) - var(--s4)); overflow:auto; }
+}

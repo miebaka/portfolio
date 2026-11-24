@@ -1348,3 +1348,7 @@ body[data-page="home"] .home-landing__meta p.hero-support { font-size:var(--type
 .home-beyond__caption { font-size:var(--type-heading-sm); }
 .home-beyond__card,.reference-nav-contact,.scroll-cue { text-decoration:none; }
 @media(max-width:39.999em) { body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,11.2vw,4.5em); } }
+
+body.case-page .case-back a { text-decoration:none; }
+body.case-page:not(.design-audit-disabled) .case-opening h1 { max-width:none; font-size:clamp(2em,5.4vw,5em); line-height:var(--type-leading-tight); }
+@media(min-width:56em) { body.case-page:not(.design-audit-disabled) .case-opening h1 { white-space:nowrap; text-wrap:nowrap; } }
