@@ -49,7 +49,7 @@ html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
   inset: 0;
   display: grid;
   place-items: center;
-  background: var(--paper);
+  background: var(--ref-ultramarine);
   pointer-events: none;
   animation: case-route-curtain 450ms cubic-bezier(.5,0,.5,1) both;
 }
@@ -57,31 +57,9 @@ html[data-motion="reduced"]::view-transition-new(root) { animation: none; }
   display: block;
   width: clamp(4.5em,8vw,7em);
   aspect-ratio: 1;
-  background: var(--ink);
+  background: var(--ref-white);
   mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
   animation: case-route-mark 450ms cubic-bezier(.2,.8,.2,1) both;
-}
-body.case-page .case::before {
-  content: "";
-  position: fixed;
-  z-index: 8500;
-  inset: 0;
-  background: var(--paper);
-  pointer-events: none;
-  animation: case-arrival-curtain 760ms cubic-bezier(.5,0,.5,1) both;
-}
-body.case-page .case::after {
-  content: "";
-  position: fixed;
-  z-index: 8501;
-  top: 50%;
-  left: 50%;
-  width: clamp(4.5em,8vw,7em);
-  aspect-ratio: 1;
-  background: var(--ink);
-  mask: url("../assets/images/miebaka-joshua-logo.svg") center / contain no-repeat;
-  pointer-events: none;
-  animation: case-arrival-mark 700ms cubic-bezier(.2,.8,.2,1) both;
 }
 @keyframes case-route-curtain {
   0% { opacity: 0; }
@@ -90,15 +68,6 @@ body.case-page .case::after {
 @keyframes case-route-mark {
   0% { opacity: 0; transform: scale(.7); }
   100% { opacity: 1; transform: scale(1); }
-}
-@keyframes case-arrival-curtain {
-  0%,30% { opacity: 1; }
-  100% { opacity: 0; }
-}
-@keyframes case-arrival-mark {
-  0% { opacity: 0; transform: translate(-50%,-50%) scale(.7); }
-  30%,65% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.07); }
 }
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) .case-route-transition,

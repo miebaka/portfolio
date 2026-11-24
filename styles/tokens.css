@@ -1349,7 +1349,7 @@ body.case-page:not(.design-audit-disabled) .case-opening h1 { font-weight:var(--
 /* Text wordmark: Belonwus uses a graphic; fit our existing live name to the
    available inline width instead. This is the only display-size exception. */
 body[data-page="home"] .home-landing h1,
-body.case-page .case-cover .display-name,
+body.case-page:not(.design-audit-disabled) .case-cover h1.display-name,
 body .next-content .case-next__name {
   font:var(--type-weight-semibold) var(--type-name)/.94 var(--font-sans);
   letter-spacing:-.055em;

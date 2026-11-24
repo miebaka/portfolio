@@ -136,8 +136,6 @@ export function createMarqueeController(root, deps = {}) {
     deps.MutationObserver === undefined ? doc.defaultView?.MutationObserver : deps.MutationObserver;
   const motionQuery = doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)");
   const { control } = deps;
-  const logos = [...(root.querySelectorAll?.(".client-proof:first-child .marquee__item") || [])];
-  const sizes = null;
   let userPaused = false;
   let visible = !Observer;
   let destroyed = false;
@@ -200,7 +198,6 @@ export function createMarqueeController(root, deps = {}) {
       if (destroyed) return;
       destroyed = true;
       control?.removeEventListener("click", onToggle);
-      sizes?.disconnect();
       observer?.disconnect();
       preferences?.disconnect();
       motionQuery?.removeEventListener?.("change", onVisibility);

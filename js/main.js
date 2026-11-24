@@ -31,11 +31,11 @@ const run = (label, task) => {
   catch (error) { console.error("[portfolio] " + label + " failed", error); }
 };
 
-run("Page loader", initPageLoader);
 run("DOM contract", initContract);
 
 /* Render: build markup from site data into the [data-mount] points. */
 run("navigation render", renderNavigation);
+run("Page loader", initPageLoader);
 run("Last.fm listening status", initNowPlaying);
 if (has('[data-mount="work"], [data-mount="work-grid"]')) run("work render", renderWork);
 if (has('[data-project-archive]')) run("project archive render", renderProjectArchive);
