@@ -441,7 +441,7 @@ body[data-page="contact"] .contact__form .field :is(input,select,textarea) {
 }
 body[data-page="contact"] .contact__form .field :is(input,select,textarea)::placeholder {
   color: var(--ink);
-  opacity: .86;
+  opacity: 1;
 }
 body[data-page="contact"] .contact__form .field :is(input,select,textarea):focus-visible {
   outline: .1875em solid var(--focus);
@@ -713,7 +713,7 @@ body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,
 
   position:relative; isolation:isolate; overflow:clip; border-radius:0;
   background:transparent; color:var(--ink); box-shadow:none;
-  transition:color var(--dur-ui) var(--ease-standard);
+  transition:none;
 }
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.about-cv) {
   display:inline-flex; align-items:center; justify-content:space-between;
@@ -722,7 +722,7 @@ body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,
 }
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.about-cv,.home-beyond__card,.writing-item__link,.article-toc a)::before {
   content:""; position:absolute; z-index:-1; inset:0; background:var(--row-fill);
-  transform:scaleY(0); transform-origin:bottom; transition:transform 240ms var(--ease-standard);
+  transform:scaleY(0); transform-origin:bottom; transition:none;
 }
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.about-cv,.home-beyond__card,.writing-item__link,.article-toc a):focus-visible {
   background:transparent; color:var(--row-on); outline:2px solid var(--ink); outline-offset:3px;
@@ -741,7 +741,7 @@ body[data-page] :is(.btn,.site-nav__menu-btn):disabled {opacity:.5;cursor:not-al
 body.case-page:not(.design-audit-disabled) .case > .case-cover {
   display:block; width:100%; max-width:none; padding:0;
   margin:0; min-height:0; overflow:visible;
-  background:var(--folder-tone); color:var(--folder-on); animation:none;
+  background:var(--folder-reading-tone,var(--folder-tone)); color:var(--folder-reading-ink,var(--folder-on)); animation:none;
 }
 body.case-page .case-cover__intro {
   position:relative;display:grid;place-items:center;container-type:inline-size;
@@ -750,11 +750,11 @@ body.case-page .case-cover__intro {
 body.case-page .case-cover__intro h1 {width:100%;max-width:none;color:inherit;margin:0}
 body.case-page .case-cover__intro .case-back {position:absolute;inset-block-start:var(--s2);inset-inline-start:0;margin:0}
 body.case-page .case-cover__intro .case-back a {
-  --row-fill:var(--folder-on);--row-on:var(--folder-tone);
+  --row-fill:var(--folder-reading-ink,var(--folder-on));--row-on:var(--folder-reading-tone,var(--folder-tone));
 
-  color:var(--folder-on);
+  color:var(--folder-reading-ink,var(--folder-on));
 }
-body.case-page .case-cover__intro .case-back a:focus-visible {outline-color:var(--folder-on)}
+body.case-page .case-cover__intro .case-back a:focus-visible {outline-color:var(--folder-reading-ink,var(--folder-on))}
 body.case-page .case-cover__intro .case-back a:is(:hover,:focus-visible) {color:var(--row-on)}
 body.case-page .case-gallery-flow > .case-shot--hero {width:min(calc(100% - 2 * var(--page)),var(--content))}
 body.case-page .case::before,body.case-page .case::after {content:none}

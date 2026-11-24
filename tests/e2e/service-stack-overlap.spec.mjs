@@ -160,12 +160,12 @@ test("five service palettes are fixed by discipline across routes, themes and wi
           return result;
         },tokenNames);
         expect(new Set(palettes.map(p=>p.paper)).size).toBe(5);
-        for(const [i,p] of palettes.entries()){
+        for(const p of palettes){
           expect(p.paper).toBe(p.expectedPaper);
           expect(p.ink).toBe(p.expectedInk);
           expect(p.inherited).toBe(true);
           expect(p.gradient).toBe("none");
-          expect(p.contrast).toBeGreaterThanOrEqual(i===1?4.5:7);
+          expect(p.contrast).toBeGreaterThanOrEqual(9);
         }
         const signature=palettes.map(p=>[p.paper,p.ink]);
         if(!baseline) baseline=signature;
@@ -201,4 +201,28 @@ test("forced colors keep service cards and their evidence links legible", async 
       expect(await link.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe("none");
     }
   }
+});
+
+
+test("service motifs animate only over the icon and respect reduced motion", async ({page}) => {
+  await page.setViewportSize({width:1440,height:900});
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  for (const route of ["/index.html","/about.html"]) {
+    await page.goto(route);
+    for (const card of await page.locator(".service-stack__card").all()) {
+      const icon=card.locator(".service-stack__motif");
+      const shape=icon.locator(".motif-a");
+      await icon.scrollIntoViewIfNeeded();
+      await card.locator("h3").hover();
+      await expect(shape).toHaveCSS("transform","none");
+      await icon.hover();
+      await expect.poll(()=>shape.evaluate(el=>getComputedStyle(el).transform)).not.toBe("none");
+      await card.locator("h3").hover();
+      await expect(shape).toHaveCSS("transform","none");
+    }
+  }
+  await page.emulateMedia({reducedMotion:"reduce"});
+  const icon=page.locator(".service-stack__motif").first();
+  await icon.hover();
+  await expect(icon.locator(".motif-a")).toHaveCSS("transform","none");
 });

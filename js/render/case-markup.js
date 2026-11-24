@@ -1,3 +1,4 @@
+import { projectReadingColors } from "./project-reading-colors.js";
 import { viewportQueries } from "../core/responsive.js";
 import { renderNextContent } from "./next-content.js";
 import { renderMetadataStrip } from "./metadata-strip.js";
@@ -81,6 +82,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const heroMarkup = shot(hero, "hero", base).replace('loading="eager"', 'loading="lazy"');
   const tone = /^#[0-9a-fA-F]{6}$/.test(project?.tone || "") ? project.tone : "#002080";
   const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
+  const [readingTone, readingInk] = projectReadingColors(slug);
   /* Use published artifacts only. The Rivo guidelines image is a cover,
      not a readable page excerpt; applications remain labelled visualisations. */
   const lead = {
@@ -103,7 +105,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
       images: ["chopbox-logo-lockups", "chopbox-packaging"]
     }
   }[slug];
-  const opening = `<header class="case-opening case-cover" id="case-top" style="--folder-tone:${tone};--folder-on:${onColor}"><div class="case-cover__intro container"><p class="case-back"><a href="${base}work.html">← All work</a></p><h1 class="display-name">${esc(project?.title || study.title)}</h1></div></header>`;
+  const opening = `<header class="case-opening case-cover" id="case-top" style="--folder-tone:${tone};--folder-on:${onColor};--folder-reading-tone:${readingTone};--folder-reading-ink:${readingInk}"><div class="case-cover__intro container"><p class="case-back"><a href="${base}work.html">← All work</a></p><h1 class="display-name">${esc(project?.title || study.title)}</h1></div></header>`;
   const toc = `<nav class="article-toc case-toc" aria-label="Case study contents"><p>The story</p><ol>${study.chapters.map((item, index) => `<li><a href="#${token(item.id)}"><span class="article-toc__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><strong class="article-toc__title">${esc(item.label)}</strong></a></li>`).join("")}</ol></nav>`;
   const featured = lead
     ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">

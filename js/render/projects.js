@@ -2,6 +2,7 @@
 import { SITE } from "../../data/site.js";
 import { escapeHTML as esc, safeToken, safeURL, mount, basePath } from "../utilities/dom.js";
 import { MOUNT } from "../core/contract.js";
+import { projectReadingColors } from "./project-reading-colors.js";
 
 export function renderWork() {
   const el = mount(MOUNT.WORK_GRID);
@@ -19,6 +20,7 @@ function renderFolderCard(project, index, base) {
   const title = esc(project.title);
   const tone = /^#[0-9a-fA-F]{6}$/.test(project.tone || "") ? project.tone : "#002080";
   const onColor = slug === "chopbox" ? "#000000" : "#ffffff";
+  const [readingTone, readingInk] = projectReadingColors(slug);
   const href = base + safeURL(project.href || "work/" + slug + ".html");
   const number = String(index + 1).padStart(2, "0");
   const papers = Array.from({ length: 5 }, (_, paperIndex) =>
@@ -28,7 +30,7 @@ function renderFolderCard(project, index, base) {
     '<span class="project-folder__category">' + esc(project.category) + '</span>' +
     '<span class="project-folder__outcome">' + esc(project.tagline) + '</span></span>';
   return '<li class="project-folder project-folder--' + slug + '" data-slug="' + slug +
-    '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + '">' +
+    '" style="--folder-index:' + index + ';--folder-tone:' + tone + ';--folder-on:' + onColor + ';--folder-reading-tone:' + readingTone + ';--folder-reading-ink:' + readingInk + '">' +
     '<a class="project-folder__link" href="' + href + '" aria-label="View ' + title + ' case study"' +
     ' aria-describedby="folder-preview-' + slug + '">' +
     '<span class="project-folder__back" aria-hidden="true"><span class="project-folder__tab">' +

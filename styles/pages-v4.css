@@ -71,7 +71,7 @@
 .article-body :is(p,h2,h3,ul,ol,blockquote){margin-inline:0;}
 .article-hero__summary{margin-inline:0;max-width:26.625em;margin-top:var(--s3);color:var(--muted);}
 .about-cv{margin-top:var(--s4);gap:var(--s2)}
-.about-cv span{opacity:.74}
+.about-cv span{opacity:1}
 .case-locked{min-height:calc(100svh - var(--nav-h));display:grid;align-content:center;justify-items:start;gap:var(--s3);padding-block:var(--s8)}
 .case-locked__status{color:var(--sys-color-primary);}
 .case-locked h1{max-width:none;}
@@ -400,9 +400,9 @@ body[data-page="about"]{background:var(--paper);color:var(--ink)}
 body[data-page="explorations"] .experiments-spatial::before{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--ref-paper) 35%,transparent),transparent 22% 78%,color-mix(in srgb,var(--ref-paper) 35%,transparent))}
 body[data-page="explorations"] .experiments-spatial::after{box-shadow:inset 0 0 6em color-mix(in srgb,var(--ref-black) 4%,transparent)}
 .experiments-nav{position:fixed;z-index:52;top:.6em;left:50%;display:flex;align-items:center;gap:var(--s3);transform:translateX(-50%)}
-.experiments-nav :is(a,button){display:inline-flex;align-items:center;min-height:2.75em;padding:0;border:0;background:none;color:var(--ref-near-black);transition:opacity 180ms ease}
+.experiments-nav :is(a,button){display:inline-flex;align-items:center;min-height:2.75em;padding:0;border:0;background:none;color:var(--ink);transition:opacity 180ms ease}
 .experiments-nav button span{display:inline-block;margin-left:var(--s1);transition:transform 180ms ease}.experiments-nav button[aria-expanded="true"] span{transform:rotate(180deg)}
-body[data-page="explorations"] .experiments-spatial__heading{position:fixed;z-index:18;top:.35em;left:.35em;right:auto;display:block;width:min(21vw,17em);pointer-events:none;color:var(--ref-near-black)}
+body[data-page="explorations"] .experiments-spatial__heading{position:fixed;z-index:18;top:.35em;left:.35em;right:auto;display:block;width:min(21vw,17em);pointer-events:none;color:var(--ink)}
 body[data-page="explorations"] .experiments-spatial__heading h1{padding-bottom:var(--s1);border-bottom:1px solid var(--ref-near-black);}
 .experiments-spatial__heading dl{margin:0}
 .experiments-spatial__heading dl>div{display:grid;grid-template-columns:5.2em 1fr;gap:var(--s1);padding:var(--s1) 0;border-bottom:1px solid color-mix(in srgb,var(--ref-black) 55%,transparent)}
@@ -428,11 +428,11 @@ body[data-page="explorations"] .experiments-spatial__stage{position:absolute;ins
 .experiments-index__head{display:flex;align-items:center;justify-content:space-between;padding-bottom:var(--s2);background:var(--ref-neutral-94)}.experiments-index__head h2{margin:0;}
 .experiments-index ol{width:100%;margin:0;padding:0;border-top:1px solid var(--ref-near-black);list-style:none}
 .experiments-index li{border-bottom:1px solid var(--ref-near-black)}
-.experiments-index li>button{display:grid;grid-template-columns:3em minmax(0,1fr) auto;align-items:baseline;width:100%;min-height:4.5em;padding:var(--s3) 0;border:0;background:none;color:var(--ref-near-black);transition:background-color 180ms ease}.experiments-index button span{color:var(--muted)}.experiments-index button i{color:var(--muted)}
+.experiments-index li>button{display:grid;grid-template-columns:3em minmax(0,1fr) auto;align-items:baseline;width:100%;min-height:4.5em;padding:var(--s3) 0;border:0;background:none;color:var(--ink);transition:background-color 180ms ease}.experiments-index button span{color:var(--muted)}.experiments-index button i{color:var(--muted)}
 .experiments-spatial[data-index-open] :is(.experiments-spatial__heading,.experiments-spatial__viewport,.experiments-spatial__counter,.experiments-spatial__caption,.experiments-spatial__hint,.experiments-controls){visibility:hidden}
 .no-js .experiments-index,.no-js .experiments-spatial__counter{display:none}
 .no-js body[data-page="explorations"]{overflow:auto}.no-js body[data-page="explorations"] .experiments-page,.no-js body[data-page="explorations"] .experiments-spatial{height:auto;min-height:100vh}.no-js body[data-page="explorations"] .experiments-spatial__heading{position:static;width:auto;padding:var(--s4) var(--page)}.no-js body[data-page="explorations"] .experiments-spatial__viewport{position:static;height:auto;overflow:visible}
-@media(hover:hover) and (pointer:fine){.experiments-nav :is(a,button):hover{opacity:.55}.experiments-controls button:hover,.experiments-index__head button:hover{background:var(--ref-near-black);color:var(--ref-paper)}.experiments-index li>button:hover{background:var(--ref-paper)}.experiment-poster:not([data-active]):hover{filter:brightness(.92)}}
+@media(hover:hover) and (pointer:fine){.experiments-nav :is(a,button):hover{opacity:1}.experiments-controls button:hover,.experiments-index__head button:hover{background:var(--ref-near-black);color:var(--ref-paper)}.experiments-index li>button:hover{background:var(--surface)}.experiment-poster:not([data-active]):hover{filter:brightness(.92)}}
 @media(max-width:48em){.experiments-nav{left:auto;right:.5em;transform:none;gap:var(--s2)}.experiments-nav .experiments-nav__mark{display:none}body[data-page="explorations"] .experiments-spatial__heading{width:58vw;top:.35em;left:.5em}.experiments-spatial__heading dl>div{grid-template-columns:3.8em 1fr}.experiment-poster{left:50%;top:52%;width:min(72vw,22em);transform:translate3d(calc(-50% + var(--offset) * 72vw),-50%,0) rotate(calc(var(--offset) * -5deg)) scale(calc(1 - var(--distance) * .16))}.experiments-spatial__counter,.experiments-spatial__caption span{display:none}.experiments-spatial__caption p{max-width:58vw}.experiments-spatial__hint{display:none}.experiments-controls{bottom:.5em}.experiments-index li>button{grid-template-columns:2em minmax(0,1fr)}.experiments-index button i{display:none}}
 @media(prefers-reduced-motion:reduce){.experiment-poster,.experiment-poster__face{transition:none}}
 

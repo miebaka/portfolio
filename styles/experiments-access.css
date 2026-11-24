@@ -18,11 +18,11 @@ body[data-page="explorations"] .experiments-nav {
   transform: none; z-index: 30; gap:var(--s1);
 }
 body[data-page="explorations"] .experiments-nav :is(a,button) {
-  min-height: 2.75em; padding:var(--s1) var(--s1); color: var(--ref-near-black);
+  min-height: 2.75em; padding:var(--s1) var(--s1); color: var(--ink);
 }
 body[data-page="explorations"] .experiments-spatial__heading {
   position: absolute; z-index: 20; top: 4.6em;
-  left: var(--page); width: min(59vw, 17em); color: var(--ref-near-black);
+  left: var(--page); width: min(59vw, 17em); color: var(--ink);
 }
 body[data-page="explorations"] .experiments-spatial__viewport {
   position: absolute; inset: 0; z-index: 4; touch-action: pan-y pinch-zoom;
