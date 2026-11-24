@@ -44,10 +44,7 @@
   </script>
   <script>(function(r){
     r.classList.replace("no-js","has-js");
-    /* localStorage throws outright when storage is blocked (Safari private
-       browsing, some enterprise policies). Unguarded, that exception kills
-       the rest of this script. */
-    try { const saved = localStorage.getItem("color-theme"); if (saved === "dark" || saved === "light") r.dataset.theme = saved; else if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; } catch (e) { if (matchMedia("(prefers-color-scheme: dark)").matches) r.dataset.theme = "dark"; }
+    r.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   })(document.documentElement);</script>
 
   <link rel="stylesheet" href="styles/main.css">

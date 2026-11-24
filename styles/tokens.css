@@ -1352,3 +1352,5 @@ body[data-page="home"] .home-landing__meta p.hero-support { font-size:var(--type
 body.case-page .case-back a { text-decoration:none; }
 body.case-page:not(.design-audit-disabled) .case-opening h1 { max-width:none; font-size:clamp(2em,5.4vw,5em); line-height:var(--type-leading-tight); }
 @media(min-width:56em) { body.case-page:not(.design-audit-disabled) .case-opening h1 { white-space:nowrap; text-wrap:nowrap; } }
+
+body[data-page="home"] .home-landing h1 { font-size:clamp(1.5em,13.3cqi,12em); text-align:left; }
