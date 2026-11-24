@@ -81,14 +81,14 @@ body[data-page]:not(.site-system-disabled) .site-footer__signature {
   height: clamp(10em, 40vw, 17em);
   margin:0;
   padding:0 0 var(--safe-bottom);
-  color: var(--ink);
+  color: var(--signature-rest);
   overflow: hidden;
-  --footer-signature-active: var(--accent);
+  --footer-signature-active: var(--ref-ultramarine);
 }
 
 body[data-page]:not(.site-system-disabled) .site-footer__signature::before {
   display: block;
-  opacity: .7;
+  opacity:1;
   mask-size: contain;
   -webkit-mask-size: contain;
 }
@@ -136,3 +136,12 @@ body[data-page]:not(.site-system-disabled) .site-footer__email-actions {
 body[data-page]:not(.site-system-disabled) .site-footer__email-actions .copy-email {
   margin:0;
 }
+
+/* System theme owns the resting stock; the interactive ink never changes. */
+:root {--signature-rest:var(--ref-black)}
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) {--signature-rest:var(--ref-white)}
+}
+:root[data-theme="dark"] {--signature-rest:var(--ref-white)}
+body[data-page]:not(.site-system-disabled) .site-footer__signature::after {content:none}
+body[data-page]:not(.site-system-disabled) .site-footer__signature .site-footer__signature-canvas {opacity:1;mix-blend-mode:normal}

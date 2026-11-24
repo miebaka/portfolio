@@ -14,7 +14,7 @@ export function renderHeader({ base = "", page = "" } = {}) {
   const links = routesFor("primary").filter(route => route.key !== "contact").map(route =>
     `<a class="site-nav__link" href="${base}${escapeHTML(route.href)}"${route.key === page ? ' aria-current="page"' : ""}>${escapeHTML(route.label)}</a>`
   ).join("");
-  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a></div><nav class="reference-nav-links" aria-label="Primary">${links}</nav><a class="reference-nav-contact" href="${base}contact.html">Let’s talk</a></div></header>`;
+  return `<header class="site-nav" data-mount="nav"><div class="site-nav__inner"><div class="site-nav__leading"><a class="site-nav__brand" href="${base}index.html" aria-label="${escapeHTML(siteConfig.name)}, home"${page === "home" ? ' aria-current="page"' : ""}><img class="nav-logo" src="${base}assets/images/miebaka-joshua-logo.svg" alt="" width="40" height="40"></a></div><nav class="reference-nav-links" aria-label="Primary">${links}</nav><a class="reference-nav-contact" href="${base}contact.html"${page === "contact" ? ' aria-current="page"' : ""}>Let’s talk</a></div></header>`;
 }
 
 export function renderFooter({ base = "" } = {}) {

@@ -9,7 +9,7 @@
   --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem; --s5:1.5rem; --s6:2rem;
   --s7:2.5rem; --s8:3rem; --s9:4rem; --s10:5rem; --s11:7.5rem; --s12:15rem;
   --page:var(--grid-outer); --content:var(--grid-max); --grid-gap:var(--grid-gutter);
-  --section-padding:var(--s9); --section-padding-tight:var(--s6); --section-break:var(--s11);
+  --section-padding:var(--s9); --section-padding-tight:var(--s6); --section-break:var(--s11); --page-opening-space:var(--s9); --heading-content-gap:var(--s4);
   --nav-h:4.5rem; --list-item-inline:var(--s4); --control-target:max(44px,2.75rem);
   --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px); --safe-left:env(safe-area-inset-left,0px);

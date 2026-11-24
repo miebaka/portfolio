@@ -50,8 +50,6 @@
 .site-footer__availability{color:var(--muted)}
 .site-footer__signature{padding:0;transform:none;transition:none;padding-bottom:var(--safe-bottom);position:relative;width:100%;overflow:hidden;color:var(--ink);height:clamp(18em,34vw,34em);margin:0;opacity:1}
 .site-footer__signature img{display:none}
-
-.writing-item__link:active{transform:scale(.98)}
 .site-nav__menu-btn:active{transform:scale(.96)}
 .site-nav__brand:active{transform:scale(.98)}
 .disciplines-heading>p{color:var(--muted);}

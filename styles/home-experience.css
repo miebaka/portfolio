@@ -5,10 +5,11 @@ body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
 
 .service-stack-section {
   --service-overlap: 0;
+  --service-card-height: clamp(17em,38svh,21em);
 }
 
 body section.service-stack-section .service-stack__card {
-  min-height: var(--home-panel-height);
+  min-height: var(--service-card-height);
 }
 
 /* The larger sticky-card experience is an enhancement of the mobile list. */
@@ -16,6 +17,7 @@ body section.service-stack-section .service-stack__card {
   body:is([data-page="home"], [data-page="work"], [data-page="about"]) {
     --home-panel-height: clamp(25em, 68svh, 44em);
   }
+  .service-stack-section {--service-card-height:clamp(22em,58svh,38em)}
 }
 
 body section.service-stack-section {
@@ -284,7 +286,7 @@ body section.service-stack-section .process-sequence .service-stack {
     padding-bottom:var(--s5);
   }
   body section.service-stack-section .disciplines-heading{
-    margin-bottom:var(--section-padding);
+    margin-bottom:var(--heading-content-gap);
   }
   body section.service-stack-section .service-stack__item + .service-stack__item {
     margin-top:var(--service-list-gap, var(--s2));
@@ -293,10 +295,10 @@ body section.service-stack-section .process-sequence .service-stack {
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    min-height:min(var(--home-panel-height), 80svh);
+    min-height:min(var(--service-card-height), 80svh);
     gap:var(--s2);
-    padding:var(--s10);
-    padding-bottom:calc(var(--s10) + var(--service-overlap));
+    padding:var(--s8);
+    padding-bottom:calc(var(--s8) + var(--service-overlap));
     border:0;
     border-radius:clamp(1em,2vw,2em);
     background:var(--ref-air);

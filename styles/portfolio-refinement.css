@@ -140,7 +140,7 @@ body section.service-stack-section .service-stack__item:last-child {
   margin-bottom:0;}
 body section.service-stack-section .service-stack__card {
   width: 100%;
-  min-height: clamp(25em, 68svh, 44em);
+  min-height:var(--service-card-height);
   border-radius: clamp(1em, 2vw, 2em);
   padding:var(--s10);
 
@@ -286,9 +286,7 @@ body[data-page="home"]:not(.site-system-disabled) .site-footer__signature {
   height: clamp(19em, 43vw, 42em);
   margin:var(--s10) auto 0;
   overflow: hidden;
-  color: var(--ink);
   background: transparent;
-  --footer-signature-active: var(--accent);
 
   cursor: crosshair;}
 body .site-footer__signature::before,

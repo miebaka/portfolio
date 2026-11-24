@@ -6,7 +6,7 @@ body section.service-stack-section {
   background:var(--paper);color:var(--ink);
   padding-block:var(--s11) var(--s10);}
 body section.service-stack-section .disciplines-heading {
-  margin:0 0 var(--s11);padding:0;border:0;}
+  margin:0 0 var(--heading-content-gap);padding:0;border:0;}
 body section.service-stack-section .disciplines-heading h2 {
   max-width:16ch;color:var(--ink);}
 body section.service-stack-section .process-sequence {
@@ -238,8 +238,3 @@ html body .site-footer .site-footer__links a:focus-visible {
   outline:3px solid var(--focus);outline-offset:3px;}
 
 
-/* The interactive signature must be visible, not pastel-on-paper. */
-body[data-page="home"]:not(.site-system-disabled) .site-footer__signature,
-body:not(.site-system-disabled) .site-footer__signature {
-  color:var(--ink);
-  --footer-signature-active:var(--accent);}

@@ -127,28 +127,6 @@ body[data-page="home"] .service-stack__card::before{content:none;display:none;ba
 body[data-page="home"] .service-stack__card{background-image:none}
 body[data-page="home"] .service-journey a::before{content:none;display:none}
 
-/* Raised lettering inspired by For Living, using the original authored SVG.
-   Opposite directional light/shadow shape the relief without an external raster. */
-body .site-footer__signature::before {
-  opacity:1;
-  background:var(--paper);
-  filter:drop-shadow(-2px -2px 1px color-mix(in srgb,var(--paper) 62%,white))
-    drop-shadow(3px 3px 2px color-mix(in srgb,var(--ink) 29%,transparent));}
-body .site-footer__signature::after {
-  opacity:.68;
-  background:linear-gradient(135deg,
-    color-mix(in srgb,var(--paper) 76%,white),
-    color-mix(in srgb,var(--paper) 94%,var(--ink)) 43%,
-    color-mix(in srgb,var(--paper) 76%,var(--ink)) 76%,
-    color-mix(in srgb,var(--paper) 90%,var(--ink)));
-  filter:drop-shadow(-1px -1px 1px color-mix(in srgb,var(--paper) 70%,white))
-    drop-shadow(2px 2px 1px color-mix(in srgb,var(--ink) 20%,transparent));}
-body .site-footer__signature .site-footer__signature-canvas{
-  opacity:.14;
-  mix-blend-mode:soft-light;}
-:root[data-theme="dark"] body .site-footer__signature .site-footer__signature-canvas{opacity:.22;mix-blend-mode:screen}
-
-
 /* Responsive upgrades are additive: mobile Index remains complete by default. */
 @media(min-width:48.0625em){
   body .site-nav__inner{gap:var(--s6)}

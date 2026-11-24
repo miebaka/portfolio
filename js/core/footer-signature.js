@@ -17,7 +17,7 @@ function enhanceFooterSignature(host) {
   if (!context) return;
   const pointer = { x: -9999, y: -9999, active: false };
   let points = [], width = 0, height = 0, frame = 0, running = false, enabled = false, generation = 0;
-  let restColor = "rgba(255,255,255,.48)", activeColor = "rgba(255,160,143,.92)";
+  let restColor, activeColor;
 
   const loadImage = () => new Promise((resolve, reject) => {
     const image = new Image();
@@ -36,8 +36,13 @@ function enhanceFooterSignature(host) {
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const probe = document.createElement("span");
+    probe.hidden = true;
+    probe.style.color = "var(--footer-signature-active)";
+    host.append(probe);
     restColor = getComputedStyle(host).color;
-    activeColor = getComputedStyle(host).getPropertyValue("--footer-signature-active").trim() || activeColor;
+    activeColor = getComputedStyle(probe).color;
+    probe.remove();
     let image;
     try { image = await loadImage(); } catch { return; }
     if (current !== generation) return;

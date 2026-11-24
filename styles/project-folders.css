@@ -316,7 +316,7 @@ html[data-motion="reduced"] .project-folder {
 /* Shared compact landscape files on Home and Work. The controller measures
    actual viewport space, without the previous portrait-specific cascade. */
 body[data-page="work"] .project-archive--folders {
-  padding-block:var(--s3) var(--s10);
+  padding-block:var(--page-opening-space) var(--section-padding);
 }
 
 body[data-page="work"] .project-archive--folders .project-archive__head {
@@ -377,7 +377,7 @@ body .project-folder:focus-within .project-folder__front {
 
 @media (max-width:48em), (pointer: coarse) {
   body[data-page="work"] .project-archive--folders {
-    padding-block:var(--s3) var(--s8);
+    padding-block:var(--page-opening-space) var(--section-padding);
   }
 
   body[data-page="work"] .project-archive--folders .project-archive__head {

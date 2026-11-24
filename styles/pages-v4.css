@@ -182,11 +182,9 @@ body .site-nav__themes{justify-self:end;display:flex;align-items:center;gap:var(
 .editorial-index__item:last-child{border-bottom:0}
 .editorial-index__row{position:relative;width:100%;min-height:15em;padding:var(--s7) var(--list-item-inline);display:flex;align-items:center;justify-content:space-between;gap:var(--s3);overflow:hidden;color:var(--ink)}
 .editorial-index__meta{display:flex;max-width:min(30em,38vw);align-items:center;gap:var(--s3);color:var(--muted)}
-.editorial-index__title{display:inline-block;transition:opacity var(--dur-proof-fade) var(--ease-enter),transform var(--dur-proof-shift) var(--ease-enter)}
+.editorial-index__title{display:inline-block}
 @media(hover:hover) and (pointer:fine){
-  .editorial-index__row[href]:is(:hover,:focus-visible) .editorial-index__title{transform:translateX(3vw)}
 }
-.editorial-index__row[href]:focus-visible .editorial-index__title{transform:translateX(3vw)}
 
 /* Essays carries the same editorial index behavior as Selected Work. */
 body[data-page="writing"] .hero{min-height:0;padding-block:var(--section-padding) var(--s11);display:block}
@@ -290,7 +288,7 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
 @media(max-width:48em){
   body .site-nav{height:var(--nav-h);min-height:var(--nav-h)}body .site-nav__inner{height:var(--nav-h);padding-inline:var(--s4);display:flex}body .nav-logo{width:2em;height:2em}body .site-nav__brand{width:3em;height:3em;min-width:3em;min-height:3em}body .site-nav__themes{margin-left:0}body .site-nav__links{color:var(--comp-nav-ink)}body .site-nav__link{justify-content:flex-start;color:var(--comp-nav-muted)}
   
-  body[data-page="writing"] .hero{padding-block:var(--s12) var(--s10)}body[data-page="writing"] .section{padding-bottom:var(--s11)}body[data-page="writing"] .section-head{margin-bottom:var(--s6)}
+  body[data-page="writing"] .hero{padding-block:var(--page-opening-space) var(--section-padding)}body[data-page="writing"] .section{padding-bottom:var(--section-padding)}body[data-page="writing"] .section-head{margin-bottom:var(--s6)}
   .editorial-index__row{min-height:11em;align-items:flex-start;padding-block:var(--s4)}.editorial-index--notes .writing-item__trailing{max-width:none}.editorial-index--notes .writing-item__summary{display:none}
   .editorial-index--notes .writing-item__identity>.writing-item__summary{display:block;}
   body .site-footer{min-height:34em}body .site-footer__groups{grid-template-columns:1fr;padding-top:var(--s12);gap:var(--s4)}body .site-footer__explore,body .site-footer__socials{grid-column:1}body .site-footer__signature{top:1.5em;height:14em}body .site-footer__panel{padding-bottom:var(--s6)}body .site-footer__links{display:flex;flex-wrap:wrap}
