@@ -1,0 +1,87 @@
+name: Portfolio CMS pilot
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Apply eligible changes (requires publication switch)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '7,37 * * * *'
+
+concurrency:
+  group: portfolio-cms-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/main' && vars.CMS_SYNC_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      CMS_SYNC_ENABLED: ${{ vars.CMS_SYNC_ENABLED }}
+      CMS_PUBLISH_ENABLED: ${{ vars.CMS_PUBLISH_ENABLED }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test tests/cms-sync.test.mjs
+      - id: google
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.CMS_WIF_PROVIDER }}
+          service_account: ${{ vars.CMS_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/documents.readonly,https://www.googleapis.com/auth/drive.metadata.readonly
+          create_credentials_file: false
+          export_environment_variables: false
+      - name: Check or prepare candidate
+        env:
+          CMS_GOOGLE_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+          CMS_KIKI_DOCUMENT_ID: ${{ secrets.CMS_KIKI_DOCUMENT_ID }}
+          REQUEST_PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+        run: |
+          if [ "$REQUEST_PUBLISH" = "true" ] && [ "$CMS_PUBLISH_ENABLED" = "true" ]; then
+            node scripts/cms/sync.mjs --apply
+          else
+            node scripts/cms/sync.mjs --check
+          fi
+      - id: changed
+        name: Verify allowed changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --name-only | while IFS= read -r path; do
+              case "$path" in data/case-studies.js|work/kiki-joshua-notepad.html) ;; *) exit 1 ;; esac
+            done
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.changed.outputs.changed == 'true'
+        run: npm ci
+      - if: steps.changed.outputs.changed == 'true'
+        run: npm test
+      - if: steps.changed.outputs.changed == 'true'
+        name: Recheck document before publishing
+        env:
+          CMS_GOOGLE_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+          CMS_KIKI_DOCUMENT_ID: ${{ secrets.CMS_KIKI_DOCUMENT_ID }}
+        run: node scripts/cms/sync.mjs --verify
+      - if: steps.changed.outputs.changed == 'true'
+        name: Commit validated snapshot (non-force push)
+        run: |
+          git config user.name "Portfolio CMS"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/case-studies.js work/kiki-joshua-notepad.html
+          git commit -m "content: sync Kiki-Joshua from Google Docs"
+          git push origin HEAD:main
