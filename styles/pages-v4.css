@@ -309,10 +309,10 @@ body[data-page="work"] .project-archive__collections a small{color:var(--muted);
   .experiments-spatial__hint{bottom:calc(1em + var(--safe-bottom));}
 }body .swiss-section-head{overflow:hidden}
 body .editorial-index__row{position:relative;isolation:isolate;overflow:clip;transition:none}body .editorial-index__row::before{content:"";position:absolute;z-index:-1;inset:0;background:var(--project-wash,var(--accent));transform:scaleY(0);transform-origin:bottom;transition:none}body .editorial-index__row:focus-visible::before{transform:scaleY(1)}body .editorial-index__row:focus-visible{color:var(--project-ink,var(--paper))}body .editorial-index__row:focus-visible :is(.editorial-index__meta,.editorial-index__description,time,.writing-item__meta){color:inherit}.project-tone--tedx-rsu{--project-wash:var(--ref-tedx);--project-ink:var(--ref-paper)}.project-tone--rivo{--project-wash:var(--ref-rivo);--project-ink:var(--ref-paper)}.project-tone--chopbox{--project-wash:var(--ref-chopbox-light);--project-ink:var(--ref-midnight)}
-body .case-opening{min-height:clamp(36em,82svh,52em);display:flex;flex-direction:column;justify-content:flex-end;padding-block:var(--s11)}body .case-shot{overflow:clip}body .case-shot img{transition:transform 300ms var(--ease-standard)}
+body .case-opening{min-height:clamp(36em,82svh,52em);display:flex;flex-direction:column;justify-content:flex-end;padding-block:var(--s11)}body .case-shot{overflow:clip}
 body .case-chapter__copy{position:relative}body .case-chapter__copy::before{content:attr(data-chapter);position:absolute;right:var(--page);top:0;color:color-mix(in srgb,var(--ink) 7%,transparent);pointer-events:none}body .case-chapter h2{position:relative;max-width:22ch}
 @media(max-width:48em){body[data-page]::after{display:none}}
-@media(hover:hover) and (pointer:fine){.editorial-index__row:hover::before{transform:scaleY(1)}body .editorial-index__row:hover{color:var(--project-ink,var(--paper))}body .editorial-index__row:hover :is(.editorial-index__meta,.editorial-index__description,time,.writing-item__meta){color:inherit}.case-shot:hover img{transform:scale(1.025)}}
+@media(hover:hover) and (pointer:fine){.editorial-index__row:hover::before{transform:scaleY(1)}body .editorial-index__row:hover{color:var(--project-ink,var(--paper))}body .editorial-index__row:hover :is(.editorial-index__meta,.editorial-index__description,time,.writing-item__meta){color:inherit}}
 
 /* 2026-11 editorial reset — full column edges, Google Sans Flex, spatial thresholds. */
 body .editorial-index__row{padding-inline:0}
