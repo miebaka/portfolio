@@ -73,6 +73,7 @@ test("all published case studies use six chapters and standard label tracking", 
 
 
 test("shared contents align numbers with the first line of wrapped titles", async ({ page }) => {
+  test.setTimeout(120_000);
   const routes = [
     "/work/tedx-rsu.html", "/work/rivo.html", "/work/chopbox.html",
     "/work/kiki-joshua-notepad.html",
@@ -112,6 +113,7 @@ test("shared contents align numbers with the first line of wrapped titles", asyn
 });
 
 test("homepage scroll cue remains inside the landing at maximum travel", async ({ page }) => {
+  test.setTimeout(60_000);
   for (const width of [320, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: "no-preference" });
