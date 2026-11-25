@@ -34,7 +34,7 @@
     "optimize:images": "node scripts/optimize-images.mjs",
     "test:integrity": "node --test scripts/site-integrity.test.mjs",
     "test:contract": "node --test scripts/visual-contract.test.mjs",
-    "test": "npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run test:listening && npm run test:folders && npm run test:motion && npm run build && npm run test:css && npm run test:intent && npm run test:tokens && npm run test:sizing && npm run test:relative && npm run test:integrity && npm run test:contract && node --test scripts/seo-audit.test.mjs",
+    "test": "npm run test:cms && npm run test:content && npm run test:navigation && npm run test:case && npm run test:professional && npm run test:contact-api && npm run test:contact-form && npm run test:listening && npm run test:folders && npm run test:motion && npm run build && npm run test:css && npm run test:intent && npm run test:tokens && npm run test:sizing && npm run test:relative && npm run test:integrity && npm run test:contract && node --test scripts/seo-audit.test.mjs",
     "lint:typography": "stylelint \"styles/**/*.css\"",
     "test:typography": "node --test scripts/typography-contract.test.mjs scripts/typography-structure.test.mjs",
     "test:folders": "node --test tests/project-folders.test.mjs",
@@ -44,7 +44,8 @@
     "test:routes": "playwright test tests/route-matrix.spec.mjs --project desktop --reporter=line --output test-results/route-matrix",
     "release:receipt": "node scripts/release-receipt.mjs",
     "test:lighthouse:mobile": "lhci autorun --config=lighthouserc.mobile.cjs",
-    "test:motion": "node --test tests/motion-language.test.mjs"
+    "test:motion": "node --test tests/motion-language.test.mjs",
+    "test:cms": "node --test tests/cms-sync.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
