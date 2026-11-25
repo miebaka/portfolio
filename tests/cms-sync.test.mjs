@@ -29,3 +29,26 @@ function contract(assert){
 }
 
 test("CMS pilot publication contract", () => contract((ok,label)=>assert.ok(ok,label)));
+
+test("Drive version must be stable across retrieval", async () => {
+  const { stableDocument } = await import("../scripts/cms/fetch-document.mjs");
+  let reads=0;
+  await assert.rejects(stableDocument({
+    version: async () => String(++reads),
+    document: async () => fixture(),
+  }, "test-document"), /CMS_DOCUMENT_CHANGED_DURING_READ/);
+  const result = await stableDocument({
+    version: async () => "42",
+    document: async () => fixture(),
+  }, "test-document");
+  assert.equal(result.version,"42");
+});
+
+test("unsafe and unavailable Google responses fail closed", async () => {
+  const { googleClient } = await import("../scripts/cms/fetch-document.mjs");
+  assert.throws(() => googleClient({token:""}), /CMS_AUTH_REQUIRED/);
+  const client = googleClient({token:"mock-token",request:async () => ({ok:false,status:403})});
+  await assert.rejects(client.document("test-document-123"), /CMS_GOOGLE_HTTP_403/);
+  const trashed = googleClient({token:"mock-token",request:async () => ({ok:true,json:async()=>({version:"1",trashed:true,mimeType:"application/vnd.google-apps.document"})})});
+  await assert.rejects(trashed.version("test-document-123"), /CMS_DOCUMENT_UNAVAILABLE/);
+});
