@@ -265,7 +265,7 @@ a[href]:hover{text-decoration-color:currentColor}
 
 .article-toc a[aria-current="location"]{font-weight:var(--type-weight-semibold)}
 
-.article-toc__index{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-body) var(--font-sans);letter-spacing:var(--type-tracking-label);}
+.article-toc__index{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label);font-variant-numeric:tabular-nums;}
 
 .article-toc__title{overflow-wrap:anywhere;font:var(--type-weight-semibold) var(--type-caption)/var(--type-leading-ui) var(--font-sans)}
 
