@@ -657,10 +657,10 @@ export const caseStudies = {
       {
         "id": "context",
         "label": "The Context",
-        "title": "A medical induction, with 24 hours to design",
+        "title": "Context",
         "body": [
-          "In February 2021, my sister Amelia was inducted into the medical profession after training at Babcock University’s Benjamin Carson (Snr.) School of Medicine. The induction had been planned for 2020, before COVID delayed it.",
-          "At Nigerian celebrations, it is customary for those celebrating to give souvenirs to their guests. My parents asked me to design a notepad for Amelia’s induction and gave me 24 hours, with one constraint: they wanted the cover without a portrait. How could I make a familiar souvenir feel like it belonged to this particular occasion, while deviating from the usual portrait-led design?",
+          "In February 2021, my sister Amelia was inducted into the medical profession after training at Babcock University's Benjamin Carson (Snr.) School of Medicine. The induction had been planned for 2020, before COVID delayed it.",
+          "At Nigerian celebrations, it is somewhat customary for those celebrating to give souvenirs to the people who come to celebrate with us. My parents asked me to design a notepad for Amelia's induction and gave me 24 hours, with one constraint: they wanted the cover without a portrait. How could I make a familiar souvenir feel like it belonged to this particular occasion, while deviating from the norm of having a portrait of the subject?",
           "Despite the pressure, taking a bath was more important in that moment than anything else. It was in the presence of water that I had a literal eureka moment, like a design Archimedes."
         ],
         "media": []
@@ -668,11 +668,11 @@ export const caseStudies = {
       {
         "id": "decision",
         "label": "The Decision",
-        "title": "Make the souvenir belong to medicine",
+        "title": "Decision",
         "body": [
-          "As a teenager, I became an avid fan of The Da Vinci Code by Dan Brown, which introduced me to Leonardo da Vinci’s work across art, technology and anatomy. Curious, I looked up his notes and found references to old physicians’ notebooks.",
-          "I remembered those images while taking my bath. I looked up Da Vinci’s notes again and found more references to the scattered scribbling and notes in old physicians’ books.",
-          "In that moment, I decided to make the notepad look like an old physician’s notebook."
+          "As a teenager, I became an avid fan of The Da Vinci Code by Dan Brown, which introduced me to the myriad works of the polymath Leonardo da Vinci, whose work spanned art, technology, and anatomy. While reading the book, my curiosity was piqued, and I Googled Da Vinci's notes, finding references to old physicians' notebooks.",
+          "I vividly remembered the images I had seen while Googling old physicians' notebooks. My curiosity was piqued again, so I Googled Da Vinci’s notes once more and found even more beautiful references to the scattered scribbling and notes in old physicians’ books.",
+          "In that moment, I decided to make the notepad look like an old physician's notebook."
         ],
         "media": [
           "kiki-joshua-seal"
@@ -681,10 +681,10 @@ export const caseStudies = {
       {
         "id": "system",
         "label": "The System",
-        "title": "Build a physician’s notebook",
+        "title": "System",
         "body": [
-          "The front cover pairs a sketched caduceus with an illustrated wax seal. Amelia suggested using the Babcock University logo on the seal, which I drew in Illustrator so the cover could carry a detail from the school where she had trained.",
-          "On the back cover, I placed the Hippocratic Oath at the top, Leonardo’s Vitruvian Man in the centre, and the World Medical Association’s Declaration of Geneva at the bottom. The figure brought anatomy into the design and carried the notebook reference through to the back. The two texts brought in the commitments that come with becoming a doctor."
+          "I made a wax seal in Illustrator with the Babcock University logo. Amelia liked the idea, and the finished seal added a detail from the school where she'd trained.",
+          "My sister suggested a wax seal with the Babcock University logo. I drew it in Illustrator so the cover could carry a detail from the school where she'd trained."
         ],
         "media": [
           "kiki-joshua-back"
@@ -693,10 +693,12 @@ export const caseStudies = {
       {
         "id": "survival",
         "label": "What Survived",
-        "title": "Take the illustration into print",
+        "title": "Applications",
         "body": [
-          "Within the 24-hour brief, the front and back retained the physician’s notebook concept without introducing a portrait or unrelated celebratory graphics.",
-          "The original project includes a photograph identified as the printed notepad, alongside design visualisations. Print specifications, quantity and budget are not documented."
+          "Front cover",
+          "The front pairs the sketched caduceus with the illustrated Babcock seal.",
+          "Back cover",
+          "I placed the Hippocratic Oath at the top, Leonardo's Vitruvian Man in the center, and the World Medical Association's Declaration of Geneva at the bottom. The figure brought anatomy into the design and carried the notebook reference through to the back. The two texts brought in the commitments that come with becoming a doctor."
         ],
         "media": [
           "kiki-joshua-presentation"
@@ -705,10 +707,9 @@ export const caseStudies = {
       {
         "id": "encounter",
         "label": "First Contact",
-        "title": "A keepsake rather than another portrait",
+        "title": "Reflection",
         "body": [
-          "Amelia was happy with how the seal came out. On a cover without her portrait, the Babcock logo tied the notebook to her own training and to the occasion we were celebrating.",
-          "The notepad was intended as a souvenir for the induction celebration. Distribution and guest responses are not documented."
+          "Amelia was happy with how the seal came out."
         ],
         "media": [
           "kiki-joshua-print"
@@ -717,10 +718,9 @@ export const caseStudies = {
       {
         "id": "results",
         "label": "The Results",
-        "title": "A finished object with a specific story",
+        "title": "The Results",
         "body": [
-          "The outcome was a commemorative notepad design with a visual identity specific to Amelia’s medical induction, without relying on her portrait.",
-          "The original project was published on 1 March 2021. Amelia’s response to the seal is documented; wider audience impact is not."
+          "On a cover without her portrait, the Babcock logo tied the notebook to her own training and to the occasion we were celebrating."
         ]
       }
     ],
