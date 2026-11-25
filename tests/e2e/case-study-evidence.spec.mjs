@@ -65,8 +65,73 @@ test("all published case studies use six chapters and standard label tracking", 
     for (const label of await metadata.all()) {
       expect(await label.evaluate(el => {
         const style = getComputedStyle(el);
-        return Math.abs(parseFloat(style.letterSpacing) / parseFloat(style.fontSize) + 0.005) < 0.001;
+        return Math.abs(parseFloat(style.letterSpacing) / parseFloat(style.fontSize) + 0.015) < 0.001;
       })).toBe(true);
     }
+  }
+});
+
+
+test("shared contents align numbers with the first line of wrapped titles", async ({ page }) => {
+  const routes = [
+    "/work/tedx-rsu.html", "/work/rivo.html", "/work/chopbox.html",
+    "/work/kiki-joshua-notepad.html",
+    "/essays/when-the-swoosh-lost-its-soul.html",
+    "/essays/designing-for-disability-in-nigeria.html",
+  ];
+  for (const width of [320, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const route of routes) {
+      await page.goto(route);
+      await expect(page.locator(".article-toc")).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+      const rows = await page.locator(".article-toc a").evaluateAll(links => links.map(link => {
+        const index = link.querySelector(".article-toc__index");
+        const title = link.querySelector(".article-toc__title");
+        const n = index.getBoundingClientRect();
+        const t = title.getBoundingClientRect();
+        const r = link.getBoundingClientRect();
+        return {
+          display: getComputedStyle(link).display,
+          aligned: Math.abs(n.top - t.top) <= 1,
+          equalLineHeight: getComputedStyle(index).lineHeight === getComputedStyle(title).lineHeight,
+          titleOffset: t.left - r.left,
+          contained: t.right <= r.right + 1 && t.bottom <= r.bottom + 1,
+        };
+      }));
+      expect(rows.length).toBeGreaterThan(1);
+      for (const row of rows) {
+        expect(row.display).toBe("grid");
+        expect(row.aligned).toBe(true);
+        expect(row.equalLineHeight).toBe(true);
+        expect(row.contained).toBe(true);
+        expect(Math.abs(row.titleOffset - rows[0].titleOffset)).toBeLessThanOrEqual(1);
+      }
+    }
+  }
+});
+
+test("homepage scroll cue remains inside the landing at maximum travel", async ({ page }) => {
+  for (const width of [320, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    const cue = page.locator(".scroll-cue span:last-child");
+    await expect(cue).toBeVisible();
+    const bounds = await cue.evaluate(async el => {
+      const animation = el.getAnimations().find(a => a.animationName === "work-scroll-nudge");
+      if (!animation) return null;
+      animation.pause();
+      await animation.ready;
+      animation.currentTime = Number(animation.effect.getTiming().duration) * 0.3;
+      const arrow = el.getBoundingClientRect();
+      const frame = el.closest(".home-landing").getBoundingClientRect();
+      return { bottom: arrow.bottom, frameBottom: frame.bottom };
+    });
+    expect(bounds).not.toBeNull();
+    expect(bounds.bottom).toBeLessThanOrEqual(bounds.frameBottom + 0.5);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect.poll(() => cue.evaluate(el => el.getAnimations().some(a => a.animationName === "work-scroll-nudge"))).toBe(false);
   }
 });
