@@ -2,8 +2,13 @@
    Labels and questions live here so every renderer uses exactly the same language. */
 export const CASE_STORY_STRUCTURE = Object.freeze([
   Object.freeze({
+    id: "context",
+    label: "The Context",
+    descriptor: "What was the brief, and what constraints shaped it?",
+  }),
+  Object.freeze({
     id: "decision",
-    label: "The Call",
+    label: "The Decision",
     descriptor: "What did I decide, and what did I turn down to get there?",
   }),
   Object.freeze({

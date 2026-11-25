@@ -23,12 +23,12 @@ test("specific decision headings replace generic prompt-led chapter hierarchy", 
   for (const {slug,title} of cases) {
     await page.goto("/work/" + slug + ".html");
     const chapters = page.locator(".case-chapter");
-    await expect(chapters).toHaveCount(5);
+    await expect(chapters).toHaveCount(6);
     await expect(chapters.locator(".case-chapter__eyebrow")).toHaveText([
-      "The Call","The System","What Survived","First Contact","The Results"
+      "The Context","The Decision","The System","What Survived","First Contact","The Results"
     ]);
-    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(5);
-    await expect(chapters.first().locator("h2")).toHaveText(title);
+    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(6);
+    await expect(page.locator("#decision h2")).toHaveText(title);
     await expect(page.locator(".case-chapter__descriptor")).toHaveCount(0);
   }
 });
@@ -49,7 +49,24 @@ test("case-study evidence and chapter labels remain accessible without JavaScrip
     await page.goto("/work/" + slug + ".html");
     await expect(page.locator(".case-opening h1")).toBeVisible();
     await expect(page.locator(".case-lead-proof__images img")).toHaveCount(2);
-    await expect(page.locator(".case-chapter h2")).toHaveCount(5);
+    await expect(page.locator(".case-chapter h2")).toHaveCount(6);
   }
   await context.close();
+});
+
+
+test("all published case studies use six chapters and standard label tracking", async ({ page }) => {
+  for (const slug of ["tedx-rsu", "rivo", "chopbox", "kiki-joshua-notepad"]) {
+    await page.goto("/work/" + slug + ".html");
+    await expect(page.locator(".case-chapter__eyebrow")).toHaveText(["The Context", "The Decision", "The System", "What Survived", "First Contact", "The Results"]);
+    await expect(page.locator(".case-toc strong")).toHaveText(["The Context", "The Decision", "The System", "What Survived", "First Contact", "The Results"]);
+    const metadata = page.locator(".case-facts dt");
+    await expect(metadata).toHaveText(["Year", "Deliverables", "Credits"]);
+    for (const label of await metadata.all()) {
+      expect(await label.evaluate(el => {
+        const style = getComputedStyle(el);
+        return Math.abs(parseFloat(style.letterSpacing) / parseFloat(style.fontSize) + 0.005) < 0.001;
+      })).toBe(true);
+    }
+  }
 });

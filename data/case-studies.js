@@ -83,12 +83,20 @@ export const caseStudies = {
     ],
     "chapters": [
       {
-        "id": "decision",
-        "label": "The Call",
-        "title": "Soften the technical signal",
+        "id": "context",
+        "label": "The Context",
+        "title": "Make technical capability feel accessible",
         "body": [
           "Rivo Studio needed an identity for a software practice positioned around access. The work had to make that intention visible in the brand itself, rather than leave it as a statement beside the design.",
-          "The category often uses complexity as shorthand for capability. Rivo needed to communicate technical confidence while remaining clear, approachable and useful across everyday brand materials.",
+          "The category often uses complexity as shorthand for capability. Rivo needed to communicate technical confidence while remaining clear, approachable and useful across everyday brand materials."
+        ],
+        "media": []
+      },
+      {
+        "id": "decision",
+        "label": "The Decision",
+        "title": "Soften the technical signal",
+        "body": [
           "I worked from the spoken name, /ˈraɪvoʊ/, then tested how it behaved at small sizes, in strong colour pairings and beside practical information.",
           "The wordmark removes hard corners and keeps the letterforms open. Its job is to feel assured without becoming severe, giving the studio a recognisable voice before supporting graphics are added."
         ],
@@ -265,12 +273,20 @@ export const caseStudies = {
     ],
     "chapters": [
       {
-        "id": "decision",
-        "label": "The Call",
-        "title": "Give the event a pause",
+        "id": "context",
+        "label": "The Context",
+        "title": "A local event inside a global identity",
         "body": [
           "TEDx gives every event a strict global identity and asks each chapter to find its own character within it. For TEDx Rivers State University, the work had to feel local while keeping the parent system recognisable.",
-          "The identity needed one idea strong enough to hold across social promotion, printed collateral and the event stage. The TEDx red and wordmark were fixed; the event’s own character had to come from the elements around them.",
+          "The identity needed one idea strong enough to hold across social promotion, printed collateral and the event stage. The TEDx red and wordmark were fixed; the event’s own character had to come from the elements around them."
+        ],
+        "media": []
+      },
+      {
+        "id": "decision",
+        "label": "The Decision",
+        "title": "Give the event a pause",
+        "body": [
           "“Pause…” is the organising idea. Its three dots leave the thought open; the line beneath it makes the invitation explicit: “Reflect. Reconsider. Reward.”",
           "The theme mark sits alongside the TEDx identity in the applications, giving the event its own voice within the parent system. Neue Haas Grotesk carries the direct voice, while the type specimen turns the theme into a short reminder: “Remember to stay pause-itive.”"
         ],
@@ -448,12 +464,20 @@ export const caseStudies = {
     ],
     "chapters": [
       {
-        "id": "decision",
-        "label": "The Call",
-        "title": "Use appetite as the filter",
+        "id": "context",
+        "label": "The Context",
+        "title": "Build appetite before the first order",
         "body": [
           "ChopBox needed an identity that felt warm, generous and immediately appetising before a first order arrived. The work began as an independent identity commission spanning strategy, identity design and proposed packaging and campaign applications.",
-          "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct.",
+          "Food brands often reach for the same loud reds and delivery-app urgency. ChopBox needed enough energy to invite an order while still feeling considered, trustworthy and distinct."
+        ],
+        "media": []
+      },
+      {
+        "id": "decision",
+        "label": "The Decision",
+        "title": "Use appetite as the filter",
+        "body": [
           "I built the identity from strategy out, checking each decision against one question: does this make you hungry? The filter kept the work focused on warmth, generosity and food rather than decoration.",
           "A friendly rounded logotype and toasted yellow-red palette replace the category's harder, louder shorthand. The result aims to feel ready to order without making every application shout."
         ],
@@ -631,11 +655,19 @@ export const caseStudies = {
     ],
     "chapters": [
       {
+        "id": "context",
+        "label": "The Context",
+        "title": "A medical induction, with 24 hours to design",
+        "body": [
+          "When my sister, Dr. Amelia Ibinabo Kiki-Joshua, was inducted into medicine at Babcock University in February 2021, my parents asked me to design a commemorative notepad. I had 24 hours to work with, and they did not want her photograph on the cover."
+        ],
+        "media": []
+      },
+      {
         "id": "decision",
-        "label": "The Call",
+        "label": "The Decision",
         "title": "Make the souvenir belong to medicine",
         "body": [
-          "When my sister, Dr. Amelia Ibinabo Kiki-Joshua, was inducted into medicine at Babcock University in February 2021, my parents asked me to design a commemorative notepad. I had 24 hours to work with, and they did not want her photograph on the cover.",
           "Rather than make another portrait-led celebration souvenir, I drew on historical physician notebooks and Leonardo da Vinci’s studies. The aim was to make the object feel connected to the profession and the occasion."
         ],
         "media": [

@@ -67,7 +67,7 @@ The Work index uses three compact, full-width landscape folders: each has a numb
 To add a case study:
 
 1. Create or update the project in `data/projects.js`. Use `status: "published"` only when its case and evidence are ready; set `featuredOrder` explicitly when needed.
-2. Author the matching `caseStudies[slug]` record in `data/case-studies.js`. Do not invent outcomes. Follow the actual content schema and `data/case-story-structure.js`; the five public chapters are **The Call, The System, What Survived, First Contact, The Results**.
+2. Author the matching `caseStudies[slug]` record in `data/case-studies.js`. Do not invent outcomes. Follow the actual content schema and `data/case-story-structure.js`; the six public chapters are **The Context, The Decision, The System, What Survived, First Contact, The Results**.
 3. Create/update the corresponding `work/<slug>.html` shell, including correct SEO metadata and `data-case`; use `npm run sync:fallbacks` for static case fallbacks, then `npm run validate:content` and `npm run build`.
 4. Test native navigation, keyboard focus, images, mobile and no-JavaScript fallbacks. Check the generated sitemap and canonical URLs.
 

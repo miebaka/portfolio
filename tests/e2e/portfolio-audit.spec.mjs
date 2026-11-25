@@ -31,7 +31,7 @@ test("each distinctive capability proof link opens a real published chapter", as
   }
   for (const caseSlug of ["rivo", "tedx-rsu", "chopbox"]) {
     await page.goto("/work/" + caseSlug + ".html");
-    for (const anchor of ["decision", "system", "survival", "encounter", "results"]) {
+    for (const anchor of ["context", "decision", "system", "survival", "encounter", "results"]) {
       await expect(page.locator("#" + anchor + ".case-chapter"), caseSlug + "#" + anchor).toHaveCount(1);
     }
   }

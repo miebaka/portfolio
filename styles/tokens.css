@@ -1345,6 +1345,7 @@ body .next-content :is(.case-next__name,.case-next__label) {text-align:right}
 body .next-content .case-next__name {font:var(--type-weight-semibold) var(--type-heading-lg)/var(--type-leading-tight) var(--font-sans);letter-spacing:var(--type-tracking-heading);text-transform:none}
 body.case-page .metadata-strip dt,
 body[data-page="explorations"] .metadata-strip dt {font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-meta) var(--font-sans);letter-spacing:var(--type-tracking-label-wide);text-transform:uppercase}
+body.case-page .metadata-strip dt {letter-spacing:var(--type-tracking-label)}
 body.case-page .metadata-strip dd,
 body[data-page="explorations"] .metadata-strip dd {font:var(--type-weight-regular) var(--type-input)/var(--type-leading-meta) var(--font-sans);text-align:left;overflow-wrap:anywhere}
 body[data-page="writing"] .editorial-index--notes .writing-item__title {font-size:var(--type-heading-lg)}

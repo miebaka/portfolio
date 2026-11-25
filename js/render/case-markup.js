@@ -109,7 +109,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const toc = `<nav class="article-toc case-toc" aria-label="Case study contents"><p>The story</p><ol>${study.chapters.map((item, index) => `<li><a href="#${token(item.id)}"><span class="article-toc__index" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><strong class="article-toc__title">${esc(item.label)}</strong></a></li>`).join("")}</ol></nav>`;
   const featured = lead
     ? `<section class="case-lead-proof" aria-labelledby="case-lead-title">
-      <div class="case-lead-proof__copy container"><p class="case-lead-proof__eyebrow">The decision</p>
+      <div class="case-lead-proof__copy container"><p class="case-lead-proof__eyebrow">Decision in practice</p>
         <h2 id="case-lead-title">${esc(lead.heading)}</h2><p>${esc(lead.rationale)}</p></div>
       <p class="case-lead-proof__status container">${esc(lead.status)}</p>
     </section>`
@@ -128,7 +128,7 @@ export function renderCaseMarkup(site, slug, base = "../") {
     uniqueMedia(item.media || []), base, nextPlate,
   )).join("");
   return opening + factsBlock(study, project) +
-    `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${featured || ""}${study.chapters.map(chapter).join("")}</div></div>` +
+    `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${study.chapters.map(item => chapter(item) + (item.id === "decision" ? featured : "")).join("")}</div></div>` +
     `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
     (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance</a></p>` : "") +
     nextBlock(site, study, base) +

@@ -160,11 +160,11 @@ test("published case chapters lead with their own decisions rather than boilerpl
   for (const slug of ["tedx-rsu", "rivo", "chopbox"]) {
     await page.goto("/work/" + slug + ".html");
     const chapters = page.locator(".case-chapter");
-    await expect(chapters).toHaveCount(5);
+    await expect(chapters).toHaveCount(6);
     await expect(chapters.locator(".case-chapter__eyebrow")).toHaveText([
-      "The Call", "The System", "What Survived", "First Contact", "The Results"
+      "The Context", "The Decision", "The System", "What Survived", "First Contact", "The Results"
     ]);
-    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(5);
+    await expect(chapters.locator("h2.case-chapter__heading")).toHaveCount(6);
     await expect(chapters.locator(".case-chapter__descriptor")).toHaveCount(0);
     await expect(page.locator(".case-index,.case-lede,.case-scroll-index,.case-opening__summary")).toHaveCount(0);
     await page.setViewportSize({width:390,height:844});

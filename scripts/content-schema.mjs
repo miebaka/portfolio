@@ -181,7 +181,7 @@ export function validateContent(content) {
       else {
         const ids = study.chapters.map(chapter => chapter?.id);
         const wanted = CASE_STORY_STRUCTURE.map(chapter => chapter.id);
-        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", "Use The Call, The System, What Survived, First Contact, then The Results.");
+        if (ids.length !== wanted.length || ids.some((id, index) => id !== wanted[index])) add(`${path}.chapters`, "CASE_CHAPTER_ORDER_INVALID", `Use ${CASE_STORY_STRUCTURE.map(chapter => chapter.label).join(", ")} in that order.`);
         const usedMedia = new Set([study.hero]);
         study.chapters.forEach((chapter, index) => {
           const chapterPath = `${path}.chapters[${index}]`;
