@@ -55,7 +55,7 @@
     "prettier": "^3.9.10",
     "sharp": "^0.35.5",
     "stylelint": "^18.0.0",
-    "stylelint-config-standard": "^41.0.0"
+    "stylelint-config-standard": "^41.1.0"
   },
   "type": "module",
   "engines": {
