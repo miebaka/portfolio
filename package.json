@@ -47,7 +47,7 @@
     "test:motion": "node --test tests/motion-language.test.mjs"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.13.0",
+    "@axe-core/playwright": "4.14.0",
     "@lhci/cli": "0.16.1",
     "@playwright/test": "1.64.0",
     "esbuild": "^0.28.2",
