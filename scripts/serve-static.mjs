@@ -7,7 +7,14 @@ const port = Number(process.argv[3] || 4173);
 const types = { ".avif": "image/avif", ".css": "text/css; charset=utf-8", ".html": "text/html; charset=utf-8", ".jpg": "image/jpeg", ".js": "text/javascript; charset=utf-8", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".ttf": "font/ttf", ".webp": "image/webp", ".woff2": "font/woff2" };
 
 createServer((request, response) => {
-  const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
+  if (!["GET", "HEAD"].includes(request.method)) { response.writeHead(405, { Allow: "GET, HEAD" }).end(); return; }
+  let pathname;
+  try { pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname); }
+  catch { response.writeHead(400).end(); return; }
+  // The source-mode dev server must not accidentally serve local credentials.
+  if (/(?:^|\/)(?:\.[^/]+|node_modules|scripts|tests|api|docs|reports)(?:\/|$)|(?:^|\/)(?:package(?:-lock)?\.json|vercel\.json|drafts\.js)$|\.(?:pem|key|p12|pfx|log|map|bak)$/i.test(pathname)) {
+    response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("Not found"); return;
+  }
   const requested = normalize(pathname).replace(/^[/\\]+/u, "");
   let file = join(root, requested || "index.html");
   if (!file.startsWith(root + sep) && file !== root) { response.writeHead(403).end(); return; }

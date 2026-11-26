@@ -187,7 +187,9 @@ test("published case narratives render when their project is published", () => {
   const markup = renderCaseMarkup(fixture({ caseStudies: { sample: study({ status: "published", hero: "sample-hero", facts: { role: "Identity", delivered: "Application system" }, chapters }) } }), "sample");
   assert.match(markup, /id="results"/);
   assert.match(markup, /<h2 id="decision-title" class="case-chapter__heading">A focused chapter<\/h2>/);
-  assert.match(markup, /case-opening__essentials/);
+  assert.match(markup, /class="case-facts container metadata-strip"/);
+  assert.match(markup, /<dt>Deliverables<\/dt><dd>Application system<\/dd>/);
+  assert.match(markup, /<dt>Credits<\/dt><dd>Identity<\/dd>/);
   assert.doesNotMatch(markup, /case-index|case-lede/);
   assert.doesNotMatch(markup, /Coming soon/);
 });
@@ -205,11 +207,8 @@ test("invalid content fails CLI and direct build without touching previous outpu
   await mkdir(join(directory, "js", "core"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
-  for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) {
-    await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
-  }
-  await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
-  await cp(new URL("../js/core/responsive.js", import.meta.url), join(directory, "js", "core", "responsive.js"));
+  // Copy the real import graph so these fail on content validation, not missing modules.
+  for (const folder of ["scripts", "js"]) await cp(new URL(`../${folder}`, import.meta.url), join(directory, folder), { recursive: true });
   await writeFile(join(directory, "package.json"), '{"type":"module"}');
   const previousOutput = "Keep this previously built page.";
   await writeFile(join(directory, "dist", "index.html"), previousOutput);
@@ -280,9 +279,8 @@ test("missing build registry and origin fail with validation errors before dist 
   await mkdir(join(directory, "js", "core"), { recursive: true });
   await mkdir(join(directory, "dist"));
   await cp(new URL("../data", import.meta.url), join(directory, "data"), { recursive: true });
-  for (const file of ["build-site.mjs", "content-schema.mjs", "render-partials.mjs", "validate-content.mjs"]) await cp(new URL(`../scripts/${file}`, import.meta.url), join(directory, "scripts", file));
-  await cp(new URL("../js/render/case-markup.js", import.meta.url), join(directory, "js", "render", "case-markup.js"));
-  await cp(new URL("../js/core/responsive.js", import.meta.url), join(directory, "js", "core", "responsive.js"));
+  // Copy the real import graph so these fail on content validation, not missing modules.
+  for (const folder of ["scripts", "js"]) await cp(new URL(`../${folder}`, import.meta.url), join(directory, folder), { recursive: true });
   await writeFile(join(directory, "package.json"), '{"type":"module"}');
   const previousOutput = "Keep the prior output.";
   await writeFile(join(directory, "dist", "index.html"), previousOutput);
