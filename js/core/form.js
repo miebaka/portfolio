@@ -23,7 +23,12 @@ const words = (value) => String(value || "").trim();
 const describedByWithoutError = (input) => words(input?.getAttribute("aria-describedby"))
   .split(/\s+/u).filter((id) => id && !id.endsWith("-error"));
 
-export function createContactForm(form, { submitContact: send = submitContact, timeoutMs = 10_000 } = {}) {
+export function emailDraft(payload) {
+  const body = ["Name: " + payload.name, "Email: " + payload.email, "Interest: " + (payload.interest || "Not specified"), "", payload.message].join("\r\n");
+  return "mailto:miebakakiki@gmail.com?subject=" + encodeURIComponent("Portfolio enquiry") + "&body=" + encodeURIComponent(body);
+}
+
+export function createContactForm(form, { submitContact: send = submitContact, timeoutMs = 10_000, openEmail = href => { globalThis.location.href = href; } } = {}) {
   if (!form) throw new TypeError("form is required");
   /* Native constraint validation remains available when JavaScript is off;
      once enhanced, the stable inline errors below own the experience. */
@@ -82,7 +87,15 @@ export function createContactForm(form, { submitContact: send = submitContact, t
     transition("validating");
     const validation = clientErrors();
     if (Object.keys(validation).length) { showErrors(validation); transition("validation-error", "Check the highlighted fields."); return; }
-    clearErrors(); transition("submitting", "Sending your message…"); activeController = new AbortController();
+    clearErrors();
+    if (form.dataset.contactMode === "email") {
+      try {
+        openEmail(emailDraft(payload()));
+        transition("email-draft", "Your email app can open a draft. Review and send it there. Your inquiry has not been sent yet.");
+      } catch { transition("error", NETWORK_COPY); }
+      return;
+    }
+    transition("submitting", "Sending your message…"); activeController = new AbortController();
     const timer = setTimeout(() => activeController?.abort(), timeoutMs);
     try {
       const response = await send(payload(), { signal: activeController.signal });

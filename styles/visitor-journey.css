@@ -823,6 +823,7 @@ body:is([data-page="home"],[data-page="about"]) section.service-stack-section .p
 body:is([data-page="home"],[data-page="about"]) section.service-stack-section .service-stack__item,
 body:is([data-page="home"],[data-page="about"]) section.service-stack-section .service-stack__card {width:100%;max-width:100%;margin-inline:0}
 body[data-page="home"] .home-landing__inner {min-height:0}
+
 /* Reserve the complete downward travel inside the clipped landing frame. */
 body[data-page="home"] .home-landing__meta .scroll-cue {margin-inline-start:auto;gap:var(--s4);padding-block-end:var(--s2)}
 @keyframes work-scroll-nudge {0%,60%,100%{transform:translateY(0)}30%{transform:translateY(.35em)}}

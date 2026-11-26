@@ -18,7 +18,7 @@
     "test:case": "node --test tests/case-study.test.mjs",
     "test:professional": "node --test tests/professional-evidence.test.mjs",
     "test:contact-api": "node --test tests/contact-api.test.mjs",
-    "test:contact-form": "node --test tests/contact-form.test.mjs",
+    "test:contact-form": "node --test tests/contact-form.test.mjs tests/contact-fallback.test.mjs",
     "test:listening": "node --test tests/now-playing.test.mjs",
     "test:css": "node scripts/check-css-contract.mjs",
     "test:intent": "node --test scripts/intent-quality.test.mjs",

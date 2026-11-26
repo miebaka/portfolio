@@ -1,6 +1,6 @@
 # Miebaka Joshua — Portfolio
 
-A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory, the contact endpoint and the server-side Last.fm listening-status endpoint.
+A static-first design portfolio built with HTML, CSS, vanilla ES modules and a Node.js 24 build. Content stays readable and navigable without JavaScript; scroll motion and the interactive signature enhance that base. Vercel serves the generated `dist/` directory, and the contact endpoint.
 
 - **Visual direction and current approved behavior:** [`DESIGN.md`](DESIGN.md) (latest decision appendix takes precedence over historical proposals).
 - **Engineering, security and release requirements:** [`engineering-specification.md`](engineering-specification.md).
@@ -52,7 +52,6 @@ Do not commit `dist/`: it is generated during the build.
 | Footer links above interactive dot-matrix wordmark | `js/render/footer.js`, `styles/footer-layout.css`, `js/core/footer-signature.js` |
 | Native service-card scrolling | `styles/services-stack.css`, `styles/portfolio-refinement.css` |
 | Contact API, anti-abuse and mail provider | `api/contact.js`, `api/lib/` |
-| Public listening-status feed and navbar pill | `api/now-playing.js`, `js/render/now-playing.js`, `data/site-config.js` |
 | Deployment redirects, headers, CSP | `vercel.json` |
 | Content validation and production bundle | `scripts/validate-content.mjs`, `scripts/build-site.mjs` |
 
@@ -87,13 +86,9 @@ For changed case-study or profile images, run `npm run optimize:images`. The bui
 - `System`, `Reduce` and `Full` motion choices are persisted independently of colour theme. The OS `prefers-reduced-motion: reduce` disables recurring decorative animation.
 - Essential content must not depend on decorative animation, GPU capability or hover.
 
-## Last.fm Now Playing
-
-The masthead displays a small vinyl pill directly after the logo. When a Last.fm API key is configured, it reports currently playing tracks or scrobbles from the past 24 hours from the public account in `data/site-config.js`; when the key or upstream is unavailable it simply links to the public listening profile, **never displays a fabricated song**, and pauses polling in background tabs. Successful responses can be edge-cached for 60 seconds. The API key stays in the Vercel server environment as `LASTFM_API_KEY` (see `.env.example`). No key is included in client code or Git.
-
 ## Contact, privacy and deployment
 
-`POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback. Visible email addresses also expose an adjacent keyboard-operable **Copy** button with a screen-reader-announced **Copied** result. Contact intake guides a first brief through goal, scope, deadline and success criteria without changing the validated API payload schema.
+`POST /api/contact` validates JSON, checks origin, filters honeypot submissions, applies an Upstash-backed rate limit and delivers accepted messages through Resend. Copy [`.env.example`](.env.example) for **variable names** only; configure real secrets in Vercel or your local environment, never in Git. `CONTACT_ALLOWED_ORIGINS` must list the actual permitted origins (including the canonical Vercel host where applicable). The authored contact page preserves direct email/mailto fallback. Vercel builds without all required contact-service variables explicitly use email draft mode; no message is reported as sent. Configure Resend and Upstash before enabling server delivery. Visible email addresses also expose an adjacent keyboard-operable **Copy** button with a screen-reader-announced **Copied** result. Contact intake guides a first brief through goal, scope, deadline and success criteria without changing the validated API payload schema.
 
 The public canonical host is `https://miebaka-portfolio.vercel.app/`. `data/navigation.js` controls public route registry and sitemap inclusion; `vercel.json` controls redirects, security headers and caching. The root `robots.txt` allows public pages to be crawled; the generated sitemap lists indexable canonical routes. Redirect-only and 404 pages retain page-specific `noindex` as appropriate. Privacy claims must match the actual browser requests, including the self-hosted text fonts.
 
@@ -114,7 +109,7 @@ npm run quality
 ## Repository layout and asset build path
 
 ```text
-api/                Server-only contact and Last.fm handlers; no browser secrets
+api/                Server-only contact handlers; no browser secrets
 assets/images/      Source/reference photography, covers, client SVG marks
 assets/experiments/ Authored experiment metadata and originals
 data/               Projects, case narratives, service proof and route registry

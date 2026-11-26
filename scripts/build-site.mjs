@@ -7,6 +7,7 @@ import { renderExperimentMetadata } from "../js/render/metadata-strip.js";
 import { renderNextEssayMarkup } from "../js/render/next-content.js";
 import { renderPageLoaderMarkup } from "../js/core/page-loader.js";
 import { assertValidContent } from "./validate-content.mjs";
+import { contactServiceConfigured } from "./contact-config.mjs";
 import { normalizeHead, renderFooter, renderHeader } from "./render-partials.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -112,6 +113,13 @@ function renderShell(source, href) {
   if (href === "about.html") rendered = rendered.replace(/<div data-mount="experience">[\s\S]*?<\/ol><\/div>/, '<div data-mount="experience" data-prerendered="true">' + renderExperienceLedger(content.siteConfig.experience) + '</div>');
   if (href.startsWith("essays/")) rendered = rendered.replace(/<section class="case-next next-content article-next container"[\s\S]*?<\/section>/, renderNextEssayMarkup(href));
   if (href === "experiments.html") rendered = rendered.replace(/<dl class="metadata-strip">[\s\S]*?<\/dl>/, renderExperimentMetadata());
+  // Do not advertise server delivery when deployment credentials are missing.
+  if (href === "contact.html" && process.env.VERCEL === "1" && !contactServiceConfigured(process.env)) {
+    rendered = rendered.replace('<form class="contact__form"', '<form class="contact__form" data-contact-mode="email"')
+      .replace('>Send inquiry</button>', '>Open email draft</button>')
+      .replace("Prefer email? Write to", "This form opens a draft in your email app. You still need to send it. Or write to")
+      .replace("The form will retain your message if sending fails.", "Your details stay here until you leave the page.");
+  }
   return href === "index.html" ? rendered.replace(/<body\b[^>]*>/, match => match + renderPageLoaderMarkup()) : rendered;
 }
 await rm(output, { recursive: true, force: true });
@@ -134,7 +142,7 @@ await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), joi
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
 // Publish experiment media and its public metadata, not source documentation.
 for (const entry of await readdir(join(root, "assets/experiments"), { withFileTypes: true })) {
-  if (entry.isFile() && !entry.name.startsWith(".") && /\.(?:avif|webp|jpe?g|png|gif|svg|mp4|webm|json)$/i.test(entry.name)) {
+  if (entry.isFile() && !entry.name.startsWith(".") && (entry.name === "manifest.json" || /\.(?:avif|webp|jpe?g|png|gif|mp4|webm)$/i.test(entry.name))) {
     await ensureCopy(join(root, "assets/experiments", entry.name), join(output, "assets/experiments", entry.name));
   }
 }

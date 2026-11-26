@@ -480,10 +480,8 @@ test("Vercel configuration is valid and serves the static build", async () => {
   const header = (source, key) =>
     config.headers.find((rule) => rule.source === source)?.headers.find((item) => item.key === key)?.value;
   assert.equal(header("/api/contact", "Cache-Control"), "no-store");
-  assert.equal(header("/api/(.*)", "Cache-Control"), undefined,
-    "the Last.fm GET endpoint must be free to set a short shared cache at runtime");
-  const nowPlayingApi = await readFile(join(root, "api", "now-playing.js"), "utf8");
-  assert.match(nowPlayingApi, /s-maxage=60/);
+  assert.ok(!Object.hasOwn(config.functions || {}, "api/now-playing.js"));
+  await assert.rejects(access(join(root, "api", "now-playing.js")));
   assert.equal(header("/", "Cache-Control"), "public, max-age=0, must-revalidate");
   assert.equal(header("/(.*)\\.html", "Cache-Control"), "public, max-age=0, must-revalidate");
   for (const rule of config.headers) {
