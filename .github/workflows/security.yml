@@ -41,4 +41,4 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: node --test tests/security.test.mjs tests/contact-api.test.mjs tests/contact-form.test.mjs tests/contact-fallback.test.mjs
       - run: npm audit --omit=dev --audit-level=moderate
-      - run: npm audit --audit-level=high
+      - run: npm audit --audit-level=low

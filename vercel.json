@@ -60,7 +60,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'sha256-DejhjEnE0qGjWCdM5ZUAHUSCZgjdWHcny5Yg+mSbXq8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mir-s3-cdn-cf.behance.net; font-src 'self'; connect-src 'self'; form-action 'self' mailto:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests; script-src-attr 'none'; worker-src 'self'; manifest-src 'self'"
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://mir-s3-cdn-cf.behance.net; font-src 'self'; connect-src 'self'; form-action 'self' mailto:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests; script-src-attr 'none'; worker-src 'self'; manifest-src 'self'"
         },
         {
           "key": "X-Content-Type-Options",
