@@ -43,16 +43,21 @@ export function createUpstashRateLimiter({
   return async function checkRateLimit({ req, now, requestId, signal }) {
     if (!url || !token || !secret) throw new Error("Rate-limit service is not configured");
     const key = `contact:${privacyKey(requestAddress(req), secret)}`;
+    const endpoint = new URL(url);
+    if (endpoint.protocol !== "https:" || endpoint.username || endpoint.password) throw new Error("Invalid rate-limit endpoint");
+    const timeout = AbortSignal.timeout(3_000);
     const response = await fetchImpl(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(["EVAL", SCRIPT, "1", key, String(now), String(windowMs), String(limit), requestId]),
-      signal
+      redirect: "error",
+      signal: signal ? AbortSignal.any([signal, timeout]) : timeout
     });
     if (!response.ok) throw new Error("Rate-limit service unavailable");
     const payload = await response.json();
     if (payload.error || !Array.isArray(payload.result)) throw new Error("Invalid rate-limit response");
-    const [allowed, , retryMs] = payload.result.map(Number);
+    const [allowed, count, retryMs] = payload.result.map(Number);
+    if (payload.result.length !== 3 || ![0, 1].includes(allowed) || !Number.isSafeInteger(count) || count < 0 || !Number.isFinite(retryMs) || retryMs < 0) throw new Error("Invalid rate-limit response");
     return { allowed: allowed === 1, retryAfter: allowed === 1 ? 0 : Math.max(1, Math.ceil(retryMs / 1_000)) };
   };
 }

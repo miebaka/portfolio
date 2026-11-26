@@ -26,7 +26,8 @@ const SAFE_SCHEME = /^(https?:|mailto:|tel:)/i;
    pass through untouched. */
 export function safeURL(value) {
   const url = String(value == null ? "" : value).trim();
-  if (!url) return "#";
+  // Browsers strip ASCII controls inside URL schemes; reject before parsing.
+  if (!url || /[\u0000-\u0020\u007f]/u.test(url.replace(/ /g, "")) || /^[\\/]{2}/u.test(url)) return "#";
   /* A colon before the first slash or hash means an explicit scheme */
   const colon = url.indexOf(":");
   if (colon !== -1) {

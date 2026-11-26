@@ -4,7 +4,10 @@ function firstHeader(value) {
 
 export function configuredOrigins(value = process.env.CONTACT_ALLOWED_ORIGINS || "") {
   return String(value).split(",").map((origin) => origin.trim()).filter(Boolean).map((origin) => {
-    try { return new URL(origin).origin; } catch { return ""; }
+    try {
+      const parsed = new URL(origin);
+      return parsed.protocol === "https:" && parsed.origin === origin ? origin : "";
+    } catch { return ""; }
   }).filter(Boolean);
 }
 
@@ -13,11 +16,12 @@ export function isSameOriginRequest(req, allowedOrigins = configuredOrigins()) {
   if (!supplied) return false;
 
   let origin;
-  try { origin = new URL(supplied).origin; } catch { return false; }
-  if (allowedOrigins.length) return allowedOrigins.includes(origin);
-
-  const host = firstHeader(req?.headers?.host);
-  const protocol = "https";
-  if (!host || !["http", "https"].includes(protocol)) return false;
-  try { return origin === new URL(`${protocol}://${host}`).origin; } catch { return false; }
+  try {
+    const parsed = new URL(supplied);
+    if (parsed.protocol !== "https:" || parsed.origin !== supplied) return false;
+    origin = parsed.origin;
+  } catch { return false; }
+  // Do not treat caller-controlled Host as an authorization allowlist.
+  const trusted = allowedOrigins.length ? allowedOrigins : ["https://miebaka-portfolio.vercel.app"];
+  return trusted.includes(origin);
 }

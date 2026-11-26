@@ -22,3 +22,13 @@ Samples from Figma/
 output/
 reports/
 klat_magazine/
+
+# Credentials and local environment overrides (template only is public).
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.npmrc.local

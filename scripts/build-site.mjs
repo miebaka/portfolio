@@ -132,7 +132,12 @@ await ensureCopy(join(root, "data/site.js"), join(output, "data/site.js"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-logo.svg"), join(output, "assets/images/miebaka-joshua-logo.svg"));
 await ensureCopy(join(root, "assets/images/miebaka-joshua-script-name.svg"), join(output, "assets/images/miebaka-joshua-script-name.svg"));
 await ensureCopy(join(root, "assets/images/clients"), join(output, "assets/images/clients"));
-await ensureCopy(join(root, "assets/experiments"), join(output, "assets/experiments"));
+// Publish experiment media and its public metadata, not source documentation.
+for (const entry of await readdir(join(root, "assets/experiments"), { withFileTypes: true })) {
+  if (entry.isFile() && !entry.name.startsWith(".") && /\.(?:avif|webp|jpe?g|png|gif|svg|mp4|webm|json)$/i.test(entry.name)) {
+    await ensureCopy(join(root, "assets/experiments", entry.name), join(output, "assets/experiments", entry.name));
+  }
+}
 for (const file of articleFiles) {
   await mkdir(dirname(join(output, file)), { recursive: true });
   await writeFile(join(output, file), renderShell(await readFile(join(root, file), "utf8"), file));
@@ -180,7 +185,7 @@ for (const match of bundledCss.matchAll(/\.\.\/assets\/fonts\/([a-z0-9_.-]+\.(?:
 await ensureCopy(join(root, "assets/fonts/OverusedGrotesk-LICENSE.txt"), join(output, "assets/fonts/OverusedGrotesk-LICENSE.txt"));
 
 // Fail closed if a future copy step leaks implementation or review material.
-const forbiddenOutput = /(?:^|\/)(?:docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output)(?:\/|$)|\.map$/i;
+const forbiddenOutput = /(?:^|\/)(?:\.[^/]+|docs|reports|drafts?|samples from figma|klat_magazine|graphify-out|output|node_modules|api|scripts|tests)(?:\/|$)|(?:^|\/)(?:package(?:-lock)?\.json|vercel\.json|readme\.md)$|\.(?:map|pem|key|p12|pfx|psd|psb|zip|log|sql|bak)$/i;
 for (const file of await outputFiles(output)) {
   const shippedPath = relative(output, file).replaceAll("\\", "/");
   if (forbiddenOutput.test(shippedPath)) throw new Error(`Production output contains forbidden file: ${shippedPath}`);
