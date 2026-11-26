@@ -45,7 +45,7 @@ jobs:
       # alone cannot establish convincing physical materials or tab alignment.
       - name: Upload Work folder visual evidence
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: work-folder-visual-review
           path: test-results/folder-*.png
@@ -53,7 +53,7 @@ jobs:
           retention-days: 14
       - name: Upload mobile SEO and performance baseline
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: seo-mobile-lighthouse
           path: .lighthouseci/mobile-reports
@@ -63,7 +63,7 @@ jobs:
       # advisories without misrepresenting them as production dependencies.
       - name: Upload failure evidence
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: quality-failure-evidence
           path: |
