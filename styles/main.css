@@ -34,6 +34,8 @@ html[data-theme-changing] *::after {
 
 /* Editorial lists share immediate entry and a 400ms colour release. */
 :is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link,
+    .btn, .reference-nav-contact, .site-nav__menu-btn, .swiss-link,
+    .case-back a, .case-end-actions a, .site-footer__start, .about-cv,
     .home-service > summary, [data-experiment-jump], .case-next__link, .home-beyond__card, .link-fallback > li > a) {
   transition: background-color 400ms ease, color 400ms ease;
 
@@ -41,25 +43,25 @@ html[data-theme-changing] *::after {
     transition: color 400ms ease;
   }
 
-  &:focus-visible {
+  &:focus-visible:not(:disabled, [aria-disabled="true"]) {
     background-color: var(--list-active-bg, var(--ref-ultramarine));
     color: var(--list-active-text, var(--ref-white));
     transition-duration: 0s;
   }
 
-  &:focus-visible :where(span, strong, h3, p, time, div, small, b, i) {
+  &:focus-visible:not(:disabled, [aria-disabled="true"]) :where(span, strong, h3, p, time, div, small, b, i) {
     color: inherit;
     transition-duration: 0s;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    &:hover {
+    &:hover:not(:disabled, [aria-disabled="true"]) {
       background-color: var(--list-active-bg, var(--ref-ultramarine));
       color: var(--list-active-text, var(--ref-white));
       transition-duration: 0s;
     }
 
-    &:hover :where(span, strong, h3, p, time, div, small, b, i) {
+    &:hover:not(:disabled, [aria-disabled="true"]) :where(span, strong, h3, p, time, div, small, b, i) {
       color: inherit;
       transition-duration: 0s;
     }
@@ -70,21 +72,21 @@ html[data-theme-changing] *::after {
   }
 }
 
-:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link, .home-beyond__card)::before {
+:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link, .home-beyond__card,
+    .btn, .reference-nav-contact, .site-nav__menu-btn, .swiss-link,
+    .case-back a, .case-end-actions a, .site-footer__start, .about-cv)::before {
   content: none;
 }
 
 html[data-motion="reduced"] :is(.case-toc a, .article-toc a, .editorial-index__row,
-    .writing-item__link, .home-service > summary, [data-experiment-jump], .case-next__link, .home-beyond__card, .link-fallback > li > a) {
+    .writing-item__link, .btn, .reference-nav-contact, .site-nav__menu-btn, .swiss-link,
+    .case-back a, .case-end-actions a, .site-footer__start, .about-cv,
+    .home-service > summary, [data-experiment-jump], .case-next__link, .home-beyond__card, .link-fallback > li > a) {
   &, & * { transition: none; }
 }
 
 .link-fallback > li > a { display: block; }
 
-.home-beyond__card {
-  --list-active-bg: var(--paper);
-  --list-active-text: var(--ink);
-}
 
 .next-content .case-next__link {
   width: 100%;
@@ -120,3 +122,24 @@ footer[data-mount="footer"] .nav-fallback a { flex: none; }
   flex-wrap: nowrap;
   align-items: center;
 }
+
+/* Align the contact, portfolio and social groups to one text baseline. */
+.site-footer__groups {
+  justify-content: space-between;
+  align-items: baseline;
+  column-gap: var(--s6);
+}
+.site-footer__groups :is(.site-footer__email-actions, .site-footer__links) {
+  align-items: baseline;
+}
+.site-footer__groups .site-footer__links { column-gap: var(--s3); }
+.site-footer__groups .site-footer__email-actions { gap: var(--s1); }
+.site-footer__groups a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-target);
+  margin: 0;
+  padding-block: 0;
+  line-height: var(--type-leading-ui);
+}
+.site-footer__groups .site-footer__start { padding-inline: 0; }
