@@ -34,32 +34,32 @@ html[data-theme-changing] *::after {
 
 /* Editorial lists share immediate entry and a 400ms colour release. */
 :is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link,
-    .home-service > summary, .service-fallback > li, .career-index__entry, .about-principles > li, .link-fallback > li > a) {
+    .home-service > summary, [data-experiment-jump], .case-next__link, .home-beyond__card, .link-fallback > li > a) {
   transition: background-color 400ms ease, color 400ms ease;
 
-  & :where(span, strong, h3, p, time, div, small) {
+  & :where(span, strong, h3, p, time, div, small, b, i) {
     transition: color 400ms ease;
   }
 
   &:focus-visible {
-    background-color: var(--ref-ultramarine);
-    color: var(--ref-white);
+    background-color: var(--list-active-bg, var(--ref-ultramarine));
+    color: var(--list-active-text, var(--ref-white));
     transition-duration: 0s;
   }
 
-  &:focus-visible :where(span, strong, h3, p, time, div, small) {
+  &:focus-visible :where(span, strong, h3, p, time, div, small, b, i) {
     color: inherit;
     transition-duration: 0s;
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--ref-ultramarine);
-      color: var(--ref-white);
+      background-color: var(--list-active-bg, var(--ref-ultramarine));
+      color: var(--list-active-text, var(--ref-white));
       transition-duration: 0s;
     }
 
-    &:hover :where(span, strong, h3, p, time, div, small) {
+    &:hover :where(span, strong, h3, p, time, div, small, b, i) {
       color: inherit;
       transition-duration: 0s;
     }
@@ -70,13 +70,53 @@ html[data-theme-changing] *::after {
   }
 }
 
-:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link)::before {
+:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link, .home-beyond__card)::before {
   content: none;
 }
 
 html[data-motion="reduced"] :is(.case-toc a, .article-toc a, .editorial-index__row,
-    .writing-item__link, .home-service > summary, .service-fallback > li, .career-index__entry, .about-principles > li, .link-fallback > li > a) {
+    .writing-item__link, .home-service > summary, [data-experiment-jump], .case-next__link, .home-beyond__card, .link-fallback > li > a) {
   &, & * { transition: none; }
 }
 
 .link-fallback > li > a { display: block; }
+
+.home-beyond__card {
+  --list-active-bg: var(--paper);
+  --list-active-text: var(--ink);
+}
+
+.next-content .case-next__link {
+  width: 100%;
+  padding: var(--space-card);
+}
+.next-content .case-next__name {
+  transform: none;
+  color: inherit;
+  -webkit-text-stroke: 0;
+}
+
+body[data-page="home"] .journey {
+  padding-block: clamp(var(--s6), 5vw, var(--s10));
+}
+
+/* The footer row can scroll independently on narrow screens. */
+.site-footer__groups, footer[data-mount="footer"] .nav-fallback {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: var(--s4);
+  grid-column: 1 / -1;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  padding-block: var(--s1);
+  white-space: nowrap;
+}
+.site-footer__groups > *, .site-footer__groups a,
+footer[data-mount="footer"] .nav-fallback a { flex: none; }
+.site-footer__groups :is(.site-footer__email-actions, .site-footer__links) {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
