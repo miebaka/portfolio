@@ -116,11 +116,7 @@ export function renderClients() {
     '</ul><ul class="client-proof" aria-hidden="true">' +
     items +
     "</ul></div>";
-  const control = document.createElement("button");
-  control.type = "button";
-  control.className = "client-marquee__control";
-  el.after(control);
-  const controller = createMarqueeController(el, { control });
+  const controller = createMarqueeController(el);
   addEventListener("pagehide", (event) => {
     if (!event.persisted) controller.destroy();
   });
