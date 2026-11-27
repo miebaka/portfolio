@@ -31,3 +31,52 @@ html[data-theme-changing] *::before,
 html[data-theme-changing] *::after {
   transition: none !important;
 }
+
+/* Editorial lists share immediate entry and a 400ms colour release. */
+:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link,
+    .home-service > summary, .service-fallback > li, .career-index__entry, .about-principles > li, .link-fallback > li > a) {
+  transition: background-color 400ms ease, color 400ms ease;
+
+  & :where(span, strong, h3, p, time, div, small) {
+    transition: color 400ms ease;
+  }
+
+  &:focus-visible {
+    background-color: var(--ref-ultramarine);
+    color: var(--ref-white);
+    transition-duration: 0s;
+  }
+
+  &:focus-visible :where(span, strong, h3, p, time, div, small) {
+    color: inherit;
+    transition-duration: 0s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--ref-ultramarine);
+      color: var(--ref-white);
+      transition-duration: 0s;
+    }
+
+    &:hover :where(span, strong, h3, p, time, div, small) {
+      color: inherit;
+      transition-duration: 0s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &, & * { transition: none; }
+  }
+}
+
+:is(.case-toc a, .article-toc a, .editorial-index__row, .writing-item__link)::before {
+  content: none;
+}
+
+html[data-motion="reduced"] :is(.case-toc a, .article-toc a, .editorial-index__row,
+    .writing-item__link, .home-service > summary, .service-fallback > li, .career-index__entry, .about-principles > li, .link-fallback > li > a) {
+  &, & * { transition: none; }
+}
+
+.link-fallback > li > a { display: block; }
