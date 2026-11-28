@@ -203,9 +203,20 @@ export async function initExperimentsSpatial() {
   }
   if (indexPanel && indexButton) {
     const list = indexPanel.querySelector("ol");
+    const background = [...root.children].filter(child => child !== indexPanel);
     list.innerHTML = entries.map((entry, index) => `<li><button type="button" data-experiment-jump="${index}"><span>${String(index + 1).padStart(2, "0")}</span><b>${esc(entry.title)}</b><i>${esc(entry.category || "Experiment")}</i></button></li>`).join("");
-    const closeIndex = (restore = true) => { indexPanel.hidden = true; root.removeAttribute("data-index-open"); indexButton.setAttribute("aria-expanded", "false"); if (restore) indexButton.focus(); };
-    const openIndex = () => { indexPanel.hidden = false; root.setAttribute("data-index-open", ""); indexButton.setAttribute("aria-expanded", "true"); closeButton?.focus(); };
+    const closeIndex = (restore = true) => {
+      indexPanel.hidden = true; root.removeAttribute("data-index-open");
+      document.documentElement.classList.remove("experiments-index-open");
+      background.forEach(element => element.removeAttribute("inert"));
+      indexButton.setAttribute("aria-expanded", "false"); if (restore) indexButton.focus();
+    };
+    const openIndex = () => {
+      indexPanel.hidden = false; root.setAttribute("data-index-open", "");
+      document.documentElement.classList.add("experiments-index-open");
+      background.forEach(element => element.setAttribute("inert", ""));
+      indexButton.setAttribute("aria-expanded", "true"); closeButton?.focus();
+    };
     indexButton.addEventListener("click", () => indexPanel.hidden ? openIndex() : closeIndex());
     closeButton?.addEventListener("click", () => closeIndex());
     indexPanel.addEventListener("keydown", event => {

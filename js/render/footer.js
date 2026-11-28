@@ -11,11 +11,16 @@ export function renderFooter() {
      visitors off-site in the same tab from the footer while the same links in
      the menu opened a new one. */
   const footerOrder = ["work", "explorations", "about", "writing", "process", "contact", "accessibility", "privacy"];
+  const currentPath = (globalThis.location?.pathname || "").replace(/^\/+|\/+$/gu, "") || "index.html";
   const explore = footerOrder.map(key => navigation.routes.find(item => item.key === key)).filter(Boolean).map((item) =>
-    '<a href="' + basePath() + esc(item.href) + '">' + esc(item.label) + '</a>'
+    {
+      const stem = item.href.replace(/\.html$/u, "");
+      const current = currentPath === item.href || currentPath.startsWith(stem + "/");
+      return '<a href="' + basePath() + esc(item.href) + '"' + (current ? ' aria-current="page"' : '') + '>' + esc(item.label) + '</a>';
+    }
   ).join('');
   const socials = (SITE.socials || []).filter(item => ["Behance", "LinkedIn", "Instagram", "X"].includes(item.label)).map((item) =>
-    '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer">' + esc(item.label) + '</a>'
+    '<a href="' + safeURL(item.href) + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(item.label) + ', external site">' + esc(item.label) + '</a>'
   ).join('');
   const group = (className, label, content) =>
     '<div class="site-footer__group ' + className + '"><div class="site-footer__links" aria-label="' + esc(label) + '">' + content + '</div></div>';

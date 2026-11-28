@@ -4,6 +4,7 @@
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 const FIELD_NAMES = ["name", "email", "interest", "message"];
 const NETWORK_COPY = "I couldn’t confirm delivery. Your message is still here; check before retrying or email me directly.";
+export const CONTACT_DRAFT_KEY = "portfolio-contact-draft-v1";
 
 export async function submitContact(payload, { signal, fetchImpl = globalThis.fetch } = {}) {
   if (typeof fetchImpl !== "function") throw new TypeError("fetch is unavailable");
@@ -42,6 +43,16 @@ export function createContactForm(form, { submitContact: send = submitContact, t
   let state = "idle";
   let activeController = null;
   let destroyed = false;
+  let draftTimer = 0;
+  const draftStorage = (() => { try { return globalThis.sessionStorage; } catch { return null; } })();
+  const draftRow = form.ownerDocument?.createElement?.("div");
+  let draftStatus = null, draftClear = null;
+  if (draftRow && draftStorage) {
+    draftRow.className = "contact__draft";
+    draftRow.innerHTML = '<p aria-live="polite"></p><button type="button" hidden>Clear draft</button>';
+    draftStatus = draftRow.querySelector("p"); draftClear = draftRow.querySelector("button");
+    form.querySelector(".contact__submit")?.before(draftRow);
+  }
 
   function transition(next, message = "") {
     state = next;
@@ -81,6 +92,32 @@ export function createContactForm(form, { submitContact: send = submitContact, t
     name: words(fields.name?.value), email: words(fields.email?.value), interest: words(fields.interest?.value),
     message: words(fields.message?.value), website: words(fields.website?.value)
   });
+  const removeDraft = () => {
+    try { draftStorage?.removeItem(CONTACT_DRAFT_KEY); } catch { /* optional */ }
+    if (draftStatus) draftStatus.textContent = ""; if (draftClear) draftClear.hidden = true;
+  };
+  const saveDraft = () => {
+    draftTimer = 0;
+    const value = Object.fromEntries(FIELD_NAMES.map(name => [name, fields[name]?.value || ""]));
+    if (!Object.values(value).some(item => item.trim())) { removeDraft(); return; }
+    try {
+      draftStorage?.setItem(CONTACT_DRAFT_KEY, JSON.stringify(value));
+      if (draftStatus) draftStatus.textContent = "Saved in this browser session.";
+      if (draftClear) draftClear.hidden = false;
+    } catch { /* the form remains usable */ }
+  };
+  const scheduleDraft = () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 350); };
+  if (draftStorage) {
+    try {
+      const saved = JSON.parse(draftStorage.getItem(CONTACT_DRAFT_KEY) || "null");
+      if (saved && FIELD_NAMES.some(name => saved[name])) {
+        FIELD_NAMES.forEach(name => { if (fields[name] && !fields[name].value) fields[name].value = saved[name] || ""; });
+        if (draftStatus) draftStatus.textContent = "Draft restored from this browser session.";
+        if (draftClear) draftClear.hidden = false;
+      }
+    } catch { removeDraft(); }
+  }
+  draftClear?.addEventListener("click", () => { form.reset(); clearErrors(); removeDraft(); fields.name?.focus(); });
   async function onSubmit(event) {
     event.preventDefault();
     if (destroyed || state === "submitting") return;
@@ -101,7 +138,7 @@ export function createContactForm(form, { submitContact: send = submitContact, t
       const response = await send(payload(), { signal: activeController.signal });
       if (destroyed) return;
       if (response.status === 202 && response.ok === true) {
-        form.reset(); transition("success", "Message sent. I’ll reply by email.");
+        form.reset(); removeDraft(); transition("success", "Message sent. I’ll reply by email.");
       } else if (response.status === 422 && response.fieldErrors) {
         showErrors(response.fieldErrors); transition("validation-error", response.fieldErrors.form || "Check the highlighted fields.");
       } else if (response.status === 429 || response.code === "RATE_LIMITED") {
@@ -115,9 +152,10 @@ export function createContactForm(form, { submitContact: send = submitContact, t
   function onInput(event) {
     const name = event?.target?.name;
     if (FIELD_NAMES.includes(name) && event.target.getAttribute("aria-invalid")) setFieldError(name);
+    if (FIELD_NAMES.includes(name)) scheduleDraft();
   }
   form.addEventListener("submit", onSubmit); form.addEventListener("input", onInput); transition("idle");
-  return { get state() { return state; }, destroy() { destroyed = true; activeController?.abort(); form.removeEventListener("submit", onSubmit); form.removeEventListener("input", onInput); } };
+  return { get state() { return state; }, destroy() { destroyed = true; clearTimeout(draftTimer); activeController?.abort(); form.removeEventListener("submit", onSubmit); form.removeEventListener("input", onInput); } };
 }
 
 export function initForm() {

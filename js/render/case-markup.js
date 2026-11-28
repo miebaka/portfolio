@@ -58,6 +58,21 @@ function chapter({ id, label, title, body }) {
   return `<section class="case-chapter" id="${token(id)}" aria-labelledby="${token(id)}-title"><div class="case-chapter__copy container"><div class="case-chapter__intro"><p class="case-chapter__eyebrow">${esc(label)}</p></div><h2 id="${token(id)}-title" class="case-chapter__heading">${esc(title || label)}</h2><div class="case-chapter__body">${paras(body)}</div></div></section>`;
 }
 
+const evidenceState = proof => proof.strength === "verified"
+  ? ["documented", "Documented"]
+  : ["system", "survival"].includes(proof.type)
+    ? ["proposed", "Proposed"]
+    : ["unverified", "Not established"];
+
+function evidenceLens(study) {
+  if (!study.proof?.length) return "";
+  const records = study.proof.map(proof => {
+    const [state, label] = evidenceState(proof);
+    return `<li data-evidence-state="${state}"><span class="evidence-lens__status">${label}</span><strong>${esc(proof.type)}</strong><p>${esc(proof.statement)}</p></li>`;
+  }).join("");
+  return `<section class="evidence-lens container" data-evidence-lens aria-labelledby="evidence-lens-title"><div class="evidence-lens__heading"><p>Evidence</p><h2 id="evidence-lens-title">What the record supports.</h2></div><div class="evidence-lens__filters" aria-label="Filter project evidence"><button type="button" data-evidence-choice="all" aria-pressed="true">All</button><button type="button" data-evidence-choice="documented" aria-pressed="false">Documented</button><button type="button" data-evidence-choice="proposed" aria-pressed="false">Proposed</button><button type="button" data-evidence-choice="unverified" aria-pressed="false">Not established</button></div><ol>${records}</ol></section>`;
+}
+
 function nextBlock(site, study, base) {
   const next = study.next;
   const project = site.projects?.find((item) => item.slug === next?.slug);
@@ -127,11 +142,11 @@ export function renderCaseMarkup(site, slug, base = "../") {
   const gallery = study.chapters.map(item => sequence(
     uniqueMedia(item.media || []), base, nextPlate,
   )).join("");
-  return opening + factsBlock(study, project) +
+  return opening + factsBlock(study, project) + evidenceLens(study) +
     `<div class="article-reading case-narrative container">${toc}<div class="article-body case-narrative__copy">${study.chapters.map(item => chapter(item) + (item.id === "decision" ? featured : "")).join("")}</div></div>` +
     `<section id="case-gallery" class="case-gallery-flow" aria-label="Project gallery">${heroMarkup}${leadGallery}${gallery}</section>` +
     (study.source && /^https:\/\/www\.behance\.net\/gallery\//.test(study.source) ? `<p class="container"><a class="link" href="${esc(study.source)}" rel="noopener noreferrer">Original project on Behance</a></p>` : "") +
     nextBlock(site, study, base) +
-    `<nav class="case-end-actions container" aria-label="Case study navigation"><a href="${base}contact.html">Send an inquiry</a><a href="mailto:miebakakiki@gmail.com">Email directly</a><a href="${base}work.html">All work</a><a href="#case-top">Back to top ↑</a></nav>`;
+    `<nav class="case-end-actions container" aria-label="Case study navigation"><button class="case-print" type="button" data-print-case>Save / print case study</button><a href="${base}contact.html">Send an inquiry</a><a href="mailto:miebakakiki@gmail.com">Email directly</a><a href="${base}work.html">All work</a><a href="#case-top">Back to top ↑</a></nav>`;
 
 }

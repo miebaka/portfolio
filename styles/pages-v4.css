@@ -425,6 +425,7 @@ body[data-page="explorations"] .experiments-spatial__stage{position:absolute;ins
 .experiments-spatial [data-experiments-status]{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:0!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;border:0!important}
 .experiments-index{position:fixed;z-index:45;inset:0;padding:var(--s1);background:var(--ref-neutral-94);overflow:auto}
 .experiments-index[hidden]{display:none}
+.experiments-index-open{overflow:hidden}
 .experiments-index__head{display:flex;align-items:center;justify-content:space-between;padding-bottom:var(--s2);background:var(--ref-neutral-94)}.experiments-index__head h2{margin:0;}
 .experiments-index ol{width:100%;margin:0;padding:0;border-top:1px solid var(--ref-near-black);list-style:none}
 .experiments-index li{border-bottom:1px solid var(--ref-near-black)}

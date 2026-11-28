@@ -1355,6 +1355,10 @@ body[data-page] .hero-listening .now-playing__track { font-size:var(--type-recor
 .page-loader__count { font:var(--type-weight-regular) var(--type-body)/1 var(--font-sans); font-variant-numeric:tabular-nums; text-align:right; }
 .home-beyond__art { text-align:center; }
 body[data-page] :is(.btn,.reference-nav-contact,.site-nav__menu-btn,.swiss-link,.case-back a,.case-end-actions a,.site-footer__start,.home-beyond__card) { text-decoration:none; }
+.section-permalink,.evidence-lens__filters button,.case-print,.reading-resume button,.contact__draft button{font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label)}
+.evidence-lens__heading>p,.evidence-lens__status,.evidence-lens li>strong{text-transform:uppercase;font:var(--type-weight-semibold) var(--type-label)/var(--type-leading-ui) var(--font-sans);letter-spacing:var(--type-tracking-label)}
+.evidence-lens__heading h2{font-size:var(--type-heading-lg);font-weight:var(--type-weight-regular)}.evidence-lens li>strong{text-transform:capitalize}.case-shot__inspect{text-align:inherit}.media-inspector__caption{text-align:center}
+@media print{body{font-size:10.5pt}.case-cover h1,.article-hero h1{font-size:30pt!important}a[href^="http"]::after{overflow-wrap:anywhere}}
 
 
 body[data-page="explorations"] .experiments-static__meta {overflow-wrap:anywhere}

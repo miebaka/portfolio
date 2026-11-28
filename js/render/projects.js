@@ -137,18 +137,7 @@ export function createMarqueeController(root, deps = {}) {
   let userPaused = false;
   let visible = !Observer;
   let destroyed = false;
-  const win = doc.defaultView;
   const track = root.querySelector?.(".client-marquee__track");
-  let frame = 0, x = 0, previousY = win?.scrollY || 0, last = 0;
-  const tick = time => {
-    if (destroyed || !root.classList.contains("is-running")) { frame = 0; last = 0; return; }
-    const y = win.scrollY, velocity = Math.abs(y - previousY);
-    previousY = y;
-    const half = track.scrollWidth / 2;
-    const elapsed = last ? Math.min(32, time - last) : 16.67; last = time;
-    if (half) { x = ((x - (.72 + velocity * .35) * elapsed / 16.67) % half + half) % half; track.style.transform = "translate3d(" + (x - half) + "px,0,0)"; }
-    frame = win.requestAnimationFrame(tick);
-  };
 
   const isReduced = () => {
     const chosen = doc.documentElement?.dataset.motion;
@@ -164,12 +153,7 @@ export function createMarqueeController(root, deps = {}) {
     root.dataset.marqueeMode = reduced ? "static" : "scroll";
     root.classList.toggle("is-running", running);
     root.dataset.marqueeState = running ? "playing" : "paused";
-    if (track && win?.requestAnimationFrame) {
-      track.style.animation = "none";
-      if (reduced) track.style.transform = "";
-      if (running && !frame) { previousY = win.scrollY; frame = win.requestAnimationFrame(tick); }
-      else if (!running && frame) { win.cancelAnimationFrame(frame); frame = 0; last = 0; }
-    }
+    if (track) { track.style.animation = ""; track.style.transform = ""; }
   };
   const onToggle = () => { userPaused = !userPaused; sync(); };
   control?.addEventListener("click", onToggle);

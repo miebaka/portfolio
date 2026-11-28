@@ -18,6 +18,11 @@ import { initCaseRouteTransitions } from "./core/case-route-transition.js";
 import { initCopyEmail } from "./core/copy-email.js";
 import { initArticleNavigation } from "./core/article-navigation.js";
 import { initExperimentsSpatial } from "./render/experiments.js";
+import { initSectionLinks, replaceSectionHash } from "./core/section-links.js";
+import { initEvidenceLens } from "./core/evidence-lens.js";
+import { initMediaInspector } from "./core/media-inspector.js";
+import { clearReadingPosition, initReadingResume, rememberReadingPosition } from "./core/reading-memory.js";
+import { initFooterOverflow } from "./core/footer-overflow.js";
 
 /* Verify the HTML/JS contract before rendering anything. A mount name that
    exists in one half but not the other is reported here instead of showing up
@@ -50,8 +55,9 @@ if (page === "home" || isCaseStudy) run("Fit display title", () => {
     const style = getComputedStyle(name);
     const probe = document.createElement("span");
     Object.assign(probe.style, {position:"absolute",visibility:"hidden",whiteSpace:"nowrap",font:style.font,letterSpacing:style.letterSpacing});
-    probe.textContent = "Miebaka Joshua";
-    name.append(probe);
+    probe.setAttribute("aria-hidden", "true");
+    probe.textContent = name.textContent.trim();
+    document.body.append(probe);
     const width = probe.getBoundingClientRect().width;
     probe.remove();
     if (width > 0) {
@@ -68,6 +74,7 @@ if (page === "home" || isCaseStudy) run("Fit display title", () => {
 });
 if (has('[data-mount="writing"]')) run("writing render", renderWriting);
 run("footer render", renderFooter);
+run("footer overflow", initFooterOverflow);
 run("content slots", fillSlots);
 run("copy email", initCopyEmail);
 if (page === "writing" && has(".article-body")) run("article navigation", initArticleNavigation);
@@ -84,20 +91,33 @@ if (isCaseStudy) run("case study navigation", () => {
   const links = [...document.querySelectorAll(".case-toc a")];
   const chapters = links.map(link => document.getElementById(link.hash.slice(1)));
   if (!links.length) return;
+  initReadingResume({ root: document.querySelector(".article-reading") });
   let frame = 0;
   const update = () => {
     frame = 0;
-    let active = 0;
+    let active = -1;
     chapters.forEach((chapter, index) => {
-      if (chapter && chapter.getBoundingClientRect().top <= Math.max(100, innerHeight * .28)) active = index;
+      if (chapter && chapter.getBoundingClientRect().top <= Math.max(120, innerHeight * .28 + 24)) active = index;
     });
     links.forEach((link, index) => {
       if (index === active) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     });
+    if (active >= 0) {
+      const chapter = chapters[active];
+      replaceSectionHash(chapter?.id);
+      rememberReadingPosition(chapter?.id, links[active]?.textContent.trim());
+      if (active === chapters.length - 1 && scrollY + innerHeight >= document.documentElement.scrollHeight - 120) clearReadingPosition();
+    }
   };
   const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
   addEventListener("scroll", schedule, { passive: true });
   addEventListener("resize", schedule, { passive: true });
   update();
+  initSectionLinks({ root: document.querySelector(".case-narrative__copy"), headingSelector: ".case-chapter__heading" });
 });
+if (isCaseStudy) {
+  run("case study evidence lens", initEvidenceLens);
+  run("case study media inspector", initMediaInspector);
+  run("case study print control", () => document.querySelector("[data-print-case]")?.addEventListener("click", () => print()));
+}
